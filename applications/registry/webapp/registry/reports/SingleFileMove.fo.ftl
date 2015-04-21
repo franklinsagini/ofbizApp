@@ -26,7 +26,7 @@ under the License.
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
         
          <#if singleActivityfileMovement?has_content>
-            <#assign reason = delegator.findOne("RegistryFileActivity", {"activityId" : parameters.activityId}, false)/>
+            <#assign reason = delegator.findOne("RegistryFileActivity", {"activityId" : activityCode}, false)/>
 FILE MOVEMENT FOR  [${reason.activity}]  REPORT
         </#if>
         

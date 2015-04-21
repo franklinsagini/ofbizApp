@@ -957,15 +957,15 @@ under the License.
     </request-map>
     <request-map uri="updatePerfGoalsDef">
         <security https="true" auth="true"/>
-        <event type="service" invoke="updatePerfGoalsDef"/>
+        <event type="service-multi" invoke="updatePerfGoalsDef"/>
         <response name="success" type="request-redirect-noparam" value="perfGoalsDef"/>
-		<response name="error" type="view" value="perfGoalsDef" />
+		<response name="error" type="request-redirect-noparam" value="perfGoalsDef" />
     </request-map>
     <request-map uri="deletePerfGoalsDef">
         <security https="true" auth="true"/>
         <event type="service" invoke="deletePerfGoalsDef"/>
         <response name="success" type="request-redirect-noparam" value="perfGoalsDef"/>
-        <response name="error" type="view" value="perfGoalsDef" />
+        <response name="error" type="request-redirect-noparam" value="perfGoalsDef" />
     </request-map>
     
     <request-map uri="perfGoals">
@@ -1021,6 +1021,222 @@ under the License.
 		<response name="success" type="view" value="PerfStaff"
 			save-home-view="true" />
 	</request-map>
+	
+	<request-map uri="PerfReviews">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="PerfReviews"
+			save-home-view="true" />
+	</request-map>
+	
+	
+	
+	 <request-map uri="setupReviewObjectives">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="setupReviewObjectives"
+			save-home-view="true">
+				<redirect-parameter name="perfReviewDefId"/>
+			</response>
+	</request-map>
+	
+	<request-map uri="setupObjectiveActionPlan">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="setupObjectiveActionPlan"
+			save-home-view="true">
+				<redirect-parameter name="PerfReviewsGroupObjectiveDefinitionId"/>
+			</response>
+	</request-map>
+	
+	<request-map uri="setupActionPlanIndicator">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="setupActionPlanIndicator"
+			save-home-view="true">
+				<redirect-parameter name="PerfObjectiveActionPlanId"/>
+			</response>
+	</request-map>
+	
+	<request-map uri="addStaffToPerfReviewGroup">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="addStaffToPerfReviewGroup"
+			save-home-view="true" />
+	</request-map>
+	
+	<request-map uri="reviewPeriod">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="reviewPeriod"
+			save-home-view="true" />
+	</request-map>
+	 <!--======================= REVIEWS GROUPS DEFINITION =================================== -->
+
+	<request-map uri="createPerfReviews">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createPerfReviews" />
+		<response name="success" type="request-redirect-noparam" value="PerfReviews" />
+		<response name="error" type="request-redirect-noparam" value="PerfReviews" />
+	</request-map>
+
+	<request-map uri="updatePerfReviews">
+		<security https="true" auth="true" />
+		<event type="service-multi" invoke="updatePerfReviews" />
+		<response name="success" type="request-redirect" value="PerfReviews">
+			<redirect-parameter name="perfReviewDefId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="PerfReviews" />
+	</request-map>
+
+	<request-map uri="deletePerfReviews">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deletePerfReviews" />
+		<response name="success" type="request-redirect-noparam" value="PerfReviews"/>
+		<response name="error" type="request-redirect-noparam" value="PerfReviews" />
+	</request-map>
+	
+	 <!--======================= REVIEWS OBJECTIVES SETUP DEFINITION =================================== -->
+
+	<request-map uri="createPerfReviewObjective">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createPerfReviewObjective" />
+		<response name="success" type="request-redirect" value="setupReviewObjectives">
+			<redirect-parameter name="perfReviewDefId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="setupReviewObjectives" />
+	</request-map>
+
+	<request-map uri="updatePerfReviewObjective">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updatePerfReviewObjective" />
+		<response name="success" type="request-redirect" value="setupReviewObjectives">
+			<redirect-parameter name="perfReviewDefId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="setupReviewObjectives" />
+	</request-map>
+
+	<request-map uri="deletePerfReviewObjective">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deletePerfReviewObjective" />
+		<response name="success" type="request-redirect" value="setupReviewObjectives">
+			<redirect-parameter name="perfReviewDefId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="setupReviewObjectives" />
+	</request-map>
+	
+	
+	 <!--======================= OBJECTIVES ACTION PLANS SETUP DEFINITION =================================== -->
+
+	<request-map uri="createPerfObjectiveActionPlan">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createPerfObjectiveActionPlan" />
+		<response name="success" type="request-redirect" value="setupObjectiveActionPlan">
+			<redirect-parameter name="PerfReviewsGroupObjectiveDefinitionId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="setupObjectiveActionPlan" />
+	</request-map>
+
+	<request-map uri="updatePerfObjectiveActionPlan">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updatePerfObjectiveActionPlan" />
+		<response name="success" type="request-redirect" value="setupObjectiveActionPlan">
+			<redirect-parameter name="PerfReviewsGroupObjectiveDefinitionId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="setupObjectiveActionPlan" />
+	</request-map>
+
+	<request-map uri="deletePerfObjectiveActionPlan">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deletePerfObjectiveActionPlan" />
+		<response name="success" type="request-redirect" value="setupObjectiveActionPlan">
+			<redirect-parameter name="PerfReviewsGroupObjectiveDefinitionId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="setupObjectiveActionPlan" />
+	</request-map>
+	
+	
+	 <!--======================= ACTION PLAN INDICATORS SETUP DEFINITION =================================== -->
+
+	<request-map uri="createPerfActionPlanIndicator">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createPerfActionPlanIndicator" />
+		<response name="success" type="request-redirect" value="setupActionPlanIndicator">
+			<redirect-parameter name="PerfObjectiveActionPlanId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="setupActionPlanIndicator" />
+	</request-map>
+
+	<request-map uri="updatePerfActionPlanIndicator">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updatePerfActionPlanIndicator" />
+		<response name="success" type="request-redirect" value="setupActionPlanIndicator">
+			<redirect-parameter name="PerfObjectiveActionPlanId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="setupActionPlanIndicator" />
+	</request-map>
+
+	<request-map uri="deletePerfActionPlanIndicator">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deletePerfActionPlanIndicator" />
+		<response name="success" type="request-redirect" value="setupActionPlanIndicator">
+			<redirect-parameter name="PerfObjectiveActionPlanId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="setupActionPlanIndicator" />
+	</request-map>
+	
+	 <!--======================= ADD STAFF TO REVIEW GROUPS =================================== -->
+
+	<request-map uri="addStaffToReviewGroup">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="addStaffToReviewGroup" />
+		<response name="success" type="request-redirect-noparam" value="addStaffToPerfReviewGroup">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="addStaffToPerfReviewGroup" />
+	</request-map>
+
+	
+	<request-map uri="removeStaffToReviewGroup">
+		<security https="true" auth="true" />
+		<event type="service" invoke="removeStaffToReviewGroup" />
+		<response name="success" type="request-redirect-noparam" value="addStaffToPerfReviewGroup">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="addStaffToPerfReviewGroup" />
+	</request-map>
+	
+	
+	 <!--======================= REVIEW PERIODS =================================== -->
+
+	<request-map uri="createReviewPeriod">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createReviewPeriod" />
+		<response name="success" type="request-redirect-noparam" value="reviewPeriod">
+			<redirect-parameter name="PerfReviewPeriodId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="reviewPeriod" />
+	</request-map>
+	
+	
+	 <!--======================= OPEN REVIEW PERIOD =================================== -->
+
+	<request-map uri="openReviewPeriod">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="openReviewPeriod" />
+		<response name="success" type="request-redirect-noparam" value="reviewPeriod">
+			<redirect-parameter name="PerfReviewPeriodId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="reviewPeriod" />
+	</request-map>
+	
+	 <!--======================= CLOSE REVIEW PERIOD =================================== -->
+
+	<request-map uri="closeReviewPeriod">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="closeReviewPeriod" />
+		<response name="success" type="request-redirect-noparam" value="reviewPeriod">
+			<redirect-parameter name="PerfReviewPeriodId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="reviewPeriod" />
+	</request-map>
+	
+	
+	
 	
 	<request-map uri="ManagePerfObjectives">
 		<security https="true" auth="true" />
@@ -3176,6 +3392,7 @@ under the License.
 
 	<request-map uri="perfReviewReport"><security https="true" auth="true"/><response name="success" type="view" value="perfReviewReport"/></request-map>
 	<request-map uri="perfScoresReport"><security https="true" auth="true"/><response name="success" type="view" value="perfScoresReport"/></request-map>
+	<request-map uri="StaffperfScoresReport"><security https="true" auth="true"/><response name="success" type="view" value="StaffperfScoresReport"/></request-map>
 
 
 	<!-- ========================Training Reports========================== -->
@@ -3291,6 +3508,12 @@ under the License.
         <response name="success" type="view" value="leaveActivityPDF"/>
     </request-map>
     
+    <request-map uri="allStaffPerformanceScoresPDF">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="allStaffPerformanceScoresPDF"/>
+    </request-map>
+    
+     <view-map name="allStaffPerformanceScoresPDF" type="screenfop" page="component://humanres/widget/PerfReportScreens.xml#allStaffPerformanceScoresPDF" content-type="application/pdf" encoding="none"/>
      <view-map name="leaveCalendarPDF" type="screenfop" page="component://humanres/widget/ReportScreens.xml#leaveCalendarPDF" content-type="application/pdf" encoding="none"/>
 	 <view-map name="leaveActivityPDF" type="screenfop" page="component://humanres/widget/ReportScreens.xml#leaveActivityPDF" content-type="application/pdf" encoding="none"/>
      <view-map name="staffListingCSV" type="screencsv" page="component://humanres/widget/ReportScreens.xml#staffListingCSV" content-type="text/csv" encoding="none"/>
@@ -3422,6 +3645,12 @@ under the License.
     <view-map name="PerfBranches" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#PerformanceBranches"/>
     <view-map name="PerfDepartments" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#PerformanceDepartments"/>
     <view-map name="PerfStaff" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#PerformanceStaff"/>
+    <view-map name="setupReviewObjectives" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewPerfReviewsObjectiveScreen"/>
+     <view-map name="setupObjectiveActionPlan" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewPerfObjectiveActionPlansScreen"/>
+      <view-map name="setupActionPlanIndicator" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewPerfActionPlanIndicatorsScreen"/>
+     <view-map name="PerfReviews" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewPerfReviewScreen"/>
+     <view-map name="reviewPeriod" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#PerfReviewPeriodsScreen"/>
+       <view-map name="addStaffToPerfReviewGroup" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#PerfReviewGroupsViewScreen"/>
     <view-map name="ManagePerfObjectives" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#ManagePerfObjectives"/>
     <view-map name="kpidefinition" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIDefinition"/>
     <view-map name="kpiachievementstatus" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#NewKPIAchievementStatus"/>
@@ -3619,6 +3848,7 @@ under the License.
 
 	<view-map name="perfReviewReport" type="screen" page="component://humanres/widget/PerfReportScreens.xml#PerfReviewReport"/>
     <view-map name="perfScoresReport" type="screen" page="component://humanres/widget/PerfReportScreens.xml#PerfScoresReport"/>
+    <view-map name="StaffperfScoresReport" type="screen" page="component://humanres/widget/PerfReportScreens.xml#employeePerformanceScoresReport"/>
 
     <view-map name="trainingSummaryReport" type="screen" page="component://humanres/widget/TrainingReportScreens.xml#TrainingSummaryReport"/>
     <view-map name="separationSummaryReport" type="screen" page="component://humanres/widget/ReportScreens.xml#SeparationSummaryReport"/>

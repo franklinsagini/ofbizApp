@@ -1260,7 +1260,31 @@ under the License.
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
 	
 
-        <create-value value-field="newEntity"/>
+        <set field="fieldName" value="name"/>
+		<set field="value" from-field="newEntity.name"/>
+		<set field="exists" value="${bsh:org.ofbiz.party.party.SaccoUtility.itemExists(value, fieldName, entityName);}" type="Boolean" />
+		<set field="trueField" value="true" type="Boolean"/>
+		
+		
+		<if> 
+            <condition> 
+                        <!-- if-compare operator="equals" value="true" field="exists"></if-compare -->
+                        <if-compare-field to-field="trueField" operator="equals" field="exists"></if-compare-field>
+            </condition> 
+            <then> 
+                <add-error> 
+                    <fail-property resource="PartyUiLabels.xml"  
+                        property="relationShipSaveError" /> 
+                </add-error> 
+                <check-errors /> 
+            </then> 
+             
+            <else>
+            	<create-value value-field="newEntity" /> 
+                <property-to-field resource="PartyUiLabels.xml" 
+            property="relationShipSaveSuccess" field="successMessage" /> 
+            </else> 
+        </if>
     </simple-method>
 
     <simple-method method-name="updateMemberType" short-description="Update MemberType">
@@ -1285,13 +1309,60 @@ under the License.
         
         <set field="newEntity.memberClassId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
 
-        <create-value value-field="newEntity"/>
+        <set field="fieldName" value="name"/>
+		<set field="value" from-field="newEntity.name"/>
+		<set field="exists" value="${bsh:org.ofbiz.party.party.SaccoUtility.itemExists(value, fieldName, entityName);}" type="Boolean" />
+		<set field="trueField" value="true" type="Boolean"/>
+		<if> 
+            <condition> 
+                <if-compare-field to-field="trueField" operator="equals" field="exists"></if-compare-field>
+            </condition> 
+            <then> 
+                <add-error> 
+                    <fail-property resource="PartyUiLabels.xml"  
+                        property="relationShipSaveError" /> 
+                </add-error> 
+                <check-errors /> 
+            </then> 
+            <else>
+            	<create-value value-field="newEntity" /> 
+                <property-to-field resource="PartyUiLabels.xml" 
+            property="relationShipSaveSuccess" field="successMessage" /> 
+            </else> 
+        </if>
     </simple-method>
 
     <simple-method method-name="updateMemberClass" short-description="Update MemberClass">
         <entity-one entity-name="MemberClass" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <store-value value-field="lookedUpValue"/>
+       
+        <set field="entityName" value="MemberCLass"/>
+		<set field="fieldName" value="name"/>
+		<set field="value" from-field="lookedUpValue.name"/>
+		<set field="exists" value="${bsh:org.ofbiz.party.party.SaccoUtility.itemExists(value, fieldName, entityName);}" type="Boolean" />
+		<set field="trueField" value="true" type="Boolean"/>
+		
+		<if> 
+            <condition> 
+                        <!-- if-compare operator="equals" value="true" field="exists"></if-compare -->
+                        <if-compare-field to-field="trueField" operator="equals" field="exists"></if-compare-field>
+            </condition> 
+            <then> 
+                <add-error> 
+                    <fail-property resource="PartyUiLabels.xml"  
+                        property="relationShipSaveError" /> 
+                </add-error> 
+                <check-errors /> 
+            </then> 
+             
+            <else>
+            	 <store-value value-field="lookedUpValue"/>
+                <property-to-field resource="PartyUiLabels.xml" 
+            property="relationShipSaveSuccess" field="successMessage" /> 
+            </else> 
+        </if>
+       
+       
     </simple-method>
 
     <simple-method method-name="deleteMemberClass" short-description="Delete MemberClass">
@@ -1309,9 +1380,31 @@ under the License.
         <set field="newEntity.memberStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
 
         
-        <!-- sequenced-id sequence-name="MemberType" field="memberTypeId" />
-        <set from-field="memberTypeId" field="newEntity.memberTypeId" /-->
-        <create-value value-field="newEntity"/>
+	    <set field="fieldName" value="name"/>
+		<set field="value" from-field="newEntity.name"/>
+		<set field="exists" value="${bsh:org.ofbiz.party.party.SaccoUtility.itemExists(value, fieldName, entityName);}" type="Boolean" />
+		<set field="trueField" value="true" type="Boolean"/>
+		
+		
+		<if> 
+            <condition> 
+                        <!-- if-compare operator="equals" value="true" field="exists"></if-compare -->
+                        <if-compare-field to-field="trueField" operator="equals" field="exists"></if-compare-field>
+            </condition> 
+            <then> 
+                <add-error> 
+                    <fail-property resource="PartyUiLabels.xml"  
+                        property="relationShipSaveError" /> 
+                </add-error> 
+                <check-errors /> 
+            </then> 
+             
+            <else>
+            	<create-value value-field="newEntity" /> 
+                <property-to-field resource="PartyUiLabels.xml" 
+            property="relationShipSaveSuccess" field="successMessage" /> 
+            </else> 
+        </if>
     </simple-method>
 
     <simple-method method-name="updateMemberStatus" short-description="Update MemberStatus">
@@ -1334,9 +1427,31 @@ under the License.
         <set field="newEntity.salutationId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
 
         
-        <!-- sequenced-id sequence-name="MemberType" field="memberTypeId" />
-        <set from-field="memberTypeId" field="newEntity.memberTypeId" /-->
-        <create-value value-field="newEntity"/>
+	        <set field="fieldName" value="name"/>
+		<set field="value" from-field="newEntity.name"/>
+		<set field="exists" value="${bsh:org.ofbiz.party.party.SaccoUtility.itemExists(value, fieldName, entityName);}" type="Boolean" />
+		<set field="trueField" value="true" type="Boolean"/>
+		
+		
+		<if> 
+            <condition> 
+                        <!-- if-compare operator="equals" value="true" field="exists"></if-compare -->
+                        <if-compare-field to-field="trueField" operator="equals" field="exists"></if-compare-field>
+            </condition> 
+            <then> 
+                <add-error> 
+                    <fail-property resource="PartyUiLabels.xml"  
+                        property="relationShipSaveError" /> 
+                </add-error> 
+                <check-errors /> 
+            </then> 
+             
+            <else>
+            	<create-value value-field="newEntity" /> 
+                <property-to-field resource="PartyUiLabels.xml" 
+            property="relationShipSaveSuccess" field="successMessage" /> 
+            </else> 
+        </if>
     </simple-method>
 
     <simple-method method-name="updateSalutation" short-description="Update Salutation">
@@ -1359,9 +1474,31 @@ under the License.
         <set field="newEntity.maritalStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
 
         
-        <!-- sequenced-id sequence-name="MemberType" field="memberTypeId" />
-        <set from-field="memberTypeId" field="newEntity.memberTypeId" /-->
-        <create-value value-field="newEntity"/>
+        <set field="fieldName" value="name"/>
+		<set field="value" from-field="newEntity.name"/>
+		<set field="exists" value="${bsh:org.ofbiz.party.party.SaccoUtility.itemExists(value, fieldName, entityName);}" type="Boolean" />
+		<set field="trueField" value="true" type="Boolean"/>
+		
+		
+		<if> 
+            <condition> 
+                        <!-- if-compare operator="equals" value="true" field="exists"></if-compare -->
+                        <if-compare-field to-field="trueField" operator="equals" field="exists"></if-compare-field>
+            </condition> 
+            <then> 
+                <add-error> 
+                    <fail-property resource="PartyUiLabels.xml"  
+                        property="relationShipSaveError" /> 
+                </add-error> 
+                <check-errors /> 
+            </then> 
+             
+            <else>
+            	<create-value value-field="newEntity" /> 
+                <property-to-field resource="PartyUiLabels.xml" 
+            property="relationShipSaveSuccess" field="successMessage" /> 
+            </else> 
+        </if>
     </simple-method>
 
     <simple-method method-name="updateMaritalStatus" short-description="Update MaritalStatus">
@@ -1385,9 +1522,31 @@ under the License.
         <set field="newEntity.recruitingAgentId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
 
         
-        <!-- sequenced-id sequence-name="MemberType" field="memberTypeId" />
-        <set from-field="memberTypeId" field="newEntity.memberTypeId" /-->
-        <create-value value-field="newEntity"/>
+        <set field="fieldName" value="name"/>
+		<set field="value" from-field="newEntity.name"/>
+		<set field="exists" value="${bsh:org.ofbiz.party.party.SaccoUtility.itemExists(value, fieldName, entityName);}" type="Boolean" />
+		<set field="trueField" value="true" type="Boolean"/>
+		
+		
+		<if> 
+            <condition> 
+                        <!-- if-compare operator="equals" value="true" field="exists"></if-compare -->
+                        <if-compare-field to-field="trueField" operator="equals" field="exists"></if-compare-field>
+            </condition> 
+            <then> 
+                <add-error> 
+                    <fail-property resource="PartyUiLabels.xml"  
+                        property="relationShipSaveError" /> 
+                </add-error> 
+                <check-errors /> 
+            </then> 
+             
+            <else>
+            	<create-value value-field="newEntity" /> 
+                <property-to-field resource="PartyUiLabels.xml" 
+            property="relationShipSaveSuccess" field="successMessage" /> 
+            </else> 
+        </if>
     </simple-method>
 
     <simple-method method-name="updateRecruitingAgent" short-description="Update RecruitingAgent">
@@ -1411,9 +1570,31 @@ under the License.
         <set field="newEntity.employmentTypeId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
 
         
-        <!-- sequenced-id sequence-name="MemberType" field="memberTypeId" />
-        <set from-field="memberTypeId" field="newEntity.memberTypeId" /-->
-        <create-value value-field="newEntity"/>
+        <set field="fieldName" value="name"/>
+		<set field="value" from-field="newEntity.name"/>
+		<set field="exists" value="${bsh:org.ofbiz.party.party.SaccoUtility.itemExists(value, fieldName, entityName);}" type="Boolean" />
+		<set field="trueField" value="true" type="Boolean"/>
+		
+		
+		<if> 
+            <condition> 
+                        <!-- if-compare operator="equals" value="true" field="exists"></if-compare -->
+                        <if-compare-field to-field="trueField" operator="equals" field="exists"></if-compare-field>
+            </condition> 
+            <then> 
+                <add-error> 
+                    <fail-property resource="PartyUiLabels.xml"  
+                        property="relationShipSaveError" /> 
+                </add-error> 
+                <check-errors /> 
+            </then> 
+             
+            <else>
+            	<create-value value-field="newEntity" /> 
+                <property-to-field resource="PartyUiLabels.xml" 
+            property="relationShipSaveSuccess" field="successMessage" /> 
+            </else> 
+        </if>
     </simple-method>
 
     <simple-method method-name="updateEmploymentType" short-description="Update EmploymentType">
@@ -1437,9 +1618,31 @@ under the License.
         <set field="newEntity.genderId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
 
         
-        <!-- sequenced-id sequence-name="MemberType" field="memberTypeId" />
-        <set from-field="memberTypeId" field="newEntity.memberTypeId" /-->
-        <create-value value-field="newEntity"/>
+       <set field="fieldName" value="name"/>
+		<set field="value" from-field="newEntity.name"/>
+		<set field="exists" value="${bsh:org.ofbiz.party.party.SaccoUtility.itemExists(value, fieldName, entityName);}" type="Boolean" />
+		<set field="trueField" value="true" type="Boolean"/>
+		
+		
+		<if> 
+            <condition> 
+                        <!-- if-compare operator="equals" value="true" field="exists"></if-compare -->
+                        <if-compare-field to-field="trueField" operator="equals" field="exists"></if-compare-field>
+            </condition> 
+            <then> 
+                <add-error> 
+                    <fail-property resource="PartyUiLabels.xml"  
+                        property="relationShipSaveError" /> 
+                </add-error> 
+                <check-errors /> 
+            </then> 
+             
+            <else>
+            	<create-value value-field="newEntity" /> 
+                <property-to-field resource="PartyUiLabels.xml" 
+            property="relationShipSaveSuccess" field="successMessage" /> 
+            </else> 
+        </if>
     </simple-method>
 
     <simple-method method-name="updateGender" short-description="Update Gender">

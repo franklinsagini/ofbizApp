@@ -156,4 +156,114 @@ under the License.
         </section>
     </screen>
 
+    <screen name="EditPartyGroup">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditGroupInformation" />
+                <set field="tabButtonItem" value="viewprofile" />
+                <set field="headerItem" value="find" />
+                <set field="labelTitleProperty" value="PageTitleEditGroupInformation" />
+
+                <set field="donePage" from-field="parameters.DONE_PAGE"
+                    default-value="viewprofile" />
+                <set field="partyId" from-field="parameters.partyId" />
+                <set field="preferredCurrencyUomId" value="KES"/>
+                <entity-one entity-name="PartyAndGroup" value-field="partyGroup" />
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator"
+                    location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="${uiLabelMap.PageTitleEditGroupInformation}">
+                            <include-form name="EditPartyGroup"
+                                location="component://order/widget/ordermgr/OrderEntryForms.xml" />
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="FindProduct">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleFindProduct"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonProductDecorator" location="component://product/widget/catalog/ProductScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-service-permission service-name="acctgAgreementPermissionCheck" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="search-options">
+                                        <include-form name="FindProduct" location="component://order/widget/ordermgr/OrderEntryForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                        <include-form name="ListProducts" location="component://order/widget/ordermgr/OrderEntryForms.xml"/>
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.AccountingViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+
+    <screen name="EditProduct">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditProduct"/>
+                <set field="tabButtonItem" value="EditProduct"/>
+                <set field="labelTitleProperty" value="ProductProduct"/>
+
+                <set field="parameters.bypassIfNoProduct" value="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonProductDecorator" location="component://product/widget/catalog/ProductScreens.xml">
+                    <decorator-section name="body">
+                        <screenlet title="${uiLabelMap.PageTitleEditProduct}">
+                            <include-form name="EditProduct" location="component://order/widget/ordermgr/OrderEntryForms.xml"/>
+                        </screenlet>
+
+                        <section>
+                            <condition>
+                                <not><if-empty field="product"/></not>
+                            </condition>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.ProductDuplicateProduct}">
+                                    <include-form name="EditProductDup" location="component://product/widget/catalog/ProductForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        <section>
+                            <condition>
+                                <not><if-empty field="product"/></not>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <if-compare field="product.isVirtual" operator="equals" type="String" value="Y"/>
+                                    </condition>
+                                    <widgets>
+                                        <screenlet title="${uiLabelMap.ProductUpdateProductVariants}">
+                                            <include-form name="UpdateProductVariants" location="component://product/widget/catalog/ProductForms.xml"/>
+                                        </screenlet>
+                                    </widgets>
+                                </section>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+
 </screens>

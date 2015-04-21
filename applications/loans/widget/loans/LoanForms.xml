@@ -267,8 +267,8 @@ under the License.
         <field name="currentStationId" title="Current Station">
         	 <display-entity entity-name="Station" key-field-name="stationId"  description="${name}" also-hidden="false"/>
         </field>
-        <field name="guaranteedPercentage" title="Guaranteed %"><text size="20" maxlength="60"/></field>
-		<field name="guaranteedValue" title="Guaranteed Amount"><text size="20" maxlength="60"/></field> 
+        <field name="guaranteedPercentage" title="Guaranteed %"> <display></display> </field>
+		<field name="guaranteedValue" title="Guaranteed Amount"> <display></display> </field> 
 		<field name="myLoans" title="My Loans" widget-style="buttontext">
             <hyperlink target="myLoans" description="My Loans" also-hidden="false">
                 <parameter param-name="guarantorId"/>
@@ -281,11 +281,11 @@ under the License.
             </hyperlink>
         </field>
 		
-		<field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+		<!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteLoanApplicationGuarantor" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="loanGuarantorId"/>
             </hyperlink>
-        </field>
+        </field -->
     </form>
     
     <!-- Loan Application - the opening balance are entered here -->
@@ -732,6 +732,43 @@ under the License.
             </drop-down>
         </field>
         
+        <field name="glAccountId" title="Ledger Account (Debit/Credit)" 
+			required-field="true">
+			<drop-down allow-empty="true">
+					<entity-options description="${accountName} - ${accountCode}" entity-name="GlAccount" key-field-name="glAccountId">
+						<entity-order-by field-name="accountName"/>
+					</entity-options>
+			</drop-down>
+		</field>    
+		
+		<field name="commissionAccountId" title="Commission A/C (Ledger)" 
+			required-field="false">
+			<drop-down allow-empty="true">
+					<entity-options description="${accountName} - ${accountCode}" entity-name="GlAccount" key-field-name="glAccountId">
+						<entity-order-by field-name="accountName"/>					
+					</entity-options>
+			</drop-down>
+		</field>   
+		
+		<!-- exciseDutyAccountId -->
+				<field name="exciseDutyAccountId" title="Excise Duty A/C (Ledger)" 
+			required-field="false">
+			<drop-down allow-empty="true">
+					<entity-options description="${accountName} - ${accountCode}" entity-name="GlAccount" key-field-name="glAccountId">
+						<entity-order-by field-name="accountName"/>					
+					</entity-options>
+			</drop-down>
+		</field>
+		
+		<field name="interestAccountId" title="Interest A/C (Ledger)" 
+			required-field="false">
+			<drop-down allow-empty="true">
+					<entity-options description="${accountName} - ${accountCode}" entity-name="GlAccount" key-field-name="glAccountId">
+						<entity-order-by field-name="accountName"/>
+					</entity-options>
+			</drop-down>
+		</field>    
+		 
         
         <field name="saveAccountProduct" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -895,6 +932,37 @@ under the License.
         
         <!-- field name="createdStamp" title="Created"><display type="date-time"></display></field -->
          <!-- field name="createdBy" title="Created By"><display ></display></field -->
+        <field name="glAccountId" title="Ledger Account (Debit/Credit)" 
+			required-field="true">
+			<drop-down allow-empty="true" text-size="25">
+					<entity-options description="${accountName} - ${accountCode}" entity-name="GlAccount" key-field-name="glAccountId"></entity-options>
+			</drop-down>
+		</field>
+		
+		<field name="commissionAccountId" title="Commission A/C (Ledger)" 
+			required-field="false">
+			<drop-down allow-empty="true" text-size="25">
+					<entity-options description="${accountName} - ${accountCode}" entity-name="GlAccount" key-field-name="glAccountId"></entity-options>
+			</drop-down>
+		</field>
+		
+		<!-- exciseDutyAccountId -->
+		<field name="exciseDutyAccountId" title="Excise Duty A/C (Ledger)" 
+			required-field="false">
+			<drop-down allow-empty="true" text-size="25">
+					<entity-options description="${accountName} - ${accountCode}" entity-name="GlAccount" key-field-name="glAccountId"></entity-options>
+			</drop-down>
+		</field>
+		
+		   
+		
+		<field name="interestAccountId" title="Interest A/C (Ledger)" 
+			required-field="false">
+			<drop-down allow-empty="true" text-size="25">
+					<entity-options description="${accountName} - ${accountCode}" entity-name="GlAccount" key-field-name="glAccountId"></entity-options>
+			</drop-down>
+		</field>    
+		
         
         <field name="Edit Account">
         	<hyperlink target="AccountProduct?accountProductId=${accountProductId}" description="Edit Account"></hyperlink>
@@ -1545,6 +1613,43 @@ under the License.
         <field name="minSavingsAmt"><text></text></field>
         <field name="minInterestEarningAmt"><text></text></field>
         <field name="interestPerMonth"><text></text></field>
+       
+        <field name="glAccountId" title="Ledger Account (Debit/Credit)" 
+			required-field="true">
+			<drop-down allow-empty="true" text-size="30">
+					<entity-options description="${accountName} - ${accountCode}" entity-name="GlAccount" key-field-name="glAccountId">
+						<entity-order-by field-name="accountName"/>
+					</entity-options>
+			</drop-down>
+		</field>    
+		
+		<field name="commissionAccountId" title="Commission A/C (Ledger)" 
+			required-field="false" >
+			<drop-down allow-empty="true"  text-size="30">
+					<entity-options description="${accountName} - ${accountCode}" entity-name="GlAccount" key-field-name="glAccountId">
+						<entity-order-by field-name="accountName"/>
+					</entity-options>
+			</drop-down>
+		</field>   
+		
+		<!-- exciseDutyAccountId -->
+		<field name="exciseDutyAccountId" title="Excise Duty A/C (Ledger)" 
+			required-field="false" >
+			<drop-down allow-empty="true"  text-size="30">
+					<entity-options description="${accountName} - ${accountCode}" entity-name="GlAccount" key-field-name="glAccountId">
+						<entity-order-by field-name="accountName"/>
+					</entity-options>
+			</drop-down>
+		</field>
+	
+		<field name="interestAccountId" title="Interest A/C (Ledger)" 
+			required-field="false">
+			<drop-down allow-empty="true"  text-size="30">
+					<entity-options description="${accountName} - ${accountCode}" entity-name="GlAccount" key-field-name="glAccountId">
+						<entity-order-by field-name="accountName"/>
+					</entity-options>
+			</drop-down>
+		</field>    
         
         <field name="Edit Account">
         	<hyperlink target="AccountProduct?accountProductId=${accountProductId}" description="Edit Account"></hyperlink>

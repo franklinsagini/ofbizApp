@@ -26,12 +26,10 @@
         <entity-one value-field="party" entity-name="Party">
             <field-map field-name="partyId" from-field="parameters.partyId"/>
         </entity-one>
-        <log level="info" message=">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Parameters [${parameters}]"/>
 
         <!-- Create a record in party if its not there -->
             <if-empty field="party">
                 <sequenced-id sequence-name="Party" field="partyId"/>
-                <log level="info" message=">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>PartyId [${partyId}]"/>
                 <set field="createParty.partyId" value="${partyId}"/>
                 <set field="createParty.partyTypeId" value="PARTY_GROUP"/>
                 <set field="createParty.preferredCurrencyUomId" value="KES"/>
@@ -68,7 +66,6 @@
                 <set field="relationshipMap.partyRelationshipTypeId" value="GROUP_ROLLUP" />
                 <set field="relationshipMap.partyIdFrom" value="Company" />
                 <set-service-fields service-name="createPartyRelationship" map="relationshipMap" to-map="partyRelations"/>
-                <log level="info" message=">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>CREATING A RELATIONSHIP USING THE FOLLOWING PARAMETERS [${partyRelations}]"/>
                 <call-service service-name="createPartyRelationship" in-map-name="partyRelations" break-on-error="false"/>
             </if-not-empty>
 

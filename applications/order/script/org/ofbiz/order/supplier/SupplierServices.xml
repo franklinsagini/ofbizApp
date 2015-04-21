@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
+
+        <!-- Supplier -->
+    <simple-method method-name="createChaiSupplier" short-description="Create Branch">
+        <entity-one value-field="party" entity-name="Party">
+            <field-map field-name="partyId" from-field="parameters.partyId"/>
+        </entity-one>
+
+        <!-- Create a record in party if its not there -->
+            <if-empty field="party">
+                <sequenced-id sequence-name="Party" field="partyId"/>
+                <set field="createParty.partyId" value="${partyId}"/>
+                <set field="createParty.partyTypeId" value="PARTY_GROUP"/>
+                <set field="createParty.preferredCurrencyUomId" value="KES"/>
+                <set field="createParty.statusId" value="PARTY_ENABLED"/>
+                <set field="createParty.description" value="Chai Sacco Prequalified Supplier"/>
+                <call-service service-name="createCustomParty" in-map-name="createParty"/>
+                <check-errors/>
+            </if-empty>
+
+
+            <!-- Create a PartyGroup Record -->
+            <make-value entity-name="PartyGroup" value-field="newEntity"/>
+            <set-pk-fields map="parameters" value-field="newEntity"/>
+            <set-nonpk-fields map="parameters" value-field="newEntity"/>
+            <set from-field="partyId" field="newEntity.partyId"/>
+            <create-value value-field="newEntity"/>
+
+            <!-- Only Create a role of internal organization if partyGroup was saved successfully -->
+            <if-not-empty field="newEntity.partyId">
+                <set field="branchMap.partyId" from-field="newEntity.partyId"/>
+                <set field="branchMap.roleTypeId" value="SUPPLIER" />
+                <set-service-fields service-name="createPartyRole" map="branchMap" to-map="partyRole"/>
+                <call-service service-name="createPartyRole" in-map-name="partyRole" break-on-error="false"/>
+            </if-not-empty>
+
+            <!-- Create a relationship from branch to HQ -ChaiSacco -->
+
+    </simple-method>
+
+
+    <simple-method method-name="createCustomParty" short-description="Create a party">
+            <make-value entity-name="Party" value-field="newEntity"/>
+             <set-pk-fields map="parameters" value-field="newEntity"/>
+            <set-nonpk-fields map="parameters" value-field="newEntity"/>
+            <set from-field="partyId" field="newEntity.partyId"/>
+            <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="createLPOProduct" short-description="Create a Product">
+        <check-permission permission="CATALOG" action="_CREATE">
+            <alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
+            <fail-property resource="ProductUiLabels" property="ProductCatalogCreatePermissionError"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-field="newEntity" entity-name="Product"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+
+        <set from-field="parameters.productId" field="newEntity.productId"/>
+        <if-empty field="newEntity.productId">
+            <sequenced-id sequence-name="Product" field="newEntity.productId"/>
+        <else>
+            <check-id field="newEntity.productId"/>
+            <check-errors />
+            <entity-one value-field="dummyProduct" entity-name="Product">
+                <field-map field-name="productId" from-field="parameters.productId"/>
+            </entity-one>
+            <if-not-empty field="dummyProduct">
+                <add-error >
+                    <fail-property resource="CommonErrorUiLabels" property="CommonErrorDublicateKey" />
+                </add-error>
+            </if-not-empty>
+            <check-errors />
+        </else>
+        </if-empty>
+        <field-to-result field="newEntity.productId" result-name="productId"/>
+
+        <now-timestamp field="nowTimestamp"/>
+        <set from-field="nowTimestamp" field="newEntity.createdDate"/>
+        <set from-field="nowTimestamp" field="newEntity.lastModifiedDate"/>
+        <set from-field="userLogin.userLoginId" field="newEntity.lastModifiedByUserLogin"/>
+        <set from-field="userLogin.userLoginId" field="newEntity.createdByUserLogin"/>
+        <if-empty field="newEntity.isVariant">
+            <set field="newEntity.isVariant" value="N"/>
+        </if-empty>
+        <if-empty field="newEntity.isVirtual">
+            <set field="newEntity.isVirtual" value="N"/>
+        </if-empty>
+        <if-empty field="newEntity.billOfMaterialLevel">
+            <set field="newEntity.billOfMaterialLevel" value="0" type="Long"/>
+        </if-empty>
+
+        <create-value value-field="newEntity"/>
+
+        <!-- if setting the primaryProductCategoryId create a member entity too -->
+        <!-- THIS IS REMOVED BECAUSE IT CAUSES PROBLEMS FOR WORKING ON PRODUCTION SITES
+        <if-not-empty field="newEntity.primaryProductCategoryId">
+            <make-value entity-name="ProductCategoryMember" value-field="newMember"/>
+            <set from-field="productId" map-name="newEntity" to-field-name="productId" to-map-name="newMember"/>
+            <set from-field="primaryProductCategoryId" map-name="newEntity" to-field-name="productCategoryId" to-map-name="newMember"/>
+            <now-timestamp field="nowStamp"/>
+            <set from-field="nowStamp" field="newMember.fromDate"/>
+            <create-value value-field="newMember"/>
+        </if-not-empty>
+        -->
+
+        <!-- if the user has the role limited position, add this product to the limit category/ies -->
+        <if-has-permission permission="CATALOG_ROLE" action="_CREATE">
+            <entity-and entity-name="ProductCategoryRole" list="productCategoryRoles" filter-by-date="true">
+                <field-map field-name="partyId" from-field="userLogin.partyId"/>
+                <field-map field-name="roleTypeId" value="LTD_ADMIN"/>
+            </entity-and>
+
+            <iterate entry="productCategoryRole" list="productCategoryRoles">
+                <!-- add this new product to the category -->
+                <make-value value-field="newLimitMember" entity-name="ProductCategoryMember"/>
+                <set from-field="newEntity.productId" field="newLimitMember.productId"/>
+                <set from-field="productCategoryRole.productCategoryId" field="newLimitMember.productCategoryId"/>
+                <set from-field="nowTimestamp" field="newLimitMember.fromDate"/>
+                <create-value value-field="newLimitMember"/>
+            </iterate>
+        </if-has-permission>
+    </simple-method>
+
+</simple-methods>

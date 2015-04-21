@@ -27,12 +27,45 @@ under the License.
         <make-value entity-name="AccountTransaction" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-		<set field="newEntity.treasuryId" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerId(userLogin);}" type="String"/>
-		<!-- withdrawalStatus -->
-		<set field="accountTransactionParentId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.cashWithdrawal(newEntity, userLogin);}" type="String"/>
-		<field-to-result field="accountTransactionParentId" result-name="accountTransactionParentId"/>
-		<!-- call-simple-method method-name="cashWithdrawalSave" scope="inline"></call-simple-method -->
-        <!-- set field="transactionStatus" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.addChargesToTransaction(newEntity, userLogin, transactionType);}" type="String"/ -->
+        
+        <!-- Check if the commission charges are set otherwise scream and dont allow a withdrawal to happen -->
+        
+        <set field="commissionSetup" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.commissionChargeIsSetup();}" type="Boolean"/>
+		
+
+        <set field="ledgerAccountSetup" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.commissionChargeIsSetup();}" type="Boolean"/>
+        <set field="commissionAccountSetup" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.commissionAccountSetUp();}" type="Boolean"/>
+       <set field="exciseDutyAccountSetup" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.exciseDutyAccountSetUp();}" type="Boolean"/>
+		
+		<set field="falseField" value="false" type="Boolean"/>
+		
+		
+		<if> 
+            <condition> 
+                   <if-compare-field to-field="commissionSetup" operator="equals" field="falseField"></if-compare-field>
+            </condition> 
+            <then> 
+                <add-error> 
+                    <fail-property resource="AccountHolderTransactionsUILabels.xml"  
+                        property="commissionChargeSetupError" /> 
+                </add-error> 
+                <check-errors /> 
+            </then> 
+             
+            <else>
+            	
+				<set field="newEntity.treasuryId" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerId(userLogin);}" type="String"/>
+				<!-- withdrawalStatus -->
+				<set field="accountTransactionParentId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.cashWithdrawal(newEntity, userLogin);}" type="String"/>
+				<field-to-result field="accountTransactionParentId" result-name="accountTransactionParentId"/>
+				<!-- call-simple-method method-name="cashWithdrawalSave" scope="inline"></call-simple-method -->
+		        <!-- set field="transactionStatus" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.addChargesToTransaction(newEntity, userLogin, transactionType);}" type="String"/ -->
+
+                <property-to-field resource="AccountHolderTransactionsUILabels.xml" 
+            	property="commissionChargeSetupSuccess" field="successMessage" /> 
+            </else> 
+        </if>
+        
     </simple-method>
     
    

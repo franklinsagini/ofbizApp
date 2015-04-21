@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="main">
+        <section>
+            <actions>
+                <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
+            </actions>
+            <widgets>
+                <decorator-screen name="GuarantorManagementCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- forwardedLoanApplications -->
+    <screen name="forwardedLoanApplications">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Create New Loan Application"/>
+                <set field="headerItem" value="forwardedLoanApplications"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createLoanApplication"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/>
+                <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                <set field="loanApplicationCtx" from-field="parameters"/>
+                
+                <entity-one entity-name="LoanApplication" value-field="applicationContext">
+                	<field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
+                </entity-one>
+                
+            <!-- entity-condition entity-name="Member" list="membersList">
+            </entity-condition -->
+             <entity-condition entity-name="LoanProduct" list="productsList">
+             	 <!-- condition-expr field-name="productType" operator="equals" value="Loan"/ -->
+            </entity-condition>
+            <entity-condition entity-name="PaymentMethodType" list="paymentMethodsList">
+            </entity-condition>
+            <entity-condition entity-name="LoanStatus" list="loanStatusList">
+            </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="FindLoansForwarded" location="component://guarantormanagement/widget/GuarantorManagementForms.xml"/>
+                        		</screenlet>
+                        		<screenlet title="Loan Applications">
+                        			<include-form name="listForwardedLoanApplications" location="component://guarantormanagement/widget/GuarantorManagementForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- guarantorsList -->
+        <screen name="changeGuarantors">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Guarantors"/>
+                <set field="headerItem" value="guarantorsList"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createLoanApplication"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/>
+                <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                <set field="loanApplicationCtx" from-field="parameters"/>
+                
+                <entity-one entity-name="LoanApplication" value-field="applicationContext">
+                	<field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
+                </entity-one>
+                
+                <entity-and entity-name="LoanGuarantor" list="loanGuarantorsList">
+                    <field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                    <!--  order-by field-name="-changeDate"/ -->
+                </entity-and>
+                
+                
+            <!-- entity-condition entity-name="Member" list="membersList">
+            </entity-condition -->
+             <entity-condition entity-name="LoanProduct" list="productsList">
+             	 <!-- condition-expr field-name="productType" operator="equals" value="Loan"/ -->
+            </entity-condition>
+            <entity-condition entity-name="PaymentMethodType" list="paymentMethodsList">
+            </entity-condition>
+            <entity-condition entity-name="LoanStatus" list="loanStatusList">
+            </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+
+                        <section name="search-results">
+                        	<widgets>
+                        		
+                        		<screenlet title="Guarantors">
+                        			<include-form name="changeGuarantors" location="component://guarantormanagement/widget/GuarantorManagementForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+</screens>

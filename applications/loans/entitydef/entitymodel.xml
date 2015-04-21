@@ -268,14 +268,33 @@ under the License.
 		<field name="isFixedDeposit" type="indicator"   enable-audit-log="true"></field>
 		<field name="isMemberDeposit" type="indicator"   enable-audit-log="true"></field>
 		
+		<field name="glAccountId" type="id"   enable-audit-log="true"></field>
+		<field name="commissionAccountId" type="id"   enable-audit-log="true"></field>
+		<field name="exciseDutyAccountId" type="id"   enable-audit-log="true"></field>
+		<field name="interestAccountId" type="id"   enable-audit-log="true"></field>
+		
 		<prim-key field="accountProductId" />
 		
+		<relation type="one" fk-name="AccountProduct_LEDGER" rel-entity-name="GlAccount">
+            <key-map field-name="glAccountId" rel-field-name="glAccountId"/>
+        </relation>
+
+		<relation type="one" fk-name="AccountProduct_COMMISSION" rel-entity-name="GlAccount">
+            <key-map field-name="commissionAccountId" rel-field-name="glAccountId"/>
+        </relation>
+        
+        <relation type="one" fk-name="AccountProduct_EXCISEDUTY" rel-entity-name="GlAccount">
+            <key-map field-name="exciseDutyAccountId" rel-field-name="glAccountId"/>
+        </relation>
+        
+		<relation type="one" fk-name="AccountProduct_INTEREST" rel-entity-name="GlAccount">
+            <key-map field-name="interestAccountId" rel-field-name="glAccountId"/>
+        </relation>
+        
 		 <index name="ACCOUNT_NAME" unique="true">
             <index-field name="name"/>
         </index>
         
-       
-		
 	</entity>
 	
 	<!-- org.ofbiz.loans.LoanSecurity -->

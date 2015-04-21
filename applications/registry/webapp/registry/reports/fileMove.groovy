@@ -20,6 +20,7 @@ context.member = member;
 
 class MovementActivity{
 	def activityCode
+	def grouper
 	def partyId
 	def activityDuration
 	def total
@@ -32,6 +33,7 @@ class FileMovement{
 	def carriedBy
 	def receivedBy
 	def activityCode
+	def grouper
 	def timeIn
 	def timeOut
 }
@@ -44,17 +46,22 @@ List<String> orderByList = new ArrayList<String>();
 activityList = delegator.findByAnd("fileMovementActivityView", [partyId : partyId], null, false);
  
  activityList.eachWithIndex { activityItem, index ->
- activities = delegator.findByAnd("RegistryFileMovement", [partyId : partyId, activityCode : activityItem.activityCode], orderByList, false);
+ activities = delegator.findByAnd("RegistryFileMovement", [partyId : partyId, grouper : activityItem.grouper], orderByList, false);
 
- duration = delegator.findByAnd("RegistryFileActivity", [activityId : activityItem.activityCode], null, false);
+activities.eachWithIndex { movementItem, indexMovement ->
+	
+	 duration = delegator.findByAnd("RegistryFileActivity", [activityId : movementItem.activityCode], null, false);
  
  activity = new MovementActivity()
  activity.activityCode = duration.activity
  activity.activityDuration = duration.activityDuration
  activity.total = BigDecimal.ZERO;
-
+ 
+ }
+ 
  def movement
 activities.eachWithIndex { movementItem, indexMovement ->
+
 	
 	movement = new FileMovement()
 	 movement.receivedBy = movementItem.receivedBy
@@ -62,10 +69,13 @@ activities.eachWithIndex { movementItem, indexMovement ->
 	 movement.releasedTo = movementItem.releasedTo
 	 movement.carriedBy = movementItem.carriedBy
 	 movement.activityCode = movementItem.activityCode
+	 movement.grouper = movementItem.grouper
 	 movement.timeIn = movementItem.timeIn
 	 movement.timeOut = movementItem.timeOut
 	 activity.listMovements.add(movement)
 	 System.out.println("RELEASEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD TO " + movement.releasedTo)
+
+
 	 
  }
  

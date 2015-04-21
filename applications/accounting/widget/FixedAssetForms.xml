@@ -77,9 +77,9 @@ under the License.
         <field use-when="fixedAsset!=null" name="fixedAssetId" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <!-- <field use-when="fixedAsset==null&amp;&amp;fixedAssetId==null" name="fixedAssetId"><text size="20" maxlength="20"/></field> -->
         <field use-when="fixedAsset==null&amp;&amp;fixedAssetId!=null" name="fixedAssetId" tooltip="${uiLabelMap.CommonCannotBeFound}:[${fixedAssetId}]"><text size="20" maxlength="20"/></field>
-        <field name="fixedAssetName" title="${uiLabelMap.AccountingFixedAssetName}"><text size="20"/></field>
-        <field name="serialNumber" title="Serial Number"><text size="20"/></field>
-        <field name="fixedAssetTypeId">
+        <field name="fixedAssetName" title="${uiLabelMap.AccountingFixedAssetName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="20"/></field>
+        <field name="serialNumber" title="Serial Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="20"/></field>
+        <field name="fixedAssetTypeId" title="Fixed Asset Type">
             <drop-down allow-empty="false">
                 <entity-options entity-name="FixedAssetType" description="${description}">
                     <entity-order-by field-name="description"/>
@@ -95,7 +95,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field> -->
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}"><lookup target-form-name="LookupPerson"/></field>
+        <field name="partyId" title="Assigned To" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><lookup target-form-name="LookupPerson"/></field>
 <!--         <field name="roleTypeId" title="${uiLabelMap.PartyRoleTypeId}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="RoleType" description="${description}">
@@ -120,16 +120,15 @@ under the License.
         </field> -->
         <field name="dateLastServiced"><date-time/></field>
         <field name="dateNextService"><date-time/></field>
-        <field name="dateAcquired"><date-time/></field>
+        <field name="dateAcquired" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><date-time/></field>
         <field name="expectedEndOfLife"><date-time/></field>
         <field name="parentFixedAssetId"><lookup target-form-name="LookupFixedAsset"/></field>
-        <field name="locatedAtFacilityId"><lookup target-form-name="LookupFacility"/></field>
-        <field name="purchaseCost" ><text size="20"/></field>
+        <field name="locatedAtFacilityId" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true" title="Located At"><lookup target-form-name="LookupFacility"/></field>
+        <field name="purchaseCost" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="20"/></field>
         <field name="salvageValue" ><text size="20"/></field>
-        <field name="depreciation" ><text size="20"/></field>
+        <field name="depreciation" tooltip="Depreciation Rate" widget-style="required" required-field="true"><text size="20"/></field>
         <!-- <field name="locatedAtLocationSeqId"><lookup target-form-name="LookupFacilityLocation"/></field> -->
-
-        <field name="submitButton" use-when="fixedAsset==null" title="Create" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="createButton" use-when="fixedAsset==null" widget-style="smallSubmit" title="Create"><submit button-type="button"/></field>
         <field name="submitButton" use-when="fixedAsset!=null" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
@@ -283,7 +282,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="idValue" title="${uiLabelMap.AccountingFixedAssetIdentIdValue}"><text size="20" maxlength="20"/></field>
+        <field name="idValue" title="Reference No"><text size="20" maxlength="20"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
@@ -317,7 +316,7 @@ under the License.
         <field name="fixedAssetId"><hidden/></field>
         <field name="licenseNumber" title="${uiLabelMap.AccountingFixedAssetLicenseNumber}"><text size="20"/></field>
         <field name="registrationNumber" title="${uiLabelMap.AccountingFixedAssetRegNumber}"><text size="20"/></field>
-        <field name="govAgencyPartyId" title="${uiLabelMap.AccountingFixedAssetGovAgencyPartyId}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="govAgencyPartyId" title="Registering Agency"><lookup target-form-name="LookupPartyName"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 

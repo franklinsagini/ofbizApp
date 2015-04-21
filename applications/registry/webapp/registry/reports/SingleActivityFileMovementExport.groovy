@@ -40,5 +40,6 @@ singleActivityfileMovement = delegator.findByAnd("RegistryFileMovement", [partyI
  timeReleased :timeReleased,  receivedBy : receivedBy, timeReceived : timeReceived]);
  }
  context.member = member;
+ context.activityCode = activityCode;
  context.singleActivityfileMovement = singleActivityfileMovement;
 context.singleActivityfileMovementlist = singleActivityfileMovementlist;
