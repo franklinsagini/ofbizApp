@@ -287,12 +287,8 @@ under the License.
 			</response>
 		<response name="error" type="view" value="partyContentTypes" />
 	</request-map>
-
-
-
-
-
-
+	
+	           
 		<request-map uri="bankbranch">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="bankbranch"
@@ -418,6 +414,40 @@ under the License.
     <response name="success" type="view"  value="LeaveBalances"></response>
     <response name="error" type="view" value="LeaveBalances" />
     </request-map>
+    
+    <request-map uri="scheduleInterestCalculationsLeave">
+                <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="scheduleAnnualLeaveBalanceCalculation" />
+                <response name="success" type="view" value="LeaveBalances">                      
+                        </response>
+                <response name="error" type="view" value="LeaveBalances" />
+    </request-map>
+    
+    <request-map uri="scheduleSendEmailNotification">
+                <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="scheduleSendingEmailNotification" />
+                <response name="success" type="view" value="LeaveBalances">                      
+                        </response>
+                <response name="error" type="view" value="LeaveBalances" />
+    </request-map>
+    
+     <request-map uri="scheduleDisableLogins">
+                <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="scheduleDisableEnableUserLogins" />
+                <response name="success" type="view" value="LeaveBalances">                      
+                        </response>
+                <response name="error" type="view" value="LeaveBalances" />
+    </request-map>
+    
+    
+     <request-map uri="SaveEmail_ToBeSendafterwards">
+                <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="SaveEmail_ToBeSendScheduler" />
+                <response name="success" type="view" value="LeaveBalances">                      
+                        </response>
+                <response name="error" type="view" value="LeaveBalances" />
+    </request-map>
+	
 
 
 
@@ -3513,6 +3543,13 @@ under the License.
         <response name="success" type="view" value="allStaffPerformanceScoresPDF"/>
     </request-map>
     
+     <request-map uri="SingleStaffPerformanceScoresPDF">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="SingleStaffPerformanceScoresPDF"/>
+    </request-map>
+    
+    
+     <view-map name="SingleStaffPerformanceScoresPDF" type="screenfop" page="component://humanres/widget/PerfReportScreens.xml#SingleStaffPerformanceScoresPDF" content-type="application/pdf" encoding="none"/>
      <view-map name="allStaffPerformanceScoresPDF" type="screenfop" page="component://humanres/widget/PerfReportScreens.xml#allStaffPerformanceScoresPDF" content-type="application/pdf" encoding="none"/>
      <view-map name="leaveCalendarPDF" type="screenfop" page="component://humanres/widget/ReportScreens.xml#leaveCalendarPDF" content-type="application/pdf" encoding="none"/>
 	 <view-map name="leaveActivityPDF" type="screenfop" page="component://humanres/widget/ReportScreens.xml#leaveActivityPDF" content-type="application/pdf" encoding="none"/>

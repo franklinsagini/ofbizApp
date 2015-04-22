@@ -271,6 +271,8 @@ public class EmailServices {
             }
             if (isStartTLSEnabled) {
                 props.put("mail.smtp.starttls.enable", "true");
+				//props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+				props.setProperty("mail.smtp.ssl.trust", "smtp.gmail.com");
             }
 
             session = Session.getInstance(props);
@@ -284,7 +286,7 @@ public class EmailServices {
             }
             mail.setFrom(new InternetAddress(sendFrom));
             mail.setSubject(subject, "UTF-8");
-            mail.setHeader("X-Mailer", "Apache OFBiz, The Apache Open For Business Project");
+            mail.setHeader("X-Mailer", "Chai Sacco, Count On Us");
             mail.setSentDate(new Date());
             mail.addRecipients(Message.RecipientType.TO, sendTo);
 

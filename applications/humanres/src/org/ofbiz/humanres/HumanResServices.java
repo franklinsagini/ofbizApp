@@ -13,7 +13,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +32,7 @@ import org.joda.time.Period;
 import org.joda.time.PeriodType;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.common.email.EmailServices;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
@@ -39,7 +42,12 @@ import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.GenericDispatcherFactory;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.calendar.RecurrenceRule;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 import com.google.gson.Gson;
@@ -2427,6 +2435,415 @@ public static String  NextPayrollNumber(String employmentTerms) {
 				return qString+" %";
 				
 			}
+			
+			
+			              /* ANNUAL LEAVE BALANCE CALCULATION*/
+			
+			public static String scheduleAnnualLeaveBalanceCalculation(HttpServletRequest request, HttpServletResponse response) {
+				Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+				LocalDispatcher dispatcher = (new GenericDispatcherFactory()).createLocalDispatcher("interestcalculations", delegator);
+
+				Map<String, String> context = UtilMisc.toMap("message",	"Annual Balance Testing !!");
+				Map<String, Object> result = new HashMap<String, Object>();
+				try {
+					long startTime = (new Date()).getTime();
+					int frequency = RecurrenceRule.DAILY;
+					int interval = 5;
+					int count = -1;
+					dispatcher.schedule("calculateStaffAnnualLeaveDays", context, startTime, frequency, interval, count);
+				} catch (GenericServiceException e) {
+					e.printStackTrace();
+				}
+
+				Writer out;
+				try {
+					out = response.getWriter();
+					out.write("");
+					out.flush();
+				} catch (IOException e) {
+					try {
+						throw new EventHandlerException(
+								"Unable to get response writer", e);
+					} catch (EventHandlerException e1) {
+						e1.printStackTrace();
+					}
+				}
+				return "";
+
+			}
+			
+			
+			public static Map<String, Object> calculateAnnualLeavebalance(
+				DispatchContext context, Map<String, String> map) {
+				Map<String, Object> result = new HashMap<String, Object>();
+				System.out.println("############## Attempting to Calculate Annual leave balances ... "+ Calendar.getInstance().getTime());
+
+				HttpServletRequest request = null;
+				HttpServletResponse response = null;
+				Leave.generateAnnulLeaveBalancesWithOpeningBalances(request, response);
+
+				return result;
+			}
 	
+			
+                                  /* SEND SCHEDULED EMAIL NOTIFICATION*/
+			
+			public static String scheduleSendingEmailNotification(HttpServletRequest request, HttpServletResponse response) {
+				Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+				LocalDispatcher dispatcher = (new GenericDispatcherFactory()).createLocalDispatcher("interestcalculations", delegator);
+
+				Map<String, String> context = UtilMisc.toMap("message",	"Email Sending Testing !!");
+				Map<String, Object> result = new HashMap<String, Object>();
+				try {
+					long startTime = (new Date()).getTime();
+					int frequency = RecurrenceRule.SECONDLY;
+					int interval = 5;
+					int count = -1;
+					dispatcher.schedule("sendScheduledEmailNotification", context, startTime, frequency, interval, count);
+				} catch (GenericServiceException e) {
+					e.printStackTrace();
+				}
+
+				Writer out;
+				try {
+					out = response.getWriter();
+					out.write("");
+					out.flush();
+				} catch (IOException e) {
+					try {
+						throw new EventHandlerException(
+								"Unable to get response writer", e);
+					} catch (EventHandlerException e1) {
+						e1.printStackTrace();
+					}
+				}
+				return "";
+
+			}
+			
+			
+			                              /*DISABLE/ENABLE LOGINS*/
+			 public static Map<String, Object> enableDisableLogins(DispatchContext ctx, Map<String, ? extends Object> context) {
+				 Delegator delegator = ctx.getDelegator();
+			        List<GenericValue> OnLeaveELI = null;
+			        List<GenericValue> OutOfLeaveELI = null;
+			        String state = "NOTSEND";
+			        Map<String, Object> results = ServiceUtil.returnSuccess();
+			        //Timestamp now = UtilDateTime.nowTimestamp();
+			        
+			        String now = Calendar.getInstance().getTime().toString();
+			        Date noww = null;
+					try {
+						noww = new SimpleDateFormat("E MMM dd HH:mm:ss zzz yyyy", Locale.UK).parse(now);
+					} catch (ParseException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+			        java.sql.Date today = new java.sql.Date(noww.getTime());
+			        
+			    	EntityConditionList<EntityExpr> onLeaveConditions = EntityCondition.makeCondition(UtilMisc.toList(
+							 EntityCondition.makeCondition("fromDate",EntityOperator.LESS_THAN_EQUAL_TO, today),
+							 EntityCondition.makeCondition("thruDate",EntityOperator.GREATER_THAN, today),
+							 EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "Approved")),
+								EntityOperator.AND);
+			    	
+
+				try {
+					OnLeaveELI = delegator.findList("EmplLeave", onLeaveConditions, null, null, null, false);
+						
+				} catch (GenericEntityException e) {
+					e.printStackTrace();
+				}
+					
+					for (GenericValue genericValue : OnLeaveELI) {
+						String party = genericValue.getString("partyId");
+						String userName;
+						GenericValue OnleaveParty = null;
+						List<GenericValue> OnleavePartyELI = null;
+					      try {
+					    	  //OnleaveParty = delegator.findOne("PartyAndUserLoginAndPerson", UtilMisc.toMap("partyId", party), false);
+					    	  OnleavePartyELI=delegator.findList("PartyAndUserLoginAndPerson", EntityCondition.makeCondition("partyId", party), null, null, null, false);
+					           	log.info("++++++++++++++OnleaveParty++++++++++++++++" +OnleaveParty);
+					             }
+					       catch (GenericEntityException e) {
+					            e.printStackTrace();;
+					       } 
+					      
+					      for (GenericValue genericValue2 : OnleavePartyELI) {
+					    	  userName = genericValue2.getString("userLoginId");
+					    	  
+					    	  if (userName != null) {
+
+							    	 
+						    	  
+						    	  GenericValue OnleavePartyLogin = null;
+							      try {
+							    	  OnleavePartyLogin = delegator.findOne("UserLogin", UtilMisc.toMap("userLoginId", userName), false);
+							           	log.info("++++++++++++++OnleavePartyLogin++++++++++++++++" +OnleavePartyLogin);
+							             }
+							       catch (GenericEntityException e) {
+							            e.printStackTrace();;
+							       }
+							      if (OnleavePartyLogin != null) {
+							    	  OnleavePartyLogin.set("enabled", "N");
+							          
+							          try {
+							  			delegator.createOrStore(OnleavePartyLogin);
+							  		} catch (GenericEntityException e) {
+							  			// TODO Auto-generated catch block
+							  			e.printStackTrace();
+							  		}
+								} else {
+
+								}
+									
+								} else {
+									System.out.println("######## User not found #### ");
+								}
+					      }
+					      
+					     
+						
+					}
+					
+					
+					
+					try {
+						OutOfLeaveELI = delegator.findList("PartyAndUserLoginAndPerson", EntityCondition.makeCondition("enabled", "N"), null, null, null, false);
+							
+					} catch (GenericEntityException e) {
+						e.printStackTrace();
+					}
+						
+						for (GenericValue genericValue : OutOfLeaveELI) {
+							String party = genericValue.getString("partyId");
+							
+							EntityConditionList<EntityExpr> OffLeaveConditions = EntityCondition.makeCondition(UtilMisc.toList(
+									 EntityCondition.makeCondition("partyId",EntityOperator.EQUALS, party),
+									 EntityCondition.makeCondition("fromDate",EntityOperator.LESS_THAN_EQUAL_TO, today),
+									 EntityCondition.makeCondition("thruDate",EntityOperator.GREATER_THAN, today),
+									 EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "Approved")),
+										EntityOperator.AND);
+							
+							List<GenericValue> DisabledUsersInLeave = null;
+							try {
+								DisabledUsersInLeave = delegator.findList("EmplLeave", OffLeaveConditions, null, null, null, false);
+									
+							} catch (GenericEntityException e) {
+								e.printStackTrace();
+							}
+							
+							if (DisabledUsersInLeave.size() == 0){
+								
+								//==================================================================================
+								String userName2;
+								GenericValue OffleaveParty = null;
+								List<GenericValue> OffleavePartyELI = null;
+							      try {
+							    	  //OffleaveParty = delegator.findOne("PartyAndUserLoginAndPerson", UtilMisc.toMap("partyId", party), false);
+							    	  OffleavePartyELI=delegator.findList("PartyAndUserLoginAndPerson", EntityCondition.makeCondition("partyId", party), null, null, null, false);
+							           	log.info("++++++++++++++OnleaveParty++++++++++++++++" +OffleavePartyELI);
+							             }
+							       catch (GenericEntityException e) {
+							            e.printStackTrace();;
+							       } 
+							      
+							      for (GenericValue genericValue3 : OffleavePartyELI) {
+							    	  userName2 = genericValue3.getString("userLoginId");
+							    	  
+							    	  if (userName2 != null) {
+
+									    	 
+								    	  
+								    	  GenericValue OnleavePartyLogin = null;
+									      try {
+									    	  OnleavePartyLogin = delegator.findOne("UserLogin", UtilMisc.toMap("userLoginId", userName2), false);
+									           	log.info("++++++++++++++OnleavePartyLogin++++++++++++++++" +OnleavePartyLogin);
+									             }
+									       catch (GenericEntityException e) {
+									            e.printStackTrace();;
+									       }
+									      if (OnleavePartyLogin != null) {
+									    	  OnleavePartyLogin.set("enabled", "Y");
+									          
+									          try {
+									  			delegator.createOrStore(OnleavePartyLogin);
+									  		} catch (GenericEntityException e) {
+									  			// TODO Auto-generated catch block
+									  			e.printStackTrace();
+									  		}
+										} else {
+
+										}
+											
+										} else {
+											System.out.println("######## User not found #### ");
+										}
+							      }
+							
+						}
+			        
+					}
+			        
+			        
+			        return results;
+			 }
+			 
+			 
+			 //======================= DISABLE AND ENABLE USERLOGINS ===================================
+				
+				public static String scheduleDisableEnableUserLogins(HttpServletRequest request, HttpServletResponse response) {
+					Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+					LocalDispatcher dispatcher = (new GenericDispatcherFactory()).createLocalDispatcher("interestcalculations", delegator);
+
+					Map<String, String> context = UtilMisc.toMap("message",	"Userlogins enable/Disable Testing !!");
+					Map<String, Object> result = new HashMap<String, Object>();
+					try {
+						long startTime = (new Date()).getTime();
+						int frequency = RecurrenceRule.SECONDLY;
+						int interval = 5;
+						int count = -1;
+						dispatcher.schedule("scheduleDisableEnableUserLoginAsTheyAreOnLeave", context, startTime, frequency, interval, count);
+					} catch (GenericServiceException e) {
+						e.printStackTrace();
+					}
+
+					Writer out;
+					try {
+						out = response.getWriter();
+						out.write("");
+						out.flush();
+					} catch (IOException e) {
+						try {
+							throw new EventHandlerException(
+									"Unable to get response writer", e);
+						} catch (EventHandlerException e1) {
+							e1.printStackTrace();
+						}
+					}
+					return "";
+
+				}
+				
+				
+				public static Map<String, Object> SaveEmail_ToBeSend(DispatchContext ctx, Map<String, ? extends Object> context) {
+					 Delegator delegator = ctx.getDelegator();
+				        List<GenericValue> OnLeaveELI = null;
+				        List<GenericValue> OutOfLeaveELI = null;
+				        GenericValue emailRecord_HandedOver = null;
+				        Map<String, Object> results = ServiceUtil.returnSuccess();
+				        //Timestamp now = UtilDateTime.nowTimestamp();
+				        
+				        String now = Calendar.getInstance().getTime().toString();
+				        Date noww = null;
+						try {
+							noww = new SimpleDateFormat("E MMM dd HH:mm:ss zzz yyyy", Locale.UK).parse(now);
+						} catch (ParseException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+				        java.sql.Date today = new java.sql.Date(noww.getTime());
+				        
+				        LocalDate todayDate = new LocalDate(today);
+
+						LocalDate threeDaysAgo = todayDate.plusDays(4);
+						
+								
+						Date f = threeDaysAgo.toDate();
+						java.sql.Date todayPlusFourDays = new java.sql.Date(f.getTime());
+						
+				        
+				    	EntityConditionList<EntityExpr> onLeaveConditions = EntityCondition.makeCondition(UtilMisc.toList(
+				    			EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "Approved"),
+				    			EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN, today),
+								 EntityCondition.makeCondition("fromDate",EntityOperator.LESS_THAN, todayPlusFourDays)),
+									EntityOperator.AND);
+				    	
+					try {
+						OnLeaveELI = delegator.findList("EmplLeave", onLeaveConditions, null, null, null, false);
+							
+					} catch (GenericEntityException e) {
+						e.printStackTrace();
+					}
+						
+						for (GenericValue genericValue : OnLeaveELI) {
+							String party = genericValue.getString("partyId");
+							String partyToGetMail = genericValue.getString("handedOverTo");
+							
+							 GenericValue staff = null;
+						      try {
+						    	  staff = delegator.findOne("Person", UtilMisc.toMap("partyId", party), false);
+						           	log.info("//////////////////////////////\\\\\\\\\\\\Going On Leave++++++++++++++++" +staff);
+						             }
+						       catch (GenericEntityException e) {
+						            e.printStackTrace();;
+						       }
+						      
+						      if (staff != null) {
+						    	  
+						    	  emailRecord_HandedOver = delegator.makeValue("StaffScheduledMail", "msgId", delegator.getNextSeqId("StaffScheduledMail"), 
+											"partyId", partyToGetMail,
+								            "subject", "Responsibilities Handover", 
+								            "body", "Staff by the name:-"+staff.getString("firstName")+" "+ staff.getString("lastName")+" With Payroll Number-"+staff.getString("employeeNumber")+
+								            " is scheduled to go on leave starting:-"+genericValue.getDate("fromDate")+". You are hereby reminded that they handed over their responsibilities to you."
+								            		+ " Please make necessary arrangements for smooth running of all activities. Thanks",
+								            "sendStatus", "NOTSEND");
+						          
+						          try {
+						        	  emailRecord_HandedOver.create();
+						  		} catch (GenericEntityException e) {
+						  			// TODO Auto-generated catch block
+						  			e.printStackTrace();
+						  		}
+							} else {
+
+							}
+						      
+							
+						      
+						     
+							
+						}
+					
+					return results;
+				}
+				
+				
+ //======================= SAVE EMAILS TO BE SEND LATER ===================================
+				
+				public static String SaveEmail_ToBeSendScheduler(HttpServletRequest request, HttpServletResponse response) {
+					Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+					LocalDispatcher dispatcher = (new GenericDispatcherFactory()).createLocalDispatcher("interestcalculations", delegator);
+
+					Map<String, String> context = UtilMisc.toMap("message",	"Saving Scheduled Emails Testing !!");
+					Map<String, Object> result = new HashMap<String, Object>();
+					try {
+						long startTime = (new Date()).getTime();
+						int frequency = RecurrenceRule.SECONDLY;
+						int interval = 5;
+						int count = -1;
+						dispatcher.schedule("SaveEmail_ToBeSendLaterWhenInternetIsAvailed", context, startTime, frequency, interval, count);
+					} catch (GenericServiceException e) {
+						e.printStackTrace();
+					}
+
+					Writer out;
+					try {
+						out = response.getWriter();
+						out.write("");
+						out.flush();
+					} catch (IOException e) {
+						try {
+							throw new EventHandlerException(
+									"Unable to get response writer", e);
+						} catch (EventHandlerException e1) {
+							e1.printStackTrace();
+						}
+					}
+					return "";
+
+				}
+				
+				
 }
 
