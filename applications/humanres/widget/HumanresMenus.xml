@@ -136,15 +136,15 @@
         	<link target="perfGoalsDef"/>
         </menu-item>
 
-         <menu-item name="PerfManagement" title="Performance Management">
+<!--          <menu-item name="PerfManagement" title="Performance Management">
         	<link target="PerfManagement"/>
         </menu-item>
         <menu-item name="MyPerfReviews" title="My Performance Reviews">
         	<link target="MyPerfReviews"/>
-        </menu-item>
-<!--         <menu-item name="perfReviewReport" title="Performance Reports">
-        	<link target="perfReviewReport"/>
         </menu-item> -->
+      <menu-item name="perfReviewReport" title="Performance Reports">
+        	<link target="perfReviewReport"/>
+        </menu-item> 
     </menu>
 
     <menu name="PerfSetupBar" type="simple" default-menu-item-name="perfGoalsDef"
@@ -164,12 +164,12 @@
         <menu-item name="reviewPeriod" title="Manage Review Periods">
         	<link target="reviewPeriod"/>
         </menu-item>
-        <menu-item name="PerfStaff" title="Objective Definition">
+        <!-- <menu-item name="PerfStaff" title="Objective Definition">
         	<link target="PerfStaff"/>
         </menu-item>
          <menu-item name="kpiachievementstatus" title="Achievement Status">
         	<link target="kpiachievementstatus"/>
-        </menu-item>
+        </menu-item> -->
         <menu-item name="perfRatingType" title="Performance Assessment Ratings">
         	<link target="perfRatingType"/>
         </menu-item>
@@ -241,6 +241,9 @@
         </menu-item> -->
          <menu-item name="perfScoresReport" title="Performance Scores Report">
         	<link target="perfScoresReport"/>
+        </menu-item>
+         <menu-item name="StaffperfScoresReport" title="Staff Performance Scores Reports">
+        	<link target="StaffperfScoresReport"/>
         </menu-item>
     </menu>
 
@@ -609,6 +612,31 @@
             <link target="ActiveEmplLeaves"/>
         </menu-item>
 
+        <menu-item name="schedule" title="schedule Leave Balances">
+            <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
+            <!-- <link target="LeaveBalances"/> -->
+            <link target="scheduleInterestCalculationsLeave"/>
+        </menu-item>
+
+        <menu-item name="scheduleMail" title="schedule Mail Email Notification">
+            <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
+            <!-- <link target="LeaveBalances"/> -->
+            <link target="scheduleSendEmailNotification"/>
+        </menu-item> 
+
+        <menu-item name="scheduleDisableLogins" title="schedule Login Disable">
+            <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
+            <!-- <link target="LeaveBalances"/> -->
+            <link target="scheduleDisableLogins"/>
+        </menu-item> 
+
+        <menu-item name="SaveEmail_ToBeSendafterwards" title="Save Scheduled Handover Mail">
+            <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
+            <!-- <link target="LeaveBalances"/> -->
+            <link target="SaveEmail_ToBeSendafterwards"/>
+        </menu-item>
+
+         
        <!--  <menu-item name="openingLeaveBalance" title="Opening Leave Balances">
             <condition><if-has-permission permission="HUMANRES" action="_APPROVE"/></condition>
             <link target="createOpeningLeaveBalances"/>
@@ -718,16 +746,20 @@
             <link target="PersonalReview">
             </link>
         </menu-item>
-        <menu-item name="forwardedReview" title="Forwarded Reviews">
-            <link target="forwardedReview">
+        <menu-item name="HODReview" title="Forwarded Reviews">
+            <link target="HODReview">
+            <parameter param-name="partyId"/>
             </link>
         </menu-item>
-         <menu-item name="discussedReview" title="Harmonized/Discussed Review">
-            <link target="discussedReview">
+         <menu-item name="HarmonizedReview" title="Harmonized/Discussed Review">
+            <link target="HarmonizedReview">
+            <parameter param-name="partyId"/>
             </link>
         </menu-item>
 
 	</menu>
+	
+	
 
 
 

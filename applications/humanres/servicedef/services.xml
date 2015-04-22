@@ -23,6 +23,9 @@ under the License.
     <description>Human Resources Services</description>
     <vendor>OFBiz</vendor>
     <version>1.0</version>
+	
+	
+	
 
     <service name="createSupervisorLevel" engine="simple" default-entity-name="SupervisorLevel"
             location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="createSupervisorLevel" auth="true">
@@ -2302,6 +2305,106 @@ under the License.
 		<description>Create File Request header record</description>
 		<auto-attributes include="pk" mode="IN" optional="true" />
 		<auto-attributes include="nonpk" mode="IN" optional="true" />
+	</service>
+	
+	
+	<!--======================= SUBMIT PERSONAL REVIEW SCORES =================================== -->
+	
+	<service name="submitPersonalReviewScores" engine="simple" default-entity-name="PerfPartyReview"
+	location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" 
+	invoke="submitPersonalReviewScores" auth="true">
+		<description>Create File Request header record</description>
+		<auto-attributes include="pk" mode="IN" optional="true" />
+		<auto-attributes include="nonpk" mode="IN" optional="true" />
+	</service>
+	
+	 <!--======================= HOD REVIEW  =================================== -->
+	
+	<service name="HODreviews" engine="simple" default-entity-name="PerfPartyReview"
+	location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" 
+	invoke="HODreviews" auth="true">
+		<description>Create File Request header record</description>
+		<auto-attributes include="pk" mode="IN" optional="true" />
+		<auto-attributes include="nonpk" mode="IN" optional="true" />
+	</service>
+	
+	
+	<!--======================= SUBMIT HOD REVIEW SCORES =================================== -->
+	
+	<service name="submitHODReviewScores" engine="simple" default-entity-name="PerfPartyReview"
+	location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" 
+	invoke="submitHODReviewScores" auth="true">
+		<description>Create File Request header record</description>
+		<auto-attributes include="pk" mode="IN" optional="true" />
+		<auto-attributes include="nonpk" mode="IN" optional="true" />
+	</service>
+	
+	 <!--======================= HARMONIZED REVIEW  =================================== -->
+	
+	<service name="HarmonizedHODReview" engine="simple" default-entity-name="PerfPartyReview"
+	location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" 
+	invoke="HarmonizedHODReview" auth="true">
+		<description>Create File Request header record</description>
+		<auto-attributes include="pk" mode="IN" optional="true" />
+		<auto-attributes include="nonpk" mode="IN" optional="true" />
+	</service>
+	
+	
+	<!--======================= SUBMIT HARMONIZED REVIEW SCORES =================================== -->
+	
+	<service name="submitHarmonizedReviewScores" engine="simple" default-entity-name="PerfPartyReview"
+	location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" 
+	invoke="submitHarmonizedReviewScores" auth="true">
+		<description>Create File Request header record</description>
+		<auto-attributes include="pk" mode="IN" optional="true" />
+		<auto-attributes include="nonpk" mode="IN" optional="true" />
+	</service>
+	
+	
+	<!--======================= SCHEDULE ANNUAL LEAVE BALANCE CALCULATION =================================== -->
+	
+	 <service name="calculateStaffAnnualLeaveDays" engine="java" location="org.ofbiz.humanres.HumanResServices" invoke="calculateAnnualLeavebalance">
+    	<description>Interest Earned</description>
+		<attribute name="message" type="String" mode="IN"/>
+	</service>
+	
+	<!--======================= SCHEDULE ANNUAL LEAVE BALANCE CALCULATION =================================== -->
+	
+	<!--  <service name="sendScheduledEmailNotification" engine="java" location="org.ofbiz.humanres.HumanResServices" invoke="sendScheduledEmailNotification">
+    	<description>Interest Earned</description>
+		<attribute name="message" type="String" mode="IN"/>
+	</service> -->
+	
+	<service name="sendScheduledEmailNotification" engine="java"	location="org.ofbiz.common.email.EmailServices" invoke="sendMail_verge">
+    <description>Send E-Mail Service. partyId and communicationEventId aren't used by sendMail
+    but are passed down to storeEmailAsCommunication during the SECA chain. See sendMailInterface for more comments.</description>
+    <implements service="sendMailOnePartInterface"/>
+    <attribute name="message" type="String" mode="IN"/>
+    </service>
+	
+	<service name="sendMailOnePartInterface"  engine="interface" location="" invoke="">
+        <description>Interface service for sendMail* services.</description>
+        <implements service="sendMailInterface"/>
+        <attribute name="body" type="String" mode="INOUT" optional="true" allow-html="any"/>   
+        <attribute name="subject" type="String" mode="INOUT" optional="true" allow-html="any"/>		
+        <override name="contentType" mode="INOUT"/>
+        <!--  override name="subject" mode="INOUT" optional="true"/ -->
+        <override name="emailType" type="String" mode="INOUT" optional="true"/>
+        <override name="sendTo" optional="true"/><!-- service will give an NPE when not provided -->
+    </service>
+    
+    <!--======================= DISABLE AND ENABLE USERLOGINS =================================== -->
+	
+	 <service name="scheduleDisableEnableUserLoginAsTheyAreOnLeave" engine="java" location="org.ofbiz.humanres.HumanResServices" invoke="enableDisableLogins">
+    	<description>Interest Earned</description>
+		<attribute name="message" type="String" mode="IN"/>
+	</service>
+	
+	<!--  ======================= SAVE EMAILS TO BE SEND LATER =================================== -->
+	
+	 <service name="SaveEmail_ToBeSendLaterWhenInternetIsAvailed" engine="java" location="org.ofbiz.humanres.HumanResServices" invoke="SaveEmail_ToBeSend">
+    	<description>Interest Earned</description>
+		<attribute name="message" type="String" mode="IN"/>
 	</service>
     
 </services>

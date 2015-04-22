@@ -403,7 +403,7 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
 		String thisYear=LeaveServices.getCurrentYear(now);
 		try {
 			personsELI = delegator.findAll("LeaveBalancesView", true);
-			log.info("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"+personsELI);
+			log.info("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&>>>>>>>>>>>>>>>>>>>"+personsELI);
 			
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
@@ -417,10 +417,10 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
 			//log.info("===================="+partyId);
 			//log.info("++++++++++++++++++++"+appointmentdate);
 			calculateAnnualLeaveBalanceWithOpeningBalancesSave(partyId, appointmentdate, thisYear);
-			generateCompassionateLeaveBalances(request, response);
+			//generateCompassionateLeaveBalances(request, response);
 		}
 		//log.info("------------------------------------------------" +partyId);
-		return partyId;
+		return "";
 	}
 
 

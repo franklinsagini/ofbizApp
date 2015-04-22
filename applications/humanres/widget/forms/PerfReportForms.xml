@@ -21,4 +21,89 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
        <form name=""></form>
+       
+       
+        <form name="singleStaffPerformance" type="single" target="SingleStaffPerformanceScoresPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <actions>
+        <entity-condition entity-name="PerfReviewPeriod" list="periodList">
+				<order-by field-name="quarter"/>
+			</entity-condition>
+		</actions>
+        <field name="partyId"   title="Employee" widget-style="required"	required-field="true">
+            <lookup target-form-name="LookupEmployee"/> 
+        </field>
+        <field name="year" title="Select Financial Year" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="year" list-name="periodList"
+					description="${year}" />
+			</drop-down>
+		</field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="AllStaffPerformance" type="single" target="allStaffPerformanceScoresPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+         <actions>
+        <entity-condition entity-name="PerfReviewPeriod" list="periodList">
+				<order-by field-name="quarter"/>
+			</entity-condition>
+		</actions>
+         <field name="year" title="Select Financial Year" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="year" list-name="periodList"
+					description="${year}" />
+			</drop-down>
+		</field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="StaffPerScoreBracket" type="single" target="postingByEmployeepdf" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <actions>
+        <entity-condition entity-name="PerfReviewPeriod" list="periodList">
+				<order-by field-name="quarter"/>
+			</entity-condition>
+		</actions>
+         <field name="year" title="Select Financial Year" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="year" list-name="periodList"
+					description="${year}" />
+			</drop-down>
+		</field>
+		<field name="bracket" required-field="true" widget-style="required">
+            <drop-down allow-empty="true">
+                <option key="Below" description="Below 50%"/>
+                <option key="FiftyPlus" description="51% - 70%"/>
+                <option key="SeventyPlus" description="71% - 80%"/>
+                <option key="EightyPlus" description="81% - 90%"/>
+                <option key="Above" description="Above 90%"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="StaffPerScoreQuarter" type="single" target="postingByEmployeepdf" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <actions>
+        <entity-condition entity-name="PerfReviewPeriod" list="periodList">
+				<order-by field-name="quarter"/>
+			</entity-condition>
+		</actions>
+         <field name="quarter" title="Select Period Quarter" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="quarter" list-name="periodList"
+					description="${quarter}" />
+			</drop-down>
+		</field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
 </forms>

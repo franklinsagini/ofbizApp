@@ -750,6 +750,8 @@
 		<make-value entity-name="StaffInPerfReviewGroup" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="StaffInPerfReviewGroup" field="StaffInPerfReviewGroupId" />
+		<set from-field="StaffInPerfReviewGroupId" field="newEntity.StaffInPerfReviewGroupId" /> 
 		
 		<set field="party" value="${newEntity.partyId}"/>
 		<set field="exist" value="${bsh:org.ofbiz.humanres.HumanResServices.findExistanceOfStaffInReviewGroups(party);}"/>
@@ -787,7 +789,7 @@
 	</simple-method>
 	
 	
-	 <!--======================= ADD STAFF REVIEW PERIODS =================================== -->
+	 <!--======================= CREATE REVIEW PERIOD =================================== -->
                      
 	<simple-method method-name="createReviewPeriod"
 		short-description="Create File location">
@@ -955,6 +957,119 @@
         <entity-one entity-name="PerfPartyReview" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
         <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!--======================= SUBMIT PERSONAL REVIEW SCORES =================================== -->
+			  
+		<simple-method method-name="submitPersonalReviewScores" short-description="Update PerfGoals">
+		
+		<entity-condition list="reviews" entity-name="PerfPartyReview">
+		<condition-list>
+		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+		<condition-expr field-name="stage" value="STAFF"/>
+		</condition-list>
+		</entity-condition>
+		<iterate entry="singleReview" list="reviews">
+		<entity-one entity-name="PerfPartyReview" value-field="lookedUpValue">
+        <field-map field-name="reviewId" from-field="singleReview.reviewId"/>
+        </entity-one>
+        <set field="lookedUpValue.stage" value="HOD"/>
+        <store-value value-field="lookedUpValue"/>
+		</iterate>
+		
+		<entity-condition list="staffs" entity-name="StaffInPerfReviewGroup">
+		<condition-list>
+		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+		</condition-list>
+		</entity-condition>
+		<iterate entry="singleStaff" list="staffs">
+		<entity-one entity-name="StaffInPerfReviewGroup" value-field="lookedUpValue2">
+        <field-map field-name="StaffInPerfReviewGroupId" from-field="singleStaff.StaffInPerfReviewGroupId"/>
+        </entity-one>
+        <set field="lookedUpValue2.stage" value="HOD"/>
+        <store-value value-field="lookedUpValue2"/>
+		</iterate>
+        
+    </simple-method>
+    
+    <!--======================= HOD REVIEW  =================================== -->
+			  <simple-method method-name="HODreviews" short-description="Update PerfGoals">
+        <entity-one entity-name="PerfPartyReview" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!--======================= SUBMIT HOD REVIEW SCORES =================================== -->
+			  
+		<simple-method method-name="submitHODReviewScores" short-description="Update PerfGoals">
+		
+		<entity-condition list="reviews" entity-name="PerfPartyReview">
+		<condition-list>
+		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+		<condition-expr field-name="stage" value="HOD"/>
+		</condition-list>
+		</entity-condition>
+		<iterate entry="singleReview" list="reviews">
+		<entity-one entity-name="PerfPartyReview" value-field="lookedUpValue">
+        <field-map field-name="reviewId" from-field="singleReview.reviewId"/>
+        </entity-one>
+        <set field="lookedUpValue.stage" value="HARMONIZED"/>
+        <store-value value-field="lookedUpValue"/>
+		</iterate>
+		
+		<entity-condition list="staffs" entity-name="StaffInPerfReviewGroup">
+		<condition-list>
+		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+		</condition-list>
+		</entity-condition>
+		<iterate entry="singleStaff" list="staffs">
+		<entity-one entity-name="StaffInPerfReviewGroup" value-field="lookedUpValue2">
+        <field-map field-name="StaffInPerfReviewGroupId" from-field="singleStaff.StaffInPerfReviewGroupId"/>
+        </entity-one>
+        <set field="lookedUpValue2.stage" value="HARMONIZED"/>
+        <store-value value-field="lookedUpValue2"/>
+		</iterate>
+        
+    </simple-method>
+    
+    <!--======================= HARMONIZED REVIEW  =================================== -->
+			  <simple-method method-name="HarmonizedHODReview" short-description="Update PerfGoals">
+        <entity-one entity-name="PerfPartyReview" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!--======================= SUBMIT HARMONIZED REVIEW SCORES =================================== -->
+			  
+		<simple-method method-name="submitHarmonizedReviewScores" short-description="Update PerfGoals">
+		
+		<entity-condition list="reviews" entity-name="PerfPartyReview">
+		<condition-list>
+		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+		<condition-expr field-name="stage" value="HARMONIZED"/>
+		</condition-list>
+		</entity-condition>
+		<iterate entry="singleReview" list="reviews">
+		<entity-one entity-name="PerfPartyReview" value-field="lookedUpValue">
+        <field-map field-name="reviewId" from-field="singleReview.reviewId"/>
+        </entity-one>
+        <set field="lookedUpValue.stage" value="FORWARDED"/>
+        <store-value value-field="lookedUpValue"/>
+		</iterate>
+		
+		<entity-condition list="staffs" entity-name="StaffInPerfReviewGroup">
+		<condition-list>
+		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+		</condition-list>
+		</entity-condition>
+		<iterate entry="singleStaff" list="staffs">
+		<entity-one entity-name="StaffInPerfReviewGroup" value-field="lookedUpValue2">
+        <field-map field-name="StaffInPerfReviewGroupId" from-field="singleStaff.StaffInPerfReviewGroupId"/>
+        </entity-one>
+        <set field="lookedUpValue2.stage" value="FORWARDED"/>
+        <store-value value-field="lookedUpValue2"/>
+		</iterate>
+        
     </simple-method>
 			
 	

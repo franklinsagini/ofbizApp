@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -12,7 +13,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +32,7 @@ import org.joda.time.Period;
 import org.joda.time.PeriodType;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.common.email.EmailServices;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
@@ -37,10 +41,13 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.entity.datasource.GenericHelperInfo;
-import org.ofbiz.entity.jdbc.SQLProcessor;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.GenericDispatcherFactory;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.calendar.RecurrenceRule;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 import com.google.gson.Gson;
@@ -2091,7 +2098,752 @@ public static String  NextPayrollNumber(String employmentTerms) {
 				return state;
 				
 			}
+			
+			
+			public static String getTotalPartyPerformance(String party, String year) {
+				BigDecimal totalpercentage =BigDecimal.ZERO;
+				Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+				List<GenericValue> holidaysELI = null; 
+				String state = null;
+				ResultSet rs1;
+				String quarter = year+"-Quarter-1";
+				int count=0;
+				
+				EntityConditionList<EntityExpr> totalConditions = EntityCondition.makeCondition(UtilMisc.toList(
+						 EntityCondition.makeCondition("partyId",EntityOperator.EQUALS, party),
+						 EntityCondition.makeCondition("quarter",EntityOperator.EQUALS, quarter),
+						 EntityCondition.makeCondition("year", EntityOperator.EQUALS, year)),
+							EntityOperator.AND);
+
+			
+			
+			try {
+				holidaysELI = delegator.findList("PerfPartyReview", totalConditions, null, null, null, false);
+				/*holidaysELI = delegator.findList("PerfPartyReview", EntityCondition.makeCondition("partyId", year), null, null, null, false);*/
+					
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+				
+				for (GenericValue genericValue : holidaysELI) {
+					totalpercentage = totalpercentage.add(genericValue.getBigDecimal("scoreOne").stripTrailingZeros());
+					count++;
+					
+				}
+				
+				String f=String.valueOf(totalpercentage);
+				
+				
+				return f+"%";
+			}
+			
+			public static BigDecimal getFirstQuarterTotalPartyPerformance(String party, String year) {
+				BigDecimal totalpercentage =BigDecimal.ZERO;
+				BigDecimal maxtotalpercentage =BigDecimal.ZERO;
+				Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+				List<GenericValue> holidaysELI = null; 
+				String quarter = year+"-Quarter-1";
+				int count=0;
+				BigDecimal QuarterScore =BigDecimal.ZERO;
+				
+				EntityConditionList<EntityExpr> totalConditions = EntityCondition.makeCondition(UtilMisc.toList(
+						 EntityCondition.makeCondition("partyId",EntityOperator.EQUALS, party),
+						 EntityCondition.makeCondition("quarter",EntityOperator.EQUALS, quarter),
+						 EntityCondition.makeCondition("year", EntityOperator.EQUALS, year)),
+							EntityOperator.AND);
+
+			
+			
+			try {
+				holidaysELI = delegator.findList("PerfPartyReview", totalConditions, null, null, null, false);
+				/*holidaysELI = delegator.findList("PerfPartyReview", EntityCondition.makeCondition("partyId", year), null, null, null, false);*/
+					
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+				
+				for (GenericValue genericValue : holidaysELI) {
+					totalpercentage = totalpercentage.add(genericValue.getBigDecimal("scoreFour").stripTrailingZeros());
+					maxtotalpercentage = maxtotalpercentage.add(genericValue.getBigDecimal("scoreOne").stripTrailingZeros());
+					count++;
+					
+				}
+				
+				String f=String.valueOf(totalpercentage);
+				log.info("++++++++++++++q1party++++++++++++++++" +party);
+				log.info("++++++++++++++q1totalpercentage++++++++++++++++" +f);
+				log.info("++++++++++++++q1maxtotalpercentage++++++++++++++++" +maxtotalpercentage);
+				log.info("++++++++++++++q1count++++++++++++++++" +count);
+				
+				
+				
+				
+				if (count == 0) {
+					QuarterScore =BigDecimal.ZERO;
+				} else {
+					/*int totalpercentageINT = totalpercentage.intValue();
+					int maxtotalpercentageINT = maxtotalpercentage.intValue();
+					
+					int staffScoreDivideCount = (totalpercentageINT/count);
+					int staffScoreDivideCountBy5 = (staffScoreDivideCount/5);
+					int staffScoreDivideCountBy5MultiplyMaxScore = (staffScoreDivideCountBy5*maxtotalpercentageINT);
+					int QuarterScoreINT = (staffScoreDivideCountBy5MultiplyMaxScore/4);
+							
+							
+					QuarterScore = new BigDecimal(QuarterScoreINT);*/
+					
+					BigDecimal newCount = new BigDecimal(count);
+					BigDecimal staffScoreDivideCount = totalpercentage.divide(newCount, 20, RoundingMode.HALF_UP);
+					BigDecimal five = new BigDecimal(5);
+					BigDecimal staffScoreDivideCountBy5 = staffScoreDivideCount.divide(five, 20, RoundingMode.HALF_UP);
+					BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5.multiply(maxtotalpercentage);
+					BigDecimal four = new BigDecimal(4);
+					QuarterScore = staffScoreDivideCountBy5MultiplyMaxScore.divide(four, 2, RoundingMode.HALF_UP);
+				}
+
+				
+				
+				
+				return QuarterScore;
+			}
+			
+			public static BigDecimal getSecondQuarterTotalPartyPerformance(String party, String year) {
+				BigDecimal totalpercentage =BigDecimal.ZERO;
+				BigDecimal maxtotalpercentage =BigDecimal.ZERO;
+				BigDecimal QuarterScore =BigDecimal.ZERO;
+				Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+				List<GenericValue> holidaysELI = null; 
+				String quarter = year+"-Quarter-2";
+				int count=0;
+				
+				EntityConditionList<EntityExpr> totalConditions = EntityCondition.makeCondition(UtilMisc.toList(
+						 EntityCondition.makeCondition("partyId",EntityOperator.EQUALS, party),
+						 EntityCondition.makeCondition("quarter",EntityOperator.EQUALS, quarter),
+						 EntityCondition.makeCondition("year", EntityOperator.EQUALS, year)),
+							EntityOperator.AND);
+
+			
+			
+			try {
+				holidaysELI = delegator.findList("PerfPartyReview", totalConditions, null, null, null, false);
+				/*holidaysELI = delegator.findList("PerfPartyReview", EntityCondition.makeCondition("partyId", year), null, null, null, false);*/
+					
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+				
+				for (GenericValue genericValue : holidaysELI) {
+					totalpercentage = totalpercentage.add(genericValue.getBigDecimal("scoreFour").stripTrailingZeros());
+					maxtotalpercentage = maxtotalpercentage.add(genericValue.getBigDecimal("scoreOne").stripTrailingZeros());
+					count++;
+					
+				}
+				
+				
+				String f=String.valueOf(totalpercentage);
+				log.info("++++++++++++++q2party++++++++++++++++" +party);
+				log.info("++++++++++++++q2totalpercentage++++++++++++++++" +f);
+				log.info("++++++++++++++q2maxtotalpercentage++++++++++++++++" +maxtotalpercentage);
+				log.info("++++++++++++++q2count++++++++++++++++" +count);
+				if (count == 0) {
+					QuarterScore =BigDecimal.ZERO;
+				} else {
+					BigDecimal newCount = new BigDecimal(count);
+					BigDecimal staffScoreDivideCount = totalpercentage.divide(newCount, 20, RoundingMode.HALF_UP);
+					BigDecimal five = new BigDecimal(5);
+					BigDecimal staffScoreDivideCountBy5 = staffScoreDivideCount.divide(five, 20, RoundingMode.HALF_UP);
+					BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5.multiply(maxtotalpercentage);
+					BigDecimal four = new BigDecimal(4);
+					QuarterScore = staffScoreDivideCountBy5MultiplyMaxScore.divide(four, 2, RoundingMode.HALF_UP);
+				}
+						
+						
+				
+				
+				
+				return QuarterScore;
+			}
+			
+			public static BigDecimal getThirdQuarterTotalPartyPerformance(String party, String year) {
+				BigDecimal totalpercentage =BigDecimal.ZERO;
+				BigDecimal maxtotalpercentage =BigDecimal.ZERO;
+				BigDecimal QuarterScore =BigDecimal.ZERO;
+				Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+				List<GenericValue> holidaysELI = null; 
+				String quarter = year+"-Quarter-3";
+				int count=0;
+				
+				EntityConditionList<EntityExpr> totalConditions = EntityCondition.makeCondition(UtilMisc.toList(
+						 EntityCondition.makeCondition("partyId",EntityOperator.EQUALS, party),
+						 EntityCondition.makeCondition("quarter",EntityOperator.EQUALS, quarter),
+						 EntityCondition.makeCondition("year", EntityOperator.EQUALS, year)),
+							EntityOperator.AND);
+
+			
+			
+			try {
+				holidaysELI = delegator.findList("PerfPartyReview", totalConditions, null, null, null, false);
+				/*holidaysELI = delegator.findList("PerfPartyReview", EntityCondition.makeCondition("partyId", year), null, null, null, false);*/
+					
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+				
+				for (GenericValue genericValue : holidaysELI) {
+					totalpercentage = totalpercentage.add(genericValue.getBigDecimal("scoreFour").stripTrailingZeros());
+					maxtotalpercentage = maxtotalpercentage.add(genericValue.getBigDecimal("scoreOne").stripTrailingZeros());
+					count++;
+					
+				}
+				
+				String f=String.valueOf(totalpercentage);
+				log.info("++++++++++++++q3party++++++++++++++++" +party);
+				log.info("++++++++++++++q3totalpercentage++++++++++++++++" +f);
+				log.info("++++++++++++++q3maxtotalpercentage++++++++++++++++" +maxtotalpercentage);
+				log.info("++++++++++++++q3count++++++++++++++++" +count);
+				if (count == 0) {
+					QuarterScore =BigDecimal.ZERO;
+				} else {
+					BigDecimal newCount = new BigDecimal(count);
+					BigDecimal staffScoreDivideCount = totalpercentage.divide(newCount, 20, RoundingMode.HALF_UP);
+					BigDecimal five = new BigDecimal(5);
+					BigDecimal staffScoreDivideCountBy5 = staffScoreDivideCount.divide(five, 20, RoundingMode.HALF_UP);
+					BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5.multiply(maxtotalpercentage);
+					BigDecimal four = new BigDecimal(4);
+					QuarterScore = staffScoreDivideCountBy5MultiplyMaxScore.divide(four, 2, RoundingMode.HALF_UP);
+				}
+						
+						
+				
+				
+				
+				return QuarterScore;
+			}
+			
+			public static BigDecimal getFourthQuarterTotalPartyPerformance(String party, String year) {
+				BigDecimal totalpercentage =BigDecimal.ZERO;
+				BigDecimal maxtotalpercentage =BigDecimal.ZERO;
+				BigDecimal QuarterScore =BigDecimal.ZERO;
+				Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+				List<GenericValue> holidaysELI = null; 
+				String quarter = year+"-Quarter-4";
+				int count=0;
+				
+				EntityConditionList<EntityExpr> totalConditions = EntityCondition.makeCondition(UtilMisc.toList(
+						 EntityCondition.makeCondition("partyId",EntityOperator.EQUALS, party),
+						 EntityCondition.makeCondition("quarter",EntityOperator.EQUALS, quarter),
+						 EntityCondition.makeCondition("year", EntityOperator.EQUALS, year)),
+							EntityOperator.AND);
+
+			
+			
+			try {
+				holidaysELI = delegator.findList("PerfPartyReview", totalConditions, null, null, null, false);
+				/*holidaysELI = delegator.findList("PerfPartyReview", EntityCondition.makeCondition("partyId", year), null, null, null, false);*/
+					
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+				
+				for (GenericValue genericValue : holidaysELI) {
+					totalpercentage = totalpercentage.add(genericValue.getBigDecimal("scoreFour").stripTrailingZeros());
+					maxtotalpercentage = maxtotalpercentage.add(genericValue.getBigDecimal("scoreOne").stripTrailingZeros());
+					count++;
+					
+				}
+				
+				String f=String.valueOf(totalpercentage);
+				log.info("++++++++++++++q4party++++++++++++++++" +party);
+				log.info("++++++++++++++q4totalpercentage++++++++++++++++" +f);
+				log.info("++++++++++++++q4maxtotalpercentage++++++++++++++++" +maxtotalpercentage);
+				log.info("++++++++++++++q4count++++++++++++++++" +count);
+				
+				if (count == 0) {
+					QuarterScore =BigDecimal.ZERO;
+				} else {
+					BigDecimal newCount = new BigDecimal(count);
+					BigDecimal staffScoreDivideCount = totalpercentage.divide(newCount, 20, RoundingMode.HALF_UP);
+					BigDecimal five = new BigDecimal(5);
+					BigDecimal staffScoreDivideCountBy5 = staffScoreDivideCount.divide(five, 20, RoundingMode.HALF_UP);
+					BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5.multiply(maxtotalpercentage);
+					BigDecimal four = new BigDecimal(4);
+					QuarterScore = staffScoreDivideCountBy5MultiplyMaxScore.divide(four, 2, RoundingMode.HALF_UP);
+
+					
+				}
+				
+						
+						
+				
+				
+				
+				return QuarterScore;
+			}
+	
+			
+			public static BigDecimal getFourQuartersTotalPartyPerformance(String party, String year) {
+				BigDecimal q1 =getFirstQuarterTotalPartyPerformance(party, year);
+				BigDecimal q2 =getSecondQuarterTotalPartyPerformance(party, year);
+				BigDecimal q3 =getThirdQuarterTotalPartyPerformance(party, year);
+				BigDecimal q4 =getFourthQuarterTotalPartyPerformance(party, year);
+				BigDecimal q12 = q1.add(q2);
+				BigDecimal q123 =q12.add(q3);
+				BigDecimal q1234 =q123.add(q4);
+				
+				return q1234;
+			}
 	
 	
+			public static String Q1String(String party, String year) {
+				String qString = null;
+				BigDecimal score = getFirstQuarterTotalPartyPerformance(party, year);
+				qString = String.valueOf(score);
+			
+				return qString+" %";
+				
+			}
+			
+			public static String Q2String(String party, String year) {
+				String qString = null;
+				BigDecimal score = getSecondQuarterTotalPartyPerformance(party, year);
+				qString = String.valueOf(score);
+			
+				return qString+" %";
+				
+			}
+			public static String Q3String(String party, String year) {
+				String qString = null;
+				BigDecimal score = getThirdQuarterTotalPartyPerformance(party, year);
+				qString = String.valueOf(score);
+			
+				return qString+" %";
+				
+			}
+			public static String Q4String(String party, String year) {
+				String qString = null;
+				BigDecimal score = getFourthQuarterTotalPartyPerformance(party, year);
+				qString = String.valueOf(score);
+			
+				return qString+" %";
+				
+			}
+			public static String TotalScoreString(String party, String year) {
+				String qString = null;
+				BigDecimal score = getFourQuartersTotalPartyPerformance(party, year);
+				qString = String.valueOf(score);
+			
+				return qString+" %";
+				
+			}
+			
+			
+			              /* ANNUAL LEAVE BALANCE CALCULATION*/
+			
+			public static String scheduleAnnualLeaveBalanceCalculation(HttpServletRequest request, HttpServletResponse response) {
+				Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+				LocalDispatcher dispatcher = (new GenericDispatcherFactory()).createLocalDispatcher("interestcalculations", delegator);
+
+				Map<String, String> context = UtilMisc.toMap("message",	"Annual Balance Testing !!");
+				Map<String, Object> result = new HashMap<String, Object>();
+				try {
+					long startTime = (new Date()).getTime();
+					int frequency = RecurrenceRule.DAILY;
+					int interval = 5;
+					int count = -1;
+					dispatcher.schedule("calculateStaffAnnualLeaveDays", context, startTime, frequency, interval, count);
+				} catch (GenericServiceException e) {
+					e.printStackTrace();
+				}
+
+				Writer out;
+				try {
+					out = response.getWriter();
+					out.write("");
+					out.flush();
+				} catch (IOException e) {
+					try {
+						throw new EventHandlerException(
+								"Unable to get response writer", e);
+					} catch (EventHandlerException e1) {
+						e1.printStackTrace();
+					}
+				}
+				return "";
+
+			}
+			
+			
+			public static Map<String, Object> calculateAnnualLeavebalance(
+				DispatchContext context, Map<String, String> map) {
+				Map<String, Object> result = new HashMap<String, Object>();
+				System.out.println("############## Attempting to Calculate Annual leave balances ... "+ Calendar.getInstance().getTime());
+
+				HttpServletRequest request = null;
+				HttpServletResponse response = null;
+				Leave.generateAnnulLeaveBalancesWithOpeningBalances(request, response);
+
+				return result;
+			}
+	
+			
+                                  /* SEND SCHEDULED EMAIL NOTIFICATION*/
+			
+			public static String scheduleSendingEmailNotification(HttpServletRequest request, HttpServletResponse response) {
+				Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+				LocalDispatcher dispatcher = (new GenericDispatcherFactory()).createLocalDispatcher("interestcalculations", delegator);
+
+				Map<String, String> context = UtilMisc.toMap("message",	"Email Sending Testing !!");
+				Map<String, Object> result = new HashMap<String, Object>();
+				try {
+					long startTime = (new Date()).getTime();
+					int frequency = RecurrenceRule.SECONDLY;
+					int interval = 5;
+					int count = -1;
+					dispatcher.schedule("sendScheduledEmailNotification", context, startTime, frequency, interval, count);
+				} catch (GenericServiceException e) {
+					e.printStackTrace();
+				}
+
+				Writer out;
+				try {
+					out = response.getWriter();
+					out.write("");
+					out.flush();
+				} catch (IOException e) {
+					try {
+						throw new EventHandlerException(
+								"Unable to get response writer", e);
+					} catch (EventHandlerException e1) {
+						e1.printStackTrace();
+					}
+				}
+				return "";
+
+			}
+			
+			
+			                              /*DISABLE/ENABLE LOGINS*/
+			 public static Map<String, Object> enableDisableLogins(DispatchContext ctx, Map<String, ? extends Object> context) {
+				 Delegator delegator = ctx.getDelegator();
+			        List<GenericValue> OnLeaveELI = null;
+			        List<GenericValue> OutOfLeaveELI = null;
+			        String state = "NOTSEND";
+			        Map<String, Object> results = ServiceUtil.returnSuccess();
+			        //Timestamp now = UtilDateTime.nowTimestamp();
+			        
+			        String now = Calendar.getInstance().getTime().toString();
+			        Date noww = null;
+					try {
+						noww = new SimpleDateFormat("E MMM dd HH:mm:ss zzz yyyy", Locale.UK).parse(now);
+					} catch (ParseException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+			        java.sql.Date today = new java.sql.Date(noww.getTime());
+			        
+			    	EntityConditionList<EntityExpr> onLeaveConditions = EntityCondition.makeCondition(UtilMisc.toList(
+							 EntityCondition.makeCondition("fromDate",EntityOperator.LESS_THAN_EQUAL_TO, today),
+							 EntityCondition.makeCondition("thruDate",EntityOperator.GREATER_THAN, today),
+							 EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "Approved")),
+								EntityOperator.AND);
+			    	
+
+				try {
+					OnLeaveELI = delegator.findList("EmplLeave", onLeaveConditions, null, null, null, false);
+						
+				} catch (GenericEntityException e) {
+					e.printStackTrace();
+				}
+					
+					for (GenericValue genericValue : OnLeaveELI) {
+						String party = genericValue.getString("partyId");
+						String userName;
+						GenericValue OnleaveParty = null;
+						List<GenericValue> OnleavePartyELI = null;
+					      try {
+					    	  //OnleaveParty = delegator.findOne("PartyAndUserLoginAndPerson", UtilMisc.toMap("partyId", party), false);
+					    	  OnleavePartyELI=delegator.findList("PartyAndUserLoginAndPerson", EntityCondition.makeCondition("partyId", party), null, null, null, false);
+					           	log.info("++++++++++++++OnleaveParty++++++++++++++++" +OnleaveParty);
+					             }
+					       catch (GenericEntityException e) {
+					            e.printStackTrace();;
+					       } 
+					      
+					      for (GenericValue genericValue2 : OnleavePartyELI) {
+					    	  userName = genericValue2.getString("userLoginId");
+					    	  
+					    	  if (userName != null) {
+
+							    	 
+						    	  
+						    	  GenericValue OnleavePartyLogin = null;
+							      try {
+							    	  OnleavePartyLogin = delegator.findOne("UserLogin", UtilMisc.toMap("userLoginId", userName), false);
+							           	log.info("++++++++++++++OnleavePartyLogin++++++++++++++++" +OnleavePartyLogin);
+							             }
+							       catch (GenericEntityException e) {
+							            e.printStackTrace();;
+							       }
+							      if (OnleavePartyLogin != null) {
+							    	  OnleavePartyLogin.set("enabled", "N");
+							          
+							          try {
+							  			delegator.createOrStore(OnleavePartyLogin);
+							  		} catch (GenericEntityException e) {
+							  			// TODO Auto-generated catch block
+							  			e.printStackTrace();
+							  		}
+								} else {
+
+								}
+									
+								} else {
+									System.out.println("######## User not found #### ");
+								}
+					      }
+					      
+					     
+						
+					}
+					
+					
+					
+					try {
+						OutOfLeaveELI = delegator.findList("PartyAndUserLoginAndPerson", EntityCondition.makeCondition("enabled", "N"), null, null, null, false);
+							
+					} catch (GenericEntityException e) {
+						e.printStackTrace();
+					}
+						
+						for (GenericValue genericValue : OutOfLeaveELI) {
+							String party = genericValue.getString("partyId");
+							
+							EntityConditionList<EntityExpr> OffLeaveConditions = EntityCondition.makeCondition(UtilMisc.toList(
+									 EntityCondition.makeCondition("partyId",EntityOperator.EQUALS, party),
+									 EntityCondition.makeCondition("fromDate",EntityOperator.LESS_THAN_EQUAL_TO, today),
+									 EntityCondition.makeCondition("thruDate",EntityOperator.GREATER_THAN, today),
+									 EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "Approved")),
+										EntityOperator.AND);
+							
+							List<GenericValue> DisabledUsersInLeave = null;
+							try {
+								DisabledUsersInLeave = delegator.findList("EmplLeave", OffLeaveConditions, null, null, null, false);
+									
+							} catch (GenericEntityException e) {
+								e.printStackTrace();
+							}
+							
+							if (DisabledUsersInLeave.size() == 0){
+								
+								//==================================================================================
+								String userName2;
+								GenericValue OffleaveParty = null;
+								List<GenericValue> OffleavePartyELI = null;
+							      try {
+							    	  //OffleaveParty = delegator.findOne("PartyAndUserLoginAndPerson", UtilMisc.toMap("partyId", party), false);
+							    	  OffleavePartyELI=delegator.findList("PartyAndUserLoginAndPerson", EntityCondition.makeCondition("partyId", party), null, null, null, false);
+							           	log.info("++++++++++++++OnleaveParty++++++++++++++++" +OffleavePartyELI);
+							             }
+							       catch (GenericEntityException e) {
+							            e.printStackTrace();;
+							       } 
+							      
+							      for (GenericValue genericValue3 : OffleavePartyELI) {
+							    	  userName2 = genericValue3.getString("userLoginId");
+							    	  
+							    	  if (userName2 != null) {
+
+									    	 
+								    	  
+								    	  GenericValue OnleavePartyLogin = null;
+									      try {
+									    	  OnleavePartyLogin = delegator.findOne("UserLogin", UtilMisc.toMap("userLoginId", userName2), false);
+									           	log.info("++++++++++++++OnleavePartyLogin++++++++++++++++" +OnleavePartyLogin);
+									             }
+									       catch (GenericEntityException e) {
+									            e.printStackTrace();;
+									       }
+									      if (OnleavePartyLogin != null) {
+									    	  OnleavePartyLogin.set("enabled", "Y");
+									          
+									          try {
+									  			delegator.createOrStore(OnleavePartyLogin);
+									  		} catch (GenericEntityException e) {
+									  			// TODO Auto-generated catch block
+									  			e.printStackTrace();
+									  		}
+										} else {
+
+										}
+											
+										} else {
+											System.out.println("######## User not found #### ");
+										}
+							      }
+							
+						}
+			        
+					}
+			        
+			        
+			        return results;
+			 }
+			 
+			 
+			 //======================= DISABLE AND ENABLE USERLOGINS ===================================
+				
+				public static String scheduleDisableEnableUserLogins(HttpServletRequest request, HttpServletResponse response) {
+					Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+					LocalDispatcher dispatcher = (new GenericDispatcherFactory()).createLocalDispatcher("interestcalculations", delegator);
+
+					Map<String, String> context = UtilMisc.toMap("message",	"Userlogins enable/Disable Testing !!");
+					Map<String, Object> result = new HashMap<String, Object>();
+					try {
+						long startTime = (new Date()).getTime();
+						int frequency = RecurrenceRule.SECONDLY;
+						int interval = 5;
+						int count = -1;
+						dispatcher.schedule("scheduleDisableEnableUserLoginAsTheyAreOnLeave", context, startTime, frequency, interval, count);
+					} catch (GenericServiceException e) {
+						e.printStackTrace();
+					}
+
+					Writer out;
+					try {
+						out = response.getWriter();
+						out.write("");
+						out.flush();
+					} catch (IOException e) {
+						try {
+							throw new EventHandlerException(
+									"Unable to get response writer", e);
+						} catch (EventHandlerException e1) {
+							e1.printStackTrace();
+						}
+					}
+					return "";
+
+				}
+				
+				
+				public static Map<String, Object> SaveEmail_ToBeSend(DispatchContext ctx, Map<String, ? extends Object> context) {
+					 Delegator delegator = ctx.getDelegator();
+				        List<GenericValue> OnLeaveELI = null;
+				        List<GenericValue> OutOfLeaveELI = null;
+				        GenericValue emailRecord_HandedOver = null;
+				        Map<String, Object> results = ServiceUtil.returnSuccess();
+				        //Timestamp now = UtilDateTime.nowTimestamp();
+				        
+				        String now = Calendar.getInstance().getTime().toString();
+				        Date noww = null;
+						try {
+							noww = new SimpleDateFormat("E MMM dd HH:mm:ss zzz yyyy", Locale.UK).parse(now);
+						} catch (ParseException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+				        java.sql.Date today = new java.sql.Date(noww.getTime());
+				        
+				        LocalDate todayDate = new LocalDate(today);
+
+						LocalDate threeDaysAgo = todayDate.plusDays(4);
+						
+								
+						Date f = threeDaysAgo.toDate();
+						java.sql.Date todayPlusFourDays = new java.sql.Date(f.getTime());
+						
+				        
+				    	EntityConditionList<EntityExpr> onLeaveConditions = EntityCondition.makeCondition(UtilMisc.toList(
+				    			EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "Approved"),
+				    			EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN, today),
+								 EntityCondition.makeCondition("fromDate",EntityOperator.LESS_THAN, todayPlusFourDays)),
+									EntityOperator.AND);
+				    	
+					try {
+						OnLeaveELI = delegator.findList("EmplLeave", onLeaveConditions, null, null, null, false);
+							
+					} catch (GenericEntityException e) {
+						e.printStackTrace();
+					}
+						
+						for (GenericValue genericValue : OnLeaveELI) {
+							String party = genericValue.getString("partyId");
+							String partyToGetMail = genericValue.getString("handedOverTo");
+							
+							 GenericValue staff = null;
+						      try {
+						    	  staff = delegator.findOne("Person", UtilMisc.toMap("partyId", party), false);
+						           	log.info("//////////////////////////////\\\\\\\\\\\\Going On Leave++++++++++++++++" +staff);
+						             }
+						       catch (GenericEntityException e) {
+						            e.printStackTrace();;
+						       }
+						      
+						      if (staff != null) {
+						    	  
+						    	  emailRecord_HandedOver = delegator.makeValue("StaffScheduledMail", "msgId", delegator.getNextSeqId("StaffScheduledMail"), 
+											"partyId", partyToGetMail,
+								            "subject", "Responsibilities Handover", 
+								            "body", "Staff by the name:-"+staff.getString("firstName")+" "+ staff.getString("lastName")+" With Payroll Number-"+staff.getString("employeeNumber")+
+								            " is scheduled to go on leave starting:-"+genericValue.getDate("fromDate")+". You are hereby reminded that they handed over their responsibilities to you."
+								            		+ " Please make necessary arrangements for smooth running of all activities. Thanks",
+								            "sendStatus", "NOTSEND");
+						          
+						          try {
+						        	  emailRecord_HandedOver.create();
+						  		} catch (GenericEntityException e) {
+						  			// TODO Auto-generated catch block
+						  			e.printStackTrace();
+						  		}
+							} else {
+
+							}
+						      
+							
+						      
+						     
+							
+						}
+					
+					return results;
+				}
+				
+				
+ //======================= SAVE EMAILS TO BE SEND LATER ===================================
+				
+				public static String SaveEmail_ToBeSendScheduler(HttpServletRequest request, HttpServletResponse response) {
+					Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+					LocalDispatcher dispatcher = (new GenericDispatcherFactory()).createLocalDispatcher("interestcalculations", delegator);
+
+					Map<String, String> context = UtilMisc.toMap("message",	"Saving Scheduled Emails Testing !!");
+					Map<String, Object> result = new HashMap<String, Object>();
+					try {
+						long startTime = (new Date()).getTime();
+						int frequency = RecurrenceRule.SECONDLY;
+						int interval = 5;
+						int count = -1;
+						dispatcher.schedule("SaveEmail_ToBeSendLaterWhenInternetIsAvailed", context, startTime, frequency, interval, count);
+					} catch (GenericServiceException e) {
+						e.printStackTrace();
+					}
+
+					Writer out;
+					try {
+						out = response.getWriter();
+						out.write("");
+						out.flush();
+					} catch (IOException e) {
+						try {
+							throw new EventHandlerException(
+									"Unable to get response writer", e);
+						} catch (EventHandlerException e1) {
+							e1.printStackTrace();
+						}
+					}
+					return "";
+
+				}
+				
+				
 }
 

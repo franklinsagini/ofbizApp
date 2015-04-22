@@ -287,12 +287,8 @@ under the License.
 			</response>
 		<response name="error" type="view" value="partyContentTypes" />
 	</request-map>
-
-
-
-
-
-
+	
+	           
 		<request-map uri="bankbranch">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="bankbranch"
@@ -418,6 +414,40 @@ under the License.
     <response name="success" type="view"  value="LeaveBalances"></response>
     <response name="error" type="view" value="LeaveBalances" />
     </request-map>
+    
+    <request-map uri="scheduleInterestCalculationsLeave">
+                <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="scheduleAnnualLeaveBalanceCalculation" />
+                <response name="success" type="view" value="LeaveBalances">                      
+                        </response>
+                <response name="error" type="view" value="LeaveBalances" />
+    </request-map>
+    
+    <request-map uri="scheduleSendEmailNotification">
+                <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="scheduleSendingEmailNotification" />
+                <response name="success" type="view" value="LeaveBalances">                      
+                        </response>
+                <response name="error" type="view" value="LeaveBalances" />
+    </request-map>
+    
+     <request-map uri="scheduleDisableLogins">
+                <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="scheduleDisableEnableUserLogins" />
+                <response name="success" type="view" value="LeaveBalances">                      
+                        </response>
+                <response name="error" type="view" value="LeaveBalances" />
+    </request-map>
+    
+    
+     <request-map uri="SaveEmail_ToBeSendafterwards">
+                <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.humanres.HumanResServices" invoke="SaveEmail_ToBeSendScheduler" />
+                <response name="success" type="view" value="LeaveBalances">                      
+                        </response>
+                <response name="error" type="view" value="LeaveBalances" />
+    </request-map>
+	
 
 
 
@@ -984,7 +1014,7 @@ under the License.
     </request-map>
     <request-map uri="updatePerfGoals">
         <security https="true" auth="true"/>
-        <event type="service-multi" invoke="updatePerfGoals"/>
+        <event type="service" invoke="updatePerfGoals"/>
         <response name="success" type="request-redirect" value="perfGoals">
         	<redirect-parameter name="goalDef"/>
         	<redirect-parameter name="perfGoalsDefId"/>
@@ -1028,22 +1058,30 @@ under the License.
 			save-home-view="true" />
 	</request-map>
 	
-	<request-map uri="setupReviewObjectives">
+	
+	
+	 <request-map uri="setupReviewObjectives">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="setupReviewObjectives"
-			save-home-view="true" />
+			save-home-view="true">
+				<redirect-parameter name="perfReviewDefId"/>
+			</response>
 	</request-map>
 	
 	<request-map uri="setupObjectiveActionPlan">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="setupObjectiveActionPlan"
-			save-home-view="true" />
+			save-home-view="true">
+				<redirect-parameter name="PerfReviewsGroupObjectiveDefinitionId"/>
+			</response>
 	</request-map>
 	
 	<request-map uri="setupActionPlanIndicator">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="setupActionPlanIndicator"
-			save-home-view="true" />
+			save-home-view="true">
+				<redirect-parameter name="PerfObjectiveActionPlanId"/>
+			</response>
 	</request-map>
 	
 	<request-map uri="addStaffToPerfReviewGroup">
@@ -1087,18 +1125,17 @@ under the License.
 	<request-map uri="createPerfReviewObjective">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="createPerfReviewObjective" />
-		<response name="success" type="request-redirect-noparam" value="setupReviewObjectives">
-			<redirect-parameter name="PerfReviewsGroupObjectiveDefinitionId" />
+		<response name="success" type="request-redirect" value="setupReviewObjectives">
+			<redirect-parameter name="perfReviewDefId" />
 		</response>
 		<response name="error" type="request-redirect-noparam" value="setupReviewObjectives" />
 	</request-map>
 
 	<request-map uri="updatePerfReviewObjective">
 		<security https="true" auth="true" />
-		<event type="service-multi" invoke="updatePerfReviewObjective" />
-		<response name="success" type="request-redirect-noparam" value="setupReviewObjectives">
-			<redirect-parameter name="PerfReviewsGroupObjectiveDefinitionId" />
-			<redirect-parameter name="perfReviewDefId"/>
+		<event type="service" invoke="updatePerfReviewObjective" />
+		<response name="success" type="request-redirect" value="setupReviewObjectives">
+			<redirect-parameter name="perfReviewDefId" />
 		</response>
 		<response name="error" type="request-redirect-noparam" value="setupReviewObjectives" />
 	</request-map>
@@ -1106,8 +1143,8 @@ under the License.
 	<request-map uri="deletePerfReviewObjective">
 		<security https="true" auth="true" />
 		<event type="service" invoke="deletePerfReviewObjective" />
-		<response name="success" type="request-redirect-noparam" value="setupReviewObjectives">
-			<redirect-parameter name="PerfReviewsGroupObjectiveDefinitionId" />
+		<response name="success" type="request-redirect" value="setupReviewObjectives">
+			<redirect-parameter name="perfReviewDefId" />
 		</response>
 		<response name="error" type="request-redirect-noparam" value="setupReviewObjectives" />
 	</request-map>
@@ -1118,17 +1155,17 @@ under the License.
 	<request-map uri="createPerfObjectiveActionPlan">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="createPerfObjectiveActionPlan" />
-		<response name="success" type="request-redirect-noparam" value="setupObjectiveActionPlan">
-			<redirect-parameter name="PerfObjectiveActionPlanId" />
+		<response name="success" type="request-redirect" value="setupObjectiveActionPlan">
+			<redirect-parameter name="PerfReviewsGroupObjectiveDefinitionId" />
 		</response>
 		<response name="error" type="request-redirect-noparam" value="setupObjectiveActionPlan" />
 	</request-map>
 
 	<request-map uri="updatePerfObjectiveActionPlan">
 		<security https="true" auth="true" />
-		<event type="service-multi" invoke="updatePerfObjectiveActionPlan" />
-		<response name="success" type="request-redirect-noparam" value="setupObjectiveActionPlan">
-			<redirect-parameter name="PerfObjectiveActionPlanId" />
+		<event type="service" invoke="updatePerfObjectiveActionPlan" />
+		<response name="success" type="request-redirect" value="setupObjectiveActionPlan">
+			<redirect-parameter name="PerfReviewsGroupObjectiveDefinitionId" />
 		</response>
 		<response name="error" type="request-redirect-noparam" value="setupObjectiveActionPlan" />
 	</request-map>
@@ -1136,8 +1173,8 @@ under the License.
 	<request-map uri="deletePerfObjectiveActionPlan">
 		<security https="true" auth="true" />
 		<event type="service" invoke="deletePerfObjectiveActionPlan" />
-		<response name="success" type="request-redirect-noparam" value="setupObjectiveActionPlan">
-			<redirect-parameter name="PerfObjectiveActionPlanId" />
+		<response name="success" type="request-redirect" value="setupObjectiveActionPlan">
+			<redirect-parameter name="PerfReviewsGroupObjectiveDefinitionId" />
 		</response>
 		<response name="error" type="request-redirect-noparam" value="setupObjectiveActionPlan" />
 	</request-map>
@@ -1148,17 +1185,17 @@ under the License.
 	<request-map uri="createPerfActionPlanIndicator">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="createPerfActionPlanIndicator" />
-		<response name="success" type="request-redirect-noparam" value="setupActionPlanIndicator">
-			<redirect-parameter name="PerfActionPlanIndicatorId" />
+		<response name="success" type="request-redirect" value="setupActionPlanIndicator">
+			<redirect-parameter name="PerfObjectiveActionPlanId" />
 		</response>
 		<response name="error" type="request-redirect-noparam" value="setupActionPlanIndicator" />
 	</request-map>
 
 	<request-map uri="updatePerfActionPlanIndicator">
 		<security https="true" auth="true" />
-		<event type="service-multi" invoke="updatePerfActionPlanIndicator" />
-		<response name="success" type="request-redirect-noparam" value="setupActionPlanIndicator">
-			<redirect-parameter name="PerfActionPlanIndicatorId" />
+		<event type="service" invoke="updatePerfActionPlanIndicator" />
+		<response name="success" type="request-redirect" value="setupActionPlanIndicator">
+			<redirect-parameter name="PerfObjectiveActionPlanId" />
 		</response>
 		<response name="error" type="request-redirect-noparam" value="setupActionPlanIndicator" />
 	</request-map>
@@ -1166,8 +1203,8 @@ under the License.
 	<request-map uri="deletePerfActionPlanIndicator">
 		<security https="true" auth="true" />
 		<event type="service" invoke="deletePerfActionPlanIndicator" />
-		<response name="success" type="request-redirect-noparam" value="setupActionPlanIndicator">
-			<redirect-parameter name="PerfActionPlanIndicatorId" />
+		<response name="success" type="request-redirect" value="setupActionPlanIndicator">
+			<redirect-parameter name="PerfObjectiveActionPlanId" />
 		</response>
 		<response name="error" type="request-redirect-noparam" value="setupActionPlanIndicator" />
 	</request-map>
@@ -3385,6 +3422,7 @@ under the License.
 
 	<request-map uri="perfReviewReport"><security https="true" auth="true"/><response name="success" type="view" value="perfReviewReport"/></request-map>
 	<request-map uri="perfScoresReport"><security https="true" auth="true"/><response name="success" type="view" value="perfScoresReport"/></request-map>
+	<request-map uri="StaffperfScoresReport"><security https="true" auth="true"/><response name="success" type="view" value="StaffperfScoresReport"/></request-map>
 
 
 	<!-- ========================Training Reports========================== -->
@@ -3500,6 +3538,19 @@ under the License.
         <response name="success" type="view" value="leaveActivityPDF"/>
     </request-map>
     
+    <request-map uri="allStaffPerformanceScoresPDF">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="allStaffPerformanceScoresPDF"/>
+    </request-map>
+    
+     <request-map uri="SingleStaffPerformanceScoresPDF">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="SingleStaffPerformanceScoresPDF"/>
+    </request-map>
+    
+    
+     <view-map name="SingleStaffPerformanceScoresPDF" type="screenfop" page="component://humanres/widget/PerfReportScreens.xml#SingleStaffPerformanceScoresPDF" content-type="application/pdf" encoding="none"/>
+     <view-map name="allStaffPerformanceScoresPDF" type="screenfop" page="component://humanres/widget/PerfReportScreens.xml#allStaffPerformanceScoresPDF" content-type="application/pdf" encoding="none"/>
      <view-map name="leaveCalendarPDF" type="screenfop" page="component://humanres/widget/ReportScreens.xml#leaveCalendarPDF" content-type="application/pdf" encoding="none"/>
 	 <view-map name="leaveActivityPDF" type="screenfop" page="component://humanres/widget/ReportScreens.xml#leaveActivityPDF" content-type="application/pdf" encoding="none"/>
      <view-map name="staffListingCSV" type="screencsv" page="component://humanres/widget/ReportScreens.xml#staffListingCSV" content-type="text/csv" encoding="none"/>
@@ -3834,6 +3885,7 @@ under the License.
 
 	<view-map name="perfReviewReport" type="screen" page="component://humanres/widget/PerfReportScreens.xml#PerfReviewReport"/>
     <view-map name="perfScoresReport" type="screen" page="component://humanres/widget/PerfReportScreens.xml#PerfScoresReport"/>
+    <view-map name="StaffperfScoresReport" type="screen" page="component://humanres/widget/PerfReportScreens.xml#employeePerformanceScoresReport"/>
 
     <view-map name="trainingSummaryReport" type="screen" page="component://humanres/widget/TrainingReportScreens.xml#TrainingSummaryReport"/>
     <view-map name="separationSummaryReport" type="screen" page="component://humanres/widget/ReportScreens.xml#SeparationSummaryReport"/>

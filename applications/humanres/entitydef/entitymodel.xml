@@ -526,10 +526,12 @@ under the License.
                 
      <entity entity-name="StaffInPerfReviewGroup"  package-name="org.ofbiz.humanres.ability"
             title="Performance Goals Definition">
+            <field name="StaffInPerfReviewGroupId" type="id-ne"></field>
             <field name="partyId" type="id-ne"></field>
             <field name="hod" type="id-ne"></field>
             <field name="perfReviewDefId" type="id-ne"></field>
-           <prim-key field="partyId"/>
+             <field name="stage" type="name"></field>
+           <prim-key field="StaffInPerfReviewGroupId"/>
     </entity>
     
      <!-- =============== STAFF-REVIEW-GROUP DEFINITION =================== -->
@@ -565,6 +567,21 @@ under the License.
 	        <field name="scoreFour" type="fixed-point"></field>
 	        <prim-key field="reviewId"/>
     </entity>
+    
+     <view-entity entity-name="PerfPartyReviewAndAppraiseView"
+             package-name="org.ofbiz.humanres.employment"
+             title="Benefit Type Entity">
+             <member-entity entity-alias="RG" entity-name="StaffInPerfReviewGroup"/>
+      <member-entity entity-alias="PR" entity-name="PerfPartyReview"/>
+      
+      <alias name="stage" entity-alias="PR" field="stage"></alias>
+      <alias name="GroupId" entity-alias="RG" field="StaffInPerfReviewGroupId"></alias>
+      <alias name="party" entity-alias="RG" field="partyId"></alias>
+      <alias name="HOD" entity-alias="RG" field="hod"></alias>
+      <view-link entity-alias="PR" rel-entity-alias="RG">
+        <key-map field-name="partyId"/>
+      </view-link>
+    </view-entity>
     
     
      <entity entity-name="PerfGoals"
