@@ -90,6 +90,18 @@
         </iterate>
     </simple-method>
 
+
+    <simple-method method-name="saveDepositReturns" short-description="Fetch Account Balances and Accounts Count">
+         <set field="count" type="BigDecimal" value="1"/>
+        <entity-condition entity-name="StatementDepositReturns" list="statementDepositReturnsList">
+            <condition-expr field-name="depositReturnsId" operator="not-equals" from-field="nullField"/>
+        </entity-condition>
+        <iterate list="statementDepositReturnsList" entry="statementDepositReturn">
+            <log message="TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT-------COUNT ${count} " level="info" />
+            <set field="count" value="${count + 1}" type="BigDecimal"/>
+        </iterate>
+    </simple-method>
+
     <simple-method method-name="updateDepositReturnValues" short-description="update Deposit Return Values">
         <entity-one entity-name="StatementDepositReturns" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>

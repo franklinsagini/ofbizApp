@@ -2980,8 +2980,10 @@ under the License.
     <request-map uri="saveDepositReturns">
         <security https="true" auth="true"/>
         <event type="service" invoke="saveDepositReturns"/>
-        <response name="success" type="StatementDepositReturns"/>
-        <response name="error" type="StatementDepositReturns"/>
+        <response name="success" type="request-redirect" value="StatementDepositReturns">
+            <redirect-parameter name="organizationPartyId"/>
+        </response>
+        <response name="error" type="view" value="StatementDepositReturns"/>
     </request-map>
     <!-- end of request mappings -->
 
