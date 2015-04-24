@@ -24,23 +24,18 @@ under the License.
         CHAI SACCO
     </fo:block>
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" text-decoration="underline">
-        ${fNameUpperCased} ${sNameUpperCased}'s PERFORMANCE REPORT FOR THE YEAR ${year}
+        ${fNameUpperCased} ${sNameUpperCased}'s PERFORMANCE ON [${perspectiveUpperCased}] FOR THE YEAR ${year}
     </fo:block>
     <fo:block><fo:leader/></fo:block>
-
-    <fo:block font-size="12pt" text-align="center"  font-weight="bold" text-decoration="underline">
-        Quantitative Goals Scores
-    </fo:block>
     <#-- Employee Details -->
-<#if Goal_QuantitativeScorelist?has_content>
+<#if scorelist?has_content>
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
             <fo:table-column column-width="20pt"/>
             <fo:table-column column-width="85pt"/>
-            <fo:table-column column-width="80pt"/>
-            <fo:table-column column-width="80pt"/>
-            <fo:table-column column-width="80pt"/>
+            <fo:table-column column-width="110pt"/>
+            <fo:table-column column-width="110pt"/>
             <fo:table-column column-width="38pt"/>
             <fo:table-column column-width="38pt"/>
             <fo:table-column column-width="38pt"/>
@@ -51,9 +46,6 @@ under the License.
                 <fo:table-row font-weight="bold">
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block></fo:block>
-                    </fo:table-cell>
-                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block>Goal Perspective</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block>Strategic Objective</fo:block>
@@ -86,14 +78,11 @@ under the License.
             </fo:table-header>
             <fo:table-body>
             <#assign count=0>
-                  <#list Goal_QuantitativeScorelist as score>
+                  <#list scorelist as score>
                      <fo:table-row>
                        <#assign count = count + 1>
                       <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${count}</fo:block>
-                        </fo:table-cell>
-                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${score.perspective?if_exists}</fo:block>
                         </fo:table-cell>
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${score.Objective?if_exists}</fo:block>
@@ -125,14 +114,7 @@ under the License.
                      </fo:table-row>
                   </#list>
 
-
-
-
                        <fo:table-row column-height="30mm" font-weight="bold">
-                             <fo:table-cell padding="2pt" border="1pt solid" border-width="0mm" font-size="10pt">
-                                <fo:block text-align="right">
-                                </fo:block>
-                            </fo:table-cell>
                              <fo:table-cell padding="2pt" border="1pt solid" border-width="0mm" font-size="10pt">
                                 <fo:block text-align="right">
                                 </fo:block>
@@ -177,140 +159,11 @@ under the License.
                         </fo:table-row>
 
 
-
-
-
-
             </fo:table-body>
         </fo:table>
     </fo:block>
 
 
-  <fo:block font-size="12pt" text-align="center"  font-weight="bold" text-decoration="underline">
-        Qualitative Goals Scores
-    </fo:block>
-
-
-    <#if Goal_QualitativeScorelist?has_content>
-    <#-- REPORT BODY -->
-    <fo:block space-after.optimum="10pt" font-size="10pt">
-        <fo:table table-layout="fixed" width="100%">
-            <fo:table-column column-width="22pt"/>
-            <fo:table-column column-width="250pt"/>
-            <fo:table-column column-width="50pt"/>
-            <fo:table-column column-width="50pt"/>
-            <fo:table-column column-width="50pt"/>
-            <fo:table-column column-width="50pt"/>
-            <fo:table-column column-width="50pt"/>
-            <fo:table-column column-width="50pt"/>
-            <fo:table-header>
-                <fo:table-row font-weight="bold">
-                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block></fo:block>
-                    </fo:table-cell>
-                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block>Goal Indicator</fo:block>
-                    </fo:table-cell>
-                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Max Score</fo:block>
-                    </fo:table-cell>
-                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Quarter One</fo:block>
-                    </fo:table-cell>
-                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Quarter two</fo:block>
-                    </fo:table-cell>
-                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Quarter three</fo:block>
-                    </fo:table-cell>
-                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Quarter four</fo:block>
-                    </fo:table-cell>
-                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Total Score</fo:block>
-                    </fo:table-cell>
-                </fo:table-row>
-            </fo:table-header>
-            <fo:table-body>
-            <#assign count=0>
-                  <#list Goal_QualitativeScorelist as score2>
-                     <fo:table-row>
-                       <#assign count = count + 1>
-                      <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${count}</fo:block>
-                        </fo:table-cell>
-                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${score2.IndicatorDescription2?if_exists}</fo:block>
-                        </fo:table-cell>
-                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block text-align="right">${score2.MaxPossibleScore2?if_exists} %</fo:block>
-                        </fo:table-cell>
-                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block text-align="right">${score2.Q1?if_exists}</fo:block>
-                        </fo:table-cell>
-                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block text-align="right">${score2.Q2?if_exists}</fo:block>
-                        </fo:table-cell>
-                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block text-align="right">${score2.Q3?if_exists}</fo:block>
-                        </fo:table-cell>
-                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block text-align="right">${score2.Q4?if_exists}</fo:block>
-                        </fo:table-cell>
-                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block text-align="right">${score2.Total?if_exists}</fo:block>
-                        </fo:table-cell>
-                     </fo:table-row>
-                  </#list>
-
-                  <fo:table-row column-height="30mm" font-weight="bold">
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width="0mm" font-size="12pt">
-                                <fo:block text-align="left" >
-                                </fo:block>
-                            </fo:table-cell>
-                           <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-size="10pt">
-                                <fo:block text-align="right">Total Score
-                                </fo:block>
-                            </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-size="10pt">
-                                <fo:block text-align="right">${QTT_Totalall4qstotalMaxScore}
-                                </fo:block>
-                            </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-size="10pt">
-                                <fo:block text-align="right">${QTT_Totalq1}
-                                </fo:block>
-                            </fo:table-cell>
-                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-size="10pt">
-                                <fo:block text-align="right">${QTT_Totalq2}
-                                </fo:block>
-                            </fo:table-cell>
-                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-size="10pt">
-                                <fo:block text-align="right">${QTT_Totalq3}
-                                </fo:block>
-                            </fo:table-cell>
-                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-size="10pt">
-                                <fo:block text-align="right">${QTT_Totalq4}
-                                </fo:block>
-                            </fo:table-cell>
-                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-size="10pt">
-                                <fo:block text-align="right">${QTT_Totalall4qstotalScore}
-                                </fo:block>
-                            </fo:table-cell>
-                            
-                        </fo:table-row>
-            </fo:table-body>
-        </fo:table>
-    </fo:block>
-
-<fo:block font-size="12pt" text-align="right"  font-weight="bold" text-decoration="underline">
-        Total Staff Performance Score: ${all4qstotalScore}
-    </fo:block>
-
-    <#else>
-     <fo:block space-after.optimum="10pt" >
-        <fo:block text-align="center" font-size="14pt">No Scores Were found</fo:block>
-    </fo:block>
-  </#if>
     <#else>
      <fo:block space-after.optimum="10pt" >
         <fo:block text-align="center" font-size="14pt">No Scores Were found</fo:block>
