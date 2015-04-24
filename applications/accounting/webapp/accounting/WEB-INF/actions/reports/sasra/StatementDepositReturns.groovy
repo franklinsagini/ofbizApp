@@ -29,14 +29,9 @@ if (depositReturnsList) {
     depositReturnsList.each { depositReturn ->
         range = delegator.findOne("DepositReturnsRanges", UtilMisc.toMap("rangesId", depositReturn.rangesId), true);
         depositType = delegator.findOne("DepositType", UtilMisc.toMap("depositTypeId", depositReturn.depositTypeId), true);
-        count = SasraReportsService.getAccountTotalsCount(depositReturn.depositTypeId, new BigDecimal(range.minRange), new BigDecimal(range.maxRange))
-        total = SasraReportsService.getAccountTotalsTotal(depositReturn.depositTypeId, new BigDecimal(1), new BigDecimal(50000))
-
-
-
-        statementofDepositReturnsList.add(["minRange":range.minRange, "maxRange":range.maxRange, "depositType":depositType.name, noOfAccounts:count, amount:total]);
-        totalAccounts = totalAccounts + count
-        totalAmount = totalAmount + total
+        statementofDepositReturnsList.add(["minRange":range.minRange, "maxRange":range.maxRange, "depositType":depositType.name, noOfAccounts:depositReturn.noOfAccounts, amount:depositReturn.amount]);
+        totalAccounts = totalAccounts + depositReturn.noOfAccounts.toInteger()
+        totalAmount = totalAmount + depositReturn.amount
     }
 }
 
