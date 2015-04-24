@@ -24,7 +24,7 @@ under the License.
         CHAI SACCO
     </fo:block>
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" text-decoration="underline">
-        ${fNameUpperCased} ${sNameUpperCased}'s PERFORMANCE REPORT FOR THE YEAR ${year}
+        ${fNameUpperCased} ${sNameUpperCased}'s ${appraiserType} PERFORMANCE REVIEW REPORT FOR THE YEAR ${year}
     </fo:block>
     <fo:block><fo:leader/></fo:block>
 

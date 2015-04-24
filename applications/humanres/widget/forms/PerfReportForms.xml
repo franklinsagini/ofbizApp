@@ -106,4 +106,65 @@ under the License.
             <submit button-type="button"/>
         </field>
     </form>
+    
+      <form name="StaffPerformancePerGoal" type="single" target="StaffPerformancePerGoalPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <actions>
+        <entity-condition entity-name="PerfGoals" list="GoalsList">
+                <condition-expr field-name="perfGoalsDefId" operator="equals" value="QNT_GOALS"/>
+				<order-by field-name="perfGoalsId"/>
+			</entity-condition>
+		 <entity-condition entity-name="PerfReviewPeriod" list="periodList">
+				<order-by field-name="quarter"/>
+			</entity-condition>
+		</actions>
+		<field name="partyId"   title="Employee" widget-style="required"	required-field="true">
+            <lookup target-form-name="LookupEmployee"/> 
+        </field>
+         <field name="year" title="Select Financial Year" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="year" list-name="periodList"
+					description="${year}" />
+			</drop-down>
+		</field>
+        
+        <field name="perfGoalsId" title="Select Goal" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="perfGoalsId" list-name="GoalsList"
+					description="${goal}" />
+			</drop-down>
+		</field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    
+        <form name="SelfOrHODAppraisal" type="single" target="SelfOrHodAppraisalPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <actions>
+        <entity-condition entity-name="PerfReviewPeriod" list="periodList">
+				<order-by field-name="quarter"/>
+			</entity-condition>
+		</actions>
+        <field name="partyId"   title="Employee" widget-style="required"	required-field="true">
+            <lookup target-form-name="LookupEmployee"/> 
+        </field>
+        <field name="year" title="Select Financial Year" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="year" list-name="periodList"
+					description="${year}" />
+			</drop-down>
+		</field>
+		 <field name="appraiserType" title="Select Type of Appraisal" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<option key="SELF" description="Self Appraisal"/>
+				<option key="HOD" description="Supervisor/HOD Appraisal"/>
+			</drop-down>
+		</field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
 </forms>
