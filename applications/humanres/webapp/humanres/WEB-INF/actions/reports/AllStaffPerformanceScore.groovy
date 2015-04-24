@@ -24,13 +24,11 @@ q3 = org.ofbiz.humanres.HumanResServices.Q3String(party, year)
 q4 = org.ofbiz.humanres.HumanResServices.Q4String(party, year)
 all4qstotalScore = org.ofbiz.humanres.HumanResServices.TotalScoreString(party, year)
 
-//expr = exprBldr.AND() {
-//			EQUALS(year: year)
-//			EQUALS(partyId: party)
-//		}
-//reviewedStaff = delegator.findList("PerfPartyReview", expr, null, null, null, false);
+bonus = org.ofbiz.humanres.HumanResServices.StaffBonusOnSalary(party, year)
+increment = org.ofbiz.humanres.HumanResServices.StaffSalaryIncrement(party, year)
 
-//reviewedStaff.eachWithIndex { reviewedStaffItem, reviewedStaffindex ->
+
+
 
 staff = delegator.findOne("Person", [partyId : party], false);
 dept = delegator.findOne("department", [departmentId : staff.departmentId], false);
@@ -46,7 +44,7 @@ Total = all4qstotalScore
 
 //}
 scorelist.add([name :name, branch :branch, department : department, Q1 : Q1,
- Q2 : Q2, Q3 : Q3, Q4 : Q4, Total : Total]);
+ Q2 : Q2, Q3 : Q3, Q4 : Q4, Total : Total, bonus : bonus, increment : increment]);
  }
  
  

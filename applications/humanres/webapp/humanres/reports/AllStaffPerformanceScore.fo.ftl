@@ -32,14 +32,16 @@ under the License.
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
-            <fo:table-column column-width="20pt"/>
-            <fo:table-column column-width="115pt"/>
-            <fo:table-column column-width="95pt"/>
-            <fo:table-column column-width="95pt"/>
-            <fo:table-column column-width="50pt"/>
-            <fo:table-column column-width="50pt"/>
-            <fo:table-column column-width="50pt"/>
-            <fo:table-column column-width="50pt"/>
+            <fo:table-column column-width="15pt"/>
+            <fo:table-column column-width="100pt"/>
+            <fo:table-column column-width="85pt"/>
+            <fo:table-column column-width="85pt"/>
+            <fo:table-column column-width="40pt"/>
+            <fo:table-column column-width="40pt"/>
+            <fo:table-column column-width="40pt"/>
+            <fo:table-column column-width="40pt"/>
+            <fo:table-column column-width="40pt"/>
+            <fo:table-column column-width="40pt"/>
             <fo:table-column column-width="50pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
@@ -68,7 +70,13 @@ under the License.
                         <fo:block>Fourth Quarter Score</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block>Total Score</fo:block>
+                        <fo:block>Total Year Score</fo:block>
+                    </fo:table-cell>
+                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block>Bonus (% of bonus of basic salary)</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block>Salary Increment (% of basic salary)</fo:block>
                     </fo:table-cell>
                 </fo:table-row>
             </fo:table-header>
@@ -103,6 +111,12 @@ under the License.
                         </fo:table-cell>
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${score.Total?if_exists}</fo:block>
+                        </fo:table-cell>
+                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${score.bonus?if_exists}</fo:block>
+                        </fo:table-cell>
+                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${score.increment?if_exists}</fo:block>
                         </fo:table-cell>
                      </fo:table-row>
                   </#list>
