@@ -1128,7 +1128,9 @@ under the License.
 		<response name="success" type="request-redirect" value="setupReviewObjectives">
 			<redirect-parameter name="perfReviewDefId" />
 		</response>
-		<response name="error" type="request-redirect-noparam" value="setupReviewObjectives" />
+		<response name="error" type="request-redirect" value="setupReviewObjectives">
+		<redirect-parameter name="perfReviewDefId" />
+		</response>
 	</request-map>
 
 	<request-map uri="updatePerfReviewObjective">
@@ -1158,7 +1160,9 @@ under the License.
 		<response name="success" type="request-redirect" value="setupObjectiveActionPlan">
 			<redirect-parameter name="PerfReviewsGroupObjectiveDefinitionId" />
 		</response>
-		<response name="error" type="request-redirect-noparam" value="setupObjectiveActionPlan" />
+		<response name="error" type="request-redirect" value="setupObjectiveActionPlan">
+			<redirect-parameter name="PerfReviewsGroupObjectiveDefinitionId" />
+		</response>
 	</request-map>
 
 	<request-map uri="updatePerfObjectiveActionPlan">
@@ -1188,7 +1192,9 @@ under the License.
 		<response name="success" type="request-redirect" value="setupActionPlanIndicator">
 			<redirect-parameter name="PerfObjectiveActionPlanId" />
 		</response>
-		<response name="error" type="request-redirect-noparam" value="setupActionPlanIndicator" />
+		<response name="error" type="request-redirect" value="setupActionPlanIndicator">
+		<redirect-parameter name="PerfObjectiveActionPlanId" />
+		</response>
 	</request-map>
 
 	<request-map uri="updatePerfActionPlanIndicator">
@@ -3558,6 +3564,12 @@ under the License.
         <response name="success" type="view" value="SelfOrHodAppraisalPDF"/>
     </request-map>
     
+    <request-map uri="AllStaffPerformanceScorePerQualitativeGoalPDF">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AllStaffPerformanceScorePerQualitativeGoalPDF"/>
+    </request-map>
+    
+     <view-map name="AllStaffPerformanceScorePerQualitativeGoalPDF" type="screenfop" page="component://humanres/widget/PerfReportScreens.xml#AllStaffPerformanceScorePerQualitativeGoalPDF" content-type="application/pdf" encoding="none"/>
      <view-map name="SelfOrHodAppraisalPDF" type="screenfop" page="component://humanres/widget/PerfReportScreens.xml#SelfOrHodAppraisalPDF" content-type="application/pdf" encoding="none"/>
      <view-map name="StaffPerformancePerGoalPDF" type="screenfop" page="component://humanres/widget/PerfReportScreens.xml#StaffPerformancePerGoalPDF" content-type="application/pdf" encoding="none"/>
      <view-map name="SingleStaffPerformanceScoresPDF" type="screenfop" page="component://humanres/widget/PerfReportScreens.xml#SingleStaffPerformanceScoresPDF" content-type="application/pdf" encoding="none"/>
@@ -3894,7 +3906,7 @@ under the License.
 	<view-map name="leaveCalender" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#StaffLeaveCalender"/>
 	<view-map name="payrollPrefix" type="screen" page="component://humanres/widget/GlobalHRSettingScreens.xml#NewPayrollPrefix"/>
 
-	<view-map name="perfReviewReport" type="screen" page="component://humanres/widget/PerfReportScreens.xml#PerfReviewReport"/>
+	<view-map name="perfReviewReport" type="screen" page="component://humanres/widget/PerfReportScreens.xml#employeePerformanceScoresReport"/>
     <view-map name="perfScoresReport" type="screen" page="component://humanres/widget/PerfReportScreens.xml#PerfScoresReport"/>
     <view-map name="StaffperfScoresReport" type="screen" page="component://humanres/widget/PerfReportScreens.xml#employeePerformanceScoresReport"/>
 
