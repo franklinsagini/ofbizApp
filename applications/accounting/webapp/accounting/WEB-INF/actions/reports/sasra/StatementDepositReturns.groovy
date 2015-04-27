@@ -7,9 +7,9 @@ depositReturnsList = [];
 statementofDepositReturnsTotalList = [];
 totalAccounts = 0
 totalAmount = BigDecimal.ZERO
-
-depositReturnsList = delegator.findList("StatementDepositReturns", null, UtilMisc.toSet("rangesId", "depositTypeId", "noOfAccounts", "amount"), UtilMisc.toList("rangesId"), null, false);
 /*
+depositReturnsList = delegator.findList("StatementDepositReturns", null, UtilMisc.toSet("rangesId", "depositTypeId", "noOfAccounts", "amount"), UtilMisc.toList("rangesId"), null, false);
+
 if (depositReturnsList) {
     depositReturnsList.each { depositReturn ->
         range = delegator.findOne("DepositReturnsRanges", UtilMisc.toMap("rangesId", depositReturn.rangesId), true);
