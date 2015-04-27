@@ -190,15 +190,15 @@ under the License.
     });
     }
     
-        function isRemittanceEnough(reqUrl, stationNumber, month){
+    function isRemittanceEnough(reqUrl, stationNumber, month){
         var isEnough = false;
-    jQuery.ajax({
+    	jQuery.ajax({
 
-     url    : reqUrl,
-     type   : 'GET',
-     data   : {'stationNumber': stationNumber, 'month': month}, //here you can pass the parameters to  
+     		url    : reqUrl,
+     		type   : 'GET',
+     		data   : {'stationNumber': stationNumber, 'month': month}, //here you can pass the parameters to  
                                                    //the request if any.
-     success : function(data){
+     		success : function(data){
 				
 					if (data.REMITANCEENOUGH == 'YES')
 					{
@@ -207,14 +207,12 @@ under the License.
 						isEnough = false;
 					}
 				   
-				
-					
 			
                },
-      async : false
-    });
+      		async : false
+    	});
     
-   return isEnough;
+   		return isEnough;
     }
     
   
@@ -234,9 +232,6 @@ under the License.
 					} else{
 						isEnough = false;
 					}
-				   
-				
-					
 			
                },
       		async : false

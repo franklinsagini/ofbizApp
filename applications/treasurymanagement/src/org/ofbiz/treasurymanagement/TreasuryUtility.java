@@ -285,6 +285,33 @@ public class TreasuryUtility {
 		}
 		return bdBalance;
 	}
+	
+	
+	public static BigDecimal getTotalCashDeposit(String treasuryId){
+		Map<String, String> userLogin = new HashMap<String, String>();
+		
+		GenericValue treasury = getTreasury(treasuryId);
+		String partyId = treasury.getString("employeeResponsible");
+		String userLoginId = getUserLoginId(partyId);
+		
+		userLogin.put("partyId", partyId);
+		userLogin.put("userLoginId", userLoginId);
+		
+		return getTotalCashDeposit(userLogin);
+	}
+	
+	
+	public static BigDecimal getTotalCashWithdrawal(String treasuryId) {
+		Map<String, String> userLogin = new HashMap<String, String>();
+		
+		GenericValue treasury = getTreasury(treasuryId);
+		String partyId = treasury.getString("employeeResponsible");
+		String userLoginId = getUserLoginId(partyId);
+		userLogin.put("partyId", partyId);
+		userLogin.put("userLoginId", userLoginId);
+		
+		return getTotalCashWithdrawal(userLogin);
+	}
 
 	/***
 	 * Cash Amount Deposited Today
