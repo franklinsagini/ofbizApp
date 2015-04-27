@@ -134,7 +134,21 @@ under the License.
     	
     	var availableBalance = jQuery('input[name="availableAmount"]').val();
     	var transactionAmount = jQuery('input[name="transactionAmount"]').val();
+    	transactionAmount = transactionAmount.replace(/,/g, '');
+    	
+    	var memberAccountId = jQuery('select[name="memberAccountId"]').val();
+    	memberAccountId = memberAccountId.replace(/,/g, '');
+    	
+    	var treasuryId = jQuery('input[name="treasuryId"]').val();
+    	treasuryId = treasuryId.replace(/,/g, '');
      	
+     	
+     	var reqUrl = '/accountholdertransactions/control/isTellerBalanceEnough';
+    	var isEnough = isTellerBalanceEnough(reqUrl, treasuryId, memberAccountId, transactionAmount);
+	     if (isEnough != true){
+	    	alert("Teller balance is not enough - you must have enough money in the teller to transact");
+	    	return false;
+	    }
      	
      	
     	if (parseFloat(transactionAmount, 10) < parseFloat(availableBalance, 10)){
@@ -201,5 +215,33 @@ under the License.
     });
     
    return isEnough;
+    }
+    
+  
+    function isTellerBalanceEnough(reqUrl, treasuryId, memberAccountId, transactionAmount){
+        var isEnough = false;
+    	jQuery.ajax({
+
+     		url    : reqUrl,
+     		type   : 'GET',
+    		data   : {'treasuryId': treasuryId, 'memberAccountId': memberAccountId, 'transactionAmount':transactionAmount}, //here you can pass the parameters to  
+                                                   //the request if any.
+     			success : function(data){
+				
+					if (data.TELLERBALANCEENOUGH == true)
+					{
+						isEnough = true;
+					} else{
+						isEnough = false;
+					}
+				   
+				
+					
+			
+               },
+      		async : false
+    		});
+    
+   			return isEnough;
     }
 </script>
