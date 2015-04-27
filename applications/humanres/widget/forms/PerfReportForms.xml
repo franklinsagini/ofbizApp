@@ -167,4 +167,32 @@ under the License.
         </field>
     </form>
     
+    <form name="AllStaffPerformanceOnQualitativeGoals" type="single" target="AllStaffPerformanceScorePerQualitativeGoalPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+         <actions>
+        <entity-condition entity-name="PerfReviewPeriod" list="periodList">
+				<order-by field-name="quarter"/>
+			</entity-condition>
+			 <entity-condition entity-name="PerfGoals" list="GoalsList">
+                <condition-expr field-name="perfGoalsDefId" operator="equals" value="QTT_GOALS"/>
+				<order-by field-name="perfGoalsId"/>
+			</entity-condition>
+		</actions>
+		<field name="perfGoalsId" title="Select Goal" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="perfGoalsId" list-name="GoalsList"
+					description="${goal}" />
+			</drop-down>
+		</field>
+         <field name="year" title="Select Financial Year" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="year" list-name="periodList"
+					description="${year}" />
+			</drop-down>
+		</field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
 </forms>
