@@ -331,6 +331,16 @@ public class TreasuryUtility {
 		return glAccountId;
 	}
 
+	public static String getTellerTreasuryId(Map<String, String> userLogin){
+		String treasuryId = "";
+		
+		//Get the teller assigned to this partyId (name for Treasury where employeeResponsible is the guy logged in)
+		String partyId = userLogin.get("partyId"); 
+		treasuryId = getTeller(partyId).getString("treasuryId");
+		
+		return treasuryId;
+	}
+	
 	private static String getPersonNames(String partyId) {
 		// TODO Auto-generated method stub
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);

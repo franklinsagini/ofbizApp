@@ -57,5 +57,8 @@ transfersTotalList.eachWithIndex { transferItem, index ->
 
 println "Items are ... "+ mergedTransferTotalList.size()
 
+mergedTransferTotalList.sort{it.transferDate}
+mergedTransferTotalList.reverse(true);
+
 
 context.transfers = mergedTransferTotalList
