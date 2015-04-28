@@ -532,7 +532,7 @@ public class TreasuryReconciliation {
 	}
 	
 	
-	private static String getTreasuryTypeName(String treasuryId) {
+	public static String getTreasuryTypeName(String treasuryId) {
 		//Get the treasury type
 		List<GenericValue> treasuryELI = null; // =
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -567,7 +567,7 @@ public class TreasuryReconciliation {
 		return name.toUpperCase();
 	}
 	
-	private static String getTreasuryAccountId(String treasuryId) {
+	public static String getTreasuryAccountId(String treasuryId) {
 		//Get the treasury type
 		List<GenericValue> treasuryELI = null; // =
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
