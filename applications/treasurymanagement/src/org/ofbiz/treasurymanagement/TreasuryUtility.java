@@ -11,7 +11,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
-import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
@@ -44,6 +43,16 @@ public class TreasuryUtility {
 		
 		
 		return bdTellerBalance;
+	}
+	
+	public static BigDecimal getOpeningBalance(String treasuryId, Timestamp date){
+		BigDecimal bdBalance = BigDecimal.ZERO;
+		
+		/****
+		 * Transfers In - Transfers Out + Transactions In - Transactions Out before that date
+		 * */
+		log.info(" TTTTTTTTT Treasury ID "+treasuryId+"DDDDDDDDDDD Date is "+date);
+		return bdBalance;
 	}
 
 	/***
@@ -247,7 +256,7 @@ public class TreasuryUtility {
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.HOUR_OF_DAY, 0);
 		
-		Timestamp tstampDateCreated = new Timestamp(calendar.getTimeInMillis());
+		//Timestamp tstampDateCreated = new Timestamp(calendar.getTimeInMillis());
 		
 		List<GenericValue> cashWithdrawalELI = null;
 		//CASHWITHDRAWAL
@@ -256,15 +265,16 @@ public class TreasuryUtility {
 						"createdBy", EntityOperator.EQUALS,
 						createdBy), EntityCondition
 						.makeCondition("transactionType",
-								EntityOperator.EQUALS, "CASHWITHDRAWAL"),
-								EntityCondition
-								.makeCondition("createdStamp",
-										EntityOperator.GREATER_THAN_EQUAL_TO, tstampDateCreated)		
+								EntityOperator.EQUALS, "CASHWITHDRAWAL")		
 						),
 						EntityOperator.AND);
 		
 		log.info(" ############ Cash withdrawal createdBy : "+createdBy);
 		
+//		,
+//		EntityCondition
+//		.makeCondition("createdStamp",
+//				EntityOperator.GREATER_THAN_EQUAL_TO, tstampDateCreated)
 
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 
@@ -326,7 +336,7 @@ public class TreasuryUtility {
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.HOUR_OF_DAY, 0);
 		
-		Timestamp tstampDateCreated = new Timestamp(calendar.getTimeInMillis());
+		//Timestamp tstampDateCreated = new Timestamp(calendar.getTimeInMillis());
 		
 		List<GenericValue> cashDepositELI = null;
 
@@ -335,12 +345,14 @@ public class TreasuryUtility {
 						"createdBy", EntityOperator.EQUALS,
 						createdBy), EntityCondition
 						.makeCondition("transactionType",
-								EntityOperator.EQUALS, "CASHDEPOSIT"),
-								EntityCondition
-								.makeCondition("createdStamp",
-										EntityOperator.GREATER_THAN_EQUAL_TO, tstampDateCreated)		
+								EntityOperator.EQUALS, "CASHDEPOSIT")		
 						),
 						EntityOperator.AND);
+		
+//		,
+//		EntityCondition
+//		.makeCondition("createdStamp",
+//				EntityOperator.GREATER_THAN_EQUAL_TO, tstampDateCreated)
 		log.info(" ############ Cash Deposit createdBy : "+createdBy);
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {

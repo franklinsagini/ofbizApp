@@ -6,8 +6,13 @@ class TransferTotal{
 	def treasury
 	def name
 	def transferDate
+	def openingBalance
 	def amountIn
 	def amountOut
+	
+	def transactionsIn
+	def transactionsOut
+	
 	def amountBalance
 	
 }
@@ -15,6 +20,7 @@ class TransferTotal{
 class TransferDetail{
 	def treasuryFrom
 	def treasuryTo
+	
 	def amountIn
 	def amountOut
 	def comment
@@ -47,10 +53,15 @@ transfersTotalList.eachWithIndex { transferItem, index ->
 	//transferTotal.amountOut = BigDecimal.ZERO;
 	//transferTotal.amountBalance = transferItem.transactionAmount;
 	balanceAmount = BigDecimal.ZERO;
+	
 	balanceAmount = transferItem.transactionAmount.toBigDecimal();
 	
 	balanceAmount = balanceAmount.subtract(totalOut);
-	transferTotal = [destinationTreasury:transferItem.destinationTreasury, treasury:transferItem.destinationTreasury, name:transferItem.name, transferDate:transferItem.transferDate, amountIn:transferItem.transactionAmount, amountOut:totalOut, amountBalance:balanceAmount ]
+	
+	openingBalance = BigDecimal.ZERO;
+	transactionsIn = BigDecimal.ZERO;
+	transactionsOut = BigDecimal.ZERO;
+	transferTotal = [destinationTreasury:transferItem.destinationTreasury, treasury:transferItem.destinationTreasury, name:transferItem.name, transferDate:transferItem.transferDate, openingBalance:openingBalance,  amountIn:transferItem.transactionAmount, amountOut:totalOut, transactionsIn:transactionsIn, transactionsOut:transactionsOut, amountBalance:balanceAmount ]
 	
 	mergedTransferTotalList.add(transferTotal)
 }
