@@ -52,15 +52,22 @@ transfersTotalList.eachWithIndex { transferItem, index ->
 	//transferTotal.amountIn = transferItem.transactionAmount
 	//transferTotal.amountOut = BigDecimal.ZERO;
 	//transferTotal.amountBalance = transferItem.transactionAmount;
+	openingBalance = BigDecimal.ZERO;
+	openingBalance = org.ofbiz.treasurymanagement.TreasuryUtility.getOpeningBalance(transferItem.destinationTreasury, transferItem.transferDate);
+
+	transactionsIn = BigDecimal.ZERO;
+	transactionsIn = org.ofbiz.treasurymanagement.TreasuryUtility.getTransactionsIn(transferItem.destinationTreasury, transferItem.transferDate);
+	transactionsOut = BigDecimal.ZERO;
+	transactionsOut = org.ofbiz.treasurymanagement.TreasuryUtility.getTransactionsOut(transferItem.destinationTreasury, transferItem.transferDate);
+	
 	balanceAmount = BigDecimal.ZERO;
 	
 	balanceAmount = transferItem.transactionAmount.toBigDecimal();
 	
-	balanceAmount = balanceAmount.subtract(totalOut);
+	balanceAmount = balanceAmount.add(openingBalance).add(transactionsIn).subtract(totalOut);
+	balanceAmount = balanceAmount.subtract(transactionsOut);
 	
-	openingBalance = BigDecimal.ZERO;
-	transactionsIn = BigDecimal.ZERO;
-	transactionsOut = BigDecimal.ZERO;
+
 	transferTotal = [destinationTreasury:transferItem.destinationTreasury, treasury:transferItem.destinationTreasury, name:transferItem.name, transferDate:transferItem.transferDate, openingBalance:openingBalance,  amountIn:transferItem.transactionAmount, amountOut:totalOut, transactionsIn:transactionsIn, transactionsOut:transactionsOut, amountBalance:balanceAmount ]
 	
 	mergedTransferTotalList.add(transferTotal)
