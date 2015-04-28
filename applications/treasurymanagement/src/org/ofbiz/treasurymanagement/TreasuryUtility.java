@@ -5,11 +5,13 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
+import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
@@ -73,6 +75,84 @@ public class TreasuryUtility {
 		
 		
 		return bdAmountAllocated;
+	}
+	
+	public static String getTreasuryId(Map<String, String> userLogin) {
+		//Get Treasury ID
+		String partyId = userLogin.get("partyId");
+		String treasuryId = getTeller(partyId).getString("treasuryId");
+		return treasuryId;
+	}
+	
+	
+	/***
+	 * Check that teller balance is sufficent
+	 * **/
+	public static Boolean tellerBalanceSufficient(String treasuryId, Long memberAccountId,  BigDecimal transactionAmount){
+		
+		GenericValue treasury = getTreasury(treasuryId);
+		
+		String partyId = treasury.getString("employeeResponsible");
+		
+		String userLoginId = getUserLoginId(partyId);
+		Map<String, String> userLogin = new HashMap<String, String>();
+		userLogin.put("userLoginId", userLoginId);
+		userLogin.put("partyId", partyId);
+		
+		
+		BigDecimal bdTellerBalanceAmt = getTellerBalance(userLogin);
+		
+		//BigDecimal bdCommissionAmount = AccHolderTransactionServices.getTransactionCommissionAmount(transactionAmount);
+		//BigDecimal bdExciseDutyAmount = AccHolderTransactionServices.getTransactionExcideDutyAmount(bdCommissionAmount);
+		
+		//BigDecimal bdTotalAmount = transactionAmount.add(bdCommissionAmount).add(bdExciseDutyAmount);
+		
+		if (bdTellerBalanceAmt.compareTo(transactionAmount) != -1)
+			return true;
+		
+		
+		return false;
+	}
+
+	private static String getUserLoginId(String partyId) {
+		
+		List<GenericValue> userLoginELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			userLoginELI = delegator.findList("UserLogin", EntityCondition
+					.makeCondition("partyId", partyId), null, null,
+					null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		GenericValue userLogin = null;
+		for (GenericValue genericValue : userLoginELI) {
+			userLogin = genericValue;
+		}
+		
+		if (userLogin != null)
+			return userLogin.getString("userLoginId");
+		
+		return null;
+	}
+
+	private static GenericValue getTreasury(String treasuryId) {
+		List<GenericValue> treasuryELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			treasuryELI = delegator.findList("Treasury", EntityCondition
+					.makeCondition("treasuryId", treasuryId), null, null,
+					null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		GenericValue treasury = null;
+		for (GenericValue genericValue : treasuryELI) {
+			treasury = genericValue;
+		}
+		return treasury;
 	}
 
 	private static GenericValue getTreasuryTransfer(String treasuryId) {
@@ -204,6 +284,33 @@ public class TreasuryUtility {
 					.getBigDecimal("transactionAmount"));
 		}
 		return bdBalance;
+	}
+	
+	
+	public static BigDecimal getTotalCashDeposit(String treasuryId){
+		Map<String, String> userLogin = new HashMap<String, String>();
+		
+		GenericValue treasury = getTreasury(treasuryId);
+		String partyId = treasury.getString("employeeResponsible");
+		String userLoginId = getUserLoginId(partyId);
+		
+		userLogin.put("partyId", partyId);
+		userLogin.put("userLoginId", userLoginId);
+		
+		return getTotalCashDeposit(userLogin);
+	}
+	
+	
+	public static BigDecimal getTotalCashWithdrawal(String treasuryId) {
+		Map<String, String> userLogin = new HashMap<String, String>();
+		
+		GenericValue treasury = getTreasury(treasuryId);
+		String partyId = treasury.getString("employeeResponsible");
+		String userLoginId = getUserLoginId(partyId);
+		userLogin.put("partyId", partyId);
+		userLogin.put("userLoginId", userLoginId);
+		
+		return getTotalCashWithdrawal(userLogin);
 	}
 
 	/***

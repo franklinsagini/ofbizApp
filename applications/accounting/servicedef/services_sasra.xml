@@ -19,13 +19,17 @@
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
 
-    <service name="saveDepositReturns" engine="simple" default-entity-name="ImprestAccount" auth="true" max-retry="3" transaction-timeout="3600"
+<!--     <service name="saveDepositReturns" engine="simple" default-entity-name="ImprestAccount" auth="true" max-retry="3" transaction-timeout="3600"
              location="component://accounting/script/org/ofbiz/accounting/sasra/SasraServices.xml" invoke="saveDepositReturns" auth="true">
         <description>Update Imprest Account Mapping</description>
          <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
-
+ -->
+    <service name="saveDepositReturns" engine="simple"
+             location="component://accounting/script/org/ofbiz/accounting/sasra/SasraServices.xml" invoke="saveDepositReturns" >
+        <description>Update Imprest Account Mapping</description>
+    </service>
 
     <service name="createSasraReportItem" engine="simple" default-entity-name="SasraReportItem"
              location="component://accounting/script/org/ofbiz/accounting/sasra/SasraServices.xml" invoke="createSasraReportItem" auth="true">

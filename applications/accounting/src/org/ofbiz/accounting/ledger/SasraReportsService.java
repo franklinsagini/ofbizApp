@@ -20,15 +20,22 @@ import org.ofbiz.entity.condition.EntityOperator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import java.io.Writer;
+
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.calendar.RecurrenceRule;
 import org.ofbiz.webapp.event.EventHandlerException;
+
 import java.io.IOException;
+
 import org.ofbiz.service.GenericServiceException;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.ofbiz.service.GenericDispatcherFactory;
 
 /***
@@ -420,37 +427,6 @@ public class SasraReportsService {
 		return count;
 	}
 
-				public static String sheduleDepositReturnReport(HttpServletRequest request, HttpServletResponse response) {
-					Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-					LocalDispatcher dispatcher = (new GenericDispatcherFactory()).createLocalDispatcher("interestcalculations", delegator);
 
-					Map<String, String> context = UtilMisc.toMap("message",	"Saving Scheduled Emails Testing !!");
-					Map<String, Object> result = new HashMap<String, Object>();
-					try {
-						long startTime = (new Date()).getTime();
-						int frequency = RecurrenceRule.SECONDLY;
-						int interval = 5;
-						int count = -1;
-						dispatcher.schedule("saveDepositReturns", context, startTime, frequency, interval, count);
-					} catch (GenericServiceException e) {
-						e.printStackTrace();
-					}
-
-					Writer out;
-					try {
-						out = response.getWriter();
-						out.write("");
-						out.flush();
-					} catch (IOException e) {
-						try {
-							throw new EventHandlerException(
-									"Unable to get response writer", e);
-						} catch (EventHandlerException e1) {
-							e1.printStackTrace();
-						}
-					}
-					return "";
-
-				}
 
 }

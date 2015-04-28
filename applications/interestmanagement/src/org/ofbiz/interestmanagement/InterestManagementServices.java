@@ -17,6 +17,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import javolution.util.FastMap;
 
@@ -743,6 +744,12 @@ public class InterestManagementServices {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		LocalDispatcher dispatcher = (new GenericDispatcherFactory())
 				.createLocalDispatcher("interestcalculations", delegator);
+		
+		// HttpSession session = request.getSession();
+		// Map<String, String> userLogin = (HashMap)
+		// session.getAttribute("userLogin");
+		// userLogin.get("userLoginId")
+		
 
 		Map<String, String> context = UtilMisc.toMap("message",
 				"Interest Testing !!");
