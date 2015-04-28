@@ -880,6 +880,15 @@
 		<sequenced-id sequence-name="StaffInPerfReviewGroup" field="StaffInPerfReviewGroupId" />
 		<set from-field="StaffInPerfReviewGroupId" field="newEntity.StaffInPerfReviewGroupId" /> 
 		
+		<set field="party" from-field="newEntity.partyId"/>
+		
+		<entity-one value-field="staff" entity-name="Person">
+		<field-map field-name="partyId" from-field="party"/>
+		</entity-one>
+		
+		<set field="newEntity.departmentId" from-field="staff.departmentId"/>
+		<set field="newEntity.branchId" from-field="staff.branchId"/>
+		
 		<set field="party" value="${newEntity.partyId}"/>
 		<set field="exist" value="${bsh:org.ofbiz.humanres.HumanResServices.findExistanceOfStaffInReviewGroups(party);}"/>
 		<set field="indicatorTotal" value="${bsh:org.ofbiz.humanres.HumanResServices.getIndicatorTotalsCompareToActionPlans();}"/>

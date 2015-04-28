@@ -189,6 +189,12 @@
                                 <include-form name="AllStaffPerformanceOnQualitativeGoals" location="component://humanres/widget/forms/PerfReportForms.xml"/>
                             </screenlet>
                              </container>
+                             
+                              <container style="righthalf">
+                            <screenlet title="Staff Performance Per Branch/Department">
+                                <include-form name="StaffPerformancePerDepartment" location="component://humanres/widget/forms/PerfReportForms.xml"/>
+                            </screenlet>
+                             </container>
 
                         	</widgets>
                         </section>
@@ -312,6 +318,29 @@
                     <decorator-section name="body">
                         <platform-specific>
                             <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/AllStaffPerformanceScorePerQualitativeGoal.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+      <!-- =================== STAFF PERFORMANCE SCORES PER BRANCH/DEPARTMENT REPORTS ====================== -->
+    
+     <screen name="StaffPerformancePerBranchOrDepartmentPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/StaffPerformancePerBranchOrDepartment.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/StaffPerformancePerBranchOrDepartment.fo.ftl"/></xsl-fo>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>
