@@ -496,11 +496,33 @@ public class TreasuryReconciliation {
 		String treasuryTypeName = getTreasuryTypeName(destinationTreasury);
 		if (treasuryTypeName.equals("BANK"))
 		{
+			log.info("IIIIIIIII Its a BANK !!!!!!!!!!!!!!!!!!!!! ");
 			String glAccountId = getTreasuryAccountId(destinationTreasury);
 			bdNetAllocation = TreasuryAccounting.getAccountBalance(glAccountId);
 			
 			return bdNetAllocation;
 		}
+		
+		//getNetAllocation
+		if (treasuryTypeName.equals("TELLER")){
+			log.info("IIIIIIIII Its a teller !!!!!!!!!!!!!!!!!!!!! ");
+			//Get net allocations
+			bdNetAllocation = bdNetAllocation.add(getTotalIn(destinationTreasury));
+			bdNetAllocation = bdNetAllocation.subtract(getTotalOut(destinationTreasury));
+			
+			//Add total deposits by this user
+			BigDecimal bdTotalDeposits = TreasuryUtility.getTotalCashDeposit(destinationTreasury);
+			log.info("IIIIIIIII Total Deposits !!!!!!!!!!!!!!!!!!!!! "+bdTotalDeposits);
+			bdNetAllocation = bdNetAllocation.add(bdTotalDeposits);
+			
+			//Subtract total withdrawals by this user
+			BigDecimal bdTotalWithdrawal = TreasuryUtility.getTotalCashWithdrawal(destinationTreasury);
+			log.info("IIIIIIIII Total Withdrawal !!!!!!!!!!!!!!!!!!!!! "+bdTotalWithdrawal);
+			bdNetAllocation = bdNetAllocation.subtract(bdTotalWithdrawal);
+			return bdNetAllocation;
+		}
+		
+		log.info("IIIIIIIII Its none of the above !!!!!!!!!!!!!!!!!!!!! ==== "+treasuryTypeName);
 		
 		bdNetAllocation = bdNetAllocation.add(getTotalIn(destinationTreasury));
 		log.info(" NNNNNNNNNNNNNNNNN Net Allocation  "+bdNetAllocation);

@@ -11,13 +11,20 @@ if (accountTransactionParentId) {
 	   context.accountTransactionList = accountTransactionList;
 }
 
+referenceNo = null;
 partyId = null;
 memberAccountId = null;
 totalAmount = BigDecimal.ZERO;
+transactionType = null;
 accountTransactionList.eachWithIndex { transactionItem, item ->
 	partyId = transactionItem.partyId
 	memberAccountId  = transactionItem.memberAccountId
 	totalAmount = totalAmount + transactionItem.transactionAmount
+	referenceNo = transactionItem.acctgTransId
+	
+	if (transactionItem.transactionType.equals("CASHWITHDRAWAL")){
+		transactionType = "CASHWITHDRAWAL"
+	}
 }
 
 context.totalAmount = totalAmount
@@ -29,3 +36,12 @@ context.memberAccount = memberAccount
 branch = delegator.findOne("PartyGroup", [partyId : member.branchId], false);
 context.branch =  branch
 context.createdBy = accountTransactionParent.createdBy
+
+//Get the Balance after this transaction
+balanceAmount = org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getAvailableBalanceVer3(memberAccountId.toString());
+context.balanceAmount = balanceAmount
+context.referenceNo = referenceNo
+
+
+if (transactionType != null)
+	context.transactionType = transactionType
