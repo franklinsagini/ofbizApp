@@ -1,746 +1,985 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+	license agreements. See the NOTICE file distributed with this work for additional 
+	information regarding copyright ownership. The ASF licenses this file to 
+	you under the Apache License, Version 2.0 (the "License"); you may not use 
+	this file except in compliance with the License. You may obtain a copy of 
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
+	by applicable law or agreed to in writing, software distributed under the 
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. See the License for the specific 
+	language governing permissions and limitations under the License. -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
+	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
-<!-- CashWithdrawal -->
-	<simple-method method-name="createCashWithdrawal" short-description="Create CashWithdrawal">
-		
-        <make-value entity-name="AccountTransaction" value-field="newEntity"/>
-        <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        
-        <!-- Check if the commission charges are set otherwise scream and dont allow a withdrawal to happen -->
-        
-        <set field="commissionSetup" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.commissionChargeIsSetup();}" type="Boolean"/>
-		
+	<!-- CashWithdrawal -->
+	<simple-method method-name="createCashWithdrawal"
+		short-description="Create CashWithdrawal">
 
-        <set field="ledgerAccountSetup" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.commissionChargeIsSetup();}" type="Boolean"/>
-        <set field="commissionAccountSetup" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.commissionAccountSetUp();}" type="Boolean"/>
-       <set field="exciseDutyAccountSetup" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.exciseDutyAccountSetUp();}" type="Boolean"/>
-		
-		<set field="falseField" value="false" type="Boolean"/>
-		
-		
-		<if> 
-            <condition> 
-                   <if-compare-field to-field="commissionSetup" operator="equals" field="falseField"></if-compare-field>
-            </condition> 
-            <then> 
-                <add-error> 
-                    <fail-property resource="AccountHolderTransactionsUILabels.xml"  
-                        property="commissionChargeSetupError" /> 
-                </add-error> 
-                <check-errors /> 
-            </then> 
-             
-            <else>
-            	
-				<set field="newEntity.treasuryId" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerId(userLogin);}" type="String"/>
-				<!-- withdrawalStatus -->
-				<set field="accountTransactionParentId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.cashWithdrawal(newEntity, userLogin);}" type="String"/>
-				<field-to-result field="accountTransactionParentId" result-name="accountTransactionParentId"/>
-				<!-- call-simple-method method-name="cashWithdrawalSave" scope="inline"></call-simple-method -->
-		        <!-- set field="transactionStatus" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.addChargesToTransaction(newEntity, userLogin, transactionType);}" type="String"/ -->
+		<make-value entity-name="AccountTransaction" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
 
-                <property-to-field resource="AccountHolderTransactionsUILabels.xml" 
-            	property="commissionChargeSetupSuccess" field="successMessage" /> 
-            </else> 
-        </if>
-        
-    </simple-method>
-    
-   
-    <simple-method method-name="createMemberTransaction" short-description="Member Transaction Entry" use-transaction="true">
-        <!-- Create Account Transaction -->
-        <!-- TTTTTTTTTTTTTTTTTTTTTTTTTTTTTT -->
-        <make-value entity-name="AcctgTrans" value-field="acctgTrans"/>
-        <!-- entity-one entity-name="AcctgTrans" value-field="acctgTrans"/ -->
-         <!-- set-pk-fields map="parameters" value-field="acctgTrans"/ -->
-        <!-- set-nonpk-fields map="newEntity" value-field="acctgTrans"/ -->
-         <sequenced-id sequence-name="AcctgTrans" field="acctgTransId"/>
-        <now-timestamp field="createdDate"/>
-        <set from-field="acctgTransId" field="acctgTrans.acctgTransId"/>
-        
-		<!-- set field="entityName" value="AcctgTrans"></set>
-		<set field="acctgTrans.acctgTransId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}" type="String"></set -->        
-        <!-- Get Accounts from setup -->
-        <set field="accountHolderTransactionSetupId" value="MEMBERTRANSACTIONACCOUNT"/>
-        <entity-one entity-name="AccountHolderTransactionSetup" value-field="accountHolderTransactionSetup"/>
-        
-        <!-- Set values Account Trans Entity -->
-        <now-timestamp field="createdDate"/>
-        <set field="acctgTrans.acctgTransTypeId" value="MEMBER_DEPOSIT"/>
-        <set field="acctgTrans.transactionDate" from-field="createdDate"/>
-        <set field="acctgTrans.isPosted" value="Y"/>
-        <set field="acctgTrans.postedDate" from-field="createdDate"/>
-        <set field="acctgTrans.glFiscalTypeId" value="ACTUAL"/>
-        <!-- set field="acctgTrans.partyId" from-field="newEntity.partyId"/ -->
-        <set field="acctgTrans.partyId" from-field="Company"/>
-        <set field="acctgTrans.createdDate" from-field="createdDate"/>
-        <set field="acctgTrans.createdByUserLogin" from-field="newEntity.createdBy"/>
-        <set field="acctgTrans.lastModifiedDate" from-field="createdDate"/>
-        <set field="acctgTrans.lastModifiedByUserLogin" from-field="newEntity.createdBy"/>
-        <create-value value-field="acctgTrans"/>
-        
-        <!-- Create Account Entries one for Member Deposit and Another for Cash -->
-        <!-- TTTTTTTTTTTTTTTTTTTTTTTTTTTTTT -->
-        <call-simple-method method-name="createMemberDepositEntry" scope="inline"></call-simple-method>
-        <call-simple-method method-name="createMemberCashEntry" scope="inline"></call-simple-method>
-    </simple-method>
-    
-    <simple-method method-name="createMemberDepositEntry" short-description="Member Deposit Entry">
-    	<!-- There is one Debit to the account specified in the setup (Member Deposit) -->
-        <!-- entity-one entity-name="AcctgTransEntry" value-field="memberDepositEntry"/ -->
-        <make-value entity-name="AcctgTransEntry" value-field="memberDepositEntry"/>
-         <!-- set-pk-fields map="parameters" value-field="memberDepositEntry"/ -->
-        <!-- set-nonpk-fields map="newEntity" value-field="memberDepositEntry"/ -->
-        
-        <set field="memberDepositEntry.acctgTransId" from-field="acctgTrans.acctgTransId"/>
-        <set field="memberDepositEntry.acctgTransEntrySeqId" value="1"/>
-        <!-- set field="memberDepositEntry.partyId" from-field="newEntity.partyId"/ -->
-        <set field="memberDepositEntry.partyId" from-field="Company"/>
-        <set field="memberDepositEntry.glAccountTypeId" value="MEMBER_DEPOSIT"/>
-        <set field="memberDepositEntry.glAccountId" from-field="accountHolderTransactionSetup.memberDepositAccId"/>
-        <!-- set field="memberDepositEntry.organizationPartyId" from-field="userLogin.partyId"/ -->
-        
-        <set field="memberDepositEntry.organizationPartyId" value="Company"/>
-        <set field="memberDepositEntry.amount" from-field="newEntity.transactionAmount"/>
-		<set field="memberDepositEntry.currencyUomId" value="KES"/>
-		<set field="memberDepositEntry.origAmount" from-field="newEntity.transactionAmount"/>
-		<set field="memberDepositEntry.origCurrencyUomId" value="KES"/>
-    	<set field="memberDepositEntry.debitCreditFlag" from-field="memberDepostPosting"/>    
-    	<set field="memberDepositEntry.reconcileStatusId" value="AES_NOT_RECONCILED"/>    
-        
-        
-        
-        <create-value value-field="memberDepositEntry"/>
-    </simple-method>
-    <simple-method method-name="createMemberCashEntry" short-description="Member Cash Entry">
-    	<!--  There is a Credit in the account specified for Cash Entry (Cash Register in this case) -->
-        <!-- entity-one entity-name="AcctgTransEntry" value-field="memberCashEntry" /-->
-        <make-value entity-name="AcctgTransEntry" value-field="memberCashEntry"/>
-        <!-- set-pk-fields map="parameters" value-field="memberCashEntry"/ -->
-        <!--  set-nonpk-fields map="newEntity" value-field="memberCashEntry"/ -->
-        
-        <set field="memberCashEntry.acctgTransId" from-field="acctgTrans.acctgTransId"/>
-        <set field="memberCashEntry.acctgTransEntrySeqId" value="2"/>
-        <!-- set field="memberCashEntry.partyId" from-field="newEntity.partyId"/ -->
-        <set field="memberCashEntry.partyId" from-field="Company"/>
-        <set field="memberCashEntry.glAccountTypeId" value="MEMBER_DEPOSIT"/>
-        <set field="memberCashEntry.glAccountId" from-field="accountHolderTransactionSetup.cashAccountId"/>
-        <!-- set field="memberCashEntry.organizationPartyId" from-field="userLogin.partyId"/ -->
-        <set field="memberCashEntry.amount" from-field="newEntity.transactionAmount"/>
-         <set field="memberCashEntry.organizationPartyId" value="Company"/>
-		<set field="memberCashEntry.currencyUomId" value="KES"/>
-		<set field="memberCashEntry.origAmount" from-field="newEntity.transactionAmount"/>
-		<set field="memberCashEntry.origCurrencyUomId" value="KES"/>
-    	<set field="memberCashEntry.debitCreditFlag" from-field="cashPosting"/>    
-    	<set field="memberCashEntry.reconcileStatusId" value="AES_NOT_RECONCILED"/> 
-        
-        <create-value value-field="memberCashEntry"/>
-    </simple-method>
-    
-    <simple-method method-name="updateCashWithdrawal" short-description="Update CashWithdrawal">
-        <entity-one entity-name="AccountTransaction" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <set field="newEntity.updatedBy" from-field="userLogin.userLoginId"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <simple-method method-name="deleteCashWithdrawal" short-description="Delete CashWithdrawal">
-     	<entity-one entity-name="AccountTransaction" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <set field="newEntity.updatedBy" from-field="userLogin.userLoginId"/>
-        <set field="newEntity.isActive" value="N"/>
-        <store-value value-field="lookedUpValue"/>
-        <!-- entity-one entity-name="CashWithdrawal" value-field="lookedUpValue"/>
-        <remove-value value-field="lookedUpValue"/ -->
-    </simple-method>
-<!-- CashDeposit -->
-<simple-method method-name="createCashDeposit" short-description="Create CashDeposit">
-		
-        <call-simple-method method-name="saveCashDeposit" scope="inline"></call-simple-method>
-        
-         <!-- Post Cash Deposit -->
-        <call-simple-method method-name="createMemberTransaction" scope="inline"></call-simple-method>
-        
-        
-    </simple-method>
-    
-    <simple-method method-name="saveCashDeposit" use-transaction="true">
-    	<make-value entity-name="AccountTransaction" value-field="newEntity"/>
-         <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        
-        <map-to-map map="parameters" to-map="transactionParameters"/>
-       
-        <!-- set field="entityName" value="AccountTransaction"></set>
-        <set field="newEntity.accountTransactionId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set -->
-        <sequenced-id sequence-name="AccountTransaction" field="accountTransactionId"/>
-        <set from-field="accountTransactionId" field="newEntity.accountTransactionId"/>
-        <call-simple-method method-name="createAccountTransactionParent" scope="inline"></call-simple-method>
-		<set field="newEntity.accountTransactionParentId" value="${transactionParent.accountTransactionParentId}"/>
-        <set field="newEntity.treasuryId" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerId(userLogin);}" type="String"/>
-         <set field="newEntity.isActive" value="Y"/>
-        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
-        <set field="loggedInPartyId" from-field="userLogin.partyId"/>
-        <!-- set field="memberAccountId" from-field="newEntity.memberAccountId"/ -->
-        <!-- set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" type="String"/ -->
-        <!-- set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}"/-->
-        <!-- set field="newEntity.branchId" from-field="userLogin.partyId"/ -->
-        <set field="newEntity.transactionType" value="CASHDEPOSIT"/>
-        <set field="transactionType" value="CASHDEPOSIT"/>
-         <set field="newEntity.increaseDecrease" value="I"/>
-        <create-value value-field="newEntity"/>
-        
-        
-        <field-to-result field="newEntity.accountTransactionParentId" result-name="accountTransactionParentId"/>
-        
-         <!-- Set Posting Type -->
-        <set field="memberDepostPosting" value="C"/>
-        <set field="cashPosting" value="D"/>
-    </simple-method>
-    <simple-method method-name="updateCashDeposit" short-description="Update CashDeposit">
-        <entity-one entity-name="AccountTransaction" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <set field="newEntity.updatedBy" from-field="userLogin.userLoginId"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <simple-method method-name="deleteCashDeposit" short-description="Delete CashDeposit">
-        <entity-one entity-name="AccountTransaction" value-field="lookedUpValue"/>
-         <set field="newEntity.updatedBy" from-field="userLogin.userLoginId"/>
-        <set field="newEntity.isActive" value="N"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-<!-- ChequeWithdrawal -->
-<simple-method method-name="createChequeWithdrawal" short-description="Create ChequeWithdrawal">
-        <make-value entity-name="AccountTransaction" value-field="newEntity"/>
-         <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <call-simple-method method-name="saveChequeWithdrawal" scope="inline"> </call-simple-method>
-        <set field="transactionType" value="CHEQUEWITHDRAWAL"/>
-        <set field="newEntity.treasuryId" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerId(userLogin);}" type="String"/>
-        <set field="postedStatus" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.createChequeTransaction(newEntity, userLogin);}" type="String"/>
-        <set field="transactionStatus" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.addChargesToTransaction(newEntity, userLogin, transactionType);}" type="String"/>
-    </simple-method>
-    
-    
-    <simple-method method-name="saveChequeWithdrawal" short-description="Saving Cheque Withdrawal Reccord, call this method in createChequeWithdrawal">
-        <!-- set field="entityName" value="AccountTransaction"></set>
-        <set field="newEntity.accountTransactionId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set -->
-		
-		<sequenced-id sequence-name="AccountTransaction" field="accountTransactionId"/>
-        <set from-field="accountTransactionId" field="newEntity.accountTransactionId"/>
-		
-        <call-simple-method method-name="createAccountTransactionParent" scope="inline"></call-simple-method>
-		<set field="newEntity.accountTransactionParentId" value="${transactionParent.accountTransactionParentId}"/>
-         <set field="newEntity.isActive" value="Y"/>
-        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
-        <set field="loggedInPartyId" from-field="userLogin.partyId"/>
-        <set field="memberAccountId" from-field="newEntity.memberAccountId"/>
-        <!-- set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" type="String"/ -->
-        <!--set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}" type="String"/-->
-        
-        <!-- set field="newEntity.branchId" from-field="userLogin.partyId"/ -->
-        <set field="newEntity.transactionType" value="CHEQUEWITHDRAWAL"/>
-        <set field="newEntity.increaseDecrease" value="D"/>
-        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
-        <!-- set field="productType" value="Loan"/ -->
-        <create-value value-field="newEntity"/>
-    </simple-method>
-        
-    <simple-method method-name="updateChequeWithdrawal" short-description="Update ChequeWithdrawal">
-        <entity-one entity-name="AccountTransaction" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <set field="newEntity.updatedBy" from-field="userLogin.userLoginId"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <simple-method method-name="deleteChequeWithdrawal" short-description="Delete ChequeWithdrawal">
-        <entity-one entity-name="AccountTransaction" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <set field="newEntity.updatedBy" from-field="userLogin.userLoginId"/>
-        <set field="newEntity.isActive" value="N"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-<!-- ChequeDeposit -->
-<simple-method method-name="createChequeDeposit" short-description="Create ChequeDeposit">
-        <call-simple-method method-name="createChequeDepositTemporary" scope="inline"></call-simple-method>
-        <!-- create-object class-name="org.ofbiz.entity.GenericDelegator"  field="delegator">
-        	<field field="delegator"/>
-        </create-object -->
-        
-         <set from-field="newEntity.accountTransactionId" field="accountTransactionId"/>
-         <set field="newEntity.isPosted" value="N"/>
-         <entity-one value-field="accountTransaction" entity-name="AccountTransaction">
-         	<field-map field-name="accountTransactionId" from-field="newEntity.accountTransactionId"/>
-         </entity-one>
-         <set field="newEntity.treasuryId" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerId(userLogin);}" type="String"/>
-        <set field="endDate" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.calculateChequeClearance(accountTransaction);}" type="Timestamp"/>
-        <!-- call-class-method  class-name="org.ofbiz.accountholdertransactions.AccHolderTransactionServices" method-name="calculateChequeClearance" ret-field="endDate">
-        	<string value="${accountTransactionId}"/>
-        </call-class-method -->
-       
-        
-        <map-to-map map="newEntity" to-map="transactionMap"/>
-        <make-value value-field="anotherTransaction" entity-name="AccountTransaction" map="transactionMap"/>
-        <set field="anotherTransaction.clearDate" from-field="endDate"/>
-        <!-- create-value value-field="newEntity"/ -->
-        
-         <call-simple-method method-name="removeTransaction" scope="inline"></call-simple-method>
-        <!--  store-value value-field="anotherTransaction"/ -->
-        <call-simple-method method-name="createChequeDepositWithEndDate" scope="inline"></call-simple-method>
-        
-        <!-- map-to-map map="newEntity" to-map="transactionMap"/ -->
-         <!-- call-service service-name="calculateChequeClearDate" in-map-name="transactionMap" include-user-login="false" require-new-transaction="true"  >
-         	<result-to-field result-name="clearDate"/>
-            <result-to-result result-name="clearDate"/>
-         </call-service -->
-        
-        
-    </simple-method>
-    
-    <simple-method method-name="removeTransaction" use-transaction="true">
-    	<remove-value value-field="newEntity"/>
-    </simple-method>
-    <simple-method method-name="createChequeDepositTemporary" use-transaction="true">
-    	<make-value entity-name="AccountTransaction" value-field="newEntity"/>
-         <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <!-- set field="entityName" value="AccountTransaction"></set>
-        <set field="newEntity.accountTransactionId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set -->
-		<sequenced-id sequence-name="AccountTransaction" field="accountTransactionId"/>
-        <set from-field="accountTransactionId" field="newEntity.accountTransactionId"/>
-		
-        <call-simple-method method-name="createAccountTransactionParent" scope="inline"></call-simple-method>
-		<set field="newEntity.accountTransactionParentId" value="${transactionParent.accountTransactionParentId}"/>
-         <set field="newEntity.isActive" value="Y"/>
-        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
-        <set field="loggedInPartyId" from-field="userLogin.partyId"/>
-        <set field="memberAccountId" from-field="newEntity.memberAccountId"/>
-        <!-- set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" type="String"/ -->
-       <!--set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}" type="String"/ -->
-       
-        <!-- set field="newEntity.branchId" from-field="userLogin.partyId"/ -->
-        <set field="newEntity.transactionType" value="CHEQUEDEPOSIT"/>
-         <set field="newEntity.increaseDecrease" value="I"/>
-         <set field="newEntity.isPosted" value="N"/>
-        
-        <now-timestamp field="createdDate"/>
-        
-        <set field="chequeSetupId" value="TIMETOCLEAR"/>
-        <entity-one value-field="chequeSetup" entity-name="ChequeSetup">
-        </entity-one>
-        <!-- ${chequeSetup.durationToClear} -->
-        <set-calendar field="newEntity.clearDate" from-field="createdDate" days="${chequeSetup.durationToClear}"  />
-        <set field="newEntity.clearDuration" from-field="chequeSetup.durationToClear"/>
-        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
-        <!-- set field="productType" value="Loan"/ -->
-        
-        <create-value value-field="newEntity"/>
-    </simple-method>
-    
-    <simple-method method-name="createChequeDepositWithEndDate" use-transaction="true">
-         <set-pk-fields map="parameters" value-field="anotherTransaction"/>
-        <set-nonpk-fields map="parameters" value-field="anotherTransaction"/>
-        <!-- set field="entityName" value="AccountTransaction"></set>
-        <set field="anotherTransaction.accountTransactionId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set-->
-        <sequenced-id sequence-name="AccountTransaction" field="accountTransactionId"/>
-        <set from-field="accountTransactionId" field="anotherTransaction.accountTransactionId"/>
-        
-         <set field="anotherTransaction.isActive" value="Y"/>
-        <set field="anotherTransaction.createdBy" from-field="userLogin.userLoginId"/>
-        <set field="anotherTransaction.branchId" from-field="userLogin.partyId"/>
-        <set field="anotherTransaction.transactionType" value="CHEQUEDEPOSIT"/>
-        <set field="anotherTransaction.isPosted" value="N"/>
-        
-        <now-timestamp field="createdDate"/>
-        
-        <set field="chequeSetupId" value="TIMETOCLEAR"/>
-        <entity-one value-field="chequeSetup" entity-name="ChequeSetup">
-        </entity-one>
-        <!-- ${chequeSetup.durationToClear} -->
-        <set field="anotherTransaction.clearDuration" from-field="chequeSetup.durationToClear"/>
-        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
-        <!-- set field="productType" value="Loan"/ -->
-        
-        <create-value value-field="anotherTransaction"/>
-    </simple-method>
-    
-    <simple-method method-name="updateChequeDeposit" short-description="Update ChequeDeposit">
-       <entity-one entity-name="AccountTransaction" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <set field="newEntity.updatedBy" from-field="userLogin.userLoginId"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <simple-method method-name="deleteChequeDeposit" short-description="Delete ChequeDeposit">
-        <entity-one entity-name="AccountTransaction" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <set field="newEntity.updatedBy" from-field="userLogin.userLoginId"/>
-        <set field="newEntity.isActive" value="N"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-<!-- LoanRepayment -->
-<!-- createLoanRepayment  -->
-	<simple-method method-name="createLoanRepayment"  short-description="Create LoanRepayment">
+		<!-- Check if the commission charges are set otherwise scream and dont 
+			allow a withdrawal to happen -->
 
-        <make-value entity-name="LoanRepayment" value-field="newEntity"/>
-        <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <set field="entityName" value="LoanRepayment"></set>
-        <set field="newEntity.loanRepaymentId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
-        <call-simple-method method-name="createAccountTransactionParent" scope="inline"></call-simple-method>
-		<set field="newEntity.accountTransactionParentId" value="${transactionParent.accountTransactionParentId}"/>
-        <set field="newEntity.isActive" value="Y"/>
-        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
-        <set field="loggedInPartyId" from-field="userLogin.partyId"/>
-        <!-- set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" type="String"/ -->
-        <set field="memberAccountId" from-field="newEntity.memberAccountId"/>
-        <!--set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}" type="String"/ -->
-        
-        <!-- set field="newEntity.branchId" from-field="userLogin.partyId"/ -->
-        <set field="newEntity.transactionType" from-field="LOANREPAYMENT"/>
-        
-        <call-simple-method method-name="saveLoanRepayment" scope="inline"></call-simple-method>
-        <!-- distribute repayment -->
-        
-        
-        <entity-one entity-name="LoanRepayment" value-field="loanRepayment">
-        	 <field-map field-name="loanRepaymentId" value="${newEntity.loanRepaymentId}"/>
-        </entity-one>
-        
-        <set field="repayLoan" value="${bsh:org.ofbiz.accountholdertransactions.LoanRepayments.repayLoan(loanRepayment, userLogin);}" type="String"/>
-        
-    </simple-method>
-    
-    <simple-method method-name="saveLoanRepayment" use-transaction="true">
-    	
-        
-         
-        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
-        <!-- set field="productType" value="Loan"/ -->
-        <create-value value-field="newEntity"/>
-    </simple-method>
-    
-    <simple-method method-name="updateLoanRepayment" short-description="Update LoanRepayment">
-        <entity-one entity-name="AccountTransaction" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <set field="newEntity.updatedBy" from-field="userLogin.userLoginId"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <simple-method method-name="deleteLoanRepayment" short-description="Delete LoanRepayment">
-        <entity-one entity-name="LoanRepayment" value-field="lookedUpValue"/>
-        <remove-value value-field="lookedUpValue"/>
-    </simple-method>
-<!-- ApplyStandingOrder -->
-<simple-method method-name="createApplyStandingOrder" short-description="Create ApplyStandingOrder">
-        <make-value entity-name="ApplyStandingOrder" value-field="newEntity"/>
-         <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <set field="entityName" value="ApplyStandingOrder"></set>
-        <set field="newEntity.applyStandingOrderId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
-        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
-        <!-- set field="productType" value="Loan"/ -->
-        <create-value value-field="newEntity"/>
-    </simple-method>
-    <simple-method method-name="updateApplyStandingOrder" short-description="Update ApplyStandingOrder">
-        <entity-one entity-name="ApplyStandingOrder" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <simple-method method-name="deleteApplyStandingOrder" short-description="Delete ApplyStandingOrder">
-        <entity-one entity-name="ApplyStandingOrder" value-field="lookedUpValue"/>
-        <remove-value value-field="lookedUpValue"/>
-    </simple-method>
-<!-- ChequeType -->
-<simple-method method-name="createChequeType" short-description="Create ChequeType">
-        <make-value entity-name="ChequeType" value-field="newEntity"/>
-         <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <set field="entityName" value="ChequeType"></set>
-        <set field="newEntity.chequeTypeId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+		<set field="commissionSetup"
+			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.commissionChargeIsSetup();}"
+			type="Boolean" />
 
-        <set field="newEntity.isActive" value="Y"/>
-        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
-        <create-value value-field="newEntity"/>
-    </simple-method>
-    <simple-method method-name="updateChequeType" short-description="Update ChequeType">
-        <entity-one entity-name="ChequeType" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <set field="newEntity.updatedBy" from-field="userLogin.userLoginId"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <simple-method method-name="deleteChequeType" short-description="Delete ChequeType">
-        <entity-one entity-name="ChequeType" value-field="lookedUpValue"/>
-        <remove-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <!-- ChequeSetup -->
-    <!-- Start -->
-    <simple-method method-name="createChequeSetup" short-description="Create ChequeSetup">
-        <make-value entity-name="ChequeSetup" value-field="newEntity"/>
-         <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <set field="entityName" value="ChequeSetup"></set>
-        <set field="newEntity.chequeSetupId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
-        <!-- set from-field="chequeSetupId" field="newEntity.chequeSetupId"/ -->
-        <set field="newEntity.isActive" value="Y"/>
-        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
-        <create-value value-field="newEntity"/>
-    </simple-method>
-    <simple-method method-name="updateChequeSetup" short-description="Update ChequeSetup">
-        <entity-one entity-name="ChequeSetup" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <set field="newEntity.updatedBy" from-field="userLogin.userLoginId"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <simple-method method-name="deleteChequeSetup" short-description="Delete ChequeSetup">
-        <entity-one entity-name="ChequeSetup" value-field="lookedUpValue"/>
-        <remove-value value-field="lookedUpValue"/>
-    </simple-method>
-    <!-- End -->
+
+		<set field="ledgerAccountSetup"
+			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.legerAccountSetUp(newEntity);}"
+			type="Boolean" />
+		<set field="commissionAccountSetup"
+			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.commissionAccountSetUp(newEntity);}"
+			type="Boolean" />
+		<set field="exciseDutyAccountSetup"
+			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.exciseDutyAccountSetUp(newEntity);}"
+			type="Boolean" />
+
+		<set field="exciseDutyRateSetup"
+			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.exciseDutyRateSetUp();}"
+			type="Boolean" />
+
+		<set field="falseField" value="false" type="Boolean" />
+
+
+		<if> <!-- commissionSetup -->
+			<condition>
+				<if-compare-field to-field="commissionSetup"
+					operator="equals" field="falseField"></if-compare-field>
+			</condition>
+			<then>
+
+				<add-error>
+					<fail-property resource="AccountHolderTransactionsUILabels.xml"
+						property="commissionChargeSetupError" />
+				</add-error>
+				<check-errors />
+
+			</then>
+
+			<else>
+
+
+				<if> <!-- ledgerAccountSetup -->
+					<condition>
+						<if-compare-field to-field="ledgerAccountSetup"
+							operator="equals" field="falseField"></if-compare-field>
+					</condition>
+					<then>
+						<add-error>
+							<fail-property resource="AccountHolderTransactionsUILabels.xml"
+								property="ledgerAccountSetupError" />
+						</add-error>
+						<check-errors />
+					</then>
+					<else>
+
+						<if> <!-- commissionAccountSetup -->
+							<condition>
+								<if-compare-field to-field="commissionAccountSetup"
+									operator="equals" field="falseField"></if-compare-field>
+							</condition>
+							<then>
+								<add-error>
+									<fail-property resource="AccountHolderTransactionsUILabels.xml"
+										property="commissionAccountSetupError" />
+								</add-error>
+								<check-errors />
+							</then>
+							<else>
+
+								<if> <!-- exciseDutyAccountSetup -->
+									<condition>
+										<if-compare-field to-field="exciseDutyAccountSetup"
+											operator="equals" field="falseField"></if-compare-field>
+									</condition>
+									<then>
+										<add-error>
+											<fail-property resource="AccountHolderTransactionsUILabels.xml"
+												property="exciseDutyAccountSetupError" />
+										</add-error>
+										<check-errors />
+									</then>
+									<else>
+
+										<if> <!-- exciseDutyRateSetup -->
+											<condition>
+												<if-compare-field to-field="exciseDutyRateSetup"
+													operator="equals" field="falseField"></if-compare-field>
+											</condition>
+											<then>
+												<add-error>
+													<fail-property resource="AccountHolderTransactionsUILabels.xml"
+														property="exciseDutyRateSetupError" />
+												</add-error>
+												<check-errors />
+											</then>
+											<else>
+												<!-- Finally Do the saving -->
+												<set field="newEntity.treasuryId"
+													value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerId(userLogin);}"
+													type="String" />
+												<!-- withdrawalStatus -->
+												<!-- set field="accountTransactionParentId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.cashWithdrawal(newEntity, 
+													userLogin);}" type="String"/ -->
+												<!-- set field="cashWithdrawalVer2"/ -->
+												<set field="accountTransactionParentId"
+													value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.cashWithdrawalVer2(newEntity, userLogin);}"
+													type="String" />
+												<field-to-result field="accountTransactionParentId"
+													result-name="accountTransactionParentId" />
+												<!-- call-simple-method method-name="cashWithdrawalSave" scope="inline"></call-simple-method -->
+												<!-- set field="transactionStatus" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.addChargesToTransaction(newEntity, 
+													userLogin, transactionType);}" type="String"/ -->
+
+												<property-to-field resource="AccountHolderTransactionsUILabels.xml"
+													property="commissionChargeSetupSuccess" field="successMessage" />
+
+											</else>
+										</if>
+
+
+
+									</else>
+								</if>
+
+
+
+							</else>
+						</if>
+
+
+					</else>
+				</if>
+
+
+
+			</else>
+		</if>
+
+	</simple-method>
+
+
+	<simple-method method-name="createMemberTransaction"
+		short-description="Member Transaction Entry" use-transaction="true">
+		<!-- Create Account Transaction -->
+		<!-- TTTTTTTTTTTTTTTTTTTTTTTTTTTTTT -->
+		<make-value entity-name="AcctgTrans" value-field="acctgTrans" />
+		<!-- entity-one entity-name="AcctgTrans" value-field="acctgTrans"/ -->
+		<!-- set-pk-fields map="parameters" value-field="acctgTrans"/ -->
+		<!-- set-nonpk-fields map="newEntity" value-field="acctgTrans"/ -->
+		<sequenced-id sequence-name="AcctgTrans" field="acctgTransId" />
+		<now-timestamp field="createdDate" />
+		<set from-field="acctgTransId" field="acctgTrans.acctgTransId" />
+
+		<!-- set field="entityName" value="AcctgTrans"></set> <set field="acctgTrans.acctgTransId" 
+			value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}" 
+			type="String"></set -->
+		<!-- Get Accounts from setup -->
+		<set field="accountHolderTransactionSetupId" value="MEMBERTRANSACTIONACCOUNT" />
+		<entity-one entity-name="AccountHolderTransactionSetup"
+			value-field="accountHolderTransactionSetup" />
+
+		<!-- Set values Account Trans Entity -->
+		<now-timestamp field="createdDate" />
+		<set field="acctgTrans.acctgTransTypeId" value="MEMBER_DEPOSIT" />
+		<set field="acctgTrans.transactionDate" from-field="createdDate" />
+		<set field="acctgTrans.isPosted" value="Y" />
+		<set field="acctgTrans.postedDate" from-field="createdDate" />
+		<set field="acctgTrans.glFiscalTypeId" value="ACTUAL" />
+		<!-- set field="acctgTrans.partyId" from-field="newEntity.partyId"/ -->
+		<set field="acctgTrans.partyId" from-field="Company" />
+		<set field="acctgTrans.createdDate" from-field="createdDate" />
+		<set field="acctgTrans.createdByUserLogin" from-field="newEntity.createdBy" />
+		<set field="acctgTrans.lastModifiedDate" from-field="createdDate" />
+		<set field="acctgTrans.lastModifiedByUserLogin" from-field="newEntity.createdBy" />
+		<create-value value-field="acctgTrans" />
+
+		<!-- Create Account Entries one for Member Deposit and Another for Cash -->
+		<!-- TTTTTTTTTTTTTTTTTTTTTTTTTTTTTT -->
+		<call-simple-method method-name="createMemberDepositEntry"
+			scope="inline"></call-simple-method>
+		<call-simple-method method-name="createMemberCashEntry"
+			scope="inline"></call-simple-method>
+	</simple-method>
+
+	<simple-method method-name="createMemberDepositEntry"
+		short-description="Member Deposit Entry">
+		<!-- There is one Debit to the account specified in the setup (Member Deposit) -->
+		<!-- entity-one entity-name="AcctgTransEntry" value-field="memberDepositEntry"/ -->
+		<make-value entity-name="AcctgTransEntry" value-field="memberDepositEntry" />
+		<!-- set-pk-fields map="parameters" value-field="memberDepositEntry"/ -->
+		<!-- set-nonpk-fields map="newEntity" value-field="memberDepositEntry"/ -->
+
+		<set field="memberDepositEntry.acctgTransId" from-field="acctgTrans.acctgTransId" />
+		<set field="memberDepositEntry.acctgTransEntrySeqId" value="1" />
+		<!-- set field="memberDepositEntry.partyId" from-field="newEntity.partyId"/ -->
+		<set field="memberDepositEntry.partyId" from-field="Company" />
+		<set field="memberDepositEntry.glAccountTypeId" value="MEMBER_DEPOSIT" />
+		<set field="memberDepositEntry.glAccountId" from-field="accountHolderTransactionSetup.memberDepositAccId" />
+		<!-- set field="memberDepositEntry.organizationPartyId" from-field="userLogin.partyId"/ -->
+
+		<set field="memberDepositEntry.organizationPartyId" value="Company" />
+		<set field="memberDepositEntry.amount" from-field="newEntity.transactionAmount" />
+		<set field="memberDepositEntry.currencyUomId" value="KES" />
+		<set field="memberDepositEntry.origAmount" from-field="newEntity.transactionAmount" />
+		<set field="memberDepositEntry.origCurrencyUomId" value="KES" />
+		<set field="memberDepositEntry.debitCreditFlag" from-field="memberDepostPosting" />
+		<set field="memberDepositEntry.reconcileStatusId" value="AES_NOT_RECONCILED" />
+
+
+
+		<create-value value-field="memberDepositEntry" />
+	</simple-method>
+	<simple-method method-name="createMemberCashEntry"
+		short-description="Member Cash Entry">
+		<!-- There is a Credit in the account specified for Cash Entry (Cash Register 
+			in this case) -->
+		<!-- entity-one entity-name="AcctgTransEntry" value-field="memberCashEntry" 
+			/ -->
+		<make-value entity-name="AcctgTransEntry" value-field="memberCashEntry" />
+		<!-- set-pk-fields map="parameters" value-field="memberCashEntry"/ -->
+		<!-- set-nonpk-fields map="newEntity" value-field="memberCashEntry"/ -->
+
+		<set field="memberCashEntry.acctgTransId" from-field="acctgTrans.acctgTransId" />
+		<set field="memberCashEntry.acctgTransEntrySeqId" value="2" />
+		<!-- set field="memberCashEntry.partyId" from-field="newEntity.partyId"/ -->
+		<set field="memberCashEntry.partyId" from-field="Company" />
+		<set field="memberCashEntry.glAccountTypeId" value="MEMBER_DEPOSIT" />
+		<set field="memberCashEntry.glAccountId" from-field="accountHolderTransactionSetup.cashAccountId" />
+		<!-- set field="memberCashEntry.organizationPartyId" from-field="userLogin.partyId"/ -->
+		<set field="memberCashEntry.amount" from-field="newEntity.transactionAmount" />
+		<set field="memberCashEntry.organizationPartyId" value="Company" />
+		<set field="memberCashEntry.currencyUomId" value="KES" />
+		<set field="memberCashEntry.origAmount" from-field="newEntity.transactionAmount" />
+		<set field="memberCashEntry.origCurrencyUomId" value="KES" />
+		<set field="memberCashEntry.debitCreditFlag" from-field="cashPosting" />
+		<set field="memberCashEntry.reconcileStatusId" value="AES_NOT_RECONCILED" />
+
+		<create-value value-field="memberCashEntry" />
+	</simple-method>
+
+	<simple-method method-name="updateCashWithdrawal"
+		short-description="Update CashWithdrawal">
+		<entity-one entity-name="AccountTransaction" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<set field="newEntity.updatedBy" from-field="userLogin.userLoginId" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<simple-method method-name="deleteCashWithdrawal"
+		short-description="Delete CashWithdrawal">
+		<entity-one entity-name="AccountTransaction" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<set field="newEntity.updatedBy" from-field="userLogin.userLoginId" />
+		<set field="newEntity.isActive" value="N" />
+		<store-value value-field="lookedUpValue" />
+		<!-- entity-one entity-name="CashWithdrawal" value-field="lookedUpValue"/> 
+			<remove-value value-field="lookedUpValue"/ -->
+	</simple-method>
+	<!-- CashDeposit -->
+	<simple-method method-name="createCashDeposit"
+		short-description="Create CashDeposit">
+		<make-value entity-name="AccountTransaction" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+
+		<map-to-map map="parameters" to-map="transactionParameters" />
+
+		<set field="ledgerAccountSetup"
+			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.legerAccountSetUp(newEntity);}"
+			type="Boolean" />
+		<set field="falseField" value="false" type="Boolean" />
+
+		<if>
+			<!-- ledgerAccountSetup -->
+			<condition>
+				<if-compare-field to-field="ledgerAccountSetup"
+					operator="equals" field="falseField"></if-compare-field>
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="AccountHolderTransactionsUILabels.xml"
+						property="ledgerAccountSetupError" />
+				</add-error>
+				<check-errors />
+			</then>
+			<else>
+
+				<call-simple-method method-name="saveCashDeposit"
+					scope="inline"></call-simple-method>
+				<!-- Post Cash Deposit -->
+				<!-- call-simple-method method-name="createMemberTransaction" scope="inline"></call-simple-method -->
+
+				<set field="accountTransactionParentId"
+					value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.cashDepositVer2(newEntity, userLogin);}"
+					type="String" />
+
+				<property-to-field resource="AccountHolderTransactionsUILabels.xml"
+					property="commissionChargeSetupSuccess" field="successMessage" />
+
+			</else>
+		</if>
+
+	</simple-method>
+
+	<simple-method method-name="saveCashDeposit"
+		use-transaction="true">
+
+		<!-- set field="entityName" value="AccountTransaction"></set> <set field="newEntity.accountTransactionId" 
+			value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set -->
+		<sequenced-id sequence-name="AccountTransaction" field="accountTransactionId" />
+		<set from-field="accountTransactionId" field="newEntity.accountTransactionId" />
+		<call-simple-method method-name="createAccountTransactionParent"
+			scope="inline"></call-simple-method>
+		<set field="newEntity.accountTransactionParentId" value="${transactionParent.accountTransactionParentId}" />
+		<set field="newEntity.treasuryId"
+			value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerId(userLogin);}"
+			type="String" />
+		<set field="newEntity.isActive" value="Y" />
+		<set field="newEntity.createdBy" from-field="userLogin.userLoginId" />
+		<set field="loggedInPartyId" from-field="userLogin.partyId" />
+		<!-- set field="memberAccountId" from-field="newEntity.memberAccountId"/ -->
+		<!-- set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" 
+			type="String"/ -->
+		<!-- set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}"/ -->
+		<!-- set field="newEntity.branchId" from-field="userLogin.partyId"/ -->
+		<set field="newEntity.transactionType" value="CASHDEPOSIT" />
+		<set field="transactionType" value="CASHDEPOSIT" />
+		<set field="newEntity.increaseDecrease" value="I" />
+		<create-value value-field="newEntity" />
+		<field-to-result field="newEntity.accountTransactionParentId"
+			result-name="accountTransactionParentId" />
+
+		<!-- Set Posting Type -->
+		<set field="memberDepostPosting" value="C" />
+		<set field="cashPosting" value="D" />
+	</simple-method>
+	<simple-method method-name="updateCashDeposit"
+		short-description="Update CashDeposit">
+		<entity-one entity-name="AccountTransaction" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<set field="newEntity.updatedBy" from-field="userLogin.userLoginId" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<simple-method method-name="deleteCashDeposit"
+		short-description="Delete CashDeposit">
+		<entity-one entity-name="AccountTransaction" value-field="lookedUpValue" />
+		<set field="newEntity.updatedBy" from-field="userLogin.userLoginId" />
+		<set field="newEntity.isActive" value="N" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+	<!-- ChequeWithdrawal -->
+	<simple-method method-name="createChequeWithdrawal"
+		short-description="Create ChequeWithdrawal">
+		<make-value entity-name="AccountTransaction" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<call-simple-method method-name="saveChequeWithdrawal"
+			scope="inline">
+		</call-simple-method>
+		<set field="transactionType" value="CHEQUEWITHDRAWAL" />
+		<set field="newEntity.treasuryId"
+			value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerId(userLogin);}"
+			type="String" />
+		<set field="postedStatus"
+			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.createChequeTransaction(newEntity, userLogin);}"
+			type="String" />
+		<set field="transactionStatus"
+			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.addChargesToTransaction(newEntity, userLogin, transactionType);}"
+			type="String" />
+	</simple-method>
+
+
+	<simple-method method-name="saveChequeWithdrawal"
+		short-description="Saving Cheque Withdrawal Reccord, call this method in createChequeWithdrawal">
+		<!-- set field="entityName" value="AccountTransaction"></set> <set field="newEntity.accountTransactionId" 
+			value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set -->
+
+		<sequenced-id sequence-name="AccountTransaction" field="accountTransactionId" />
+		<set from-field="accountTransactionId" field="newEntity.accountTransactionId" />
+
+		<call-simple-method method-name="createAccountTransactionParent"
+			scope="inline"></call-simple-method>
+		<set field="newEntity.accountTransactionParentId" value="${transactionParent.accountTransactionParentId}" />
+		<set field="newEntity.isActive" value="Y" />
+		<set field="newEntity.createdBy" from-field="userLogin.userLoginId" />
+		<set field="loggedInPartyId" from-field="userLogin.partyId" />
+		<set field="memberAccountId" from-field="newEntity.memberAccountId" />
+		<!-- set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" 
+			type="String"/ -->
+		<!--set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}" 
+			type="String"/ -->
+
+		<!-- set field="newEntity.branchId" from-field="userLogin.partyId"/ -->
+		<set field="newEntity.transactionType" value="CHEQUEWITHDRAWAL" />
+		<set field="newEntity.increaseDecrease" value="D" />
+		<!-- set field="entity.loanStatus" value="DRAFT"/ -->
+		<!-- set field="productType" value="Loan"/ -->
+		<create-value value-field="newEntity" />
+	</simple-method>
+
+	<simple-method method-name="updateChequeWithdrawal"
+		short-description="Update ChequeWithdrawal">
+		<entity-one entity-name="AccountTransaction" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<set field="newEntity.updatedBy" from-field="userLogin.userLoginId" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<simple-method method-name="deleteChequeWithdrawal"
+		short-description="Delete ChequeWithdrawal">
+		<entity-one entity-name="AccountTransaction" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<set field="newEntity.updatedBy" from-field="userLogin.userLoginId" />
+		<set field="newEntity.isActive" value="N" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+	<!-- ChequeDeposit -->
+	<simple-method method-name="createChequeDeposit"
+		short-description="Create ChequeDeposit">
+		<call-simple-method method-name="createChequeDepositTemporary"
+			scope="inline"></call-simple-method>
+		<!-- create-object class-name="org.ofbiz.entity.GenericDelegator" field="delegator"> 
+			<field field="delegator"/> </create-object -->
+
+		<set from-field="newEntity.accountTransactionId" field="accountTransactionId" />
+		<set field="newEntity.isPosted" value="N" />
+		<entity-one value-field="accountTransaction" entity-name="AccountTransaction">
+			<field-map field-name="accountTransactionId" from-field="newEntity.accountTransactionId" />
+		</entity-one>
+		<set field="newEntity.treasuryId"
+			value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerId(userLogin);}"
+			type="String" />
+		<set field="endDate"
+			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.calculateChequeClearance(accountTransaction);}"
+			type="Timestamp" />
+		<!-- call-class-method class-name="org.ofbiz.accountholdertransactions.AccHolderTransactionServices" 
+			method-name="calculateChequeClearance" ret-field="endDate"> <string value="${accountTransactionId}"/> 
+			</call-class-method -->
+
+
+		<map-to-map map="newEntity" to-map="transactionMap" />
+		<make-value value-field="anotherTransaction" entity-name="AccountTransaction"
+			map="transactionMap" />
+		<set field="anotherTransaction.clearDate" from-field="endDate" />
+		<!-- create-value value-field="newEntity"/ -->
+
+		<call-simple-method method-name="removeTransaction"
+			scope="inline"></call-simple-method>
+		<!-- store-value value-field="anotherTransaction"/ -->
+		<call-simple-method method-name="createChequeDepositWithEndDate"
+			scope="inline"></call-simple-method>
+
+		<!-- map-to-map map="newEntity" to-map="transactionMap"/ -->
+		<!-- call-service service-name="calculateChequeClearDate" in-map-name="transactionMap" 
+			include-user-login="false" require-new-transaction="true" > <result-to-field 
+			result-name="clearDate"/> <result-to-result result-name="clearDate"/> </call-service -->
+
+
+	</simple-method>
+
+	<simple-method method-name="removeTransaction"
+		use-transaction="true">
+		<remove-value value-field="newEntity" />
+	</simple-method>
+	<simple-method method-name="createChequeDepositTemporary"
+		use-transaction="true">
+		<make-value entity-name="AccountTransaction" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<!-- set field="entityName" value="AccountTransaction"></set> <set field="newEntity.accountTransactionId" 
+			value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set -->
+		<sequenced-id sequence-name="AccountTransaction" field="accountTransactionId" />
+		<set from-field="accountTransactionId" field="newEntity.accountTransactionId" />
+
+		<call-simple-method method-name="createAccountTransactionParent"
+			scope="inline"></call-simple-method>
+		<set field="newEntity.accountTransactionParentId" value="${transactionParent.accountTransactionParentId}" />
+		<set field="newEntity.isActive" value="Y" />
+		<set field="newEntity.createdBy" from-field="userLogin.userLoginId" />
+		<set field="loggedInPartyId" from-field="userLogin.partyId" />
+		<set field="memberAccountId" from-field="newEntity.memberAccountId" />
+		<!-- set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" 
+			type="String"/ -->
+		<!--set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}" 
+			type="String"/ -->
+
+		<!-- set field="newEntity.branchId" from-field="userLogin.partyId"/ -->
+		<set field="newEntity.transactionType" value="CHEQUEDEPOSIT" />
+		<set field="newEntity.increaseDecrease" value="I" />
+		<set field="newEntity.isPosted" value="N" />
+
+		<now-timestamp field="createdDate" />
+
+		<set field="chequeSetupId" value="TIMETOCLEAR" />
+		<entity-one value-field="chequeSetup" entity-name="ChequeSetup">
+		</entity-one>
+		<!-- ${chequeSetup.durationToClear} -->
+		<set-calendar field="newEntity.clearDate" from-field="createdDate"
+			days="${chequeSetup.durationToClear}" />
+		<set field="newEntity.clearDuration" from-field="chequeSetup.durationToClear" />
+		<!-- set field="entity.loanStatus" value="DRAFT"/ -->
+		<!-- set field="productType" value="Loan"/ -->
+
+		<create-value value-field="newEntity" />
+	</simple-method>
+
+	<simple-method method-name="createChequeDepositWithEndDate"
+		use-transaction="true">
+		<set-pk-fields map="parameters" value-field="anotherTransaction" />
+		<set-nonpk-fields map="parameters" value-field="anotherTransaction" />
+		<!-- set field="entityName" value="AccountTransaction"></set> <set field="anotherTransaction.accountTransactionId" 
+			value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set -->
+		<sequenced-id sequence-name="AccountTransaction" field="accountTransactionId" />
+		<set from-field="accountTransactionId" field="anotherTransaction.accountTransactionId" />
+
+		<set field="anotherTransaction.isActive" value="Y" />
+		<set field="anotherTransaction.createdBy" from-field="userLogin.userLoginId" />
+		<set field="anotherTransaction.branchId" from-field="userLogin.partyId" />
+		<set field="anotherTransaction.transactionType" value="CHEQUEDEPOSIT" />
+		<set field="anotherTransaction.isPosted" value="N" />
+
+		<now-timestamp field="createdDate" />
+
+		<set field="chequeSetupId" value="TIMETOCLEAR" />
+		<entity-one value-field="chequeSetup" entity-name="ChequeSetup">
+		</entity-one>
+		<!-- ${chequeSetup.durationToClear} -->
+		<set field="anotherTransaction.clearDuration" from-field="chequeSetup.durationToClear" />
+		<!-- set field="entity.loanStatus" value="DRAFT"/ -->
+		<!-- set field="productType" value="Loan"/ -->
+
+		<create-value value-field="anotherTransaction" />
+	</simple-method>
+
+	<simple-method method-name="updateChequeDeposit"
+		short-description="Update ChequeDeposit">
+		<entity-one entity-name="AccountTransaction" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<set field="newEntity.updatedBy" from-field="userLogin.userLoginId" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<simple-method method-name="deleteChequeDeposit"
+		short-description="Delete ChequeDeposit">
+		<entity-one entity-name="AccountTransaction" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<set field="newEntity.updatedBy" from-field="userLogin.userLoginId" />
+		<set field="newEntity.isActive" value="N" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+	<!-- LoanRepayment -->
+	<!-- createLoanRepayment -->
+	<simple-method method-name="createLoanRepayment"
+		short-description="Create LoanRepayment">
+
+		<make-value entity-name="LoanRepayment" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<set field="entityName" value="LoanRepayment"></set>
+		<set field="newEntity.loanRepaymentId"
+			value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+		<call-simple-method method-name="createAccountTransactionParent"
+			scope="inline"></call-simple-method>
+		<set field="newEntity.accountTransactionParentId" value="${transactionParent.accountTransactionParentId}" />
+		<set field="newEntity.isActive" value="Y" />
+		<set field="newEntity.createdBy" from-field="userLogin.userLoginId" />
+		<set field="loggedInPartyId" from-field="userLogin.partyId" />
+		<!-- set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" 
+			type="String"/ -->
+		<set field="memberAccountId" from-field="newEntity.memberAccountId" />
+		<!--set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}" 
+			type="String"/ -->
+
+		<!-- set field="newEntity.branchId" from-field="userLogin.partyId"/ -->
+		<set field="newEntity.transactionType" from-field="LOANREPAYMENT" />
+
+		<call-simple-method method-name="saveLoanRepayment"
+			scope="inline"></call-simple-method>
+		<!-- distribute repayment -->
+
+
+		<entity-one entity-name="LoanRepayment" value-field="loanRepayment">
+			<field-map field-name="loanRepaymentId" value="${newEntity.loanRepaymentId}" />
+		</entity-one>
+
+		<set field="repayLoan"
+			value="${bsh:org.ofbiz.accountholdertransactions.LoanRepayments.repayLoan(loanRepayment, userLogin);}"
+			type="String" />
+
+	</simple-method>
+
+	<simple-method method-name="saveLoanRepayment"
+		use-transaction="true">
+
+
+
+		<!-- set field="entity.loanStatus" value="DRAFT"/ -->
+		<!-- set field="productType" value="Loan"/ -->
+		<create-value value-field="newEntity" />
+	</simple-method>
+
+	<simple-method method-name="updateLoanRepayment"
+		short-description="Update LoanRepayment">
+		<entity-one entity-name="AccountTransaction" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<set field="newEntity.updatedBy" from-field="userLogin.userLoginId" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<simple-method method-name="deleteLoanRepayment"
+		short-description="Delete LoanRepayment">
+		<entity-one entity-name="LoanRepayment" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+	</simple-method>
+	<!-- ApplyStandingOrder -->
+	<simple-method method-name="createApplyStandingOrder"
+		short-description="Create ApplyStandingOrder">
+		<make-value entity-name="ApplyStandingOrder" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<set field="entityName" value="ApplyStandingOrder"></set>
+		<set field="newEntity.applyStandingOrderId"
+			value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+		<!-- set field="entity.loanStatus" value="DRAFT"/ -->
+		<!-- set field="productType" value="Loan"/ -->
+		<create-value value-field="newEntity" />
+	</simple-method>
+	<simple-method method-name="updateApplyStandingOrder"
+		short-description="Update ApplyStandingOrder">
+		<entity-one entity-name="ApplyStandingOrder" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<simple-method method-name="deleteApplyStandingOrder"
+		short-description="Delete ApplyStandingOrder">
+		<entity-one entity-name="ApplyStandingOrder" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+	</simple-method>
+	<!-- ChequeType -->
+	<simple-method method-name="createChequeType"
+		short-description="Create ChequeType">
+		<make-value entity-name="ChequeType" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<set field="entityName" value="ChequeType"></set>
+		<set field="newEntity.chequeTypeId"
+			value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+
+		<set field="newEntity.isActive" value="Y" />
+		<set field="newEntity.createdBy" from-field="userLogin.userLoginId" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+	<simple-method method-name="updateChequeType"
+		short-description="Update ChequeType">
+		<entity-one entity-name="ChequeType" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<set field="newEntity.updatedBy" from-field="userLogin.userLoginId" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<simple-method method-name="deleteChequeType"
+		short-description="Delete ChequeType">
+		<entity-one entity-name="ChequeType" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<!-- ChequeSetup -->
+	<!-- Start -->
+	<simple-method method-name="createChequeSetup"
+		short-description="Create ChequeSetup">
+		<make-value entity-name="ChequeSetup" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<set field="entityName" value="ChequeSetup"></set>
+		<set field="newEntity.chequeSetupId"
+			value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+		<!-- set from-field="chequeSetupId" field="newEntity.chequeSetupId"/ -->
+		<set field="newEntity.isActive" value="Y" />
+		<set field="newEntity.createdBy" from-field="userLogin.userLoginId" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+	<simple-method method-name="updateChequeSetup"
+		short-description="Update ChequeSetup">
+		<entity-one entity-name="ChequeSetup" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<set field="newEntity.updatedBy" from-field="userLogin.userLoginId" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<simple-method method-name="deleteChequeSetup"
+		short-description="Delete ChequeSetup">
+		<entity-one entity-name="ChequeSetup" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+	</simple-method>
+	<!-- End -->
 	<!-- AccountHolderTransactionSetup -->
 	<!-- Start -->
-	    <simple-method method-name="createAccountHolderTransactionSetup" short-description="Create AccountHolderTransactionSetup">
-        <make-value entity-name="AccountHolderTransactionSetup" value-field="newEntity"/>
-         <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <!-- sequenced-id sequence-name="ChequeSetup" field="chequeSetupId"/ -->
-        <now-timestamp field="createdDate"/>
-        <!-- set from-field="chequeSetupId" field="newEntity.chequeSetupId"/ -->
-        <set field="newEntity.isActive" value="Y"/>
-        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
-        <create-value value-field="newEntity"/>
-    </simple-method>
-    <simple-method method-name="updateAccountHolderTransactionSetup" short-description="Update AccountHolderTransactionSetup">
-        <entity-one entity-name="AccountHolderTransactionSetup" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <set field="newEntity.updatedBy" from-field="userLogin.userLoginId"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <simple-method method-name="deleteAccountHolderTransactionSetup" short-description="Delete AccountHolderTransactionSetup">
-        <entity-one entity-name="AccountHolderTransactionSetup" value-field="lookedUpValue"/>
-        <remove-value value-field="lookedUpValue"/>
-    </simple-method>
+	<simple-method method-name="createAccountHolderTransactionSetup"
+		short-description="Create AccountHolderTransactionSetup">
+		<make-value entity-name="AccountHolderTransactionSetup"
+			value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<!-- sequenced-id sequence-name="ChequeSetup" field="chequeSetupId"/ -->
+		<now-timestamp field="createdDate" />
+		<!-- set from-field="chequeSetupId" field="newEntity.chequeSetupId"/ -->
+		<set field="newEntity.isActive" value="Y" />
+		<set field="newEntity.createdBy" from-field="userLogin.userLoginId" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+	<simple-method method-name="updateAccountHolderTransactionSetup"
+		short-description="Update AccountHolderTransactionSetup">
+		<entity-one entity-name="AccountHolderTransactionSetup"
+			value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<set field="newEntity.updatedBy" from-field="userLogin.userLoginId" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<simple-method method-name="deleteAccountHolderTransactionSetup"
+		short-description="Delete AccountHolderTransactionSetup">
+		<entity-one entity-name="AccountHolderTransactionSetup"
+			value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+	</simple-method>
 	<!-- End -->
-	
+
 	<!-- Expected Payment -->
-	<simple-method method-name="createExpectedPayment" short-description="Create ExpectedPayment">
-       <make-value entity-name="ExpectedPayment" value-field="newEntity"/>
-         <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        
-         <set field="newEntity.isActive" value="Y"/>
-        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
-        <set field="loggedInPartyId" from-field="userLogin.partyId"/>
-        <!-- set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" type="String"/ -->
-        <set field="memberAccountId" from-field="newEntity.memberAccountId"/>
-        <!--set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}" type="String"/ -->
-        
-        <!-- set field="newEntity.branchId" from-field="userLogin.partyId"/ -->
-        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
-        <!-- set field="productType" value="Loan"/ -->
-        <create-value value-field="newEntity"/>
-    </simple-method>
-    <simple-method method-name="updateExpectedPayment" short-description="Update ExpectedPayment">
-        <entity-one entity-name="ExpectedPayment" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <set field="newEntity.updatedBy" from-field="userLogin.userLoginId"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <simple-method method-name="deleteExpectedPayment" short-description="Delete ExpectedPayment">
-        <entity-one entity-name="ExpectedPayment" value-field="lookedUpValue"/>
-        <remove-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-  	<!-- StationAccountingTransaction -->
-     <simple-method method-name="createStationAccountTransaction" short-description="Create StationAccountTransaction">
-		<call-simple-method method-name="saveStationTransaction" scope="inline"></call-simple-method>
-        
-        <set field="postStatus" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.postStationTransaction(newEntity, userLogin);}" type="String"/>
-    	<entity-one value-field="stationEntity" entity-name="Station">
-    		<field-map field-name="stationId" from-field="newEntity.stationId"/>
-    	</entity-one>
-    	<set field="newEntity.employerCode" value="${stationEntity.employerCode}"/>
-    	<store-value value-field="newEntity"/>
-    </simple-method>
-    <simple-method method-name="saveStationTransaction">
-    	<make-value entity-name="StationAccountTransaction" value-field="newEntity"/>
-        <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        
-       <set field="entityName" value="StationAccountTransaction"></set>
-        <set field="newEntity.stationAccountTransactionId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
-        
-        <!-- sequenced-id sequence-name="StationAccountTransaction" field="stationAccountTransactionId"/>
-        <now-timestamp field="createdDate"/>
-        <set from-field="stationAccountTransactionId" field="newEntity.stationAccountTransactionId"/ -->
-        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
-        <!-- set field="productType" value="Loan"/ -->
-        <create-value value-field="newEntity"/>
-    </simple-method>
-    <simple-method method-name="updateStationAccountTransaction" short-description="Update StationAccountTransaction">
-        <entity-one entity-name="StationAccountTransaction" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <simple-method method-name="deleteStationAccountTransaction" short-description="Delete StationAccountTransaction">
-        <entity-one entity-name="StationAccountTransaction" value-field="lookedUpValue"/>
-        <remove-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <!-- Station Expectation -->
-    <simple-method method-name="createStationExpectation" short-description="Create StationExpectation">
-        <make-value entity-name="StationExpectation" value-field="newEntity"/>
-        <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <now-timestamp field="createdDate"/>
-        <create-value value-field="newEntity"/>
-    </simple-method>
+	<simple-method method-name="createExpectedPayment"
+		short-description="Create ExpectedPayment">
+		<make-value entity-name="ExpectedPayment" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
 
-    <simple-method method-name="updateStationExpectation" short-description="Update StationExpectation">
-        <entity-one entity-name="StationExpectation" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <simple-method method-name="deleteStationExpectation" short-description="Delete StationExpectation">
-        <entity-one entity-name="StationExpectation" value-field="lookedUpValue"/>
-        <remove-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <!-- Expected Payment Sent -->
-    <simple-method method-name="createExpectedPaymentSent" short-description="Create ExpectedPaymentSent">
-        <make-value entity-name="ExpectedPaymentSent" value-field="newEntity"/>
-        <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <now-timestamp field="createdDate"/>
-        <create-value value-field="newEntity"/>
-    </simple-method>
+		<set field="newEntity.isActive" value="Y" />
+		<set field="newEntity.createdBy" from-field="userLogin.userLoginId" />
+		<set field="loggedInPartyId" from-field="userLogin.partyId" />
+		<!-- set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" 
+			type="String"/ -->
+		<set field="memberAccountId" from-field="newEntity.memberAccountId" />
+		<!--set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}" 
+			type="String"/ -->
 
-    <simple-method method-name="updateExpectedPaymentSent" short-description="Update ExpectedPaymentSent">
-        <entity-one entity-name="ExpectedPaymentSent" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <simple-method method-name="deleteExpectedPaymentSent" short-description="Delete ExpectedPaymentSent">
-        <entity-one entity-name="ExpectedPaymentSent" value-field="lookedUpValue"/>
-        <remove-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <!-- Expected Payment Received -->
-    <simple-method method-name="createExpectedPaymentReceived" short-description="Create ExpectedPaymentReceived">
-        <make-value entity-name="ExpectedPaymentReceived" value-field="newEntity"/>
-        <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <now-timestamp field="createdDate"/>
-        <create-value value-field="newEntity"/>
-    </simple-method>
+		<!-- set field="newEntity.branchId" from-field="userLogin.partyId"/ -->
+		<!-- set field="entity.loanStatus" value="DRAFT"/ -->
+		<!-- set field="productType" value="Loan"/ -->
+		<create-value value-field="newEntity" />
+	</simple-method>
+	<simple-method method-name="updateExpectedPayment"
+		short-description="Update ExpectedPayment">
+		<entity-one entity-name="ExpectedPayment" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<set field="newEntity.updatedBy" from-field="userLogin.userLoginId" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
 
-    <simple-method method-name="updateExpectedPaymentReceived" short-description="Update ExpectedPaymentReceived">
-        <entity-one entity-name="ExpectedPaymentReceived" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <simple-method method-name="deleteExpectedPaymentReceived" short-description="Delete ExpectedPaymentReceived">
-        <entity-one entity-name="ExpectedPaymentReceived" value-field="lookedUpValue"/>
-        <remove-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <simple-method method-name="createCodesSetup" short-description="Create CodesSetup">
-        <make-value entity-name="CodesSetup" value-field="newEntity"/>
-        <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <now-timestamp field="createdDate"/>
-        <create-value value-field="newEntity"/>
-    </simple-method>
+	<simple-method method-name="deleteExpectedPayment"
+		short-description="Delete ExpectedPayment">
+		<entity-one entity-name="ExpectedPayment" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+	</simple-method>
 
-    <simple-method method-name="updateCodesSetup" short-description="Update CodesSetup">
-        <entity-one entity-name="CodesSetup" value-field="lookedUpValue"/>
-        <set-pk-fields value-field="lookedUpValue" map="parameters" />
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <simple-method method-name="deleteCodesSetup" short-description="Delete CodesSetup">
-        <entity-one entity-name="CodesSetup" value-field="lookedUpValue"/>
-        <remove-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    
-    <!-- MissingMemberLog -->
-        <simple-method method-name="createMissingMemberLog" short-description="Create MissingMemberLog">
-        <make-value entity-name="MissingMemberLog" value-field="newEntity"/>
-        <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <now-timestamp field="createdDate"/>
-        <create-value value-field="newEntity"/>
-    </simple-method>
+	<!-- StationAccountingTransaction -->
+	<simple-method method-name="createStationAccountTransaction"
+		short-description="Create StationAccountTransaction">
+		<call-simple-method method-name="saveStationTransaction"
+			scope="inline"></call-simple-method>
 
-    <simple-method method-name="updateMissingMemberLog" short-description="Update MissingMemberLog">
-        <entity-one entity-name="MissingMemberLog" value-field="lookedUpValue"/>
-        <set-pk-fields value-field="lookedUpValue" map="parameters" />
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <simple-method method-name="deleteMissingMemberLog" short-description="Delete MissingMemberLog">
-        <entity-one entity-name="MissingMemberLog" value-field="lookedUpValue"/>
-        <remove-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <simple-method method-name="createAccountTransactionParent">
-    	<make-value entity-name="AccountTransactionParent" value-field="transactionParent"/>
-         <set-pk-fields map="parameters" value-field="transactionParent"/>
-        <set-nonpk-fields map="parameters" value-field="transactionParent"/>
-		<!-- set field="entityName" value="AccountTransactionParent"></set>
-		<set field="transactionParent.accountTransactionParentId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set -->
-		<sequenced-id sequence-name="AccountTransactionParent" field="accountTransactionParentId"/>
-        <set from-field="accountTransactionParentId" field="transactionParent.accountTransactionParentId"/>        
-        <set field="transactionParent.isActive" value="Y"/>
-        <set field="transactionParent.createdBy" from-field="userLogin.userLoginId"/>
-        <set field="loggedInPartyId" from-field="userLogin.partyId"/>
-        <!-- set field="memberAccountId" from-field="newEntity.memberAccountId"/ -->
-        <!-- set field="transactionParent.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}" type="String"/-->
+		<set field="postStatus"
+			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.postStationTransaction(newEntity, userLogin);}"
+			type="String" />
+		<entity-one value-field="stationEntity" entity-name="Station">
+			<field-map field-name="stationId" from-field="newEntity.stationId" />
+		</entity-one>
+		<set field="newEntity.employerCode" value="${stationEntity.employerCode}" />
+		<store-value value-field="newEntity" />
+	</simple-method>
+	<simple-method method-name="saveStationTransaction">
+		<make-value entity-name="StationAccountTransaction"
+			value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
 
-        <!--set field="transactionParent.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}" type="String"/-->
+		<set field="entityName" value="StationAccountTransaction"></set>
+		<set field="newEntity.stationAccountTransactionId"
+			value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
 
-        
-        
-        <set field="transactionParent.approved" value="NO"/>
-        <set field="transactionParent.rejected" value="NO"/>
-        <set field="transactionParent.posted" value="NO"/>
-        
-        <create-value value-field="transactionParent"/>
-    </simple-method>
+		<!-- sequenced-id sequence-name="StationAccountTransaction" field="stationAccountTransactionId"/> 
+			<now-timestamp field="createdDate"/> <set from-field="stationAccountTransactionId" 
+			field="newEntity.stationAccountTransactionId"/ -->
+		<!-- set field="entity.loanStatus" value="DRAFT"/ -->
+		<!-- set field="productType" value="Loan"/ -->
+		<create-value value-field="newEntity" />
+	</simple-method>
+	<simple-method method-name="updateStationAccountTransaction"
+		short-description="Update StationAccountTransaction">
+		<entity-one entity-name="StationAccountTransaction"
+			value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<simple-method method-name="deleteStationAccountTransaction"
+		short-description="Delete StationAccountTransaction">
+		<entity-one entity-name="StationAccountTransaction"
+			value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<!-- Station Expectation -->
+	<simple-method method-name="createStationExpectation"
+		short-description="Create StationExpectation">
+		<make-value entity-name="StationExpectation" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<now-timestamp field="createdDate" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+
+	<simple-method method-name="updateStationExpectation"
+		short-description="Update StationExpectation">
+		<entity-one entity-name="StationExpectation" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<simple-method method-name="deleteStationExpectation"
+		short-description="Delete StationExpectation">
+		<entity-one entity-name="StationExpectation" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<!-- Expected Payment Sent -->
+	<simple-method method-name="createExpectedPaymentSent"
+		short-description="Create ExpectedPaymentSent">
+		<make-value entity-name="ExpectedPaymentSent" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<now-timestamp field="createdDate" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+
+	<simple-method method-name="updateExpectedPaymentSent"
+		short-description="Update ExpectedPaymentSent">
+		<entity-one entity-name="ExpectedPaymentSent" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<simple-method method-name="deleteExpectedPaymentSent"
+		short-description="Delete ExpectedPaymentSent">
+		<entity-one entity-name="ExpectedPaymentSent" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<!-- Expected Payment Received -->
+	<simple-method method-name="createExpectedPaymentReceived"
+		short-description="Create ExpectedPaymentReceived">
+		<make-value entity-name="ExpectedPaymentReceived"
+			value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<now-timestamp field="createdDate" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+
+	<simple-method method-name="updateExpectedPaymentReceived"
+		short-description="Update ExpectedPaymentReceived">
+		<entity-one entity-name="ExpectedPaymentReceived"
+			value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<simple-method method-name="deleteExpectedPaymentReceived"
+		short-description="Delete ExpectedPaymentReceived">
+		<entity-one entity-name="ExpectedPaymentReceived"
+			value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<simple-method method-name="createCodesSetup"
+		short-description="Create CodesSetup">
+		<make-value entity-name="CodesSetup" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<now-timestamp field="createdDate" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+
+	<simple-method method-name="updateCodesSetup"
+		short-description="Update CodesSetup">
+		<entity-one entity-name="CodesSetup" value-field="lookedUpValue" />
+		<set-pk-fields value-field="lookedUpValue" map="parameters" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<simple-method method-name="deleteCodesSetup"
+		short-description="Delete CodesSetup">
+		<entity-one entity-name="CodesSetup" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+	</simple-method>
+
+
+	<!-- MissingMemberLog -->
+	<simple-method method-name="createMissingMemberLog"
+		short-description="Create MissingMemberLog">
+		<make-value entity-name="MissingMemberLog" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<now-timestamp field="createdDate" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+
+	<simple-method method-name="updateMissingMemberLog"
+		short-description="Update MissingMemberLog">
+		<entity-one entity-name="MissingMemberLog" value-field="lookedUpValue" />
+		<set-pk-fields value-field="lookedUpValue" map="parameters" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<simple-method method-name="deleteMissingMemberLog"
+		short-description="Delete MissingMemberLog">
+		<entity-one entity-name="MissingMemberLog" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<simple-method method-name="createAccountTransactionParent">
+		<make-value entity-name="AccountTransactionParent"
+			value-field="transactionParent" />
+		<set-pk-fields map="parameters" value-field="transactionParent" />
+		<set-nonpk-fields map="parameters" value-field="transactionParent" />
+		<!-- set field="entityName" value="AccountTransactionParent"></set> <set 
+			field="transactionParent.accountTransactionParentId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set -->
+		<sequenced-id sequence-name="AccountTransactionParent"
+			field="accountTransactionParentId" />
+		<set from-field="accountTransactionParentId" field="transactionParent.accountTransactionParentId" />
+		<set field="transactionParent.isActive" value="Y" />
+		<set field="transactionParent.createdBy" from-field="userLogin.userLoginId" />
+		<set field="loggedInPartyId" from-field="userLogin.partyId" />
+		<!-- set field="memberAccountId" from-field="newEntity.memberAccountId"/ -->
+		<!-- set field="transactionParent.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}" 
+			type="String"/ -->
+
+		<!--set field="transactionParent.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}" 
+			type="String"/ -->
+
+
+
+		<set field="transactionParent.approved" value="NO" />
+		<set field="transactionParent.rejected" value="NO" />
+		<set field="transactionParent.posted" value="NO" />
+
+		<create-value value-field="transactionParent" />
+	</simple-method>
 </simple-methods>

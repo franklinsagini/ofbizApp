@@ -37,18 +37,32 @@
 				<set field="bdTotalAllocated"
 					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalAllocated(userLogin);}"
 					type="BigDecimal" />
-
-				<set field="tellerBalance"
-					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerBalance(userLogin);}"
+					
+				
+				<set field="bdTotalDeAllocated"
+					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalDeAllocatedToday(userLogin);}"
 					type="BigDecimal" />
+				<!-- set name="fromDate"><date-time> default-value="${nowTimestamp}"/></field -->
+				<set field="transferDate" default-value="${nowTimestamp}"/>
+				<set field="tellerBalance"
+					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerBalanceWithOpeningBalance(userLogin);}"
+					type="BigDecimal" />
+				<!-- set field="tellerBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getTotalBalanceForDestinationTreasury(destinationTreasury, transferDate);}" type="BigDecimal"/>
+          		<set field="bdTotalOpeningBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getOpeningBalance(destinationTreasury, transferDate);}" type="BigDecimal"/-->
+				
+					
 				<set field="totalCashWithdrawal"
-					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalCashWithdrawal(userLogin);}"
+					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalCashWithdrawalToday(userLogin);}"
 					type="BigDecimal" />
 				<set field="totalCashDeposit"
-					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalCashDeposit(userLogin);}"
+					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalCashDepositToday(userLogin);}"
 					type="BigDecimal" />
+					<set field="bdTotalOpeningBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getOpeningBalance(userLogin);}" type="BigDecimal"/>
 					
 				<set field="amTeller" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.hasTellerAssigned(userLogin);}" type="Boolean"/>
+				
+				
+				<set field="treasuryId"	value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTreasuryId(userLogin);}" type="String" />
 			</actions>
 			<widgets>
 				<!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
@@ -71,11 +85,15 @@
 												<label style="h3"> Teller Assigned To : ${assignee}</label>
 												<label style="h3"> Teller Name : ${assignedteller} </label>
 												<label style="h3"> Today Transactions</label>
-												<label style="h3"> Total Available (Transfer + Deposits -
+												<label style="h3"> Total Available (Opening Balance + Transfer In - Transfer Out + Deposits -
 													Withdrawals) : Kshs. ${tellerBalance}</label>
+												
+												<label style="h3"> Opening Balance  : KShs. ${bdTotalOpeningBalance}</label>
 
-												<label style="h3"> Start of Day Transfer : KShs.
+												<label style="h3"> Transfer In : KShs.
 													${bdTotalAllocated}</label>
+												<label style="h3"> Transfer Out : KShs.
+													${bdTotalDeAllocated}</label>
 												<label style="h3"> Total Withdrawals : KShs.
 													${totalCashWithdrawal}</label>
 												<label style="h3"> Total Deposits : KShs.
@@ -136,15 +154,26 @@
 				<set field="bdTotalAllocated"
 					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalAllocated(userLogin);}"
 					type="BigDecimal" />
-
-				<set field="tellerBalance"
-					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerBalance(userLogin);}"
+				
+				<set field="bdTotalOpeningBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getOpeningBalance(userLogin);}" type="BigDecimal"/>
+				
+				<set field="bdTotalDeAllocated"
+					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalDeAllocatedToday(userLogin);}"
 					type="BigDecimal" />
+				<!-- set name="fromDate"><date-time> default-value="${nowTimestamp}"/></field -->
+				<set field="transferDate" default-value="${nowTimestamp}"/>
+				<set field="tellerBalance"
+					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerBalanceWithOpeningBalance(userLogin);}"
+					type="BigDecimal" />
+				<!-- set field="tellerBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getTotalBalanceForDestinationTreasury(destinationTreasury, transferDate);}" type="BigDecimal"/>
+          		<set field="bdTotalOpeningBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getOpeningBalance(destinationTreasury, transferDate);}" type="BigDecimal"/-->
+				
+					
 				<set field="totalCashWithdrawal"
-					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalCashWithdrawal(userLogin);}"
+					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalCashWithdrawalToday(userLogin);}"
 					type="BigDecimal" />
 				<set field="totalCashDeposit"
-					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalCashDeposit(userLogin);}"
+					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalCashDepositToday(userLogin);}"
 					type="BigDecimal" />
 					<set field="amTeller" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.hasTellerAssigned(userLogin);}" type="Boolean"/>
 			</actions>
@@ -169,12 +198,14 @@
 											<container>
 												<label style="h3"> Teller Assigned To : ${assignee}</label>
 												<label style="h3"> Teller Name : ${assignedteller} </label>
-												<label style="h3"> Today Transactions</label>
-												<label style="h3"> Total Available (Transfer + Deposits -
+												<label style="h3"> Total Available (Opening Balance + Transfer In - Transfer Out + Deposits -
 													Withdrawals) : Kshs. ${tellerBalance}</label>
-
-												<label style="h3"> Start of Day Transfer : KShs.
+												
+												<label style="h3"> Opening Balance  : KShs. ${bdTotalOpeningBalance}</label>
+												<label style="h3"> Transfer In : KShs.
 													${bdTotalAllocated}</label>
+												<label style="h3"> Transfer Out : KShs.
+													${bdTotalDeAllocated}</label>
 												<label style="h3"> Total Withdrawals : KShs.
 													${totalCashWithdrawal}</label>
 												<label style="h3"> Total Deposits : KShs.

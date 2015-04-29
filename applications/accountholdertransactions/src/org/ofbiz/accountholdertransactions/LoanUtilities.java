@@ -204,6 +204,24 @@ public class LoanUtilities {
 
 		return member;
 	}
+	
+	public static String getMemberBranchId(String partyId) {
+
+		partyId = partyId.replaceAll(",", "");
+		GenericValue member = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			member = delegator.findOne("Member",
+					UtilMisc.toMap("partyId", Long.valueOf(partyId)), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		if (member != null)
+			return member.getString("branchId").toString();
+
+		return null;
+	}
 
 	public static GenericValue getMember(Long partyId) {
 
@@ -1285,6 +1303,40 @@ public class LoanUtilities {
 			e2.printStackTrace();
 		}
 		return member;
+	}
+
+	public static String getMemberPartyIdFromMemberAccountId(
+			Long memberAccountId) {
+		GenericValue memberAccount = null;
+
+		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(
+
+				EntityCondition.makeCondition("memberAccountId", EntityOperator.EQUALS,
+						memberAccountId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> memberAccountELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			memberAccountELI = delegator.findList("MemberAccount",
+					memberAccountConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		for (GenericValue genericValue : memberAccountELI) {
+			memberAccount = genericValue;
+		}
+		
+		if (memberAccount != null)
+			return memberAccount.getLong("partyId").toString();
+		
+		return null;
+		
+		
 	}
 
 }

@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
@@ -118,7 +120,24 @@ public class TreasuryReconciliation {
 		for (GenericValue genericValue : treasuryTransferELI) {
 			bdTotalBalance = bdTotalBalance.add(getTotalBalance(genericValue.getString("treasuryTransferId")));
 		}
+		
+		BigDecimal bdOpeningBalance = TreasuryUtility.getOpeningBalance(destinationTreasury, transferDate);
+		
+		
+		GenericValue treasury = getTreasury(destinationTreasury);
 
+		String partyId = treasury.getString("employeeResponsible");
+
+		String userLoginId = TreasuryUtility.getUserLoginId(partyId);
+		Map<String, String> userLogin = new HashMap<String, String>();
+		userLogin.put("userLoginId", userLoginId);
+		userLogin.put("partyId", partyId);
+		
+		//Timestamp transactionDate = new Timestamp(transferDate.getTime());
+		BigDecimal bdTotalDeAllocation = getTotalDeAllocated(destinationTreasury, transferDate);
+				
+		//TreasuryUtility.getTotalDeAllocated(userLogin, transactionDate);
+		bdTotalBalance = bdTotalBalance.add(bdOpeningBalance).subtract(bdTotalDeAllocation);
 		
 		return bdTotalBalance;
 	}
@@ -496,11 +515,33 @@ public class TreasuryReconciliation {
 		String treasuryTypeName = getTreasuryTypeName(destinationTreasury);
 		if (treasuryTypeName.equals("BANK"))
 		{
+			log.info("IIIIIIIII Its a BANK !!!!!!!!!!!!!!!!!!!!! ");
 			String glAccountId = getTreasuryAccountId(destinationTreasury);
 			bdNetAllocation = TreasuryAccounting.getAccountBalance(glAccountId);
 			
 			return bdNetAllocation;
 		}
+		
+		//getNetAllocation
+		if (treasuryTypeName.equals("TELLER")){
+			log.info("IIIIIIIII Its a teller !!!!!!!!!!!!!!!!!!!!! ");
+			//Get net allocations
+			bdNetAllocation = bdNetAllocation.add(getTotalIn(destinationTreasury));
+			bdNetAllocation = bdNetAllocation.subtract(getTotalOut(destinationTreasury));
+			
+			//Add total deposits by this user
+			BigDecimal bdTotalDeposits = TreasuryUtility.getTotalCashDeposit(destinationTreasury);
+			log.info("IIIIIIIII Total Deposits !!!!!!!!!!!!!!!!!!!!! "+bdTotalDeposits);
+			bdNetAllocation = bdNetAllocation.add(bdTotalDeposits);
+			
+			//Subtract total withdrawals by this user
+			BigDecimal bdTotalWithdrawal = TreasuryUtility.getTotalCashWithdrawal(destinationTreasury);
+			log.info("IIIIIIIII Total Withdrawal !!!!!!!!!!!!!!!!!!!!! "+bdTotalWithdrawal);
+			bdNetAllocation = bdNetAllocation.subtract(bdTotalWithdrawal);
+			return bdNetAllocation;
+		}
+		
+		log.info("IIIIIIIII Its none of the above !!!!!!!!!!!!!!!!!!!!! ==== "+treasuryTypeName);
 		
 		bdNetAllocation = bdNetAllocation.add(getTotalIn(destinationTreasury));
 		log.info(" NNNNNNNNNNNNNNNNN Net Allocation  "+bdNetAllocation);
@@ -510,7 +551,7 @@ public class TreasuryReconciliation {
 	}
 	
 	
-	private static String getTreasuryTypeName(String treasuryId) {
+	public static String getTreasuryTypeName(String treasuryId) {
 		//Get the treasury type
 		List<GenericValue> treasuryELI = null; // =
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -545,7 +586,7 @@ public class TreasuryReconciliation {
 		return name.toUpperCase();
 	}
 	
-	private static String getTreasuryAccountId(String treasuryId) {
+	public static String getTreasuryAccountId(String treasuryId) {
 		//Get the treasury type
 		List<GenericValue> treasuryELI = null; // =
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -651,5 +692,36 @@ public class TreasuryReconciliation {
 		}
 		return bdTotalAllocated;
 	}
+	
+	public static BigDecimal getTotalDeAllocated(String sourceTreasury, Date transferDate){
+		BigDecimal bdTotalAllocated = BigDecimal.ZERO;
+		
+		List<GenericValue> treasuryTransferELI = null;
+		//Get all the transfers for this destination treasury
+		EntityConditionList<EntityExpr> treasuryTransferConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"sourceTreasury", EntityOperator.EQUALS,
+						sourceTreasury), EntityCondition
+						.makeCondition("transferDate",
+								EntityOperator.EQUALS, transferDate)
+						),
+						EntityOperator.AND);
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			treasuryTransferELI = delegator.findList("TreasuryTransfer",
+					treasuryTransferConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		for (GenericValue genericValue : treasuryTransferELI) {
+			bdTotalAllocated = bdTotalAllocated.add(genericValue.getBigDecimal("transactionAmount"));
+		}
+		return bdTotalAllocated;
+	}
+	
+	
 
 }

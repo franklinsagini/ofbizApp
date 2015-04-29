@@ -18,12 +18,32 @@ import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import java.io.Writer;
+
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.calendar.RecurrenceRule;
+import org.ofbiz.webapp.event.EventHandlerException;
+
+import java.io.IOException;
+
+import org.ofbiz.service.GenericServiceException;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.ofbiz.service.GenericDispatcherFactory;
+
 /***
  * @author Japheth Odonya
- * 
+ *
  *         Purpose : Get SASRA Report Values
  * @author Japheth Odonya @when Feb 12, 2015 6:11:46 PM
- * 
+ *
  * */
 public class SasraReportsService {
 
@@ -290,16 +310,16 @@ public class SasraReportsService {
 		}
 		return bdAmount;
 	}
-	
-	
+
+
 	public static Long getAccountTotalsCount(String classificationId, BigDecimal bdLower, BigDecimal bdUpper){
 		return getAccountTotals(classificationId, bdLower, bdUpper).getCount();
 	}
-	
+
 	public static BigDecimal getAccountTotalsTotal(String classificationId, BigDecimal bdLower, BigDecimal bdUpper){
 		return getAccountTotals(classificationId, bdLower, bdUpper).getTotal();
 	}
-	
+
 	/***
 	 * Sum Member Accounts greater than Lower and Less than Upper
 	 * **/
@@ -308,7 +328,7 @@ public class SasraReportsService {
 		//BigDecimal bdTotal = BigDecimal.ZERO;
 		accountAccount.setCount(0L);
 		accountAccount.setTotal(BigDecimal.ZERO);
-		
+
 		//Get Accounts
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		GenericValue depositType = null;
@@ -318,7 +338,7 @@ public class SasraReportsService {
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
-		
+
 		//Get Accounts
 		EntityConditionList<EntityExpr> depositTypeItemConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
@@ -337,22 +357,22 @@ public class SasraReportsService {
 		for (GenericValue genericValue : depositTypeItemELI) {
 			//reportItemId = genericValue.getString("reportItemId");
 			accountProductId = genericValue.getLong("accountProductId");
-			
+
 			accountAccount = processMemberAccounts(accountAccount, accountProductId, bdLower, bdUpper);
 			//Get Members with this account
-			
+
 			// each member , get account balance
-			
-			
+
+
 			//check if balance within range and add total and increment count
 		}
-		
+
 		//For each Account compute total balance and add it to total if within range
-		
-		
+
+
 		return accountAccount;
 	}
-	
+
 	private static AccountCount processMemberAccounts(
 			AccountCount accountAccount, Long accountProductId, BigDecimal bdLower, BigDecimal bdUpper) {
 		// TODO Auto-generated method stub
@@ -377,20 +397,20 @@ public class SasraReportsService {
 				for (GenericValue genericValue : memberAccountELI) {
 					//reportItemId = genericValue.getString("reportItemId");
 					memberAccountId = genericValue.getLong("memberAccountId");
-					
+
 					//accountAccount = processMemberAccounts(accountAccount, accountProductId);
 					//Get Members with this account
 					bdTotal = AccHolderTransactionServices.getBookBalanceVer3(memberAccountId.toString(), delegator);
 					// each member , get account balance
-					
+
 					if ((bdTotal.compareTo(bdLower) > -1) && (bdTotal.compareTo(bdUpper) < 1)){
 						accountAccount.setCount(accountAccount.getCount() + 1);
 						accountAccount.setTotal(accountAccount.getTotal().add(bdTotal));
 					}
-					
+
 					//check if balance within range and add total and increment count
 				}
-		
+
 		return accountAccount;
 	}
 
@@ -400,11 +420,13 @@ public class SasraReportsService {
 	public static Long getAccountCounts(String classificationId, BigDecimal bdLower, BigDecimal bdUpper){
 		Long count = 0L;
 		//Get Accounts
-		
+
 		//For each Account compute total balance and add it to total if within range
-		
-		
+
+
 		return count;
 	}
+
+
 
 }

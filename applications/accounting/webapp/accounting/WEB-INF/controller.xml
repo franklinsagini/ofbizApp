@@ -35,7 +35,14 @@ under the License.
         <event name="test" type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/>
     </postprocessor>
     -->
-
+<!--     <request-map uri="sheduleDepositReturnReport">
+        <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.accounting.ledger.SasraReportsService" invoke="sheduleDepositReturnReport" />
+        <response name="success" type="request-redirect" value="StatementDepositReturns">
+            <redirect-parameter name="organizationPartyId"/>
+        </response>
+        <response name="error" type="view" value="StatementDepositReturns"/>
+    </request-map> -->
     <request-map uri="fetchAccountBalances">
         <security https="true" auth="true" />
         <event type="service" invoke="fetchAccountBalances" />
@@ -2976,6 +2983,14 @@ under the License.
         <event type="service" invoke="updateWorkEffort"/>
         <response name="success" type="view-last"/>
         <response name="error" type="view-last"/>
+    </request-map>
+    <request-map uri="saveDepositReturns">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="saveDepositReturns"/>
+        <response name="success" type="request-redirect" value="StatementDepositReturns">
+            <redirect-parameter name="organizationPartyId"/>
+        </response>
+        <response name="error" type="view" value="StatementDepositReturns"/>
     </request-map>
     <!-- end of request mappings -->
 

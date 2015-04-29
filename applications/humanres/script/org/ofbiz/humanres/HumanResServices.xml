@@ -530,11 +530,57 @@
 		<sequenced-id sequence-name="PerfReviewsDefinition" field="perfReviewDefId" />
 		<set from-field="perfReviewDefId" field="newEntity.perfReviewDefId" /> 
 		
-		
+		<set field="quantitative" value="${bsh:org.ofbiz.humanres.HumanResServices.getQuantitativeTotal();}"/>
+		<set field="qualitative" value="${bsh:org.ofbiz.humanres.HumanResServices.getQualitativeTotal();}"/>
+		<set field="QNTQLTNotFull" value="${bsh:org.ofbiz.humanres.HumanResServices.getTotal();}"/>
 		<set field="exist" value="${bsh:org.ofbiz.humanres.HumanResServices.CheckExistenceOfQualitativeIndicators();}"/>
 		<set field="valid" value="INVALID"/>
 		
+		 
+		
+		
 		<if>
+			<condition>
+					<if-compare-field field="QNTQLTNotFull"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="QNTQLTNotFullFoundError" />
+				</add-error>
+				<check-errors />
+			</then>
+	    </if>
+	   
+	    
+	    <if>
+			<condition>
+					<if-compare-field field="quantitative"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="QuantitativeTotalError" />
+				</add-error>
+				<check-errors />
+			</then>
+			</if>
+	    	<if>
+			<condition>
+					<if-compare-field field="qualitative"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="QualitativeTotalError" />
+				</add-error>
+				<check-errors />
+			</then>
+			</if>
+		    <if>
 			<condition>
 					<if-compare-field field="exist"
 						to-field="valid" operator="equals" />
@@ -617,11 +663,47 @@
 		<entity-one value-field="persGoal" entity-name="PerfGoals">
 			<field-map field-name="perfGoalsId" from-field="newEntity.perfGoalsId"/>
 		</entity-one>
-		
 		<set from-field="persGoal.perfGoalsDefId" field="newEntity.perfGoalsDefId" /> 
-		<create-value value-field="newEntity"/>
-		<property-to-field resource="HumanResUiLabels"
-	    property="CreateSuccess" field="successMessage" />
+		
+	    
+	    
+		<set field="quantitative" value="${bsh:org.ofbiz.humanres.HumanResServices.getQuantitativeTotal();}"/>
+		<set field="qualitative" value="${bsh:org.ofbiz.humanres.HumanResServices.getQualitativeTotal();}"/>
+		<set field="valid" value="INVALID"/>
+	    
+	    
+	    <if>
+			<condition>
+					<if-compare-field field="quantitative"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="QuantitativeTotalError" />
+				</add-error>
+				<check-errors />
+			</then>
+			</if>
+	    	<if>
+			<condition>
+					<if-compare-field field="qualitative"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="QualitativeTotalError" />
+				</add-error>
+				<check-errors />
+			</then>
+			
+			<else>
+			   <create-value value-field="newEntity" />
+		      <property-to-field resource="HumanResUiLabels"
+			  property="CreateSuccess" field="successMessage" />
+			</else>
+		</if>
 			
 			
 			</simple-method>
@@ -666,9 +748,32 @@
 		
 		<set field="newEntity.perfReviewDefId" from-field="obj.perfReviewDefId"/>
 		<set field="newEntity.perfGoalsId" from-field="obj.perfGoalsId"/>
-		 <create-value value-field="newEntity" />
+			
+			
+		<set field="objective" from-field="newEntity.PerfReviewsGroupObjectiveDefinitionId"/>
+		<set field="PerspectiveTotalState" value="${bsh:org.ofbiz.humanres.HumanResServices.getObjectiveAndRespectivePerspectiveTotal(objective);}"/>
+		<set field="valid" value="INVALID"/>
+	    
+	   
+	    	<if>
+			<condition>
+					<if-compare-field field="PerspectiveTotalState"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="PerspectiveTotalError" />
+				</add-error>
+				<check-errors />
+			</then>
+			
+			<else>
+			   <create-value value-field="newEntity" />
 		      <property-to-field resource="HumanResUiLabels"
 			  property="CreateSuccess" field="successMessage" />
+			</else>
+		</if>
 			
 			
 			</simple-method>
@@ -714,10 +819,32 @@
 		<set field="newEntity.perfReviewDefId" from-field="obj.perfReviewDefId"/>
 		<set field="newEntity.perfGoalsId" from-field="obj.perfGoalsId"/>
 		<set field="newEntity.PerfReviewsGroupObjectiveDefinitionId" from-field="obj.PerfReviewsGroupObjectiveDefinitionId"/>
-		 <create-value value-field="newEntity" />
+			  
+			  
+			  <set field="actionPlan" from-field="newEntity.PerfObjectiveActionPlanId"/>
+		<set field="ObjectiveTotalState" value="${bsh:org.ofbiz.humanres.HumanResServices.getActionPlanAndRespectiveObjectiveTotal(actionPlan) ;}"/>
+		<set field="valid" value="INVALID"/>
+	    
+	   
+	    	<if>
+			<condition>
+					<if-compare-field field="ObjectiveTotalState"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="ObjectiveTotalError" />
+				</add-error>
+				<check-errors />
+			</then>
+			
+			<else>
+			   <create-value value-field="newEntity" />
 		      <property-to-field resource="HumanResUiLabels"
 			  property="CreateSuccess" field="successMessage" />
-			
+			</else>
+		</if>
 			
 			</simple-method>
 			
@@ -755,7 +882,22 @@
 		
 		<set field="party" value="${newEntity.partyId}"/>
 		<set field="exist" value="${bsh:org.ofbiz.humanres.HumanResServices.findExistanceOfStaffInReviewGroups(party);}"/>
+		<set field="indicatorTotal" value="${bsh:org.ofbiz.humanres.HumanResServices.getIndicatorTotalsCompareToActionPlans();}"/>
 		<set field="valid" value="INVALID"/>
+	    
+	    <if>
+			<condition>
+					<if-compare-field field="indicatorTotal"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="ActionPlanTotalError" />
+				</add-error>
+				<check-errors />
+			</then>
+	    </if>
 		
 		<if>
 			<condition>
@@ -858,7 +1000,22 @@
 			
 		<simple-method method-name="openReviewPeriod" short-description="create KPI Definition">
 		<set field="exist" value="${bsh:org.ofbiz.humanres.HumanResServices.findExistanceOfOpenPeriod();}"/>
+		<set field="indicatorTotal" value="${bsh:org.ofbiz.humanres.HumanResServices.getIndicatorTotalsCompareToActionPlans();}"/>
 		<set field="valid" value="INVALID"/>
+	    
+	    <if>
+			<condition>
+					<if-compare-field field="indicatorTotal"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="ActionPlanTotalError" />
+				</add-error>
+				<check-errors />
+			</then>
+	    </if>
 		
 		<if>
 			<condition>
@@ -1074,7 +1231,8 @@
 			
 	
     
-     <!-- Perf Goals -->
+     <!-- ============== PERFORMANCE GOALS MANAGEMENT ================= -->
+     
    <simple-method method-name="createPerfGoals" short-description="create PerfGoals">
         <make-value entity-name="PerfGoals" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>

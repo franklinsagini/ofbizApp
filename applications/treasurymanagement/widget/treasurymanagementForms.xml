@@ -560,9 +560,13 @@
   		<!-- field name="destinationTreasury"><hidden/></field -->
         <field name="name" title="Treasury" ><display></display></field>
         <field name="transferDate" title="Transfer Date" ><display type="date"></display></field>
+        <field name="openingBalance" title="Opening Balance" ><display></display></field>
+        <field name="amountIn" title="Transfers In" ><display></display></field>
+        <field name="amountOut" title="Transfers Out" ><display></display></field>
         
-        <field name="amountIn" title="Amount In" ><display></display></field>
-        <field name="amountOut" title="Amount Out" ><display></display></field>
+        <field name="transactionsIn" title="Transactions In" ><display></display></field>
+        <field name="transactionsOut" title="Transactions Out" ><display></display></field>
+        
         <field name="amountBalance" title="Balance" ><display></display></field>
         <!-- field name="processReconciliation" title="Process Reconciliation" widget-style="buttontext">
             <hyperlink target="processReconciliation" description="Process Reconciliation" also-hidden="false">
@@ -570,15 +574,15 @@
             </hyperlink>
         </field -->
         
-         <field name="showTransfers" title="Show Transfers(Issue)" widget-style="buttontext">
-            <hyperlink target="showTransfers" description="Show Tranfers" also-hidden="false">
+         <field name="showTransfers" title="Transfers" widget-style="buttontext">
+            <hyperlink target="showTransfers" description="Tranfers" also-hidden="false">
                 
                 <parameter param-name="destinationTreasury"/>
                 <parameter param-name="transferDate"/>
             </hyperlink>
         </field>
-          <field name="showTransactions" title="Show Transactions(Issue)" widget-style="buttontext">
-            <hyperlink target="showTransactions" description="Show Transactions" also-hidden="false">
+          <field name="showTransactions" title="Transactions" widget-style="buttontext">
+            <hyperlink target="showTransactions" description="Transactions" also-hidden="false">
               
                 <parameter param-name="destinationTreasury"/>
                 <parameter param-name="transferDate"/>
@@ -598,16 +602,23 @@
      			<set field="treasuryId" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerId(userLogin);}" / -->
             <entity-condition entity-name="AccountTransaction" >
             	
-            	<condition-list combine="and">
-            		<condition-expr field-name="isActive" value="Y"/>
-            		<!-- condition-expr field-name="partyId" from-field="parameters.partyId"/ -->
-            		<!-- condition-expr field-name="transactionType" value="CASHWITHDRAWAL"/ -->
-            		<!-- condition-expr field-name="createdBy" operator="equals" from-field="creatorId"/ -->
-            		<condition-expr field-name="treasuryId" operator="equals" value="${treasuryId}"/>
-            		<!-- condition-expr field-name="createdStamp" operator="not-equals" value="NULL"/ -->
-            		<condition-expr field-name="createdStamp" operator="greater-equals" value="${transferDate}"/>
-            		<condition-expr field-name="createdStamp" operator="less" value="${endOfDay}"/>
-            		<!-- condition-expr field-name="createdStamp" operator="less-equals" from-field="${endOfDay}"/ -->
+            	<condition-list combine="or">
+            		<condition-list combine="and">
+            			<condition-expr field-name="isActive" value="Y"/>
+            			<condition-expr field-name="treasuryId" operator="equals" value="${treasuryId}"/>
+            			<condition-expr field-name="createdStamp" operator="greater-equals" value="${transferDate}"/>
+            			<condition-expr field-name="createdStamp" operator="less" value="${endOfDay}"/>
+            			<condition-expr field-name="transactionType" operator="equals" value="CASHDEPOSIT"/>
+            		</condition-list>
+ 
+             		<condition-list combine="and">
+            			<condition-expr field-name="isActive" value="Y"/>
+            			<condition-expr field-name="treasuryId" operator="equals" value="${treasuryId}"/>
+            			<condition-expr field-name="createdStamp" operator="greater-equals" value="${transferDate}"/>
+            			<condition-expr field-name="createdStamp" operator="less" value="${endOfDay}"/>
+            			<condition-expr field-name="transactionType" operator="equals" value="CASHWITHDRAWAL"/>
+            		</condition-list>
+            	
             	</condition-list>
             	<order-by field-name="-accountTransactionId"></order-by>
             </entity-condition>
@@ -623,7 +634,11 @@
         	<display-entity entity-name="MemberAccount" key-field-name="memberAccountId" description="${accountNo}" ></display-entity>
         </field>
         <field name="transactionType" title="Transaction Type"><display also-hidden="false"></display></field>
-        <field name="slipNumber" title="SLIP Number"><display also-hidden="false"></display></field>
+        <!-- field name="slipNumber" title="SLIP Number"><display also-hidden="false"></display></field -->
+      
+      	<field name="acctgTransId" title="Ledger Number/ID">
+      		<display></display>
+      	</field>
         <field name="transactionAmount" title="Amount"><display also-hidden="false" description="${transactionAmount}" type="currency" currency="KES"></display></field>
         
         <field name="createdBy" title="Served By"><display also-hidden="false"></display></field>

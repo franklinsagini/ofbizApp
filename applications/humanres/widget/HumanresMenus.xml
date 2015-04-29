@@ -27,8 +27,8 @@
          <menu-item name="probationEmployees" title="Employees On Probation"><link target="findProbationEmployees"/></menu-item>
         <menu-item name="Employment" title="Employee Postings"><link target="FindEmployments"/></menu-item>
         <menu-item name="EmplPosition" title="${uiLabelMap.HumanResEmployeePosition}"><link target="FindEmplPositions"/></menu-item>
-        <menu-item name="PartyQual" title="${uiLabelMap.HumanResPartyQualification}"><link target="FindPartyQuals"/></menu-item>
-        <menu-item name="EmplSkills" title="${uiLabelMap.HumanResSkills}"><link target="FindPartySkills"/></menu-item>
+       <!--  <menu-item name="PartyQual" title="${uiLabelMap.HumanResPartyQualification}"><link target="FindPartyQuals"/></menu-item>
+        <menu-item name="EmplSkills" title="${uiLabelMap.HumanResSkills}"><link target="FindPartySkills"/></menu-item> -->
         <menu-item name="EmplRelations" title="Employee Relations"><link target="employeeRelations"/></menu-item>
        <!--  <menu-item name="EmplBankDetails" title="Employee Bank Details"><link target="employeeBankDetails"/></menu-item>
         <menu-item name="PartyResume" title="${uiLabelMap.HumanResPartyResume}"><link target="FindPartyResumes"/></menu-item> -->
@@ -234,18 +234,6 @@
         </menu-item>
     </menu>
 
-    <menu name="PerfReportsBar" type="simple" default-menu-item-name="kpidefinition"
-        menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">
-<!--     	 <menu-item name="perfReviewReport" title="Performance Review Report">
-        	<link target="perfReviewReport"/>
-        </menu-item> -->
-         <menu-item name="perfScoresReport" title="Performance Scores Report">
-        	<link target="perfScoresReport"/>
-        </menu-item>
-         <menu-item name="StaffperfScoresReport" title="Staff Performance Scores Reports">
-        	<link target="StaffperfScoresReport"/>
-        </menu-item>
-    </menu>
 
     <menu name="KPITargetManagementBar" type="simple" default-menu-item-name="PerfStaff"
         menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">
@@ -612,6 +600,31 @@
             <link target="ActiveEmplLeaves"/>
         </menu-item>
 
+        <menu-item name="schedule" title="schedule Leave Balances">
+            <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
+            <!-- <link target="LeaveBalances"/> -->
+            <link target="scheduleInterestCalculationsLeave"/>
+        </menu-item>
+
+        <menu-item name="scheduleMail" title="schedule Mail Email Notification">
+            <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
+            <!-- <link target="LeaveBalances"/> -->
+            <link target="scheduleSendEmailNotification"/>
+        </menu-item> 
+
+        <menu-item name="scheduleDisableLogins" title="schedule Login Disable">
+            <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
+            <!-- <link target="LeaveBalances"/> -->
+            <link target="scheduleDisableLogins"/>
+        </menu-item> 
+
+        <menu-item name="SaveEmail_ToBeSendafterwards" title="Save Scheduled Handover Mail">
+            <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
+            <!-- <link target="LeaveBalances"/> -->
+            <link target="SaveEmail_ToBeSendafterwards"/>
+        </menu-item>
+
+         
        <!--  <menu-item name="openingLeaveBalance" title="Opening Leave Balances">
             <condition><if-has-permission permission="HUMANRES" action="_APPROVE"/></condition>
             <link target="createOpeningLeaveBalances"/>

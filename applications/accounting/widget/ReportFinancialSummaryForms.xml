@@ -79,23 +79,56 @@ under the License.
         <field name="submitButton" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
-    <form name="TransactionSelectionForm" type="single" header-row-style="header-row" default-table-style="basic-table">
-        <field name="selectedMonth" title="${uiLabelMap.CommonMonth}">
-            <drop-down allow-empty="true">
-                <list-options list-name="monthList" key-name="value" description="${description}"/>
+    <form name="StatementDepositReturnsParamsForm" type="single"  target="saveDepositReturns" header-row-style="header-row" default-table-style="basic-table">
+        <field name="organizationPartyId"><hidden/></field>
+        <field name="customTimePeriodId" required-field="true">
+            <drop-down>
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
+                    <entity-constraint name="periodTypeId" operator="like" value="FISCAL_%"/>
+                    <entity-order-by field-name="-thruDate"/>
+                    <entity-order-by field-name="periodNum"/>
+                </entity-options>
             </drop-down>
         </field>
         <field name="fromDate" required-field="false"><date-time type="timestamp"/></field>
         <field name="thruDate" required-field="false"><date-time type="timestamp"/></field>
-        <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}">
-            <drop-down>
-                <entity-options entity-name="GlFiscalType" description="${description}">
-                    <entity-order-by field-name="glFiscalTypeId"/>
-                </entity-options>
-            </drop-down>
-        </field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit" tooltip="Please enter From and Thru date in fields above"><submit button-type="button"/></field>
     </form>
+
+    <form name="TransactionSelectionForm" type="single" header-row-style="header-row" default-table-style="basic-table">
+
+        <field name="selectedMonth" title="${uiLabelMap.CommonMonth}">
+
+            <drop-down allow-empty="true">
+
+                <list-options list-name="monthList" key-name="value" description="${description}"/>
+
+            </drop-down>
+
+        </field>
+
+        <field name="fromDate" required-field="false"><date-time type="timestamp"/></field>
+
+        <field name="thruDate" required-field="false"><date-time type="timestamp"/></field>
+
+        <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}">
+
+            <drop-down>
+
+                <entity-options entity-name="GlFiscalType" description="${description}">
+
+                    <entity-order-by field-name="glFiscalTypeId"/>
+
+                </entity-options>
+
+            </drop-down>
+
+        </field>
+
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit" tooltip="Please enter From and Thru date in fields above"><submit button-type="button"/></field>
+
+    </form>
+
 
     <form name="IncomeStatementRevenues" type="list" list-name="revenueAccountBalanceList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
