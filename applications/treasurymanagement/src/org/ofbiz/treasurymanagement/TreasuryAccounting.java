@@ -5,6 +5,8 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -545,6 +547,31 @@ public class TreasuryAccounting {
 		
 		return bdTotalBalance;
 	}
+	
+	
+	public static BigDecimal getAccountBalance(String glAccountId, Timestamp transactionDate) {
+		// TODO Check if acctgTransId has correct entries (Debits and Credits
+		// are equal)
+		BigDecimal bdTotalDebits = getTotalEntries(glAccountId, "D", transactionDate);
+		BigDecimal bdTotalCredits = getTotalEntries(glAccountId, "C", transactionDate);
+		
+		BigDecimal bdTotalBalance = bdTotalDebits.subtract(bdTotalCredits);
+		
+		
+		return bdTotalBalance;
+	}
+	
+	public static BigDecimal getAccountBalance(String glAccountId, Timestamp transactionDate, boolean strict) {
+		// TODO Check if acctgTransId has correct entries (Debits and Credits
+		// are equal)
+		BigDecimal bdTotalDebits = getTotalEntries(glAccountId, "D", transactionDate, strict);
+		BigDecimal bdTotalCredits = getTotalEntries(glAccountId, "C", transactionDate, strict);
+		
+		BigDecimal bdTotalBalance = bdTotalDebits.subtract(bdTotalCredits);
+		
+		
+		return bdTotalBalance;
+	}
 
 	private static BigDecimal getTotalEntries(String glAccountId, String debitCreditFlag) {
 		BigDecimal bdTotalEntryAmt = BigDecimal.ZERO;
@@ -557,6 +584,93 @@ public class TreasuryAccounting {
 						EntityCondition
 								.makeCondition("debitCreditFlag", EntityOperator.EQUALS,
 										debitCreditFlag)
+								
+
+				), EntityOperator.AND);
+
+		try {
+			listEntries = delegator.findList("AcctgTransEntry", entriesConditions, null,
+					null, null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		for (GenericValue genericValue : listEntries) {
+			bdTotalEntryAmt = bdTotalEntryAmt.add(genericValue.getBigDecimal("amount"));
+		}
+		
+		//bdTotalEntryAmt = bdTotalEntryAmt.
+		return bdTotalEntryAmt.setScale(4, RoundingMode.HALF_UP);
+	}
+	
+	public static BigDecimal getTotalEntries(String glAccountId, String debitCreditFlag, Timestamp date) {
+		BigDecimal bdTotalEntryAmt = BigDecimal.ZERO;
+		List<GenericValue> listEntries = null;
+		Delegator delegator =  DelegatorFactoryImpl.getDelegator(null);
+		EntityConditionList<EntityExpr> entriesConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition
+						.makeCondition("glAccountId", EntityOperator.EQUALS,
+								glAccountId),
+						EntityCondition
+								.makeCondition("debitCreditFlag", EntityOperator.EQUALS,
+										debitCreditFlag),
+										
+										EntityCondition
+										.makeCondition("createdStamp", EntityOperator.LESS_THAN,
+												date)
+								
+
+				), EntityOperator.AND);
+
+		try {
+			listEntries = delegator.findList("AcctgTransEntry", entriesConditions, null,
+					null, null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		for (GenericValue genericValue : listEntries) {
+			bdTotalEntryAmt = bdTotalEntryAmt.add(genericValue.getBigDecimal("amount"));
+		}
+		
+		//bdTotalEntryAmt = bdTotalEntryAmt.
+		return bdTotalEntryAmt.setScale(4, RoundingMode.HALF_UP);
+	}
+	
+	
+	public static BigDecimal getTotalEntries(String glAccountId, String debitCreditFlag, Timestamp date, boolean strict) {
+		BigDecimal bdTotalEntryAmt = BigDecimal.ZERO;
+		List<GenericValue> listEntries = null;
+		Delegator delegator =  DelegatorFactoryImpl.getDelegator(null);
+		
+		//End of the day
+		Calendar calEndDay = Calendar.getInstance();
+		calEndDay.setTimeInMillis(date.getTime());
+		calEndDay.add(Calendar.DATE, 1);
+		calEndDay.set(Calendar.MILLISECOND, 0);
+		calEndDay.set(Calendar.SECOND, 0);
+		calEndDay.set(Calendar.MINUTE, 0);
+		calEndDay.set(Calendar.HOUR_OF_DAY, 0);
+
+
+		Timestamp tstEndDay = new Timestamp(calEndDay.getTimeInMillis());
+
+		
+		EntityConditionList<EntityExpr> entriesConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition
+						.makeCondition("glAccountId", EntityOperator.EQUALS,
+								glAccountId),
+						EntityCondition
+								.makeCondition("debitCreditFlag", EntityOperator.EQUALS,
+										debitCreditFlag),
+										
+										EntityCondition
+										.makeCondition("createdStamp", EntityOperator.GREATER_THAN_EQUAL_TO,
+												date),
+												
+												EntityCondition
+												.makeCondition("createdStamp", EntityOperator.LESS_THAN,
+														tstEndDay)
 								
 
 				), EntityOperator.AND);
