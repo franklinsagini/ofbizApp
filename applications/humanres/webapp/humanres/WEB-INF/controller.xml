@@ -3452,6 +3452,131 @@ under the License.
 
 
 
+  <!--==============Training Types==================-->
+    <request-map uri="staffTraining">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="staffTraining"/>
+    </request-map>
+    
+     <!--==============Training cost types==================-->
+    <request-map uri="trainingCost">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="trainingCost"/>
+    </request-map>
+
+
+ <!--==============Training Events==================-->
+    <request-map uri="trainingEvent">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="trainingEvent"/>
+    </request-map>
+    
+     <!--==============Add Staff To Training Events==================-->
+    <request-map uri="AddStaffToTraining">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AddStaffToTraining"/>
+    </request-map>
+    
+     <!--======================= TRAINING TYPES SETUP DEFINITION =================================== -->
+
+	<request-map uri="createStaffTrainingType">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createStaffTrainingType" />
+		<response name="success" type="request-redirect-noparam" value="staffTraining" />
+		<response name="error" type="request-redirect-noparam" value="staffTraining" />
+	</request-map>
+
+	<request-map uri="updateStaffTrainingType">
+		<security https="true" auth="true" />
+		<event type="service-multi" invoke="updateStaffTrainingType" />
+		<response name="success" type="request-redirect" value="staffTraining">
+			<redirect-parameter name="trainingTypeId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="staffTraining" />
+	</request-map>
+
+	<request-map uri="deleteStaffTrainingType">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteStaffTrainingType" />
+		<response name="success" type="request-redirect-noparam" value="staffTraining"/>
+		<response name="error" type="request-redirect-noparam" value="staffTraining" />
+	</request-map>
+	
+	<!--======================= TRAINING COST TYPES SETUP DEFINITION =================================== -->
+
+	<request-map uri="createStaffTrainingCostType">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createStaffTrainingCostType" />
+		<response name="success" type="request-redirect-noparam" value="trainingCost" />
+		<response name="error" type="request-redirect-noparam" value="trainingCost" />
+	</request-map>
+
+	<request-map uri="updateStaffTrainingCostType">
+		<security https="true" auth="true" />
+		<event type="service-multi" invoke="updateStaffTrainingCostType" />
+		<response name="success" type="request-redirect" value="trainingCost">
+			<redirect-parameter name="costTypeId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="trainingCost" />
+	</request-map>
+
+	<request-map uri="deleteStaffTrainingCostType">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteStaffTrainingCostType" />
+		<response name="success" type="request-redirect-noparam" value="trainingCost"/>
+		<response name="error" type="request-redirect-noparam" value="trainingCost" />
+	</request-map>
+	
+	<!--======================= TRAINING EVENT SETUP DEFINITION =================================== -->
+
+	<request-map uri="createStaffTrainingEvent">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createStaffTrainingEvent" />
+		<response name="success" type="request-redirect-noparam" value="trainingEvent" />
+		<response name="error" type="request-redirect-noparam" value="trainingEvent" />
+	</request-map>
+
+	<request-map uri="updateStaffTrainingEvent">
+		<security https="true" auth="true" />
+		<event type="service-multi" invoke="updateStaffTrainingEvent" />
+		<response name="success" type="request-redirect" value="trainingEvent">
+			<redirect-parameter name="eventId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="trainingEvent" />
+	</request-map>
+
+	<request-map uri="deleteStaffTrainingEvent">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteStaffTrainingEvent" />
+		<response name="success" type="request-redirect-noparam" value="trainingEvent"/>
+		<response name="error" type="request-redirect-noparam" value="trainingEvent" />
+	</request-map>
+	
+	<!--======================= ADD STAFF TO TRAINING EVENT SETUP DEFINITION =================================== -->
+
+	<request-map uri="addStaffToTrainingEvent">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="addStaffToTrainingEvent" />
+		<response name="success" type="request-redirect-noparam" value="AddStaffToTraining" />
+		<response name="error" type="request-redirect-noparam" value="AddStaffToTraining" />
+	</request-map>
+
+	<request-map uri="updateaddStaffToTrainingEvent">
+		<security https="true" auth="true" />
+		<event type="service-multi" invoke="updateaddStaffToTrainingEvent" />
+		<response name="success" type="request-redirect" value="AddStaffToTraining">
+			<redirect-parameter name="partyTrainingId" />
+		</response>
+		<response name="error" type="request-redirect-noparam" value="AddStaffToTraining" />
+	</request-map>
+
+	<request-map uri="deleteaddStaffToTrainingEvent">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteaddStaffToTrainingEvent" />
+		<response name="success" type="request-redirect-noparam" value="AddStaffToTraining"/>
+		<response name="error" type="request-redirect-noparam" value="AddStaffToTraining" />
+	</request-map>
+    
     <!--==============PayRoll History Requests==================-->
     <request-map uri="PayrollHistory">
         <security https="true" auth="true"/>
@@ -3569,7 +3694,14 @@ under the License.
         <response name="success" type="view" value="AllStaffPerformanceScorePerQualitativeGoalPDF"/>
     </request-map>
     
-     <view-map name="AllStaffPerformanceScorePerQualitativeGoalPDF" type="screenfop" page="component://humanres/widget/PerfReportScreens.xml#AllStaffPerformanceScorePerQualitativeGoalPDF" content-type="application/pdf" encoding="none"/>
+    
+     <request-map uri="StaffPerformancePerBranchOrDepartmentPDF">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="StaffPerformancePerBranchOrDepartmentPDF"/>
+    </request-map>
+    
+     <view-map name="StaffPerformancePerBranchOrDepartmentPDF" type="screenfop" page="component://humanres/widget/PerfReportScreens.xml#StaffPerformancePerBranchOrDepartmentPDF" content-type="application/pdf" encoding="none"/>
+      <view-map name="AllStaffPerformanceScorePerQualitativeGoalPDF" type="screenfop" page="component://humanres/widget/PerfReportScreens.xml#AllStaffPerformanceScorePerQualitativeGoalPDF" content-type="application/pdf" encoding="none"/>
      <view-map name="SelfOrHodAppraisalPDF" type="screenfop" page="component://humanres/widget/PerfReportScreens.xml#SelfOrHodAppraisalPDF" content-type="application/pdf" encoding="none"/>
      <view-map name="StaffPerformancePerGoalPDF" type="screenfop" page="component://humanres/widget/PerfReportScreens.xml#StaffPerformancePerGoalPDF" content-type="application/pdf" encoding="none"/>
      <view-map name="SingleStaffPerformanceScoresPDF" type="screenfop" page="component://humanres/widget/PerfReportScreens.xml#SingleStaffPerformanceScoresPDF" content-type="application/pdf" encoding="none"/>
@@ -3772,6 +3904,10 @@ under the License.
 
     <!-- ==================Trainings View Map===================== -->
     <view-map name="TrainingCalendar" type="screen" page="component://humanres/widget/PersonTrainingScreens.xml#TrainingCalendarWithDecorator"/>
+    <view-map name="staffTraining" type="screen" page="component://humanres/widget/PersonTrainingScreens.xml#TrainingSetup"/>
+    <view-map name="trainingCost" type="screen" page="component://humanres/widget/PersonTrainingScreens.xml#costSetup"/>
+     <view-map name="trainingEvent" type="screen" page="component://humanres/widget/PersonTrainingScreens.xml#TrainingEventsScreen"/>
+     <view-map name="AddStaffToTraining" type="screen" page="component://humanres/widget/PersonTrainingScreens.xml#AddStaffToTrainingEventsScreen"/>
     <view-map name="FindTrainingStatus" type="screen" page="component://humanres/widget/PersonTrainingScreens.xml#FindTrainingStatus"/>
     <view-map name="FindTrainingApprovals" type="screen" page="component://humanres/widget/PersonTrainingScreens.xml#FindTrainingApprovals"/>
     <view-map name="EditTrainingApprovals" type="screen" page="component://humanres/widget/PersonTrainingScreens.xml#EditTrainingApprovals"/>
