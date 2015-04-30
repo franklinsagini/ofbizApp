@@ -751,6 +751,7 @@ under the License.
         <key-map field-name="parentTypeId" rel-field-name="skillTypeId"/>
       </relation>
     </entity>
+    
     <entity entity-name="TrainingClassType"
             package-name="org.ofbiz.humanres.ability"
             title="Training Class Type Entity">
@@ -2288,6 +2289,45 @@ under the License.
        <field name="retirementAge" type="name"></field>
        <prim-key field="ageId"/>
     </entity>
+    
+    
+               <!-- TRAINING OF STAFF -->
+       
+      <entity entity-name="TrainingTypes" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
+       <field name="trainingTypeId" type="id-ne"><description>primary sequenced ID</description></field>
+       <field name="trainingName" type="name"></field>
+       <field name="parentTraining" type="name"></field>
+       <field name="essentialSkill" type="name"></field>
+       <field name="timeFrame" type="name"></field>
+       <prim-key field="trainingTypeId"/>
+    </entity>   
+    
+     <entity entity-name="CostTypes" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
+       <field name="costTypeId" type="id-ne"><description>primary sequenced ID</description></field>
+       <field name="CostName" type="name"></field>
+       <field name="trainingFees" type="name"></field>
+       <field name="travelCost" type="name"></field>
+       <field name="accomodationCost" type="name"></field>
+        <field name="allowance" type="name"></field>
+       <prim-key field="costTypeId"/>
+    </entity>  
+    
+     <entity entity-name="TrainingEvent" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
+       <field name="eventId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="eventName" type="name"></field>
+       <field name="trainingTypeId" type="name"></field>
+       <field name="costTypeId" type="name"></field>
+       <field name="startDate" type="date"></field>
+       <field name="endDate" type="date"></field>
+       <prim-key field="eventId"/>
+    </entity>  
+    
+     <entity entity-name="PatyInTrainingEvent" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
+       <field name="partyTrainingId" type="id-ne"><description>primary sequenced ID</description></field>
+       <field name="partyId" type="name"></field>
+       <field name="eventId" type="name"></field>
+       <prim-key field="partyTrainingId"/>
+    </entity>  
     
     
     

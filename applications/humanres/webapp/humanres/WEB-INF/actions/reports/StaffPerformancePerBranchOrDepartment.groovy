@@ -27,6 +27,16 @@ ReviewGroup1 = delegator.findList("StaffInPerfReviewGroup", expr, null, null, nu
 ReviewGroup1.eachWithIndex { ReviewGroup1Item, index ->
 party = ReviewGroup1Item.partyId
 
+
+
+expr2 = exprBldr.AND() {
+			EQUALS(partyId: party)
+		}
+ReviewGroup = delegator.findList("StaffInPerfReviewGroup", expr2, null, null, null, false);
+
+ReviewGroup.eachWithIndex { ReviewGroupItem, index2 ->
+
+
 staff = delegator.findOne("Person", [partyId : party], false);
 fName = staff.firstName
 sName = staff.lastName
@@ -34,22 +44,14 @@ fNameUpperCased = fName.toUpperCase()
 sNameUpperCased = sName.toUpperCase()
 Goal_QuantitativeScorelist = [];
 Goal_QualitativeScorelist = [];
-}
-
-expr = exprBldr.AND() {
-			EQUALS(partyId: party)
-		}
-ReviewGroup = delegator.findList("StaffInPerfReviewGroup", expr, null, null, null, false);
-
-ReviewGroup.eachWithIndex { ReviewGroupItem, index2 ->
 
 	groupId = ReviewGroupItem.perfReviewDefId
 
-	expr2 = exprBldr.AND() {
+	expr3 = exprBldr.AND() {
 			EQUALS(perfReviewDefId: groupId)
 			EQUALS(perfGoalsDefId: Goal_Quantitative)
 		}
-Goal_QuantitativeGroup = delegator.findList("PerfActionPlanIndicatorDefinition", expr2, null, null, null, false);
+Goal_QuantitativeGroup = delegator.findList("PerfActionPlanIndicatorDefinition", expr3, null, null, null, false);
 Goal_QuantitativeGroup.eachWithIndex { Goal_QuantitativeGroupItem, index3 ->
 
 	perspectiveId = Goal_QuantitativeGroupItem.perfGoalsId
@@ -85,11 +87,11 @@ QNT_Totalall4qstotalMaxScore = org.ofbiz.humanres.HumanResServices.getMaxTotalPa
 
 	}
 
-	expr3 = exprBldr.AND() {
+	expr4 = exprBldr.AND() {
 			EQUALS(perfReviewDefId: groupId)
 			EQUALS(perfGoalsDefId: Goal_Qualitative)
 		}
-Goal_QualitativeGroup = delegator.findList("PerfActionPlanIndicatorDefinition", expr3, null, null, null, false);
+Goal_QualitativeGroup = delegator.findList("PerfActionPlanIndicatorDefinition", expr4, null, null, null, false);
 Goal_QualitativeGroup.eachWithIndex { Goal_QualitativeGroupItem, index4 ->
 
 	
@@ -141,7 +143,7 @@ context.sNameUpperCased = sNameUpperCased;
 context.all4qstotalScore = all4qstotalScore;
 
 
-
+}
 
 
 
