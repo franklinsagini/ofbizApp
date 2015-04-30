@@ -50,7 +50,7 @@ activityList = delegator.findByAnd("fileMovementActivityView", [partyId : partyI
 
 activities.eachWithIndex { movementItem, indexMovement ->
 	
-	 duration = delegator.findByAnd("RegistryFileActivity", [activityId : movementItem.activityCode], null, false);
+duration = delegator.findByAnd("RegistryFileActivity", [activityId : movementItem.activityCode], null, false);
  
  activity = new MovementActivity()
  activity.activityCode = duration.activity
@@ -63,7 +63,7 @@ activities.eachWithIndex { movementItem, indexMovement ->
 activities.eachWithIndex { movementItem, indexMovement ->
 
 	
-	movement = new FileMovement()
+	 movement = new FileMovement()
 	 movement.receivedBy = movementItem.receivedBy
 	 movement.releasedBy = movementItem.releasedBy
 	 movement.releasedTo = movementItem.releasedTo
