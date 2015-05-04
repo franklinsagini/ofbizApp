@@ -5110,5 +5110,21 @@ public static String  NextPayrollNumber(String employmentTerms) {
 					return state;
 				}
 				
+				
+				
+				public static String  CompareStartEndDate(Date from, Date end) {
+				LocalDate StartDate = new LocalDate(from);
+				LocalDate EndDate = new LocalDate(end);
+				String state = null;
+					if (StartDate.isAfter(EndDate)) {
+						state = "INVALID";
+					} else {
+						state = "VALID";
+					}
+					
+							return state;
+					
+				}
+				
 }
 
