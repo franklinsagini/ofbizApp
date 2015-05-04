@@ -53,6 +53,22 @@
         <call-service service-name="updateWorkEffort" in-map-name="updateWorkEffortCtx"/>
     </simple-method>
 
+    <simple-method method-name="updateFixedAssetMaintAndWorkEffortBAK" login-required="true"
+        short-description="Update FixedAssetMaint and Schedule information in WorkEffort">
+        <set-service-fields map="parameters" service-name="updateFixedAssetMaint" to-map="updateFixedAssetMaintCtx"/>
+        <call-service service-name="updateFixedAssetMaint" in-map-name="updateFixedAssetMaintCtx"/>
+        <check-errors/>
+        <if-compare field="parameters.statusId" operator="equals" value="FAM_CANCELLED">
+            <set field="updateWorkEffortCtx.currentStatusId" value="CAL_CANCELLED"/>
+        </if-compare>
+        <set-service-fields map="parameters" service-name="updateWorkEffort" to-map="updateWorkEffortCtx"/>
+        <set from-field="parameters.scheduleWorkEffortId" field="updateWorkEffortCtx.workEffortId"/>
+        <set from-field="parameters.scheduleWorkEffortId" field="workEffortId"/>
+        <entity-one value-field="workEffort" entity-name="WorkEffort"/>
+        <set field="updateWorkEffortCtx.actualCompletionDate" from-field="parameters.actualCompletionDate" default-value="${workEffort.actualCompletionDate}"/>
+        <call-service service-name="updateWorkEffort" in-map-name="updateWorkEffortCtx"/>
+    </simple-method>
+
     <simple-method method-name="createWorkEffortAndAssocWithParent" login-required="true"
         short-description="Create WorkEffort and Associate it with Parent (identified by workEffortFromId)">
         <set from-field="parameters.workEffortIdTo" field="parameters.workEffortId"/>
