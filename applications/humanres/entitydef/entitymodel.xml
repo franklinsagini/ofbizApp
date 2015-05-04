@@ -530,7 +530,10 @@ under the License.
             <field name="partyId" type="id-ne"></field>
             <field name="hod" type="id-ne"></field>
             <field name="perfReviewDefId" type="id-ne"></field>
+            <field name="departmentId" type="name"></field>
+            <field name="branchId" type="name"></field>
              <field name="stage" type="name"></field>
+              <field name="trainingStage" type="name"></field>
            <prim-key field="StaffInPerfReviewGroupId"/>
     </entity>
     
@@ -749,6 +752,7 @@ under the License.
         <key-map field-name="parentTypeId" rel-field-name="skillTypeId"/>
       </relation>
     </entity>
+    
     <entity entity-name="TrainingClassType"
             package-name="org.ofbiz.humanres.ability"
             title="Training Class Type Entity">
@@ -2287,6 +2291,76 @@ under the License.
        <prim-key field="ageId"/>
     </entity>
     
+    
+               <!-- TRAINING OF STAFF -->
+       
+      <entity entity-name="TrainingTypes" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
+       <field name="trainingTypeId" type="id-ne"><description>primary sequenced ID</description></field>
+       <field name="trainingName" type="name"></field>
+       <field name="parentTraining" type="name"></field>
+       <field name="essentialSkill" type="name"></field>
+       <field name="timeFrame" type="name"></field>
+       <prim-key field="trainingTypeId"/>
+    </entity>   
+    
+     <entity entity-name="CostTypes" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
+       <field name="costTypeId" type="id-ne"><description>primary sequenced ID</description></field>
+       <field name="CostName" type="name"></field>
+       <field name="trainingFees" type="name"></field>
+       <field name="travelCost" type="name"></field>
+       <field name="accomodationCost" type="name"></field>
+        <field name="allowance" type="name"></field>
+       <prim-key field="costTypeId"/>
+    </entity>  
+    
+     <entity entity-name="StaffWhoNeedTraining" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
+       <field name="needId" type="id-ne"><description>primary sequenced ID</description></field>
+       <field name="partyId" type="id-ne"></field>
+       <field name="departmentId" type="name"></field>
+       <field name="branchId" type="name"></field>
+       <field name="skillRequired" type="name"></field>
+       <field name="status" type="name"></field>
+       <prim-key field="needId"/>
+    </entity>  
+    
+     <entity entity-name="TrainingEvent" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
+       <field name="eventId" type="id-ne"><description>primary sequenced ID</description></field>
+        <field name="eventName" type="name"></field>
+       <field name="trainingTypeId" type="name"></field>
+       <field name="costTypeId" type="name"></field>
+       <field name="startDate" type="date"></field>
+       <field name="endDate" type="date"></field>
+       <prim-key field="eventId"/>
+    </entity>  
+    
+     <entity entity-name="PatyInTrainingEvent" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
+       <field name="partyTrainingId" type="id-ne"><description>primary sequenced ID</description></field>
+       <field name="partyId" type="name"></field>
+       <field name="eventId" type="name"></field>
+       <field name="approvalStatus" type="name"></field>
+       <prim-key field="partyTrainingId"/>
+    </entity>  
+    
+    
+     <view-entity entity-name="PartyAndTrainingEventsView" package-name="org.ofbiz.humanres">
+      <member-entity entity-alias="Person" entity-name="PatyInTrainingEvent"></member-entity>
+      <member-entity entity-alias="event" entity-name="TrainingEvent"></member-entity>
+
+      <alias entity-alias="Person" name="partyId" field="partyId"/>
+       <alias entity-alias="event" name="eventName" field="eventName"/>
+      <alias entity-alias="event" name="trainingTypeId" field="trainingTypeId"/>
+      <alias entity-alias="event" name="costTypeId" field="costTypeId"/>
+      <alias entity-alias="event" name="startDate" field="startDate"/>
+      <alias entity-alias="event" name="endDate" field="endDate"/>
+                 
+       <view-link  entity-alias="Person" rel-entity-alias="event">
+        <key-map field-name="eventId" rel-field-name="eventId"/>
+         <entity-condition>
+         <condition-expr field-name="approvalStatus" entity-alias="Person" operator="equals" value="APPROVED"/>
+       </entity-condition>
+
+      </view-link>
+    </view-entity>
     
     
 </entitymodel>

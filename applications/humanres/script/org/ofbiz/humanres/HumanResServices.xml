@@ -880,6 +880,15 @@
 		<sequenced-id sequence-name="StaffInPerfReviewGroup" field="StaffInPerfReviewGroupId" />
 		<set from-field="StaffInPerfReviewGroupId" field="newEntity.StaffInPerfReviewGroupId" /> 
 		
+		<set field="party" from-field="newEntity.partyId"/>
+		
+		<entity-one value-field="staff" entity-name="Person">
+		<field-map field-name="partyId" from-field="party"/>
+		</entity-one>
+		
+		<set field="newEntity.departmentId" from-field="staff.departmentId"/>
+		<set field="newEntity.branchId" from-field="staff.branchId"/>
+		
 		<set field="party" value="${newEntity.partyId}"/>
 		<set field="exist" value="${bsh:org.ofbiz.humanres.HumanResServices.findExistanceOfStaffInReviewGroups(party);}"/>
 		<set field="indicatorTotal" value="${bsh:org.ofbiz.humanres.HumanResServices.getIndicatorTotalsCompareToActionPlans();}"/>
@@ -1184,6 +1193,7 @@
         <field-map field-name="StaffInPerfReviewGroupId" from-field="singleStaff.StaffInPerfReviewGroupId"/>
         </entity-one>
         <set field="lookedUpValue2.stage" value="HARMONIZED"/>
+        <set field="lookedUpValue2.trainingStage" value="HOD"/>
         <store-value value-field="lookedUpValue2"/>
 		</iterate>
         
@@ -3977,5 +3987,262 @@
 			property="DeleteSuccess" field="successMessage" />
     </simple-method>
     
+    
+     <!--======================= TRAINING TYPES SETUP DEFINITION =================================== -->
+                     
+	<simple-method method-name="createStaffTrainingType"
+		short-description="Create File location">
+		<make-value entity-name="TrainingTypes" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="TrainingTypes" field="trainingTypeId" />
+		<set from-field="trainingTypeId" field="newEntity.trainingTypeId" /> 
+		
+		<create-value value-field="newEntity" />
+		      <property-to-field resource="HumanResUiLabels"
+			  property="CreateSuccess" field="successMessage" />
+			
+			</simple-method>
+			
+			<simple-method method-name="updateStaffTrainingType"
+		short-description="Update an existing Budget">
+		<entity-one entity-name="TrainingTypes" value-field="lookedUpValue" />
+		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
+		<set-pk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+		   <property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" /> 
+			
+	</simple-method>
+			
+			
+			<simple-method method-name="deleteStaffTrainingType"
+		short-description="Remove an file type">
+		<set field="trainingTypeId" from-field="parameters.trainingTypeId" />
+		<entity-one entity-name="TrainingTypes" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
+	</simple-method>
+	
+	  <!--======================= TRAINING COST TYPES SETUP DEFINITION =================================== -->
+                     
+	<simple-method method-name="createStaffTrainingCostType"
+		short-description="Create File location">
+		<make-value entity-name="CostTypes" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="CostTypes" field="costTypeId" />
+		<set from-field="costTypeId" field="newEntity.costTypeId" /> 
+		
+		<create-value value-field="newEntity" />
+		      <property-to-field resource="HumanResUiLabels"
+			  property="CreateSuccess" field="successMessage" />
+			
+			</simple-method>
+			
+			<simple-method method-name="updateStaffTrainingCostType"
+		short-description="Update an existing Budget">
+		<entity-one entity-name="CostTypes" value-field="lookedUpValue" />
+		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
+		<set-pk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+		   <property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" /> 
+			
+	</simple-method>
+			
+			
+			<simple-method method-name="deleteStaffTrainingCostType"
+		short-description="Remove an file type">
+		<set field="costTypeId" from-field="parameters.costTypeId" />
+		<entity-one entity-name="CostTypes" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
+	</simple-method>
+	
+	  <!--======================= TRAINING EVENT SETUP DEFINITION =================================== -->
+                     
+	<simple-method method-name="createStaffTrainingEvent"
+		short-description="Create File location">
+		<make-value entity-name="TrainingEvent" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="TrainingEvent" field="eventId" />
+		<set from-field="eventId" field="newEntity.eventId" /> 
+		
+			  
+	    <set field="valid" value="INVALID"/>
+	    <set field="from" from-field="newEntity.startDate"/>
+	    <set field="end" from-field="newEntity.endDate"/>
+        <set field="datesCompare" value="${bsh:org.ofbiz.humanres.HumanResServices.CompareStartEndDate(from, end);}" /> 
+        
+        <if>
+			<condition>
+					<if-compare-field field="datesCompare"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="startEndDateError" />
+				</add-error>
+				<check-errors />
+			</then>
+			
+			<else>
+			    <create-value value-field="newEntity"/>
+				<property-to-field resource="HumanResUiLabels"
+			property="CreateSuccess" field="successMessage" />
+			</else>
+		</if>
+			
+			</simple-method>
+			
+			<simple-method method-name="updateStaffTrainingEvent"
+		short-description="Update an existing Budget">
+		<entity-one entity-name="TrainingEvent" value-field="lookedUpValue" />
+		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
+		<set-pk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+		   <property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" /> 
+			
+	</simple-method>
+			
+			
+			<simple-method method-name="deleteStaffTrainingEvent"
+		short-description="Remove an file type">
+		<set field="eventId" from-field="parameters.eventId" />
+		<entity-one entity-name="TrainingEvent" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
+	</simple-method>
+	
+	  <!--======================= ADD STAFF TO TRAINING EVENT SETUP DEFINITION =================================== -->
+                     
+	<simple-method method-name="addStaffToTrainingEvent"
+		short-description="Create File location">
+		<make-value entity-name="PatyInTrainingEvent" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="PatyInTrainingEvent" field="partyTrainingId" />
+		<set from-field="partyTrainingId" field="newEntity.partyTrainingId" /> 
+		<set value="NEW" field="newEntity.approvalStatus" /> 
+		
+		<create-value value-field="newEntity" />
+		      <property-to-field resource="HumanResUiLabels"
+			  property="CreateSuccess" field="successMessage" />
+			
+			</simple-method>
+			
+			<simple-method method-name="updateaddStaffToTrainingEvent"
+		short-description="Update an existing Budget">
+		<entity-one entity-name="PatyInTrainingEvent" value-field="lookedUpValue" />
+		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
+		<set-pk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+		   <property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" /> 
+			
+	</simple-method>
+			
+			
+			<simple-method method-name="deleteaddStaffToTrainingEvent"
+		short-description="Remove an file type">
+		<set field="partyTrainingId" from-field="parameters.partyTrainingId" />
+		<entity-one entity-name="PatyInTrainingEvent" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
+	</simple-method>
+    
+    <!--======================= APPROVE TRAINING  =================================== -->
+    
+    	<simple-method method-name="approveTraining"
+		short-description="Update an existing Budget">
+		<entity-one entity-name="PatyInTrainingEvent" value-field="lookedUpValue" />
+		<set field="lookedUpValue.approvalStatus" value="APPROVED"/>
+		<store-value value-field="lookedUpValue" />
+		   <property-to-field resource="HumanResUiLabels"
+			property="successTrainingApproval" field="successMessage" /> 
+			
+	</simple-method>
+	
+	<!--======================= DISAPPROVE TRAINING =================================== -->
+	
+		<simple-method method-name="disapproveTraining"
+		short-description="Update an existing Budget">
+		<entity-one entity-name="PatyInTrainingEvent" value-field="lookedUpValue" />
+		<set field="lookedUpValue.approvalStatus" value="DISAPPROVED"/>
+		<store-value value-field="lookedUpValue" />
+		   <property-to-field resource="HumanResUiLabels"
+			property="successTrainingDisapproval" field="successMessage" /> 
+			
+	</simple-method>
+	
+	
+	<!--======================= STAFF WHO NEED TRAINING FOR HODS =================================== -->
+	
+	<simple-method method-name="hodAddStaffWithTrainingNeeds"
+		short-description="Create a Party Qualification Group">
+		<make-value entity-name="StaffWhoNeedTraining" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="StaffWhoNeedTraining" field="needId"/>
+		<set from-field="needId" field="newEntity.needId" />
+		
+		
+		<entity-condition list="staffs" entity-name="StaffInPerfReviewGroup">
+		<condition-list>
+		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+		</condition-list>
+		</entity-condition>
+		<iterate entry="singleStaff" list="staffs">
+		<entity-one entity-name="StaffInPerfReviewGroup" value-field="lookedUpValue2">
+        <field-map field-name="StaffInPerfReviewGroupId" from-field="singleStaff.StaffInPerfReviewGroupId"/>
+        </entity-one>
+        <set field="lookedUpValue2.trainingStage" value="DONE"/>
+        <store-value value-field="lookedUpValue2"/>
+		</iterate>
+		
+		<entity-one value-field="staff" entity-name="Person">
+		<field-map field-name="partyId" from-field="parameters.partyId"/>
+		</entity-one>
+		
+		<set field="newEntity.departmentId" from-field="staff.departmentId"/>
+		<set field="newEntity.branchId" from-field="staff.branchId"/>
+		
+		<create-value value-field="newEntity" />
+		<property-to-field resource="HumanResUiLabels"
+			property="CreateSuccess" field="successMessage" />
+	</simple-method>
+	
+	
+	<!--======================= STAFF DONT NEED TRAINING FOR HODS =================================== -->
+	<simple-method method-name="staffDontNeedTraining"
+		short-description="Create a Party Qualification Group">
+		
+		
+		<entity-condition list="staffs" entity-name="StaffInPerfReviewGroup">
+		<condition-list>
+		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+		</condition-list>
+		</entity-condition>
+		<iterate entry="singleStaff" list="staffs">
+		<entity-one entity-name="StaffInPerfReviewGroup" value-field="lookedUpValue2">
+        <field-map field-name="StaffInPerfReviewGroupId" from-field="singleStaff.StaffInPerfReviewGroupId"/>
+        </entity-one>
+        <set field="lookedUpValue2.trainingStage" value="DONE"/>
+        <store-value value-field="lookedUpValue2"/>
+        <property-to-field resource="HumanResUiLabels"
+		property="UpdateSuccess" field="successMessage" />
+		</iterate>
+		
+		
+		
+	</simple-method>
 
 </simple-methods>

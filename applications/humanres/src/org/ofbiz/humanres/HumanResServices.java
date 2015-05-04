@@ -32,7 +32,6 @@ import org.joda.time.Period;
 import org.joda.time.PeriodType;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.common.email.EmailServices;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
@@ -5109,6 +5108,22 @@ public static String  NextPayrollNumber(String employmentTerms) {
 					
 					
 					return state;
+				}
+				
+				
+				
+				public static String  CompareStartEndDate(Date from, Date end) {
+				LocalDate StartDate = new LocalDate(from);
+				LocalDate EndDate = new LocalDate(end);
+				String state = null;
+					if (StartDate.isAfter(EndDate)) {
+						state = "INVALID";
+					} else {
+						state = "VALID";
+					}
+					
+							return state;
+					
 				}
 				
 }

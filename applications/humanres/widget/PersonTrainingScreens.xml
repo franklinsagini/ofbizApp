@@ -399,4 +399,288 @@
             </widgets>
         </section>
     </screen>
+    
+    
+    
+     <!--======================= TRAINING TYPES DEFINITION =================================== --> 
+     
+     <screen name="TrainingSetup">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Perf Goals Def"/>
+                <set field="headerItem" value="staffTraining"/>
+                <set field="tabButtonItem" value="trainingSetup"/>                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPerfGoalsDef"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <entity-one entity-name="TrainingTypes" value-field="TrainingTypesContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="TrainingNewMenu" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="trainingSetupMenu" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="New Training Type Defintion">
+                                    <include-form name="TrainingTypeForm" location="component://humanres/widget/forms/PersonTrainingForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Training Types List">
+                        			<include-form name="listTrainingTypeForm" location="component://humanres/widget/forms/PersonTrainingForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+     <!--======================= COST TYPES DEFINITION =================================== -->
+     
+      <screen name="costSetup">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Perf Goals Def"/>
+                <set field="headerItem" value="staffTraining"/>
+                <set field="tabButtonItem" value="trainingCost"/>                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPerfGoalsDef"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <entity-one entity-name="CostTypes" value-field="CostTypesContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="TrainingNewMenu" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="trainingSetupMenu" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="New Training Cost Type Defintion">
+                                    <include-form name="CostTypeForm" location="component://humanres/widget/forms/PersonTrainingForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Cost Types List">
+                        			<include-form name="listCostTypeForm" location="component://humanres/widget/forms/PersonTrainingForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+     <!--======================= TRAINING EVENTS DEFINITION =================================== -->
+     
+      <screen name="TrainingEventsScreen">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Perf Goals Def"/>
+                <set field="headerItem" value="staffTraining"/>
+                <set field="tabButtonItem" value="trainingEvent"/>                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPerfGoalsDef"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <entity-one entity-name="TrainingEvent" value-field="TrainingEventContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="TrainingNewMenu" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="trainingCalenderSetupMenu" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="New Training Event Defintion">
+                                    <include-form name="TrainingEventsForm" location="component://humanres/widget/forms/PersonTrainingForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Training Event List">
+                        			<include-form name="listTrainingEventsForm" location="component://humanres/widget/forms/PersonTrainingForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+      <!--======================= STAFF WHO NEED TRAINING FOR HR DEPARTMENT=================================== -->
+     
+      <screen name="StaffWhoNeedTrainingsScreen">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Perf Goals Def"/>
+                <set field="headerItem" value="staffTraining"/>
+                <set field="tabButtonItem" value="staffWhoNeedTraining"/>                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPerfGoalsDef"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <entity-one entity-name="PatyInTrainingEvent" value-field="PatyInTrainingEventContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="TrainingNewMenu" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="trainingCalenderSetupMenu" location="component://humanres/widget/HumanresMenus.xml"/>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Staff Who Need Training">
+                        			<include-form name="StaffWhoNeedTrainingForm" location="component://humanres/widget/forms/PersonTrainingForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+      <!--======================= STAFF WHO NEED TRAINING FOR HODS =================================== -->
+     
+      <screen name="AddStaffWithTrainingNeedsScreen">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Perf Goals Def"/>
+                <set field="headerItem" value="staffTraining"/>
+                <set field="tabButtonItem" value="staffWhoNeedTraining"/>                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPerfGoalsDef"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <entity-one entity-name="StaffWhoNeedTraining" value-field="PatyTrainingNeedContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="personalReviewMenuBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Staff Who Need Training">
+                        			<include-form name="AddStaffWithTrainingNeedsForm" location="component://humanres/widget/forms/PersonTrainingForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+     <!--======================= ADD STAFF TO TRAINING EVENTS =================================== -->
+     
+      <screen name="AddStaffToTrainingEventsScreen">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Perf Goals Def"/>
+                <set field="headerItem" value="staffTraining"/>
+                <set field="tabButtonItem" value="AddStaffToTraining"/>                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPerfGoalsDef"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <entity-one entity-name="PatyInTrainingEvent" value-field="PatyInTrainingEventContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="TrainingNewMenu" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="trainingCalenderSetupMenu" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Add Staff To Training">
+                                    <include-form name="AddStaffToTrainingEventsForm" location="component://humanres/widget/forms/PersonTrainingForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Staff In Training Events">
+                        			<include-form name="listAddStaffToTrainingEventsForm" location="component://humanres/widget/forms/PersonTrainingForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+     <!--======================= TRAINING APPROVALS =================================== -->
+     
+      <screen name="TrainingApprovalsScreen">
+      <section>
+            <actions>
+                <set field="titleProperty" value="Perf Goals Def"/>
+                <set field="headerItem" value="staffTraining"/>
+                <set field="tabButtonItem" value="trainingApprovals"/>                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPerfGoalsDef"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <entity-one entity-name="PatyInTrainingEvent" value-field="PatyInTrainingEventContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="TrainingNewMenu" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Approve Staff To Training">
+                                    <include-form name="ApproveStaffTrainingForm" location="component://humanres/widget/forms/PersonTrainingForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Approved Staff Training">
+                        			<include-form name="TrainingApprovalsForm" location="component://humanres/widget/forms/PersonTrainingForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    
 </screens>

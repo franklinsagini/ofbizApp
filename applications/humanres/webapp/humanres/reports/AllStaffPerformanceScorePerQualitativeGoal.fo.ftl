@@ -41,6 +41,7 @@ under the License.
             <fo:table-column column-width="40pt"/>
             <fo:table-column column-width="40pt"/>
             <fo:table-column column-width="40pt"/>
+            <fo:table-column column-width="40pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
@@ -54,6 +55,9 @@ under the License.
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block>Department</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block>Max Score</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block>First Quarter Score</fo:block>
@@ -89,6 +93,9 @@ under the License.
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${score.department?if_exists}</fo:block>
+                        </fo:table-cell>
+                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${score.MaxPossibleScore?if_exists}</fo:block>
                         </fo:table-cell>
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${score.Q1?if_exists}</fo:block>

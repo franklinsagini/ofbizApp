@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
+    
+        <!-- CommissionCharge -->
+    <simple-method method-name="createCommissionCharge" short-description="Create CommissionCharge">
+        <make-value entity-name="CommissionCharge" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set field="entityName" value="CommissionCharge"></set>
+        <set field="newEntity.commissionChargeId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateCommissionCharge" short-description="Update CommissionCharge">
+        <entity-one entity-name="CommissionCharge" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteCommissionCharge" short-description="Delete CommissionCharge">
+        <entity-one entity-name="CommissionCharge" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- MemberStatusTransition -->
+    <simple-method method-name="createMemberStatusTransition" short-description="Create MemberStatusTransition">
+        <make-value entity-name="MemberStatusTransition" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set field="entityName" value="MemberStatusTransition"></set>
+        <set field="newEntity.memberStatusTransitionId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateMemberStatusTransition" short-description="Update MemberStatusTransition">
+        <entity-one entity-name="MemberStatusTransition" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteMemberStatusTransition" short-description="Delete MemberStatusTransition">
+        <entity-one entity-name="MemberStatusTransition" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- ExciseDuty -->
+    
+      <simple-method method-name="createExciseDuty" short-description="Create ExciseDuty">
+        <make-value entity-name="ExciseDuty" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set field="entityName" value="ExciseDuty"></set>
+        <set field="newEntity.exciseDutyId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateExciseDuty" short-description="Update ExciseDuty">
+        <entity-one entity-name="ExciseDuty" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteExciseDuty" short-description="Delete ExciseDuty">
+        <entity-one entity-name="ExciseDuty" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+  
+    
+</simple-methods>

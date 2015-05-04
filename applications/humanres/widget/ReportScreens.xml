@@ -2000,5 +2000,128 @@ under the License.
         </section>
     </screen>
     
+    
+      <screen name="StaffTrainingReportScreen">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Staff List"/>
+                <set field="headerItem" value="staffTraining"/>
+                <set field="tabButtonItem" value="trainingReport"/> 
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="staffList"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+
+                <!-- <set field="userLoginId" from-field="userLogin.userLoginId"/>  -->
+                <!-- <entity-one entity-name="userLogin" value-field="userLoginId"/> -->
+                <!-- entity-one entity-name="Person" value-field="staffListContext"/-->
+
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+
+                		<screenlet>
+                			<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    		<decorator-section name="body">
+                    		<include-menu name="TrainingNewMenu" location="component://humanres/widget/HumanresMenus.xml"/>
+                       
+                        <section>
+                        	<widgets>
+                        	 <container style="lefthalf">
+                           
+                            <screenlet title="Staff on Training">
+                                <include-form name="staffOnTrainingReportForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                         <container style="righthalf">                          
+                            <screenlet title="Scheduled Training">
+                                <include-form name="scheduledTrainingReportForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <screenlet></screenlet>
+						 <screenlet></screenlet>
+                        <container style="lefthalf">
+                           
+                            <screenlet title="Staff Training History">
+                                <include-form name="staffTrainingHistoryReportForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        	</widgets>
+                        </section>
+	                    </decorator-section>
+	                	</decorator-screen>
+                	</screenlet>
+
+
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="staffOnTrainingPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffOnTraining.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffOnTraining.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="scheduledStaffOnTrainingPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/scheduledStaffTraining.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/scheduledStaffTraining.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="StaffTrainingHistoryPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffTrainingHistory.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffTrainingHistory.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
 
 </screens>
