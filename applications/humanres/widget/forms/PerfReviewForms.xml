@@ -2293,7 +2293,7 @@
 	
 	       <!--   FORWARDED REVIEWS TO THE HOD -->
 	       
-	        <form name="StaffForHODReviewForm" type="multi" use-row-submit="true"
+	    <form name="StaffForHODReviewForm" type="multi" use-row-submit="true"
 		title="Selected Monument" separate-columns="true" paginate-target=""
 		target="reviewMyself" default-table-style="basic-table hover-bar" odd-row-style="alternate-row">
 		<actions>
@@ -2311,6 +2311,37 @@
 		</field>
 		<field name="HODreviewStaff" title="Review Staff">
 			<hyperlink target="HODreviewStaff" description="Review Staff" also-hidden="false">
+				<parameter param-name="partyId" />
+			</hyperlink>
+		</field>
+		
+	</form>
+	
+	 <!--======================= HOD ADD STAFF WITH TRAINING NEEDS LISTING=================================== -->  
+	       
+	    <form name="StaffWithTrainingNeedsForHODAddForm" type="multi" use-row-submit="true"
+		title="Selected Monument" separate-columns="true" paginate-target=""
+		target="reviewMyself" default-table-style="basic-table hover-bar" odd-row-style="alternate-row">
+		<actions>
+		<entity-condition entity-name="StaffInPerfReviewGroup">
+				<condition-list>
+				<condition-expr field-name="hod" value="${userLogin.partyId}" operator="equals"/>
+				<condition-expr field-name="trainingStage" value="HOD" operator="equals"/>
+				</condition-list>
+			</entity-condition>
+		</actions>
+		
+		<field name="StaffInPerfReviewGroupId"><hidden/>
+		</field>
+		<field name="partyId" title="Staff Name"><display-entity entity-name="Person" description="${firstName} ${lastName}"></display-entity>
+		</field>
+		<field name="addStaffToTrainingList" title="Need Training?">
+			<hyperlink target="addStaffToTrainingList" description="Add Staff To Training List" also-hidden="false">
+				<parameter param-name="partyId" />
+			</hyperlink>
+		</field>
+		<field name="noNeedForTraining" title="-">
+			<hyperlink target="staffDontNeedTraining" description="Don't Need Training" also-hidden="false" confirmation-message="You are Sure Staff Don't Need Training?" request-confirmation="true">
 				<parameter param-name="partyId" />
 			</hyperlink>
 		</field>
@@ -2345,7 +2376,7 @@
 	<!--================================= HOD REVIEWS =================================== -->   
 	
 	
-	   <form name="StaffHODReviewQuantitativeForm" type="list" list-name="listIt" use-row-submit="true"
+	   <form name="StaffHODReviewQuantitativeForm" type="multi" use-row-submit="true"
 		title="Selected Monument" separate-columns="true" paginate-target="PerfReviewPeriod"
 		target="HODreviews" default-table-style="basic-table hover-bar" odd-row-style="alternate-row">
 		<actions>
@@ -2384,13 +2415,13 @@
 		<field name="_rowSubmit" title="${uiLabelMap.CommonSelect}">
 			<hidden value="Y" />
 		</field>
-		<field name="submitButton" title="Review Myself" widget-style="smallSubmit">
+		<field name="submitButton" title="Review Staff" widget-style="smallSubmit">
 			<submit />
 		</field>
 	</form>
 	
 	
-	 <form name="StaffHODReviewQualitativeForm" type="list" list-name="listIt" use-row-submit="true"
+	 <form name="StaffHODReviewQualitativeForm" type="multi" use-row-submit="true"
 		title="Selected Monument" separate-columns="true" paginate-target="PerfReviewPeriod"
 		target="HODreviews" default-table-style="basic-table hover-bar" odd-row-style="alternate-row">
 		<actions>
@@ -2433,7 +2464,7 @@
 	<!--================================= HARMONIZED REVIEWS =================================== -->   
 	
 	
-	   <form name="StaffHarmonizedReviewQuantitativeForm" type="list" list-name="listIt" use-row-submit="true"
+	   <form name="StaffHarmonizedReviewQuantitativeForm" type="multi" use-row-submit="true"
 		title="Selected Monument" separate-columns="true" paginate-target="PerfReviewPeriod"
 		target="HarmonizedHODReview" default-table-style="basic-table hover-bar" odd-row-style="alternate-row">
 		<actions>
@@ -2470,13 +2501,16 @@
         </field>
 		
 		
+		<field name="_rowSubmit" title="${uiLabelMap.CommonSelect}">
+			<hidden value="Y" />
+		</field>
 		<field name="submitButton" title="Save Score" widget-style="smallSubmit">
 			<submit />
 		</field>
 	</form>
 	
 	
-	 <form name="StaffHarmonizedReviewQualitativeForm" type="list" list-name="listIt" use-row-submit="true"
+	 <form name="StaffHarmonizedReviewQualitativeForm" type="multi" use-row-submit="true"
 		title="Selected Monument" separate-columns="true" paginate-target="PerfReviewPeriod"
 		target="HarmonizedHODReview" default-table-style="basic-table hover-bar" odd-row-style="alternate-row">
 		<actions>
@@ -2507,6 +2541,9 @@
             </drop-down>
         </field>
 		
+		<field name="_rowSubmit" title="${uiLabelMap.CommonSelect}">
+			<hidden value="Y" />
+		</field>
 		<field name="submitButton" title="Save Score" widget-style="smallSubmit">
 			<submit />
 		</field>

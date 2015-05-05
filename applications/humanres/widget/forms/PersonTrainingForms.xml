@@ -530,7 +530,7 @@ under the License.
 		<field name="_rowSubmit" title="${uiLabelMap.CommonSelect}">
 			<hidden value="Y" />
 		</field>
-		<field name="submitButton" title="Update Reviews" widget-style="smallSubmit">
+		<field name="submitButton" title="Update Reviews" widget-style="button">
 			<submit />
 		</field>
 
@@ -698,6 +698,148 @@ under the License.
 			<submit />
 		</field>
 
+	</form>
+	
+	
+	
+	           <!--  ===================== APPROVE STAFF TRAINING ================================== -->
+	           
+	    <form name="ApproveStaffTrainingForm" type="multi" use-row-submit="true"
+		title="Selected Monument" separate-columns="true" paginate-target="AddStaffToTrainingEventsForm"
+		target="approveTraining" default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="PatyInTrainingEvent">
+			<condition-expr field-name="approvalStatus" operator="equals" value="NEW"/>
+				<order-by field-name="partyTrainingId" />
+			</entity-condition>
+		</actions>
+		<field name="partyTrainingId">
+			<hidden />
+		</field>
+		<field name="partyId" title="Staff" >
+			<display-entity entity-name="Person" description="${firstName}  ${lastName}"></display-entity>
+		</field>
+		<field name="eventId" title="Training Event" >
+			<display-entity entity-name="TrainingEvent" description="${eventName}"></display-entity>
+		</field>
+
+		<field name="disapprove" title="Disapprove"	widget-style="buttontext">
+			<hyperlink target="disapproveTraining" description="Disapprove"
+				also-hidden="false" request-confirmation="true"
+				confirmation-message="Disapprove Staff?">
+				<parameter param-name="partyTrainingId"/>
+			</hyperlink>
+		</field>
+
+		<field name="_rowSubmit" title="Select To Approve">
+			<check />
+		</field>
+		<field name="submitButton" title="Approve Selected" widget-style="smallSubmit">
+			<submit />
+		</field>
+
+	</form>
+	
+	
+	 <!--  ===================== TRAINING APPROVALS ================================== -->
+	           
+	           <form name="TrainingApprovalsForm" type="multi" use-row-submit="true"
+		title="Selected Monument" separate-columns="true" paginate-target="AddStaffToTrainingEventsForm"
+		target="updateaddStaffToTrainingEvent" default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="PatyInTrainingEvent">
+			<condition-expr field-name="approvalStatus" operator="equals" value="APPROVED"/>
+				<order-by field-name="partyTrainingId" />
+			</entity-condition>
+		</actions>
+		<field name="partyTrainingId">
+			<hidden />
+		</field>
+		<field name="partyId" title="Staff" >
+			<display-entity entity-name="Person" description="${firstName}  ${lastName}"></display-entity>
+		</field>
+		<field name="eventId" title="Training Event" >
+			<display-entity entity-name="TrainingEvent" description="${eventName}"></display-entity>
+		</field>
+		
+		<field name="approvalStatus">
+			<display />
+		</field>
+	</form>
+	
+	
+	
+	 
+	     <!--  ===================== STAFF WHO NEED TRAINING FOR HR DEPARTMENT================================== -->
+	           
+	    <form name="StaffWhoNeedTrainingForm" type="multi" use-row-submit="true"
+		title="Selected Monument" separate-columns="true" paginate-target="AddStaffToTrainingEventsForm"
+		target="approveTraining" default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="StaffWhoNeedTraining">
+			<condition-expr field-name="trainingStageFromHod" value="FORWARDED" operator="equals"/> 
+				<order-by field-name="needId" />
+			</entity-condition>
+		</actions>
+		<field name="needId">
+			<hidden />
+		</field>
+		<field name="partyId" title="Staff" >
+			<display-entity entity-name="Person" description="${firstName}  ${lastName}"></display-entity>
+		</field>
+		<field name="departmentId" title="Staff Department" >
+			<display-entity entity-name="department" description="${departmentName}"></display-entity>
+		</field>
+		
+		<field name="branchId" title="Staff Branch" >
+			<display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}"></display-entity>
+		</field>
+		
+		<field name="skillRequired" title="Skill Required" >
+			<display-entity entity-name="SkillType" key-field-name="skillTypeId" description="${description}"></display-entity>
+		</field>
+
+		<field name="addStaffToRequiredTraining" title="Add Staff To A Training"	widget-style="buttontext">
+			<hyperlink target="AddStaffToTraining" description="Add Staff To A Training"	also-hidden="false">
+				<parameter param-name="needId"/>
+				<parameter param-name="partyId"/>
+			</hyperlink>
+		</field>
+
+
+	</form>
+	
+	
+	
+	 <!--======================= STAFF WHO NEED TRAINING FOR HODS =================================== -->
+
+	<form name="AddStaffWithTrainingNeedsForm" type="single" target="hodAddStaffWithTrainingNeeds"
+		focus-field-name="name" header-row-style="header-row"
+		default-table-style="basic-table" default-map-name="PatyTrainingNeedContext">
+        
+        <actions>
+         <entity-condition entity-name="SkillType" list="skillsList">
+				<order-by field-name="skillTypeId"/>
+			</entity-condition>
+        </actions>
+        
+		<field name="needId">
+			<hidden />
+		</field>
+		<field name="partyId" title="Staff" >
+			<display-entity entity-name="Person" description="${firstName}  ${lastName}"></display-entity>
+		</field>
+		<field name="skillRequired" title="Training Event" widget-style="required"
+			required-field="true">
+			<drop-down allow-empty="true">
+			<entity-options description="${description}" entity-name="SkillType" key-field-name="skillTypeId"></entity-options>
+			</drop-down>
+		</field>
+		
+		<field name="submitButton" title="${uiLabelMap.CommonSave}"
+			widget-style="smallSubmit">
+			<submit button-type="button" />
+		</field>
 	</form>
 	
 	

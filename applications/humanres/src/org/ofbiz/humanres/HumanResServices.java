@@ -2135,16 +2135,6 @@ public static String  NextPayrollNumber(String employmentTerms) {
 				if (count == 0) {
 					QuarterScore =BigDecimal.ZERO;
 				} else {
-					/*int totalpercentageINT = totalpercentage.intValue();
-					int maxtotalpercentageINT = maxtotalpercentage.intValue();
-					
-					int staffScoreDivideCount = (totalpercentageINT/count);
-					int staffScoreDivideCountBy5 = (staffScoreDivideCount/5);
-					int staffScoreDivideCountBy5MultiplyMaxScore = (staffScoreDivideCountBy5*maxtotalpercentageINT);
-					int QuarterScoreINT = (staffScoreDivideCountBy5MultiplyMaxScore/4);
-							
-							
-					QuarterScore = new BigDecimal(QuarterScoreINT);*/
 					
 					BigDecimal newCount = new BigDecimal(count);
 					BigDecimal staffScoreDivideCount = totalpercentage.divide(newCount, 20, RoundingMode.HALF_UP);
@@ -3319,10 +3309,12 @@ public static String  NextPayrollNumber(String employmentTerms) {
 					BigDecimal totalpercentage =BigDecimal.ZERO;
 					Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 					List<GenericValue> holidaysELI = null; 
+					String quarter = year+"-Quarter-1";
 					
 					EntityConditionList<EntityExpr> totalConditions = EntityCondition.makeCondition(UtilMisc.toList(
 							 EntityCondition.makeCondition("partyId",EntityOperator.EQUALS, party),
 							 EntityCondition.makeCondition("perfGoalsDefId",EntityOperator.EQUALS, goalType),
+							 EntityCondition.makeCondition("quarter",EntityOperator.EQUALS, quarter),
 							 EntityCondition.makeCondition("year", EntityOperator.EQUALS, year)),
 								EntityOperator.AND);
 
@@ -5108,6 +5100,28 @@ public static String  NextPayrollNumber(String employmentTerms) {
 					
 					
 					return state;
+				}
+				
+				
+				
+				public static String  CompareStartEndDate(Date from, Date end) {
+				LocalDate StartDate = new LocalDate(from);
+				LocalDate EndDate = new LocalDate(end);
+				String state = null;
+					if (StartDate.isAfter(EndDate)) {
+						state = "INVALID";
+					} else {
+						state = "VALID";
+					}
+					
+							return state;
+					
+				}
+				
+				public static BigDecimal returnBigDecimal() {
+					BigDecimal st = BigDecimal.ZERO;
+					
+					return st;
 				}
 				
 }
