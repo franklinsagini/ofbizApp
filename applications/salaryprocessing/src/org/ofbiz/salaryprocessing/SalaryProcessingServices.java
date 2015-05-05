@@ -879,6 +879,8 @@ public class SalaryProcessingServices {
 		String line = "";
 		String csvSplitBy = ",";
 		
+		//Add the records to Member Salaries
+		
 		try {
 			br = new BufferedReader(new FileReader(csvPath));
 			
@@ -886,6 +888,8 @@ public class SalaryProcessingServices {
 				String[] salary = line.split(csvSplitBy);
 				
 				System.out.println("Payroll No "+salary[0]+" Net Pay "+salary[1]);
+				
+			
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
