@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 
 
 
-
+historylist = [];
 
 now = Calendar.getInstance().getTime().toString();
 noww = new SimpleDateFormat("E MMM dd HH:mm:ss zzz yyyy", Locale.UK).parse(now);
@@ -26,11 +26,28 @@ EntityFindOptions findOptions = new EntityFindOptions();
 findOptions.setMaxRows(1000);
 
 employees = delegator.findList("PartyAndTrainingEventsView", expr, null, ["endDate ASC"], findOptions, false);
-context.employees = employees
+employees.eachWithIndex { employeesItem, index ->
 
 
-staff = delegator.findOne("Person", [partyId : party], false);
-fname = staff.firstName.toUpperCase()
-sname = staff.lastName.toUpperCase()
-context.fname = fname
-context.sname = sname
+
+
+	traintypeid = employeesItem.trainingTypeId
+	tr = delegator.findOne("TrainingTypes", [trainingTypeId : traintypeid], false);
+	event = employeesItem.eventName
+	trainingType = tr.trainingName
+	start = employeesItem.startDate
+	end = employeesItem.endDate
+	
+	
+	historylist.add([event :event, trainingType : trainingType, start : start, end : end]);
+		}
+	
+	context.historylist = historylist;
+	context.employees = employees
+
+	
+	staff = delegator.findOne("Person", [partyId : party], false);
+	fname = staff.firstName.toUpperCase()
+	sname = staff.lastName.toUpperCase()
+	context.fname = fname
+	context.sname = sname

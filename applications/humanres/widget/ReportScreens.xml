@@ -2034,9 +2034,23 @@ under the License.
                             </screenlet>
                         </container>
                         
-                         <container style="righthalf">                          
+                         <container style="righthalf">
+                           
+                            <screenlet title="Staff on Training (EXCEL)">
+                                <include-form name="staffOnTrainingCSV" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                         <screenlet></screenlet>
+						 <screenlet></screenlet>
+                         <container style="lefthalf">                          
                             <screenlet title="Scheduled Training">
                                 <include-form name="scheduledTrainingReportForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                         <container style="righthalf">                          
+                            <screenlet title="Scheduled Training (EXCEL)">
+                                <include-form name="scheduledStaffOnTrainingCSV" location="component://humanres/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
                         <screenlet></screenlet>
@@ -2045,6 +2059,12 @@ under the License.
                            
                             <screenlet title="Staff Training History">
                                 <include-form name="staffTrainingHistoryReportForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                         <container style="righthalf">
+                           
+                            <screenlet title="Staff Training History (EXCEL)">
+                                <include-form name="StaffTrainingHistoryCSV" location="component://humanres/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
                         	</widgets>
@@ -2081,6 +2101,32 @@ under the License.
         </section>
     </screen>
     
+     <!-- ===================  ALL STAFF ON TRAINING EXCEL =============== -->
+
+     <screen name="staffOnTrainingCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+               
+
+                
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffOnTraining.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="STAFF CURRENTLY ON TRAINING"/>
+                </container>
+                <include-form name="staffOnTrainingExport" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
      <screen name="scheduledStaffOnTrainingPDF">
         <section>
             <actions>
@@ -2102,6 +2148,30 @@ under the License.
         </section>
     </screen>
     
+     <!-- ===================  SCHEDULED TRAINING EXCEL =============== -->
+
+     <screen name="scheduledStaffOnTrainingCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+               
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/scheduledStaffTraining.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="SCHEDULED STAFF TRAINING"/>
+                </container>
+                <include-form name="scheduledStaffOnTrainingExport" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
      <screen name="StaffTrainingHistoryPDF">
         <section>
             <actions>
@@ -2119,6 +2189,35 @@ under the License.
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <!-- ===================  STAFF TRAINING HISTORY EXCEL =============== -->
+
+     <screen name="StaffTrainingHistoryCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+                <entity-one value-field="staff" entity-name="Person">
+                <field-map field-name="partyId" from-field="parameters.partyId"/>
+                </entity-one>
+
+                
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffTrainingHistory.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text=" STAFF TRAINING HISTORY FOR [${staff.firstName} ${staff.lastName}]"/>
+                </container>
+                <include-form name="StaffTrainingHistoryExport" location="component://humanres/widget/ReportForms.xml"/>
             </widgets>
         </section>
     </screen>
