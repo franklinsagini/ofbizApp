@@ -1012,7 +1012,7 @@
 		<set field="indicatorTotal" value="${bsh:org.ofbiz.humanres.HumanResServices.getIndicatorTotalsCompareToActionPlans();}"/>
 		<set field="valid" value="INVALID"/>
 	    
-	    <if>
+	  <!--   <if>  
 			<condition>
 					<if-compare-field field="indicatorTotal"
 						to-field="valid" operator="equals" />
@@ -1024,7 +1024,7 @@
 				</add-error>
 				<check-errors />
 			</then>
-	    </if>
+	    </if> -->
 		
 		<if>
 			<condition>
@@ -1041,7 +1041,7 @@
 			
 			<else>
 			   
-			   <entity-condition list="staffList" entity-name="StaffInPerfReviewGroup">
+		<entity-condition list="staffList" entity-name="StaffInPerfReviewGroup">
 		</entity-condition>
 		
 		<iterate entry="singlestaff" list="staffList">
@@ -1077,8 +1077,9 @@
 		<set value="STAFF" field="newEntity.stage"/>
 		<set from-field="singleindicate.percentage" field="newEntity.scoreOne"/>
 		<set from-field="singlestaff.hod" field="newEntity.hod"/>
-		<set value="" field="newEntity.scoreTwo"/>
-		<set value="" field="newEntity.scoreThree"/>
+		<set value="${bsh:org.ofbiz.humanres.HumanResServices.returnBigDecimal();}" field="newEntity.scoreTwo"/>
+		<set value="${bsh:org.ofbiz.humanres.HumanResServices.returnBigDecimal();}" field="newEntity.scoreThree"/>
+		<set value="${bsh:org.ofbiz.humanres.HumanResServices.returnBigDecimal();}" field="newEntity.scoreFour"/>
 		
 		<create-value value-field="newEntity" />
 		<property-to-field resource="HumanResUiLabels"
@@ -1098,6 +1099,7 @@
     </simple-method>
     
     
+   
     	<!--=============== CHANGE PERIOD STATUS TO OPEN ==============================-->
     
     <simple-method method-name="openStatusToReviewPeriod" short-description="Update PerfGoals">
@@ -4132,7 +4134,28 @@
 		<set from-field="partyTrainingId" field="newEntity.partyTrainingId" /> 
 		<set value="NEW" field="newEntity.approvalStatus" /> 
 		
-		<create-value value-field="newEntity" />
+        
+        <entity-condition list="staffs" entity-name="StaffWhoNeedTraining">
+		<condition-list>
+		<condition-expr field-name="partyId" from-field="newEntity.partyId"/>
+		</condition-list>
+		</entity-condition>
+		<iterate entry="singleStaff" list="staffs">
+		<entity-one entity-name="StaffWhoNeedTraining" value-field="lookedUpValue2">
+        <field-map field-name="needId" from-field="singleStaff.needId"/>
+        </entity-one>
+        <set field="fromHod" from-field="lookedUpValue2.trainingStageFromHod"/>
+        
+        <if-compare operator="equals" value="FORWARDED" field="fromHod">
+        <set field="lookedUpValue2.trainingStageFromHod" value="DONE"/>
+        <store-value value-field="lookedUpValue2"/>
+        </if-compare>
+        
+		</iterate>
+		
+		
+		
+		    <create-value value-field="newEntity" />
 		      <property-to-field resource="HumanResUiLabels"
 			  property="CreateSuccess" field="successMessage" />
 			
@@ -4208,6 +4231,20 @@
         <store-value value-field="lookedUpValue2"/>
 		</iterate>
 		
+		<entity-condition list="staffwithneeds" entity-name="StaffWhoNeedTraining">
+		<condition-list>
+		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+		</condition-list>
+		</entity-condition>
+		<iterate entry="singlestaffwithneeds" list="staffwithneeds">
+		<entity-one entity-name="StaffWhoNeedTraining" value-field="lookedUpValue3">
+        <field-map field-name="needId" from-field="singlestaffwithneeds.needId"/>
+        </entity-one>
+        <set field="lookedUpValue2.trainingStageFromHod" value="FORWARDED"/>
+        <store-value value-field="lookedUpValue3"/>
+		</iterate>
+		
+		
 		<entity-one value-field="staff" entity-name="Person">
 		<field-map field-name="partyId" from-field="parameters.partyId"/>
 		</entity-one>
@@ -4236,6 +4273,7 @@
         <field-map field-name="StaffInPerfReviewGroupId" from-field="singleStaff.StaffInPerfReviewGroupId"/>
         </entity-one>
         <set field="lookedUpValue2.trainingStage" value="DONE"/>
+        <set field="lookedUpValue2.trainingStageFromHod" value="DONE"/>
         <store-value value-field="lookedUpValue2"/>
         <property-to-field resource="HumanResUiLabels"
 		property="UpdateSuccess" field="successMessage" />
