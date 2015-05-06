@@ -25,28 +25,15 @@ import org.ofbiz.product.image.ScaleImage;
 context.nowTimestampString = UtilDateTime.nowTimestamp().toString();
 
 // make the image file formats
-imageFilenameFormat = UtilProperties.getPropertyValue('salaries', 'image.filename.format');
-imageServerPath = FlexibleStringExpander.expandString(UtilProperties.getPropertyValue("salaries", "image.server.path"), context);
-imageUrlPrefix = UtilProperties.getPropertyValue('salaries', 'image.url.prefix');
-context.imageFilenameFormat = imageFilenameFormat;
-context.imageServerPath = imageServerPath;
-context.imageUrlPrefix = imageUrlPrefix;
+//salaryFilenameFormat = UtilProperties.getPropertyValue('salaries', 'salary.filename.format');
+//salaryServerPath = UtilProperties.getPropertyValue('salaries', 'salaries.server.path');
 
-filenameExpander = FlexibleStringExpander.getInstance(imageFilenameFormat);
-context.imageNameSmall  = imageUrlPrefix + "/" + filenameExpander.expandString([location : 'members', id : partyId, type : 'small']);
-context.imageNameMedium = imageUrlPrefix + "/" + filenameExpander.expandString([location : 'members', id : partyId, type : 'medium']);
-context.imageNameLarge  = imageUrlPrefix + "/" + filenameExpander.expandString([location : 'members', id : partyId, type : 'large']);
-context.imageNameDetail = imageUrlPrefix + "/" + filenameExpander.expandString([location : 'members', id : partyId, type : 'detail']);
-context.imageNameOriginal = imageUrlPrefix + "/" + filenameExpander.expandString([location : 'members', id : partyId, type : 'original']);
+salaryServerPath = "/F:/projects/vergeofbiz/vergesacco/thesalary";
 
-// Start MemberContent stuff
-//memberContent = null;
-//if (member) {
-//	memberContent = member.getRelated('MemberContent', null, ['memberContentTypeId'], false);
-//}
-//context.memberContent = memberContent;
-// End MemberContentent stuff
-
+//salaryServerPath = FlexibleStringExpander.expandString(UtilProperties.getPropertyValue("salaries", "salaryfile.server.path"), context);
+//salaryServerPath = "";
+//FlexibleStringExpander.expandString(UtilProperties.getPropertyValue("member", "image.server.path"), context);
+//context.salaryServerPath = salaryServerPath
 tryEntity = true;
 if (request.getAttribute("_ERROR_MESSAGE_")) {
 	tryEntity = false;
@@ -54,6 +41,10 @@ if (request.getAttribute("_ERROR_MESSAGE_")) {
 //if (!member) {
 //	tryEntity = false;
 //}
+
+salaryMonthYearId = parameters.salaryMonthYearId;
+
+println "######### The Salary Month ID ONE  is "+salaryMonthYearId;
 
 if ("true".equalsIgnoreCase((String) request.getParameter("tryEntity"))) {
 	tryEntity = true;
@@ -63,70 +54,54 @@ context.tryEntity = tryEntity;
 // UPLOADING STUFF
 forLock = new Object();
 contentType = null;
+
+
 String fileType = request.getParameter("upload_file_type");
-
-String photourl = request.getParameter("photourl");
-String idfronturl = request.getParameter("idfronturl");
-String idbackurl = request.getParameter("idbackurl");
-String signatureurl = request.getParameter("signatureurl");
-String fileNameToSave = "";
-//Set the file name
-if (photourl.equals("Y")){
-	fileNameToSave = "photourl";
-} else if (idfronturl.equals("Y")){
-	fileNameToSave = "idfronturl";
-} else if (idbackurl.equals("Y")){
-	fileNameToSave = "idbackurl";
-} else if (signatureurl.equals("Y")){
-	fileNameToSave = "signatureurl";
-}
-
 if (fileType) {
-
-	context.fileType = fileType;
-
+	println "######### The Salary Month ID TWO - for upload clicked is "+salaryMonthYearId;
 	//fileLocation = filenameExpander.expandString([location : 'members', id : partyId, type : fileType]);
-	fileLocation = filenameExpander.expandString([location : 'members', id : partyId, type : fileNameToSave]);
-	filePathPrefix = "";
-	filenameToUse = fileLocation;
-	if (fileLocation.lastIndexOf("/") != -1) {
-		filePathPrefix = fileLocation.substring(0, fileLocation.lastIndexOf("/") + 1); // adding 1 to include the trailing slash
-		filenameToUse = fileLocation.substring(fileLocation.lastIndexOf("/") + 1);
-	}
+	//fileLocation = filenameExpander.expandString([location : 'members', id : partyId, type : fileNameToSave]);
 
-	int i1;
-	if (contentType && (i1 = contentType.indexOf("boundary=")) != -1) {
-		contentType = contentType.substring(i1 + 9);
-		contentType = "--" + contentType;
-	}
 
-	defaultFileName = filenameToUse + "_temp";
+	//defaultFileName = filenameToUse + "_temp";
+	//defaultFileName = 'test';
 	uploadObject = new HttpRequestFileUpload();
-	uploadObject.setOverrideFilename(defaultFileName);
-	uploadObject.setSavePath(imageServerPath + "/" + filePathPrefix);
+	//uploadObject.setOverrideFilename(defaultFileName);
+	//uploadObject.setSavePath(imageServerPath + "/" + filePathPrefix);
+	//println " The file Name FFFFFFFFNNNNNNNNNNN "+uploadObject.getFilename();
+	//uploadObject.setSavePath(salaryServerPath + "/"+uploadObject.getFilename());
+	uploadObject.setSavePath(salaryServerPath + "/");
+	
 	uploadObject.doUpload(request);
-
+	
 	clientFileName = uploadObject.getFilename();
+	defaultFileName = clientFileName;
 	if (clientFileName) {
 		context.clientFileName = clientFileName;
 	}
-
+	filenameToUse = clientFileName;
+	
 	if (clientFileName && clientFileName.length() > 0) {
-		if (clientFileName.lastIndexOf(".") > 0 && clientFileName.lastIndexOf(".") < clientFileName.length()) {
-			filenameToUse += clientFileName.substring(clientFileName.lastIndexOf("."));
-		} else {
-			filenameToUse += ".jpg";
-		}
+		//		if (clientFileName.lastIndexOf(".") > 0 && clientFileName.lastIndexOf(".") < clientFileName.length()) {
+		//			filenameToUse += clientFileName.substring(clientFileName.lastIndexOf("."));
+		//		} else {
+		//			filenameToUse;
+		//			 //+= ".csv";
+		//		}
 
 		context.clientFileName = clientFileName;
 		context.filenameToUse = filenameToUse;
 
 		characterEncoding = request.getCharacterEncoding();
-		imageUrl = imageUrlPrefix + "/" + filePathPrefix + java.net.URLEncoder.encode(filenameToUse, characterEncoding);
-
+		//imageUrl = imageUrlPrefix + "/" + filePathPrefix + java.net.URLEncoder.encode(filenameToUse, characterEncoding);
+	
 		try {
-			file = new File(imageServerPath + "/" + filePathPrefix, defaultFileName);
-			file1 = new File(imageServerPath + "/" + filePathPrefix, filenameToUse);
+			file = new File(salaryServerPath + "/", defaultFileName);
+			file1 = new File(salaryServerPath + "/", filenameToUse);
+			
+			println("defaultFileName --- "+defaultFileName);
+			println("filenameToUse --- "+filenameToUse);
+			
 			//			try {
 			//				// Delete existing image files
 			//				File targetDir = new File(imageServerPath + "/" + filePathPrefix);
@@ -154,40 +129,15 @@ if (fileType) {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		
+		//Process the CSV
+		absoluteFileName = salaryServerPath + "/" + filenameToUse;
+		
+		org.ofbiz.salaryprocessing.SalaryProcessingServices.processCSV(absoluteFileName, salaryMonthYearId);
+		
+		println "Absolute File Name AAAAAAAAA absoluteFileName "+absoluteFileName;
 
-		if (imageUrl && imageUrl.length() > 0) {
-			context.imageUrl = imageUrl;
-			//member.set(fileType + "ImageUrl", imageUrl);
 
-//			if (photourl.equals("Y")){
-//				member.set("photourl", imageUrl);
-//				memberimageurl = "photourl";
-//			} else if (idfronturl.equals("Y")){
-//				member.set("idfronturl", imageUrl);
-//				memberimageurl = "idfronturl";
-//			} else if (idbackurl.equals("Y")){
-//				member.set("idbackurl", imageUrl);
-//				memberimageurl = "idbackurl";
-//			} else if (signatureurl.equals("Y")){
-//				member.set("signatureurl", imageUrl);
-//				memberimageurl = "signatureurl";
-//			}
-
-			// call scaleImageInAllSize
-			//			if (fileType.equals("original")) {
-			//				result = ScaleImage.scaleImageInAllSize(context, filenameToUse, "main", "0");
-			//
-			//				if (result.containsKey("responseMessage") && result.get("responseMessage").equals("success")) {
-			//					imgMap = result.get("imageUrlMap");
-			//					imgMap.each() { key, value ->
-			//						//member.set(key + "ImageUrl", value);
-			//						member.set(memberimageurl, value);
-			//
-			//					}
-			//				}
-			//			}
-
-			//member.store();
-		}
 	}
 }

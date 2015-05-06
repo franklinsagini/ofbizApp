@@ -27,8 +27,10 @@ under the License.
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set field="entityName" value="SalaryMonthYear"></set>
+        
         <set field="newEntity.salaryMonthYearId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <set field="newEntity.isActive" value="Y"/>
+        <set field="newEntity.salaryNumber" from-field="newEntity.salaryMonthYearId"/>
 	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <create-value value-field="newEntity"/>
     </simple-method>
