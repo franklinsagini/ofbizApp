@@ -1,5 +1,8 @@
 package org.ofbiz.salaryprocessing;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.Writer;
 import java.math.BigDecimal;
@@ -860,6 +863,52 @@ public class SalaryProcessingServices {
 
 		return Long.valueOf(missingSalaryPayrollNumberELI.size());
 
+	}
+	
+	
+	/****
+	 * Take the path to csv and salaryMonthYearId and do the processing of the csv
+	 * */
+	public static void processCSV(String csvPath, String salaryMonthYearId){
+		
+		log.info(" GGGGGGGGGGGGGGGGGGG ");
+		log.info(" CSV Path (absolute is ) :::  "+csvPath);
+		log.info(" Salary Month Year ID is :::  ) "+salaryMonthYearId);
+		
+		BufferedReader br = null;
+		String line = "";
+		String csvSplitBy = ",";
+		
+		//Add the records to Member Salaries
+		
+		try {
+			br = new BufferedReader(new FileReader(csvPath));
+			
+			while ((line = br.readLine()) != null){
+				String[] salary = line.split(csvSplitBy);
+				
+				System.out.println("Payroll No "+salary[0]+" Net Pay "+salary[1]);
+				
+			
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+			
+			if (br != null){
+				try {
+					br.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	
 	}
 
 }

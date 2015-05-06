@@ -54,15 +54,20 @@
         <auto-fields-service default-field-type="hidden" service-name="updateSalaryMonthYear"/>
 		
 		
-        <field name="month" title="Month"><text></text></field>
-         <field name="year" title="Year"><text></text></field>
+        <field name="month" title="Month"><display></display></field>
+         <field name="year" title="Year"><display></display></field>
          
          <field name="stationId" title="Station / Employer" required-field="true">
-        	<drop-down allow-empty="true">
+        	<!-- drop-down allow-empty="true">
         		<entity-options description="${employerName} - ${employerCode}" entity-name="Station">
         			<entity-order-by field-name="employerName"/>
         		</entity-options>
-        	</drop-down>
+        	</drop-down -->
+        	<display-entity entity-name="Station" description="${employerName} - ${employerCode}"></display-entity>
+        </field>
+        
+        <field name="salaryNumber">
+        	<display></display>
         </field>
        
         <field name="memberSalary" title="Member Salaries" widget-style="buttontext">
@@ -72,13 +77,20 @@
         </field>
         
         
-        <field name="employer" title="Employer/Station" widget-style="buttontext">
+        <!-- field name="employer" title="Employer/Station" widget-style="buttontext">
             <hyperlink target="employerSalary" description="Employer/Station" also-hidden="false">
+                <parameter param-name="salaryMonthYearId"/>
+            </hyperlink>
+        </field -->
+        
+        
+        <field name="salaryImport" title="Salary Import" widget-style="buttontext">
+            <hyperlink target="salaryImport" description="SalaryImport" also-hidden="false">
                 <parameter param-name="salaryMonthYearId"/>
             </hyperlink>
         </field>
                
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
     </form>
     
     <!-- MemberSalary -->
