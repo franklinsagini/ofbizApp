@@ -267,10 +267,12 @@
 	<request-map uri="HODreviews">
 		<security https="true" auth="true" />
 		<event type="service-multi" invoke="HODreviews" />
-		<response name="success" type="request-redirect" value="HODreviewStaff">
+		<response name="success" type="request-redirect-noparam" value="HODreviewStaff">
 			<redirect-parameter name="partyId" />
 		</response>
-		<response name="error" type="view" value="HODreviewStaff" />
+		<response name="error" type="request-redirect-noparam" value="HODreviewStaff">
+			<redirect-parameter name="partyId" />
+		</response>
 	</request-map>
 	
 	

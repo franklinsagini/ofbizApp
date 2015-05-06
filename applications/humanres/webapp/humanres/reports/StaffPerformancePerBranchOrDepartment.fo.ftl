@@ -309,7 +309,7 @@ under the License.
     </fo:block>
 
 <fo:block font-size="12pt" text-align="right"  font-weight="bold" text-decoration="underline">
-        Total Staff Performance Score: ${all4qstotalScore}
+        Total Staff Performance Score: ${individual.all4qstotalScore}
     </fo:block>
     <fo:block font-size="12pt" text-align="right"  font-weight="bold" text-decoration="underline">
     </fo:block>

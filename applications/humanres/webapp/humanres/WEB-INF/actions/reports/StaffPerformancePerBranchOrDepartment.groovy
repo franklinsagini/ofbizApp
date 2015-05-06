@@ -68,6 +68,8 @@ class IndividualGoalScore{
 	def qualitativeQuarterThree
 	def qualitativeQuarterFour
 	def qualitativeTotal
+	def all4qstotalScore
+	
 
 }
 
@@ -219,6 +221,7 @@ ReviewGroup1.eachWithIndex { ReviewGroup1Item, index ->
 		individual.qualitativeQuarterThree = QTT_Totalq3
 		individual.qualitativeQuarterFour = QTT_Totalq4
 		individual.qualitativeTotal = QTT_Totalall4qstotalScore
+		individual.all4qstotalScore = org.ofbiz.humanres.HumanResServices.getFourQuartersTotalPartyPerformanceOfQualAndQuantiGoalsToString(party, year, Goal_Quantitative, Goal_Qualitative)
 
 //		context.QNT_Totalq1 = QNT_Totalq1;
 //		context.QNT_Totalq2 = QNT_Totalq2;
@@ -233,9 +236,10 @@ ReviewGroup1.eachWithIndex { ReviewGroup1Item, index ->
 //		context.QTT_Totalall4qstotalScore = QTT_Totalall4qstotalScore;
 //		context.QTT_Totalall4qstotalMaxScore = QTT_Totalall4qstotalMaxScore;
 	//}
-	all4qstotalScore = org.ofbiz.humanres.HumanResServices.TotalScoreString(party, year)
+	//all4qstotalScore = org.ofbiz.humanres.HumanResServices.TotalScoreString(party, year)
+	context.all4qstotalScore = org.ofbiz.humanres.HumanResServices.getFourQuartersTotalPartyPerformanceOfQualAndQuantiGoalsToString(party, year, Goal_Quantitative, Goal_Qualitative)
 
-	context.all4qstotalScore = all4qstotalScore;
+	
 	
 	listIndividualGoalScore << individual
 }
