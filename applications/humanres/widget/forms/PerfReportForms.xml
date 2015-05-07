@@ -275,7 +275,63 @@ under the License.
     </form>
     
     
-     <form name="StaffPerformancePerDepartment" type="single" target="StaffPerformancePerBranchOrDepartmentPDF" title="" header-row-style="header-row"
+     <form name="StaffPerformanceOfWholeSociety" type="single" target="StaffPerformanceOfSociety" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+         <actions>
+        <entity-condition entity-name="PerfReviewPeriod" list="periodList">
+        
+				<order-by field-name="quarter"/>
+			</entity-condition>
+			 <entity-condition entity-name="PartyGroup" list="branchList">
+			 <condition-expr field-name="isBranch" value="Y"/>
+				<order-by field-name="partyId"/>
+			</entity-condition>
+		</actions>
+		 <field name="year" title="Select Financial Year" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="year" list-name="periodList"
+					description="${year}" />
+			</drop-down>
+		</field>
+		
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    
+    
+     <form name="StaffPerformancePerBranch" type="single" target="StaffPerformancePerBranchPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+         <actions>
+        <entity-condition entity-name="PerfReviewPeriod" list="periodList">
+        
+				<order-by field-name="quarter"/>
+			</entity-condition>
+			 <entity-condition entity-name="PartyGroup" list="branchList">
+			 <condition-expr field-name="isBranch" value="Y"/>
+				<order-by field-name="partyId"/>
+			</entity-condition>
+		</actions>
+		 <field name="year" title="Select Financial Year" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="year" list-name="periodList"
+					description="${year}" />
+			</drop-down>
+		</field>
+		<field name="branch" title="Select Branch" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="partyId" list-name="branchList"
+					description="${groupName}" />
+			</drop-down>
+		</field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    
+     <form name="StaffPerformancePerDepartment" type="single" target="StaffPerformancePerDepartmentPDF" title="" header-row-style="header-row"
         default-table-style="basic-table">
          <actions>
         <entity-condition entity-name="PerfReviewPeriod" list="periodList">
@@ -299,7 +355,7 @@ under the License.
 					description="${groupName}" />
 			</drop-down>
 		</field>
-        <field name="departmentId" title=" Select Department">
+        <field name="departmentId" title=" Select Department" widget-style="required"	required-field="true">
             <drop-down allow-empty="true">
             </drop-down>
         </field>

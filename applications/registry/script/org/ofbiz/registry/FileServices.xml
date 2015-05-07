@@ -551,16 +551,49 @@
 		 
 		 
          <set field="valid" value="INVALID"/>
-		 <set field="userReq" value="REQUESTED"/>
-		 <set field="request" from-field="req.status"/>
+         <set field="requestedbyEarlier" from-field="req.actionBy"/>
+         <set field="requestedbyHasFile" from-field="req.currentPossesser"/>
          <set field="text" value="${userLogin.partyId}"/>
         <set field="userInput" value="${bsh:org.ofbiz.registry.FileServices.findnoOfOfFileperUser(text) ;}" type="String" /> 
+        <set field="newRequester" value="${bsh:org.ofbiz.registry.FileServices.ifnewRequesterPartyHasBeenQued(partyId,text);}"/>
         
-        <log message=">>>>>>>>>>>>>>>>********************************>>>>>>>ISVALID === ${userInput}" level="info"/>
+        <log message=">>>>>>>>>>>>>>>>********************************>>>>>>>ISVALID === ${newRequester}" level="info"/>
+        
+         <if>
+         
+			<condition>
+			<if-compare-field field="requestedbyHasFile"	to-field="text" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="RegistryUiLabels"
+						property="AlreadyHaveFileError" />
+				</add-error>
+				<check-errors />
+			</then>
+			</if>
+        
+        
+        
         <if>
 			<condition>
-					<if-compare-field field="userReq"
-						to-field="request" operator="equals" />
+					<if-compare-field field="newRequester"
+						to-field="valid" operator="equals" />
+						
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="RegistryUiLabels"
+						property="AlreadyRequestedError" />
+				</add-error>
+				<check-errors />
+			</then>
+			</if>
+			   
+        <if>
+			<condition>
+					<if-compare-field field="requestedbyEarlier"
+						to-field="text" operator="equals" />
 			</condition>
 			<then>
 				<add-error>
@@ -585,10 +618,27 @@
 			
 			
 			<else>
-			 
-		 
-		 
-		 
+			
+		<entity-one entity-name="RegistryFiles" value-field="registryFileStatus">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+		 </entity-one>
+		<set field="fileStatus" from-field="registryFileStatus.status"/>
+			
+			
+			
+			
+			  <if>
+			<condition>
+					<if-compare operator="not-equals" value="AVAILABLE" field="fileStatus"/>
+			</condition>
+			<then>
+				<call-simple-method method-name="queuFileRequest" scope="inline"></call-simple-method>
+				
+			</then>
+			
+			<else>
+			
+			
 		 <entity-one entity-name="RegistryFiles" value-field="registryFile">
 		 	<field-map field-name="partyId" from-field="partyId"/>
 		 </entity-one>
@@ -617,9 +667,32 @@
         
 				<property-to-field resource="HumanResUiLabels"
 			property="CreateSuccess" field="successMessage" />
+			
+			
+			</else>
+			</if>
+			
+			
 			</else>
 		</if>
 		
+	</simple-method>
+	
+	<simple-method method-name="queuFileRequest">
+		<now-timestamp field="nowTimestamp"/>
+		<make-value entity-name="RegistryFileRequestQueu" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="RegistryFileRequestQueu" field="queId" />
+		<set from-field="queId" field="newEntity.queId" />
+		<set value="${userLogin.partyId}" field="newEntity.requester" />
+		<set field="newEntity.requestDate" from-field="nowTimestamp" />
+		<set field="newEntity.partyId" from-field="parameters.partyId" />
+		<set field="newEntity.Reason" from-field="parameters.Reason" />
+		<create-value value-field="newEntity" />
+		
+		<property-to-field resource="HumanResUiLabels"
+	  property="successRequestQueuing" field="successMessage" />
 	</simple-method>
 	
 	
@@ -698,6 +771,7 @@
 		<set field="newEntity.sendStatus" value="NOTSEND" />
 		<create-value value-field="newEntity" />
 	</simple-method>
+	
 	
 	<!-- ========================== APPROVE FILE ISSUANCE ================================== -->
 	
@@ -1696,11 +1770,55 @@
 	<call-simple-method method-name="saveReturnAction" scope="inline"></call-simple-method>
 	<call-simple-method method-name="saveReturnActionToLogs" scope="inline"></call-simple-method>
 	<call-simple-method method-name="saveFileReturnActionToFileMovement" scope="inline"></call-simple-method>
+	<call-simple-method method-name="RemoveFileMovementGrouper" scope="inline"></call-simple-method>
 		 
 		 <set field="partyId" value="${newEntity.partyId}"/>
 		 
 		 
-		 <entity-one entity-name="RegistryFiles" value-field="registryFile">
+		 <set field="isQued" value="${bsh:org.ofbiz.registry.FileServices.checkIfFileRequestHasBeenQued(partyId);}"/>
+		 
+		 
+		 
+			  <if>
+			<condition>
+					<if-compare operator="equals" value="QUED" field="isQued"/>
+			</condition>
+			<then>
+			
+				<set field="newRequester" value="${bsh:org.ofbiz.registry.FileServices.newRequesterParty(partyId);}"/>
+				
+				 <entity-one entity-name="RegistryFiles" value-field="registryFileUpdateRequester">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+		 </entity-one>
+
+		 <!-- Get status -->
+		 <set value="${userLogin.partyId}" field="registryFileUpdateRequester.actionBy" />
+		  <set field="registryFileUpdateRequester.approvalStatus" value="na"/>
+		 <set field="registryFileUpdateRequester.status" value="REQUESTED"/>
+		  <set field="registryFileUpdateRequester.fileLocation" value="REGISTRY"/>
+		  <set field="registryFileUpdateRequester.currentPossesser" value="REGISTRY"/>
+		  <set field="registryFileUpdateRequester.actionBy" from-field="newRequester"/>
+		 <set field="registryFileUpdateRequester.recieptStatus" value="RELEASEDANDRECIEVED"/>
+		<store-value value-field="registryFileUpdateRequester"/>
+		
+		<call-simple-method method-name="deleteFromQue" scope="inline"></call-simple-method>
+		
+		 <entity-condition list="personList" entity-name="Person">
+				<condition-expr field-name="departmentId" value="2"/>
+		</entity-condition>
+		
+		<iterate entry="email" list="personList">
+        
+        <set field="emailparty" value="${email.partyId}"/>
+		 <call-simple-method method-name="fileNewRequesterEmailInformation" scope="inline"></call-simple-method>
+		</iterate>
+		<call-simple-method method-name="setFileMovementGrouper" scope="inline"></call-simple-method>
+		
+			</then>
+			
+			<else>
+			
+			<entity-one entity-name="RegistryFiles" value-field="registryFile">
 		 	<field-map field-name="partyId" from-field="partyId"/>
 		 </entity-one>
 
@@ -1712,8 +1830,57 @@
 		  <set field="registryFile.currentPossesser" value="REGISTRY"/>
 		 <set field="registryFile.recieptStatus" value="RELEASEDANDRECIEVED"/>
 		<store-value value-field="registryFile"/>
-		<call-simple-method method-name="RemoveFileMovementGrouper" scope="inline"></call-simple-method>
+			
+			</else>
+			
+			</if>
+		 
 	</simple-method>
+	
+	<simple-method method-name="deleteFromQue">
+	
+	
+		<entity-condition list="requester" entity-name="RegistryFileRequestQueu">
+		<condition-list>
+		<condition-expr field-name="partyId" from-field="partyId"/>
+		<condition-expr field-name="requester" from-field="newRequester"/>
+		</condition-list>
+		</entity-condition>
+		
+		<iterate entry="singleRequester" list="requester">
+		<entity-one entity-name="RegistryFileRequestQueu" value-field="requesterToBeRemoved">
+		 	<field-map field-name="queId" from-field="singleRequester.queId"/>
+		 </entity-one>
+		 <entity-one entity-name="RegistryFiles" value-field="UpdateReason">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+		 </entity-one>
+		 <set from-field="requesterToBeRemoved.Reason" field="UpdateReason.Reason"/>
+		<remove-value value-field="requesterToBeRemoved" />
+		</iterate>
+		
+	</simple-method>
+	
+	 <simple-method method-name="fileNewRequesterEmailInformation">
+		<make-value entity-name="StaffScheduledMail" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="StaffScheduledMail" field="msgId" />
+		<set from-field="msgId" field="newEntity.msgId" />
+		
+		<set field="party" from-field="parameters.partyId"/> 
+		<entity-one entity-name="RegistryFiles" value-field="reg">
+		 	<field-map field-name="partyId" from-field="party"/>
+		 </entity-one>
+		 
+		 <set field="newEntity.partyId" from-field="emailparty"/> 
+		<set field="newEntity.body" value="A Request For a file belonging to:- [${reg.firstName} ${reg.lastName}] has been Waiting For file to be returned. Please log onto the system for details now that the file is back. " />
+		 <set field="newEntity.subject" value="File Request"/>
+		<set field="newEntity.sendStatus" value="NOTSEND" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
+	
+	
 	
 	<simple-method method-name="saveReturnAction">
 		<now-timestamp field="nowTimestamp"/>
