@@ -19,9 +19,9 @@ Goal_Qualitative = "QTT_GOALS"
 
 
 
-/*
-expr = exprBldr.AND() { EQUALS(branchId: bran) }*/
-ReviewGroup1 = delegator.findList("StaffInPerfReviewGroup", null, null, null, null, false);
+
+expr = exprBldr.AND() { EQUALS(departmentId: dept) }
+ReviewGroup1 = delegator.findList("StaffInPerfReviewGroup", expr, null, null, null, false);
 
 class QualitativeGoalScore{
 	def name
@@ -94,12 +94,20 @@ ReviewGroup1.eachWithIndex { ReviewGroup1Item, index ->
 
 	ReviewGroup.eachWithIndex { ReviewGroupItem, index2 ->*/
 
-
+	
+	
+		
+        staffBranch = delegator.findOne("PartyGroup", [partyId : bran], false);
+		staffdepartment = delegator.findOne("department", [departmentId : dept], false);
 		staff = delegator.findOne("Person", [partyId : party], false);
+		staffbran = staffBranch.groupName
+		staffdept = staffdepartment.departmentName
 		fName = staff.firstName
 		sName = staff.lastName
 		fNameUpperCased = fName.toUpperCase()
 		sNameUpperCased = sName.toUpperCase()
+		staffbranUppercase = staffbran.toUpperCase()
+		staffdeptUppercase = staffdept.toUpperCase()
 		Goal_QuantitativeScorelist = [];
 		Goal_QualitativeScorelist = [];
 
@@ -251,7 +259,8 @@ context.year = year;
 context.ReviewGroup1 = ReviewGroup1;
 context.fNameUpperCased = fNameUpperCased;
 context.sNameUpperCased = sNameUpperCased;
-
+context.staffbranUppercase = staffbranUppercase;
+context.staffdeptUppercase = staffdeptUppercase;
 
 context.listIndividualGoalScore = listIndividualGoalScore
 

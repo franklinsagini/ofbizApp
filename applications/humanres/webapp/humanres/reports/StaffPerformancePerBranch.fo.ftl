@@ -30,6 +30,11 @@ under the License.
 	<#assign partyId = individual.partyId />
 	<#assign person = delegator.findOne("Person", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", partyId), true)/>
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" text-decoration="underline">
+        ${staffbranUppercase} BRANCH'S STAFF PERFORMANCE REPORT FOR THE YEAR ${year}
+    </fo:block>
+    <fo:block><fo:leader/></fo:block>
+	
+	 <fo:block font-size="12pt" text-align="center"  font-weight="bold" text-decoration="underline">
         ${person.firstName} ${person.lastName}'s PERFORMANCE REPORT FOR THE YEAR ${year}
     </fo:block>
     <fo:block><fo:leader/></fo:block>

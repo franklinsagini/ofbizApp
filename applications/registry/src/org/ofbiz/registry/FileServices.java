@@ -1015,4 +1015,98 @@ public class FileServices {
 					log.info("DELETED  ALL RECORDS!" );
 					
 				}
+				
+				
+				
+				public static String checkIfFileRequestHasBeenQued(String patyId){
+					Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+					String state = null;
+					List<GenericValue> FileQuedLI = null;
+					
+					try {
+						FileQuedLI = delegator.findList("RegistryFileRequestQueu", EntityCondition.makeCondition("partyId", patyId), null, null, null, false);
+						
+					} catch (GenericEntityException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
+					
+
+					if ((FileQuedLI.size() > 0)) {
+						state = "QUED";
+
+					}
+					
+					else {
+						state = "NOTQUED";
+					}
+					
+					
+				return state; 
+				}
+				
+				
+				
+				public static String newRequesterParty(String patyId){
+					Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+					String newRequester = null;
+					List<GenericValue> FileQuedLI = null;
+					GenericValue req = null;
+					
+					try {
+						List<String> orderByList = new ArrayList<String>();
+						orderByList.add("requestDate");
+						FileQuedLI = delegator.findList("RegistryFileRequestQueu", EntityCondition.makeCondition("partyId", patyId), null, orderByList, null, false);
+						
+					} catch (GenericEntityException e2) {
+						e2.printStackTrace();
+					}
+					
+
+					if ((FileQuedLI.size() > 0)) {
+						req = FileQuedLI.get(0);
+						newRequester = req.getString("requester");
+
+					}
+					
+
+					
+					
+				return newRequester; 
+				}
+				
+				
+				public static String ifnewRequesterPartyHasBeenQued(String patyId, String loggedinuser){
+					Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+					String newRequester = null;
+					List<GenericValue> FileQuedLI = null;
+					GenericValue req = null;
+					
+					EntityConditionList<EntityExpr> getfilesRequested = EntityCondition.makeCondition(UtilMisc.toList(
+						    EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, patyId),
+							EntityCondition.makeCondition("requester",EntityOperator.EQUALS, loggedinuser)),EntityOperator.AND);
+					
+					try {
+						FileQuedLI = delegator.findList("RegistryFileRequestQueu", getfilesRequested, null, null, null, false);
+						
+					} catch (GenericEntityException e2) {
+						e2.printStackTrace();
+					}
+					
+					if ((FileQuedLI.size() > 0)) {
+						newRequester = "INVALID";
+
+					}
+					else {
+						newRequester = "VALID";
+					}
+
+					
+					
+
+					
+					
+				return newRequester; 
+				}
+				
 }

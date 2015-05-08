@@ -448,15 +448,20 @@ under the License.
 	
 	
 	
-	  <!--======================= COST TYPES DEFINITION =================================== -->
+	
+	  
+	  
 
 	<form name="CostTypeForm" type="single" target="createStaffTrainingCostType"
 		focus-field-name="name" header-row-style="header-row"
 		default-table-style="basic-table" default-map-name="CostTypesContext">
+		
+		<alt-target use-when="CostTypesContext!=null" target="updateStaffTrainingCostType"/>
 
 		<field name="costTypeId">
 			<hidden />
 		</field>
+		<field name="costTypeId" use-when="CostTypesContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display /></field>
 		<field name="CostName" title="Cost Name" widget-style="required"
 			required-field="true">
 			<text />
@@ -477,17 +482,15 @@ under the License.
 			required-field="true">
 			<text />
 		</field>
+		<field use-when="CostTypesContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field use-when="CostTypesContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
 		
 		
-		<field name="submitButton" title="${uiLabelMap.CommonSave}"
-			widget-style="smallSubmit">
-			<submit button-type="button" />
-		</field>
 	</form>
 
-	<form name="listCostTypeForm" type="multi" use-row-submit="true"
+	<form name="listCostTypeForm" type="list" list-name="listIt"  use-row-submit="true"
 		title="Selected Monument" separate-columns="true" paginate-target="CostTypeForm"
-		target="updateStaffTrainingCostType" default-table-style="basic-table hover-bar">
+		target="" default-table-style="basic-table hover-bar">
 		<actions>
 			<entity-condition entity-name="CostTypes">
 				<order-by field-name="costTypeId" />
@@ -498,23 +501,23 @@ under the License.
 		</field>
 		<field name="CostName" title="Cost Name" widget-style="required"
 			required-field="true">
-			<text />
+			<display />
 		</field>
 		<field name="trainingFees" title="Training Fees" widget-style="required"
 			required-field="true">
-			<text />
+			<display type="currency" currency="KES"/>
 		</field>
 		<field name="travelCost" title="Travel Cost" widget-style="required"
 			required-field="true">
-			<text />
+			<display type="currency" currency="KES"/>
 		</field>
 		<field name="accomodationCost" title="Accomodation Cost" widget-style="required"
 			required-field="true">
-			<text />
+			<display type="currency" currency="KES"/>
 		</field>
 		<field name="allowance" title="Allowance" widget-style="required"
 			required-field="true">
-			<text />
+			<display type="currency" currency="KES"/>
 		</field>
 
 
@@ -527,12 +530,7 @@ under the License.
 			</hyperlink>
 		</field>
 
-		<field name="_rowSubmit" title="${uiLabelMap.CommonSelect}">
-			<hidden value="Y" />
-		</field>
-		<field name="submitButton" title="Update Reviews" widget-style="button">
-			<submit />
-		</field>
+		<field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
 
 	</form>
 	
@@ -638,13 +636,19 @@ under the License.
 	<form name="AddStaffToTrainingEventsForm" type="single" target="addStaffToTrainingEvent"
 		focus-field-name="name" header-row-style="header-row"
 		default-table-style="basic-table" default-map-name="PatyInTrainingEventContext">
-
+         
+         <actions>
+         <set field="p" from-field="parameters.partyId"/>
+         </actions>
 		<field name="partyTrainingId">
 			<hidden />
 		</field>
 		<field name="partyId" title="Staff" widget-style="required"
-			required-field="true">
+			required-field="true" use-when="p == null">
 			<lookup target-form-name="LookupEmployee"/>
+		</field>
+		<field name="partyId" title="Staff" use-when="p !=null">
+			<display-entity entity-name="Person" description="${firstName}  ${lastName}"></display-entity>
 		</field>
 		<field name="eventId" title="Training Event" widget-style="required"
 			required-field="true">
@@ -652,8 +656,6 @@ under the License.
 			<entity-options description="${eventName}" entity-name="TrainingEvent" key-field-name="eventId"></entity-options>
 			</drop-down>
 		</field>
-		
-		
 		
 		<field name="submitButton" title="${uiLabelMap.CommonSave}"
 			widget-style="smallSubmit">
@@ -801,7 +803,6 @@ under the License.
 
 		<field name="addStaffToRequiredTraining" title="Add Staff To A Training"	widget-style="buttontext">
 			<hyperlink target="AddStaffToTraining" description="Add Staff To A Training"	also-hidden="false">
-				<parameter param-name="needId"/>
 				<parameter param-name="partyId"/>
 			</hyperlink>
 		</field>

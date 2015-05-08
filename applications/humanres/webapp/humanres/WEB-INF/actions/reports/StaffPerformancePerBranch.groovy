@@ -10,8 +10,7 @@ import org.ofbiz.entity.util.EntityFindOptions;
 exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder();
 
 year = parameters.year
-dept = parameters.departmentId
-bran = parameters.branchId
+bran = parameters.branch
 Goal_Quantitative = "QNT_GOALS"
 Goal_Qualitative = "QTT_GOALS"
 
@@ -19,9 +18,8 @@ Goal_Qualitative = "QTT_GOALS"
 
 
 
-/*
-expr = exprBldr.AND() { EQUALS(branchId: bran) }*/
-ReviewGroup1 = delegator.findList("StaffInPerfReviewGroup", null, null, null, null, false);
+expr = exprBldr.AND() { EQUALS(branchId: bran) }
+ReviewGroup1 = delegator.findList("StaffInPerfReviewGroup", expr, null, null, null, false);
 
 class QualitativeGoalScore{
 	def name
@@ -96,8 +94,11 @@ ReviewGroup1.eachWithIndex { ReviewGroup1Item, index ->
 
 
 		staff = delegator.findOne("Person", [partyId : party], false);
+		staffBranch = delegator.findOne("PartyGroup", [partyId : bran], false);
+		staffbran = staffBranch.groupName
 		fName = staff.firstName
 		sName = staff.lastName
+		staffbranUppercase = staffbran.toUpperCase()
 		fNameUpperCased = fName.toUpperCase()
 		sNameUpperCased = sName.toUpperCase()
 		Goal_QuantitativeScorelist = [];
@@ -251,6 +252,7 @@ context.year = year;
 context.ReviewGroup1 = ReviewGroup1;
 context.fNameUpperCased = fNameUpperCased;
 context.sNameUpperCased = sNameUpperCased;
+context.staffbranUppercase = staffbranUppercase;
 
 
 context.listIndividualGoalScore = listIndividualGoalScore
