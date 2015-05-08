@@ -21,8 +21,8 @@
     -->
 
     <!-- Request Mappings -->
-    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
-    
+    <!-- request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map -->
+    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="salaryMonthYear"/></request-map>
          <request-map uri="salaryMonthYear">
                 <security https="true" auth="true" />
                 <response name="success" type="view" value="salaryMonthYear" />
@@ -70,7 +70,43 @@
         <!-- Member Salary -->
         <request-map uri="memberSalary">
                 <security https="true" auth="true" />
-                <response name="success" type="view" value="memberSalary" />
+                <response name="success" type="view" value="memberSalary">
+                	<redirect-parameter name="salaryMonthYearId" />
+                </response>
+        </request-map>
+        
+		<request-map uri="fulldeductions">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="memberSalary">
+                	<redirect-parameter name="salaryMonthYearId" />
+                	<redirect-parameter name="deductType" value="FULL"/>
+                	<redirect-parameter name="deductTypeLink"/>
+                </response>
+        </request-map>
+                <request-map uri="loandeductionsonly">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="memberSalary">
+                	<redirect-parameter name="salaryMonthYearId" />
+                	<redirect-parameter name="deductType" value="LOANONLY"/>
+                	<redirect-parameter name="deductTypeLink"/>
+                </response>
+        </request-map>
+                <request-map uri="nodeductions">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="memberSalary">
+                	<redirect-parameter name="salaryMonthYearId" />
+                	<redirect-parameter name="deductType" value="NODEDUCTIONS"/>
+                	<redirect-parameter name="deductTypeLink"/>
+                </response>
+        </request-map>
+                <request-map uri="accountcontributions">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="memberSalary">
+                	<redirect-parameter name="salaryMonthYearId" />
+                	<redirect-parameter name="deductType" value="ACCOUNTCONTRIBUTIONS"/>
+                	<redirect-parameter name="deductTypeLink"/>
+                	
+                </response>
         </request-map>
         
         <request-map uri="createMemberSalary">
@@ -113,6 +149,29 @@
 		</response>
 		<response name="error" type="view" value="memberSalary" />
 	</request-map>
+	
+	<!-- Loan Deduction Only -->
+		<request-map uri="processSalaryReceivedLoanDeductionOnly">
+		<security auth="true" https="true" />
+		<event type="java"
+			path="org.ofbiz.salaryprocessing.SalaryProcessingServices" invoke="processSalaryReceivedLoanDeductionOnly" />
+		<response name="success" type="view" value="memberSalary">
+			<redirect-parameter name="salaryMonthYearId"/>
+		</response>
+		<response name="error" type="view" value="memberSalary" />
+	</request-map>
+	
+	<!-- Account Contribution Only -->
+	
+	<request-map uri="processSalaryReceivedAccountContributionOnly">
+		<security auth="true" https="true" />
+		<event type="java"
+			path="org.ofbiz.salaryprocessing.SalaryProcessingServices" invoke="processSalaryReceivedAccountContributionOnly" />
+		<response name="success" type="view" value="memberSalary">
+			<redirect-parameter name="salaryMonthYearId"/>
+		</response>
+		<response name="error" type="view" value="memberSalary" />
+	</request-map>
         
         <!-- employerSalary -->
                 <request-map uri="employerSalary">
@@ -146,9 +205,13 @@
     
     <view-map name="salaryMonthYear" type="screen" page="component://salaryprocessing/widget/SalaryProcessingScreens.xml#salaryMonthYear"/>
     <view-map name="employerSalary" type="screen" page="component://salaryprocessing/widget/SalaryProcessingScreens.xml#employerSalary"/>
-    
-    
+
     <view-map name="memberSalary" type="screen" page="component://salaryprocessing/widget/SalaryProcessingScreens.xml#memberSalary"/>
+
+    <view-map name="fulldeductions" type="screen" page="component://salaryprocessing/widget/SalaryProcessingScreens.xml#fulldeductions"/>
+    <view-map name="loandeductionsonly" type="screen" page="component://salaryprocessing/widget/SalaryProcessingScreens.xml#loandeductionsonly"/>
+    <view-map name="nodeductions" type="screen" page="component://salaryprocessing/widget/SalaryProcessingScreens.xml#nodeductions"/>
+    <view-map name="accountcontributions" type="screen" page="component://salaryprocessing/widget/SalaryProcessingScreens.xml#accountcontributions"/>
     
     <view-map name="salaryImport" type="screen" page="component://salaryprocessing/widget/SalaryProcessingScreens.xml#salaryImport"/>
     

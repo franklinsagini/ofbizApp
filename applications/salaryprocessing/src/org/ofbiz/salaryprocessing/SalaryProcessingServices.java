@@ -869,28 +869,106 @@ public class SalaryProcessingServices {
 	/****
 	 * Take the path to csv and salaryMonthYearId and do the processing of the csv
 	 * */
-	public static void processCSV(String csvPath, String salaryMonthYearId){
+	public static void processCSV(String csvPath, String salaryMonthYearIdStr){
 		
 		log.info(" GGGGGGGGGGGGGGGGGGG ");
 		log.info(" CSV Path (absolute is ) :::  "+csvPath);
-		log.info(" Salary Month Year ID is :::  ) "+salaryMonthYearId);
+		log.info(" Salary Month Year ID is :::  ) "+salaryMonthYearIdStr);
+		
+		/***
+		 * Create MemberSalary 
+		 * 
+		 * 
+		 * 		<field name="memberSalaryId" type="id-vlong-int"></field>
+				<field name="salaryMonthYearId" type="id-vlong-int"></field>
+				<field name="isActive" type="indicator"></field>
+				<field name="createdBy" type="id"></field>
+				<field name="month" type="id"></field>
+				<field name="year" type="id"></field>
+				<field name="employerCode" type="id"></field>
+				<field name="payrollNumber" type="id"></field>
+				<field name="netSalary" type="fixed-point"></field>
+				<field name="processed" type="indicator"></field>
+		 * 
+		 * */
+		
+		//String month = "";
+		//String year = "";
+		//String employerCode = "";
+		Long salaryMonthYearIdLong = Long.valueOf(salaryMonthYearIdStr);
+		// Need month, year and employerCode
+
+		// Find the SalaryMonthYear
+		GenericValue salaryMonthYear = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			salaryMonthYear = delegator.findOne("SalaryMonthYear",
+					UtilMisc.toMap("salaryMonthYearId", salaryMonthYearIdLong),
+					false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		Long month = salaryMonthYear.getLong("month");
+		Long year = salaryMonthYear.getLong("year");
+
+		GenericValue station = LoanUtilities.getStation(salaryMonthYear
+				.getString("stationId"));
+		String employerCode = station.getString("employerCode");
+		
 		
 		BufferedReader br = null;
 		String line = "";
 		String csvSplitBy = ",";
 		
-		//Add the records to Member Salaries
+		Long memberSalaryId;
+		GenericValue memberSalary;
 		
+		List<GenericValue> listMemberSalary = new ArrayList<GenericValue>();
+		
+		//Add the records to Member Salaries
+		int count = 0;
+		BigDecimal netSalary = BigDecimal.ZERO;
 		try {
 			br = new BufferedReader(new FileReader(csvPath));
 			
 			while ((line = br.readLine()) != null){
 				String[] salary = line.split(csvSplitBy);
+				count++;
 				
-				System.out.println("Payroll No "+salary[0]+" Net Pay "+salary[1]);
+				System.out.println(" Count "+count+" Payroll No "+salary[0]+" Net Pay "+salary[1]);
+				netSalary = new BigDecimal(salary[1]);
+				memberSalaryId = delegator.getNextSeqIdLong("MemberSalary");
+				memberSalary =  delegator.makeValue(
+						"MemberSalary", UtilMisc.toMap(
+								"memberSalaryId", memberSalaryId,
+								"salaryMonthYearId", salaryMonthYearIdLong,
+								"isActive", "Y",
+								"createdBy", "admin",
+								//"transactionType", "LOANREPAYMENT",
+								"month", month.toString(),
+								"year", year.toString(),
+								
+								"employerCode",
+								employerCode,
+								
+								"payrollNumber", salary[0].trim(),
+								
+								"netSalary", netSalary,
+								
+								"processed", "N"
+								));
 				
-			
+				listMemberSalary.add(memberSalary);
 			}
+			
+			try {
+				delegator.storeAll(listMemberSalary);
+			} catch (GenericEntityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -909,6 +987,92 @@ public class SalaryProcessingServices {
 			}
 		}
 	
+	}
+
+	private static GenericValue getSalaryMonthYear(Long salaryMonthYearIdLong) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
+	/**
+	 * @author Japheth Odonya  @when May 8, 2015 3:50:07 PM
+	 * 
+	 * processSalaryReceivedLoanDeductionOnly
+	 * 
+	 * */
+	public static synchronized String processSalaryReceivedLoanDeductionOnly(
+			HttpServletRequest request, HttpServletResponse response) {
+
+		// salaryMonthYearId
+		String salaryMonthYearId = (String) request
+				.getParameter("salaryMonthYearId");
+
+		/***
+		 * Get month year and employerCode from SalaryMonthYear where
+		 * salaryMonthYearId is the given value
+		 * */
+		GenericValue salaryMonthYear = null;
+		salaryMonthYearId = salaryMonthYearId.replaceAll(",", "");
+		Long salaryMonthIdLong = Long.valueOf(salaryMonthYearId);
+		salaryMonthYear = LoanUtilities.getSalaryMonthYear(salaryMonthIdLong);
+
+		String month = String.valueOf(salaryMonthYear.getLong("month"));
+		String year = String.valueOf(salaryMonthYear.getLong("year"));
+		String stationId = salaryMonthYear.getString("stationId");
+		stationId = stationId.replaceAll(",", "");
+		String employerCode = LoanUtilities.getStationEmployerCode(stationId);
+
+		// Remove Current Logs first
+		removeMissingPayrollNumbersLog(month, year, employerCode);
+		log.info("NOOOOOO DEDUCT LLLLLLLLLLLLLLLL Month " + month + " Year "
+				+ year + " Employer Code  " + employerCode);
+
+		// List<GenericValue> MemberSalaryELI = null;
+
+		Boolean missingPayrollNumbers = getMissingPayrollNumbers(month, year,
+				employerCode);
+		return "";
+	}
+	
+	/**
+	 * @author Japheth Odonya  @when May 8, 2015 3:52:59 PM
+	 * 
+	 * processSalaryReceivedAccountContributionOnly
+	 * 
+	 * */
+	public static synchronized String processSalaryReceivedAccountContributionOnly(
+			HttpServletRequest request, HttpServletResponse response) {
+
+		// salaryMonthYearId
+		String salaryMonthYearId = (String) request
+				.getParameter("salaryMonthYearId");
+
+		/***
+		 * Get month year and employerCode from SalaryMonthYear where
+		 * salaryMonthYearId is the given value
+		 * */
+		GenericValue salaryMonthYear = null;
+		salaryMonthYearId = salaryMonthYearId.replaceAll(",", "");
+		Long salaryMonthIdLong = Long.valueOf(salaryMonthYearId);
+		salaryMonthYear = LoanUtilities.getSalaryMonthYear(salaryMonthIdLong);
+
+		String month = String.valueOf(salaryMonthYear.getLong("month"));
+		String year = String.valueOf(salaryMonthYear.getLong("year"));
+		String stationId = salaryMonthYear.getString("stationId");
+		stationId = stationId.replaceAll(",", "");
+		String employerCode = LoanUtilities.getStationEmployerCode(stationId);
+
+		// Remove Current Logs first
+		removeMissingPayrollNumbersLog(month, year, employerCode);
+		log.info("NOOOOOO DEDUCT LLLLLLLLLLLLLLLL Month " + month + " Year "
+				+ year + " Employer Code  " + employerCode);
+
+		// List<GenericValue> MemberSalaryELI = null;
+
+		Boolean missingPayrollNumbers = getMissingPayrollNumbers(month, year,
+				employerCode);
+		return "";
 	}
 
 }
