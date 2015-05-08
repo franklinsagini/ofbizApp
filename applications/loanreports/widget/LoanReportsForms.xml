@@ -14,11 +14,44 @@
     <form name="memberstatementReportForm" type="single" target="memberstatementreportPDF" title="" header-row-style="header-row"
         default-table-style="basic-table">
 
-        <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
+        <field name="partyId" title="Member" widget-style="required" required-field="true"><lookup target-form-name="LookupActiveMember"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
+    
+    <!-- memberstatementreportWithDatesForm -->
+    <form name="memberstatementreportWithDatesForm" type="single" target="memberstatementreportWithDatesPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+
+        <field name="partyId" title="Member" widget-style="required" required-field="true"><lookup target-form-name="LookupActiveMember"/></field>
+        <field name="accountProductId" title="Account Type">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name} - ${code}" entity-name="AccountProduct"></entity-options>
+        	</drop-down>
+        </field>
+        
+        <field name="loanProductId" title="Loan Type">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name} - ${code}" key-field-name="loanProductId" entity-name="LoanProduct"></entity-options>
+        	</drop-down>
+        </field>
+        
+        <field name="startDate" title="From">
+        	<date-time type="date"/>
+        		
+        	
+        </field>
+        
+        <field name="endDate" title="To">
+        	<date-time type="date"/>
+        </field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
 	
 	
     
