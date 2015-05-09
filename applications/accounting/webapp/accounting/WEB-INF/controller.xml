@@ -43,12 +43,42 @@ under the License.
         </response>
         <response name="error" type="view" value="StatementDepositReturns"/>
     </request-map> -->
+
+    <!-- =============== Inter Branch Settlement =================-->
+    <request-map uri="FundingTypes">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FundingTypes"/>
+    </request-map>
+
+    <request-map uri="FundingTypeRules">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FundingTypeRules"/>
+    </request-map>
+
+    <request-map uri="createFundingType">
+        <security https="true" auth="true" />
+        <event type="service" invoke="createFundingType" />
+        <response name="success" type="request-redirect-noparam" value="FundingTypes" />
+        <response name="error" type="view" value="FundingTypes" />
+    </request-map>
+
+    <request-map uri="createFundingRules">
+        <security https="true" auth="true" />
+        <event type="service" invoke="createFundingRules" />
+        <response name="success" type="request-redirect" value="FundingTypeRules">
+            <redirect-parameter name="fundingTypeId"/>
+        </response>
+        <response name="error" type="view" value="FundingTypeRules" />
+    </request-map>
+
+
     <request-map uri="fetchAccountBalances">
         <security https="true" auth="true" />
         <event type="service" invoke="fetchAccountBalances" />
         <response name="success" type="request-redirect-noparam" value="DepositReturnSetup" />
         <response name="error" type="view" value="DepositReturnSetup" />
     </request-map>
+
     <request-map uri="createSasraReport">
         <security https="true" auth="true" />
         <event type="service" invoke="createSasraReport" />
@@ -3033,6 +3063,11 @@ under the License.
 
 
     <!-- View Mappings -->
+
+    <!-- Inter Branch Settlement -->
+    <view-map name="FundingTypes" type="screen" page="component://accounting/widget/InterBranchSettlementScreens.xml#FundingTypes"/>
+    <view-map name="FundingTypeRules" type="screen" page="component://accounting/widget/InterBranchSettlementScreens.xml#FundingTypeRules"/>
+
     <view-map name="AccountingReportsScreen" type="screen" page="component://accounting/widget/ReportScreens.xml#AccountingReportsScreen"/>
     <view-map name="FinanceReports" type="screen" page="component://accounting/widget/ReportScreens.xml#FinanceReports"/>
     <view-map name="main" type="screen" page="component://accounting/widget/CommonScreens.xml#main"/>

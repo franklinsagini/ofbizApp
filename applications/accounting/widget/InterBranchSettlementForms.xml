@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+    <form name="FundingTypes" type="single" target="createFundingType" focus-field-name="fundingTypeName" header-row-style="header-row" default-table-style="basic-table"
+        default-map-name="fundingTypesContext">
+        <alt-target use-when="fundingTypesContext!=null" target="UpdateSasraReport"/>
+
+        <field name="fundingTypeId">
+            <hidden/>
+        </field>
+
+        <field name="fundingTypeId" use-when="fundingTypesContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+            <display />
+        </field>
+
+        <field name="fundingTypeName" title="Name">
+            <text size="25"></text>
+        </field>
+                <!-- submitButton -->
+        <field use-when="fundingTypesContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field use-when="fundingTypesContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+    </form>
+
+
+      <field name="fundingTypeName" type="name"></field>
+
+    <form name="FundingTypesList" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="UpdateSasraReport"
+        paginate-target="createFundingType" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="FundingTypes"></entity-condition>
+        </actions>
+        <field name="fundingTypeId"><display /></field>
+        <field name="fundingTypeName" title="Funding Type">
+            <display />
+        </field>
+         <field name="Contribution Limits">
+            <hyperlink target="FundingTypeRules" description="Contribution Limits">
+                <parameter param-name="fundingTypeId"/>
+            </hyperlink>
+        </field>
+    </form>
+
+    <form name="FundingTypeRules" type="single" target="createFundingRules" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
+        default-map-name="fundingTypeRulesContext">
+        <alt-target use-when="fundingTypeRulesContext!=null" target="UpdateSasraReportItem"/>
+
+        <field name="fundingRulesId">
+            <hidden/>
+        </field>
+        <field name="fundingTypeId">
+            <hidden/>
+        </field>
+
+        <field name="fundingRulesId" use-when="fundingTypeRulesContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+            <display />
+        </field>
+
+      <field name="branchId" title="Branch">
+        <drop-down allow-empty="false">
+            <entity-options key-field-name="partyId" description="${groupName}" entity-name="PartyGroup">
+                <entity-constraint name="isBranch" operator="equals" value="Y"/>
+                <entity-order-by field-name="groupName"/>
+            </entity-options>
+        </drop-down>
+      </field>
+      <field name="contributingAmount"><text size="15"></text></field>
+
+                <!-- submitButton -->
+        <field use-when="fundingTypeRulesContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field use-when="fundingTypeRulesContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+    </form>
+
+
+    <form name="FundingTypeRulesList" list-name="listIt" target="" title="" type="list" view-size="20"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" paginate-target="SasraReportItem">
+        <actions>
+            <entity-condition entity-name="FundingTypeRules">
+                <condition-expr field-name="fundingTypeId" from-field="fundingTypeId"/>
+                <order-by field-name="fundingRulesId"/>
+            </entity-condition>
+        </actions>
+        <field name="fundingRulesId"><display /></field>
+        <field name="branchId" title="Branch">
+            <display-entity entity-name="PartyGroup" description="${groupName}" key-field-name="partyId"/>
+        </field>
+        <field name="contributingAmount" title="Contributing Amount">
+            <display currency="${KES}"/>
+        </field>
+    </form>
+
+
+
+
+
+
+
+</forms>
