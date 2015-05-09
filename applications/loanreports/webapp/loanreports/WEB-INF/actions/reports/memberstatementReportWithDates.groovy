@@ -1,12 +1,18 @@
-import org.ofbiz.base.util.UtilMisc;
-
-import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionBuilder;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.entity.util.EntityFindOptions;
+import java.text.SimpleDateFormat;
 
 partyId = parameters.partyId
 
 
 //Account Product
-accountProductId =  = parameters.accountProductId
+accountProductId = parameters.accountProductId
 
 startDate = parameters.startDate
 endDate = parameters.endDate
@@ -35,7 +41,13 @@ if ((endDate?.trim())){
 
 
 lpartyId = partyId.toLong();
-laccountProductId = accountProductId.toLong();
+
+lmemberAccountId = null;
+
+if((accountProductId != null) && (!accountProductId.equals(""))){
+	laccountProductId = accountProductId.toLong();
+	lmemberAccountId = org.ofbiz.accountholdertransactions.LoanUtilities.getMemberAccountIdFromMemberAccount(lpartyId, laccountProductId);
+}
 
 member = delegator.findOne("Member", [partyId : lpartyId], false);
 payrollNo = member.payrollNumber;
@@ -56,6 +68,8 @@ class MemberTransaction{
 	def transactionAmount
 }
 
+
+
 expectedPaymentReceivedList = delegator.findByAnd("ExpectedPaymentReceived",  [payrollNo : payrollNo], null, false);
 expectedPaymentSentList = delegator.findByAnd("ExpectedPaymentSent",  [payrollNo : payrollNo], null, false);
 
@@ -67,11 +81,27 @@ disburseLoanStatusId = 6.toLong();
 loansList = delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: disburseLoanStatusId], null, false);
 def statementItem;
 
+
 //add account transactions
-accountTransactionList = delegator.findByAnd("AccountTransaction",  [partyId : lpartyId], null, false);
+accountTransactionList = null;
+if ((accountProductId == null) || (accountProductId.equals(""))){
+	accountTransactionList = delegator.findByAnd("AccountTransaction",  [partyId : lpartyId], null, false);
+} else{
+	//Get memberAccountId given accountProductId and partyId
+	//Get the transactions for this memberAccountId
+	
+	println " Member Account ---  "+lmemberAccountId;
+	accountTransactionList = delegator.findByAnd("AccountTransaction",  [partyId : lpartyId, memberAccountId : lmemberAccountId], null, false);
+}
 
 accountTransactionList.eachWithIndex { accountItem, index ->
 	
+	if (accountItem.lmemberAccountId == lmemberAccountId){
+		
+		
+		println " Member Account in item ---  "+accountItem.memberAccoundId;
+		println " Member Account sent ---  "+lmemberAccountId;
+		
 	statementItem = delegator.makeValue("ExpectedPaymentSent",
 		null);
 	statementItem.loanNo = "";
@@ -99,6 +129,7 @@ accountTransactionList.eachWithIndex { accountItem, index ->
 	statementItem.totalAmount = totalAmount;
 	
 	combinedList << statementItem
+	}
 }
 
 loansList.eachWithIndex { loanItem, index ->
@@ -157,13 +188,20 @@ def memberStatementList = []
 theDisburseLoanStatusId = 6.toLong();
 theClearedLoanStatusId = 7.toLong();
 
-allDisbursedLoansList = delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: theDisburseLoanStatusId], null, false);
-allClearedLoansList = delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: theClearedLoanStatusId], null, false);
+allDisbursedLoansList = null;
+allClearedLoansList = null;
+allLoansList = null;
+
+if ((accountProductId == null) || (accountProductId.equals(""))){
+	allDisbursedLoansList = delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: theDisburseLoanStatusId], null, false);
+	allClearedLoansList = delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: theClearedLoanStatusId], null, false);
+	
+	allLoansList = allDisbursedLoansList;
+	
+	allLoansList = allLoansList + allClearedLoansList;
+}
 
 
-allLoansList = allDisbursedLoansList;
-
-allLoansList = allLoansList + allClearedLoansList;
 //delegator.findByAnd("LoanApplication",  [partyId : lpartyId], null, false);
 allLoansList.eachWithIndex { loanItem, index ->
 	
@@ -285,7 +323,21 @@ allLoansList.eachWithIndex { loanItem, index ->
 //	combinedList << statementItem
 }
 //Add Account Products
-allAccountProducts = delegator.findByAnd("MemberAccount",  [partyId : lpartyId], null, false);
+
+if ((accountProductId == null) || (accountProductId.equals(""))){
+	//accountTransactionList = delegator.findByAnd("AccountTransaction",  [partyId : lpartyId], null, false);
+	allAccountProducts = delegator.findByAnd("MemberAccount",  [partyId : lpartyId], null, false);
+	
+} else{
+	//Get memberAccountId given accountProductId and partyId
+	//Get the transactions for this memberAccountId
+	
+	println " Member Account last ---  "+lmemberAccountId;
+	//accountTransactionList = delegator.findByAnd("AccountTransaction",  [partyId : lpartyId, memberAccountId : memberAccountId], null, false);
+	allAccountProducts = delegator.findByAnd("MemberAccount",  [memberAccountId : lmemberAccountId], null, false);
+	
+}
+
 allAccountProducts.eachWithIndex { memberAccount, index ->
 	
 	
@@ -327,8 +379,6 @@ allAccountProducts.eachWithIndex { memberAccount, index ->
 	}
 	
 	memberStatementList.add(memberStatement)
-	
-	
 }
 
 context.memberStatementList = memberStatementList;
