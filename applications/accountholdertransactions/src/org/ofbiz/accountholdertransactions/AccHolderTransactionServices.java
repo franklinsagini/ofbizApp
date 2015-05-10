@@ -1981,6 +1981,52 @@ public class AccHolderTransactionServices {
 		return bdTotalAvailable.add(calculateOpeningBalance(memberAccountId,
 				DelegatorFactoryImpl.getDelegator(null)));
 	}
+	
+	public static BigDecimal getBookBalanceVer3(String memberAccountId,
+			Timestamp balanceDate) {
+		BigDecimal bdTotalIncrease = BigDecimal.ZERO;
+		BigDecimal bdTotalDecrease = BigDecimal.ZERO;
+		BigDecimal bdTotalAvailable = BigDecimal.ZERO;
+		BigDecimal bdTotalChequeDeposit = BigDecimal.ZERO;
+		BigDecimal bdTotalChequeDepositCleared = BigDecimal.ZERO;
+		bdTotalIncrease = calculateTotalIncreaseDecrease(memberAccountId,
+				balanceDate, "I");
+		log.info(" IIIIIIIIIIIIIIIIIIII Total Increase is " + bdTotalIncrease);
+
+		bdTotalDecrease = calculateTotalIncreaseDecrease(memberAccountId,
+				balanceDate, "D");
+		log.info(" DDDDDDDDDDDDDDDDDDD Total Decrease is " + bdTotalDecrease);
+
+		bdTotalChequeDeposit = calculateTotalChequeDeposits(memberAccountId,
+				balanceDate);
+		log.info(" CCCCCCCCCCCCCCCCC Total Cheque Deposit is "
+				+ bdTotalChequeDeposit);
+		bdTotalChequeDepositCleared = calculateTotalClearedChequeDeposits(
+				memberAccountId, balanceDate);
+		log.info(" CCCCCCCCCCCCCCCCCC Total Cheque Cleared is "
+				+ bdTotalChequeDepositCleared);
+
+		bdTotalAvailable = bdTotalIncrease.subtract(bdTotalDecrease);
+		bdTotalAvailable = bdTotalAvailable.subtract(bdTotalChequeDeposit);
+		bdTotalAvailable = bdTotalAvailable.add(bdTotalChequeDepositCleared);
+
+		memberAccountId = memberAccountId.replaceAll(",", "");
+		Long lmemberAccountId = Long.valueOf(memberAccountId);
+
+		BigDecimal bdRetailedSavings = BigDecimal.ZERO;
+		bdRetailedSavings = getRetainedSavings(lmemberAccountId);
+
+//		bdTotalAvailable = bdTotalAvailable
+//				.subtract(getMinimumBalance(lmemberAccountId));
+		bdTotalAvailable = bdTotalAvailable.subtract(bdRetailedSavings);
+		log.info(" AAAAAAAAAAAAAAAAAAA Total Available is " + bdTotalAvailable);
+		// return
+		// bdTotalIncrease.add(bdTotalChequeDepositCleared).subtract(bdTotalDecrease).subtract(bdTotalChequeDeposit);
+		return bdTotalAvailable.add(calculateOpeningBalance(memberAccountId,
+				DelegatorFactoryImpl.getDelegator(null)));
+	}
+	
+	
 
 	private static BigDecimal getRetainedSavings(Long lmemberAccountId) {
 		// TODO Auto-generated method stub

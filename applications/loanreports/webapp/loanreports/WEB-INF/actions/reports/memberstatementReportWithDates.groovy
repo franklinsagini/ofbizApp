@@ -348,13 +348,11 @@ if ((loanApplicationId == null) || (loanApplicationId.equals(""))){
 
 		println " Member Account last ---  "+lmemberAccountId;
 		//accountTransactionList = delegator.findByAnd("AccountTransaction",  [partyId : lpartyId, memberAccountId : memberAccountId], null, false);
-		allAccountProducts = delegator.findByAnd("MemberAccount",  [memberAccountId : lmemberAccountId], null, false);
-
+			allAccountProducts = delegator.findByAnd("MemberAccount",  [memberAccountId : lmemberAccountId], null, false);
 	}
 }
 
 allAccountProducts.eachWithIndex { memberAccount, index ->
-
 
 	//Get Account Product
 	Long accountProductId = memberAccount.accountProductId;
@@ -368,12 +366,18 @@ allAccountProducts.eachWithIndex { memberAccount, index ->
 	memberStatement.itemTotal = BigDecimal.ZERO;
 
 	//Add Opening Balance
-	openingBalanceAmount = org.ofbiz.accountholdertransactions.AccHolderTransactionServices.calculateOpeningBalance(memberAccountId);
-
-
-
 	memberAccountTransaction = new MemberTransaction()
-	memberAccountTransaction.transactionDate = memberAccount.createdStamp
+	
+	if ((sqlStartDate == null) && (sqlEndDate == null)){
+		openingBalanceAmount = org.ofbiz.accountholdertransactions.AccHolderTransactionServices.calculateOpeningBalance(memberAccountId);
+		memberAccountTransaction.transactionDate = memberAccount.createdStamp;
+	} else{
+		startDateTimestamp = new Timestamp(sqlStartDate.getTime());
+		openingBalanceAmount = org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getBookBalanceVer3(memberAccountId.toString(), startDateTimestamp);
+		memberAccountTransaction.transactionDate = startDateTimestamp
+	}
+
+	
 	memberAccountTransaction.transactionDescription = 'Opening Balance'
 	memberAccountTransaction.increaseDecrease = 'I'
 	memberAccountTransaction.transactionAmount = openingBalanceAmount
@@ -381,7 +385,29 @@ allAccountProducts.eachWithIndex { memberAccount, index ->
 
 	//Add Account Transactions to each product
 
-	allTransactions = delegator.findByAnd("AccountTransaction",  [memberAccountId : memberAccountId], null, false);
+	allTransactions = null;
+	if ((sqlStartDate == null) && (sqlEndDate == null)){
+		allTransactions = delegator.findByAnd("AccountTransaction",  [memberAccountId : memberAccountId], null, false);
+	} else {
+		//Filter by start and end date
+		exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder();
+		
+		startDateTimestamp = new Timestamp(sqlStartDate.getTime());
+		endDateTimestamp = new Timestamp(sqlEndDate.getTime());
+		
+		expr = exprBldr.AND() { //Timestamp
+			GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
+			LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
+			EQUALS(memberAccountId: memberAccountId)
+		}
+		
+		//allTransactions = delegator.findByAnd("AccountTransaction",  expr, null, false);
+		
+		//membersList = delegator.findList("Member", expr, null, ["joinDate ASC"], findOptions, false)
+		EntityFindOptions findOptions = new EntityFindOptions();
+		allTransactions = delegator.findList("AccountTransaction", expr, null, null, findOptions, false)
+	}
+	
 	allTransactions.eachWithIndex { theTransaction, anindex ->
 		memberAccountTransaction = new MemberTransaction()
 		memberAccountTransaction.transactionDate = theTransaction.createdStamp

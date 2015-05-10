@@ -130,13 +130,13 @@ under the License.
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                             <fo:block>Description</fo:block>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm" text-align="right">
                             <fo:block>Debit</fo:block>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm" text-align="right">
                             <fo:block>Credit</fo:block>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm" text-align="right">
                             <fo:block>Balance</fo:block>
                         </fo:table-cell>
                          <#-- fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
@@ -183,32 +183,32 @@ under the License.
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>${transaction.transactionDescription?if_exists}</fo:block>
                             </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right">
                                 <fo:block>
                                 	<#if (transaction.increaseDecrease = 'D') && (transaction.transactionAmount??)  >
                                 	
                                 		
-                                		 Kshs.  ${transaction.transactionAmount?string(",##0.00")}
+                                		 ${transaction.transactionAmount?string(",##0.00")}
 								  
 								</#if>
                                 </fo:block>
                             </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right">
                                 <fo:block>
                                 	
                                 	<#if (transaction.increaseDecrease = 'I') && (transaction.transactionAmount??)  >
                                 	
                                 		
-                                		 Kshs.  ${transaction.transactionAmount?string(",##0.00")}
+                                		 ${transaction.transactionAmount?string(",##0.00")}
 								  
 								</#if>
 								
                                 </fo:block>
                             </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right">
                                 <fo:block>
                               
-								    Kshs.  ${totalAmount?string(",##0.00")} 
+								    ${totalAmount?string(",##0.00")} 
 								
                                </fo:block>
                             </fo:table-cell>
