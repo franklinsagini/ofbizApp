@@ -426,6 +426,34 @@ public class SasraReportsService {
 
 		return count;
 	}
+	
+	public static Long getLoanCount(Long lowerDays, Long upperDays){
+		
+		if (lowerDays == null){
+			//We are dealing with zero
+			
+		} else if (upperDays == null){
+			//We are dealing with upper limit - greater than 30
+		} else{
+			//Its normal - look at lower and upper
+		}
+		
+		return 0L;
+	}
+	
+	public static BigDecimal getLoanBalanceTotals(Long lowerDays, Long upperDays){
+		
+		if (lowerDays == null){
+			//We are dealing with zero
+			
+		} else if (upperDays == null){
+			//We are dealing with upper limit - greater than 30
+		} else{
+			//Its normal - look at lower and upper
+		}
+
+		return BigDecimal.ZERO;
+	}
 
 
 
