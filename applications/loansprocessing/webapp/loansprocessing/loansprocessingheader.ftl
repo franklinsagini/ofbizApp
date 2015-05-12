@@ -481,6 +481,75 @@
     
  
 
+	function guarantorValidation(loanApplicationId){
+    	var reqUrl = '/loansprocessing/control/validateGuarantor';
+    	var isEmployee = false;
+    	var isOldEnough = false;
+    	var isSelf = false;
+    	var hasDeposits = false;
+		
+		var guarantorId  = jQuery('input[name="guarantorId"]').val();
+		
+		//alert(' Guarantor cannot be an employee !!!');
+		//alert(' Loan Application ID is  !!!'+loanApplicationId+' Guarantor ID is '+guarantorId);
+		//alert(' Guarantor is already added  !!! '+guarantorId);
+		//return false;
+		
+		
+    	
+    	var moreThanZero = false;
+    	
+    	var theLoanAmt = jQuery('input[name="loanAmt"]').val();
+     	var baseAmt = 0;
+     	
+     	//alert(theLoanAmt);
+     	if (parseFloat(theLoanAmt, 10) <= parseFloat(baseAmt, 10)){
+    		alert('You cannot apply for a loan of ZERO amount or less');
+    		return false;
+    	}
+    	
+    	
+    	jQuery.ajax({
+
+			     url    : reqUrl,
+			      async	: false,
+			     type   : 'GET',
+			     data   : {'loanApplicationId': loanApplicationId, 'guarantorId': guarantorId}, 
+			     success : function(data){
+			     			isEmployee 	= data.isEmployee;
+			     			isOldEnough = data.isOldEnough;
+			     			isSelf 		= data.isSelf;
+			     			hasDeposits = data.hasDeposits;
+			               },
+			      error : function(errorData){
+			
+			              alert("Some error occurred while validating loan application");
+			              }
+			
+			
+		});
+		if (isEmployee){
+			alert(' An employee cannot guarantee a non staff loan!');
+			return false;
+		}
+			
+		if (isSelf){
+			alert(' You cannot guarantee yourself!');
+			return false;
+		}
+		
+		if (!hasDeposits){
+			alert(' Member must have deposits!');
+			return false;
+		}
+		
+		if (!isOldEnough){
+			alert(' Member must have been in a sacco for 6 months to guarantee! ');
+			return false;
+		}
+    	
+    	return true;
+    }
     
     
    </script>

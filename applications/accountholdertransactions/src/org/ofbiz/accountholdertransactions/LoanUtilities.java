@@ -1378,4 +1378,44 @@ public class LoanUtilities {
 		return null;
 	}
 
+	public static GenericValue getMemberGiveLoanApplicationId(
+			Long loanApplicationId) {
+		
+		//Get Loan Application
+		GenericValue loanApplication = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplication = delegator.findOne("LoanApplication",
+					UtilMisc.toMap("loanApplicationId", loanApplicationId), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		Long partyId = loanApplication.getLong("partyId");
+		
+		
+		GenericValue member = getMember(partyId);
+		
+		return member;
+	}
+	
+	public static Long getMemberDepositsAccountId(String code) {
+		List<GenericValue> accountProductELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			accountProductELI = delegator.findList("AccountProduct",
+					EntityCondition.makeCondition("code", code), null, null,
+					null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		Long accountProductId = null;
+		for (GenericValue genericValue : accountProductELI) {
+			accountProductId = genericValue.getLong("accountProductId");
+		}
+		return accountProductId;
+	}
+
+
 }

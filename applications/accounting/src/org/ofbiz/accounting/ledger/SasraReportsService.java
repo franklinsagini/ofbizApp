@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
+import org.ofbiz.accountholdertransactions.LoanUtilities;
 import org.ofbiz.accounting.util.UtilAccounting;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
@@ -34,7 +35,9 @@ import org.ofbiz.service.GenericServiceException;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.ofbiz.service.GenericDispatcherFactory;
 
@@ -429,6 +432,14 @@ public class SasraReportsService {
 	
 	public static Long getLoanCount(Long lowerDays, Long upperDays){
 		
+		Long noOfLoans = 0L;
+		List<Long> listLoanApplicationIDs = getLoanApplicationIDs();
+		Long noOfDaysNotPaid = 0L;
+		for (Long loanApplicationId : listLoanApplicationIDs) {
+			
+			noOfDaysNotPaid = getNumberOfDaysNotPaid(loanApplicationId);
+		}
+		
 		if (lowerDays == null){
 			//We are dealing with zero
 			
@@ -438,9 +449,44 @@ public class SasraReportsService {
 			//Its normal - look at lower and upper
 		}
 		
-		return 0L;
+		return noOfLoans;
 	}
 	
+	private static Long getNumberOfDaysNotPaid(Long loanApplicationId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private static List<Long> getLoanApplicationIDs() {
+		List<Long> listLoanApplicationIds = new ArrayList<Long>();
+		List<GenericValue> loanApplicationELI = null;
+		//GenericValue loanApplication = getLoanApplication(loanApplicationId);
+		Long loanDisbursedStatusId = LoanUtilities.getLoanStatusId("DISBURSED");
+		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
+				.makeCondition(
+						UtilMisc.toList(EntityCondition.makeCondition(
+								"loanStatusId", EntityOperator.EQUALS,
+								loanDisbursedStatusId)
+								), EntityOperator.AND);
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		Set<String> setSelectField = new HashSet<String>(); 
+		setSelectField.add("loanApplicationId");
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					loanApplicationConditions, setSelectField, null, null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		for (GenericValue genericValue : loanApplicationELI) {
+			listLoanApplicationIds.add(genericValue.getLong("loanApplicationId"));
+		}
+		
+		return listLoanApplicationIds;
+	}
+
 	public static BigDecimal getLoanBalanceTotals(Long lowerDays, Long upperDays){
 		
 		if (lowerDays == null){
