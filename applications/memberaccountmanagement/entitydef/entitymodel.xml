@@ -8,5 +8,42 @@
     <description>None</description>
     <copyright></copyright>
     <version></version>
+    
+    
+         <entity entity-name="MemberAccountVoucher" package-name="org.ofbiz.memberaccountmanagement" title="MemberAccount Journal Voucher Entity">
+     		<field name="memberAccountVoucherId" type="id-vlong-int"></field>
+     		<field name="createdBy" type="id"></field>
+     		<field name="updatedBy" type="id"></field>
+     		<field name="isActive" type="indicator"></field>
+     		<field name="sourcePartyId" type="id-vlong-int"  enable-audit-log="true"></field>
+     		<field name="sourceMemberAccountId" type="id-vlong-int"  enable-audit-log="true"></field>
+     		
+     		<field name="destPartyId" type="id-vlong-int"  enable-audit-log="true"></field>
+     		<field name="destMemberAccountId" type="id-vlong-int"  enable-audit-log="true"></field>
+     		
+     		<field name="amount" type="fixed-point" enable-audit-log="true"></field>
+
+			<field name="comment" type="name" enable-audit-log="true"></field>
+			
+			<prim-key field="memberAccountVoucherId"/>
+
+    	<relation type="one" fk-name="MEMBERACCOUNTVOUCHERSOURCEPARTY_MEMBER" rel-entity-name="Member">
+            <key-map field-name="sourcePartyId" rel-field-name="partyId"/>
+        </relation>
+        
+        <relation type="one" fk-name="MEMBERACCOUNTVOUCHERDESTPARTY_MEMBER" rel-entity-name="Member">
+            <key-map field-name="destPartyId" rel-field-name="partyId"/>
+        </relation>
+
+       
+
+      <relation type="one" fk-name="MEMBERACCOUNTACCSOURCE_MEMBERACCOUNT" rel-entity-name="MemberAccount">
+            <key-map field-name="sourceMemberAccountId" rel-field-name="memberAccountId"/>
+        </relation>
+
+      <relation type="one" fk-name="MEMBERACCOUNTACCSOURCE_MEMBERACCOUNT" rel-entity-name="MemberAccount">
+            <key-map field-name="destMemberAccountId" rel-field-name="memberAccountId"/>
+        </relation>
+     </entity>
 
 </entitymodel>

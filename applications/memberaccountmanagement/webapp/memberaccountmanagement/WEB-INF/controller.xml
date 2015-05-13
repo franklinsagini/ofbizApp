@@ -23,6 +23,46 @@
     <!-- Request Mappings -->
     <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
     
+    <request-map uri="memberAccountVoucher">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="memberAccountVoucher"/>
+    </request-map>
+    
+    <request-map uri="createMemberAccountVoucher">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createMemberAccountVoucher" />
+		<response name="success" type="request-redirect"
+			value="memberAccountVoucher">
+			</response>
+		<response name="error" type="view" value="memberAccountVoucher" />
+	</request-map>
+	
+	<request-map uri="updateMemberAccountVoucher">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateMemberAccountVoucher" />
+		<response name="success" type="request-redirect-noparam"
+			value="memberAccountVoucher"></response>
+		<response name="error" type="view" value="memberAccountVoucher" />
+	</request-map>
+	
+	<request-map uri="deleteMemberAccountVoucher">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteMemberAccountVoucher" />
+		<response name="success" type="request-redirect-noparam"
+			value="memberAccountVoucher"></response>
+		<response name="error" type="view" value="memberAccountVoucher" />
+	</request-map>
+	
+		<request-map uri="LookupActiveMember">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="LookupActiveMember" />
+	</request-map>
+	
     <!-- View Mappings -->
-    <view-map name="main" type="screen" page="component://memberaccountmanagement/widget/MemberAccountManagementScreens.xml#main"/>
+    <!-- view-map name="main" type="screen" page="component://memberaccountmanagement/widget/MemberAccountManagementScreens.xml#main"/ -->
+    <view-map name="main" type="screen" page="component://memberaccountmanagement/widget/MemberAccountManagementScreens.xml#memberAccountVoucher"/>
+    <view-map name="memberAccountVoucher" type="screen" page="component://memberaccountmanagement/widget/MemberAccountManagementScreens.xml#memberAccountVoucher"/>
+   	<view-map name="LookupActiveMember" type="screen"
+		page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember" /> 
+    
 </site-conf>
