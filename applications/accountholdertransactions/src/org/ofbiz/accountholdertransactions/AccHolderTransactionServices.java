@@ -1864,7 +1864,7 @@ public class AccHolderTransactionServices {
 		return bdTotalAmount;
 	}
 
-	private static BigDecimal getAccountTotalBalance(Long accountProductId, Long partyId) {
+	public static BigDecimal getAccountTotalBalance(Long accountProductId, Long partyId) {
 		// TODO Auto-generated method stub
 		List<GenericValue> memberAccountELI = null; // =
 		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition

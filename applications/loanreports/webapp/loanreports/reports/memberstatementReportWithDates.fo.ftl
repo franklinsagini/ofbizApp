@@ -97,6 +97,21 @@ under the License.
                     <fo:block></fo:block>
                 </fo:list-item-body>
             </fo:list-item>
+            
+            
+           <fo:list-item>
+                <fo:list-item-label>
+                    <fo:block font-weight="bold">
+                    <#if statement.loanNo??>
+                    ${statement.loanNo}
+                    </#if>
+                    
+                    </fo:block>
+                </fo:list-item-label>
+                <fo:list-item-body start-indent="body-start()">
+                    <fo:block></fo:block>
+                </fo:list-item-body>
+            </fo:list-item>
             <#-- fo:list-item>
                 <fo:list-item-label>
                     <fo:block font-weight="bold">Payroll Number:</fo:block>

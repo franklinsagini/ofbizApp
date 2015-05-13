@@ -8,7 +8,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
-import org.ofbiz.accounting.invoice.InvoiceServices;
+
+import org.ofbiz.accountholdertransactions.LoanUtilities;
 import org.ofbiz.accounting.util.UtilAccounting;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
@@ -36,7 +37,9 @@ import org.ofbiz.service.GenericServiceException;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.ofbiz.service.GenericDispatcherFactory;
 
@@ -444,29 +447,74 @@ public class SasraReportsService {
 		return count;
 	}
 
-	public static Long getLoanCount(Long lowerDays, Long upperDays) {
-
-		if (lowerDays == null) {
-			// We are dealing with zero
-
-		} else if (upperDays == null) {
-			// We are dealing with upper limit - greater than 30
-		} else {
-			// Its normal - look at lower and upper
+	
+	public static Long getLoanCount(Long lowerDays, Long upperDays){
+		
+		Long noOfLoans = 0L;
+		List<Long> listLoanApplicationIDs = getLoanApplicationIDs();
+		Long noOfDaysNotPaid = 0L;
+		for (Long loanApplicationId : listLoanApplicationIDs) {
+			
+			noOfDaysNotPaid = getNumberOfDaysNotPaid(loanApplicationId);
 		}
-
-		return 0L;
+		
+		if (lowerDays == null){
+			//We are dealing with zero
+			
+		} else if (upperDays == null){
+			//We are dealing with upper limit - greater than 30
+		} else{
+			//Its normal - look at lower and upper
+		}
+		
+		return noOfLoans;
+	}
+	
+	private static Long getNumberOfDaysNotPaid(Long loanApplicationId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	public static BigDecimal getLoanBalanceTotals(Long lowerDays, Long upperDays) {
+	private static List<Long> getLoanApplicationIDs() {
+		List<Long> listLoanApplicationIds = new ArrayList<Long>();
+		List<GenericValue> loanApplicationELI = null;
+		//GenericValue loanApplication = getLoanApplication(loanApplicationId);
+		Long loanDisbursedStatusId = LoanUtilities.getLoanStatusId("DISBURSED");
+		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
+				.makeCondition(
+						UtilMisc.toList(EntityCondition.makeCondition(
+								"loanStatusId", EntityOperator.EQUALS,
+								loanDisbursedStatusId)
+								), EntityOperator.AND);
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		Set<String> setSelectField = new HashSet<String>(); 
+		setSelectField.add("loanApplicationId");
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					loanApplicationConditions, setSelectField, null, null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		for (GenericValue genericValue : loanApplicationELI) {
+			listLoanApplicationIds.add(genericValue.getLong("loanApplicationId"));
+		}
+		
+		return listLoanApplicationIds;
+	}
 
-		if (lowerDays == null) {
-			// We are dealing with zero
+	public static BigDecimal getLoanBalanceTotals(Long lowerDays, Long upperDays){
+		
+		if (lowerDays == null){
+			//We are dealing with zero
+			
+		} else if (upperDays == null){
+			//We are dealing with upper limit - greater than 30
+		} else{
+			//Its normal - look at lower and upper
 
-		} else if (upperDays == null) {
-			// We are dealing with upper limit - greater than 30
-		} else {
-			// Its normal - look at lower and upper
 		}
 
 		return BigDecimal.ZERO;
