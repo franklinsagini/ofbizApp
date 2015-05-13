@@ -2326,6 +2326,7 @@ under the License.
 		<description>Create File Request header record</description>
 		<auto-attributes include="pk" mode="IN" optional="true" />
 		<auto-attributes include="nonpk" mode="IN" optional="true" />
+		<attribute name="partyId" type="String" mode="OUT" optional="false" default-value="${parameters.partyId}"/>
 	</service>
 	
 	
@@ -2375,7 +2376,16 @@ under the License.
 		<attribute name="message" type="String" mode="IN"/>
 	</service> -->
 	
-	<service name="sendScheduledEmailNotification" engine="java"	location="org.ofbiz.common.email.EmailServices" invoke="sendMail_verge">
+	
+	
+	<service name="sendScheduledEmailNotificationNonStaff" engine="java"	location="org.ofbiz.common.email.EmailServices" invoke="sendMail_verge">
+    <description>Send E-Mail Service. partyId and communicationEventId aren't used by sendMail
+    but are passed down to storeEmailAsCommunication during the SECA chain. See sendMailInterface for more comments.</description>
+    <implements service="sendMailOnePartInterface"/>
+    <attribute name="message" type="String" mode="IN"/>
+    </service>
+	
+	<service name="sendScheduledEmailNotificationToStaff" engine="java"	location="org.ofbiz.common.email.EmailServices" invoke="sendStaffMail_verge">
     <description>Send E-Mail Service. partyId and communicationEventId aren't used by sendMail
     but are passed down to storeEmailAsCommunication during the SECA chain. See sendMailInterface for more comments.</description>
     <implements service="sendMailOnePartInterface"/>

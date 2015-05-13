@@ -20,6 +20,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import javolution.util.FastList;
 import javolution.util.FastMap;
 
 import org.apache.commons.lang.StringUtils;
@@ -39,6 +40,8 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.transaction.GenericTransactionException;
+import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericDispatcherFactory;
 import org.ofbiz.service.GenericServiceException;
@@ -1339,6 +1342,7 @@ public class HumanResServices {
 		 * deleteExistingPayrollPrefix(delegator);
 		 */
 		String upperCasePayroll = payRoll.toUpperCase();
+		
 
 		log.info("++++++++++++++upperCasePayroll++++++++++++++++"
 				+ upperCasePayroll);
@@ -1355,7 +1359,8 @@ public class HumanResServices {
 			e.printStackTrace();
 		}
 		log.info("DELETED  ALL RECORDS!");
-
+		
+	
 	}
 
 	public static String validatePayrollPrefix(HttpServletRequest request,
@@ -1727,8 +1732,7 @@ public class HumanResServices {
 			log.info("++++++++++++++holidays++++++++++++++++" + holiday);
 			log.info("++++++++++++++holiDate++++++++++++++++" + holiDate);
 			log.info("++++++++++++++holiMonth++++++++++++++++" + holiMonth);
-			log.info("++++++++++++++leavestart++++++++++++++++"
-					+ localDateStartDate);
+			log.info("++++++++++++++leavestart++++++++++++++++"	+ localDateStartDate);
 			log.info("++++++++++++++statDate++++++++++++++++" + statDate);
 			log.info("++++++++++++++endMonth++++++++++++++++" + statMonth);
 		}
@@ -2509,6 +2513,51 @@ public class HumanResServices {
 
 		return result;
 	}
+	
+	
+	
+	/* SEND SCHEDULED EMAIL NOTIFICATION */
+
+	public static String scheduleSendingEmailNotificationNONStaff(
+			HttpServletRequest request, HttpServletResponse response) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		LocalDispatcher dispatcher = (new GenericDispatcherFactory())
+				.createLocalDispatcher("interestcalculations", delegator);
+
+		Map<String, String> context = UtilMisc.toMap("message",
+				"Email Sending Testing !!");
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			long startTime = (new Date()).getTime();
+			int frequency = RecurrenceRule.SECONDLY;
+			int interval = 5;
+			int count = -1;
+			dispatcher.schedule("sendScheduledEmailNotificationNonStaff", context,
+					startTime, frequency, interval, count);
+		} catch (GenericServiceException e) {
+			e.printStackTrace();
+		}
+
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write("");
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+		return "";
+
+	}
+	
+	
+	
+	
 
 	/* SEND SCHEDULED EMAIL NOTIFICATION */
 
@@ -2526,7 +2575,7 @@ public class HumanResServices {
 			int frequency = RecurrenceRule.SECONDLY;
 			int interval = 5;
 			int count = -1;
-			dispatcher.schedule("sendScheduledEmailNotification", context,
+			dispatcher.schedule("sendScheduledEmailNotificationToStaff", context,
 					startTime, frequency, interval, count);
 		} catch (GenericServiceException e) {
 			e.printStackTrace();
@@ -5561,25 +5610,94 @@ public class HumanResServices {
 
 		return state;
 	}
+	
 
 	public static String CompareStartEndDate(Date from, Date end) {
 		LocalDate StartDate = new LocalDate(from);
 		LocalDate EndDate = new LocalDate(end);
+		
 		String state = null;
 		if (StartDate.isAfter(EndDate)) {
 			state = "INVALID";
 		} else {
 			state = "VALID";
 		}
-
+		
 		return state;
 
 	}
 
+	
 	public static BigDecimal returnBigDecimal() {
 		BigDecimal st = BigDecimal.ZERO;
-
 		return st;
 	}
+	
+	
+	
+	
+
+	public static void ScheduleSocietyMails(ArrayList<String> email, String subject, String mailBody) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		GenericValue scheduledMail = null;
+		
+		 for (int i = 0; i < email.size(); i++) {
+			    String mail_value = email.get(i);
+			    System.out.println("Element: " + mail_value);
+			
+
+		scheduledMail = delegator.makeValue("SocietyScheduledMail", "scheduleId",	delegator.getNextSeqId("SocietyScheduledMail"),
+											"email",	mail_value, "subject", subject, "body",mailBody, "sendStatus", "NOTSEND");
+		
+		
+		log.info("=============>>>>>>>>>>> THIS IS THE MAIL >>>>>>>>" + scheduledMail);
+
+		try {
+			scheduledMail.create();
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			TransactionUtil.commit();
+		} catch (GenericTransactionException e) {
+			e.printStackTrace();
+		}
+			
+		 }
+	
+	}
+	
+	// ================ MAKE SURE ALL PERFORMANCE SCORES HAVE BEEN FORWARDED TO HR BEFORE CLOSING A REVIEW PERIOD
+	
+	public static String haveAllScoresBeenForwarded(String period) {
+		String results = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		List<GenericValue> leaveELI = null;
+		
+		EntityConditionList<EntityExpr> closeConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition("quarter",EntityOperator.EQUALS, period),
+						EntityCondition.makeCondition("stage",EntityOperator.NOT_EQUAL, "FORWARDED")),
+						EntityOperator.AND);
+		
+		try {
+			leaveELI = delegator.findList("PerfPartyReview", closeConditions, null, null, null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+
+		if (leaveELI.size() > 0) {
+			results = "INVALID";
+		}
+		else {
+			results = "VALID";
+		}
+
+		return results;
+	}
+	
+
 
 }

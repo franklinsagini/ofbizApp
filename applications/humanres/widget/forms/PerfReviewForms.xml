@@ -2343,6 +2343,7 @@
 		<field name="noNeedForTraining" title="-">
 			<hyperlink target="staffDontNeedTraining" description="Don't Need Training" also-hidden="false" confirmation-message="You are Sure Staff Don't Need Training?" request-confirmation="true">
 				<parameter param-name="partyId" />
+				<parameter param-name="StaffInPerfReviewGroupId" />
 			</hyperlink>
 		</field>
 		
@@ -2376,7 +2377,7 @@
 	<!--================================= HOD REVIEWS =================================== -->   
 	
 	
-	   <form name="StaffHODReviewQuantitativeForm" type="multi" use-row-submit="true"
+	   <form name="StaffHODReviewQuantitativeForm" type="list" list-name="listIt" use-row-submit="true"
 		title="Selected Monument" separate-columns="true" paginate-target="PerfReviewPeriod"
 		target="HODreviews" default-table-style="basic-table hover-bar" odd-row-style="alternate-row">
 		<actions>
@@ -2393,6 +2394,7 @@
 		</field>
 		<field name="year" title="Financial Year"><display/>
 		</field>
+		<field name="partyId"><display default-value="${parameters.partyId}"/></field>
 		<field name="quarter" title="Review Period"><display/>
 		</field>
 		<field name="perfGoalsId" title="Goal Perspective"><display-entity entity-name="PerfGoals" description="${goal}"></display-entity>
@@ -2412,17 +2414,17 @@
                 </entity-options>
             </drop-down>
         </field>
-		
-		<field name="_rowSubmit" title="${uiLabelMap.CommonSelect}">
-			<hidden value="Y" />
-		</field>
-		<field name="submitButton" title="Review Staff" widget-style="smallSubmit">
-			<submit />
-		</field>
+		<field name="submitButton" title="Review" widget-style="buttontext"> <submit button-type="button"/></field>
+		<!-- <field name="addDocument" title=" " widget-style="buttontext">
+			<hyperlink also-hidden="false"  description="Add Document To File" target="HODreviews">
+				<parameter param-name="partyId" />
+				<parameter param-name="reviewId" />
+			</hyperlink>
+		</field> -->
 	</form>
 	
 	
-	 <form name="StaffHODReviewQualitativeForm" type="multi" use-row-submit="true"
+	 <form name="StaffHODReviewQualitativeForm" type="list" list-name="listIt" use-row-submit="true"
 		title="Selected Monument" separate-columns="true" paginate-target="PerfReviewPeriod"
 		target="HODreviews" default-table-style="basic-table hover-bar" odd-row-style="alternate-row">
 		<actions>
@@ -2437,6 +2439,7 @@
 		
 		<field name="reviewId"><hidden/>
 		</field>
+		<field name="partyId"><display default-value="${parameters.partyId}"/></field>
 		<field name="year" title="Financial Year"><display/>
 		</field>
 		<field name="quarter" title="Review Period"><display/>
@@ -2452,20 +2455,20 @@
                 </entity-options>
             </drop-down>
         </field>
-		
-		<field name="_rowSubmit" title="${uiLabelMap.CommonSelect}">
-			<hidden value="Y" />
-		</field>
-		<field name="submitButton" title="Save Score" widget-style="smallSubmit">
-			<submit />
-		</field>
+		<field name="submitButton" title="Review" widget-style="buttontext"> <submit button-type="button"/></field>
+	   <!--  <field name="addDocument" title=" " widget-style="buttontext">
+			<hyperlink also-hidden="false"  description="Add Document To File" target="HODreviews">
+				<parameter param-name="partyId" />
+				<parameter param-name="reviewId" />
+			</hyperlink>
+		</field> -->
 	</form>
 	
 	
 	<!--================================= HARMONIZED REVIEWS =================================== -->   
 	
 	
-	   <form name="StaffHarmonizedReviewQuantitativeForm" type="multi" use-row-submit="true"
+	   <form name="StaffHarmonizedReviewQuantitativeForm" type="list" list-name="listIt" use-row-submit="true"
 		title="Selected Monument" separate-columns="true" paginate-target="PerfReviewPeriod"
 		target="HarmonizedHODReview" default-table-style="basic-table hover-bar" odd-row-style="alternate-row">
 		<actions>
@@ -2479,6 +2482,7 @@
 		</actions>
 		<field name="reviewId"><hidden/>
 		</field>
+		<field name="partyId"><display default-value="${parameters.partyId}"/></field>
 		<field name="year" title="Financial Year"><display/>
 		</field>
 		<field name="quarter" title="Review Period"><display/>
@@ -2502,16 +2506,11 @@
         </field>
 		
 		
-		<field name="_rowSubmit" title="${uiLabelMap.CommonSelect}">
-			<hidden value="Y" />
-		</field>
-		<field name="submitButton" title="Save Score" widget-style="smallSubmit">
-			<submit />
-		</field>
+		<field name="submitButton" title="Review" widget-style="buttontext"> <submit button-type="button"/></field>
 	</form>
 	
 	
-	 <form name="StaffHarmonizedReviewQualitativeForm" type="multi" use-row-submit="true"
+	 <form name="StaffHarmonizedReviewQualitativeForm" type="list" list-name="listIt" use-row-submit="true"
 		title="Selected Monument" separate-columns="true" paginate-target="PerfReviewPeriod"
 		target="HarmonizedHODReview" default-table-style="basic-table hover-bar" odd-row-style="alternate-row">
 		<actions>
@@ -2526,6 +2525,7 @@
 		
 		<field name="reviewId"><hidden/>
 		</field>
+		<field name="partyId"><display default-value="${parameters.partyId}"/></field>
 		<field name="year" title="Financial Year"><display/>
 		</field>
 		<field name="quarter" title="Review Period"><display/>
@@ -2542,11 +2542,25 @@
             </drop-down>
         </field>
 		
-		<field name="_rowSubmit" title="${uiLabelMap.CommonSelect}">
-			<hidden value="Y" />
+		<field name="submitButton" title="Review" widget-style="buttontext"> <submit button-type="button"/></field>
+	</form>
+	
+	 <!-- =====================  STAFF WHOSE SCORES HAVE NOT BEEN SUBMITTED  ===================================== -->
+	       
+	        <form name="NotSubmittedScoresForm" type="multi" use-row-submit="true"
+		title="Selected Monument" separate-columns="true" paginate-target=""
+		target="" default-table-style="basic-table hover-bar" odd-row-style="alternate-row">
+		<actions>
+		<entity-condition entity-name="StaffInPerfReviewGroup">
+				<condition-expr field-name="stage" value="FORWARDED" operator="not-equals"/>
+			</entity-condition>
+		</actions>
+		
+		<field name="StaffInPerfReviewGroupId"><hidden/>
 		</field>
-		<field name="submitButton" title="Save Score" widget-style="smallSubmit">
-			<submit />
+		<field name="partyId" title="Staff Name"><display-entity entity-name="Person" description="${firstName} ${lastName}"></display-entity>
+		</field>
+		<field name="hod" title="Staff HOD/Supervisor"><display-entity key-field-name="partyId" entity-name="Person" description="${firstName} ${lastName}"></display-entity>
 		</field>
 	</form>
 	
