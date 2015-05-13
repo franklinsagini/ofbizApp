@@ -60,7 +60,7 @@ under the License.
         </field>
     </form>
 
-    <form name="FundingTypeRules" type="single" target="createFundingRules" focus-field-name="name" header-row-style="header-row" default-table-style="basic-table"
+    <form name="FundingTypeRules" type="single" target="createFundingRules" header-row-style="header-row" default-table-style="basic-table"
         default-map-name="fundingTypeRulesContext">
         <alt-target use-when="fundingTypeRulesContext!=null" target="UpdateSasraReportItem"/>
 
@@ -75,15 +75,32 @@ under the License.
             <display />
         </field>
 
-      <field name="branchId" title="Branch">
-        <drop-down allow-empty="false">
-            <entity-options key-field-name="partyId" description="${groupName}" entity-name="PartyGroup">
-                <entity-constraint name="isBranch" operator="equals" value="Y"/>
-                <entity-order-by field-name="groupName"/>
-            </entity-options>
-        </drop-down>
-      </field>
-      <field name="contributingAmount"><text size="15"></text></field>
+        <field name="branchId" title="Branch">
+            <drop-down allow-empty="false">
+                <entity-options key-field-name="partyId" description="${groupName}" entity-name="PartyGroup">
+                    <entity-constraint name="isBranch" operator="equals" value="Y"/>
+                    <entity-order-by field-name="groupName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+
+        <field name="debitAccount" title="Debit Account">
+            <drop-down>
+                <entity-options key-field-name="glAccountId" entity-name="GlAccountOrganizationAndClass" description="${accountCode} - ${accountName} [${glAccountId}].">
+                    <entity-order-by field-name="accountCode"/>
+                </entity-options>
+            </drop-down>
+        </field>
+
+        <field name="creditAccount" title="Credit Account">
+            <drop-down>
+                <entity-options key-field-name="glAccountId" entity-name="GlAccountOrganizationAndClass" description="${accountCode} - ${accountName} [${glAccountId}]">
+                    <entity-order-by field-name="accountCode"/>
+                </entity-options>
+            </drop-down>
+        </field>
+
+        <field name="contributingAmount"><text size="15"></text></field>
 
                 <!-- submitButton -->
         <field use-when="fundingTypeRulesContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
