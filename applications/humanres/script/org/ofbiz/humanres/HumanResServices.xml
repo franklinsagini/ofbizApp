@@ -92,12 +92,9 @@
 		<make-value entity-name="PartyQualType" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
 		<sequenced-id sequence-name="PartyQualType" field="partyQualTypeId" />
 		<now-timestamp field="newEntity.createdDate" />
 		<set from-field="partyQualTypeId" field="newEntity.partyQualTypeId" />
-		<!-- set field="entity.loanStatus" value="DRAFT"/ -->
-		<!-- set field="productType" value="Loan"/ -->
 		<create-value value-field="newEntity" />
 		<property-to-field resource="HumanResUiLabels"
 			property="CreateSuccess" field="successMessage" />
@@ -1117,7 +1114,30 @@
         <field-map field-name="PerfReviewPeriodId" from-field="parameters.PerfReviewPeriodId"/>
         </entity-one>
         <set field="lookedUpValue.status" value="CLOSED"/>
-        <store-value value-field="lookedUpValue"/>
+        
+		<set field="period" from-field="lookedUpValue.quarter"/>
+		<set field="exist" value="${bsh:org.ofbiz.humanres.HumanResServices.haveAllScoresBeenForwarded(period);}"/>
+		<set field="valid" value="INVALID"/>
+		
+		<if>
+			<condition>
+					<if-compare-field field="exist"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="SomeStaffScoresNotSubmittedError" />
+				</add-error>
+				<check-errors />
+			</then>
+			
+			<else>
+			   <store-value value-field="lookedUpValue"/>
+		      <property-to-field resource="HumanResUiLabels"
+			  property="UpdateSuccess" field="successMessage" />
+			</else>
+		</if>
     </simple-method>
 			
 			<!--======================= REVIEW MYSELF =================================== -->
@@ -4261,7 +4281,6 @@
 	<simple-method method-name="staffDontNeedTraining"
 		short-description="Create a Party Qualification Group">
 		
-		
 		<entity-condition list="staffs" entity-name="StaffInPerfReviewGroup">
 		<condition-list>
 		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
@@ -4272,12 +4291,11 @@
         <field-map field-name="StaffInPerfReviewGroupId" from-field="singleStaff.StaffInPerfReviewGroupId"/>
         </entity-one>
         <set field="lookedUpValue2.trainingStage" value="DONE"/>
-        <set field="lookedUpValue2.trainingStageFromHod" value="DONE"/>
         <store-value value-field="lookedUpValue2"/>
-        <property-to-field resource="HumanResUiLabels"
-		property="UpdateSuccess" field="successMessage" />
 		</iterate>
 		
+		<property-to-field resource="HumanResUiLabels"
+		property="UpdateSuccess" field="successMessage" />
 		
 		
 	</simple-method>

@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -35,6 +36,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.registry.FileServices;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
@@ -73,8 +75,10 @@ public static String closeFinacialYear(HttpServletRequest request,
 			deleteExistingResetAnnualLost(delegator);
 			deleteExistingLeaveOpeningBalances(delegator);
 			deleteExistingLeaveCalendar(delegator);
+			 
 			}
 			
+	
 			
 		}
 		//log.info("------------------------------------------------" +partyId);
@@ -716,6 +720,7 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 				leavelog.create();
 				emailRecord_approver.create();
 				emailRecord_applicant.create();
+				
 			} catch (GenericEntityException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

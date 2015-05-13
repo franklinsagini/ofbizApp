@@ -548,6 +548,12 @@ under the License.
             <prim-key field="PerfReviewPeriodId"/>
     </entity>
     
+    
+    <view-entity entity-name="yearForPerReportsView" package-name="org.ofbiz.humanres">
+	    <member-entity entity-alias="FM" entity-name="PerfReviewPeriod"></member-entity>
+    	<alias entity-alias="FM" name="year" group-by="true" /> 
+    </view-entity>
+    
      <!-- =============== PARTY REVIEWS =================== -->
                 
      <entity entity-name="PerfPartyReview"  package-name="org.ofbiz.humanres.ability"
@@ -2283,6 +2289,15 @@ under the License.
        <field name="body" type="description"></field>
 	   <field name="sendStatus" type="name"></field>
        <prim-key field="msgId"/>
+    </entity>
+    
+    <entity entity-name="SocietyScheduledMail" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
+       <field name="scheduleId" type="id-ne"></field>
+	   <field name="email" type="name"></field>
+	   <field name="subject" type="description"></field>
+       <field name="body" type="description"></field>
+	   <field name="sendStatus" type="name"></field>
+       <prim-key field="scheduleId"/>
     </entity>
 	
 	<entity entity-name="RetirementAge" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
