@@ -53,10 +53,26 @@
 		<response name="error" type="view" value="memberAccountVoucher" />
 	</request-map>
 	
-		<request-map uri="LookupActiveMember">
+	<request-map uri="LookupActiveMember">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="LookupActiveMember" />
 	</request-map>
+	
+	<request-map uri="LookupSourceMember">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="LookupSourceMember" />
+	</request-map>
+	
+	<request-map uri="LookupDestinationMember">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="LookupDestinationMember" />
+	</request-map>
+	
+	<request-map uri="memberaccountlist">
+    	<event type="java" path="org.ofbiz.memberaccountmanagement.MemberAccountManagementServices" invoke="getMemberAccounts" />
+		<response name="success" type="none">
+    </response>
+    </request-map>
 	
     <!-- View Mappings -->
     <!-- view-map name="main" type="screen" page="component://memberaccountmanagement/widget/MemberAccountManagementScreens.xml#main"/ -->
@@ -64,5 +80,12 @@
     <view-map name="memberAccountVoucher" type="screen" page="component://memberaccountmanagement/widget/MemberAccountManagementScreens.xml#memberAccountVoucher"/>
    	<view-map name="LookupActiveMember" type="screen"
 		page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember" /> 
+		
+	 <view-map name="LookupSourceMember" type="screen"
+		page="component://party/widget/partymgr/LookupScreens.xml#LookupSourceMember" /> 
+	
+	 <view-map name="LookupDestinationMember" type="screen"
+		page="component://party/widget/partymgr/LookupScreens.xml#LookupDestinationMember" /> 
+	
     
 </site-conf>
