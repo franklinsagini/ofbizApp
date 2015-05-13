@@ -293,6 +293,12 @@ under the License.
         <attribute name="showUnidentifiedDebitsTotal" type="BigDecimal" mode="INOUT" optional="true"/>
         <attribute name="showAdjustedCashBookBalance" type="BigDecimal" mode="INOUT" optional="true"/>
     </service>
+    <service name="branchAccounts" engine="simple"
+            location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="branchAccounts">
+        <description>Financial Account Running Total</description>
+        <attribute name="branchId" type="String" mode="IN" optional="true"/>
+        <attribute name="branchGlAccounts" type="List" mode="OUT" optional="true"/>
+    </service>
     <service name="createBankReconSummary" engine="simple" default-entity-name="BankReconSummary"
              location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="createBankReconSummary" auth="true">
         <description>Create Imprest Account Mapping</description>

@@ -413,6 +413,15 @@
 		</response>
 		<response name="error" type="view" value="LeaveBalances" />
 	</request-map>
+	
+	<request-map uri="scheduleSendEmailNotificationNonStaff">
+		<security auth="true" https="true" />
+		<event type="java" path="org.ofbiz.humanres.HumanResServices"
+			invoke="scheduleSendingEmailNotificationNONStaff" />
+		<response name="success" type="view" value="LeaveBalances">
+		</response>
+		<response name="error" type="view" value="LeaveBalances" />
+	</request-map>
 
 	<request-map uri="scheduleDisableLogins">
 		<security auth="true" https="true" />
@@ -987,6 +996,11 @@
 	<request-map uri="perfGoalsDef">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="perfGoalsDef"
+			save-home-view="true" />
+	</request-map>
+	<request-map uri="nonSubmitted">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="nonSubmitted"
 			save-home-view="true" />
 	</request-map>
 	<request-map uri="createPerfGoalsDef">
@@ -4247,6 +4261,8 @@
 		page="component://humanres/widget/PerfReviewScreens.xml#NewPerfManagement" />
 	<view-map name="perfGoalsDef" type="screen"
 		page="component://humanres/widget/PerfReviewScreens.xml#NewPerfGoalDef" />
+		<view-map name="nonSubmitted" type="screen"
+		page="component://humanres/widget/PerfReviewScreens.xml#NotSubmittedScoresScreen" />
 	<view-map name="perfGoals" type="screen"
 		page="component://humanres/widget/PerfReviewScreens.xml#NewPerfGoal" />
 	<view-map name="FindPerfPositions" type="screen"

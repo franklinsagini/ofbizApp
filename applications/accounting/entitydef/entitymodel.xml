@@ -62,6 +62,8 @@ under the License.
       <field name="fundingRulesId" type="id-ne"></field>
       <field name="fundingTypeId" type="id-ne"></field>
       <field name="branchId" type="id-ne"></field>
+      <field name="debitAccount" type="id-ne" enable-audit-log="true"></field>
+      <field name="creditAccount" type="id-ne" enable-audit-log="true"></field>
       <field name="contributingAmount" type="currency-amount"></field>
       <prim-key field="fundingRulesId"/>
       <relation type="one" fk-name="FUND_TYPE_RULES" rel-entity-name="FundingTypes">
@@ -69,6 +71,12 @@ under the License.
       </relation>
       <relation type="one" fk-name="CONTRIB_BRANCH" rel-entity-name="PartyGroup">
          <key-map field-name="branchId" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="BRANCH_DR_ACCT" rel-entity-name="GlAccountOrganization">
+        <key-map field-name="debitAccount" rel-field-name="glAccountId"/>
+      </relation>
+      <relation type="one" fk-name="BRANCH_CR_ACCT" rel-entity-name="GlAccountOrganization">
+        <key-map field-name="creditAccount" rel-field-name="glAccountId"/>
       </relation>
       <index name="BRANCH_NAME_UNQ" unique="true">
         <index-field name="branchId"/>

@@ -35,7 +35,7 @@
 
           <!--  <menu-item name="salaryAdvance" title="Salary Advance" selected-style="selected"><link target="salaryAdvance"/></menu-item> -->
         <menu-item name="PerfReview" title="${uiLabelMap.HumanResPerfReview}"><link target="perfGoalsDef"/></menu-item>
-        <menu-item name="Training" title="${uiLabelMap.HumanResTraining}"><link target="TrainingCalendar"/></menu-item>
+        <!-- <menu-item name="Training" title="${uiLabelMap.HumanResTraining}"><link target="TrainingCalendar"/></menu-item> -->
         <menu-item name="staffTraining" title="${uiLabelMap.HumanResTraining}"><link target="staffTraining"/></menu-item>
         <menu-item name="Leave" title="${uiLabelMap.HumanResEmplLeave}"><link target="FindEmplLeaves"/></menu-item>
         <menu-item name="EmpSeparation" title="Separation Management"><link target="separationApplication"/></menu-item>
@@ -137,12 +137,9 @@
         	<link target="perfGoalsDef"/>
         </menu-item>
 
-<!--          <menu-item name="PerfManagement" title="Performance Management">
-        	<link target="PerfManagement"/>
+      <menu-item name="nonSubmitted" title="Staff Whose Scores Have Not Been Submitted">
+        	<link target="nonSubmitted"/>
         </menu-item>
-        <menu-item name="MyPerfReviews" title="My Performance Reviews">
-        	<link target="MyPerfReviews"/>
-        </menu-item> -->
       <menu-item name="perfReviewReport" title="Performance Reports">
         	<link target="perfReviewReport"/>
         </menu-item> 
@@ -466,11 +463,11 @@
                 <parameter param-name="partyId"/>
             </link>
         </menu-item> -->
-         <menu-item name="EditPartyResumes" title="${uiLabelMap.HumanResPartyResume}">
+        <!--  <menu-item name="EditPartyResumes" title="${uiLabelMap.HumanResPartyResume}">
             <link target="EditPartyResumes">
                 <parameter param-name="partyId"/>
             </link>
-        </menu-item>
+        </menu-item> -->
        <!--  <menu-item name="EditEmploymentApps" title="${uiLabelMap.HumanResEmploymentApp}">
             <link target="EditEmploymentApps">
                 <parameter param-name="partyId"/>
@@ -646,6 +643,13 @@
             <!-- <link target="LeaveBalances"/> -->
             <link target="scheduleSendEmailNotification"/>
         </menu-item> 
+        
+        
+         <menu-item name="scheduleMail2" title="schedule Mail Email Notification non staff">
+            <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
+            <!-- <link target="LeaveBalances"/> -->
+            <link target="scheduleSendEmailNotificationNonStaff"/>
+        </menu-item>
 
         <menu-item name="scheduleDisableLogins" title="schedule Login Disable">
             <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>

@@ -6,7 +6,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
+
 import org.ofbiz.accountholdertransactions.LoanUtilities;
 import org.ofbiz.accounting.util.UtilAccounting;
 import org.ofbiz.base.util.UtilMisc;
@@ -41,6 +43,12 @@ import java.util.Set;
 
 import org.ofbiz.service.GenericDispatcherFactory;
 
+import javolution.util.FastMap;
+
+import com.google.gson.Gson;
+
+import java.io.UnsupportedEncodingException;
+
 /***
  * @author Japheth Odonya
  *
@@ -49,6 +57,7 @@ import org.ofbiz.service.GenericDispatcherFactory;
  *
  * */
 public class SasraReportsService {
+	public static Logger log = Logger.getLogger(SasraReportsService.class);
 
 	/***
 	 * Get Totals given report ID, report Item Code and the from and thru dates
@@ -297,7 +306,8 @@ public class SasraReportsService {
 		List<GenericValue> acctgTransEntrySumsELI = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
-			acctgTransEntrySumsELI = delegator.findList("AcctgTransEntrySumsWithTransType",
+			acctgTransEntrySumsELI = delegator.findList(
+					"AcctgTransEntrySumsWithTransType",
 					acctgTransEntrySumsConditions, null, null, null, false);
 
 		} catch (GenericEntityException e2) {
@@ -314,25 +324,27 @@ public class SasraReportsService {
 		return bdAmount;
 	}
 
-
-	public static Long getAccountTotalsCount(String classificationId, BigDecimal bdLower, BigDecimal bdUpper){
+	public static Long getAccountTotalsCount(String classificationId,
+			BigDecimal bdLower, BigDecimal bdUpper) {
 		return getAccountTotals(classificationId, bdLower, bdUpper).getCount();
 	}
 
-	public static BigDecimal getAccountTotalsTotal(String classificationId, BigDecimal bdLower, BigDecimal bdUpper){
+	public static BigDecimal getAccountTotalsTotal(String classificationId,
+			BigDecimal bdLower, BigDecimal bdUpper) {
 		return getAccountTotals(classificationId, bdLower, bdUpper).getTotal();
 	}
 
 	/***
 	 * Sum Member Accounts greater than Lower and Less than Upper
 	 * **/
-	public static AccountCount getAccountTotals(String classificationId, BigDecimal bdLower, BigDecimal bdUpper){
+	public static AccountCount getAccountTotals(String classificationId,
+			BigDecimal bdLower, BigDecimal bdUpper) {
 		AccountCount accountAccount = new AccountCount();
-		//BigDecimal bdTotal = BigDecimal.ZERO;
+		// BigDecimal bdTotal = BigDecimal.ZERO;
 		accountAccount.setCount(0L);
 		accountAccount.setTotal(BigDecimal.ZERO);
 
-		//Get Accounts
+		// Get Accounts
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		GenericValue depositType = null;
 		try {
@@ -342,11 +354,11 @@ public class SasraReportsService {
 			e2.printStackTrace();
 		}
 
-		//Get Accounts
+		// Get Accounts
 		EntityConditionList<EntityExpr> depositTypeItemConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"depositTypeId", EntityOperator.EQUALS, classificationId)),
-						EntityOperator.AND);
+						"depositTypeId", EntityOperator.EQUALS,
+						classificationId)), EntityOperator.AND);
 		List<GenericValue> depositTypeItemELI = null;
 		try {
 			depositTypeItemELI = delegator.findList("DepositTypeItem",
@@ -358,61 +370,65 @@ public class SasraReportsService {
 
 		Long accountProductId = null;
 		for (GenericValue genericValue : depositTypeItemELI) {
-			//reportItemId = genericValue.getString("reportItemId");
+			// reportItemId = genericValue.getString("reportItemId");
 			accountProductId = genericValue.getLong("accountProductId");
 
-			accountAccount = processMemberAccounts(accountAccount, accountProductId, bdLower, bdUpper);
-			//Get Members with this account
+			accountAccount = processMemberAccounts(accountAccount,
+					accountProductId, bdLower, bdUpper);
+			// Get Members with this account
 
 			// each member , get account balance
 
-
-			//check if balance within range and add total and increment count
+			// check if balance within range and add total and increment count
 		}
 
-		//For each Account compute total balance and add it to total if within range
-
+		// For each Account compute total balance and add it to total if within
+		// range
 
 		return accountAccount;
 	}
 
 	private static AccountCount processMemberAccounts(
-			AccountCount accountAccount, Long accountProductId, BigDecimal bdLower, BigDecimal bdUpper) {
+			AccountCount accountAccount, Long accountProductId,
+			BigDecimal bdLower, BigDecimal bdUpper) {
 		// TODO Auto-generated method stub
-			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		//Get Accounts
-				EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
-						.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-								"accountProductId", EntityOperator.EQUALS, accountProductId)),
-								EntityOperator.AND);
-				List<GenericValue> memberAccountELI = null;
-				try {
-					memberAccountELI = delegator.findList("MemberAccount",
-							memberAccountConditions, null, null, null, false);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		// Get Accounts
+		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"accountProductId", EntityOperator.EQUALS,
+						accountProductId)), EntityOperator.AND);
+		List<GenericValue> memberAccountELI = null;
+		try {
+			memberAccountELI = delegator.findList("MemberAccount",
+					memberAccountConditions, null, null, null, false);
 
-				} catch (GenericEntityException e2) {
-					e2.printStackTrace();
-				}
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
 
-				Long memberAccountId = null;
-				BigDecimal bdTotal = BigDecimal.ZERO;
-				Long count = 0L;
-				for (GenericValue genericValue : memberAccountELI) {
-					//reportItemId = genericValue.getString("reportItemId");
-					memberAccountId = genericValue.getLong("memberAccountId");
+		Long memberAccountId = null;
+		BigDecimal bdTotal = BigDecimal.ZERO;
+		Long count = 0L;
+		for (GenericValue genericValue : memberAccountELI) {
+			// reportItemId = genericValue.getString("reportItemId");
+			memberAccountId = genericValue.getLong("memberAccountId");
 
-					//accountAccount = processMemberAccounts(accountAccount, accountProductId);
-					//Get Members with this account
-					bdTotal = AccHolderTransactionServices.getBookBalanceVer3(memberAccountId.toString(), delegator);
-					// each member , get account balance
+			// accountAccount = processMemberAccounts(accountAccount,
+			// accountProductId);
+			// Get Members with this account
+			bdTotal = AccHolderTransactionServices.getBookBalanceVer3(
+					memberAccountId.toString(), delegator);
+			// each member , get account balance
 
-					if ((bdTotal.compareTo(bdLower) > -1) && (bdTotal.compareTo(bdUpper) < 1)){
-						accountAccount.setCount(accountAccount.getCount() + 1);
-						accountAccount.setTotal(accountAccount.getTotal().add(bdTotal));
-					}
+			if ((bdTotal.compareTo(bdLower) > -1)
+					&& (bdTotal.compareTo(bdUpper) < 1)) {
+				accountAccount.setCount(accountAccount.getCount() + 1);
+				accountAccount.setTotal(accountAccount.getTotal().add(bdTotal));
+			}
 
-					//check if balance within range and add total and increment count
-				}
+			// check if balance within range and add total and increment count
+		}
 
 		return accountAccount;
 	}
@@ -420,15 +436,17 @@ public class SasraReportsService {
 	/****
 	 * Count Member Accounts greater than Lower and Less than Upper
 	 * */
-	public static Long getAccountCounts(String classificationId, BigDecimal bdLower, BigDecimal bdUpper){
+	public static Long getAccountCounts(String classificationId,
+			BigDecimal bdLower, BigDecimal bdUpper) {
 		Long count = 0L;
-		//Get Accounts
+		// Get Accounts
 
-		//For each Account compute total balance and add it to total if within range
-
+		// For each Account compute total balance and add it to total if within
+		// range
 
 		return count;
 	}
+
 	
 	public static Long getLoanCount(Long lowerDays, Long upperDays){
 		
@@ -496,11 +514,80 @@ public class SasraReportsService {
 			//We are dealing with upper limit - greater than 30
 		} else{
 			//Its normal - look at lower and upper
+
 		}
 
 		return BigDecimal.ZERO;
 	}
 
+	
+	/***
+	 * @author Samoei Phil
+	 *
+	 * Purpose : Get GL Accounts that only belong to a specific branch
+	 * @when May 13, 2015 12:18:36 PM
+	 *
+	 * */
+	public static String getBranchGlAccounts(HttpServletRequest request,
+			HttpServletResponse response) {
+		Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		String branchId = (String) request.getParameter("branchId");
+		log.info("Retrived Branch ID:>>>>>>>>>>>>>>> ############ " + branchId);
+		List<GenericValue> branchGlAccounts = null;
 
+		try {
+			branchGlAccounts = delegator.findList(
+					"GlAccountOrganizationAndClass", EntityCondition
+							.makeCondition("organizationPartyId", branchId),
+					null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		if (branchGlAccounts == null) {
+			result.put("", "GL Accounts Have not been Set for this branch");
+		} else {
+			for (GenericValue genericValue : branchGlAccounts) {
+				result.put(genericValue.get("accountCode").toString(), genericValue.get("accountName"));
+			}
+		}
+
+		Gson gson = new Gson();
+		String json = gson.toJson(result);
+
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
+		return json;
+	}
 
 }

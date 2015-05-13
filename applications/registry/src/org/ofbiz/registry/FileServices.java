@@ -1,9 +1,11 @@
 package org.ofbiz.registry;
 
 import java.security.Security;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -25,8 +27,18 @@ import javolution.util.FastList;
 import javolution.util.FastMap;
 
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
+import org.joda.time.Days;
+import org.joda.time.Hours;
+import org.joda.time.Interval;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
+import org.joda.time.Minutes;
+import org.joda.time.Period;
+import org.joda.time.Seconds;
+import org.joda.time.Weeks;
+import org.joda.time.base.AbstractInstant;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -42,7 +54,10 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.transaction.GenericTransactionException;
+import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityUtilProperties;
+import org.ofbiz.humanres.HumanResServices;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -72,7 +87,7 @@ public class FileServices {
 
 
 
-		return true;
+		return true;      
 	}
 	
 	//================================ COUNTING FILE VOLUMES ====================================================
@@ -504,6 +519,131 @@ public class FileServices {
 		return daysCount;
 	}
 	
+	
+	public static String calculatehoursBetweenDates(Date endDate) {
+		Date startDate = null;
+		List<GenericValue> movements = null;
+		List<GenericValue> movements1 = null;
+		GenericValue activity;
+		String grouper = null;
+		String fromReg = null;
+		DateTime startDatetime = new DateTime();
+	    DateTime endDatetime = new DateTime();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		int numberOfMinutes = 0, numberOfDays = 0, numberOfHours = 0, numberOfSeconds = 0;
+		String timeToReturn = null;
+		
+		
+		EntityConditionList<EntityExpr> getActivity = EntityCondition.makeCondition(UtilMisc.toList(
+			    EntityCondition.makeCondition("timeOut", EntityOperator.EQUALS, endDate)),EntityOperator.AND);
+
+	try {
+		
+		
+		movements = delegator.findList("RegistryFileMovement", getActivity, null, null, null, false);
+		
+	} catch (GenericEntityException e2) {
+		e2.printStackTrace();
+		
+	}
+	
+	
+	if ((movements.size() > 0)) {
+		activity = movements.get(0);
+		grouper = activity.getString("grouper");
+		fromReg = activity.getString("fromRegistry");
+
+	}
+	
+	
+	EntityConditionList<EntityExpr> allWithThisGrouper = EntityCondition.makeCondition(UtilMisc.toList(
+		    EntityCondition.makeCondition("grouper", EntityOperator.EQUALS, grouper),
+		    EntityCondition.makeCondition("timeOut", EntityOperator.LESS_THAN, endDate)),EntityOperator.AND);
+		
+
+	try {
+		List<String> orderByList = new ArrayList<String>();
+		orderByList.add("-timeOut");
+		
+		
+		movements1 = delegator.findList("RegistryFileMovement", allWithThisGrouper, null, orderByList, null, false);
+		
+	} catch (GenericEntityException e2) {
+		e2.printStackTrace();
+		
+	}
+	
+	
+	if ((movements1.size() > 0)) {
+		activity = movements1.get(0);
+		startDate = activity.getTimestamp("timeOut");
+
+	}
+	
+	if (fromReg.equalsIgnoreCase("Y")) {
+		timeToReturn = "Not Applicable";
+	} else if(fromReg.equalsIgnoreCase("N")) {
+
+	
+		
+		
+	//LocalDate localDateStartDate = new LocalDate(startDate.getTime());
+	//LocalDate localDateEndDate = new LocalDate(endDate.getTime());
+		
+	   startDatetime = new DateTime(startDate);
+	   endDatetime = new DateTime(endDate);
+	
+			
+				
+		    
+		 Hours hours = Hours.hoursBetween(startDatetime, endDatetime);
+		 Days days = Days.daysBetween(startDatetime, endDatetime);
+		 Minutes min = Minutes.minutesBetween(startDatetime, endDatetime);
+		 Seconds sec = Seconds.secondsBetween(startDatetime, endDatetime);
+		   
+		 numberOfMinutes = min.getMinutes();
+		   numberOfDays = days.getDays();
+		   numberOfHours = hours.getHours();
+		   numberOfSeconds = sec.getSeconds();
+		   
+		 if (numberOfHours < 24 && numberOfHours >= 1) {
+			   timeToReturn = numberOfHours+" Hour(s)";
+		} else if  (numberOfDays > 0) {
+			timeToReturn = numberOfDays+" Day(s)";
+		}else if  (numberOfHours < 1 && numberOfMinutes >= 1) {
+			timeToReturn = numberOfMinutes+" Minute(s)";
+		}else if  (numberOfMinutes < 1) {
+			timeToReturn = numberOfSeconds+" Second(s)";
+		}
+		   
+		    
+		    
+		
+		
+		
+		log.info("TIMEEEEEEEE ### " + timeToReturn + "########################################");
+		log.info("START TIMEEEEEE ### " + startDatetime + "########################################");
+		log.info("END  TIMEEEEEEEE ##### " + endDatetime + "########################################");
+		log.info("HOURS ##### " + numberOfHours + "########################################");
+		log.info("DAYS ##### " + numberOfDays + "########################################");
+		log.info("MINUTES ##### " + numberOfMinutes + "########################################");
+		
+	}
+	return timeToReturn;
+	}
+	
+	
+	public static Date getPriviousReleaseDate(Date endDate) {
+
+		
+
+		AbstractInstant localDateEndDate = null;
+		return localDateEndDate.toDate();
+		
+		
+	}
+	
+	
 	public static Date calculateEndWorkingDay(Date startDate, String noOfDays) {
 
 		LocalDate localDateEndDate = new LocalDate(startDate.getTime());
@@ -876,12 +1016,13 @@ public class FileServices {
 			}
 
 			if (FileLI.size() > 0){
+				
 			state = "INVALID";
 			}
 			else {
 				state = "VALID";
 			}
-		
+			
 			return state;
 			
 		}
@@ -893,9 +1034,12 @@ public class FileServices {
 			  Integer.parseInt(input);
 			  state = "VALID";
 			  deleteExistingMaxNoFiles(delegator);
+			 
+			  
 			} catch (NumberFormatException e) {
 				state = "INVALID";
 			 }
+			
 			return state; 
 			}
 		
@@ -909,7 +1053,7 @@ public class FileServices {
 				e.printStackTrace();
 			}
 			log.info("DELETED  ALL RECORDS!" );
-			
+		
 		}
 		
 		//================================ CHECK Number OF FILEs with a user ====================================================
@@ -1025,7 +1169,6 @@ public class FileServices {
 					
 					try {
 						FileQuedLI = delegator.findList("RegistryFileRequestQueu", EntityCondition.makeCondition("partyId", patyId), null, null, null, false);
-						
 					} catch (GenericEntityException e2) {
 						// TODO Auto-generated catch block
 						e2.printStackTrace();
@@ -1039,6 +1182,7 @@ public class FileServices {
 					
 					else {
 						state = "NOTQUED";
+						
 					}
 					
 					
@@ -1107,6 +1251,81 @@ public class FileServices {
 					
 					
 				return newRequester; 
+				}
+				
+				
+				
+				public static void deActivateFile(String partyId) {
+					Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+					GenericValue file = null;
+					String now = Calendar.getInstance().getTime().toString();
+					Date noww = null;
+					try {
+						noww = new SimpleDateFormat("E MMM dd HH:mm:ss zzz yyyy", Locale.UK)
+								.parse(now);
+					} catch (ParseException e1) {
+						e1.printStackTrace();
+					}
+					java.sql.Timestamp today = new java.sql.Timestamp(noww.getTime());
+					
+					try {
+						file = delegator.findOne("RegistryFiles", UtilMisc.toMap("partyId", partyId), false);
+					} catch (GenericEntityException e) {
+						e.printStackTrace();
+						
+					}
+					
+					if (file != null) {
+						file.set("stageStatus", "INACTIVE");
+						file.set("inactiveStartDate", today);
+					}
+
+					try {
+						delegator.createOrStore(file);
+					} catch (GenericEntityException e) {
+						e.printStackTrace();
+					}
+
+					try {
+						TransactionUtil.commit();
+					} catch (GenericTransactionException e) {
+						e.printStackTrace();
+					}
+						
+					 
+				
+				}
+				
+				
+				public static void ActivateFile(String partyId) {
+					Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+					GenericValue file = null;
+					
+					try {
+						file = delegator.findOne("RegistryFiles", UtilMisc.toMap("partyId", partyId), false);
+					} catch (GenericEntityException e) {
+						e.printStackTrace();
+						
+					}
+					
+					if (file != null) {
+						file.set("stageStatus", "ACTIVE");
+					}
+
+					try {
+						delegator.createOrStore(file);
+					} catch (GenericEntityException e) {
+						e.printStackTrace();
+					}
+
+					try {
+						TransactionUtil.commit();
+					} catch (GenericTransactionException e) {
+						e.printStackTrace();
+					}
+						
+					
+				
 				}
 				
 }

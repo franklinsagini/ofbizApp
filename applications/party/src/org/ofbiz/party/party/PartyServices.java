@@ -57,7 +57,6 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
-import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -291,8 +290,11 @@ public class PartyServices {
 				partyId, "employeeNumber", nextPayrollNo));
 		person.setNonPKFields(context);
 		toBeStored.add(person);
+		
+		
 
 		try {
+			
 			delegator.storeAll(toBeStored);
 		} catch (GenericEntityException e) {
 			Debug.logWarning(e.getMessage(), module);

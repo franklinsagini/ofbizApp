@@ -234,10 +234,7 @@
 	
 	 <request-map uri="HODreviewStaff">
 		<security https="true" auth="true" />
-		<response name="success" type="view" value="HODreviewStaff"
-			save-home-view="true">
-				<redirect-parameter name="partyId"/>
-			</response>
+		<response name="success" type="view" value="HODreviewStaff" />
 	</request-map>
     
      <!--======================= REVIEW MYSELF =================================== -->
@@ -266,13 +263,12 @@
 
 	<request-map uri="HODreviews">
 		<security https="true" auth="true" />
-		<event type="service-multi" invoke="HODreviews" />
-		<response name="success" type="request-redirect-noparam" value="HODreviewStaff">
-			<redirect-parameter name="partyId" />
-		</response>
-		<response name="error" type="request-redirect-noparam" value="HODreviewStaff">
-			<redirect-parameter name="partyId" />
-		</response>
+		<event type="service" invoke="HODreviews" />
+		<response name="success" type="request-redirect" value="HODreviewStaff">
+		<redirect-parameter name="partyId"/>
+		<redirect-parameter name="reviewId"/>
+			</response>
+		<response name="error" type="request-redirect-noparam" value="HODreviewStaff"/>
 	</request-map>
 	
 	
@@ -280,19 +276,20 @@
 	<request-map uri="submitHODReviewScores">
 		<security https="true" auth="true" />
 		<event type="service" invoke="submitHODReviewScores" />
-		<response name="success" type="request-redirect" value="PersonalReview">
+		<response name="success" type="request-redirect" value="HODreviewStaff">
 			<redirect-parameter name="partyId" />
 		</response>
-		<response name="error" type="request-redirect-noparam" value="PersonalReview" />
+		<response name="error" type="request-redirect-noparam" value="HODreviewStaff" />
 	</request-map>
 	
 	 <!--======================= HARMONIZED REVIEW  =================================== -->
 
 	<request-map uri="HarmonizedHODReview">
 		<security https="true" auth="true" />
-		<event type="service-multi" invoke="HarmonizedHODReview" />
-		<response name="success" type="request-redirect-noparam" value="HarmonizedReviewStaff">
+		<event type="service" invoke="HarmonizedHODReview" />
+		<response name="success" type="request-redirect" value="HarmonizedReviewStaff">
 			<redirect-parameter name="reviewId" />
+			<redirect-parameter name="partyId"/>
 		</response>
 		<response name="error" type="request-redirect-noparam" value="HarmonizedReviewStaff" />
 	</request-map>
@@ -322,7 +319,9 @@
 	<request-map uri="staffDontNeedTraining">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="staffDontNeedTraining" />
-		<response name="success" type="request-redirect-noparam" value="staffTrainingNeeds" />
+		<response name="success" type="request-redirect" value="staffTrainingNeeds" >
+		<redirect-parameter name="StaffInPerfReviewGroupId"/>
+		</response>
 		<response name="error" type="request-redirect-noparam" value="staffTrainingNeeds" />
 	</request-map>
 	
