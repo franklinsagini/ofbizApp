@@ -33,7 +33,6 @@ public class LoanUtilities {
 	public static Logger log = Logger.getLogger(LoanUtilities.class);
 	public static String MEMBER_DEPOSIT_CODE = "901";
 	public static String SAVINGS_ACCOUNT_CODE = "999";
-	
 
 	public static Long getMemberId(String payrollNo) {
 		Long memberId = null;
@@ -204,7 +203,7 @@ public class LoanUtilities {
 
 		return member;
 	}
-	
+
 	public static String getMemberBranchId(String partyId) {
 
 		partyId = partyId.replaceAll(",", "");
@@ -216,7 +215,7 @@ public class LoanUtilities {
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-		
+
 		if (member != null)
 			return member.getString("branchId").toString();
 
@@ -1204,8 +1203,8 @@ public class LoanUtilities {
 	/****
 	 * Create Expectation
 	 * **/
-	public static BigDecimal getContributionAmount(
-			GenericValue memberAccount, Long memberId) {
+	public static BigDecimal getContributionAmount(GenericValue memberAccount,
+			Long memberId) {
 
 		GenericValue accountProduct = RemittanceServices
 				.findAccountProduct(memberAccount.getLong("accountProductId")
@@ -1248,16 +1247,16 @@ public class LoanUtilities {
 
 	public static Long getSavingsMemberAccountId(Long theLoanApplicationId) {
 		// TODO Auto-generated method stub
-		GenericValue accountProduct = LoanUtilities.getAccountProductGivenCodeId(SAVINGS_ACCOUNT_CODE);
+		GenericValue accountProduct = LoanUtilities
+				.getAccountProductGivenCodeId(SAVINGS_ACCOUNT_CODE);
 		Long accountProductId = accountProduct.getLong("accountProductId");
-		
+
 		GenericValue loanApplication = getLoanApplicationEntity(theLoanApplicationId);
-		
-		
-		
-		GenericValue member = getMemberGivenPartyId(loanApplication.getLong("partyId"));
+
+		GenericValue member = getMemberGivenPartyId(loanApplication
+				.getLong("partyId"));
 		Long partyId = member.getLong("partyId");
-		
+
 		GenericValue memberAccount = null;
 
 		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
@@ -1283,16 +1282,15 @@ public class LoanUtilities {
 		for (GenericValue genericValue : memberAccountELI) {
 			memberAccount = genericValue;
 		}
-		
+
 		Long memberAccountId = null;
-		
+
 		if (memberAccount != null)
 			memberAccountId = memberAccount.getLong("memberAccountId");
-		
+
 		return memberAccountId;
 	}
-	
-	
+
 	public static GenericValue getMemberGivenPartyId(Long partyId) {
 		GenericValue member = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -1312,8 +1310,8 @@ public class LoanUtilities {
 		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(
 
-				EntityCondition.makeCondition("memberAccountId", EntityOperator.EQUALS,
-						memberAccountId)
+				EntityCondition.makeCondition("memberAccountId",
+						EntityOperator.EQUALS, memberAccountId)
 
 				), EntityOperator.AND);
 
@@ -1330,13 +1328,134 @@ public class LoanUtilities {
 		for (GenericValue genericValue : memberAccountELI) {
 			memberAccount = genericValue;
 		}
-		
+
 		if (memberAccount != null)
 			return memberAccount.getLong("partyId").toString();
-		
+
 		return null;
+
+	}
+
+	/***
+	 * Get memberAccountId
+	 * 
+	 * Get Member Account ID given accountProductId and partyId
+	 * **/
+	public static Long getMemberAccountIdFromMemberAccount(Long partyId,
+			Long accountProductId) {
+
+		// Long memberAccountId
+		GenericValue memberAccount = null;
+
+		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(
+
+				EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,
+						partyId),
+
+				EntityCondition.makeCondition("accountProductId",
+						EntityOperator.EQUALS, accountProductId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> memberAccountELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			memberAccountELI = delegator.findList("MemberAccount",
+					memberAccountConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		for (GenericValue genericValue : memberAccountELI) {
+			memberAccount = genericValue;
+		}
+
+		if (memberAccount != null)
+			return memberAccount.getLong("memberAccountId");
+
+		return null;
+	}
+
+	public static GenericValue getMemberGiveLoanApplicationId(
+			Long loanApplicationId) {
 		
+		//Get Loan Application
+		GenericValue loanApplication = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplication = delegator.findOne("LoanApplication",
+					UtilMisc.toMap("loanApplicationId", loanApplicationId), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		Long partyId = loanApplication.getLong("partyId");
+		
+		
+		GenericValue member = getMember(partyId);
+		
+		return member;
+	}
+	
+	public static Long getMemberDepositsAccountId(String code) {
+		List<GenericValue> accountProductELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			accountProductELI = delegator.findList("AccountProduct",
+					EntityCondition.makeCondition("code", code), null, null,
+					null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		Long accountProductId = null;
+		for (GenericValue genericValue : accountProductELI) {
+			accountProductId = genericValue.getLong("accountProductId");
+		}
+		return accountProductId;
+	}
+
+	public static Boolean netPayMoreThanZero(Long loanApplicationId) {
+		EntityConditionList<EntityExpr> deductionsConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanApplicationId", EntityOperator.EQUALS,
+						loanApplicationId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> loanDeductionEvaluationELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<String> orderList = new ArrayList<String>();
+		orderList.add("-loanDeductionEvaluationId");
+		try {
+			loanDeductionEvaluationELI = delegator.findList(
+					"LoanDeductionEvaluation", deductionsConditions, null,
+					orderList, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if (loanDeductionEvaluationELI == null)
+			return false;
+		
+		if (loanDeductionEvaluationELI.size() <= 0)
+			return false;
+		
+		GenericValue loanDeductionEvaluation = loanDeductionEvaluationELI.get(0);
+
+		
+		if (loanDeductionEvaluation.getBigDecimal("grossPayMinusTotalDeduction") == null)
+			return false;
+		
+		if (loanDeductionEvaluation.getBigDecimal("grossPayMinusTotalDeduction").compareTo(BigDecimal.ZERO) == 1)
+			return true;
+		
+		return false;
 		
 	}
+
 
 }

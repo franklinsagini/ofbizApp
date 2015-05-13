@@ -44,6 +44,10 @@
             	$('input[name="violationDecision"]').val('VIOLATES'); 
             }
             
+            //Set Gross Pay minus total deduction amount
+            var grossPayMinusTotalDeduction = parseFloat(varGrossSalaryAmt) - parseFloat(varTotalDeductionAfterLoanAddedAmt);
+            $('input[name="grossPayMinusTotalDeduction"]').val(grossPayMinusTotalDeduction); 
+            
             
         });
 		
@@ -409,6 +413,7 @@
 			var isAppraisedAmounNotMoreEntitlement = false;
 			var repaymentPeriodNotMoreThanMaximum = false;
 			var addedDeductions = false;
+			var netPayMoreThanZero = false;
 			
 			var reqUrl = '/loansprocessing/control/loanApplicationRules';
     		//var isSelf = false;
@@ -428,6 +433,7 @@
 			     			isAppraisedAmounNotMoreEntitlement = data.isAppraisedAmounNotMoreEntitlement;
 			     			repaymentPeriodNotMoreThanMaximum = data.repaymentPeriodNotMoreThanMaximum;
 			     			addedDeductions = data.addedDeductions;
+			     			netPayMoreThanZero = data.netPayMoreThanZero;
 			               },
 			      error : function(errorData){
 			              alert("Some error occurred while validating appraisal");
@@ -475,12 +481,93 @@
 					alert('You must add loan deductions in the Add Deductions Section !!!');
 					return false;
 				}
+				
+				if (!netPayMoreThanZero){
+					alert('Net Pay must be more than Zero after loan deduction is added !!!');
+					return false;
+				}
 			
     			return true;
     }
     
  
 
+	function guarantorValidation(loanApplicationId){
+    	var reqUrl = '/loansprocessing/control/validateGuarantor';
+    	var isEmployee = true;
+    	var isOldEnough = false;
+    	var isSelf = true;
+    	var hasDeposits = false;
+    	var alreadyAdded = true;
+		
+		var guarantorId  = jQuery('input[name="guarantorId"]').val();
+		
+		//alert(' Guarantor cannot be an employee !!!');
+		//alert(' Loan Application ID is  !!!'+loanApplicationId+' Guarantor ID is '+guarantorId);
+		//alert(' Guarantor is already added  !!! '+guarantorId);
+		//return false;
+		
+		
+    	
+    	var moreThanZero = false;
+    	
+    	var theLoanAmt = jQuery('input[name="loanAmt"]').val();
+     	var baseAmt = 0;
+     	
+     	//alert(theLoanAmt);
+     	if (parseFloat(theLoanAmt, 10) <= parseFloat(baseAmt, 10)){
+    		alert('You cannot apply for a loan of ZERO amount or less');
+    		return false;
+    	}
+    	
+    	
+    	jQuery.ajax({
+
+			     url    : reqUrl,
+			      async	: false,
+			     type   : 'GET',
+			     data   : {'loanApplicationId': loanApplicationId, 'guarantorId': guarantorId}, 
+			     success : function(data){
+			     			isEmployee 	= data.isEmployee;
+			     			isOldEnough = data.isOldEnough;
+			     			isSelf 		= data.isSelf;
+			     			hasDeposits = data.hasDeposits;
+			     			alreadyAdded = data.alreadyAdded;
+			               },
+			      error : function(errorData){
+			
+			              alert("Some error occurred while validating loan application");
+			              }
+			
+			
+		});
+		if (isEmployee){
+			alert(' An employee cannot guarantee a non staff loan!');
+			return false;
+		}
+			
+		if (isSelf){
+			alert(' You cannot guarantee yourself!');
+			return false;
+		}
+		
+		if (!hasDeposits){
+			alert(' Member must have deposits!');
+			return false;
+		}
+		
+		if (!isOldEnough){
+			alert(' Member must have been in a sacco for 6 months to guarantee! ');
+			return false;
+		}
+		
+		if (alreadyAdded){
+			alert(' Member cannot guarantee same loan twice ! ');
+			return false;
+		}
+    	
+    	return true;
+    }
     
     
    </script>

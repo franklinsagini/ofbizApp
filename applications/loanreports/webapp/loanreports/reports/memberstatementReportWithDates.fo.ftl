@@ -97,6 +97,8 @@ under the License.
                     <fo:block></fo:block>
                 </fo:list-item-body>
             </fo:list-item>
+            
+            
            <fo:list-item>
                 <fo:list-item-label>
                     <fo:block font-weight="bold">
@@ -110,6 +112,14 @@ under the License.
                     <fo:block></fo:block>
                 </fo:list-item-body>
             </fo:list-item>
+            <#-- fo:list-item>
+                <fo:list-item-label>
+                    <fo:block font-weight="bold">Payroll Number:</fo:block>
+                </fo:list-item-label>
+                <fo:list-item-body start-indent="body-start()">
+                    <fo:block>${member.payrollNumber?if_exists}</fo:block>
+                </fo:list-item-body>
+            </fo:list-item -->
             
         </fo:list-block>
         <fo:block><fo:leader/></fo:block>
@@ -135,13 +145,13 @@ under the License.
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                             <fo:block>Description</fo:block>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm" text-align="right">
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm"  text-align="right">
                             <fo:block>Debit</fo:block>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm" text-align="right">
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm"  text-align="right">
                             <fo:block>Credit</fo:block>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm" text-align="right">
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm"  text-align="right">
                             <fo:block>Balance</fo:block>
                         </fo:table-cell>
                          <#-- fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
@@ -189,11 +199,11 @@ under the License.
                                 <fo:block>${transaction.transactionDescription?if_exists}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right">
-                                <fo:block>
+                                <fo:block >
                                 	<#if (transaction.increaseDecrease = 'D') && (transaction.transactionAmount??)  >
                                 	
                                 		
-                                		 ${transaction.transactionAmount?string(",##0.00")}
+                                		   ${transaction.transactionAmount?string(",##0.00")}
 								  
 								</#if>
                                 </fo:block>

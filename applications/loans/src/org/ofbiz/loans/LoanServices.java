@@ -639,6 +639,7 @@ public class LoanServices {
 	 * 
 	 * */
 	// TOD Fix this, member deposits calculation
+	
 	private static BigDecimal totalMemberDepositSavings(String memberId,
 			Delegator delegator) {
 		// Get the multiplier account - the account being used to get the
@@ -646,12 +647,16 @@ public class LoanServices {
 		// Loan Product Setup
 		memberId = memberId.replaceAll(",", "");
 		// Get Accounts for this member
+		
+		GenericValue accountProduct = LoanUtilities.getAccountProductGivenCodeId(LoanUtilities.MEMBER_DEPOSIT_CODE);
+		Long accountProductId = accountProduct.getLong("accountProductId");
+		
 		List<GenericValue> memberAccountELI = null;
 		EntityConditionList<EntityExpr> accountsConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"partyId", EntityOperator.EQUALS,
 						Long.valueOf(memberId)), EntityCondition.makeCondition(
-						"withdrawable", EntityOperator.EQUALS, "No")),
+								accountProductId, EntityOperator.EQUALS, accountProductId)),
 						EntityOperator.AND);
 
 		try {
@@ -2922,6 +2927,8 @@ public class LoanServices {
 		result.put("isAppraisedAmounNotMoreEntitlement", LoanUtilities.isAppraisedAmounNotMoreEntitlement(loanApplicationId, bdLoanAmt));
 		result.put("repaymentPeriodNotMoreThanMaximum", LoanUtilities.repaymentPeriodNotMoreThanMaximum(loanApplicationId));
 		result.put("addedDeductions", LoanUtilities.addedDeductions(loanApplicationId));
+		result.put("netPayMoreThanZero", LoanUtilities.netPayMoreThanZero(loanApplicationId));
+		
 		
 		System.out.println(" End of Building Things !!!!!!!!!!! ");
 		
@@ -2976,6 +2983,10 @@ public class LoanServices {
 				otherLoansInProcessing(loanApplicationId));
 		result.put("otherLoanNoRepayment",
 				otherLoanWithoutRepayment(loanApplicationId));
+		
+		result.put("otherLoanUnderpayment",
+				otherLoanUnderpayment(loanApplicationId));
+		
 		result.put("anotherRunningLoanOfSameType",
 				otherRunningLoanOfSameType(loanApplicationId));
 
@@ -3013,6 +3024,26 @@ public class LoanServices {
 		}
 
 		return json;
+	}
+
+	private static Boolean otherLoanUnderpayment(Long loanApplicationId) {
+
+		BigDecimal bdTotalRepaidAmt = getLoansRepaidByLoanApplicationId(loanApplicationId);
+		
+		BigDecimal monthlyRepaymentAmt = LoansProcessingServices.getMonthlyLoanRepayment(loanApplicationId.toString());
+		BigDecimal firstMonthInsuranceAmt = LoansProcessingServices.getInsuranceAmount(loanApplicationId.toString());
+		
+		BigDecimal loanDeductionAmt = LoansProcessingServices.getTotalLoanRepayment(monthlyRepaymentAmt, firstMonthInsuranceAmt);
+		
+		
+	//	BigDecimal bdFirstRepaymentExpected = 
+		
+		if ((bdTotalRepaidAmt == null) || (loanDeductionAmt == null) || (bdTotalRepaidAmt.compareTo(loanDeductionAmt) == -1))
+		{
+			return true;
+		}
+		
+		return false;
 	}
 
 	private static boolean otherRunningLoanOfSameType(Long loanApplicationId) {
