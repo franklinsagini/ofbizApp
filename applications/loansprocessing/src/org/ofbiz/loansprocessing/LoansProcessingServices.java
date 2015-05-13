@@ -61,6 +61,7 @@ public class LoansProcessingServices {
 		BigDecimal bdLoanAmt = loanApplication.getBigDecimal("loanAmt");
 		BigDecimal bdmaxLoanAmt = loanApplication.getBigDecimal("maxLoanAmt");
 
+		if (loanApplication.getBigDecimal("maxLoanAmt") != null)
 		if (bdLoanAmt.compareTo(bdmaxLoanAmt) == 1) {
 			bdLoanAmt = bdmaxLoanAmt;
 		}
@@ -105,6 +106,7 @@ public class LoansProcessingServices {
 		BigDecimal bdLoanAmt = loanApplication.getBigDecimal("loanAmt");
 		BigDecimal bdmaxLoanAmt = loanApplication.getBigDecimal("maxLoanAmt");
 
+		if (loanApplication.getBigDecimal("maxLoanAmt") != null)
 		if (bdLoanAmt.compareTo(bdmaxLoanAmt) == 1) {
 			bdLoanAmt = bdmaxLoanAmt;
 		}
@@ -616,6 +618,8 @@ public class LoansProcessingServices {
 		
 		Boolean isSelf = guarantorIsSelf(guarantorId, loanApplicationId);
 		
+		Boolean alreadyAdded = memberAlreadyGuaranteedTheLoan(guarantorId, loanApplicationId);
+		
 		Boolean isOldEnough = LoanUtilities.isOldEnough(guarantorId.toString());
 		
 		Boolean hasDeposits = guarantorHasDeposits(guarantorId);
@@ -626,6 +630,10 @@ public class LoansProcessingServices {
 
 		result.put("isOldEnough", isOldEnough);
 		result.put("hasDeposits", hasDeposits);
+		
+		result.put("alreadyAdded", alreadyAdded);
+		
+		
 
 		Gson gson = new Gson();
 		String json = gson.toJson(result);
@@ -661,6 +669,33 @@ public class LoansProcessingServices {
 		}
 
 		return json;
+	}
+
+	private static Boolean memberAlreadyGuaranteedTheLoan(Long guarantorId,
+			Long loanApplicationId) {
+		List<GenericValue> loanGuarantorELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		EntityConditionList<EntityExpr> loanGuarantorConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanApplicationId", EntityOperator.EQUALS,
+						loanApplicationId), EntityCondition
+						.makeCondition("guarantorId",
+								EntityOperator.EQUALS, guarantorId)),
+						EntityOperator.AND);
+		
+		try {
+			loanGuarantorELI = delegator.findList("LoanGuarantor",
+					loanGuarantorConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		//return loanGuarantorELI;
+		if (loanGuarantorELI.size() > 0)
+			return true;
+		
+		return false;
 	}
 
 	private static Boolean guarantorHasDeposits(Long guarantorId) {

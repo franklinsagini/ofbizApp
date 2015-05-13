@@ -229,6 +229,7 @@
     	var reqUrl = '/loans/control/otherExistingLoans';
     	var otherLoansProcessing = false;
     	var otherLoanNoRepayment = false;
+    	var otherLoanUnderpayment = true;
     	jQuery.ajax({
 
 			     url    : reqUrl,
@@ -238,6 +239,7 @@
 			     success : function(data){
 			     			otherLoansProcessing = data.otherLoansProcessing;
 			     			otherLoanNoRepayment = data.otherLoanNoRepayment;
+			     			otherLoanUnderpayment = data.otherLoanUnderpayment;
 			     			anotherRunningLoanOfSameType = data.anotherRunningLoanOfSameType;
 			               },
 			      error : function(errorData){
@@ -255,6 +257,11 @@
 		
 		if (otherLoanNoRepayment){
 			alert(' You must have started repaying the previous loan to try and apply for another loan !');
+			return false;
+		}
+		
+		if (otherLoanUnderpayment){
+			alert(' Previous loan has been underpaid, make sure you pay atleast the full expected amount !');
 			return false;
 		}
 		

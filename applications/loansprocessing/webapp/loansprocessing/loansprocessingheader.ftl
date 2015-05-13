@@ -44,6 +44,10 @@
             	$('input[name="violationDecision"]').val('VIOLATES'); 
             }
             
+            //Set Gross Pay minus total deduction amount
+            var grossPayMinusTotalDeduction = parseFloat(varGrossSalaryAmt) - parseFloat(varTotalDeductionAfterLoanAddedAmt);
+            $('input[name="grossPayMinusTotalDeduction"]').val(grossPayMinusTotalDeduction); 
+            
             
         });
 		
@@ -409,6 +413,7 @@
 			var isAppraisedAmounNotMoreEntitlement = false;
 			var repaymentPeriodNotMoreThanMaximum = false;
 			var addedDeductions = false;
+			var netPayMoreThanZero = false;
 			
 			var reqUrl = '/loansprocessing/control/loanApplicationRules';
     		//var isSelf = false;
@@ -428,6 +433,7 @@
 			     			isAppraisedAmounNotMoreEntitlement = data.isAppraisedAmounNotMoreEntitlement;
 			     			repaymentPeriodNotMoreThanMaximum = data.repaymentPeriodNotMoreThanMaximum;
 			     			addedDeductions = data.addedDeductions;
+			     			netPayMoreThanZero = data.netPayMoreThanZero;
 			               },
 			      error : function(errorData){
 			              alert("Some error occurred while validating appraisal");
@@ -475,6 +481,11 @@
 					alert('You must add loan deductions in the Add Deductions Section !!!');
 					return false;
 				}
+				
+				if (!netPayMoreThanZero){
+					alert('Net Pay must be more than Zero after loan deduction is added !!!');
+					return false;
+				}
 			
     			return true;
     }
@@ -483,10 +494,11 @@
 
 	function guarantorValidation(loanApplicationId){
     	var reqUrl = '/loansprocessing/control/validateGuarantor';
-    	var isEmployee = false;
+    	var isEmployee = true;
     	var isOldEnough = false;
-    	var isSelf = false;
+    	var isSelf = true;
     	var hasDeposits = false;
+    	var alreadyAdded = true;
 		
 		var guarantorId  = jQuery('input[name="guarantorId"]').val();
 		
@@ -520,6 +532,7 @@
 			     			isOldEnough = data.isOldEnough;
 			     			isSelf 		= data.isSelf;
 			     			hasDeposits = data.hasDeposits;
+			     			alreadyAdded = data.alreadyAdded;
 			               },
 			      error : function(errorData){
 			
@@ -545,6 +558,11 @@
 		
 		if (!isOldEnough){
 			alert(' Member must have been in a sacco for 6 months to guarantee! ');
+			return false;
+		}
+		
+		if (alreadyAdded){
+			alert(' Member cannot guarantee same loan twice ! ');
 			return false;
 		}
     	

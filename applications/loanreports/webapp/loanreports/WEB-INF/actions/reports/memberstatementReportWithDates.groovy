@@ -58,6 +58,7 @@ context.member = member;
 class MemberStatement{
 	def name
 	def code
+	def loanNo
 	def itemTotal
 	def listOfTransactions = []
 }
@@ -223,8 +224,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 	loanProduct = delegator.findOne("LoanProduct", [loanProductId : loanProductId], false);
 
 	memberStatement =  new MemberStatement()
-	memberStatement.name = loanProduct.name;
-	memberStatement.code = loanProduct.code;
+	
 	memberStatement.itemTotal = BigDecimal.ZERO;
 
 	loanTransaction = new MemberTransaction();
@@ -232,6 +232,11 @@ allLoansList.eachWithIndex { loanItem, index ->
 	loanTransaction.transactionDescription = 'Loan Disbursed'
 	loanTransaction.increaseDecrease = 'I'
 	loanTransaction.transactionAmount = loanItem.loanAmt
+	
+	
+	memberStatement.name = "LOAN TYPE : "+loanProduct.name;
+	memberStatement.code = "LOAN CODE : "+loanProduct.code;
+	memberStatement.loanNo = "LOAN NO :  "+loanItem.loanNo;
 
 	memberStatement.listOfTransactions.add(loanTransaction);
 

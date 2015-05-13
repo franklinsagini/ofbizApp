@@ -1417,5 +1417,45 @@ public class LoanUtilities {
 		return accountProductId;
 	}
 
+	public static Boolean netPayMoreThanZero(Long loanApplicationId) {
+		EntityConditionList<EntityExpr> deductionsConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanApplicationId", EntityOperator.EQUALS,
+						loanApplicationId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> loanDeductionEvaluationELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<String> orderList = new ArrayList<String>();
+		orderList.add("-loanDeductionEvaluationId");
+		try {
+			loanDeductionEvaluationELI = delegator.findList(
+					"LoanDeductionEvaluation", deductionsConditions, null,
+					orderList, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if (loanDeductionEvaluationELI == null)
+			return false;
+		
+		if (loanDeductionEvaluationELI.size() <= 0)
+			return false;
+		
+		GenericValue loanDeductionEvaluation = loanDeductionEvaluationELI.get(0);
+
+		
+		if (loanDeductionEvaluation.getBigDecimal("grossPayMinusTotalDeduction") == null)
+			return false;
+		
+		if (loanDeductionEvaluation.getBigDecimal("grossPayMinusTotalDeduction").compareTo(BigDecimal.ZERO) == 1)
+			return true;
+		
+		return false;
+		
+	}
+
 
 }
