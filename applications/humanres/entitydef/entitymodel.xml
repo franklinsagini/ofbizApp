@@ -37,10 +37,10 @@ under the License.
      <!--  <entity entity-name="DaySpecificatiom"
             package-name="org.ofbiz.humanres"
             title="Day Specificatiom Entity">
-      <field name="daySpecificatiomId" type="id-ne"></field>
-      <field name="description" type="id-ne"></field>
-      <field name="leaveApprover" type="id"></field>
-      <field name="leaveLogStatus" type="description"></field>
+      <field name="daySpecificatiomId" type="id-ne" enable-audit-log="true"></field>
+      <field name="description" type="id-ne" enable-audit-log="true"></field>
+      <field name="leaveApprover" type="id" enable-audit-log="true"></field>
+      <field name="leaveLogStatus" type="description" enable-audit-log="true"></field>
       <prim-key field="LeaveStatusLogsId"/>
       <relation type="one" fk-name="EMPLEAVE_STTLOGS" title="Parent" rel-entity-name="EmplLeave">
         <key-map field-name="leaveId" rel-field-name="leaveId"/>
@@ -50,9 +50,9 @@ under the License.
     <entity entity-name="SupervisorLevel"
             package-name="org.ofbiz.humanres"
             title="Supervisor Level Entity">
-      <field name="supervisorLevelId" type="id-ne"></field>
-      <field name="partyId" type="id-ne"></field>
-      <field name="supervisorLevel" type="id-ne"></field>
+      <field name="supervisorLevelId" type="id-ne" enable-audit-log="true"></field>
+      <field name="partyId" type="id-ne" enable-audit-log="true"></field>
+      <field name="supervisorLevel" type="id-ne" enable-audit-log="true"></field>
       <prim-key field="supervisorLevelId"/>
       <relation type="one" fk-name="SUPERVISOR_PARTY" title="Parent" rel-entity-name="Party">
         <key-map field-name="partyId" rel-field-name="partyId"/>
@@ -70,19 +70,19 @@ under the License.
     <entity entity-name="PartyQual"
             package-name="org.ofbiz.humanres.ability"
             title="Party Qualification Entity">
-        <field name="partyId" type="id-ne"></field>
-        <field name="partyQualTypeId" type="id-ne"></field>
-        <field name="qualificationDesc" type="id-long"></field>
-        <field name="title" type="id-long"><description>Title of degree or job</description></field>
-         <field name="grade" type="id-long"><description>Title grade</description></field>
-        <field name="statusId" type="id"><description>Status e.g. completed, part-time etc.</description></field>
-        <field name="verifStatusId" type="id"><description>Verification done for this entry if any</description></field>
-        <field name="fromDate" type="date"></field>
-        <field name="thruDate" type="date"></field>
-        <field name="institute" type="name"><description>Name of Institute</description></field>
-        <field name="institutelocation" type="name"><description>Physical Location of Institute</description></field>
-        <field name="specialization" type="name"><description>Qualification Specialization</description></field>
-        <field name="partyQualGroupId" type="id-ne"></field>
+        <field name="partyId" type="id-ne" enable-audit-log="true"></field>
+        <field name="partyQualTypeId" type="id-ne" enable-audit-log="true"></field>
+        <field name="qualificationDesc" type="id-long" enable-audit-log="true"></field>
+        <field name="title" type="id-long" enable-audit-log="true"><description>Title of degree or job</description></field>
+         <field name="grade" type="id-long" enable-audit-log="true"><description>Title grade</description></field>
+        <field name="statusId" type="id" enable-audit-log="true"><description>Status e.g. completed, part-time etc.</description></field>
+        <field name="verifStatusId" type="id" enable-audit-log="true"><description>Verification done for this entry if any</description></field>
+        <field name="fromDate" type="date" enable-audit-log="true"></field>
+        <field name="thruDate" type="date" enable-audit-log="true"></field>
+        <field name="institute" type="name" enable-audit-log="true"><description>Name of Institute</description></field>
+        <field name="institutelocation" type="name" enable-audit-log="true"><description>Physical Location of Institute</description></field>
+        <field name="specialization" type="name" enable-audit-log="true"><description>Qualification Specialization</description></field>
+        <field name="partyQualGroupId" type="id-ne" enable-audit-log="true"></field>
         <prim-key field="partyId"/>
         <prim-key field="partyQualTypeId"/>
         <prim-key field="fromDate"/>
@@ -106,19 +106,19 @@ under the License.
 
     <entity entity-name="PartyQualGroup" package-name="org.ofbiz.humanres.ability"
             title="Party Qualification Group">
-        <field name="partyQualGroupId" type="id-ne"></field>
-        <field name="pqgroup" type="name"></field>
-        <field name="qualGroupDescription" type="name"></field>
+        <field name="partyQualGroupId" type="id-ne" enable-audit-log="true"></field>
+        <field name="pqgroup" type="name" enable-audit-log="true"></field>
+        <field name="qualGroupDescription" type="name" enable-audit-log="true"></field>
         <prim-key field="partyQualGroupId"/>
     </entity>
 
     <entity entity-name="PartyQualType"
             package-name="org.ofbiz.humanres.ability"
             title="Party Qualification Type Entity">
-      <field name="partyQualTypeId" type="id-ne"></field>
-      <field name="parentTypeId" type="id-ne"></field>
-      <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>
+      <field name="partyQualTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="parentTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="hasTable" type="indicator" enable-audit-log="true"></field>
+      <field name="description" type="description" enable-audit-log="true"></field>
       <prim-key field="partyQualTypeId"/>
       <relation type="one" fk-name="PARTY_QUAL_TPAR" title="Parent" rel-entity-name="PartyQualType">
         <key-map field-name="parentTypeId" rel-field-name="partyQualTypeId"/>
@@ -128,24 +128,24 @@ under the License.
      <entity entity-name="PartyCourseSpecialization"
             package-name="org.ofbiz.humanres.ability"
             title="Party Qualification Type Entity">
-      <field name="specializationId" type="id-ne"></field>
-      <field name="specialization" type="name"></field>
+      <field name="specializationId" type="id-ne" enable-audit-log="true"></field>
+      <field name="specialization" type="name" enable-audit-log="true"></field>
       <prim-key field="specializationId"/>
     </entity>
 
      <entity entity-name="PartyQualInstitute"
             package-name="org.ofbiz.humanres.ability"
             title="Party Qualification Type Entity">
-       <field name="instituteId" type="id-ne"></field>
-      <field name="institute" type="name"></field>
+       <field name="instituteId" type="id-ne" enable-audit-log="true"></field>
+      <field name="institute" type="name" enable-audit-log="true"></field>
       <prim-key field="instituteId"/>
     </entity>
 
      <entity entity-name="PartyCourseGrade"
             package-name="org.ofbiz.humanres.ability"
             title="Party Qualification Type Entity">
-       <field name="gradeId" type="id-ne"></field>
-      <field name="grade" type="name"></field>
+       <field name="gradeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="grade" type="name" enable-audit-log="true"></field>
       <prim-key field="gradeId"/>
     </entity>
 
@@ -224,11 +224,11 @@ under the License.
     <entity entity-name="PartyResume"
             package-name="org.ofbiz.humanres.ability"
             title="Resume Entity">
-      <field name="resumeId" type="id-ne"></field>
-      <field name="partyId" type="id-ne"></field>
-      <field name="contentId" type="id"></field>
-      <field name="resumeDate" type="date-time"></field>
-      <field name="resumeText" type="long-varchar"></field>
+      <field name="resumeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="partyId" type="id-ne" enable-audit-log="true"></field>
+      <field name="contentId" type="id" enable-audit-log="true"></field>
+      <field name="resumeDate" type="date-time" enable-audit-log="true"></field>
+      <field name="resumeText" type="long-varchar" enable-audit-log="true"></field>
       <prim-key field="resumeId"/>
       <relation type="one" fk-name="PARTY_RSME_PRTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
@@ -240,13 +240,13 @@ under the License.
     <entity entity-name="PartySkill"
             package-name="org.ofbiz.humanres.ability"
             title="Party Skill Entity">
-      <field name="partySkillId" type="id-ne"></field>
-      <field name="partyId" type="id-ne"></field>
-      <field name="skillTypeId" type="id-ne"></field>
-      <field name="yearsExperience" type="numeric"></field>
-      <field name="rating" type="name"></field>
-      <field name="skillLevel" type="name"></field>
-      <field name="startedUsingDate" type="date-time"></field>
+      <field name="partySkillId" type="id-ne" enable-audit-log="true"></field>
+      <field name="partyId" type="id-ne" enable-audit-log="true"></field>
+      <field name="skillTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="yearsExperience" type="numeric" enable-audit-log="true"></field>
+      <field name="rating" type="name" enable-audit-log="true"></field>
+      <field name="skillLevel" type="name" enable-audit-log="true"></field>
+      <field name="startedUsingDate" type="date-time" enable-audit-log="true"></field>
       <prim-key field="partySkillId"/>
       <relation type="one" fk-name="PARTY_SKLL_PRTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
@@ -283,11 +283,11 @@ under the License.
     <entity entity-name="PerfRatingType"
             package-name="org.ofbiz.humanres.ability"
             title="Performance Rating Type Entity">
-      <field name="perfRatingTypeId" type="id-ne"></field>
-      <field name="parentTypeId" type="id-ne"></field>
-      <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>
-      <field name="points" type="numeric"></field>
+      <field name="perfRatingTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="parentTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="hasTable" type="indicator" enable-audit-log="true"></field>
+      <field name="description" type="description" enable-audit-log="true"></field>
+      <field name="points" type="numeric" enable-audit-log="true"></field>
       <prim-key field="perfRatingTypeId"/>
       <relation type="one" fk-name="PERF_RATNG_TYP" title="Parent" rel-entity-name="PerfRatingType">
         <key-map field-name="parentTypeId" rel-field-name="perfRatingTypeId"/>
@@ -297,11 +297,11 @@ under the License.
     <entity entity-name="PerfRatingType_QTT"
             package-name="org.ofbiz.humanres.ability"
             title="Qualitative Performance Rating Types Entity">
-      <field name="perfRatingTypeQTTId" type="id-ne"></field>
-      <field name="parentTypeId" type="id-ne"></field>
-      <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>
-      <field name="points" type="numeric"></field>
+      <field name="perfRatingTypeQTTId" type="id-ne" enable-audit-log="true"></field>
+      <field name="parentTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="hasTable" type="indicator" enable-audit-log="true"></field>
+      <field name="description" type="description" enable-audit-log="true"></field>
+      <field name="points" type="numeric" enable-audit-log="true"></field>
       <prim-key field="perfRatingTypeQTTId"/>
       <relation type="one" fk-name="PERF_RATNG_TYP" title="Parent" rel-entity-name="PerfRatingType_QTT">
         <key-map field-name="parentTypeId" rel-field-name="perfRatingTypeQTTId"/>
@@ -311,13 +311,13 @@ under the License.
     <entity entity-name="PerfManager"
    		package-name="org.ofbiz.humanres.ability"
     	title="Performance Central Management">
-      <field name="perfManagerId" type="id-ne"></field>
-      <field name="name" type="name"></field>
-      <field name="branchId" type="id"></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="endDate" type="date-time"></field>
-      <field name="status" type="name"></field>
-      <field name="description" type="description"></field>
+      <field name="perfManagerId" type="id-ne" enable-audit-log="true"></field>
+      <field name="name" type="name" enable-audit-log="true"></field>
+      <field name="branchId" type="id" enable-audit-log="true"></field>
+      <field name="fromDate" type="date-time" enable-audit-log="true"></field>
+      <field name="endDate" type="date-time" enable-audit-log="true"></field>
+      <field name="status" type="name" enable-audit-log="true"></field>
+      <field name="description" type="description" enable-audit-log="true"></field>
       <prim-key field="perfManagerId"/>
        <relation type="one" fk-name="PERF_Branch" rel-entity-name="PartyGroup">
         <key-map field-name="partyId" rel-field-name="branchId"/>
@@ -327,20 +327,20 @@ under the License.
     <entity entity-name="PerfReview"
             package-name="org.ofbiz.humanres.ability"
             title="Employee Performance Review Entity">
-      <field name="employeePartyId" type="id-ne"></field>
-      <field name="employeeRoleTypeId" type="id-ne"></field>
-      <field name="perfReviewId" type="id-ne"></field>
-      <field name="managerPartyId" type="id"></field>
-      <field name="managerRoleTypeId" type="id"></field>
-      <field name="paymentId" type="id"></field>
-      <field name="emplPositionId" type="id"><description>Employee Position</description></field>
-      <field name="emplPositionTypeId" type="id"><description>Employee Position Type</description></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>
-      <field name="comments" type="comment"></field>
-      <field name="perfManagerId" type="id"></field>
-      <field name="status" type="name"></field>
-      <field name="reviewType" type="name"></field>
+      <field name="employeePartyId" type="id-ne" enable-audit-log="true"></field>
+      <field name="employeeRoleTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="perfReviewId" type="id-ne" enable-audit-log="true"></field>
+      <field name="managerPartyId" type="id" enable-audit-log="true"></field>
+      <field name="managerRoleTypeId" type="id" enable-audit-log="true"></field>
+      <field name="paymentId" type="id" enable-audit-log="true"></field>
+      <field name="emplPositionId" type="id" enable-audit-log="true"><description>Employee Position</description></field>
+      <field name="emplPositionTypeId" type="id" enable-audit-log="true"><description>Employee Position Type</description></field>
+      <field name="fromDate" type="date-time" enable-audit-log="true"></field>
+      <field name="thruDate" type="date-time" enable-audit-log="true"></field>
+      <field name="comments" type="comment" enable-audit-log="true"></field>
+      <field name="perfManagerId" type="id" enable-audit-log="true"></field>
+      <field name="status" type="name" enable-audit-log="true"></field>
+      <field name="reviewType" type="name" enable-audit-log="true"></field>
       <prim-key field="employeePartyId"/>
       <prim-key field="employeeRoleTypeId"/>
       <prim-key field="perfReviewId"/>
@@ -374,21 +374,21 @@ under the License.
     <entity entity-name="PerfReviewItem"
             package-name="org.ofbiz.humanres.ability"
             title="Performance Review Item Entity">
-      <field name="employeePartyId" type="id-ne"></field>
-      <field name="employeeRoleTypeId" type="id"></field>
-      <field name="perfReviewId" type="id-ne"></field>
-      <field name="perfReviewItemSeqId" type="id-ne"></field>
-      <field name="kpiTargetId" type="id-ne"></field>
-      <field name="actionPlans" type="description"></field>      
-      <field name="kpi" type="description"></field>
-      <field name="perfRatingTypeId" type="id"></field>
-      <field name="perfRatingTypeQTTId" type="id"></field>
-      <field name="comments" type="comment"></field>
-      <field name="kpiAchievementStatusId" type="id-ne"></field>
-      <field name="achievementDate" type="date"></field>
-      <field name="perfReviewItemTypeId" type="id"></field>
-      <field name="isSubmitted" type="indicator"></field>
-      <field name="perfGoalsId" type="id-ne"></field>
+      <field name="employeePartyId" type="id-ne" enable-audit-log="true"></field>
+      <field name="employeeRoleTypeId" type="id" enable-audit-log="true"></field>
+      <field name="perfReviewId" type="id-ne" enable-audit-log="true"></field>
+      <field name="perfReviewItemSeqId" type="id-ne" enable-audit-log="true"></field>
+      <field name="kpiTargetId" type="id-ne" enable-audit-log="true"></field>
+      <field name="actionPlans" type="description" enable-audit-log="true"></field>      
+      <field name="kpi" type="description" enable-audit-log="true"></field>
+      <field name="perfRatingTypeId" type="id" enable-audit-log="true"></field>
+      <field name="perfRatingTypeQTTId" type="id" enable-audit-log="true"></field>
+      <field name="comments" type="comment" enable-audit-log="true"></field>
+      <field name="kpiAchievementStatusId" type="id-ne" enable-audit-log="true"></field>
+      <field name="achievementDate" type="date" enable-audit-log="true"></field>
+      <field name="perfReviewItemTypeId" type="id" enable-audit-log="true"></field>
+      <field name="isSubmitted" type="indicator" enable-audit-log="true"></field>
+      <field name="perfGoalsId" type="id-ne" enable-audit-log="true"></field>
       <prim-key field="employeePartyId"/>
       <prim-key field="employeeRoleTypeId"/>
       <prim-key field="perfReviewId"/>
@@ -421,10 +421,10 @@ under the License.
     <entity entity-name="PerfReviewItemType"
             package-name="org.ofbiz.humanres.ability"
             title="Performance Review Item Type Entity">
-      <field name="perfReviewItemTypeId" type="id-ne"></field>
-      <field name="parentTypeId" type="id-ne"></field>
-      <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>
+      <field name="perfReviewItemTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="parentTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="hasTable" type="indicator" enable-audit-log="true"></field>
+      <field name="description" type="description" enable-audit-log="true"></field>
       <prim-key field="perfReviewItemTypeId"/>
       <relation type="one" fk-name="PERF_REV_ITM_TYP" title="Parent" rel-entity-name="PerfReviewItemType">
         <key-map field-name="parentTypeId" rel-field-name="perfReviewItemTypeId"/>
@@ -433,13 +433,13 @@ under the License.
     <entity entity-name="KeyPerformanceIndicators"
             package-name="org.ofbiz.humanres.ability"
             title="Key Performance Indicators">
-      <field name="keyPerformanceIndicatorsId" type="id-ne"></field>
-      <field name="parentTypeId" type="id-ne"></field>
-      <field name="kpiName" type="name"></field>
-      <field name="description" type="description"></field>
-      <field name="measure" type="description"></field>
-      <field name="trackStartDate" type="date"></field>
-      <field name="trackEndDate" type="date"></field>
+      <field name="keyPerformanceIndicatorsId" type="id-ne" enable-audit-log="true"></field>
+      <field name="parentTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="kpiName" type="name" enable-audit-log="true"></field>
+      <field name="description" type="description" enable-audit-log="true"></field>
+      <field name="measure" type="description" enable-audit-log="true"></field>
+      <field name="trackStartDate" type="date" enable-audit-log="true"></field>
+      <field name="trackEndDate" type="date" enable-audit-log="true"></field>
       <prim-key field="keyPerformanceIndicatorsId"/>
       <relation type="one" fk-name="KEY_PERF_IND" title="Parent" rel-entity-name="KeyPerformanceIndicators">
         <key-map field-name="parentTypeId" rel-field-name="keyPerformanceIndicatorsId"/>
@@ -449,20 +449,20 @@ under the License.
     <entity entity-name="KPIAchievementStatus"
             package-name="org.ofbiz.humanres.ability"
             title="KPI Achievement Status">
-      <field name="kpiAchievementStatusId" type="id-ne"></field>
-      <field name="achievementstatus" type="name"></field>
-      <field name="description" type="description"></field>
+      <field name="kpiAchievementStatusId" type="id-ne" enable-audit-log="true"></field>
+      <field name="achievementstatus" type="name" enable-audit-log="true"></field>
+      <field name="description" type="description" enable-audit-log="true"></field>
       <prim-key field="kpiAchievementStatusId"/>
     </entity>
     
       <entity entity-name="PerfGoalsDef"
             package-name="org.ofbiz.humanres.ability"
             title="Performance Goals Definition">
-      <field name="perfGoalsDefId" type="id-ne"></field>
-      <field name="goalDef" type="name"></field>
-      <!-- <field name="percentage" type="numeric"></field> -->
-	  <field name="percentage" type="fixed-point"></field>
-      <field name="description" type="description"></field>
+      <field name="perfGoalsDefId" type="id-ne" enable-audit-log="true"></field>
+      <field name="goalDef" type="name" enable-audit-log="true"></field>
+      <!-- <field name="percentage" type="numeric" enable-audit-log="true"></field> -->
+	  <field name="percentage" type="fixed-point" enable-audit-log="true"></field>
+      <field name="description" type="description" enable-audit-log="true"></field>
       <prim-key field="perfGoalsDefId"/>
       <index name="UNIQUE_GOALS" unique="true">
       	<index-field name="goalDef"/>
@@ -474,9 +474,9 @@ under the License.
                 
      <entity entity-name="PerfReviewsDefinition"  package-name="org.ofbiz.humanres.ability"
             title="Performance Goals Definition">
-      <field name="perfReviewDefId" type="id-ne"></field>
-      <field name="perfReviewName" type="name"></field>
-      <field name="description" type="description"></field>
+      <field name="perfReviewDefId" type="id-ne" enable-audit-log="true"></field>
+      <field name="perfReviewName" type="name" enable-audit-log="true"></field>
+      <field name="description" type="description" enable-audit-log="true"></field>
       <prim-key field="perfReviewDefId"/>
     </entity>
     
@@ -484,12 +484,12 @@ under the License.
                 
      <entity entity-name="PerfReviewsGroupObjectiveDefinition"  package-name="org.ofbiz.humanres.ability"
             title="Performance Goals Definition">
-      <field name="PerfReviewsGroupObjectiveDefinitionId" type="id-ne"></field>
-      <field name="perfReviewDefId" type="id-ne"></field>
-      <field name="perfGoalsId" type="id-ne"></field>
-      <field name="perfGoalsDefId" type="id"></field>
-      <field name="objectiveDescription" type="description"></field>
-       <field name="percentage" type="fixed-point"></field>
+      <field name="PerfReviewsGroupObjectiveDefinitionId" type="id-ne" enable-audit-log="true"></field>
+      <field name="perfReviewDefId" type="id-ne" enable-audit-log="true"></field>
+      <field name="perfGoalsId" type="id-ne" enable-audit-log="true"></field>
+      <field name="perfGoalsDefId" type="id" enable-audit-log="true"></field>
+      <field name="objectiveDescription" type="description" enable-audit-log="true"></field>
+       <field name="percentage" type="fixed-point" enable-audit-log="true"></field>
       <prim-key field="PerfReviewsGroupObjectiveDefinitionId"/>
     </entity>
     
@@ -497,13 +497,13 @@ under the License.
                 
      <entity entity-name="PerfObjectiveActionPlanDefinition"  package-name="org.ofbiz.humanres.ability"
             title="Performance Goals Definition">
-      <field name="PerfObjectiveActionPlanId" type="id-ne"></field>
-      <field name="perfReviewDefId" type="id-ne"></field>
-      <field name="perfGoalsId" type="id-ne"></field>
-      <field name="perfGoalsDefId" type="id"></field>
-      <field name="PerfReviewsGroupObjectiveDefinitionId" type="id-ne"></field>
-      <field name="objectiveActionPlanDescription" type="description"></field>
-       <field name="percentage" type="fixed-point"></field>
+      <field name="PerfObjectiveActionPlanId" type="id-ne" enable-audit-log="true"></field>
+      <field name="perfReviewDefId" type="id-ne" enable-audit-log="true"></field>
+      <field name="perfGoalsId" type="id-ne" enable-audit-log="true"></field>
+      <field name="perfGoalsDefId" type="id" enable-audit-log="true"></field>
+      <field name="PerfReviewsGroupObjectiveDefinitionId" type="id-ne" enable-audit-log="true"></field>
+      <field name="objectiveActionPlanDescription" type="description" enable-audit-log="true"></field>
+       <field name="percentage" type="fixed-point" enable-audit-log="true"></field>
       <prim-key field="PerfObjectiveActionPlanId"/>
     </entity>
     
@@ -511,14 +511,14 @@ under the License.
                 
      <entity entity-name="PerfActionPlanIndicatorDefinition"  package-name="org.ofbiz.humanres.ability"
             title="Performance Goals Definition">
-            <field name="PerfActionPlanIndicatorId" type="id-ne"></field>
-      <field name="PerfObjectiveActionPlanId" type="id-ne"></field>
-      <field name="perfReviewDefId" type="id-ne"></field>
-      <field name="perfGoalsId" type="id-ne"></field>
-      <field name="perfGoalsDefId" type="id"></field>
-      <field name="PerfReviewsGroupObjectiveDefinitionId" type="id-ne"></field>
-      <field name="actionPlanIndicatorDescription" type="description"></field>
-       <field name="percentage" type="fixed-point"></field>
+            <field name="PerfActionPlanIndicatorId" type="id-ne" enable-audit-log="true"></field>
+      <field name="PerfObjectiveActionPlanId" type="id-ne" enable-audit-log="true"></field>
+      <field name="perfReviewDefId" type="id-ne" enable-audit-log="true"></field>
+      <field name="perfGoalsId" type="id-ne" enable-audit-log="true"></field>
+      <field name="perfGoalsDefId" type="id" enable-audit-log="true"></field>
+      <field name="PerfReviewsGroupObjectiveDefinitionId" type="id-ne" enable-audit-log="true"></field>
+      <field name="actionPlanIndicatorDescription" type="description" enable-audit-log="true"></field>
+       <field name="percentage" type="fixed-point" enable-audit-log="true"></field>
       <prim-key field="PerfActionPlanIndicatorId"/>
     </entity>
     
@@ -526,14 +526,14 @@ under the License.
                 
      <entity entity-name="StaffInPerfReviewGroup"  package-name="org.ofbiz.humanres.ability"
             title="Performance Goals Definition">
-            <field name="StaffInPerfReviewGroupId" type="id-ne"></field>
-            <field name="partyId" type="id-ne"></field>
-            <field name="hod" type="id-ne"></field>
-            <field name="perfReviewDefId" type="id-ne"></field>
-            <field name="departmentId" type="name"></field>
-            <field name="branchId" type="name"></field>
-             <field name="stage" type="name"></field>
-             <field name="trainingStage" type="name"></field>
+            <field name="StaffInPerfReviewGroupId" type="id-ne" enable-audit-log="true"></field>
+            <field name="partyId" type="id-ne" enable-audit-log="true"></field>
+            <field name="hod" type="id-ne" enable-audit-log="true"></field>
+            <field name="perfReviewDefId" type="id-ne" enable-audit-log="true"></field>
+            <field name="departmentId" type="name" enable-audit-log="true"></field>
+            <field name="branchId" type="name" enable-audit-log="true"></field>
+             <field name="stage" type="name" enable-audit-log="true"></field>
+             <field name="trainingStage" type="name" enable-audit-log="true"></field>
            <prim-key field="StaffInPerfReviewGroupId"/>
     </entity>
     
@@ -541,10 +541,10 @@ under the License.
                 
      <entity entity-name="PerfReviewPeriod"  package-name="org.ofbiz.humanres.ability"
             title="Performance Goals Definition">
-            <field name="PerfReviewPeriodId" type="id-ne"></field>
-            <field name="year" type="id-ne"></field>
-            <field name="quarter" type="name"></field>
-            <field name="status" type="name"></field>
+            <field name="PerfReviewPeriodId" type="id-ne" enable-audit-log="true"></field>
+            <field name="year" type="id-ne" enable-audit-log="true"></field>
+            <field name="quarter" type="name" enable-audit-log="true"></field>
+            <field name="status" type="name" enable-audit-log="true"></field>
             <prim-key field="PerfReviewPeriodId"/>
     </entity>
     
@@ -558,22 +558,22 @@ under the License.
                 
      <entity entity-name="PerfPartyReview"  package-name="org.ofbiz.humanres.ability"
             title="Performance Goals Definition">
-            <field name="reviewId" type="id-ne"></field>
-            <field name="year" type="id-ne"></field>
-            <field name="quarter" type="name"></field>
-            <field name="partyId" type="id-ne"></field>
-            <field name="perfGoalsDefId" type="id"></field>
-            <field name="perfReviewDefId" type="id-ne"></field>
-            <field name="perfGoalsId" type="id-ne"></field>
-            <field name="PerfReviewsGroupObjectiveDefinitionId" type="id-ne"></field>
-            <field name="PerfObjectiveActionPlanId" type="id-ne"></field>
-            <field name="PerfActionPlanIndicatorId" type="id-ne"></field>
-             <field name="hod" type="id-ne"></field>
-	        <field name="stage" type="name"></field>
-	        <field name="scoreOne" type="fixed-point"></field>
-	        <field name="scoreTwo" type="fixed-point"></field>
-	        <field name="scoreThree" type="fixed-point"></field>
-	        <field name="scoreFour" type="fixed-point"></field>
+            <field name="reviewId" type="id-ne" enable-audit-log="true"></field>
+            <field name="year" type="id-ne" enable-audit-log="true"></field>
+            <field name="quarter" type="name" enable-audit-log="true"></field>
+            <field name="partyId" type="id-ne" enable-audit-log="true"></field>
+            <field name="perfGoalsDefId" type="id" enable-audit-log="true"></field>
+            <field name="perfReviewDefId" type="id-ne" enable-audit-log="true"></field>
+            <field name="perfGoalsId" type="id-ne" enable-audit-log="true"></field>
+            <field name="PerfReviewsGroupObjectiveDefinitionId" type="id-ne" enable-audit-log="true"></field>
+            <field name="PerfObjectiveActionPlanId" type="id-ne" enable-audit-log="true"></field>
+            <field name="PerfActionPlanIndicatorId" type="id-ne" enable-audit-log="true"></field>
+             <field name="hod" type="id-ne" enable-audit-log="true"></field>
+	        <field name="stage" type="name" enable-audit-log="true"></field>
+	        <field name="scoreOne" type="fixed-point" enable-audit-log="true"></field>
+	        <field name="scoreTwo" type="fixed-point" enable-audit-log="true"></field>
+	        <field name="scoreThree" type="fixed-point" enable-audit-log="true"></field>
+	        <field name="scoreFour" type="fixed-point" enable-audit-log="true"></field>
 	        <prim-key field="reviewId"/>
     </entity>
     
@@ -596,10 +596,10 @@ under the License.
      <entity entity-name="PerfGoals"
             package-name="org.ofbiz.humanres.ability"
             title="Performance Goals">
-      <field name="perfGoalsId" type="id-ne"></field>
-      <field name="perfGoalsDefId" type="id"></field>
-      <field name="goal" type="name"></field>
-      <field name="percentage" type="fixed-point"></field>
+      <field name="perfGoalsId" type="id-ne" enable-audit-log="true"></field>
+      <field name="perfGoalsDefId" type="id" enable-audit-log="true"></field>
+      <field name="goal" type="name" enable-audit-log="true"></field>
+      <field name="percentage" type="fixed-point" enable-audit-log="true"></field>
       <prim-key field="perfGoalsId"/>
        <relation type="one" fk-name="goal_category" title="Goal_CAT" rel-entity-name="PerfGoalsDef">
         <key-map field-name="perfGoalsDefId" rel-field-name="perfGoalsDefId"/>
@@ -613,19 +613,19 @@ under the License.
     <entity entity-name="KPITargets"
             package-name="org.ofbiz.humanres.ability"
             title="KPI Targets">
-      <field name="kpiTargetId" type="id-ne"></field>
-      <field name="kpitarget" type="description"></field>
-      <field name="measure" type="description"></field>
-      <field name="keyPerformanceIndicatorsId" type="id-ne"></field>
-      <field name="targetOption" type="indicator"></field>
-      <field name="branchId" type="id-ne"></field>
-      <field name="partyId" type="id-ne"></field>
-      <field name="deptId" type="id-ne"></field>
-	  <field name="weight" type="name"></field>
-      <field name="perfGoalsId" type="id-ne"></field>
-      <field name="emplPositionTypeId" type="id-ne"></field>
-      <field name="actionPlans" type="description"></field>
-      <field name="kpi" type="description"></field>
+      <field name="kpiTargetId" type="id-ne" enable-audit-log="true"></field>
+      <field name="kpitarget" type="description" enable-audit-log="true"></field>
+      <field name="measure" type="description" enable-audit-log="true"></field>
+      <field name="keyPerformanceIndicatorsId" type="id-ne" enable-audit-log="true"></field>
+      <field name="targetOption" type="indicator" enable-audit-log="true"></field>
+      <field name="branchId" type="id-ne" enable-audit-log="true"></field>
+      <field name="partyId" type="id-ne" enable-audit-log="true"></field>
+      <field name="deptId" type="id-ne" enable-audit-log="true"></field>
+	  <field name="weight" type="name" enable-audit-log="true"></field>
+      <field name="perfGoalsId" type="id-ne" enable-audit-log="true"></field>
+      <field name="emplPositionTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="actionPlans" type="description" enable-audit-log="true"></field>
+      <field name="kpi" type="description" enable-audit-log="true"></field>
       <prim-key field="kpiTargetId"/>
        <relation type="one" fk-name="KPI_IND" title="KPI" rel-entity-name="KeyPerformanceIndicators">
         <key-map field-name="parentTypeId" rel-field-name="keyPerformanceIndicatorsId"/>
@@ -649,19 +649,19 @@ under the License.
 
      <entity entity-name="PerfReviewItemSeq" package-name="org.ofbiz.humanres.ability"
 		title="Perf Review Item Seq">
-		<field name="perfReviewItemSeqId" type="id-ne"></field>
+		<field name="perfReviewItemSeqId" type="id-ne" enable-audit-log="true"></field>
 		<prim-key field="perfReviewItemSeqId"/>
 	</entity>
 
     <entity entity-name="PerformanceNote"
             package-name="org.ofbiz.humanres.ability"
             title="Performance Note Entity">
-      <field name="partyId" type="id-ne"></field>
-      <field name="roleTypeId" type="id-ne"></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>
-      <field name="communicationDate" type="date-time"></field>
-      <field name="comments" type="comment"></field>
+      <field name="partyId" type="id-ne" enable-audit-log="true"></field>
+      <field name="roleTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="fromDate" type="date-time" enable-audit-log="true"></field>
+      <field name="thruDate" type="date-time" enable-audit-log="true"></field>
+      <field name="communicationDate" type="date-time" enable-audit-log="true"></field>
+      <field name="comments" type="comment" enable-audit-log="true"></field>
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
       <prim-key field="fromDate"/>
@@ -679,15 +679,15 @@ under the License.
     <entity entity-name="PersonTraining"
             package-name="org.ofbiz.humanres.ability"
             title="Person Training Entity">
-      <field name="partyId" type="id-ne"></field>
-      <field name="trainingRequestId" type="id-ne"></field>
-      <field name="trainingClassTypeId" type="id-ne"></field>
-      <field name="workEffortId" type="id-ne"></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>
-      <field name="approverId" type="id-ne"></field>
-      <field name="approvalStatus" type="short-varchar"></field>
-      <field name="reason" type="description"></field>
+      <field name="partyId" type="id-ne" enable-audit-log="true"></field>
+      <field name="trainingRequestId" type="id-ne" enable-audit-log="true"></field>
+      <field name="trainingClassTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="workEffortId" type="id-ne" enable-audit-log="true"></field>
+      <field name="fromDate" type="date-time" enable-audit-log="true"></field>
+      <field name="thruDate" type="date-time" enable-audit-log="true"></field>
+      <field name="approverId" type="id-ne" enable-audit-log="true"></field>
+      <field name="approvalStatus" type="short-varchar" enable-audit-log="true"></field>
+      <field name="reason" type="description" enable-audit-log="true"></field>
       <prim-key field="partyId"/>
       <prim-key field="trainingClassTypeId"/>
       <prim-key field="fromDate"/>
@@ -709,18 +709,18 @@ under the License.
     </entity>
 
     <entity entity-name="TrainingCostType" package-name="org.ofbiz.humanres.ability" title="Training Cost Types">
-	    <field name="trainingCostTypesId" type="id-ne"></field>
-	    <field name="costType" type="name"></field>
-	    <field name="description" type="name"></field>
+	    <field name="trainingCostTypesId" type="id-ne" enable-audit-log="true"></field>
+	    <field name="costType" type="name" enable-audit-log="true"></field>
+	    <field name="description" type="name" enable-audit-log="true"></field>
 	    <prim-key field="trainingCostTypesId"/>
     </entity>
      <entity entity-name="TrainingCosts" package-name="org.ofbiz.humanres.ability" title="Training Costs">
-     	<field name="trainingCostId" type="id-ne"></field>
-	    <field name="partyId" type="id-ne"></field>
-	    <field name="trainingClassTypeId" type="id-ne"></field>
-	    <field name="trainingCostTypesId" type="id-ne"></field>
-	    <field name="cost" type="currency-amount"></field>
-	    <field name="fromDate" type="date-time"></field>
+     	<field name="trainingCostId" type="id-ne" enable-audit-log="true"></field>
+	    <field name="partyId" type="id-ne" enable-audit-log="true"></field>
+	    <field name="trainingClassTypeId" type="id-ne" enable-audit-log="true"></field>
+	    <field name="trainingCostTypesId" type="id-ne" enable-audit-log="true"></field>
+	    <field name="cost" type="currency-amount" enable-audit-log="true"></field>
+	    <field name="fromDate" type="date-time" enable-audit-log="true"></field>
 	    <prim-key field="trainingCostId"/>
 	      <relation type="one" fk-name="PERS_TRNG_PRTY" rel-entity-name="Party">
 	        <key-map field-name="partyId"/>
@@ -736,10 +736,10 @@ under the License.
     <entity entity-name="ResponsibilityType"
             package-name="org.ofbiz.humanres.ability"
             title="Responsibility Type Entity">
-      <field name="responsibilityTypeId" type="id-ne"></field>
-      <field name="parentTypeId" type="id"></field>
-      <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>
+      <field name="responsibilityTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="parentTypeId" type="id" enable-audit-log="true"></field>
+      <field name="hasTable" type="indicator" enable-audit-log="true"></field>
+      <field name="description" type="description" enable-audit-log="true"></field>
       <prim-key field="responsibilityTypeId"/>
       <relation type="one" fk-name="RESPON_TYPE_PAR" title="Parent" rel-entity-name="ResponsibilityType">
         <key-map field-name="parentTypeId" rel-field-name="responsibilityTypeId"/>
@@ -748,11 +748,11 @@ under the License.
     <entity entity-name="SkillType"
             package-name="org.ofbiz.humanres.ability"
             title="Skill Type Entity">
-      <field name="skillTypeId" type="id-ne"></field>
-      <field name="parentTypeId" type="id-ne"></field>
-      <field name="hasTable" type="indicator"></field>
-      <field name="skill" type="name"></field>
-      <field name="description" type="name"></field>
+      <field name="skillTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="parentTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="hasTable" type="indicator" enable-audit-log="true"></field>
+      <field name="skill" type="name" enable-audit-log="true"></field>
+      <field name="description" type="name" enable-audit-log="true"></field>
       <prim-key field="skillTypeId"/>
       <relation type="one" fk-name="PARNT_SKILL_TYPE" title="Parent" rel-entity-name="SkillType">
         <key-map field-name="parentTypeId" rel-field-name="skillTypeId"/>
@@ -762,10 +762,10 @@ under the License.
     <entity entity-name="TrainingClassType"
             package-name="org.ofbiz.humanres.ability"
             title="Training Class Type Entity">
-      <field name="trainingClassTypeId" type="id-ne"></field>
-      <field name="parentTypeId" type="id"></field>
-      <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>
+      <field name="trainingClassTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="parentTypeId" type="id" enable-audit-log="true"></field>
+      <field name="hasTable" type="indicator" enable-audit-log="true"></field>
+      <field name="description" type="description" enable-audit-log="true"></field>
       <prim-key field="trainingClassTypeId"/>
       <relation type="one" fk-name="TRAIN_TYPE_PAR" title="Parent" rel-entity-name="TrainingClassType">
         <key-map field-name="parentTypeId" rel-field-name="trainingClassTypeId"/>
@@ -779,12 +779,12 @@ under the License.
     <entity entity-name="BenefitType"
             package-name="org.ofbiz.humanres.employment"
             title="Benefit Type Entity">
-      <field name="benefitTypeId" type="id-ne"></field>
-      <field name="benefitName" type="name"></field>
-      <field name="parentTypeId" type="id-ne"></field>
-      <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>
-      <field name="employerPaidPercentage" type="floating-point"></field>
+      <field name="benefitTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="benefitName" type="name" enable-audit-log="true"></field>
+      <field name="parentTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="hasTable" type="indicator" enable-audit-log="true"></field>
+      <field name="description" type="description" enable-audit-log="true"></field>
+      <field name="employerPaidPercentage" type="floating-point" enable-audit-log="true"></field>
       <prim-key field="benefitTypeId"/>
       <relation type="one" fk-name="BEN_TYPE_PAR" title="Parent" rel-entity-name="BenefitType">
         <key-map field-name="parentTypeId" rel-field-name="benefitTypeId"/>
@@ -806,18 +806,18 @@ under the License.
     <entity entity-name="Employment"
             package-name="org.ofbiz.humanres.employment"
             title="Employment Entity">
-      <field name="roleTypeIdFrom" type="id-ne"></field>
-      <field name="roleTypeIdTo" type="id-ne"></field>
-      <field name="partyIdFrom" type="id-ne"></field>
-      <field name="partyIdTo" type="id-ne"></field>
-      <field name="branchId" type="id"></field>
-      <field name="departmentId" type="id"></field>
- 	  <field name="stationId" type="id"></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>
-      <field name="terminationReasonId" type="id"></field>
-      <field name="terminationTypeId" type="id"></field>
-      <field name="isCurrentEmployment" type="indicator"></field>
+      <field name="roleTypeIdFrom" type="id-ne" enable-audit-log="true"></field>
+      <field name="roleTypeIdTo" type="id-ne" enable-audit-log="true"></field>
+      <field name="partyIdFrom" type="id-ne" enable-audit-log="true"></field>
+      <field name="partyIdTo" type="id-ne" enable-audit-log="true"></field>
+      <field name="branchId" type="id" enable-audit-log="true"></field>
+      <field name="departmentId" type="id" enable-audit-log="true"></field>
+ 	  <field name="stationId" type="id" enable-audit-log="true"></field>
+      <field name="fromDate" type="date-time" enable-audit-log="true"></field>
+      <field name="thruDate" type="date-time" enable-audit-log="true"></field>
+      <field name="terminationReasonId" type="id" enable-audit-log="true"></field>
+      <field name="terminationTypeId" type="id" enable-audit-log="true"></field>
+      <field name="isCurrentEmployment" type="indicator" enable-audit-log="true"></field>
       <prim-key field="roleTypeIdFrom"/>
       <prim-key field="roleTypeIdTo"/>
       <prim-key field="partyIdFrom"/>
@@ -894,15 +894,15 @@ under the License.
     <entity entity-name="EmploymentApp"
             package-name="org.ofbiz.humanres.employment"
             title="Employment Application Entity">
-      <field name="applicationId" type="id-ne"></field>
-      <field name="emplPositionId" type="id"></field>
-      <field name="statusId" type="id"></field>
-      <field name="employmentAppSourceTypeId" type="id"></field>
-      <field name="applyingPartyId" type="id"></field>
-      <field name="referredByPartyId" type="id"></field>
-      <field name="applicationDate" type="date-time"></field>
-      <field name="approverPartyId" type="id"></field>
-      <field name="jobRequisitionId" type="id"></field>
+      <field name="applicationId" type="id-ne" enable-audit-log="true"></field>
+      <field name="emplPositionId" type="id" enable-audit-log="true"></field>
+      <field name="statusId" type="id" enable-audit-log="true"></field>
+      <field name="employmentAppSourceTypeId" type="id" enable-audit-log="true"></field>
+      <field name="applyingPartyId" type="id" enable-audit-log="true"></field>
+      <field name="referredByPartyId" type="id" enable-audit-log="true"></field>
+      <field name="applicationDate" type="date-time" enable-audit-log="true"></field>
+      <field name="approverPartyId" type="id" enable-audit-log="true"></field>
+      <field name="jobRequisitionId" type="id" enable-audit-log="true"></field>
       <prim-key field="applicationId"/>
       <relation type="one-nofk" fk-name="EMPLMNT_APP_POS" rel-entity-name="EmplPosition">
         <key-map field-name="emplPositionId"/>
@@ -929,10 +929,10 @@ under the License.
     <entity entity-name="EmploymentAppSourceType"
             package-name="org.ofbiz.humanres.employment"
             title="Employment Application Source Type Entity">
-      <field name="employmentAppSourceTypeId" type="id-ne"></field>
-      <field name="parentTypeId" type="id-ne"></field>
-      <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>
+      <field name="employmentAppSourceTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="parentTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="hasTable" type="indicator" enable-audit-log="true"></field>
+      <field name="description" type="description" enable-audit-log="true"></field>
       <prim-key field="employmentAppSourceTypeId"/>
       <relation type="one" fk-name="EMPL_APP_SRC_TYP" title="Parent" rel-entity-name="EmploymentAppSourceType">
         <key-map field-name="parentTypeId" rel-field-name="employmentAppSourceTypeId"/>
@@ -942,14 +942,14 @@ under the License.
     <entity entity-name="EmploymentHistory"
             package-name="org.ofbiz.humanres.employment"
             title="Employment History">
-      <field name="employmentHistoryId" type="id-ne"></field>
-      <field name="partyId" type="id-ne"></field>
-      <field name="employer" type="name"></field>
-      <field name="position" type="name"></field>
-      <field name="jobDescription" type="description"></field>
-      <field name="startDate" type="date-time"></field>
-      <field name="endDate" type="date-time"></field>
-      <field name="reason" type="description"></field>
+      <field name="employmentHistoryId" type="id-ne" enable-audit-log="true"></field>
+      <field name="partyId" type="id-ne" enable-audit-log="true"></field>
+      <field name="employer" type="name" enable-audit-log="true"></field>
+      <field name="position" type="name" enable-audit-log="true"></field>
+      <field name="jobDescription" type="description" enable-audit-log="true"></field>
+      <field name="startDate" type="date-time" enable-audit-log="true"></field>
+      <field name="endDate" type="date-time" enable-audit-log="true"></field>
+      <field name="reason" type="description" enable-audit-log="true"></field>
       <prim-key field="employmentHistoryId"/>
       <relation type="one" fk-name="empHistory_party" rel-entity-name="Party">
             <key-map field-name="partyId"/>
@@ -971,15 +971,15 @@ under the License.
     <entity entity-name="LeaveStatusLog"
             package-name="org.ofbiz.humanres"
             title="Leave Status Logs Entity">
-      <field name="leaveStsLogId" type="id-ne"></field>
-      <field name="leaveId" type="id"></field>
-      <field name="partyId" type="id-ne"></field>
-      <field name="approvedBy" type="id-ne"></field>
-      <field name="nextApprover" type="id"></field>
-      <field name="rejectedBy" type="id-ne"></field>
-       <field name="rejectReason" type="description"></field>
-      <!-- <field name="leaveLogStatus" type="description"></field> -->
-      <field name="approvalStatus" type="description"></field>
+      <field name="leaveStsLogId" type="id-ne" enable-audit-log="true"></field>
+      <field name="leaveId" type="id" enable-audit-log="true"></field>
+      <field name="partyId" type="id-ne" enable-audit-log="true"></field>
+      <field name="approvedBy" type="id-ne" enable-audit-log="true"></field>
+      <field name="nextApprover" type="id" enable-audit-log="true"></field>
+      <field name="rejectedBy" type="id-ne" enable-audit-log="true"></field>
+       <field name="rejectReason" type="description" enable-audit-log="true"></field>
+      <!-- <field name="leaveLogStatus" type="description" enable-audit-log="true"></field> -->
+      <field name="approvalStatus" type="description" enable-audit-log="true"></field>
       <prim-key field="leaveStsLogId"/>
       <relation type="one" fk-name="EMPLEAVE_STTLOGS" title="Parent" rel-entity-name="EmplLeave">
         <key-map field-name="leaveId" rel-field-name="leaveId"/>
@@ -1033,39 +1033,39 @@ under the License.
             package-name="org.ofbiz.humanres.employment"
             title="Employee Leave Entity">
 
-        <field name="leaveId" type="id-ne"/>
-        <field name="partyId" type="id-ne"/>
-        <field name="leaveTypeId" type="id-ne"/>
-        <field name="emplLeaveReasonTypeId" type="id-ne"/>
-        <field name="fromDate" type="date"/>
-        <field name="leaveDuration" type="floating-point"/>
-        <field name="newDuration" type="floating-point"/>
-        <field name="carryOverUsed" type="floating-point"/>
+        <field name="leaveId" type="id-ne" enable-audit-log="true"></field>
+        <field name="partyId" type="id-ne" enable-audit-log="true"></field>
+        <field name="leaveTypeId" type="id-ne" enable-audit-log="true"></field>
+        <field name="emplLeaveReasonTypeId" type="id-ne" enable-audit-log="true"></field>
+        <field name="fromDate" type="date" enable-audit-log="true"></field>
+        <field name="leaveDuration" type="floating-point" enable-audit-log="true"></field>
+        <field name="newDuration" type="floating-point" enable-audit-log="true"></field>
+        <field name="carryOverUsed" type="floating-point" enable-audit-log="true"></field>
 
-        <field name="thruDate" type="date"/>
-        <field name="callBackDate" type="date"/>
-        <field name="isDeductedFromAnnual" type="name"></field>
-        <field name="rejectReason" type="description"></field>
-        <field name="financialYear" type="id-ne"></field>
-         <field name="hasbalance" type="name"></field>
-        <field name="resumptionDate" type="date"/>
-        <field name="isActive" type="indicator"></field>
-        <field name="leaveBalance" type="numeric"/>
-        <field name="createdBy" type="id-ne"/>
-        <field name="updatedBy" type="id-ne"/>
-        <field name="leaveStatus" type="id-ne"/>
-        <field name="createdDate" type="date-time"/>
-        <field name="dateApprovedRejected" type="date-time"/>
+        <field name="thruDate" type="date" enable-audit-log="true"></field>
+        <field name="callBackDate" type="date" enable-audit-log="true"></field>
+        <field name="isDeductedFromAnnual" type="name" enable-audit-log="true"></field>
+        <field name="rejectReason" type="description" enable-audit-log="true"></field>
+        <field name="financialYear" type="id-ne" enable-audit-log="true"></field>
+         <field name="hasbalance" type="name" enable-audit-log="true"></field>
+        <field name="resumptionDate" type="date" enable-audit-log="true"></field>
+        <field name="isActive" type="indicator" enable-audit-log="true"></field>
+        <field name="leaveBalance" type="numeric" enable-audit-log="true"></field>
+        <field name="createdBy" type="id-ne" enable-audit-log="true"></field>
+        <field name="updatedBy" type="id-ne" enable-audit-log="true"></field>
+        <field name="leaveStatus" type="id-ne" enable-audit-log="true"></field>
+        <field name="createdDate" type="date-time" enable-audit-log="true"></field>
+        <field name="dateApprovedRejected" type="date-time" enable-audit-log="true"></field>
 
-        <field name="workflowDocumentTypeId" type="id-ne"/>
-        <field name="organizationUnitId" type="id"/>
-        <field name="documentApprovalId" type="id-ne"/>
-        <field name="applicationStatus" type="name"/>
-        <field name="approvalStatus" type="name"/>
-        <field name="responsibleEmployee" type="id"></field>
-        <field name="handedOverTo" type="id-ne"/>
+        <field name="workflowDocumentTypeId" type="id-ne" enable-audit-log="true"></field>
+        <field name="organizationUnitId" type="id" enable-audit-log="true"></field>
+        <field name="documentApprovalId" type="id-ne" enable-audit-log="true"></field>
+        <field name="applicationStatus" type="name" enable-audit-log="true"></field>
+        <field name="approvalStatus" type="name" enable-audit-log="true"></field>
+        <field name="responsibleEmployee" type="id" enable-audit-log="true"></field>
+        <field name="handedOverTo" type="id-ne" enable-audit-log="true"></field>
 
-        <field name="description" type="description"/>
+        <field name="description" type="description" enable-audit-log="true"></field>
         <!-- <prim-key field="leaveId"/> -->
         <!-- prim-key field="partyId"/>
         <prim-key field="leaveTypeId"/>
@@ -1133,13 +1133,13 @@ under the License.
             package-name="org.ofbiz.humanres.employment"
             title="Employee Leave Entity">
 
-        <field name="partyId" type="id-ne"/>
-        <field name="leaveTypeId" type="id-ne"/>
-         <field name="financialYear" type="id-ne"/>
-       <field name="allocatedLeaveDays" type="fixed-point"></field>
-        <field name="usedLeaveDays" type="fixed-point"></field>
-        <field name="lostLeaveDays" type="fixed-point"></field>
-        <field name="carriedOverDays" type="fixed-point"></field>
+        <field name="partyId" type="id-ne" enable-audit-log="true"></field>
+        <field name="leaveTypeId" type="id-ne" enable-audit-log="true"></field>
+         <field name="financialYear" type="id-ne" enable-audit-log="true"></field>
+       <field name="allocatedLeaveDays" type="fixed-point" enable-audit-log="true"></field>
+        <field name="usedLeaveDays" type="fixed-point" enable-audit-log="true"></field>
+        <field name="lostLeaveDays" type="fixed-point" enable-audit-log="true"></field>
+        <field name="carriedOverDays" type="fixed-point" enable-audit-log="true"></field>
         <prim-key field="partyId"/>
         <relation type="one" fk-name="EMPL_LEAVEBAL_PRTY" rel-entity-name="Party">
             <key-map field-name="partyId"/>
@@ -1157,11 +1157,11 @@ under the License.
             package-name="org.ofbiz.humanres.employment"
             title="Employee Leave Calender">
 
-        <field name="leaveCalenderId" type="id-ne"/>
-        <field name="partyId" type="id-ne"/>
-        <field name="leaveTypeId" type="id-ne"/>
-        <field name="fromDate" type="date"/>
-        <field name="leaveDuration" type="floating-point"/>
+        <field name="leaveCalenderId" type="id-ne" enable-audit-log="true"></field>
+        <field name="partyId" type="id-ne" enable-audit-log="true"></field>
+        <field name="leaveTypeId" type="id-ne" enable-audit-log="true"></field>
+        <field name="fromDate" type="date" enable-audit-log="true"></field>
+        <field name="leaveDuration" type="floating-point" enable-audit-log="true"></field>
         <prim-key field="leaveCalenderId"/>
         <relation type="one" fk-name="EMPL_LEAVECALENDER_PRTY" rel-entity-name="Party">
             <key-map field-name="partyId"/>
@@ -1178,12 +1178,12 @@ under the License.
     <entity entity-name="LeaveBalances"
             package-name="org.ofbiz.humanres.employment"
             title="Employee Leave Balances Entity">
-        <field name="partyId" type="id-ne"/>
-        <field name="accruedDays" type="floating-point"/>
-        <field name="usedLeaveDays" type="floating-point"/>
-        <field name="lostLeaveDays" type="floating-point"/>
-        <field name="LeaveDaysCarriedOver" type="floating-point"/>
-        <field name="availableLeaveDays" type="floating-point"/>
+        <field name="partyId" type="id-ne" enable-audit-log="true"></field>
+        <field name="accruedDays" type="floating-point" enable-audit-log="true"></field>
+        <field name="usedLeaveDays" type="floating-point" enable-audit-log="true"></field>
+        <field name="lostLeaveDays" type="floating-point" enable-audit-log="true"></field>
+        <field name="LeaveDaysCarriedOver" type="floating-point" enable-audit-log="true"></field>
+        <field name="availableLeaveDays" type="floating-point" enable-audit-log="true"></field>
         <prim-key field="partyId"/>
         <relation type="one" fk-name="LEAVE_BAL_PRTY" rel-entity-name="Party">
             <key-map field-name="partyId"/>
@@ -1193,8 +1193,8 @@ under the License.
      <entity entity-name="AnnualLeaveBalancesReset"
             package-name="org.ofbiz.humanres.employment"
             title="Employee Leave Balances Reset Entity">
-        <field name="partyId" type="id-ne"/>
-        <field name="annualLeaveDaysLost" type="floating-point"/>
+        <field name="partyId" type="id-ne" enable-audit-log="true"></field>
+        <field name="annualLeaveDaysLost" type="floating-point" enable-audit-log="true"></field>
         <prim-key field="partyId"/>
         <relation type="one" fk-name="LEAVE_BALRESET_PRTY" rel-entity-name="Party">
             <key-map field-name="partyId"/>
@@ -1204,11 +1204,11 @@ under the License.
     <entity entity-name="CompassionateLeaveBalances"
             package-name="org.ofbiz.humanres.employment"
             title="Employee Leave Balances Entity">
-        <field name="partyId" type="id-ne"/>
-        <field name="days" type="numeric"/>
-        <field name="usedLeaveDays" type="floating-point"/>
-        <field name="carriedOverDays" type="floating-point"/>
-        <field name="availableLeaveDays" type="floating-point"/>
+        <field name="partyId" type="id-ne" enable-audit-log="true"></field>
+        <field name="days" type="numeric" enable-audit-log="true"></field>
+        <field name="usedLeaveDays" type="floating-point" enable-audit-log="true"></field>
+        <field name="carriedOverDays" type="floating-point" enable-audit-log="true"></field>
+        <field name="availableLeaveDays" type="floating-point" enable-audit-log="true"></field>
         <prim-key field="partyId"/>
         <relation type="one" fk-name="LEAVE_BAL_PRTY" rel-entity-name="Party">
             <key-map field-name="partyId"/>
@@ -1257,14 +1257,14 @@ under the License.
             package-name="org.ofbiz.humanres.employment"
             title="Employee Carry Over  And Lost Leave Entity">
 
-        <field name="partyId" type="id-ne"/>
-        <field name="financialYear" type="id-ne"/>
-        <field name="leaveTypeId" type="id-ne"/>
-        <field name="accruedDays" type="floating-point"/>
-        <field name="usedLeaveDays" type="floating-point"/>
-        <field name="lostLeaveDays" type="floating-point"/>
-        <field name="carryOverLeaveDays" type="floating-point"/>
-        <field name="resetLeaveDays" type="floating-point"/>
+        <field name="partyId" type="id-ne" enable-audit-log="true"></field>
+        <field name="financialYear" type="id-ne" enable-audit-log="true"></field>
+        <field name="leaveTypeId" type="id-ne" enable-audit-log="true"></field>
+        <field name="accruedDays" type="floating-point" enable-audit-log="true"></field>
+        <field name="usedLeaveDays" type="floating-point" enable-audit-log="true"></field>
+        <field name="lostLeaveDays" type="floating-point" enable-audit-log="true"></field>
+        <field name="carryOverLeaveDays" type="floating-point" enable-audit-log="true"></field>
+        <field name="resetLeaveDays" type="floating-point" enable-audit-log="true"></field>
 
         <prim-key field="partyId"/>
         <relation type="one" fk-name="CRRYOVER_LOST_PRTY" rel-entity-name="Party">
@@ -1281,26 +1281,26 @@ under the License.
             package-name="org.ofbiz.humanres.employment"
             default-resource-name="HumanResEntityLabels"
             title="Employee Leave Type Entity">
-        <field name="leaveTypeId" type="id-ne"/>
-        <field name="parentTypeId" type="id-ne"/>
-        <field name="hasTable" type="name"/>
-        <field name="description" type="description"/>
-        <field name="days" type="numeric"></field>
-        <field name="daytype" type="description"></field>
-        <field name="gender" type="name"></field>
-        <field name="isforwarded" type="name"></field>
-        <field name="isDeductedFromAnnual" type="name"></field>
-        <field name="forwardmax" type="numeric"></field>
-        <field name="noticeperiod" type="numeric"></field>
-        <field name="validity" type="numeric"></field>
-        <field name="minDays" type="numeric"></field>
-        <field name="maxDays" type="numeric"></field>
-        <field name="isallocated" type="name"></field>
-        <field name="isencashable" type="name"></field>
-        <field name="isaccrued" type="name"></field>
-        <field name="accrualRate" type="fixed-point"></field>
-        <field name="hasbalance" type="name"></field>
-        <field name="allowoverflow" type="name"></field>
+        <field name="leaveTypeId" type="id-ne" enable-audit-log="true"></field>
+        <field name="parentTypeId" type="id-ne" enable-audit-log="true"></field>
+        <field name="hasTable" type="name" enable-audit-log="true"></field>
+        <field name="description" type="description" enable-audit-log="true"></field>
+        <field name="days" type="numeric" enable-audit-log="true"></field>
+        <field name="daytype" type="description" enable-audit-log="true"></field>
+        <field name="gender" type="name" enable-audit-log="true"></field>
+        <field name="isforwarded" type="name" enable-audit-log="true"></field>
+        <field name="isDeductedFromAnnual" type="name" enable-audit-log="true"></field>
+        <field name="forwardmax" type="numeric" enable-audit-log="true"></field>
+        <field name="noticeperiod" type="numeric" enable-audit-log="true"></field>
+        <field name="validity" type="numeric" enable-audit-log="true"></field>
+        <field name="minDays" type="numeric" enable-audit-log="true"></field>
+        <field name="maxDays" type="numeric" enable-audit-log="true"></field>
+        <field name="isallocated" type="name" enable-audit-log="true"></field>
+        <field name="isencashable" type="name" enable-audit-log="true"></field>
+        <field name="isaccrued" type="name" enable-audit-log="true"></field>
+        <field name="accrualRate" type="fixed-point" enable-audit-log="true"></field>
+        <field name="hasbalance" type="name" enable-audit-log="true"></field>
+        <field name="allowoverflow" type="name" enable-audit-log="true"></field>
         <prim-key field="leaveTypeId"/>
         <relation type="one" fk-name="EMPL_LEAVE_TPAR" title="Parent" rel-entity-name="EmplLeaveType">
             <key-map field-name="parentTypeId" rel-field-name="leaveTypeId"/>
@@ -1309,15 +1309,15 @@ under the License.
 
     <entity entity-name="StaffLeaveBalances" package-name="org.ofbiz.humanres.employment" title="Staff Leave Balances">
         <field name="staffLeaveBalancesId" type="id-ne"><description>primary sequenced ID</description></field>
-        <field name="partyId" type="id"></field>
-        <field name="leaveTypeId" type="id"></field>
-        <field name="allocated" type="fixed-point"></field>
-        <field name="bbf" type="fixed-point"></field>
-        <field name="taken" type="fixed-point"></field>
-        <field name="accrued" type="fixed-point"></field>
-        <field name="lostLeaveDays" type="id"></field>
-        <field name="carriedOverDays" type="id"></field>
-        <field name="balance" type="id"></field>
+        <field name="partyId" type="id" enable-audit-log="true"></field>
+        <field name="leaveTypeId" type="id" enable-audit-log="true"></field>
+        <field name="allocated" type="fixed-point" enable-audit-log="true"></field>
+        <field name="bbf" type="fixed-point" enable-audit-log="true"></field>
+        <field name="taken" type="fixed-point" enable-audit-log="true"></field>
+        <field name="accrued" type="fixed-point" enable-audit-log="true"></field>
+        <field name="lostLeaveDays" type="id" enable-audit-log="true"></field>
+        <field name="carriedOverDays" type="id" enable-audit-log="true"></field>
+        <field name="balance" type="id" enable-audit-log="true"></field>
         <prim-key field="staffLeaveBalancesId"/>
         <relation type="one" fk-name="leavebalance_leavetype" rel-entity-name="EmplLeaveType">
             <key-map field-name="leaveTypeId"/>
@@ -1330,17 +1330,17 @@ under the License.
     <entity entity-name="PartyBenefit"
             package-name="org.ofbiz.humanres.employment"
             title="Party Benefit Entity">
-      <field name="roleTypeIdFrom" type="id-ne"></field>
-      <field name="roleTypeIdTo" type="id-ne"></field>
-      <field name="partyIdFrom" type="id-ne"></field>
-      <field name="partyIdTo" type="id-ne"></field>
-      <field name="benefitTypeId" type="id-ne"></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>
-      <field name="periodTypeId" type="id"></field>
-      <field name="cost" type="currency-amount"></field>
-      <field name="actualEmployerPaidPercent" type="floating-point"></field>
-      <field name="availableTime" type="numeric"></field>
+      <field name="roleTypeIdFrom" type="id-ne" enable-audit-log="true"></field>
+      <field name="roleTypeIdTo" type="id-ne" enable-audit-log="true"></field>
+      <field name="partyIdFrom" type="id-ne" enable-audit-log="true"></field>
+      <field name="partyIdTo" type="id-ne" enable-audit-log="true"></field>
+      <field name="benefitTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="fromDate" type="date-time" enable-audit-log="true"></field>
+      <field name="thruDate" type="date-time" enable-audit-log="true"></field>
+      <field name="periodTypeId" type="id" enable-audit-log="true"></field>
+      <field name="cost" type="currency-amount" enable-audit-log="true"></field>
+      <field name="actualEmployerPaidPercent" type="floating-point" enable-audit-log="true"></field>
+      <field name="availableTime" type="numeric" enable-audit-log="true"></field>
       <prim-key field="roleTypeIdFrom"/>
       <prim-key field="roleTypeIdTo"/>
       <prim-key field="partyIdFrom"/>
@@ -1371,25 +1371,25 @@ under the License.
     <entity entity-name="PayGrade"
             package-name="org.ofbiz.humanres.employment"
             title="Pay Grade Entity">
-      <field name="payGradeId" type="id-ne"></field>
-      <field name="payGradeName" type="name"></field>
-      <field name="comments" type="comment"></field>
+      <field name="payGradeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="payGradeName" type="name" enable-audit-log="true"></field>
+      <field name="comments" type="comment" enable-audit-log="true"></field>
       <prim-key field="payGradeId"/>
     </entity>
     <entity entity-name="PayHistory"
             package-name="org.ofbiz.humanres.employment"
             title="Pay History Entity">
-      <field name="roleTypeIdFrom" type="id-ne"></field>
-      <field name="roleTypeIdTo" type="id-ne"></field>
-      <field name="partyIdFrom" type="id-ne"></field>
-      <field name="partyIdTo" type="id-ne"></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>
-      <field name="salaryStepSeqId" type="id"></field>
-      <field name="payGradeId" type="id"></field>
-      <field name="periodTypeId" type="id"></field>
-      <field name="amount" type="currency-amount"></field>
-      <field name="comments" type="comment"></field>
+      <field name="roleTypeIdFrom" type="id-ne" enable-audit-log="true"></field>
+      <field name="roleTypeIdTo" type="id-ne" enable-audit-log="true"></field>
+      <field name="partyIdFrom" type="id-ne" enable-audit-log="true"></field>
+      <field name="partyIdTo" type="id-ne" enable-audit-log="true"></field>
+      <field name="fromDate" type="date-time" enable-audit-log="true"></field>
+      <field name="thruDate" type="date-time" enable-audit-log="true"></field>
+      <field name="salaryStepSeqId" type="id" enable-audit-log="true"></field>
+      <field name="payGradeId" type="id" enable-audit-log="true"></field>
+      <field name="periodTypeId" type="id" enable-audit-log="true"></field>
+      <field name="amount" type="currency-amount" enable-audit-log="true"></field>
+      <field name="comments" type="comment" enable-audit-log="true"></field>
       <prim-key field="roleTypeIdFrom"/>
       <prim-key field="roleTypeIdTo"/>
       <prim-key field="partyIdFrom"/>
@@ -1416,19 +1416,19 @@ under the License.
     <entity entity-name="PayrollPreference"
             package-name="org.ofbiz.humanres.employment"
             title="Payroll Preference Entity">
-      <field name="partyId" type="id-ne"></field>
-      <field name="roleTypeId" type="id-ne"></field>
-      <field name="payrollPreferenceSeqId" type="id-ne"></field>
-      <field name="deductionTypeId" type="id-ne"></field>
-      <field name="paymentMethodTypeId" type="id"></field>
-      <field name="periodTypeId" type="id"></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>
-      <field name="percentage" type="floating-point"></field>
-      <field name="flatAmount" type="currency-amount"></field>
-      <field name="routingNumber" type="short-varchar"></field>
-      <field name="accountNumber" type="short-varchar"></field>
-      <field name="bankName" type="name"></field>
+      <field name="partyId" type="id-ne" enable-audit-log="true"></field>
+      <field name="roleTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="payrollPreferenceSeqId" type="id-ne" enable-audit-log="true"></field>
+      <field name="deductionTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="paymentMethodTypeId" type="id" enable-audit-log="true"></field>
+      <field name="periodTypeId" type="id" enable-audit-log="true"></field>
+      <field name="fromDate" type="date-time" enable-audit-log="true"></field>
+      <field name="thruDate" type="date-time" enable-audit-log="true"></field>
+      <field name="percentage" type="floating-point" enable-audit-log="true"></field>
+      <field name="flatAmount" type="currency-amount" enable-audit-log="true"></field>
+      <field name="routingNumber" type="short-varchar" enable-audit-log="true"></field>
+      <field name="accountNumber" type="short-varchar" enable-audit-log="true"></field>
+      <field name="bankName" type="name" enable-audit-log="true"></field>
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
       <prim-key field="payrollPreferenceSeqId"/>
@@ -1452,11 +1452,11 @@ under the License.
     <entity entity-name="SalaryStep"
             package-name="org.ofbiz.humanres.employment"
             title="Salary Step Entity">
-      <field name="salaryStepSeqId" type="id-ne"></field>
-      <field name="payGradeId" type="id-ne"></field>
-      <field name="dateModified" type="date-time"></field>
-      <field name="minAmount" type="currency-amount"></field>
-      <field name="maxAmount" type="currency-amount"></field>
+      <field name="salaryStepSeqId" type="id-ne" enable-audit-log="true"></field>
+      <field name="payGradeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="dateModified" type="date-time" enable-audit-log="true"></field>
+      <field name="minAmount" type="currency-amount" enable-audit-log="true"></field>
+      <field name="maxAmount" type="currency-amount" enable-audit-log="true"></field>
       <prim-key field="salaryStepSeqId"/>
       <prim-key field="payGradeId"/>
       <relation type="one" fk-name="SLRY_STP_PGRD" rel-entity-name="PayGrade">
@@ -1466,17 +1466,17 @@ under the License.
     <entity entity-name="TerminationReason"
             package-name="org.ofbiz.humanres.employment"
             title="Termination Reason Entity">
-      <field name="terminationReasonId" type="id-ne"></field>
-      <field name="description" type="description"></field>
+      <field name="terminationReasonId" type="id-ne" enable-audit-log="true"></field>
+      <field name="description" type="description" enable-audit-log="true"></field>
       <prim-key field="terminationReasonId"/>
     </entity>
     <entity entity-name="TerminationType"
             package-name="org.ofbiz.humanres.employment"
             title="Termination Type Entity">
-      <field name="terminationTypeId" type="id-ne"></field>
-      <field name="parentTypeId" type="id-ne"></field>
-      <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>
+      <field name="terminationTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="parentTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="hasTable" type="indicator" enable-audit-log="true"></field>
+      <field name="description" type="description" enable-audit-log="true"></field>
       <prim-key field="terminationTypeId"/>
       <relation type="one" fk-name="TERM_TYP_PAR" title="Parent" rel-entity-name="TerminationType">
         <key-map field-name="parentTypeId" rel-field-name="terminationTypeId"/>
@@ -1485,16 +1485,16 @@ under the License.
     <entity entity-name="UnemploymentClaim"
             package-name="org.ofbiz.humanres.employment"
             title="Unemployment Claim Entity">
-      <field name="unemploymentClaimId" type="id-ne"></field>
-      <field name="unemploymentClaimDate" type="date-time"></field>
-      <field name="description" type="description"></field>
-      <field name="statusId" type="id"></field>
-      <field name="partyIdFrom" type="id"></field>
-      <field name="partyIdTo" type="id"></field>
-      <field name="roleTypeIdFrom" type="id"></field>
-      <field name="roleTypeIdTo" type="id"></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>
+      <field name="unemploymentClaimId" type="id-ne" enable-audit-log="true"></field>
+      <field name="unemploymentClaimDate" type="date-time" enable-audit-log="true"></field>
+      <field name="description" type="description" enable-audit-log="true"></field>
+      <field name="statusId" type="id" enable-audit-log="true"></field>
+      <field name="partyIdFrom" type="id" enable-audit-log="true"></field>
+      <field name="partyIdTo" type="id" enable-audit-log="true"></field>
+      <field name="roleTypeIdFrom" type="id" enable-audit-log="true"></field>
+      <field name="roleTypeIdTo" type="id" enable-audit-log="true"></field>
+      <field name="fromDate" type="date-time" enable-audit-log="true"></field>
+      <field name="thruDate" type="date-time" enable-audit-log="true"></field>
       <prim-key field="unemploymentClaimId"/>
       <relation type="one-nofk" fk-name="UNMPL_CLM_EMPLMNT" rel-entity-name="Employment">
         <key-map field-name="roleTypeIdFrom"/>
@@ -1515,21 +1515,21 @@ under the License.
     <entity entity-name="EmplPosition"
             package-name="org.ofbiz.humanres.position"
             title="EmplPosition Entity">
-      <field name="emplPositionId" type="id-ne"></field>
-      <field name="positionName" type="name"></field>
-      <field name="statusId" type="id"></field>
-      <field name="partyId" type="id"></field>
-      <field name="budgetId" type="id"></field>
-      <field name="budgetItemSeqId" type="id"></field>
-      <field name="emplPositionTypeId" type="id"></field>
-      <field name="estimatedFromDate" type="date-time"></field>
-      <field name="estimatedThruDate" type="date-time"></field>
-      <field name="salaryFlag" type="indicator"></field>
-      <field name="exemptFlag" type="indicator"></field>
-      <field name="fulltimeFlag" type="indicator"></field>
-      <field name="temporaryFlag" type="indicator"></field>
-      <field name="actualFromDate" type="date-time"></field>
-      <field name="actualThruDate" type="date-time"></field>
+      <field name="emplPositionId" type="id-ne" enable-audit-log="true"></field>
+      <field name="positionName" type="name" enable-audit-log="true"></field>
+      <field name="statusId" type="id" enable-audit-log="true"></field>
+      <field name="partyId" type="id" enable-audit-log="true"></field>
+      <field name="budgetId" type="id" enable-audit-log="true"></field>
+      <field name="budgetItemSeqId" type="id" enable-audit-log="true"></field>
+      <field name="emplPositionTypeId" type="id" enable-audit-log="true"></field>
+      <field name="estimatedFromDate" type="date-time" enable-audit-log="true"></field>
+      <field name="estimatedThruDate" type="date-time" enable-audit-log="true"></field>
+      <field name="salaryFlag" type="indicator" enable-audit-log="true"></field>
+      <field name="exemptFlag" type="indicator" enable-audit-log="true"></field>
+      <field name="fulltimeFlag" type="indicator" enable-audit-log="true"></field>
+      <field name="temporaryFlag" type="indicator" enable-audit-log="true"></field>
+      <field name="actualFromDate" type="date-time" enable-audit-log="true"></field>
+      <field name="actualThruDate" type="date-time" enable-audit-log="true"></field>
       <prim-key field="emplPositionId"/>
       <relation type="one" fk-name="EMPL_POS_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
@@ -1552,10 +1552,10 @@ under the License.
     <entity entity-name="EmplPositionClassType"
             package-name="org.ofbiz.humanres.position"
             title="EmplPosition Classification Type Entity">
-      <field name="emplPositionClassTypeId" type="id-ne"></field>
-      <field name="parentTypeId" type="id-ne"></field>
-      <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>
+      <field name="emplPositionClassTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="parentTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="hasTable" type="indicator" enable-audit-log="true"></field>
+      <field name="description" type="description" enable-audit-log="true"></field>
       <prim-key field="emplPositionClassTypeId"/>
       <relation type="one" fk-name="EMPL_CLS_TYP_PAR" title="Parent" rel-entity-name="EmplPositionClassType">
         <key-map field-name="parentTypeId" rel-field-name="emplPositionClassTypeId"/>
@@ -1564,12 +1564,12 @@ under the License.
     <entity entity-name="EmplPositionFulfillment"
             package-name="org.ofbiz.humanres.position"
             title="EmplPosition Fulfillment Entity">
-      <field name="emplPositionId" type="id-ne"></field>
-      <field name="emplPositionTypeId" type="id-ne"></field>
-      <field name="partyId" type="id-ne"></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>
-      <field name="comments" type="comment"></field>
+      <field name="emplPositionId" type="id-ne" enable-audit-log="true"></field>
+      <field name="emplPositionTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="partyId" type="id-ne" enable-audit-log="true"></field>
+      <field name="fromDate" type="date-time" enable-audit-log="true"></field>
+      <field name="thruDate" type="date-time" enable-audit-log="true"></field>
+      <field name="comments" type="comment" enable-audit-log="true"></field>
       <prim-key field="emplPositionId"/>
       <prim-key field="partyId"/>
       <prim-key field="fromDate"/>
@@ -1636,12 +1636,12 @@ under the License.
     <entity entity-name="EmplPositionReportingStruct"
             package-name="org.ofbiz.humanres.position"
             title="EmplPosition Reporting Structure Entity">
-      <field name="emplPositionIdReportingTo" type="id-ne"></field>
-      <field name="emplPositionIdManagedBy" type="id-ne"></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>
-      <field name="comments" type="comment"></field>
-      <field name="primaryFlag" type="indicator"></field>
+      <field name="emplPositionIdReportingTo" type="id-ne" enable-audit-log="true"></field>
+      <field name="emplPositionIdManagedBy" type="id-ne" enable-audit-log="true"></field>
+      <field name="fromDate" type="date-time" enable-audit-log="true"></field>
+      <field name="thruDate" type="date-time" enable-audit-log="true"></field>
+      <field name="comments" type="comment" enable-audit-log="true"></field>
+      <field name="primaryFlag" type="indicator" enable-audit-log="true"></field>
       <prim-key field="emplPositionIdReportingTo"/>
       <prim-key field="emplPositionIdManagedBy"/>
       <prim-key field="fromDate"/>
@@ -1655,11 +1655,11 @@ under the License.
     <entity entity-name="EmplPositionResponsibility"
             package-name="org.ofbiz.humanres.position"
             title="EmplPosition Responsibility Entity">
-      <field name="emplPositionId" type="id-ne"></field>
-      <field name="responsibilityTypeId" type="id-ne"></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>
-      <field name="comments" type="comment"></field>
+      <field name="emplPositionId" type="id-ne" enable-audit-log="true"></field>
+      <field name="responsibilityTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="fromDate" type="date-time" enable-audit-log="true"></field>
+      <field name="thruDate" type="date-time" enable-audit-log="true"></field>
+      <field name="comments" type="comment" enable-audit-log="true"></field>
       <prim-key field="emplPositionId"/>
       <prim-key field="responsibilityTypeId"/>
       <prim-key field="fromDate"/>
@@ -1673,11 +1673,11 @@ under the License.
     <entity entity-name="EmplPositionType"
             package-name="org.ofbiz.humanres.position"
             title="EmplPosition Type Entity">
-      <field name="emplPositionTypeId" type="id-ne"></field>
-      <field name="parentTypeId" type="id-ne"></field>
-      <field name="hasTable" type="indicator"></field>
-      <field name="emplPositionType" type="description"></field>
-      <field name="payGradeId" type="id-ne"></field>      
+      <field name="emplPositionTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="parentTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="hasTable" type="indicator" enable-audit-log="true"></field>
+      <field name="emplPositionType" type="description" enable-audit-log="true"></field>
+      <field name="payGradeId" type="id-ne" enable-audit-log="true"></field>      
       <prim-key field="emplPositionTypeId"/>
       <relation type="one" fk-name="EMPL_POSI_TYP_PAR" title="Parent" rel-entity-name="EmplPositionType">
         <key-map field-name="parentTypeId" rel-field-name="emplPositionTypeId"/>
@@ -1689,11 +1689,11 @@ under the License.
     <entity entity-name="EmplPositionTypeClass"
             package-name="org.ofbiz.humanres.position"
             title="EmplPosition Type Class Entity">
-      <field name="emplPositionTypeId" type="id-ne"></field>
-      <field name="emplPositionClassTypeId" type="id-ne"></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>
-      <field name="standardHoursPerWeek" type="floating-point"></field>
+      <field name="emplPositionTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="emplPositionClassTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="fromDate" type="date-time" enable-audit-log="true"></field>
+      <field name="thruDate" type="date-time" enable-audit-log="true"></field>
+      <field name="standardHoursPerWeek" type="floating-point" enable-audit-log="true"></field>
       <prim-key field="emplPositionTypeId"/>
       <prim-key field="emplPositionClassTypeId"/>
       <prim-key field="fromDate"/>
@@ -1707,11 +1707,11 @@ under the License.
     <entity entity-name="ValidResponsibility"
             package-name="org.ofbiz.humanres.position"
             title="Valid Responsibility Entity">
-      <field name="emplPositionTypeId" type="id-ne"></field>
-      <field name="responsibilityTypeId" type="id-ne"></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>
-      <field name="comments" type="comment"></field>
+      <field name="emplPositionTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="responsibilityTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="fromDate" type="date-time" enable-audit-log="true"></field>
+      <field name="thruDate" type="date-time" enable-audit-log="true"></field>
+      <field name="comments" type="comment" enable-audit-log="true"></field>
       <prim-key field="emplPositionTypeId"/>
       <prim-key field="responsibilityTypeId"/>
       <prim-key field="fromDate"/>
@@ -1725,12 +1725,12 @@ under the License.
     <entity entity-name="EmplPositionTypeRate" table-name="EMPL_POSITION_TYPE_RATE_NEW"
             package-name="org.ofbiz.humanres.position"
             title="EmplPosition Type Rate Entity">
-    <field name="emplPositionTypeId" type="id-ne"/>
-    <field name="rateTypeId" type="id-ne"/>
-    <field name="payGradeId" type="id"/>
-    <field name="salaryStepSeqId" type="id"/>
-    <field name="fromDate" type="date-time"/>
-    <field name="thruDate" type="date-time"/>
+    <field name="emplPositionTypeId" type="id-ne" enable-audit-log="true"></field>
+    <field name="rateTypeId" type="id-ne" enable-audit-log="true"></field>
+    <field name="payGradeId" type="id" enable-audit-log="true"></field>
+    <field name="salaryStepSeqId" type="id" enable-audit-log="true"></field>
+    <field name="fromDate" type="date-time" enable-audit-log="true"></field>
+    <field name="thruDate" type="date-time" enable-audit-log="true"></field>
     <prim-key field="emplPositionTypeId"/>
     <prim-key field="rateTypeId"/>
     <prim-key field="fromDate"/>
@@ -1768,20 +1768,20 @@ under the License.
     <entity entity-name="JobRequisition"
             package-name="org.ofbiz.humanres.recruitment"
             title="Entity for storing data about recruitment">
-        <field name="jobRequisitionId" type="id-ne"></field>
-        <field name="durationMonths" type="numeric"></field>
-        <field name="age" type="numeric"></field>
-        <field name="gender" type="indicator"></field>
-        <field name="experienceMonths" type="numeric"></field>
-        <field name="experienceYears" type="numeric"></field>
-        <field name="qualification" type="id-long"></field>
-        <field name="jobLocation" type="id"></field>
-        <field name="skillTypeId" type="id"></field>
-        <field name="noOfResources" type="numeric"></field>
-        <field name="jobPostingTypeEnumId" type="id"></field>
-        <field name="jobRequisitionDate" type="date"></field>
-        <field name="examTypeEnumId" type="id"></field>
-        <field name="requiredOnDate" type="date"></field>
+        <field name="jobRequisitionId" type="id-ne" enable-audit-log="true"></field>
+        <field name="durationMonths" type="numeric" enable-audit-log="true"></field>
+        <field name="age" type="numeric" enable-audit-log="true"></field>
+        <field name="gender" type="indicator" enable-audit-log="true"></field>
+        <field name="experienceMonths" type="numeric" enable-audit-log="true"></field>
+        <field name="experienceYears" type="numeric" enable-audit-log="true"></field>
+        <field name="qualification" type="id-long" enable-audit-log="true"></field>
+        <field name="jobLocation" type="id" enable-audit-log="true"></field>
+        <field name="skillTypeId" type="id" enable-audit-log="true"></field>
+        <field name="noOfResources" type="numeric" enable-audit-log="true"></field>
+        <field name="jobPostingTypeEnumId" type="id" enable-audit-log="true"></field>
+        <field name="jobRequisitionDate" type="date" enable-audit-log="true"></field>
+        <field name="examTypeEnumId" type="id" enable-audit-log="true"></field>
+        <field name="requiredOnDate" type="date" enable-audit-log="true"></field>
         <prim-key field="jobRequisitionId"/>
         <relation type="one" fk-name="JOB_REQ_SKTYP" rel-entity-name="SkillType">
             <key-map field-name="skillTypeId"/>
@@ -1796,14 +1796,14 @@ under the License.
     <entity entity-name="JobInterview"
             package-name="org.ofbiz.humanres.recruitment"
             title="Entity for storing data about Interviews conducted">
-        <field name="jobInterviewId" type="id-ne"></field>
-        <field name="jobIntervieweePartyId" type="id"></field>
-        <field name="jobRequisitionId" type="id"></field>
-        <field name="jobInterviewerPartyId" type="id"></field>
-        <field name="jobInterviewTypeId" type="id"></field>
-        <field name="gradeSecuredEnumId" type="id"></field>
-        <field name="jobInterviewResult" type="id"></field>
-        <field name="jobInterviewDate" type="date"></field>
+        <field name="jobInterviewId" type="id-ne" enable-audit-log="true"></field>
+        <field name="jobIntervieweePartyId" type="id" enable-audit-log="true"></field>
+        <field name="jobRequisitionId" type="id" enable-audit-log="true"></field>
+        <field name="jobInterviewerPartyId" type="id" enable-audit-log="true"></field>
+        <field name="jobInterviewTypeId" type="id" enable-audit-log="true"></field>
+        <field name="gradeSecuredEnumId" type="id" enable-audit-log="true"></field>
+        <field name="jobInterviewResult" type="id" enable-audit-log="true"></field>
+        <field name="jobInterviewDate" type="date" enable-audit-log="true"></field>
         <prim-key field="jobInterviewId"/>
         <relation type="one" fk-name="JOB_INTW_IEPR" title="Interviewee" rel-entity-name="Party">
             <key-map field-name="jobIntervieweePartyId" rel-field-name="partyId"/>
@@ -1824,8 +1824,8 @@ under the License.
     <entity entity-name="JobInterviewType"
             package-name="org.ofbiz.humanres.recruitment"
             title="Entity for storing data about Interview Types">
-        <field name="jobInterviewTypeId" type="id-ne"></field>
-        <field name="description" type="description"></field>
+        <field name="jobInterviewTypeId" type="id-ne" enable-audit-log="true"></field>
+        <field name="description" type="description" enable-audit-log="true"></field>
         <prim-key field="jobInterviewTypeId"/>
     </entity>
     <view-entity entity-name="EmplPositionFulfillmentAndReportingStruct"
@@ -1849,7 +1849,7 @@ under the License.
     <entity entity-name="TrainingRequest"
             package-name="org.ofbiz.humanres.trainings"
             title="Training Request Entity">
-        <field name="trainingRequestId" type="id-ne"></field>
+        <field name="trainingRequestId" type="id-ne" enable-audit-log="true"></field>
         <prim-key field="trainingRequestId"/>
     </entity>
 	
@@ -1857,10 +1857,10 @@ under the License.
     <entity entity-name="EmplLeaveReasonType"  package-name="org.ofbiz.humanres.employment"
             default-resource-name="HumanResEntityLabels"
             title="Leave Reason Type Entity">
-        <field name="emplLeaveReasonTypeId" type="id-ne"/>
-        <field name="parentTypeId" type="id-ne"/>
-        <field name="hasTable" type="indicator"/>
-        <field name="reason" type="name"/>
+        <field name="emplLeaveReasonTypeId" type="id-ne" enable-audit-log="true"></field>
+        <field name="parentTypeId" type="id-ne" enable-audit-log="true"></field>
+        <field name="hasTable" type="indicator" enable-audit-log="true"></field>
+        <field name="reason" type="name" enable-audit-log="true"></field>
         <prim-key field="emplLeaveReasonTypeId"/>
         <relation type="one" fk-name="EMPL_REASON_TPAR" title="Parent" rel-entity-name="EmplLeaveReasonType">
             <key-map field-name="parentTypeId" rel-field-name="emplLeaveReasonTypeId"/>
@@ -1868,75 +1868,75 @@ under the License.
      </entity>
 
      <!--entity entity-name="PayrollElement" package-name="org.ofbiz.payroll" title="Payroll Element Entity">
-        <field name="payrollElementId" type="id-ne"><description>primary sequenced ID</description></field>
-        <field name="name" type="name"></field>
-        <field name="elementType" type="name"></field>
-        <field name="hasBalance" type="indicator"></field>
-        <field name="relief" type="indicator"></field>
-        <field name="cummulative" type="indicator"></field>
-        <field name="employercontribution" type="indicator"></field>
-        <field name="systemcontrolled" type="name"></field>
-        <field name="taxable" type="indicator"></field>
-        <field name="employertax" type="indicator"></field>
-        <field name="benefit" type="name"></field>
-        <field name="insurancecontribution" type="indicator"></field>
-        <field name="hasRelief" type="indicator"></field>
-        <field name="recurrent" type="indicator"></field>
-        <field name="hasInterest" type="indicator"></field>
-        <field name="isfixed" type="indicator"></field>
-        <field name="interestamount" type="currency-amount"></field>
-        <field name="interestrate" type="numeric"></field>
-        <field name="interestfrequency" type="name"></field>
-        <field name="payslipdisplay" type="indicator"></field>
-        <field name="isbold" type="indicator"></field>
+        <field name="payrollElementId" type="id-ne"><description>primary sequenced ID</description enable-audit-log="true"></field>
+        <field name="name" type="name" enable-audit-log="true"></field>
+        <field name="elementType" type="name" enable-audit-log="true"></field>
+        <field name="hasBalance" type="indicator" enable-audit-log="true"></field>
+        <field name="relief" type="indicator" enable-audit-log="true"></field>
+        <field name="cummulative" type="indicator" enable-audit-log="true"></field>
+        <field name="employercontribution" type="indicator" enable-audit-log="true"></field>
+        <field name="systemcontrolled" type="name" enable-audit-log="true"></field>
+        <field name="taxable" type="indicator" enable-audit-log="true"></field>
+        <field name="employertax" type="indicator" enable-audit-log="true"></field>
+        <field name="benefit" type="name" enable-audit-log="true"></field>
+        <field name="insurancecontribution" type="indicator" enable-audit-log="true"></field>
+        <field name="hasRelief" type="indicator" enable-audit-log="true"></field>
+        <field name="recurrent" type="indicator" enable-audit-log="true"></field>
+        <field name="hasInterest" type="indicator" enable-audit-log="true"></field>
+        <field name="isfixed" type="indicator" enable-audit-log="true"></field>
+        <field name="interestamount" type="currency-amount" enable-audit-log="true"></field>
+        <field name="interestrate" type="numeric" enable-audit-log="true"></field>
+        <field name="interestfrequency" type="name" enable-audit-log="true"></field>
+        <field name="payslipdisplay" type="indicator" enable-audit-log="true"></field>
+        <field name="isbold" type="indicator" enable-audit-log="true"></field>
         <prim-key field="payrollElementId"/>
     </entity-->
 
     <entity entity-name="Tribe" package-name="org.ofbiz.humanres.employment" title="Tribe Entity">
-       <field name="tribeId" type="id-ne"><description>primary sequenced ID</description></field>
-       <field name="tribe" type="name"></field>
+       <field name="tribeId" type="id-ne" enable-audit-log="true"><description>primary sequenced ID</description></field>
+       <field name="tribe" type="name" enable-audit-log="true"></field>
        <prim-key field="tribeId"/>
     </entity>
 
     <entity entity-name="County" package-name="org.ofbiz.humanres.employment" title="County Entity">
-       <field name="countyId" type="id-ne"><description>primary sequenced ID</description></field>
-       <field name="county" type="name"></field>
+       <field name="countyId" type="id-ne" enable-audit-log="true"><description>primary sequenced ID</description></field>
+       <field name="county" type="name" enable-audit-log="true"></field>
        <prim-key field="countyId"/>
     </entity>
 
     <entity entity-name="BloodGroup" package-name="org.ofbiz.humanres.employment" title="Blood Group Entity">
-       <field name="bloodGroupId" type="id-ne"><description>primary sequenced ID</description></field>
-       <field name="bloodGroup" type="name"></field>
+       <field name="bloodGroupId" type="id-ne" enable-audit-log="true"><description>primary sequenced ID</description></field>
+       <field name="bloodGroup" type="name" enable-audit-log="true"></field>
        <prim-key field="bloodGroupId"/>
     </entity>
 
     <entity entity-name="Religion" package-name="org.ofbiz.humanres.employment" title="Religion Entity">
-       <field name="religionId" type="id-ne"><description>primary sequenced ID</description></field>
-       <field name="religion" type="name"></field>
+       <field name="religionId" type="id-ne" enable-audit-log="true"><description>primary sequenced ID</description></field>
+       <field name="religion" type="name" enable-audit-log="true"></field>
        <prim-key field="religionId"/>
     </entity>
 
     <entity entity-name="FamilyRelations" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
-       <field name="familyRelationsId" type="id-ne"><description>primary sequenced ID</description></field>
-       <field name="relationship" type="name"></field>
+       <field name="familyRelationsId" type="id-ne" enable-audit-log="true"><description>primary sequenced ID</description></field>
+       <field name="relationship" type="name" enable-audit-log="true"></field>
        <prim-key field="familyRelationsId"/>
     </entity>
 
     <entity entity-name="StaffSpouse" package-name="org.ofbiz.humanres.employment" title="Staff Spouse Entity">
-        <field name="staffspouseId" type="id-ne"><description>primary sequenced ID</description></field>
-        <field name="partyId" type="id"></field>
-        <field name="familyRelationsId" type="id"></field>
-        <field name="partyIdentificationTypeId" type="id"></field>
-        <field name="fullname" type="name"></field>
-        <field name="gender" type="name"></field>
-        <field name="dob" type="date"></field>
-        <field name="idno" type="name"></field>
-        <field name="employer" type="name"></field>
-        <field name="phoneNo" type="name"></field>
-        <field name="emailAddress" type="name"></field>
-        <field name="postalAddress" type="name"></field>
-        <field name="homeAddress" type="name"></field>
-        <field name="geoId" type="id"></field>
+        <field name="staffspouseId" type="id-ne" enable-audit-log="true"><description>primary sequenced ID</description></field>
+        <field name="partyId" type="id" enable-audit-log="true"></field>
+        <field name="familyRelationsId" type="id" enable-audit-log="true"></field>
+        <field name="partyIdentificationTypeId" type="id" enable-audit-log="true"></field>
+        <field name="fullname" type="name" enable-audit-log="true"></field>
+        <field name="gender" type="name" enable-audit-log="true"></field>
+        <field name="dob" type="date" enable-audit-log="true"></field>
+        <field name="idno" type="name" enable-audit-log="true"></field>
+        <field name="employer" type="name" enable-audit-log="true"></field>
+        <field name="phoneNo" type="name" enable-audit-log="true"></field>
+        <field name="emailAddress" type="name" enable-audit-log="true"></field>
+        <field name="postalAddress" type="name" enable-audit-log="true"></field>
+        <field name="homeAddress" type="name" enable-audit-log="true"></field>
+        <field name="geoId" type="id" enable-audit-log="true"></field>
 
         <!--field name="maritalstatus" type="id"></field-->
 
@@ -1956,16 +1956,16 @@ under the License.
         </entity>
 
         <entity entity-name="StaffDependant" package-name="org.ofbiz.humanres.employment" title="Staff Dependant Entity">
-        <field name="staffdependantId" type="id-ne"><description>primary sequenced ID</description></field>
-        <field name="partyId" type="id"></field>
-        <field name="familyRelationsId" type="id"></field>
-        <field name="partyIdentificationTypeId" type="id"></field>
-        <field name="fullname" type="name"></field>
-        <field name="gender" type="name"></field>
-        <field name="dob" type="date"></field>
-        <field name="idno" type="name"></field>
-        <field name="bloodGroupId" type="id"></field>
-        <field name="isdeceased" type="indicator"></field>
+        <field name="staffdependantId" type="id-ne" enable-audit-log="true"><description>primary sequenced ID</description></field>
+        <field name="partyId" type="id" enable-audit-log="true"></field>
+        <field name="familyRelationsId" type="id" enable-audit-log="true"></field>
+        <field name="partyIdentificationTypeId" type="id" enable-audit-log="true"></field>
+        <field name="fullname" type="name" enable-audit-log="true"></field>
+        <field name="gender" type="name" enable-audit-log="true"></field>
+        <field name="dob" type="date" enable-audit-log="true"></field>
+        <field name="idno" type="name" enable-audit-log="true"></field>
+        <field name="bloodGroupId" type="id" enable-audit-log="true"></field>
+        <field name="isdeceased" type="indicator" enable-audit-log="true"></field>
 
 
         <prim-key field="staffdependantId"/>
@@ -1984,19 +1984,19 @@ under the License.
         </entity>
 
         <entity entity-name="StaffNextOfKin" package-name="org.ofbiz.humanres.employment" title="Staff Next Of Kin Entity">
-        <field name="staffnokId" type="id-ne"><description>primary sequenced ID</description></field>
-        <field name="partyId" type="id"></field>
-        <field name="familyRelationsId" type="id"></field>
-        <field name="partyIdentificationTypeId" type="id"></field>
-        <field name="fullname" type="name"></field>
-        <field name="gender" type="name"></field>
-        <field name="idno" type="name"></field>
-        <field name="dob" type="date"></field>
-        <field name="phoneNo" type="name"></field>
-        <field name="emailAddress" type="name"></field>
-        <field name="postalAddress" type="name"></field>
-        <field name="homeAddress" type="name"></field>
-        <field name="geoId" type="id"></field>
+        <field name="staffnokId" type="id-ne" enable-audit-log="true"><description>primary sequenced ID</description></field>
+        <field name="partyId" type="id" enable-audit-log="true"></field>
+        <field name="familyRelationsId" type="id" enable-audit-log="true"></field>
+        <field name="partyIdentificationTypeId" type="id" enable-audit-log="true"></field>
+        <field name="fullname" type="name" enable-audit-log="true"></field>
+        <field name="gender" type="name" enable-audit-log="true"></field>
+        <field name="idno" type="name" enable-audit-log="true"></field>
+        <field name="dob" type="date" enable-audit-log="true"></field>
+        <field name="phoneNo" type="name" enable-audit-log="true"></field>
+        <field name="emailAddress" type="name" enable-audit-log="true"></field>
+        <field name="postalAddress" type="name" enable-audit-log="true"></field>
+        <field name="homeAddress" type="name" enable-audit-log="true"></field>
+        <field name="geoId" type="id" enable-audit-log="true"></field>
         <prim-key field="staffnokId"/>
         <relation type="one" fk-name="nok_identification" rel-entity-name="PartyIdentificationType">
             <key-map field-name="partyIdentificationTypeId"/>
@@ -2017,20 +2017,20 @@ under the License.
   		<!-- ========================================================= -->
 
   		<entity entity-name="SeparationType" package-name="org.ofbiz.humanres.employment" title="Separation Types">
-        <field name="separationTypeId" type="id-ne"><description>primary sequenced ID</description></field>
-        <field name="name" type="name"></field>
-        <field name="description" type="description"></field>
+        <field name="separationTypeId" type="id-ne" enable-audit-log="true"><description>primary sequenced ID</description></field>
+        <field name="name" type="name" enable-audit-log="true"></field>
+        <field name="description" type="description" enable-audit-log="true"></field>
         <prim-key field="separationTypeId"/>
         </entity>
 
         <entity entity-name="SeparationApplication" package-name="org.ofbiz.humanres.employment" title="Separation Application">
-        <field name="separationApplicationId" type="id-ne"><description>primary sequenced ID</description></field>
-        <field name="partyId" type="id"></field>
-        <field name="separationTypeId" type="id"></field>
-        <field name="effectiveDate" type="id"></field>
-        <field name="reason" type="description"></field>
-        <field name="separated" type="indicator"></field>
-        <field name="status" type="name"></field>
+        <field name="separationApplicationId" type="id-ne" enable-audit-log="true"><description>primary sequenced ID</description></field>
+        <field name="partyId" type="id" enable-audit-log="true"></field>
+        <field name="separationTypeId" type="id" enable-audit-log="true"></field>
+        <field name="effectiveDate" type="id" enable-audit-log="true"></field>
+        <field name="reason" type="description" enable-audit-log="true"></field>
+        <field name="separated" type="indicator" enable-audit-log="true"></field>
+        <field name="status" type="name" enable-audit-log="true"></field>
         <prim-key field="separationApplicationId"/>
          <relation type="one" fk-name="SEP_TYPE" rel-entity-name="SeparationType">
             <key-map field-name="separationTypeId"/>
@@ -2242,15 +2242,15 @@ under the License.
 
     <entity entity-name="department" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
        <field name="departmentId" type="id-ne"><description>primary sequenced ID</description></field>
-       <field name="departmentName" type="name"></field>
-       <field name="branchId" type="name"></field>
+       <field name="departmentName" type="name" enable-audit-log="true"></field>
+       <field name="branchId" type="name" enable-audit-log="true"></field>
        <prim-key field="departmentId"/>
     </entity>
     
      <entity entity-name="PublicHolidays" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
-       <field name="holidayId" type="id-ne"><description>primary sequenced ID</description></field>
-       <field name="holidayName" type="name"></field>
-       <field name="holidayDate" type="date"></field>
+       <field name="holidayId" type="id-ne" enable-audit-log="true"><description>primary sequenced ID</description></field>
+       <field name="holidayName" type="name" enable-audit-log="true"></field>
+       <field name="holidayDate" type="date" enable-audit-log="true"></field>
        <prim-key field="holidayId"/>
     </entity>
     
@@ -2277,32 +2277,32 @@ under the License.
 	
 	
 	 <entity entity-name="OfficialEmail" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
-       <field name="partyId" type="id-ne"><description>primary sequenced ID</description></field>
-       <field name="emailAddress" type="name"></field>
+       <field name="partyId" type="id-ne" enable-audit-log="true"><description>primary sequenced ID</description></field>
+       <field name="emailAddress" type="name" enable-audit-log="true"></field>
        <prim-key field="partyId"/>
     </entity>
 	
 	<entity entity-name="StaffScheduledMail" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
-       <field name="msgId" type="id-ne"></field>
-	   <field name="partyId" type="id-ne"></field>
-	   <field name="subject" type="description"></field>
-       <field name="body" type="description"></field>
-	   <field name="sendStatus" type="name"></field>
+       <field name="msgId" type="id-ne" enable-audit-log="true"></field>
+	   <field name="partyId" type="id-ne" enable-audit-log="true"></field>
+	   <field name="subject" type="description" enable-audit-log="true"></field>
+       <field name="body" type="description" enable-audit-log="true"></field>
+	   <field name="sendStatus" type="name" enable-audit-log="true"></field>
        <prim-key field="msgId"/>
     </entity>
     
     <entity entity-name="SocietyScheduledMail" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
-       <field name="scheduleId" type="id-ne"></field>
-	   <field name="email" type="name"></field>
-	   <field name="subject" type="description"></field>
-       <field name="body" type="description"></field>
-	   <field name="sendStatus" type="name"></field>
+       <field name="scheduleId" type="id-ne" enable-audit-log="true"></field>
+	   <field name="email" type="name" enable-audit-log="true"></field>
+	   <field name="subject" type="description" enable-audit-log="true"></field>
+       <field name="body" type="description" enable-audit-log="true"></field>
+	   <field name="sendStatus" type="name" enable-audit-log="true"></field>
        <prim-key field="scheduleId"/>
     </entity>
 	
 	<entity entity-name="RetirementAge" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
-       <field name="ageId" type="id-ne"><description>primary sequenced ID</description></field>
-       <field name="retirementAge" type="name"></field>
+       <field name="ageId" type="id-ne" enable-audit-log="true"><description>primary sequenced ID</description></field>
+       <field name="retirementAge" type="name" enable-audit-log="true"></field>
        <prim-key field="ageId"/>
     </entity>
     
@@ -2310,50 +2310,50 @@ under the License.
                <!-- TRAINING OF STAFF -->
        
       <entity entity-name="TrainingTypes" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
-       <field name="trainingTypeId" type="id-ne"><description>primary sequenced ID</description></field>
-       <field name="trainingName" type="name"></field>
-       <field name="parentTraining" type="name"></field>
-       <field name="essentialSkill" type="name"></field>
-       <field name="timeFrame" type="name"></field>
+       <field name="trainingTypeId" type="id-ne" enable-audit-log="true"><description>primary sequenced ID</description></field>
+       <field name="trainingName" type="name" enable-audit-log="true"></field>
+       <field name="parentTraining" type="name" enable-audit-log="true"></field>
+       <field name="essentialSkill" type="name" enable-audit-log="true"></field>
+       <field name="timeFrame" type="name" enable-audit-log="true"></field>
        <prim-key field="trainingTypeId"/>
     </entity>   
     
      <entity entity-name="CostTypes" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
-       <field name="costTypeId" type="id-ne"><description>primary sequenced ID</description></field>
-       <field name="CostName" type="name"></field>
-       <field name="trainingFees" type="name"></field>
-       <field name="travelCost" type="name"></field>
-       <field name="accomodationCost" type="name"></field>
-        <field name="allowance" type="name"></field>
+       <field name="costTypeId" type="id-ne" enable-audit-log="true"><description>primary sequenced ID</description></field>
+       <field name="CostName" type="name" enable-audit-log="true"></field>
+       <field name="trainingFees" type="name" enable-audit-log="true"></field>
+       <field name="travelCost" type="name" enable-audit-log="true"></field>
+       <field name="accomodationCost" type="name" enable-audit-log="true"></field>
+        <field name="allowance" type="name" enable-audit-log="true"></field>
        <prim-key field="costTypeId"/>
     </entity>  
     
      <entity entity-name="StaffWhoNeedTraining" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
-       <field name="needId" type="id-ne"><description>primary sequenced ID</description></field>
-       <field name="partyId" type="id-ne"></field>
-       <field name="departmentId" type="name"></field>
-       <field name="branchId" type="name"></field>
-       <field name="skillRequired" type="name"></field>
-       <field name="status" type="name"></field>
-       <field name="trainingStageFromHod" type="name"></field>
+       <field name="needId" type="id-ne" enable-audit-log="true"><description>primary sequenced ID</description></field>
+       <field name="partyId" type="id-ne" enable-audit-log="true"></field>
+       <field name="departmentId" type="name" enable-audit-log="true"></field>
+       <field name="branchId" type="name" enable-audit-log="true"></field>
+       <field name="skillRequired" type="name" enable-audit-log="true"></field>
+       <field name="status" type="name" enable-audit-log="true"></field>
+       <field name="trainingStageFromHod" type="name" enable-audit-log="true"></field>
        <prim-key field="needId"/>
     </entity>  
     
      <entity entity-name="TrainingEvent" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
-       <field name="eventId" type="id-ne"><description>primary sequenced ID</description></field>
-        <field name="eventName" type="name"></field>
-       <field name="trainingTypeId" type="name"></field>
-       <field name="costTypeId" type="name"></field>
-       <field name="startDate" type="date"></field>
-       <field name="endDate" type="date"></field>
+       <field name="eventId" type="id-ne" enable-audit-log="true"><description>primary sequenced ID</description></field>
+        <field name="eventName" type="name" enable-audit-log="true"></field>
+       <field name="trainingTypeId" type="name" enable-audit-log="true"></field>
+       <field name="costTypeId" type="name" enable-audit-log="true"></field>
+       <field name="startDate" type="date" enable-audit-log="true"></field>
+       <field name="endDate" type="date" enable-audit-log="true"></field>
        <prim-key field="eventId"/>
     </entity>  
     
      <entity entity-name="PatyInTrainingEvent" package-name="org.ofbiz.humanres.employment" title="Family Relations Entity">
-       <field name="partyTrainingId" type="id-ne"><description>primary sequenced ID</description></field>
-       <field name="partyId" type="name"></field>
-       <field name="eventId" type="name"></field>
-       <field name="approvalStatus" type="name"></field>
+       <field name="partyTrainingId" type="id-ne" enable-audit-log="true"><description>primary sequenced ID</description></field>
+       <field name="partyId" type="name" enable-audit-log="true"></field>
+       <field name="eventId" type="name" enable-audit-log="true"></field>
+       <field name="approvalStatus" type="name" enable-audit-log="true"></field>
        <prim-key field="partyTrainingId"/>
     </entity>  
     
