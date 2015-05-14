@@ -573,9 +573,7 @@
 			</then>
 			</if>
         
-        
-        
-        <if>
+            <if>
 			<condition>
 					<if-compare-field field="newRequester"
 						to-field="valid" operator="equals" />
@@ -1478,9 +1476,9 @@
         <now-timestamp field="nowTimestamp"/>
        
         <set field="partyId" from-field="parameters.partyId"/>
-        <set field="releasedTo" value="${userLogin.partyId}"/>
-        <set field="time" value="${bsh:org.ofbiz.registry.FileServices.getDateOfReceivedFile(partyId, releasedTo);}" type="Timestamp"/>
-        <log message="=====================PLEASE SHOW TIME >> ${time} Party>${partyId} releasedto > ${releasedTo}" level="info"/>
+        <set field="party" value="${userLogin.partyId}"/>
+        <set field="time" value="${bsh:org.ofbiz.registry.FileServices.getDateOfReceivedFile(partyId, party);}" type="Timestamp"/>
+        <log message="=====================PLEASE SHOW TIME >> ${time} Party>${partyId} releasedto > ${party}" level="info"/>
         
         
         <entity-condition list="dateList" entity-name="RegistryFileMovement">
@@ -1729,7 +1727,7 @@
 		<set field="newEntity.timeOut" from-field="nowTimestamp" />
 		<set field="newEntity.fromRegistry" value="N" />
 		<set field="partyId" from-field="parameters.partyId" />
-		<set field="newEntity.releasedTo" from-field="parameters.currentPossesser"/>
+		<set field="newEntity.releasedTo" from-field="parameters.intendedPossesser"/>
 		<set field="newEntity.carriedBy" from-field="parameters.carriedBy" />
 		 
 		
