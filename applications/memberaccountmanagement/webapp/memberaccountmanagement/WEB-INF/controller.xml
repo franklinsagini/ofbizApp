@@ -73,6 +73,15 @@
 		<response name="success" type="none">
     </response>
     </request-map>
+    
+    <request-map uri="availableamount">
+		<!-- event type="java" path="org.ofbiz.loans.events.LoanEvent" invoke="getMember"/ -->
+		<event type="java"
+			path="org.ofbiz.accountholdertransactions.AccHolderTransactionServices"
+			invoke="getAccountTotalBalance" />
+		<response name="success" type="none">
+		</response>
+	</request-map>
 	
     <!-- View Mappings -->
     <!-- view-map name="main" type="screen" page="component://memberaccountmanagement/widget/MemberAccountManagementScreens.xml#main"/ -->

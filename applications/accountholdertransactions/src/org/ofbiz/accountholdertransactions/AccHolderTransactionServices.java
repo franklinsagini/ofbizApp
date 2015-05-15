@@ -222,12 +222,21 @@ public class AccHolderTransactionServices {
 				.getParameter("memberAccountId");
 		log.info(" ######### The Member Account is #########" + memberAccountId);
 		memberAccountId = memberAccountId.replaceAll(",", "");
-		result.put(
-				"availableAmount",
-				getTotalSavings(memberAccountId, delegator).subtract(
-						getMinimumBalance(Long.valueOf(memberAccountId))));
-		result.put("bookBalanceAmount",
-				getBookBalance(memberAccountId, delegator));
+
+		BigDecimal bdAvailableAmount = getTotalSavings(memberAccountId,
+				delegator).subtract(
+				getMinimumBalance(Long.valueOf(memberAccountId)));
+		
+		BigDecimal bdBookBalanceAmount = getBookBalance(memberAccountId, delegator);
+
+		result.put("availableAmount", bdAvailableAmount);
+		result.put("bookBalanceAmount", bdBookBalanceAmount);
+		
+		result.put("amountInSource", bdAvailableAmount);
+		result.put("amountInDestination", bdAvailableAmount);
+		
+		log.info(" LOOOOOOOOOOOOOOOOOOOOOOks like work is going on !!!! ");
+
 		Gson gson = new Gson();
 		String json = gson.toJson(result);
 		// set the X-JSON content type
@@ -1254,13 +1263,12 @@ public class AccHolderTransactionServices {
 
 					|| ((transactionType != null) && (transactionType
 							.equals("MSACCOWITHDRAWAL")))
-							
+
 					|| ((transactionType != null) && (transactionType
 							.equals("LOANCLEARANCE")))
 					|| ((transactionType != null) && (transactionType
-							.equals("LOANCLEARANCECHARGES")))		
-							
-							
+							.equals("LOANCLEARANCECHARGES")))
+
 					|| ((transactionType != null) && (transactionType
 							.equals("POSCASHPURCHASE")))) {
 				increaseDecrease = "D";
@@ -1318,14 +1326,14 @@ public class AccHolderTransactionServices {
 			log.error("Could not create Transaction");
 		}
 	}
-	
+
 	/***
 	 * createAccountTransactionVer2
 	 * **/
-	private static GenericValue createTransactionVer2(
-			String transactionType, Map<String, String> userLogin,
-			String memberAccountId, BigDecimal transactionAmount,
-			String productChargeId, String accountTransactionParentId, String acctgTransId) {
+	private static GenericValue createTransactionVer2(String transactionType,
+			Map<String, String> userLogin, String memberAccountId,
+			BigDecimal transactionAmount, String productChargeId,
+			String accountTransactionParentId, String acctgTransId) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);// loanApplication.getDelegator();
 		GenericValue accountTransaction;
 		String accountTransactionId = delegator
@@ -1350,13 +1358,13 @@ public class AccHolderTransactionServices {
 		if (productChargeId == null) {
 			if (((transactionType != null) && (transactionType
 					.equals("CASHWITHDRAWAL")))
-					
+
 					|| ((transactionType != null) && (transactionType
 							.equals("WITHDRAWALCOMMISSION")))
-							
+
 					|| ((transactionType != null) && (transactionType
 							.equals("EXCISEDUTY")))
-					
+
 					|| ((transactionType != null) && (transactionType
 							.equals("ATMWITHDRAWAL")))
 
@@ -1365,13 +1373,12 @@ public class AccHolderTransactionServices {
 
 					|| ((transactionType != null) && (transactionType
 							.equals("MSACCOWITHDRAWAL")))
-							
+
 					|| ((transactionType != null) && (transactionType
 							.equals("LOANCLEARANCE")))
 					|| ((transactionType != null) && (transactionType
-							.equals("LOANCLEARANCECHARGES")))		
-							
-							
+							.equals("LOANCLEARANCECHARGES")))
+
 					|| ((transactionType != null) && (transactionType
 							.equals("POSCASHPURCHASE")))) {
 				increaseDecrease = "D";
@@ -1409,8 +1416,8 @@ public class AccHolderTransactionServices {
 		String treasuryId = null;
 
 		treasuryId = TreasuryUtility.getTellerTreasuryId(userLogin);
-				
-				//loanApplication.getString("treasuryId");
+
+		// loanApplication.getString("treasuryId");
 
 		accountTransaction = delegator.makeValidValue("AccountTransaction",
 				UtilMisc.toMap("accountTransactionId", accountTransactionId,
@@ -1422,16 +1429,16 @@ public class AccHolderTransactionServices {
 						"transactionAmount", transactionAmount,
 						"transactionType", transactionType, "treasuryId",
 						treasuryId, "accountTransactionParentId",
-						accountTransactionParentId, "acctgTransId", acctgTransId));
-//		try {
-//			delegator.createOrStore(accountTransaction);
-//		} catch (GenericEntityException e) {
-//			e.printStackTrace();
-//			log.error("Could not create Transaction");
-//		}
+						accountTransactionParentId, "acctgTransId",
+						acctgTransId));
+		// try {
+		// delegator.createOrStore(accountTransaction);
+		// } catch (GenericEntityException e) {
+		// e.printStackTrace();
+		// log.error("Could not create Transaction");
+		// }
 		return accountTransaction;
 	}
-
 
 	/***
 	 * Get Party ID give memberAccountId
@@ -1864,7 +1871,8 @@ public class AccHolderTransactionServices {
 		return bdTotalAmount;
 	}
 
-	public static BigDecimal getAccountTotalBalance(Long accountProductId, Long partyId) {
+	public static BigDecimal getAccountTotalBalance(Long accountProductId,
+			Long partyId) {
 		// TODO Auto-generated method stub
 		List<GenericValue> memberAccountELI = null; // =
 		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
@@ -1890,8 +1898,10 @@ public class AccHolderTransactionServices {
 		for (GenericValue genericValue : memberAccountELI) {
 			memberAccountId = genericValue.getLong("memberAccountId");
 		}
-		
-		BigDecimal bdTotalAmount = getAvailableBalanceVer3(memberAccountId.toString(), new Timestamp(Calendar.getInstance().getTimeInMillis()));
+
+		BigDecimal bdTotalAmount = getAvailableBalanceVer3(
+				memberAccountId.toString(), new Timestamp(Calendar
+						.getInstance().getTimeInMillis()));
 		return bdTotalAmount;
 	}
 
@@ -1981,7 +1991,7 @@ public class AccHolderTransactionServices {
 		return bdTotalAvailable.add(calculateOpeningBalance(memberAccountId,
 				DelegatorFactoryImpl.getDelegator(null)));
 	}
-	
+
 	public static BigDecimal getBookBalanceVer3(String memberAccountId,
 			Timestamp balanceDate) {
 		BigDecimal bdTotalIncrease = BigDecimal.ZERO;
@@ -2016,8 +2026,8 @@ public class AccHolderTransactionServices {
 		BigDecimal bdRetailedSavings = BigDecimal.ZERO;
 		bdRetailedSavings = getRetainedSavings(lmemberAccountId);
 
-//		bdTotalAvailable = bdTotalAvailable
-//				.subtract(getMinimumBalance(lmemberAccountId));
+		// bdTotalAvailable = bdTotalAvailable
+		// .subtract(getMinimumBalance(lmemberAccountId));
 		bdTotalAvailable = bdTotalAvailable.subtract(bdRetailedSavings);
 		log.info(" AAAAAAAAAAAAAAAAAAA Total Available is " + bdTotalAvailable);
 		// return
@@ -2025,8 +2035,6 @@ public class AccHolderTransactionServices {
 		return bdTotalAvailable.add(calculateOpeningBalance(memberAccountId,
 				DelegatorFactoryImpl.getDelegator(null)));
 	}
-	
-	
 
 	private static BigDecimal getRetainedSavings(Long lmemberAccountId) {
 		// TODO Auto-generated method stub
@@ -2421,7 +2429,7 @@ public class AccHolderTransactionServices {
 		String transactionType = "CASHWITHDRAWAL";
 		String memberAccountId = accountTransaction
 				.getString("memberAccountId");
-		
+
 		BigDecimal transactionAmount = accountTransaction
 				.getBigDecimal("transactionAmount");
 		accountTransaction.set("accountTransactionParentId",
@@ -2441,17 +2449,18 @@ public class AccHolderTransactionServices {
 		// return "success";
 		return accountTransactionParent.getString("accountTransactionParentId");
 	}
-	
+
 	public static String cashWithdrawalVer2(GenericValue accountTransaction,
 			Map<String, String> userLogin) {
 
 		log.info(" UserLogin ---- " + userLogin.get("userLoginId"));
 		log.info(" Transaction Amount ---- "
 				+ accountTransaction.getBigDecimal("transactionAmount"));
-		
+
 		/****
-		 * Debit Member Deposits (Liability A/C) (Amount + Commission + Excise Duty) - from ledger account on AccountProduct
-		 * Credit Commission Account (Revenue A/C) - from commission account on AccountProduct
+		 * Debit Member Deposits (Liability A/C) (Amount + Commission + Excise
+		 * Duty) - from ledger account on AccountProduct Credit Commission
+		 * Account (Revenue A/C) - from commission account on AccountProduct
 		 * Credit Excise Duty Account - from Excise account on AccountProduct
 		 * Credit teller account from treasury account for the logged in user
 		 * 
@@ -2461,71 +2470,79 @@ public class AccHolderTransactionServices {
 		GenericValue accountTransactionParent = createAccountTransactionParent(
 				accountTransaction, userLogin);
 		String transactionType = "CASHWITHDRAWAL";
-		Long memberAccountId = accountTransaction
-				.getLong("memberAccountId");
-		
+		Long memberAccountId = accountTransaction.getLong("memberAccountId");
+
 		BigDecimal transactionAmount = accountTransaction
 				.getBigDecimal("transactionAmount");
-		
+
 		accountTransaction.set("accountTransactionParentId",
 				accountTransactionParent
 						.getString("accountTransactionParentId"));
 		String accountTransactionParentId = accountTransactionParent
 				.getString("accountTransactionParentId");
-		
+
 		BigDecimal bdCommissionAmount = getTransactionCommissionAmount(transactionAmount);
 		BigDecimal bdExciseDutyAmount = getTransactionExcideDutyAmount(bdCommissionAmount);
-		
-		//GL
+
+		// GL
 		/****
-		 * Dr total - Amount + Commission + Excise Duty to member deposits
-		 * Cr teller a/c with Amount
-		 * Cr Commission a/c with commission
-		 * Cr excise duty with excise duty amount
+		 * Dr total - Amount + Commission + Excise Duty to member deposits Cr
+		 * teller a/c with Amount Cr Commission a/c with commission Cr excise
+		 * duty with excise duty amount
 		 * 
 		 ***/
-		String glLedgerAccountId  = null;
+		String glLedgerAccountId = null;
 		String commissionAccountId = null;
 		String tellerAccountId = null;
 		String exciseDutyAccountId = null;
-		
-		//Long memberAccountId = accountTransaction.getLong("memberAccountId");
+
+		// Long memberAccountId = accountTransaction.getLong("memberAccountId");
 		GenericValue accountProduct = getAccountProductEntity(memberAccountId);
-		
-		glLedgerAccountId  = accountProduct.getString("glAccountId");
-		commissionAccountId  = accountProduct.getString("commissionAccountId");
-		exciseDutyAccountId  = accountProduct.getString("exciseDutyAccountId");
+
+		glLedgerAccountId = accountProduct.getString("glAccountId");
+		commissionAccountId = accountProduct.getString("commissionAccountId");
+		exciseDutyAccountId = accountProduct.getString("exciseDutyAccountId");
 		tellerAccountId = TreasuryUtility.getTellerAccountId(userLogin);
-		
-		//Get tha acctgTransId
+
+		// Get tha acctgTransId
 		String acctgTransId = creatAccountTransRecordVer2(accountTransaction,
 				userLogin);
 		String glAccountTypeId = "MEMBER_DEPOSIT";
-		String partyId = LoanUtilities.getMemberPartyIdFromMemberAccountId(memberAccountId);
+		String partyId = LoanUtilities
+				.getMemberPartyIdFromMemberAccountId(memberAccountId);
 		String branchId = LoanUtilities.getMemberBranchId(partyId);
 		BigDecimal bdTotalAmount = BigDecimal.ZERO;
-		bdTotalAmount = transactionAmount.add(bdCommissionAmount).add(bdExciseDutyAmount);
-		
+		bdTotalAmount = transactionAmount.add(bdCommissionAmount).add(
+				bdExciseDutyAmount);
+
 		List<GenericValue> listPostEntity = new ArrayList<GenericValue>();
-		
+
 		Long sequence = 0l;
-		
-		//Post memberDeposit
+
+		// Post memberDeposit
 		sequence = sequence + 1;
-		listPostEntity.add(createAccountPostingEntryVer2(glLedgerAccountId, glAccountTypeId, branchId, bdTotalAmount, memberAccountId, acctgTransId, "D", sequence.toString(), partyId));
-		
-		//Post for Teller
+		listPostEntity.add(createAccountPostingEntryVer2(glLedgerAccountId,
+				glAccountTypeId, branchId, bdTotalAmount, memberAccountId,
+				acctgTransId, "D", sequence.toString(), partyId));
+
+		// Post for Teller
 		sequence = sequence + 1;
-		listPostEntity.add(createAccountPostingEntryVer2(tellerAccountId, glAccountTypeId, branchId,transactionAmount, memberAccountId, acctgTransId, "C", sequence.toString(), partyId)) ;
-		//Post for Commission
+		listPostEntity.add(createAccountPostingEntryVer2(tellerAccountId,
+				glAccountTypeId, branchId, transactionAmount, memberAccountId,
+				acctgTransId, "C", sequence.toString(), partyId));
+		// Post for Commission
 		sequence = sequence + 1;
-		listPostEntity.add(createAccountPostingEntryVer2(commissionAccountId, glAccountTypeId, branchId, bdCommissionAmount, memberAccountId, acctgTransId, "C", sequence.toString(), partyId));
-		//Post for Excise Duty
+		listPostEntity.add(createAccountPostingEntryVer2(commissionAccountId,
+				glAccountTypeId, branchId, bdCommissionAmount, memberAccountId,
+				acctgTransId, "C", sequence.toString(), partyId));
+		// Post for Excise Duty
 		sequence = sequence + 1;
-		listPostEntity.add(createAccountPostingEntryVer2(exciseDutyAccountId, glAccountTypeId, branchId, bdExciseDutyAmount, memberAccountId, acctgTransId, "C", sequence.toString(), partyId));
-		
-		//Return acctgTransId
-		//tt
+		listPostEntity.add(createAccountPostingEntryVer2(exciseDutyAccountId,
+				glAccountTypeId, branchId, bdExciseDutyAmount, memberAccountId,
+				acctgTransId, "C", sequence.toString(), partyId));
+
+		// Return acctgTransId
+		// tt
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
 			delegator.storeAll(listPostEntity);
@@ -2533,99 +2550,103 @@ public class AccHolderTransactionServices {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	
-		
-		//postCashWithdrawalTransaction(accountTransaction, userLogin);
-		
-		//return acctgTrans
-		
-		//Subsidiary
+
+		// postCashWithdrawalTransaction(accountTransaction, userLogin);
+
+		// return acctgTrans
+
+		// Subsidiary
 		/***
-		 * Record Amount +
-		 * Record Commission -
-		 * Record Excise Duty -
+		 * Record Amount + Record Commission - Record Excise Duty -
 		 * **/
 		List<GenericValue> listAccountTransaction = new ArrayList<GenericValue>();
-		//get the parent id
-		//get acctgTransId
-		//Create the subsidiary with these two - this means we do gl posting first then
-		
-		//Cash withdrawal
-		listAccountTransaction.add(createTransactionVer2("CASHWITHDRAWAL", userLogin, memberAccountId.toString(), transactionAmount, null, accountTransactionParentId, acctgTransId));
-		//Commission
-		listAccountTransaction.add(createTransactionVer2("WITHDRAWALCOMMISSION", userLogin, memberAccountId.toString(), bdCommissionAmount, null, accountTransactionParentId, acctgTransId));
-		//Excercise Duty
-		listAccountTransaction.add(createTransactionVer2("EXCISEDUTY", userLogin, memberAccountId.toString(), bdExciseDutyAmount, null, accountTransactionParentId, acctgTransId));
+		// get the parent id
+		// get acctgTransId
+		// Create the subsidiary with these two - this means we do gl posting
+		// first then
 
-		
+		// Cash withdrawal
+		listAccountTransaction.add(createTransactionVer2("CASHWITHDRAWAL",
+				userLogin, memberAccountId.toString(), transactionAmount, null,
+				accountTransactionParentId, acctgTransId));
+		// Commission
+		listAccountTransaction.add(createTransactionVer2(
+				"WITHDRAWALCOMMISSION", userLogin, memberAccountId.toString(),
+				bdCommissionAmount, null, accountTransactionParentId,
+				acctgTransId));
+		// Excercise Duty
+		listAccountTransaction.add(createTransactionVer2("EXCISEDUTY",
+				userLogin, memberAccountId.toString(), bdExciseDutyAmount,
+				null, accountTransactionParentId, acctgTransId));
+
 		try {
 			delegator.storeAll(listAccountTransaction);
 		} catch (GenericEntityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
+
 		// Set the the Treasury ID
 		// String treasuryId = TreasuryUtility.getTellerId(userLogin);
 		// accountTransaction.set("treasuryId", treasuryId);
-//		addChargesToTransaction(accountTransaction, userLogin, transactionType);
+		// addChargesToTransaction(accountTransaction, userLogin,
+		// transactionType);
 		// increaseDecrease
-//		createTransaction(accountTransaction, transactionType, userLogin,
-//				memberAccountId.toString(), transactionAmount, null,
-//				accountTransactionParent
-//						.getString("accountTransactionParentId"));
-		
+		// createTransaction(accountTransaction, transactionType, userLogin,
+		// memberAccountId.toString(), transactionAmount, null,
+		// accountTransactionParent
+		// .getString("accountTransactionParentId"));
 
 		// return "success";
 		return accountTransactionParent.getString("accountTransactionParentId");
 	}
-	
-	
+
 	public static String cashDepositVer2(GenericValue accountTransaction,
 			Map<String, String> userLogin) {
-		
-		//Post the Cash Deposit to the Teller for the logged in user
+
+		// Post the Cash Deposit to the Teller for the logged in user
 		/***
-		 * Dr to the Teller Account
-		 * Cr to the Member Deposits
+		 * Dr to the Teller Account Cr to the Member Deposits
 		 * 
 		 * */
-		Long memberAccountId = accountTransaction
-				.getLong("memberAccountId");
-		
+		Long memberAccountId = accountTransaction.getLong("memberAccountId");
+
 		BigDecimal transactionAmount = accountTransaction
 				.getBigDecimal("transactionAmount");
-		
-		String glLedgerAccountId  = null;
+
+		String glLedgerAccountId = null;
 		String tellerAccountId = null;
-		
-		//Long memberAccountId = accountTransaction.getLong("memberAccountId");
+
+		// Long memberAccountId = accountTransaction.getLong("memberAccountId");
 		GenericValue accountProduct = getAccountProductEntity(memberAccountId);
-		
-		glLedgerAccountId  = accountProduct.getString("glAccountId");
+
+		glLedgerAccountId = accountProduct.getString("glAccountId");
 		tellerAccountId = TreasuryUtility.getTellerAccountId(userLogin);
-		
-		//Get tha acctgTransId
+
+		// Get tha acctgTransId
 		String acctgTransId = creatAccountTransRecordVer2(accountTransaction,
 				userLogin);
 		String glAccountTypeId = "MEMBER_DEPOSIT";
-		String partyId = LoanUtilities.getMemberPartyIdFromMemberAccountId(memberAccountId);
+		String partyId = LoanUtilities
+				.getMemberPartyIdFromMemberAccountId(memberAccountId);
 		String branchId = LoanUtilities.getMemberBranchId(partyId);
-		
+
 		List<GenericValue> listPostEntity = new ArrayList<GenericValue>();
-		
+
 		Long sequence = 0l;
-		
-		//Post memberDeposit
+
+		// Post memberDeposit
 		sequence = sequence + 1;
-		listPostEntity.add(createAccountPostingEntryVer2(glLedgerAccountId, glAccountTypeId, branchId, transactionAmount, memberAccountId, acctgTransId, "C", sequence.toString(), partyId));
-		
-		//Post for Teller
+		listPostEntity.add(createAccountPostingEntryVer2(glLedgerAccountId,
+				glAccountTypeId, branchId, transactionAmount, memberAccountId,
+				acctgTransId, "C", sequence.toString(), partyId));
+
+		// Post for Teller
 		sequence = sequence + 1;
-		listPostEntity.add(createAccountPostingEntryVer2(tellerAccountId, glAccountTypeId, branchId,transactionAmount, memberAccountId, acctgTransId, "D", sequence.toString(), partyId)) ;
-		
-		
+		listPostEntity.add(createAccountPostingEntryVer2(tellerAccountId,
+				glAccountTypeId, branchId, transactionAmount, memberAccountId,
+				acctgTransId, "D", sequence.toString(), partyId));
+
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
 			delegator.storeAll(listPostEntity);
@@ -2633,8 +2654,8 @@ public class AccHolderTransactionServices {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		//Update account transactions to reflect the ID in postings
+
+		// Update account transactions to reflect the ID in postings
 		accountTransaction.set("acctgTransId", acctgTransId);
 		try {
 			delegator.createOrStore(accountTransaction);
@@ -2642,15 +2663,13 @@ public class AccHolderTransactionServices {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return accountTransaction.getString("accountTransactionParentId");
 	}
-	
-	
 
 	/***
 	 * 
-	 * 	Get the excise duty
+	 * Get the excise duty
 	 * 
 	 * */
 	public static BigDecimal getTransactionExcideDutyAmount(
@@ -2664,27 +2683,28 @@ public class AccHolderTransactionServices {
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
-		
+
 		GenericValue exciseDuty = null;
-		
-		//get the excise duty
+
+		// get the excise duty
 		for (GenericValue genericValue : exciseDutyELI) {
 			exciseDuty = genericValue;
 		}
-		
-		if (exciseDuty != null)
-		{
-			BigDecimal bdDutyPercent = exciseDuty.getBigDecimal("dutyPercentage");
-			BigDecimal bdDuty = bdCommissionAmount.multiply(bdDutyPercent).divide(new BigDecimal(100), 4, RoundingMode.HALF_UP);	
+
+		if (exciseDuty != null) {
+			BigDecimal bdDutyPercent = exciseDuty
+					.getBigDecimal("dutyPercentage");
+			BigDecimal bdDuty = bdCommissionAmount.multiply(bdDutyPercent)
+					.divide(new BigDecimal(100), 4, RoundingMode.HALF_UP);
 			return bdDuty;
 		}
-		
+
 		return null;
 	}
 
 	/****
-	 *Get the commission amount given the transaction amount
-	 * using the scale defined in the Setup Configuration
+	 * Get the commission amount given the transaction amount using the scale
+	 * defined in the Setup Configuration
 	 * 
 	 **/
 	public static BigDecimal getTransactionCommissionAmount(
@@ -2694,33 +2714,36 @@ public class AccHolderTransactionServices {
 		List<String> commissionsOrder = new ArrayList<String>();
 		commissionsOrder.add("commissionChargeId");
 		try {
-			commissionChargeELI = delegator.findList("CommissionCharge", null, null, commissionsOrder,
-					null, false);
+			commissionChargeELI = delegator.findList("CommissionCharge", null,
+					null, commissionsOrder, null, false);
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
 		BigDecimal bdCommissionAmount = null;
-				
-				//BigDecimal.ZERO;
-		
+
+		// BigDecimal.ZERO;
+
 		for (GenericValue genericValue : commissionChargeELI) {
 			BigDecimal bdLowerValue = genericValue.getBigDecimal("fromAmount");
 			BigDecimal bdUpperValue = genericValue.getBigDecimal("toAmount");
-			
-			if ((bdLowerValue != null) && (bdUpperValue != null	)){
-				
-				//if amount between the two values then assign
-				if ((transactionAmount.compareTo(bdLowerValue) >= 0) && (transactionAmount.compareTo(bdUpperValue) <= 0)){
-					bdCommissionAmount = genericValue.getBigDecimal("chargeAmount");
+
+			if ((bdLowerValue != null) && (bdUpperValue != null)) {
+
+				// if amount between the two values then assign
+				if ((transactionAmount.compareTo(bdLowerValue) >= 0)
+						&& (transactionAmount.compareTo(bdUpperValue) <= 0)) {
+					bdCommissionAmount = genericValue
+							.getBigDecimal("chargeAmount");
 				}
-				
+
 			} else {
-				
+
 				if (bdCommissionAmount == null)
-					bdCommissionAmount = genericValue.getBigDecimal("chargeAmount");
+					bdCommissionAmount = genericValue
+							.getBigDecimal("chargeAmount");
 			}
 		}
-		
+
 		return bdCommissionAmount;
 	}
 
@@ -2729,12 +2752,11 @@ public class AccHolderTransactionServices {
 		// TODO Auto-generated method stub
 		String acctgTransId = creatAccountTransRecord(accountTransaction,
 				userLogin);
-//		createMemberDepositEntry(accountTransaction, acctgTransId);
-//		createMemberCashEntry(accountTransaction, acctgTransId);
-		
+		// createMemberDepositEntry(accountTransaction, acctgTransId);
+		// createMemberCashEntry(accountTransaction, acctgTransId);
+
 		createMemberDepositEntryAccount(accountTransaction, acctgTransId);
 		createMemberCashEntryTeller(accountTransaction, acctgTransId, userLogin);
-
 
 	}
 
@@ -2768,7 +2790,7 @@ public class AccHolderTransactionServices {
 
 	private static void createMemberDepositEntry(
 			GenericValue accountTransaction, String acctgTransId) {
-		
+
 		GenericValue accountHolderTransactionSetup = getAccountHolderTransactionSetup("MEMBERTRANSACTIONACCOUNT");
 
 		GenericValue acctgTransEntry = null;
@@ -2794,61 +2816,62 @@ public class AccHolderTransactionServices {
 		}
 
 	}
-	
-	
-	public static GenericValue createAccountPostingEntryVer2( String glAccountId,
-			String glAccountTypeId, String branchId,
-			BigDecimal amount, Long memberAccountId,  String acctgTransId, String postingType, String sequence, String partyId) {
-		
-		//Long memberAccountId = accountTransaction.getLong("memberAccountId");
-		//GenericValue memberAccount = AccHolderTransactionServices.getMemberAccount(memberAccountId);
-		
-		//GenericValue accountHolderTransactionSetup = getAccountHolderTransactionSetup("MEMBERTRANSACTIONACCOUNT");
+
+	public static GenericValue createAccountPostingEntryVer2(
+			String glAccountId, String glAccountTypeId, String branchId,
+			BigDecimal amount, Long memberAccountId, String acctgTransId,
+			String postingType, String sequence, String partyId) {
+
+		// Long memberAccountId = accountTransaction.getLong("memberAccountId");
+		// GenericValue memberAccount =
+		// AccHolderTransactionServices.getMemberAccount(memberAccountId);
+
+		// GenericValue accountHolderTransactionSetup =
+		// getAccountHolderTransactionSetup("MEMBERTRANSACTIONACCOUNT");
 		if (glAccountTypeId == null)
 			glAccountTypeId = "MEMBER_DEPOSIT";
-		
+
 		if (branchId == null)
 			branchId = "Company";
-		
+
 		GenericValue acctgTransEntry = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		acctgTransEntry = delegator.makeValidValue("AcctgTransEntry", UtilMisc
-				.toMap("acctgTransId", acctgTransId,
+		acctgTransEntry = delegator
+				.makeValidValue("AcctgTransEntry", UtilMisc.toMap(
+						"acctgTransId", acctgTransId,
 
-				"acctgTransEntrySeqId", sequence, "partyId", partyId,
+						"acctgTransEntrySeqId", sequence, "partyId", partyId,
 						"glAccountTypeId", glAccountTypeId, "glAccountId",
-						glAccountId,
-						"organizationPartyId", branchId, "amount",
-						amount,
-						"currencyUomId", "KES", "origAmount",
-						amount,
-						"origCurrencyUomId", "KES", "debitCreditFlag", postingType,
-						"reconcileStatusId", "AES_NOT_RECONCILED"));
-//		try {
-//			delegator.createOrStore(acctgTransEntry);
-//		} catch (GenericEntityException e) {
-//			e.printStackTrace();
-//			log.error("Could not create acctgTransEntry");
-//		}
-		
+						glAccountId, "organizationPartyId", branchId, "amount",
+						amount, "currencyUomId", "KES", "origAmount", amount,
+						"origCurrencyUomId", "KES", "debitCreditFlag",
+						postingType, "reconcileStatusId", "AES_NOT_RECONCILED"));
+		// try {
+		// delegator.createOrStore(acctgTransEntry);
+		// } catch (GenericEntityException e) {
+		// e.printStackTrace();
+		// log.error("Could not create acctgTransEntry");
+		// }
+
 		return acctgTransEntry;
 
 	}
-	
-	
+
 	private static void createMemberDepositEntryAccount(
 			GenericValue accountTransaction, String acctgTransId) {
-		
-		//Get the account to deposit from the account product setup
+
+		// Get the account to deposit from the account product setup
 		String glAccountId = "";
-		
+
 		Long memberAccountId = accountTransaction.getLong("memberAccountId");
-		//GenericValue memberAccount = AccHolderTransactionServices.getMemberAccount(memberAccountId);
+		// GenericValue memberAccount =
+		// AccHolderTransactionServices.getMemberAccount(memberAccountId);
 		GenericValue accountProduct = getAccountProductEntity(memberAccountId);
-		
+
 		glAccountId = accountProduct.getString("glAccountId");
-		
-		//GenericValue accountHolderTransactionSetup = getAccountHolderTransactionSetup("MEMBERTRANSACTIONACCOUNT");
+
+		// GenericValue accountHolderTransactionSetup =
+		// getAccountHolderTransactionSetup("MEMBERTRANSACTIONACCOUNT");
 
 		GenericValue acctgTransEntry = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -2857,8 +2880,8 @@ public class AccHolderTransactionServices {
 
 				"acctgTransEntrySeqId", "1", "partyId", "Company",
 						"glAccountTypeId", "MEMBER_DEPOSIT", "glAccountId",
-						glAccountId,
-						"organizationPartyId", "Company", "amount",
+						glAccountId, "organizationPartyId", "Company",
+						"amount",
 						accountTransaction.getBigDecimal("transactionAmount"),
 						"currencyUomId", "KES", "origAmount",
 						accountTransaction.getBigDecimal("transactionAmount"),
@@ -2873,13 +2896,15 @@ public class AccHolderTransactionServices {
 
 	}
 
-	private static void createMemberCashEntryTeller(GenericValue accountTransaction,
-			String acctgTransId, Map<String, String> userLogin) {
+	private static void createMemberCashEntryTeller(
+			GenericValue accountTransaction, String acctgTransId,
+			Map<String, String> userLogin) {
 
 		String glAccountId = "";
 		glAccountId = TreasuryUtility.getTellerAccountId(userLogin);
-		
-		//GenericValue accountHolderTransactionSetup = getAccountHolderTransactionSetup("MEMBERTRANSACTIONACCOUNT");
+
+		// GenericValue accountHolderTransactionSetup =
+		// getAccountHolderTransactionSetup("MEMBERTRANSACTIONACCOUNT");
 
 		GenericValue acctgTransEntry = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -2888,8 +2913,8 @@ public class AccHolderTransactionServices {
 
 				"acctgTransEntrySeqId", "2", "partyId", "Company",
 						"glAccountTypeId", "MEMBER_DEPOSIT", "glAccountId",
-						glAccountId,
-						"organizationPartyId", "Company", "amount",
+						glAccountId, "organizationPartyId", "Company",
+						"amount",
 						accountTransaction.getBigDecimal("transactionAmount"),
 						"currencyUomId", "KES", "origAmount",
 						accountTransaction.getBigDecimal("transactionAmount"),
@@ -2902,6 +2927,7 @@ public class AccHolderTransactionServices {
 			log.error("Could not create acctgTransEntry");
 		}
 	}
+
 	private static void createMemberDepositEntry(BigDecimal amount,
 			String acctgTransId, String postingType) {
 		GenericValue accountHolderTransactionSetup = getAccountHolderTransactionSetup("MEMBERTRANSACTIONACCOUNT");
@@ -2978,8 +3004,8 @@ public class AccHolderTransactionServices {
 		GenericValue acctgTrans = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		String acctgTransId = delegator.getNextSeqId("AcctgTrans", 1);
-		
-		if (userLogin == null){
+
+		if (userLogin == null) {
 			userLogin = new HashMap<String, String>();
 			userLogin.put("userLoginId", "admin");
 		}
@@ -3008,15 +3034,15 @@ public class AccHolderTransactionServices {
 		}
 		return acctgTransId;
 	}
-	
+
 	public static String creatAccountTransRecordVer2(
 			GenericValue accountTransaction, Map<String, String> userLogin) {
 
 		GenericValue acctgTrans = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		String acctgTransId = delegator.getNextSeqId("AcctgTrans", 1);
-		
-		if (userLogin == null){
+
+		if (userLogin == null) {
 			userLogin = new HashMap<String, String>();
 			userLogin.put("userLoginId", "admin");
 			userLogin.put("partyId", "Company");
@@ -3032,12 +3058,12 @@ public class AccHolderTransactionServices {
 				"isPosted", "Y", "postedDate", new Timestamp(Calendar
 						.getInstance().getTimeInMillis()),
 
-				"glFiscalTypeId", "ACTUAL", "partyId", userLogin.get("partyId"),
-				"createdDate", new Timestamp(Calendar.getInstance()
-						.getTimeInMillis()), "createdByUserLogin", createdBy,
-				"lastModifiedDate", new Timestamp(Calendar.getInstance()
-						.getTimeInMillis()), "lastModifiedByUserLogin",
-				updatedBy));
+				"glFiscalTypeId", "ACTUAL", "partyId",
+				userLogin.get("partyId"), "createdDate", new Timestamp(Calendar
+						.getInstance().getTimeInMillis()),
+				"createdByUserLogin", createdBy, "lastModifiedDate",
+				new Timestamp(Calendar.getInstance().getTimeInMillis()),
+				"lastModifiedByUserLogin", updatedBy));
 		try {
 			delegator.createOrStore(acctgTrans);
 		} catch (GenericEntityException e) {
@@ -3351,10 +3377,9 @@ public class AccHolderTransactionServices {
 	public static String cashDeposit(BigDecimal transactionAmount,
 			Long memberAccountId, Map<String, String> userLogin,
 			String withdrawalType) {
-		
+
 		log.info(" Transaction Amount ---- " + transactionAmount);
 		log.info(" Transaction MA ---- " + memberAccountId);
-		
 
 		// log.info(" UserLogin ---- " + userLogin.get("userLoginId"));
 		log.info(" Transaction Amount ---- " + transactionAmount);
@@ -3403,12 +3428,11 @@ public class AccHolderTransactionServices {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		String accountTransactionParentId = delegator
 				.getNextSeqId("AccountTransactionParent");
-		if (userLogin == null){
+		if (userLogin == null) {
 			userLogin = new HashMap<String, String>();
 			userLogin.put("userLoginId", "admin");
 		}
-		
-		
+
 		String createdBy = (String) userLogin.get("userLoginId");
 		String updatedBy = (String) userLogin.get("userLoginId");
 		// String branchId = getEmployeeBranch((String)
@@ -3431,12 +3455,13 @@ public class AccHolderTransactionServices {
 
 		return transactionParent;
 	}
-	
+
 	public static String getcreateAccountTransactionParentId(
-			Long memberAccountId, Map<String, String> userLogin){
+			Long memberAccountId, Map<String, String> userLogin) {
 		GenericValue accountTransactionParent = createAccountTransactionParent(
 				memberAccountId, userLogin);
-		String accountTransactionParentId = accountTransactionParent.getString("accountTransactionParentId");
+		String accountTransactionParentId = accountTransactionParent
+				.getString("accountTransactionParentId");
 		return accountTransactionParentId;
 	}
 
@@ -3527,84 +3552,94 @@ public class AccHolderTransactionServices {
 		}
 		return "";
 	}
-	
-	public static  List<DeductionItem> getDeductions(String payrollNo){
+
+	public static List<DeductionItem> getDeductions(String payrollNo) {
 		List<DeductionItem> listDeducionItems = new ArrayList<DeductionItem>();
 		DeductionItem deductionItem = null;
 		String code;
-		
-		//Get partyId
+
+		// Get partyId
 		Long partyId = LoanUtilities.getMemberId(payrollNo);
-		
-		//Get Loan Application IDs
-		List<Long> listLoanApplicationIds = LoanUtilities.getLoanApplicationIds(partyId);
-		
+
+		// Get Loan Application IDs
+		List<Long> listLoanApplicationIds = LoanUtilities
+				.getLoanApplicationIds(partyId);
+
 		GenericValue loanApplication = null;
 		for (Long loanApplicationId : listLoanApplicationIds) {
-			//Create Deduction Item List
-			loanApplication = LoanUtilities.getLoanApplicationEntity(loanApplicationId);
-			
-			//Add Principal
+			// Create Deduction Item List
+			loanApplication = LoanUtilities
+					.getLoanApplicationEntity(loanApplicationId);
+
+			// Add Principal
 			deductionItem = new DeductionItem();
-			code  = LoanUtilities.getLoanProductCode(loanApplication.getLong("loanProductId"));
-			
-			deductionItem.setCode(code+"A");
-			
-			BigDecimal bdAmount = LoanRepayments.getTotalPrincipalDue(partyId.toString(), loanApplicationId.toString()); 
+			code = LoanUtilities.getLoanProductCode(loanApplication
+					.getLong("loanProductId"));
+
+			deductionItem.setCode(code + "A");
+
+			BigDecimal bdAmount = LoanRepayments.getTotalPrincipalDue(
+					partyId.toString(), loanApplicationId.toString());
 			deductionItem.setBdAmount(bdAmount);
-			
-			BigDecimal bdBalance = loanApplication.getBigDecimal("loanAmt").subtract(LoanServices.getLoansRepaidByLoanApplicationId(loanApplicationId));
+
+			BigDecimal bdBalance = loanApplication
+					.getBigDecimal("loanAmt")
+					.subtract(
+							LoanServices
+									.getLoansRepaidByLoanApplicationId(loanApplicationId));
 			bdBalance = bdBalance.subtract(bdAmount);
-			
+
 			deductionItem.setBdBalance(bdBalance);
-			
-			deductionItem.setDeductionDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-			
+
+			deductionItem.setDeductionDate(new Timestamp(Calendar.getInstance()
+					.getTimeInMillis()));
+
 			listDeducionItems.add(deductionItem);
-			
-			//Add Interest
-			deductionItem.setCode(code+"B");
-			
-			bdAmount = LoanRepayments.getTotalInterestDue(partyId.toString(), loanApplicationId.toString()); 
+
+			// Add Interest
+			deductionItem.setCode(code + "B");
+
+			bdAmount = LoanRepayments.getTotalInterestDue(partyId.toString(),
+					loanApplicationId.toString());
 			deductionItem.setBdAmount(bdAmount);
-			
-			
+
 			deductionItem.setBdBalance(BigDecimal.ZERO);
-			
-			deductionItem.setDeductionDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-			
+
+			deductionItem.setDeductionDate(new Timestamp(Calendar.getInstance()
+					.getTimeInMillis()));
+
 			listDeducionItems.add(deductionItem);
-			
-			//Add Insurance
-			deductionItem.setCode(code+"C");
-			
-			bdAmount = LoanRepayments.getTotalInsuranceDue(partyId.toString(), loanApplicationId.toString()); 
+
+			// Add Insurance
+			deductionItem.setCode(code + "C");
+
+			bdAmount = LoanRepayments.getTotalInsuranceDue(partyId.toString(),
+					loanApplicationId.toString());
 			deductionItem.setBdAmount(bdAmount);
-			
-			
+
 			deductionItem.setBdBalance(BigDecimal.ZERO);
-			
-			deductionItem.setDeductionDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
-			
+
+			deductionItem.setDeductionDate(new Timestamp(Calendar.getInstance()
+					.getTimeInMillis()));
+
 			listDeducionItems.add(deductionItem);
-			
+
 		}
-		
+
 		return listDeducionItems;
 	}
-	
-	
+
 	/****
 	 * No Posting to the GL at this stage
 	 * 
 	 * */
 	public static String memberTransactionDeposit(BigDecimal transactionAmount,
 			Long memberAccountId, Map<String, String> userLogin,
-			String withdrawalType, String accountTransactionParentId, String productChargeId) {
-		
+			String withdrawalType, String accountTransactionParentId,
+			String productChargeId) {
+
 		log.info(" Transaction Amount ---- " + transactionAmount);
 		log.info(" Transaction MA ---- " + memberAccountId);
-		
 
 		// log.info(" UserLogin ---- " + userLogin.get("userLoginId"));
 		log.info(" Transaction Amount ---- " + transactionAmount);
@@ -3614,10 +3649,11 @@ public class AccHolderTransactionServices {
 		}
 
 		// Save Parent
-		if (accountTransactionParentId == null){
-		GenericValue accountTransactionParent = createAccountTransactionParent(
-				memberAccountId, userLogin);
-		accountTransactionParentId = accountTransactionParent.getString("accountTransactionParentId");
+		if (accountTransactionParentId == null) {
+			GenericValue accountTransactionParent = createAccountTransactionParent(
+					memberAccountId, userLogin);
+			accountTransactionParentId = accountTransactionParent
+					.getString("accountTransactionParentId");
 		}
 		String transactionType = withdrawalType;
 
@@ -3632,7 +3668,7 @@ public class AccHolderTransactionServices {
 		createTransaction(accountTransaction, transactionType, userLogin,
 				memberAccountId.toString(), transactionAmount, productChargeId,
 				accountTransactionParentId);
-		//postCashDeposit(memberAccountId, userLogin, transactionAmount);
+		// postCashDeposit(memberAccountId, userLogin, transactionAmount);
 		// postCashWithdrawalTransaction(accountTransaction, userLogin);
 
 		return accountTransactionParentId;
@@ -3640,12 +3676,14 @@ public class AccHolderTransactionServices {
 
 	public static Long getMemberSavingsAccountId(String payrollNumber) {
 		// TODO Auto-generated method stub
-		GenericValue accountProduct = LoanUtilities.getAccountProductGivenCodeId(SAVINGS_ACCOUNT_CODE);
+		GenericValue accountProduct = LoanUtilities
+				.getAccountProductGivenCodeId(SAVINGS_ACCOUNT_CODE);
 		Long accountProductId = accountProduct.getLong("accountProductId");
-		
-		GenericValue member = RemittanceServices.getMemberByPayrollNo(payrollNumber);
+
+		GenericValue member = RemittanceServices
+				.getMemberByPayrollNo(payrollNumber);
 		Long partyId = member.getLong("partyId");
-		
+
 		GenericValue memberAccount = null;
 
 		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
@@ -3671,27 +3709,27 @@ public class AccHolderTransactionServices {
 		for (GenericValue genericValue : memberAccountELI) {
 			memberAccount = genericValue;
 		}
-		
+
 		Long memberAccountId = null;
-		
+
 		if (memberAccount != null)
 			memberAccountId = memberAccount.getLong("memberAccountId");
-		
+
 		return memberAccountId;
 	}
-	
+
 	private static void postSalaryProcessing(Long memberAccountId,
 			Map<String, String> userLogin, BigDecimal amount) {
 		// ..
 		GenericValue accountTransaction = null;
 		String acctgTransId = creatAccountTransRecord(accountTransaction,
 				userLogin);
-		
+
 		createMemberDepositEntry(amount, acctgTransId, "C");
 		createMemberCashEntry(amount, acctgTransId, "D");
 
 	}
-	
+
 	/***
 	 * Post Entry
 	 * */
@@ -3706,10 +3744,9 @@ public class AccHolderTransactionServices {
 
 						"acctgTransEntrySeqId", "2", "partyId", "Company",
 						"glAccountTypeId", "MEMBER_DEPOSIT", "glAccountId",
-						glAccountId,
-						"organizationPartyId", "Company", "amount", amount,
-						"currencyUomId", "KES", "origAmount", amount,
-						"origCurrencyUomId", "KES", "debitCreditFlag",
+						glAccountId, "organizationPartyId", "Company",
+						"amount", amount, "currencyUomId", "KES", "origAmount",
+						amount, "origCurrencyUomId", "KES", "debitCreditFlag",
 						postingType, "reconcileStatusId", "AES_NOT_RECONCILED"));
 		try {
 			delegator.createOrStore(acctgTransEntry);
@@ -3718,9 +3755,10 @@ public class AccHolderTransactionServices {
 			log.error("Could not create acctgTransEntry");
 		}
 	}
-	
+
 	public static void createAccountPostingEntry(BigDecimal amount,
-			String acctgTransId, String postingType, String glAccountId, String entrySequence) {
+			String acctgTransId, String postingType, String glAccountId,
+			String entrySequence) {
 
 		GenericValue acctgTransEntry = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -3730,10 +3768,9 @@ public class AccHolderTransactionServices {
 
 						"acctgTransEntrySeqId", "2", "partyId", "Company",
 						"glAccountTypeId", "MEMBER_DEPOSIT", "glAccountId",
-						glAccountId,
-						"organizationPartyId", "Company", "amount", amount,
-						"currencyUomId", "KES", "origAmount", amount,
-						"origCurrencyUomId", "KES", "debitCreditFlag",
+						glAccountId, "organizationPartyId", "Company",
+						"amount", amount, "currencyUomId", "KES", "origAmount",
+						amount, "origCurrencyUomId", "KES", "debitCreditFlag",
 						postingType, "reconcileStatusId", "AES_NOT_RECONCILED"));
 		try {
 			delegator.createOrStore(acctgTransEntry);
@@ -3742,89 +3779,90 @@ public class AccHolderTransactionServices {
 			log.error("Could not create acctgTransEntry");
 		}
 	}
-	
+
 	/***
 	 * CommissionCharge
 	 * */
-	
-	public static Boolean commissionChargeIsSetup(){
+
+	public static Boolean commissionChargeIsSetup() {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		List<GenericValue> commissionChargeELI = null;
 		try {
-			commissionChargeELI = delegator.findList("CommissionCharge", null, null, null,
-					null, false);
+			commissionChargeELI = delegator.findList("CommissionCharge", null,
+					null, null, null, false);
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
-		
+
 		if ((commissionChargeELI != null) && (commissionChargeELI.size() > 0))
 			return true;
-		
+
 		return false;
 	}
-	
+
 	/***
-	 * Check that the ledger account has been specified 
+	 * Check that the ledger account has been specified
 	 * */
-	public static Boolean legerAccountSetUp(GenericValue accountTransaction){
-		
-		//Get the member account ID
+	public static Boolean legerAccountSetUp(GenericValue accountTransaction) {
+
+		// Get the member account ID
 		Long memberAccountId = accountTransaction.getLong("memberAccountId");
-		
-		GenericValue accountProduct =	getAccountProductEntity(memberAccountId);
-		
+
+		GenericValue accountProduct = getAccountProductEntity(memberAccountId);
+
 		if (accountProduct == null)
 			return false;
-		
+
 		String glAccountId = accountProduct.getString("glAccountId");
-		
+
 		if ((glAccountId != null) && (!glAccountId.equals("")))
 			return true;
-		
+
 		return false;
 	}
-	
-	
-	public static Boolean commissionAccountSetUp(GenericValue accountTransaction){
-		
+
+	public static Boolean commissionAccountSetUp(GenericValue accountTransaction) {
+
 		Long memberAccountId = accountTransaction.getLong("memberAccountId");
-		
-		GenericValue accountProduct =	getAccountProductEntity(memberAccountId);
-		
+
+		GenericValue accountProduct = getAccountProductEntity(memberAccountId);
+
 		if (accountProduct == null)
 			return false;
-		
-		String commissionAccountId = accountProduct.getString("commissionAccountId");
-		
+
+		String commissionAccountId = accountProduct
+				.getString("commissionAccountId");
+
 		if ((commissionAccountId != null) && (!commissionAccountId.equals("")))
 			return true;
-		
+
 		return false;
 	}
-	
-	public static Boolean exciseDutyAccountSetUp(GenericValue accountTransaction){
-		
+
+	public static Boolean exciseDutyAccountSetUp(GenericValue accountTransaction) {
+
 		Long memberAccountId = accountTransaction.getLong("memberAccountId");
-		
-		GenericValue accountProduct =	getAccountProductEntity(memberAccountId);
-		
+
+		GenericValue accountProduct = getAccountProductEntity(memberAccountId);
+
 		if (accountProduct == null)
 			return false;
-		
-		String exciseDutyAccountId = accountProduct.getString("exciseDutyAccountId");
-		
+
+		String exciseDutyAccountId = accountProduct
+				.getString("exciseDutyAccountId");
+
 		if ((exciseDutyAccountId != null) && (!exciseDutyAccountId.equals("")))
 			return true;
-		
+
 		return false;
 	}
-	
+
 	/***
-	 * @author Japheth Odonya  @when Apr 23, 2015 12:31:37 PM
-	 * Check that Excise Duty has been setup - at least we know what the rate is 
+	 * @author Japheth Odonya @when Apr 23, 2015 12:31:37 PM Check that Excise
+	 *         Duty has been setup - at least we know what the rate is
 	 * */
-	public static Boolean exciseDutyRateSetUp(){
-		//ExciseDuty
+	public static Boolean exciseDutyRateSetUp() {
+		// ExciseDuty
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		List<GenericValue> branchesELI = null;
 		try {
@@ -3833,59 +3871,59 @@ public class AccHolderTransactionServices {
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
-		
+
 		if ((branchesELI != null) && (branchesELI.size() > 0))
 			return true;
-		
-		
+
 		return false;
 	}
-	
-	
-	public static Boolean legerAccountMappedToMemberBranch(GenericValue accountTransaction){
-		
+
+	public static Boolean legerAccountMappedToMemberBranch(
+			GenericValue accountTransaction) {
+
 		Long memberAccountId = accountTransaction.getLong("memberAccountId");
-		
-		GenericValue accountProduct =	getAccountProductEntity(memberAccountId);
-		
+
+		GenericValue accountProduct = getAccountProductEntity(memberAccountId);
+
 		if (accountProduct == null)
 			return false;
 
-		
 		return false;
 	}
-	
-	public static BigDecimal getAvailableBalanceAfterCurrentTransactionVer3(String memberAccountId, BigDecimal transactionAmount){
-		
+
+	public static BigDecimal getAvailableBalanceAfterCurrentTransactionVer3(
+			String memberAccountId, BigDecimal transactionAmount) {
+
 		BigDecimal bdBalanceAmount = null;
-		
-		Timestamp balanceDate = new Timestamp(Calendar.getInstance().getTimeInMillis());
-		
+
+		Timestamp balanceDate = new Timestamp(Calendar.getInstance()
+				.getTimeInMillis());
+
 		bdBalanceAmount = getAvailableBalanceVer3(memberAccountId, balanceDate);
-		
+
 		BigDecimal bdCommissionAmount = getTransactionCommissionAmount(transactionAmount);
 		BigDecimal bdExciseDutyAmount = getTransactionExcideDutyAmount(bdCommissionAmount);
-		
-		BigDecimal bdTotalAmount = transactionAmount.add(bdCommissionAmount).add(bdExciseDutyAmount);
-		
+
+		BigDecimal bdTotalAmount = transactionAmount.add(bdCommissionAmount)
+				.add(bdExciseDutyAmount);
+
 		bdBalanceAmount = bdBalanceAmount.subtract(bdTotalAmount);
-		
+
 		return bdBalanceAmount;
 	}
-	
-	
-	public static BigDecimal getAvailableBalanceVer3(String memberAccountId){
-		
+
+	public static BigDecimal getAvailableBalanceVer3(String memberAccountId) {
+
 		BigDecimal bdBalanceAmount = null;
-		
-		Timestamp balanceDate = new Timestamp(Calendar.getInstance().getTimeInMillis());
-		
+
+		Timestamp balanceDate = new Timestamp(Calendar.getInstance()
+				.getTimeInMillis());
+
 		bdBalanceAmount = getAvailableBalanceVer3(memberAccountId, balanceDate);
-		
+
 		return bdBalanceAmount;
 	}
-	
-	
+
 	/***
 	 * Return verdict - either balance is enough or its not
 	 * */
@@ -3893,18 +3931,20 @@ public class AccHolderTransactionServices {
 			HttpServletResponse response) {
 
 		Map<String, Object> result = FastMap.newInstance();
-		
-		String treasuryId = (String) request
-				.getParameter("treasuryId");
-		
-		Long memberAccountId =  Long.valueOf(request.getParameter("memberAccountId"));
-		
-		BigDecimal transactionAmount = new BigDecimal(request.getParameter("transactionAmount"));
-		
-		Boolean isSufficent = TreasuryUtility.tellerBalanceSufficient(treasuryId, memberAccountId, transactionAmount);
-		
+
+		String treasuryId = (String) request.getParameter("treasuryId");
+
+		Long memberAccountId = Long.valueOf(request
+				.getParameter("memberAccountId"));
+
+		BigDecimal transactionAmount = new BigDecimal(
+				request.getParameter("transactionAmount"));
+
+		Boolean isSufficent = TreasuryUtility.tellerBalanceSufficient(
+				treasuryId, memberAccountId, transactionAmount);
+
 		result.put("TELLERBALANCEENOUGH", isSufficent);
-		
+
 		Gson gson = new Gson();
 		String json = gson.toJson(result);
 
@@ -3941,7 +3981,5 @@ public class AccHolderTransactionServices {
 
 		return json;
 	}
-	
-	
 
 }
