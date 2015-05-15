@@ -146,7 +146,6 @@ public class LeaveApplicationValidation {
 				userGender = genderELI.get(0);
 				gender = leaveType.getString("gender");
 				usergender = userGender.getString("gender");
-
 			}
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();

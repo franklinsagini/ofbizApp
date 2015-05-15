@@ -116,7 +116,8 @@ context.QTT_Totalall4qstotalScore = QTT_Totalall4qstotalScore;
 context.QTT_Totalall4qstotalMaxScore = QTT_Totalall4qstotalMaxScore;
 
 }
-all4qstotalScore = org.ofbiz.humanres.HumanResServices.TotalScoreString(partyId, year)
+//all4qstotalScore = org.ofbiz.humanres.HumanResServices.TotalScoreString(partyId, year)
+all4qstotalScore = org.ofbiz.humanres.HumanResServices.getFourQuartersTotalPartyPerformanceOfQualAndQuantiGoalsToString(partyId, year, Goal_Quantitative, Goal_Qualitative)
  
 context.Goal_QuantitativeScorelist = Goal_QuantitativeScorelist;
 context.Goal_QualitativeScorelist = Goal_QualitativeScorelist;

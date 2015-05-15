@@ -36,6 +36,7 @@ class FileMovement{
 	def grouper
 	def timeIn
 	def timeOut
+	def timeStayedWithFile
 }
 
 List<String> orderByList = new ArrayList<String>();
@@ -70,8 +71,9 @@ activities.eachWithIndex { movementItem, indexMovement ->
 	 movement.carriedBy = movementItem.carriedBy
 	 movement.activityCode = movementItem.activityCode
 	 movement.grouper = movementItem.grouper
-	 movement.timeIn = movementItem.timeIn
+	 movement.timeIn = movementItem.timeIn 
 	 movement.timeOut = movementItem.timeOut
+	 movement.timeStayedWithFile = org.ofbiz.registry.FileServices.calculatehoursBetweenDates(movementItem.timeOut)
 	 activity.listMovements.add(movement)
 	 System.out.println("RELEASEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD TO " + movement.releasedTo)
 

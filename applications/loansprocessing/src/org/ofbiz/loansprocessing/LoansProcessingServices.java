@@ -1,5 +1,8 @@
 package org.ofbiz.loansprocessing;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
@@ -18,6 +21,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.DurationFieldType;
 import org.joda.time.Months;
+import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
 import org.ofbiz.accountholdertransactions.LoanUtilities;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
@@ -25,10 +29,15 @@ import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.loans.AmortizationServices;
 import org.ofbiz.loans.LoanAccounting;
 import org.ofbiz.loans.LoanServices;
+import org.ofbiz.webapp.event.EventHandlerException;
 
+import com.google.gson.Gson;
 import com.ibm.icu.util.Calendar;
 
 /***
@@ -52,6 +61,7 @@ public class LoansProcessingServices {
 		BigDecimal bdLoanAmt = loanApplication.getBigDecimal("loanAmt");
 		BigDecimal bdmaxLoanAmt = loanApplication.getBigDecimal("maxLoanAmt");
 
+		if (loanApplication.getBigDecimal("maxLoanAmt") != null)
 		if (bdLoanAmt.compareTo(bdmaxLoanAmt) == 1) {
 			bdLoanAmt = bdmaxLoanAmt;
 		}
@@ -96,6 +106,7 @@ public class LoansProcessingServices {
 		BigDecimal bdLoanAmt = loanApplication.getBigDecimal("loanAmt");
 		BigDecimal bdmaxLoanAmt = loanApplication.getBigDecimal("maxLoanAmt");
 
+		if (loanApplication.getBigDecimal("maxLoanAmt") != null)
 		if (bdLoanAmt.compareTo(bdmaxLoanAmt) == 1) {
 			bdLoanAmt = bdmaxLoanAmt;
 		}
@@ -585,4 +596,165 @@ public class LoansProcessingServices {
 		}
 	}
 
+	
+	
+	public static String validateGuarantor(HttpServletRequest request,
+			HttpServletResponse response) {
+		Map<String, Object> result = FastMap.newInstance();
+		Long loanApplicationId = Long.valueOf((String) request.getParameter("loanApplicationId"));
+		Long guarantorId = Long.valueOf((String) request.getParameter("guarantorId"));
+		
+		/***
+		 * 
+		 * 	isEmployee 	= data.isEmployee;
+			
+			isSelf 		= data.isSelf;
+			isOldEnough = data.isOldEnough;
+			hasDeposits = data.hasDeposits;
+
+		 * 
+		 * **/
+		 Boolean isEmployee = guarantorIsAnEmployee(guarantorId);
+		
+		Boolean isSelf = guarantorIsSelf(guarantorId, loanApplicationId);
+		
+		Boolean alreadyAdded = memberAlreadyGuaranteedTheLoan(guarantorId, loanApplicationId);
+		
+		Boolean isOldEnough = LoanUtilities.isOldEnough(guarantorId.toString());
+		
+		Boolean hasDeposits = guarantorHasDeposits(guarantorId);
+		
+		
+		result.put("isEmployee", isEmployee);
+		result.put("isSelf", isSelf);
+
+		result.put("isOldEnough", isOldEnough);
+		result.put("hasDeposits", hasDeposits);
+		
+		result.put("alreadyAdded", alreadyAdded);
+		
+		
+
+		Gson gson = new Gson();
+		String json = gson.toJson(result);
+
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
+		return json;
+	}
+
+	private static Boolean memberAlreadyGuaranteedTheLoan(Long guarantorId,
+			Long loanApplicationId) {
+		List<GenericValue> loanGuarantorELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		EntityConditionList<EntityExpr> loanGuarantorConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanApplicationId", EntityOperator.EQUALS,
+						loanApplicationId), EntityCondition
+						.makeCondition("guarantorId",
+								EntityOperator.EQUALS, guarantorId)),
+						EntityOperator.AND);
+		
+		try {
+			loanGuarantorELI = delegator.findList("LoanGuarantor",
+					loanGuarantorConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		//return loanGuarantorELI;
+		if (loanGuarantorELI.size() > 0)
+			return true;
+		
+		return false;
+	}
+
+	private static Boolean guarantorHasDeposits(Long guarantorId) {
+		// TODO Auto-generated method stub
+		//LoanServices.
+		//AccHolderTransactionServices.MEMBER_DEPOSIT_CODE
+		Long accountProductId = LoanUtilities.getMemberDepositsAccountId(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE);
+		BigDecimal bdTotalAmount = AccHolderTransactionServices.getAccountTotalBalance(accountProductId,
+				guarantorId);
+		
+		if (bdTotalAmount.compareTo(BigDecimal.ZERO) == 1)
+			return true;
+		
+		return false;
+	}
+
+	private static Boolean guarantorIsSelf(Long guarantorId,
+			Long loanApplicationId) {
+		
+		//GenericValue guarantorMember = LoanUtilities.getMember(guarantorId.toString());
+		GenericValue loanApplyingMember = LoanUtilities.getMemberGiveLoanApplicationId(loanApplicationId);
+		
+		Long memberPartyId = loanApplyingMember.getLong("partyId");
+		
+		// TODO Auto-generated method stub
+		
+		if (guarantorId.compareTo(memberPartyId) == 0)
+			return true;
+		
+		return false;
+	}
+
+	/****
+	 * Check that Guarantor is Employee
+	 * **/
+	private static Boolean guarantorIsAnEmployee(Long partyId) {
+		// TODO Auto-generated method stub
+		GenericValue member = LoanUtilities.getMember(partyId);
+		String payrollNumber = member.getString("payrollNumber");
+		
+		//Find Employee Given Payroll Number
+		List<GenericValue> personELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		EntityConditionList<EntityExpr> personConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"employeeNumber", EntityOperator.EQUALS, payrollNumber)),
+						EntityOperator.AND);
+		try {
+			personELI = delegator.findList("Person",
+					personConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		if (personELI.size() > 0)
+			return true;
+		
+		return false;
+	}
+
+	
 }

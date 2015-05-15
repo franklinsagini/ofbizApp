@@ -1,305 +1,415 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-    <screen name="main">
-        <section>
-            <actions>
-                <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
-            </actions>
-            <widgets>
-                <decorator-screen name="SalaryProcessingCommonDecorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    
-    <!-- 
-    	
-	
-     -->
-         
-        <screen name="salaryMonthYear">
-        <section>
-            <actions>
-                <set field="titleProperty" value="Month"/>
-                <set field="headerItem" value="salaryMonthYear"/>
-                
-                <set field="displayPassword" value="Y"/>
-                <set field="target" value="createSalaryMonthYear"/>
-                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
-                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
-                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
-                
-                <entity-one entity-name="SalaryMonthYear" value-field="salaryMonthYearContext"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="SalaryProcessingCommonDecorator" location="${parameters.mainDecoratorLocation}">
-                	
-                    <decorator-section name="body">
-                    	
-                        <section>
-                            <!-- condition>
-                                <if-has-permission permission="ACCOUNTHOLDER" action="_CREATE"/>
-                            </condition -->
-                            <widgets>
-                                <screenlet title="Month">
-                                    <include-form name="SalaryMonthYear" location="component://salaryprocessing/widget/SalaryProcessingForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                            <!-- fail-widgets>
-                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
-                            </fail-widgets -->
-                        </section>
-                        
-                        <section name="search-results">
-                        	<widgets>
-                        		<screenlet title="Salary Month List">
-                        			<include-form name="listSalaryMonthYear" location="component://salaryprocessing/widget/SalaryProcessingForms.xml"/>
-                        		</screenlet>
-                        	</widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    
-         <screen name="memberSalary">
-        <section>
-            <actions>
-                <set field="titleProperty" value="Member Salary"/>
-                <set field="headerItem" value="memberSalary"/>
-                
-                <set field="displayPassword" value="Y"/>
-                <set field="target" value="createMemberSalary"/>
-                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
-                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
-                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
-                <set field="salaryMonthYearId" from-field="parameters.salaryMonthYearId" type="Long"/>
-                <entity-one entity-name="SalaryMonthYear" value-field="salaryMonthYear">
-                	<field-map field-name="salaryMonthYearId" from-field="salaryMonthYearId"/>
-                </entity-one>
-                
-                <set field="month" value="${salaryMonthYear.month}" type="PlainString"/>
-                <set field="year" value="${salaryMonthYear.year}" type="PlainString"/>
-                <set field="stationId" value="${salaryMonthYear.stationId}" type="PlainString"/>
-                <set field="employerCode" value="${bsh:org.ofbiz.accountholdertransactions.LoanUtilities.getStationEmployerCode(stationId);}" type="PlainString"/>
-                <set field="totalNetSalary" value="${bsh:org.ofbiz.salaryprocessing.SalaryProcessingServices.getTotalNetSalaryAmount(salaryMonthYearId);}" type="BigDecimal"/>
-                <entity-one entity-name="MemberSalary" value-field="memberSalaryContext"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="SalaryProcessingCommonDecorator" location="${parameters.mainDecoratorLocation}">
-                	
-                    <decorator-section name="body">
-                    	<include-menu
+	<screen name="main">
+		<section>
+			<actions>
+				<set field="headerItem" value="main" /><!-- this highlights the selected 
+					menu-item with name "main" -->
+			</actions>
+			<widgets>
+				<decorator-screen name="SalaryProcessingCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<!-- -->
+
+	<screen name="salaryMonthYear">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Month" />
+				<set field="headerItem" value="salaryMonthYear" />
+
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="createSalaryMonthYear" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+					property="KEN" default="KEN"/ -->
+				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+
+				<entity-one entity-name="SalaryMonthYear" value-field="salaryMonthYearContext" />
+			</actions>
+			<widgets>
+				<decorator-screen name="SalaryProcessingCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+
+					<decorator-section name="body">
+
+						<section>
+							<!-- condition> <if-has-permission permission="ACCOUNTHOLDER" action="_CREATE"/> 
+								</condition -->
+							<widgets>
+								<screenlet title="Month">
+									<include-form name="SalaryMonthYear"
+										location="component://salaryprocessing/widget/SalaryProcessingForms.xml" />
+								</screenlet>
+							</widgets>
+							<!-- fail-widgets> <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label> 
+								</fail-widgets -->
+						</section>
+
+						<section name="search-results">
+							<widgets>
+								<screenlet title="Salary Month List">
+									<include-form name="listSalaryMonthYear"
+										location="component://salaryprocessing/widget/SalaryProcessingForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="memberSalary">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Member Salary" />
+				<set field="headerItem" value="memberSalary" />
+				
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="createMemberSalary" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+					property="KEN" default="KEN"/ -->
+				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+				<set field="salaryMonthYearId" from-field="parameters.salaryMonthYearId"
+					type="Long" />
+				<set field="deductType" from-field="parameters.deductType" type="String" />
+				<set field="deductTypeLink" from-field="parameters.deductTypeLink" type="String" />
+				<set field="tabButtonItem" value="${deductTypeLink}" />
+				<entity-one entity-name="SalaryMonthYear" value-field="salaryMonthYear">
+					<field-map field-name="salaryMonthYearId" from-field="salaryMonthYearId" />
+				</entity-one>
+
+				<set field="month" value="${salaryMonthYear.month}" type="PlainString" />
+				<set field="year" value="${salaryMonthYear.year}" type="PlainString" />
+				<set field="stationId" value="${salaryMonthYear.stationId}"
+					type="PlainString" />
+				<set field="employerCode"
+					value="${bsh:org.ofbiz.accountholdertransactions.LoanUtilities.getStationEmployerCode(stationId);}"
+					type="PlainString" />
+				<set field="totalNetSalary"
+					value="${bsh:org.ofbiz.salaryprocessing.SalaryProcessingServices.getTotalNetSalaryAmount(salaryMonthYearId);}"
+					type="BigDecimal" />
+				<entity-one entity-name="MemberSalary" value-field="memberSalaryContext" />
+				
+				
+			</actions>
+
+			<widgets>
+				<decorator-screen name="SalaryProcessingCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+
+					<decorator-section name="body">
+						<include-menu
 							location="component://salaryprocessing/widget/SalaryProcessingMenus.xml"
 							name="salaryProcessingTabBar" />
-                      <section>
-                      	<widgets>
-                      		<screenlet>
-                      			<container>
-                      			<label style="h3"> Month : ${month} Year : ${year} </label>
-                      				
-                      			</container>
-                      			
-                      			
-                      		</screenlet>
-                      		
-                      		<screenlet>
-									<section>
 
+						<!-- FULL -->
+						<section>
+							<condition>
+								<if-compare operator="equals" value="FULL" field="deductType" />
+								
+							</condition>
+							
+							<widgets>
+								
+								<screenlet>
+									
+									<container>
+										<label style="h3"> Month : ${month} Year : ${year} </label>
+
+									</container>
+
+
+								</screenlet>
+
+
+								<screenlet>
+									<section>
 										<widgets>
 
 											<container style="button-bar">
-
-												<link target="processSalaryReceivedDeduct" text="Process Salary Received (Make Deductions)"
-													style="buttontext">
+												<link target="processSalaryReceivedDeduct"
+													text="Process Salary Received (Full Deductions)" style="buttontext">
 													<!-- parameter param-name="loanApplicationId"/ -->
-													<parameter param-name="salaryMonthYearId"/>
+													<parameter param-name="salaryMonthYearId" />
 													<image url-mode="raw" src="${iconsLocation}/add.png" />
 												</link>
-
-
 											</container>
-											
-											
-											<container style="button-bar">
-
-												<link target="processSalaryReceivedNoDeduct" text="Process Salary Received No Deductions)"
-													style="buttontext">
-													<parameter param-name="salaryMonthYearId"/>
-													<image url-mode="raw" src="${iconsLocation}/add.png" />
-												</link>
 
 
-											</container>
+
 										</widgets>
-
 									</section>
 								</screenlet>
-                      		
-                      	</widgets>
-                      </section>
-                      
-                      
-                        
-                        <section name="Member Salary">
-                        	<widgets>
-                        		<screenlet title="Member Salary">
-                        			<include-form name="listMemberSalary" location="component://salaryprocessing/widget/SalaryProcessingForms.xml"/>
-                        		</screenlet>
-                        		
-                        		<screenlet title="Total Salary">
-                        			<!--  include-form name="listMemberSalaryTotals" location="component://salaryprocessing/widget/SalaryProcessingForms.xml"/ -->
-                        		
-                        			<container style="button-bar">
+
+							</widgets>
+						</section>
+						<!-- LOANONLY -->
+						<section>
+							<condition>
+								<if-compare operator="equals" value="LOANONLY" field="deductType" />
+							</condition>
+							<widgets>
+								<screenlet>
+									<container>
+										<label style="h3"> Month : ${month} Year : ${year} </label>
+
+									</container>
+								</screenlet>
+								<screenlet>
+									<section>
+										<widgets>
+											<container style="button-bar">
+												<link target="processSalaryReceivedLoanDeductionOnly"
+													text="Process Salary Received (Loan Deductions Only)"
+													style="buttontext">
+													<!-- parameter param-name="loanApplicationId"/ -->
+													<parameter param-name="salaryMonthYearId" />
+													<image url-mode="raw" src="${iconsLocation}/add.png" />
+												</link>
+											</container>
+
+										</widgets>
+									</section>
+								</screenlet>
+							</widgets>
+						</section>
+
+						<!-- NODEDUCTIONS -->
+						<section>
+							<condition>
+								<if-compare operator="equals" value="NODEDUCTIONS"
+									field="deductType" />
+							</condition>
+							<widgets>
+								<screenlet>
+									<container>
+										<label style="h3"> Month : ${month} Year : ${year} </label>
+									</container>
+								</screenlet>
+								<screenlet>
+									<section>
+										<widgets>
+											<container style="button-bar">
+												<link target="processSalaryReceivedNoDeduct" text="Process Salary Received (No Deductions)"
+													style="buttontext">
+													<parameter param-name="salaryMonthYearId" />
+													<image url-mode="raw" src="${iconsLocation}/add.png" />
+												</link>
+											</container>
+										</widgets>
+									</section>
+								</screenlet>
+							</widgets>
+						</section>
+
+						<!-- ACCOUNTCONTRIBUTIONS -->
+						<section>
+							<condition>
+								<if-compare operator="equals" value="ACCOUNTCONTRIBUTIONS"
+									field="deductType" />
+							</condition>
+							<widgets>
+								<screenlet>
+									<container>
+										<label style="h3"> Month : ${month} Year : ${year} </label>
+									</container>
+								</screenlet>
+								<screenlet>
+									<section>
+										<widgets>
+											<!-- Account Contribution -->
+											<container style="button-bar">
+												<link target="processSalaryReceivedAccountContributionOnly"
+													text="Process Salary Received (Account Contributions Only)"
+													style="buttontext">
+													<!-- parameter param-name="loanApplicationId"/ -->
+													<parameter param-name="salaryMonthYearId" />
+													<image url-mode="raw" src="${iconsLocation}/add.png" />
+												</link>
+											</container>
+										</widgets>
+									</section>
+								</screenlet>
+							</widgets>
+						</section>
+
+
+						<section name="Member Salary">
+							<widgets>
+								<screenlet title="Member Salary">
+									<include-form name="listMemberSalary"
+										location="component://salaryprocessing/widget/SalaryProcessingForms.xml" />
+								</screenlet>
+
+								<screenlet title="Total Salary">
+									<!-- include-form name="listMemberSalaryTotals" location="component://salaryprocessing/widget/SalaryProcessingForms.xml"/ -->
+
+									<container style="button-bar">
 										<label style="h3" text="${totalNetSalary}" />
 									</container>
-                        		</screenlet>
-                        	</widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    
-    <!-- missingSalaryPayrollNumbers -->
-             <screen name="missingSalaryPayrollNumbers">
-        <section>
-            <actions>
-                <set field="titleProperty" value="Missing Payroll Numbers"/>
-                <set field="headerItem" value="missingSalaryPayrollNumbers"/>
-                
-                <set field="displayPassword" value="Y"/>
-                <set field="target" value="createMemberSalary"/>
-                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
-                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
-                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
-               
-               <set field="month" from-field="parameters.month" type="PlainString"/>
-               <set field="year" from-field="parameters.year" type="PlainString"/>
-               <set field="employerCode" from-field="parameters.employerCode" type="PlainString"/>
-               
-               <set field="totalMissing" value="${bsh:org.ofbiz.salaryprocessing.SalaryProcessingServices.countMissingPayrollNumbers(month, year, employerCode);}"/> 
-               </actions>
-            <widgets>
-                <decorator-screen name="SalaryProcessingCommonDecorator" location="${parameters.mainDecoratorLocation}">
-                	
-                    <decorator-section name="body">
-                    	<include-menu
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+
+
+	<!-- missingSalaryPayrollNumbers -->
+	<screen name="missingSalaryPayrollNumbers">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Missing Payroll Numbers" />
+				<set field="headerItem" value="missingSalaryPayrollNumbers" />
+
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="createMemberSalary" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+					property="KEN" default="KEN"/ -->
+				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+
+				<set field="month" from-field="parameters.month" type="PlainString" />
+				<set field="year" from-field="parameters.year" type="PlainString" />
+				<set field="employerCode" from-field="parameters.employerCode"
+					type="PlainString" />
+
+				<set field="totalMissing"
+					value="${bsh:org.ofbiz.salaryprocessing.SalaryProcessingServices.countMissingPayrollNumbers(month, year, employerCode);}" />
+			</actions>
+			<widgets>
+				<decorator-screen name="SalaryProcessingCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+
+					<decorator-section name="body">
+						<include-menu
 							location="component://salaryprocessing/widget/SalaryProcessingMenus.xml"
 							name="salaryProcessingTabBar" />
-                      <section>
-                      	<widgets>
-                      		<screenlet>
-                      			<container>
-                      			<label style="h3"> Month : ${month} Year : ${year}  Employer Code : ${employerCode} </label>
-                      				
-                      			</container>
-                      			
-                      			
-                      		</screenlet>
-                      	</widgets>
-                      </section>
-                      
-                      
-                        
-                        <section name="Missing Payroll Numbers">
-                        	<widgets>
-                        		<screenlet title="Missing Payroll Numbers">
-                        			<include-form name="listMissingSalaryPayrollNumber" location="component://salaryprocessing/widget/SalaryProcessingForms.xml"/>
-                        		</screenlet>
-                        		
-                        		<screenlet title="Count">
-                        			<container style="button-bar">
-										<label style="h3" text="${totalMissing} Payroll Numbers Missing"/>
-										
-										
+						<section>
+							<widgets>
+								<screenlet>
+									<container>
+										<label style="h3"> Month : ${month} Year : ${year} Employer
+											Code : ${employerCode}
+										</label>
+
 									</container>
-                        		</screenlet>
-                        	</widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    
-    <!-- employerSalary -->
-    <screen name="employerSalary">
-        <section>
-            <actions>
-                <set field="titleProperty" value="Employer"/>
-                <set field="headerItem" value="employerSalary"/>
-                
-                <set field="displayPassword" value="Y"/>
-                <set field="target" value="createEmployerSalary"/>
-                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
-                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
-                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
-                <set field="salaryMonthYearId" from-field="parameters.salaryMonthYearId" type="Long"/>
-                <entity-one entity-name="SalaryMonthYear" value-field="salaryMonthYear">
-                	<field-map field-name="salaryMonthYearId" from-field="salaryMonthYearId"/>
-                </entity-one>
-                
-                <set field="month" value="${salaryMonthYear.month}" type="PlainString"/>
-                <set field="year" value="${salaryMonthYear.year}" type="PlainString"/>
-                <entity-one entity-name="MemberSalary" value-field="memberSalaryContext"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="SalaryProcessingCommonDecorator" location="${parameters.mainDecoratorLocation}">
-                	
-                    <decorator-section name="body">
-                    	
-                      <section>
-                      	<widgets>
-                      		<screenlet>
-                      			<container>
-                      			<label style="h3"> Month : ${month} Year : ${year} </label>
-                      				
-                      			</container>
-                      			
-                      			
-                      		</screenlet>
-                      	</widgets>
-                      </section>
-                        
-                        <section name="Employer">
-                        	<widgets>
-                        		<screenlet title="Employer">
-                        			<include-form name="EmployerSalary" location="component://salaryprocessing/widget/SalaryProcessingForms.xml"/>
-                        		</screenlet>
-                        		<screenlet title="List Employer">
-                        			<include-form name="listEmployerSalary" location="component://salaryprocessing/widget/SalaryProcessingForms.xml"/>
-                        		</screenlet>
-                        	</widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    
-    <!-- Salary Import -->
-    	<screen name="salaryImport">
+
+
+								</screenlet>
+							</widgets>
+						</section>
+
+
+
+						<section name="Missing Payroll Numbers">
+							<widgets>
+								<screenlet title="Missing Payroll Numbers">
+									<include-form name="listMissingSalaryPayrollNumber"
+										location="component://salaryprocessing/widget/SalaryProcessingForms.xml" />
+								</screenlet>
+
+								<screenlet title="Count">
+									<container style="button-bar">
+										<label style="h3" text="${totalMissing} Payroll Numbers Missing" />
+
+
+									</container>
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<!-- employerSalary -->
+	<screen name="employerSalary">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Employer" />
+				<set field="headerItem" value="employerSalary" />
+
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="createEmployerSalary" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+					property="KEN" default="KEN"/ -->
+				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+				<set field="salaryMonthYearId" from-field="parameters.salaryMonthYearId"
+					type="Long" />
+				<entity-one entity-name="SalaryMonthYear" value-field="salaryMonthYear">
+					<field-map field-name="salaryMonthYearId" from-field="salaryMonthYearId" />
+				</entity-one>
+
+				<set field="month" value="${salaryMonthYear.month}" type="PlainString" />
+				<set field="year" value="${salaryMonthYear.year}" type="PlainString" />
+				<entity-one entity-name="MemberSalary" value-field="memberSalaryContext" />
+			</actions>
+			<widgets>
+				<decorator-screen name="SalaryProcessingCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+
+					<decorator-section name="body">
+
+						<section>
+							<widgets>
+								<screenlet>
+									<container>
+										<label style="h3"> Month : ${month} Year : ${year} </label>
+
+									</container>
+
+
+								</screenlet>
+							</widgets>
+						</section>
+
+						<section name="Employer">
+							<widgets>
+								<screenlet title="Employer">
+									<include-form name="EmployerSalary"
+										location="component://salaryprocessing/widget/SalaryProcessingForms.xml" />
+								</screenlet>
+								<screenlet title="List Employer">
+									<include-form name="listEmployerSalary"
+										location="component://salaryprocessing/widget/SalaryProcessingForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<!-- Salary Import -->
+	<screen name="salaryImport">
 		<section>
 			<actions>
 				<set field="titleProperty" value="Add/Upload Salary File" />
 				<set field="tabButtonItem" value="salaryImport" />
-				<set field="headerItem" value="salaryImport"/>
+				<set field="headerItem" value="salaryImport" />
 				<set field="labelTitleProperty" value="Add/Upload Salary File" />
 				<set field="cancelPage" from-field="parameters.CANCEL_PAGE"
 					default-value="viewprofile" />
 				<set field="createUserLoginURI" value="ProfileCreateUserLogin" />
-				<set field="partyId" from-field="parameters.partyId" />
-				<set field="photourl" value="N" />
-				<set field="idfronturl" value="N" />
-				<set field="idbackurl" value="N" />
-				<set field="signatureurl" value="N" />
+				<set field="salaryMonthYearId" from-field="parameters.salaryMonthYearId" />
 				<entity-one entity-name="SalaryMonthYear" value-field="salaryMonthYear" />
 				<script
 					location="component://salaryprocessing/webapp/salaryprocessing/WEB-INF/actions/uploads/salaryUploads.groovy" />
@@ -331,20 +441,20 @@
 							</widgets>
 						</section>
 
-						
+
 					</decorator-section>
 				</decorator-screen>
 			</widgets>
 		</section>
 	</screen>
-	
+
 	<!-- stationUpload -->
 	<screen name="stationUpload">
 		<section>
 			<actions>
 				<set field="titleProperty" value="Station Salary Upload" />
 				<set field="tabButtonItem" value="stationUpload" />
-				<set field="headerItem" value="stationUpload"/>
+				<set field="headerItem" value="stationUpload" />
 				<set field="labelTitleProperty" value="Station Salary Upload" />
 				<set field="cancelPage" from-field="parameters.CANCEL_PAGE"
 					default-value="viewprofile" />
@@ -355,8 +465,8 @@
 				<set field="idbackurl" value="N" />
 				<set field="signatureurl" value="N" />
 				<entity-one entity-name="SalaryMonthYear" value-field="salaryMonthYear" />
-				<!-- script
-					location="component://salaryprocessing/webapp/salaryprocessing/WEB-INF/actions/uploads/salaryUploads.groovy" / -->
+				<!-- script location="component://salaryprocessing/webapp/salaryprocessing/WEB-INF/actions/uploads/salaryUploads.groovy" 
+					/ -->
 			</actions>
 			<widgets>
 				<decorator-screen name="SalaryProcessingCommonDecorator"
@@ -385,7 +495,7 @@
 							</widgets>
 						</section>
 
-						
+
 					</decorator-section>
 				</decorator-screen>
 			</widgets>

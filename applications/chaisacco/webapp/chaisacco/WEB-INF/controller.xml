@@ -28,6 +28,26 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="humanresource"/>
     </request-map>
+    
+    <request-map uri="myQuals">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="myQuals" />
+	</request-map>
+	
+	 <request-map uri="myskills">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="myskills" />
+	</request-map>
+	
+	 <request-map uri="EditEmployeeLeaves">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="EditEmployeeLeaves" />
+	</request-map>
+	
+	<request-map uri="myPaySlip">
+	<security https="true" auth="true"/>
+	<response name="success" type="view" value="myPaySlip"/>
+	</request-map>
 	
 	<request-map uri="EditEmplLeave">
         <security https="true" auth="true"/>
@@ -214,6 +234,16 @@
         <response name="success" type="view" value="HarmonizedReview" save-home-view="true"/>
     </request-map>
     
+     <request-map uri="staffTrainingNeeds">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="staffTrainingNeeds" save-home-view="true"/>
+    </request-map>
+    
+     <request-map uri="addStaffToTrainingList">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="addStaffToTrainingList" save-home-view="true"/>
+    </request-map>
+    
     <request-map uri="HarmonizedReviewStaff">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="HarmonizedReviewStaff"
@@ -224,10 +254,7 @@
 	
 	 <request-map uri="HODreviewStaff">
 		<security https="true" auth="true" />
-		<response name="success" type="view" value="HODreviewStaff"
-			save-home-view="true">
-				<redirect-parameter name="partyId"/>
-			</response>
+		<response name="success" type="view" value="HODreviewStaff" />
 	</request-map>
     
      <!--======================= REVIEW MYSELF =================================== -->
@@ -258,9 +285,10 @@
 		<security https="true" auth="true" />
 		<event type="service" invoke="HODreviews" />
 		<response name="success" type="request-redirect" value="HODreviewStaff">
-			<redirect-parameter name="partyId" />
-		</response>
-		<response name="error" type="view" value="HODreviewStaff" />
+		<redirect-parameter name="partyId"/>
+		<redirect-parameter name="reviewId"/>
+			</response>
+		<response name="error" type="request-redirect-noparam" value="HODreviewStaff"/>
 	</request-map>
 	
 	
@@ -268,10 +296,10 @@
 	<request-map uri="submitHODReviewScores">
 		<security https="true" auth="true" />
 		<event type="service" invoke="submitHODReviewScores" />
-		<response name="success" type="request-redirect" value="PersonalReview">
+		<response name="success" type="request-redirect" value="HODreviewStaff">
 			<redirect-parameter name="partyId" />
 		</response>
-		<response name="error" type="request-redirect-noparam" value="PersonalReview" />
+		<response name="error" type="request-redirect-noparam" value="HODreviewStaff" />
 	</request-map>
 	
 	 <!--======================= HARMONIZED REVIEW  =================================== -->
@@ -279,8 +307,9 @@
 	<request-map uri="HarmonizedHODReview">
 		<security https="true" auth="true" />
 		<event type="service" invoke="HarmonizedHODReview" />
-		<response name="success" type="request-redirect-noparam" value="HarmonizedReviewStaff">
+		<response name="success" type="request-redirect" value="HarmonizedReviewStaff">
 			<redirect-parameter name="reviewId" />
+			<redirect-parameter name="partyId"/>
 		</response>
 		<response name="error" type="request-redirect-noparam" value="HarmonizedReviewStaff" />
 	</request-map>
@@ -296,6 +325,32 @@
 		<response name="error" type="request-redirect-noparam" value="HarmonizedReviewStaff" />
 	</request-map>
 	
+	<!--======================= STAFF WHO NEED TRAINING FOR HODS =================================== -->
+
+	<request-map uri="hodAddStaffWithTrainingNeeds">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="hodAddStaffWithTrainingNeeds" />
+		<response name="success" type="request-redirect-noparam" value="staffTrainingNeeds" />
+		<response name="error" type="request-redirect-noparam" value="staffTrainingNeeds" />
+	</request-map>
+	
+	<!--======================= STAFF DONT NEED TRAINING FOR HODS =================================== -->
+
+	<request-map uri="staffDontNeedTraining">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="staffDontNeedTraining" />
+		<response name="success" type="request-redirect" value="staffTrainingNeeds" >
+		<redirect-parameter name="StaffInPerfReviewGroupId"/>
+		</response>
+		<response name="error" type="request-redirect-noparam" value="staffTrainingNeeds" />
+	</request-map>
+	
+	<request-map uri="individualPayslippdf">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="individualPayslippdf"
+			save-home-view="true" />
+	</request-map>
+	
 	
     
     <!-- View Mappings -->
@@ -309,6 +364,9 @@
 	   <view-map name="fileReleaseToAnotherStaffScreen" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#registryFileReleaseToAnotherStaff" />
 	   <view-map name="PersonalReview" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#PerfPersonalReviewScreen"/>
 	   <view-map name="HarmonizedReview" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#PerfHarmonizedReviewScreen"/>
+	   
+	   <view-map name="staffTrainingNeeds" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#PerfHODReviewAddStaffWithTrainingNeedScreen"/>
+	   <view-map name="addStaffToTrainingList" type="screen"	page="component://humanres/widget/PersonTrainingScreens.xml#AddStaffWithTrainingNeedsScreen"/>
 	   
 	   <view-map name="HarmonizedReviewStaff" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#PerfHarmonizedReviewingsScreen"/>
 	   <view-map name="HODreviewStaff" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#PerfHODReviewingsScreen"/>
@@ -326,5 +384,10 @@
 	<view-map name="releaseFileToAnotherStaff" type="screen"	page="component://registry/widget/FileScreens.xml#releaseFileToAnotherStaff" />
 	<view-map name="dispatchingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#dispatchingFiles" />
 	<!-- <view-map name="PersonalReview" type="screen" page="component://humanres/widget/PerfReviewScreens.xml#PerfPersonalReviewScreen"/> -->
+	<view-map name="EditEmployeeLeaves" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#myEmployeeLeaves" />
+	<view-map name="myskills" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#mySkills" />
+	<view-map name="myQuals" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#myQualifications" />
+	<view-map name="myPaySlip" type="screen" page="component://chaisacco/widget/chaisaccoScreens.xml#myPayslipReport"/>
+	 <view-map name="individualPayslippdf" type="screenfop" page="component://payroll/widget/payroll/PayrollReportScreens.xml#IndividualPayslipPdf" content-type="application/pdf"/>
 	
 </site-conf>

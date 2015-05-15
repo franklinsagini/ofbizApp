@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+	<!-- Member Account Journal Voucher  -->
+    <form name="memberAccountVoucher" type="single" target="createMemberAccountVoucher"
+        focus-field-name="sourcePartyId" header-row-style="header-row" default-table-style="basic-table" default-map-name="NotificationTypeContext">
+		
+		<field name="sourcePartyId" title="From (Member)"   widget-style="required" required-field="true"><lookup target-form-name="LookupSourceMember" show-description="true" /></field>
+		
+		<field name="sourceMemberAccountId" title="To (Account)"   widget-style="required" required-field="true">
+			<drop-down>
+			</drop-down>
+		</field>
+		
+		<field name="amountInSource" title="Amount In Source"   widget-style="required" required-field="true">
+			<text></text>
+		</field>
+
+		<field name="destPartyId" title="To (Member)"   widget-style="required" required-field="true"><lookup target-form-name="LookupDestinationMember" show-description="true" /></field>
+		
+		<field name="destMemberAccountId" title="To (Account)"   widget-style="required" required-field="true">
+			<drop-down>
+			</drop-down>
+		</field>
+		
+		<field name="amountInDestination" title="Amount In Destination"   widget-style="required" required-field="true">
+			<text></text>
+		</field>
+
+		
+		<field name="amount" title="Transfer Amount"   widget-style="required" required-field="true">
+			<text></text>
+		</field>
+		
+		<field name="comment" title="Comment">
+        	<textarea/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="listMemberAccountJournalVoucher" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberAccountVoucher" paginate-target="memberAccountVoucher"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="MemberAccountVoucher">
+            </entity-condition>
+        </actions>
+     
+        <field name="memberAccountVoucherId"><hidden/></field>
+        
+        <field name="sourcePartyId" title="From (Member)">
+                <display-entity entity-name="Member" key-field-name="partyId"  description="${firstName} ${middleName} ${lastName}" also-hidden="false"/>
+        </field>
+        
+        <field name="sourceMemberAccountId" title="From (Member Account)">
+                <display-entity entity-name="MemberAccount" key-field-name="memberAccountId"  description="${accountNo} - ${accountName}" also-hidden="false"/>
+        </field>
+        
+        
+        <field name="destPartyId" title="To (Member)">
+                <display-entity entity-name="Member" key-field-name="partyId"  description="${firstName} ${middleName} ${lastName}" also-hidden="false"/>
+        </field>
+        
+        <field name="destMemberAccountId" title="To (Member Account)">
+                <display-entity entity-name="MemberAccount"  key-field-name="memberAccountId"  description="${accountNo} - ${accountName}" also-hidden="false"/>
+        </field>
+        
+        <field name="amount">
+        	<display></display>
+        </field>
+        
+        <field name="createdBy">
+        	<display></display>
+        </field>
+        
+         <field name="createdStamp">
+        	<display></display>
+        </field>
+        
+        <field name="comment">
+        	<display></display>
+        </field>
+        
+ 
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+    </form>
+	
+
+</forms>

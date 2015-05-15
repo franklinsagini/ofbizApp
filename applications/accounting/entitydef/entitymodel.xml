@@ -45,6 +45,45 @@ under the License.
   <!-- org.ofbiz.accounting.imprest -->
   <!-- ========================================================= -->
 
+    <entity entity-name="FundingTypes"
+            package-name="org.ofbiz.accounting.reports"
+            title="Sasra Report Entity">
+      <field name="fundingTypeId" type="id-ne"></field>
+      <field name="fundingTypeName" type="name"></field>
+      <prim-key field="fundingTypeId"/>
+      <index name="FUNDTYPNAME" unique="true">
+        <index-field name="fundingTypeName"/>
+      </index>
+    </entity>
+
+    <entity entity-name="FundingTypeRules"
+            package-name="org.ofbiz.accounting.reports"
+            title="Sasra Report Item entity">
+      <field name="fundingRulesId" type="id-ne"></field>
+      <field name="fundingTypeId" type="id-ne"></field>
+      <field name="branchId" type="id-ne"></field>
+      <field name="debitAccount" type="id-ne" enable-audit-log="true"></field>
+      <field name="creditAccount" type="id-ne" enable-audit-log="true"></field>
+      <field name="contributingAmount" type="currency-amount"></field>
+      <prim-key field="fundingRulesId"/>
+      <relation type="one" fk-name="FUND_TYPE_RULES" rel-entity-name="FundingTypes">
+        <key-map field-name="fundingTypeId"/>
+      </relation>
+      <relation type="one" fk-name="CONTRIB_BRANCH" rel-entity-name="PartyGroup">
+         <key-map field-name="branchId" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="BRANCH_DR_ACCT" rel-entity-name="GlAccountOrganization">
+        <key-map field-name="debitAccount" rel-field-name="glAccountId"/>
+      </relation>
+      <relation type="one" fk-name="BRANCH_CR_ACCT" rel-entity-name="GlAccountOrganization">
+        <key-map field-name="creditAccount" rel-field-name="glAccountId"/>
+      </relation>
+      <index name="BRANCH_NAME_UNQ" unique="true">
+        <index-field name="branchId"/>
+      </index>
+    </entity>
+
+
     <entity entity-name="Imprest"
             package-name="org.ofbiz.accounting.imprest"
             title="Imprest Entity">
@@ -569,8 +608,8 @@ under the License.
         <field name="finAccountTypeId" type="id"></field>
         <field name="statusId" type="id"></field>
         <field name="finAccountName" type="name"></field>
-        <field name="finAccountCode" type="long-varchar" encrypt="true"></field>
-        <field name="finAccountPin" type="long-varchar" encrypt="true"></field>
+        <field name="finAccountCode" type="id-ne"></field>
+        <field name="finAccountPin" type="long-varchar"></field>
         <field name="currencyUomId" type="id-ne"/>
         <field name="organizationPartyId" type="id"><description>The internal organization Party that owns (or rather, is liable for) the account.</description></field>
         <field name="ownerPartyId" type="id"><description>The customer or third party that owns the account.</description></field>
@@ -583,8 +622,6 @@ under the License.
         <field name="actualBalance" type="currency-amount"><description>Calculated as the sum of FinAccountTrans.amount</description></field>
         <field name="availableBalance" type="currency-amount"><description>Calculated as actualBalance minus sum of outstanding FinAccountAuth.amount</description></field>
         <prim-key field="finAccountId"/>
-        <prim-key field="finAccountPin"/>
-        <prim-key field="finAccountCode"/>
         <relation type="one" fk-name="FINACCT_TYPE" rel-entity-name="FinAccountType">
             <key-map field-name="finAccountTypeId"/>
         </relation>

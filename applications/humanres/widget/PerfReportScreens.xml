@@ -138,6 +138,10 @@
                 			<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     		<decorator-section name="body">
                     		<include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    		<container style="leftclear">
+							<label style="h1"
+							text="Staff Performance Reports" />
+					      </container>
                            <section name="search-results">
                         	<widgets>
                         	
@@ -153,9 +157,22 @@
                             </screenlet>
                             </container>
                             
-                            <screenlet></screenlet><screenlet></screenlet><screenlet></screenlet>
+                            <screenlet></screenlet>
+
+                             <container style="righthalf">
+                            <screenlet title="All Employees Performance Scores For Full Year (EXCEL)">
+                                <include-form name="AllStaffPerformanceCSV" location="component://humanres/widget/forms/PerfReportForms.xml"/>
+                            </screenlet>
+                            </container>
                             
-                             <container style="lefthalf">
+                              <container style="righthalf">
+                            <screenlet title="Employees Score Per Qualitative Goal (EXCEL)">
+                                <include-form name="AllStaffPerformanceOnQualitativeGoalCSV" location="component://humanres/widget/forms/PerfReportForms.xml"/>
+                            </screenlet>
+                            </container>
+                            
+                            
+                           <!--   <container style="lefthalf">
                             <screenlet title="Employees Per Score bracket">
                                 <include-form name="StaffPerScoreBracket" location="component://humanres/widget/forms/PerfReportForms.xml"/>
                             </screenlet>
@@ -165,10 +182,10 @@
                             <screenlet title="All Employees Performance Scores For One Quarter">
                                 <include-form name="StaffPerScoreQuarter" location="component://humanres/widget/forms/PerfReportForms.xml"/>
                             </screenlet>
-                             </container>
+                             </container> -->
                              
                               
-                            <screenlet></screenlet><screenlet></screenlet><screenlet></screenlet>
+                            <screenlet></screenlet>
                             
                              <container style="lefthalf">
                             <screenlet title="Employees Score Per Goal">
@@ -182,7 +199,7 @@
                             </screenlet>
                              </container>
                              
-                              <screenlet></screenlet><screenlet></screenlet><screenlet></screenlet>
+                             <screenlet></screenlet>
                             
                              <container style="lefthalf">
                             <screenlet title="Employees Score Per Qualitative Goal">
@@ -191,10 +208,25 @@
                              </container>
                              
                               <container style="righthalf">
-                            <screenlet title="Staff Performance Per Branch/Department">
+                            <screenlet title="Staff Performance For The Whole Society">
+                                <include-form name="StaffPerformanceOfWholeSociety" location="component://humanres/widget/forms/PerfReportForms.xml"/>
+                            </screenlet>
+                             </container>
+                             
+                              <screenlet></screenlet>
+                            
+                             <container style="lefthalf">
+                            <screenlet title="Staff Performance Per  Branch">
+                                <include-form name="StaffPerformancePerBranch" location="component://humanres/widget/forms/PerfReportForms.xml"/>
+                            </screenlet>
+                             </container>
+                             
+                              <container style="righthalf">
+                            <screenlet title="Staff Performance Per Department">
                                 <include-form name="StaffPerformancePerDepartment" location="component://humanres/widget/forms/PerfReportForms.xml"/>
                             </screenlet>
                              </container>
+                             <screenlet></screenlet>
 
                         	</widgets>
                         </section>
@@ -325,7 +357,7 @@
         </section>
     </screen>
     
-      <!-- =================== STAFF PERFORMANCE SCORES PER BRANCH/DEPARTMENT REPORTS ====================== -->
+      <!-- =================== STAFF PERFORMANCE SCORES FOR WHOLE SOCIETY REPORTS ====================== -->
     
      <screen name="StaffPerformancePerBranchOrDepartmentPDF">
         <section>
@@ -344,6 +376,107 @@
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+      <!-- =================== STAFF PERFORMANCE SCORES PER BRANCH REPORTS ====================== -->
+    
+     <screen name="StaffPerformancePerBranchPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/StaffPerformancePerBranch.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/StaffPerformancePerBranch.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+      <!-- =================== STAFF PERFORMANCE SCORES PER DEPARTMENT REPORTS ====================== -->
+    
+     <screen name="StaffPerformancePerDepartmentPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/StaffPerformancePerDepartment.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/StaffPerformancePerDepartment.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+         <!-- ===================  ALL STAFF PERFOMANCE EXCEL =============== -->
+
+     <screen name="AllStaffPerformanceCSVCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/AllStaffPerformanceScore.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="STAFF PERFORMANCE FOR YEAR [${parameters.year}] "/>
+                </container>
+                <include-form name="AllStaffPerformanceExport" location="component://humanres/widget/forms/PerfReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+     <!-- ===================  ALL STAFF PERFOMANCE PER QUALITATIVE GOAL EXCEL =============== -->
+
+     <screen name="AllStaffPerformanceOnQualitativeGoalCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+                <entity-one value-field="qgoal" entity-name="PerfGoals">
+                <field-map field-name="perfGoalsId" from-field="parameters.perfGoalsId"/>
+                </entity-one>
+
+                
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/AllStaffPerformanceScorePerQualitativeGoal.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="STAFF PERFORMANCE ON [${qgoal.goal}] FOR YEAR [${parameters.year}] "/>
+                </container>
+                <include-form name="AllStaffPerformanceOnQualitativeGoalExport" location="component://humanres/widget/forms/PerfReportForms.xml"/>
             </widgets>
         </section>
     </screen>

@@ -35,7 +35,7 @@
 
           <!--  <menu-item name="salaryAdvance" title="Salary Advance" selected-style="selected"><link target="salaryAdvance"/></menu-item> -->
         <menu-item name="PerfReview" title="${uiLabelMap.HumanResPerfReview}"><link target="perfGoalsDef"/></menu-item>
-        <menu-item name="Training" title="${uiLabelMap.HumanResTraining}"><link target="TrainingCalendar"/></menu-item>
+        <!-- <menu-item name="Training" title="${uiLabelMap.HumanResTraining}"><link target="TrainingCalendar"/></menu-item> -->
         <menu-item name="staffTraining" title="${uiLabelMap.HumanResTraining}"><link target="staffTraining"/></menu-item>
         <menu-item name="Leave" title="${uiLabelMap.HumanResEmplLeave}"><link target="FindEmplLeaves"/></menu-item>
         <menu-item name="EmpSeparation" title="Separation Management"><link target="separationApplication"/></menu-item>
@@ -137,12 +137,9 @@
         	<link target="perfGoalsDef"/>
         </menu-item>
 
-<!--          <menu-item name="PerfManagement" title="Performance Management">
-        	<link target="PerfManagement"/>
+      <menu-item name="nonSubmitted" title="Staff Whose Scores Have Not Been Submitted">
+        	<link target="nonSubmitted"/>
         </menu-item>
-        <menu-item name="MyPerfReviews" title="My Performance Reviews">
-        	<link target="MyPerfReviews"/>
-        </menu-item> -->
       <menu-item name="perfReviewReport" title="Performance Reports">
         	<link target="perfReviewReport"/>
         </menu-item> 
@@ -156,7 +153,7 @@
         <menu-item name="perfGoalsDef" title="Performance Goals Definition">
         	<link target="perfGoalsDef"/>
         </menu-item>
-        <menu-item name="PerfReviews" title="Review Setup">
+        <menu-item name="PerfReviews" title="Setup Review Groups">
         	<link target="PerfReviews"/>
         </menu-item>
          <menu-item name="addStaffToPerfReviewGroup" title="Add Staff To Review Group">
@@ -165,12 +162,6 @@
         <menu-item name="reviewPeriod" title="Manage Review Periods">
         	<link target="reviewPeriod"/>
         </menu-item>
-        <!-- <menu-item name="PerfStaff" title="Objective Definition">
-        	<link target="PerfStaff"/>
-        </menu-item>
-         <menu-item name="kpiachievementstatus" title="Achievement Status">
-        	<link target="kpiachievementstatus"/>
-        </menu-item> -->
         <menu-item name="perfRatingType" title="Performance Assessment Ratings">
         	<link target="perfRatingType"/>
         </menu-item>
@@ -354,12 +345,12 @@
             <link target="EditTerminationTypes"/>
         </menu-item> -->
 
-        <menu-item name="EditTrainingTypes" title="${uiLabelMap.HumanResTrainingClassType}">
+        <!-- <menu-item name="EditTrainingTypes" title="${uiLabelMap.HumanResTrainingClassType}">
             <link target="EditTrainingTypes"/>
         </menu-item>
         <menu-item name="trainingCostType" title="Training Cost Type">
             <link target="trainingCostType"/>
-        </menu-item>
+        </menu-item> -->
 
         <menu-item name="tribe" title="Tribe Definition">
             <link target="tribe"/>
@@ -472,11 +463,11 @@
                 <parameter param-name="partyId"/>
             </link>
         </menu-item> -->
-         <menu-item name="EditPartyResumes" title="${uiLabelMap.HumanResPartyResume}">
+        <!--  <menu-item name="EditPartyResumes" title="${uiLabelMap.HumanResPartyResume}">
             <link target="EditPartyResumes">
                 <parameter param-name="partyId"/>
             </link>
-        </menu-item>
+        </menu-item> -->
        <!--  <menu-item name="EditEmploymentApps" title="${uiLabelMap.HumanResEmploymentApp}">
             <link target="EditEmploymentApps">
                 <parameter param-name="partyId"/>
@@ -586,6 +577,9 @@
         <menu-item name="trainingEvent" title="Training Events">
             <link target="trainingEvent"/>
         </menu-item>
+        <menu-item name="staffWhoNeedTraining" title="Staff Who need Training (Forwarded by Staff Perfomance Reviewers)">
+            <link target="staffWhoNeedTraining"/>
+        </menu-item>
          <menu-item name="AddStaffToTraining" title="Add Staff To Training">
             <link target="AddStaffToTraining"/>
         </menu-item>
@@ -631,7 +625,7 @@
        <menu-item name="LeaveBalances" title="Leave Balances">
             <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
             <!-- <link target="LeaveBalances"/> -->
-            <link target="generateLeaveBalances"/>
+            <link target="LeaveBalances"/>
         </menu-item>
         <menu-item name="ActiveEmplLeaves" title="Active Leaves">
             <condition><if-has-permission permission="HUMANRES" action="_APPROVE"/></condition>
@@ -649,6 +643,13 @@
             <!-- <link target="LeaveBalances"/> -->
             <link target="scheduleSendEmailNotification"/>
         </menu-item> 
+        
+        
+         <menu-item name="scheduleMail2" title="schedule Mail Email Notification non staff">
+            <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
+            <!-- <link target="LeaveBalances"/> -->
+            <link target="scheduleSendEmailNotificationNonStaff"/>
+        </menu-item>
 
         <menu-item name="scheduleDisableLogins" title="schedule Login Disable">
             <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
@@ -774,12 +775,14 @@
         </menu-item>
         <menu-item name="HODReview" title="Forwarded Reviews">
             <link target="HODReview">
-            <parameter param-name="partyId"/>
             </link>
         </menu-item>
          <menu-item name="HarmonizedReview" title="Harmonized/Discussed Review">
             <link target="HarmonizedReview">
-            <parameter param-name="partyId"/>
+            </link>
+        </menu-item>
+         <menu-item name="staffTrainingNeeds" title="Staff Training Needs">
+            <link target="staffTrainingNeeds">
             </link>
         </menu-item>
 

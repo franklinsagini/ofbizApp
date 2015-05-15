@@ -387,6 +387,8 @@ under the License.
                         <set field="getGlAccountFromAccountTypeInMap.roleTypeId" from-field="parameters.roleTypeId"/>
                         <set field="getGlAccountFromAccountTypeInMap.invoiceId" from-field="parameters.invoiceId"/>
                         <set field="getGlAccountFromAccountTypeInMap.paymentId" from-field="parameters.paymentId"/>
+
+                        <!-- How to get the Default GL Accounts PHIL - CATCH THE Account from here -->
                         <call-service service-name="getGlAccountFromAccountType" in-map-name="getGlAccountFromAccountTypeInMap">
                             <result-to-field result-name="glAccountId" field="acctgTransEntry.glAccountId"/>
                         </call-service>
@@ -1954,6 +1956,7 @@ under the License.
                 <field-map field-name="organizationPartyId"/>
             </entity-one>
             <set field="creditGlAccountTypeId" from-field="paymentGlAccountTypeMap.glAccountTypeId"/>
+
             <!-- credit for diff amount-->
             <make-value entity-name="AcctgTransEntry" value-field="creditEntryWithDiffAmount"/>
             <set field="creditEntryWithDiffAmount.debitCreditFlag" value="C"/>

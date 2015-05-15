@@ -61,6 +61,31 @@
         <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
     </form>
 
+    <!-- Maintences Search Options form -->
+    <form name="FindFixedAssetMaintBAK" default-map-name="timesheet" target="findFixedAssetMaints" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="fixedAssetId"><text-find ignore-case="true"/></field>
+        <field name="maintHistSeqId"><text-find ignore-case="true"/></field>
+        <field name="productMaintTypeId" title="${uiLabelMap.AccountingFixedAssetMaintType}">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="ProductMaintType">
+                    <entity-order-by field-name="productMaintTypeId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="StatusItem">
+                    <entity-constraint name="statusTypeId" operator="equals" value="FIXEDAST_MNT_STATUS"/>
+                    <entity-order-by field-name="sequenceId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="actualStartDate"><date-find/></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
+    </form>
+
     <!-- Special version of the same form in Accounting. This one lists all maintenances, not just
         maintenances for a specific fixed asset. -->
     <form name="ListFixedAssetMaints" target="" title="" type="list" list-name="listIt" paginate-target="findFixedAssetMaints" paginate="true"

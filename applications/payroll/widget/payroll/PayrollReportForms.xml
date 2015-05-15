@@ -118,6 +118,25 @@ under the License.
         </field>
     </form>
     
+                                         <!-- FOR MY PROFILE -->
+     <form name="myPayslip" type="single" target="individualPayslippdf" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="payrollPeriodId" title="Payroll Period" required-field="true" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name}" entity-name="PayrollPeriod" key-field-name="payrollPeriodId">
+        			<entity-constraint name="status" operator="not-equals" value="Inactive" />
+        			<entity-order-by field-name="payrollPeriodId"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        <field name="partyId"   title="Employee">
+            <hidden value="${userLogin.partyId}"/>
+        </field>
+        <field name="submitButton" title="Show" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
     <form name="P9Report" type="single" target="p9reportPdf" title="" header-row-style="header-row"
         default-table-style="basic-table">
         <field name="payrollYearId" title="Year" required-field="true" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">

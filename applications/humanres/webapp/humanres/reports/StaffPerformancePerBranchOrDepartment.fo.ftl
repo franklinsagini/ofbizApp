@@ -17,14 +17,20 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#escape x as x?xml>
-    <#if ReviewGroup?has_content>
+    <#if ReviewGroup1?has_content>
 
     <#-- REPORT TITLE -->
     <fo:block font-size="18pt" font-weight="bold" text-align="center">
         CHAI SACCO
     </fo:block>
+    
+    <#-- BANG !!! -->
+<#list listIndividualGoalScore as individual >
+
+	<#assign partyId = individual.partyId />
+	<#assign person = delegator.findOne("Person", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", partyId), true)/>
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" text-decoration="underline">
-        ${fNameUpperCased} ${sNameUpperCased}'s PERFORMANCE REPORT FOR THE YEAR ${year}
+        ${person.firstName} ${person.lastName}'s PERFORMANCE REPORT FOR THE YEAR ${year}
     </fo:block>
     <fo:block><fo:leader/></fo:block>
 
@@ -32,7 +38,7 @@ under the License.
         Quantitative Goals Scores
     </fo:block>
     <#-- Employee Details -->
-<#if Goal_QuantitativeScorelist?has_content>
+<#if individual.listQuantitativeGoalScore?has_content>
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
@@ -86,41 +92,41 @@ under the License.
             </fo:table-header>
             <fo:table-body>
             <#assign count=0>
-                  <#list Goal_QuantitativeScorelist as score>
+                  <#list individual.listQuantitativeGoalScore as score>
                      <fo:table-row>
                        <#assign count = count + 1>
                       <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${count}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${score.perspective?if_exists}</fo:block>
+                            <fo:block>${score.name?if_exists}</fo:block>
                         </fo:table-cell>
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${score.Objective?if_exists}</fo:block>
+                            <fo:block>${score.objectiveName?if_exists}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${score.ActionPlan?if_exists}</fo:block>
+                            <fo:block>${score.actionPlanName?if_exists}</fo:block>
                         </fo:table-cell>
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${score.IndicatorDescription?if_exists}</fo:block>
+                            <fo:block>${score.indicatorName?if_exists}</fo:block>
                         </fo:table-cell>
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block text-align="right">${score.MaxPossibleScore?if_exists} %</fo:block>
+                            <fo:block text-align="right">${score.maxScore?if_exists} %</fo:block>
                         </fo:table-cell>
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block text-align="right">${score.Q1?if_exists}</fo:block>
+                            <fo:block text-align="right">${score.quarterOne?if_exists}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block text-align="right">${score.Q2?if_exists}</fo:block>
+                            <fo:block text-align="right">${score.quarterTwo?if_exists}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block text-align="right">${score.Q3?if_exists}</fo:block>
+                            <fo:block text-align="right">${score.quarterThree?if_exists}</fo:block>
                         </fo:table-cell>
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block text-align="right">${score.Q4?if_exists}</fo:block>
+                            <fo:block text-align="right">${score.quarterFour?if_exists}</fo:block>
                         </fo:table-cell>
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block text-align="right">${score.Total?if_exists}</fo:block>
+                            <fo:block text-align="right">${score.total?if_exists}</fo:block>
                         </fo:table-cell>
                      </fo:table-row>
                   </#list>
@@ -150,27 +156,27 @@ under the License.
                                 </fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-size="10pt">
-                                <fo:block text-align="right">${QNT_Totalall4qstotalMaxScore}
+                                <fo:block text-align="right">${individual.quantitativeMaxScore}
                                 </fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-size="10pt">
-                                <fo:block text-align="right">${QNT_Totalq1}
+                                <fo:block text-align="right">${individual.quantitativeQuarterOne}
                                 </fo:block>
                             </fo:table-cell>
                              <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-size="10pt">
-                                <fo:block text-align="right">${QNT_Totalq2}
+                                <fo:block text-align="right">${individual.quantitativeQuarterTwo}
                                 </fo:block>
                             </fo:table-cell>
                              <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-size="10pt">
-                                <fo:block text-align="right">${QNT_Totalq3}
+                                <fo:block text-align="right">${individual.quantitativeQuarterThree}
                                 </fo:block>
                             </fo:table-cell>
                              <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-size="10pt">
-                                <fo:block text-align="right">${QNT_Totalq4}
+                                <fo:block text-align="right">${individual.quantitativeQuarterFour}
                                 </fo:block>
                             </fo:table-cell>
                              <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-size="10pt">
-                                <fo:block text-align="right">${QNT_Totalall4qstotalScore}
+                                <fo:block text-align="right">${individual.quantitativeTotal}
                                 </fo:block>
                             </fo:table-cell>
                             
@@ -191,7 +197,7 @@ under the License.
     </fo:block>
 
 
-    <#if Goal_QualitativeScorelist?has_content>
+    <#if individual.listQualitativeGoalScore?has_content>
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
@@ -233,32 +239,32 @@ under the License.
             </fo:table-header>
             <fo:table-body>
             <#assign count=0>
-                  <#list Goal_QualitativeScorelist as score2>
+                  <#list individual.listQualitativeGoalScore as score2>
                      <fo:table-row>
                        <#assign count = count + 1>
                       <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${count}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${score2.IndicatorDescription2?if_exists}</fo:block>
+                            <fo:block>${score2.name?if_exists}</fo:block>
                         </fo:table-cell>
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block text-align="right">${score2.MaxPossibleScore2?if_exists} %</fo:block>
+                            <fo:block text-align="right">${score2.maxScore?if_exists} %</fo:block>
                         </fo:table-cell>
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block text-align="right">${score2.Q1?if_exists}</fo:block>
+                            <fo:block text-align="right">${score2.quarterOne?if_exists}</fo:block>
                         </fo:table-cell>
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block text-align="right">${score2.Q2?if_exists}</fo:block>
+                            <fo:block text-align="right">${score2.quarterTwo?if_exists}</fo:block>
                         </fo:table-cell>
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block text-align="right">${score2.Q3?if_exists}</fo:block>
+                            <fo:block text-align="right">${score2.quarterThree?if_exists}</fo:block>
                         </fo:table-cell>
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block text-align="right">${score2.Q4?if_exists}</fo:block>
+                            <fo:block text-align="right">${score2.quarterFour?if_exists}</fo:block>
                         </fo:table-cell>
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block text-align="right">${score2.Total?if_exists}</fo:block>
+                            <fo:block text-align="right">${score2.total?if_exists}</fo:block>
                         </fo:table-cell>
                      </fo:table-row>
                   </#list>
@@ -273,27 +279,27 @@ under the License.
                                 </fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-size="10pt">
-                                <fo:block text-align="right">${QTT_Totalall4qstotalMaxScore}
+                                <fo:block text-align="right">${individual.qualitativeMaxScore}
                                 </fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-size="10pt">
-                                <fo:block text-align="right">${QTT_Totalq1}
+                                <fo:block text-align="right">${individual.qualitativeQuarterOne}
                                 </fo:block>
                             </fo:table-cell>
                              <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-size="10pt">
-                                <fo:block text-align="right">${QTT_Totalq2}
+                                <fo:block text-align="right">${individual.qualitativeQuarterTwo}
                                 </fo:block>
                             </fo:table-cell>
                              <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-size="10pt">
-                                <fo:block text-align="right">${QTT_Totalq3}
+                                <fo:block text-align="right">${individual.qualitativeQuarterThree}
                                 </fo:block>
                             </fo:table-cell>
                              <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-size="10pt">
-                                <fo:block text-align="right">${QTT_Totalq4}
+                                <fo:block text-align="right">${individual.qualitativeQuarterFour}
                                 </fo:block>
                             </fo:table-cell>
                              <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-size="10pt">
-                                <fo:block text-align="right">${QTT_Totalall4qstotalScore}
+                                <fo:block text-align="right">${individual.qualitativeTotal}
                                 </fo:block>
                             </fo:table-cell>
                             
@@ -303,19 +309,31 @@ under the License.
     </fo:block>
 
 <fo:block font-size="12pt" text-align="right"  font-weight="bold" text-decoration="underline">
-        Total Staff Performance Score: ${all4qstotalScore}
+        Total Staff Performance Score: ${individual.all4qstotalScore}
     </fo:block>
+    <fo:block font-size="12pt" text-align="right"  font-weight="bold" text-decoration="underline">
+    </fo:block>
+<fo:block font-size="12pt" text-align="right"  font-weight="bold" text-decoration="underline">
+        ==================================================================================================================================================
+    </fo:block>
+    <fo:block font-size="12pt" text-align="right"  font-weight="bold" text-decoration="underline">
+        
+    </fo:block>
+
+<#-- END !!! Wont work -->
 
     <#else>
      <fo:block space-after.optimum="10pt" >
         <fo:block text-align="center" font-size="14pt">No Scores Were found</fo:block>
     </fo:block>
+
   </#if>
     <#else>
      <fo:block space-after.optimum="10pt" >
         <fo:block text-align="center" font-size="14pt">No Scores Were found</fo:block>
     </fo:block>
   </#if>
+</#list>
     <#else>
         <fo:block text-align="center">Nothing to show</fo:block>
     </#if>

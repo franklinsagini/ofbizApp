@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>MemberAccountManagement Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+
+    <service name="noSyntaxError" engine="interface">
+        <description>
+            Dummy service to prevent empty files and syntax error - Remove when the 1st real service will be added here 
+        </description>
+    </service>
+    
+           	<!-- MemberAccountVoucher -->
+	<service name="createMemberAccountVoucher" engine="simple" default-entity-name="MemberAccountVoucher"
+             location="component://memberaccountmanagement/script/org/ofbiz/memberaccountmanagement/MemberAccountManagementServices.xml" invoke="createMemberAccountVoucher" auth="true">
+        <description>Create MemberAccountVoucher</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    <service name="updateMemberAccountVoucher" engine="simple" default-entity-name="MemberAccountVoucher"
+             location="component://memberaccountmanagement/script/org/ofbiz/memberaccountmanagement/MemberAccountManagementServices.xml" invoke="updateMemberAccountVoucher" auth="true">
+        <description>Update MemberAccountVoucher</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteMemberAccountVoucher" engine="simple" default-entity-name="MemberAccountVoucher"
+             location="component://memberaccountmanagement/script/org/ofbiz/memberaccountmanagement/MemberAccountManagementServices.xml" invoke="deleteMemberAccountVoucher" auth="true">
+        <description>Delete MemberAccountVoucher</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+     
+    
+</services>
