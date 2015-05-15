@@ -15,6 +15,7 @@ import javolution.util.FastMap;
 
 import org.apache.log4j.Logger;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
+import org.ofbiz.accountholdertransactions.LoanUtilities;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
@@ -59,8 +60,10 @@ public class ATMManagementServices {
 			result.put("", "No Accounts");
 		}
 		
+		GenericValue accountProduct;
 		for (GenericValue genericValue : memberAccountELI) {
-			result.put(genericValue.get("memberAccountId").toString(), genericValue.get("accountNo")+" - "+genericValue.getString("accountName"));
+			accountProduct = LoanUtilities.getAccountProduct(genericValue.getLong("accountProductId"));
+			result.put(genericValue.get("memberAccountId").toString(), genericValue.get("accountNo")+" - "+accountProduct.getString("name")+" - "+genericValue.getString("accountName"));
 		}
 		
 		Gson gson = new Gson();

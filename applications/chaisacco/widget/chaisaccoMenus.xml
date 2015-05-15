@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
     <menu name="MainAppBar" title="${uiLabelMap.chaisaccoApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    
         <menu-item name="main" title="${uiLabelMap.CommonMain}"><link target="main"/></menu-item>
+        <menu-item name="myprofile" title="My Profile"><link target="MyProfile"><parameter param-name="partyId" from-field="userLogin.partyId"/></link></menu-item> 
 		<menu-item name="EmployeeLeave" title="My Leave"><link target="humanresource"/></menu-item>
 		<menu-item name="PersonalReview" title="Performance Reviews"><link target="PersonalReview"/></menu-item>
-	<!-- 	<menu-item name="myprofile" title="My Profile"><link target="MyProfile"/></menu-item> -->
 		<menu-item name="registry" title="Registry Files"><link target="regFileRequest"/></menu-item>
+    </menu>
+    
+    
+    
+     <menu name="myProfileTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="EditEmployeeSkills">
+        <menu-item name="myPersonalProfile" title="My Personal Profile">
+            <link target="MyProfile">
+                <parameter param-name="partyId" from-field="userLogin.partyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="myskills" title="My Skills">
+            <link target="myskills">
+                <parameter param-name="partyId" from-field="userLogin.partyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="myQuals" title="My Qualifications">
+            <link target="myQuals">
+                <parameter param-name="partyId" from-field="userLogin.partyId"/>
+            </link>
+        </menu-item>
+       <menu-item name="myLeaves" title="My Leave">
+            <link target="EditEmployeeLeaves">
+                <parameter param-name="partyId" from-field="userLogin.partyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="myPaySlip" title="My Payslip">
+            <link target="myPaySlip">
+                <parameter param-name="partyId" from-field="userLogin.partyId"/>
+            </link>
+        </menu-item>
     </menu>
     
     

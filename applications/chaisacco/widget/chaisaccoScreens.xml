@@ -358,39 +358,44 @@
 	</screen>
 	
 	
-	 <screen name="MyProfile">
+	
+    
+      <screen name="MyProfile">
         <section>
             <actions>
-                <set field="titleProperty" value="myprofile"/>
-                <set field="tabButtonItem" value="myprofile"/>
+                <set field="titleProperty" value="PageTitleViewPartyProfile"/>
+                <set field="tabButtonItem" value="myPersonalProfile"/>
+                <set field="headerItem" value="myprofile" />
                 <set field="labelTitleProperty" value="PartyTaxAuthInfos"/>
-                <set field="partyId" from-field="userLogin.partyId"/>
+                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="layoutSettings.javaScripts[]" value="/partymgr/js/PartyProfileContent.js" global="true"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/ViewProfile.groovy"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/GetUserLoginPrimaryEmail.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
+              <!--   <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}"> -->
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
                                 <not><if-empty field="party"/></not>
                             </condition>
                             <widgets>
-								<screenlet></screenlet>
                                 <section>
                                     <widgets>
+                                    <include-menu location="component://chaisacco/widget/chaisaccoMenus.xml" name="myProfileTabBar"/>
+                                    <container style="leftclear">
+									<label style="h1" text="My Details" />
+									</container>
                                         <container style="profile-left">
-                                            <include-screen name="myProfileParty" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                           <!--  <include-screen name="ContactInformation" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            <include-screen name="EmployeeIdentificationNumbers" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                             <include-screen name="trainingsList"/> -->
-                                           
+                                            <include-screen name="myPartyPersonalInfo" location="component://chaisacco/widget/chaisaccoScreens.xml"/>
+                                            <include-screen name="myContactInformation" location="component://chaisacco/widget/chaisaccoScreens.xml"/>
+                                            <include-screen name="myEmployeeIdentificationNumbers" location="component://chaisacco/widget/chaisaccoScreens.xml"/>
                                             
                                         </container>
-                                        <!-- <container style="profile-right">
+                                        <container style="profile-right">
                                             <include-screen name="EmployementStatus" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                            <!-- <include-screen name="UserLogin" location="component://party/widget/partymgr/ProfileScreens.xml"/> -->
                                             
                                              
                                              <screenlet title="Staff Spouses">
@@ -404,7 +409,7 @@
                                              <screenlet title="Staff Dependants">
                                               <include-form location="component://humanres/widget/forms/EmployeeForms.xml" name="ListemployeeDependants"/>
                                              </screenlet>
-                                        </container> -->
+                                        </container>
                                     </widgets>
                                 </section>
                             </widgets>
@@ -419,6 +424,324 @@
             </widgets>
         </section>
     </screen>
+    
+     <screen name="myPartyPersonalInfo">
+        <section>
+            <actions>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="parameters.partyId" from-field="parameters.partyId" default-value="${userLogin.partyId}"/>
+                <entity-and entity-name="PartyNameHistory" list="partyNameHistoryList">
+                    <field-map field-name="partyId" from-field="parameters.partyId"/>
+                    <order-by field-name="-changeDate"/>
+                </entity-and>
+                <entity-one entity-name="PartyAndGroup" value-field="lookupGroup">
+                    <field-map field-name="partyId" from-field="parameters.partyId"/><!-- is required -->
+                </entity-one>
+                <entity-one entity-name="PartyAndPerson" value-field="lookupPerson">
+                    <field-map field-name="partyId" from-field="parameters.partyId"/><!-- is required -->
+                </entity-one>
+                <entity-and list="partyContentList" entity-name="PartyContent">
+                    <field-map field-name="partyId" from-field="parameters.partyId"/>
+                    <field-map field-name="partyContentTypeId" value="LGOIMGURL"/>
+                    <order-by field-name="-fromDate"/>
+                </entity-and>
+                <set field="partyContentId" from-field="partyContentList[0].contentId"/>
+                <set field="partyContent" value="${groovy: partyContentId!=null?&quot;/content/control/stream?contentId=&quot; + partyContentId : &quot;&quot;}"/>
+                <set field="partyGroupLogoLinkUrl" from-field="partyContent" default-value="${lookupGroup.logoImageUrl}" global="true"/>
+                <set field="personalImage" from-field="partyContent"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <not><if-empty field="lookupPerson"/></not>
+                    </condition>
+                    <widgets>
+                        <section>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.PartyPersonalInformation}">
+                                          <!--  <include-menu name="personUpdate" location="component://party/widget/partymgr/PartyMenus.xml"/> -->
+                                    <include-form name="ViewPartyPerson" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                   
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <screenlet title="${uiLabelMap.PartyPersonalInformation}" id="PartyPersonalInformationPanel">
+                                    <include-form name="ViewPartyPerson" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                    <section>
+                                        <condition>
+                                            <not><if-empty field="partyNameHistoryList"/></not>
+                                        </condition>
+                                        <widgets>
+                                            <include-form name="ViewPartyPersonHistory" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                        </widgets>
+                                    </section>
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
+                    </widgets>
+                </section>
+                <section>
+                    <condition>
+                        <not><if-empty field="lookupGroup"/></not>
+                    </condition>
+                    <widgets>
+                        <section>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.PartyPartyGroupInformation}" navigation-menu-name="groupUpdate" id="PartyGroupInformationPanel">
+                                    <include-menu name="groupUpdate" location="component://party/widget/partymgr/PartyMenus.xml"/>
+                                    <include-form name="ViewPartyGroup" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                    <section>
+                                        <condition>
+                                            <not><if-empty field="partyNameHistoryList"/></not>
+                                        </condition>
+                                        <widgets>
+                                            <include-form name="ViewPartyGroupHistory" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                        </widgets>
+                                    </section>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <screenlet title="${uiLabelMap.PartyPartyGroupInformation}" id="PartyGroupInformationPanel">
+                                    <include-form name="ViewPartyGroup" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                    <section>
+                                        <condition>
+                                            <not><if-empty field="partyNameHistoryList"/></not>
+                                        </condition>
+                                        <widgets>
+                                            <include-form name="ViewPartyGroupHistory" location="component://party/widget/partymgr/PartyForms.xml"/>
+                                        </widgets>
+                                    </section>
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
+                    </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="myContactInformation">
+        <section>
+            <actions>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="parameters.partyId" from-field="parameters.partyId" default-value="${userLogin.partyId}"/>
+                <entity-and entity-name="PartyNameHistory" list="partyNameHistoryList">
+                    <field-map field-name="partyId" from-field="parameters.partyId"/>
+                    <order-by field-name="-changeDate"/>
+                </entity-and>
+                <entity-one entity-name="PartyAndPerson" value-field="lookupPerson">
+                    <field-map field-name="partyId" from-field="parameters.partyId"/><!-- is required -->
+                </entity-one>
+                <set field="partyContentId" from-field="partyContentList[0].contentId"/>
+                <set field="partyContent" value="${groovy: partyContentId!=null?&quot;/content/control/stream?contentId=&quot; + partyContentId : &quot;&quot;}"/>
+                <set field="partyGroupLogoLinkUrl" from-field="partyContent" default-value="${lookupGroup.logoImageUrl}" global="true"/>
+                <set field="personalImage" from-field="partyContent"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <not><if-empty field="lookupPerson"/></not>
+                    </condition>
+                    <widgets>
+                        <section>
+                            <widgets>
+                                <screenlet title="Employee Contact Information">
+                                    <include-form name="emplContactDetails" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <screenlet title="Employee Contact Information" id="PartyPersonalInformationPanel">
+                                    <include-form name="emplContactDetails" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                                   
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
+                    </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="myEmployeeIdentificationNumbers">
+        <section>
+            <actions>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="parameters.partyId" from-field="parameters.partyId" default-value="${userLogin.partyId}"/>
+                <entity-and entity-name="PartyNameHistory" list="partyNameHistoryList">
+                    <field-map field-name="partyId" from-field="parameters.partyId"/>
+                    <order-by field-name="-changeDate"/>
+                </entity-and>
+                <entity-one entity-name="PartyAndPerson" value-field="lookupPerson">
+                    <field-map field-name="partyId" from-field="parameters.partyId"/><!-- is required -->
+                </entity-one>
+                <set field="partyContentId" from-field="partyContentList[0].contentId"/>
+                <set field="partyContent" value="${groovy: partyContentId!=null?&quot;/content/control/stream?contentId=&quot; + partyContentId : &quot;&quot;}"/>
+                <set field="partyGroupLogoLinkUrl" from-field="partyContent" default-value="${lookupGroup.logoImageUrl}" global="true"/>
+                <set field="personalImage" from-field="partyContent"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <not><if-empty field="lookupPerson"/></not>
+                    </condition>
+                    <widgets>
+                        <section>
+                            <widgets>
+                                <screenlet title="Employee Identification Numbers">
+                                    <include-form name="emplIdentificationNumbers" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <screenlet title="Employee Identification Numbers" id="PartyPersonalInformationPanel">
+                                    <include-form name="emplIdentificationNumbers" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                                   
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
+                    </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="myEmployeeLeaves">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResEditEmplLeave"/>
+                <set field="tabButtonItem" value="myLeaves"/>
+                <set field="headerItem" value="myprofile"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one entity-name="EmplLeave" value-field="leaveApp"/>
+                <entity-one entity-name="LeavesBalanceView" value-field="leavebal"/>
+                
+               
+                <entity-condition list="leaveLogs" entity-name="LeaveStatusLog">
+                <condition-expr field-name="partyId" from-field="partyId"/>
+                <order-by field-name="lastUpdatedStamp"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu location="component://chaisacco/widget/chaisaccoMenus.xml" name="myProfileTabBar"/>
+                     <container style="leftclear">
+							<label style="h1" 
+							text="My Leave Details" />
+					</container>
+                     <screenlet title="My Leave Balance">
+                            <include-form name="emplLeaveBalancesForProfile"
+											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
+                        </screenlet>
+                        <screenlet id="AddEmplLeavePanel" title="My Leave History" collapsible="true">
+                            <include-form name="EmplProfileLeaves" location="component://humanres/widget/forms/EmplLeaveForms.xml"/>
+                        </screenlet>
+                       
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="mySkills">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResEditEmplLeave"/>
+                <set field="tabButtonItem" value="myskills"/>
+                <set field="headerItem" value="myprofile"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one entity-name="EmplLeave" value-field="leaveApp"/>
+                <entity-one entity-name="LeavesBalanceView" value-field="leavebal"/>
+                
+               
+            </actions>
+            <widgets>
+                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu location="component://chaisacco/widget/chaisaccoMenus.xml" name="myProfileTabBar"/>
+                     <container style="leftclear">
+							<label style="h1" 
+							text="My Skills Details" />
+					</container>
+                        <screenlet title="My Skills">
+                            <include-form name="myEmployeeSkills" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                        </screenlet>
+                       
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="myQualifications">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResEditEmplLeave"/>
+                <set field="tabButtonItem" value="myQuals"/>
+                <set field="headerItem" value="myprofile"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one entity-name="EmplLeave" value-field="leaveApp"/>
+                <entity-one entity-name="LeavesBalanceView" value-field="leavebal"/>
+                
+            </actions>
+            <widgets>
+                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu location="component://chaisacco/widget/chaisaccoMenus.xml" name="myProfileTabBar"/>
+                     <container style="leftclear">
+							<label style="h1" 
+							text="My Qualifications Details" />
+					</container>
+                        <screenlet title="My Qualifications">
+                            <include-form name="myEmployeeQualification" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                        </screenlet>
+                       
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    <screen name="myPayslipReport">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Payslip Report" />
+				<set field="headerItem" value="myprofile" />
+				<set field="tabButtonItem" value="myPaySlip" />
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="payslipReportView" />
+				<set field="partyId" from-field="parameters.partyId"/>
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"	location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+					 <include-menu location="component://chaisacco/widget/chaisaccoMenus.xml" name="myProfileTabBar"/>
+                     <container style="leftclear">
+							<label style="h1" 
+							text="My Payslip Details" />
+					</container>
+						<section>
+							<widgets>
+                            <screenlet title="My Payslip (pdf)">
+                                <include-form name="myPayslip" location="component://payroll/widget/payroll/PayrollReportForms.xml"/>
+                            </screenlet>
+                        
+                       
+							</widgets>
+							<fail-widgets>
+								<label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}
+								</label>
+							</fail-widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+    
+    
     
      <!--======================= PERSONAL REVIEW =================================== -->    
     <screen name="PerfPersonalReviewScreen">

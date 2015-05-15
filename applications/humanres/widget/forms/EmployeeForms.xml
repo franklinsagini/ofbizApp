@@ -353,6 +353,25 @@
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
     
+    
+           <!-- FOR MY PROFILE -->
+    
+    <form name="myEmployeeSkills" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateEmployeeSkill" paginate-target="PartySkill"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PartySkill">
+                <condition-expr field-name="partyId" from-field="partyId"/>
+                <order-by field-name="skillTypeId"/>
+            </entity-condition>
+        </actions>
+        <field name="partySkillId"><hidden/></field>
+        <field name="skillTypeId" title="Skill">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field>
+        <field name="yearsExperience"><display/></field>
+        <field name="skillLevel"><display/></field>
+    </form>
+    
     <form name="AddEmployeeQualification" type="single" target="createEmployeeQualification">
         <!--auto-fields-service service-name="createPartyQual"/-->
         <field name="partyId"><hidden/></field>
@@ -370,21 +389,6 @@
                 </entity-options>
             </drop-down>
         </field>
-       <!--    <field name="institute" title="Select An Institution" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
-            <drop-down allow-empty="true">
-                <entity-options description="${institute}" key-field-name="institute" entity-name="PartyQualInstitute">
-                    <entity-order-by field-name="instituteId"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        
-        <field name="grade" title="Select A grade" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
-            <drop-down allow-empty="true">
-                <entity-options description="${grade}" key-field-name="grade" entity-name="PartyCourseGrade">
-                    <entity-order-by field-name="gradeId"/>
-                </entity-options>
-            </drop-down>
-        </field> -->
          <field name="specialization" title="Specialization" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
          <field name="institute" title="Institution" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
           <field name="grade" title="Grade" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
@@ -392,22 +396,6 @@
         <field name="fromDate"><date-time type="date"/></field>
         <field name="thruDate"><date-time type="date"/></field>
 
-        <!-- field name="statusId">
-            <drop-down allow-empty="true">
-                <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
-                    <entity-constraint name="statusTypeId" operator="equals" value="PARTY_INV_STATUS"/>
-                    <entity-order-by field-name="description"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <field name="verifStatusId">
-            <drop-down allow-empty="true">
-                <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
-                    <entity-constraint name="statusTypeId" operator="equals" value="PARTYQUAL_VERIFY"/>
-                    <entity-order-by field-name="description"/>
-                </entity-options>
-            </drop-down>
-        </field-->
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         
     </form>
@@ -429,21 +417,7 @@
                 </entity-options>
             </drop-down>
         </field>
-       <!--    <field name="institute" title="Select An Institution" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
-            <drop-down allow-empty="true">
-                <entity-options description="${institute}" key-field-name="institute" entity-name="PartyQualInstitute">
-                    <entity-order-by field-name="instituteId"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        
-        <field name="grade" title="Select A grade" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
-            <drop-down allow-empty="true">
-                <entity-options description="${grade}" key-field-name="grade" entity-name="PartyCourseGrade">
-                    <entity-order-by field-name="gradeId"/>
-                </entity-options>
-            </drop-down>
-        </field> -->
+      
          <field name="specialization" title="Specialization" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
          <field name="institute" title="Institution" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
           <field name="grade" title="Grade" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
@@ -451,22 +425,7 @@
         <field name="fromDate"><date-time type="date"/></field>
         <field name="thruDate"><date-time type="date"/></field>
 
-        <!-- field name="statusId">
-            <drop-down allow-empty="true">
-                <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
-                    <entity-constraint name="statusTypeId" operator="equals" value="PARTY_INV_STATUS"/>
-                    <entity-order-by field-name="description"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <field name="verifStatusId">
-            <drop-down allow-empty="true">
-                <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
-                    <entity-constraint name="statusTypeId" operator="equals" value="PARTYQUAL_VERIFY"/>
-                    <entity-order-by field-name="description"/>
-                </entity-options>
-            </drop-down>
-        </field-->
+       
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         
     </form>
@@ -491,22 +450,6 @@
         <field name="thruDate" title="To Date"><date-time type="date"/></field>
        
        
-        <!--field name="statusId">
-            <drop-down allow-empty="true">
-                <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
-                    <entity-constraint name="statusTypeId" operator="equals" value="PARTY_INV_STATUS"/>
-                    <entity-order-by field-name="description"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <field name="verifStatusId">
-            <drop-down allow-empty="true">
-                <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
-                    <entity-constraint name="statusTypeId" operator="equals" value="PARTYQUAL_VERIFY"/>
-                    <entity-order-by field-name="description"/>
-                </entity-options>
-            </drop-down>
-        </field-->
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteEmployeeQualification" also-hidden="false" description="${uiLabelMap.CommonDelete}" request-confirmation="true" confirmation-message="Delete ${partyQualTypeId} of ${title} in ${specialization} Qualification?">
@@ -517,6 +460,32 @@
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>
     </form>
+    
+              <!-- FOR MY PROFILE -->
+              
+     <form name="myEmployeeQualification" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" paginate-target="PartyQual"
+            odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PartyQual">
+                <condition-expr field-name="partyId" from-field="partyId"/>
+                <order-by field-name="fromDate"/>
+            </entity-condition>
+        </actions>
+        <field name="partyId"><hidden/></field>
+        <field name="partyQualTypeId" title="Qualification"><display-entity entity-name="PartyQualType" description="${description}"/></field>
+        
+       
+        <field name="title" title="Course Title"><display/></field>
+         <field name="specialization" title="Specialization"><display/></field>
+        <field name="institute" title="Institution"><display/></field>
+         <field name="grade"><display/></field>
+        <field name="fromDate"><display/></field>
+        <field name="thruDate" title="To Date"><display/></field>
+       
+    </form>
+    
+    
+    
     <form name="AddEmployeeTraining" type="single" target="createEmployeeTraining">
         <field name="partyId"><hidden/></field>
         <field name="trainingClassTypeId" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">

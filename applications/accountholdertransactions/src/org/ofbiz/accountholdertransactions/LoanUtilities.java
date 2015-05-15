@@ -121,7 +121,7 @@ public class LoanUtilities {
 		}
 		return loanProduct;
 	}
-
+	
 	/***
 	 * Get Loan Product given Code
 	 * */
@@ -142,6 +142,21 @@ public class LoanUtilities {
 		}
 
 		return loanProduct;
+	}
+	
+	/***
+	 * Get AccountProduct
+	 * */
+	public static GenericValue getAccountProduct(Long accountProductId) {
+		GenericValue accountProduct = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			accountProduct = delegator.findOne("AccountProduct",
+					UtilMisc.toMap("accountProductId", accountProductId), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		return accountProduct;
 	}
 
 	/***
