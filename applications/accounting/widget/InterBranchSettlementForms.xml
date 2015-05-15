@@ -42,7 +42,7 @@ under the License.
     </form>
 
 
-      <field name="fundingTypeName" type="name"></field>
+
 
     <form name="FundingTypesList" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="UpdateSasraReport"
         paginate-target="createFundingType" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -134,9 +134,39 @@ under the License.
     </form>
 
 
+    <form name="BranchTransactionsReport" type="single" target="branchTransactionsReport" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="fundingTypeId" title="Transaction Type" widget-style="required" required-field="true">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="FundingTypes" description="${fundingTypeName} - ${fundingTypeId}">
+                    <entity-order-by field-name="fundingTypeName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="organizationPartyId" title="Branch">
+            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+                <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
+                    <entity-order-by field-name="groupName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="Run Report" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
 
-
-
-
+    <form name="BranchSettlementReport" type="single" target="branchTransactionsReport" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="organizationPartyId" title="Branch">
+            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+                <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
+                    <entity-order-by field-name="groupName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="Run Report" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
 
 </forms>
