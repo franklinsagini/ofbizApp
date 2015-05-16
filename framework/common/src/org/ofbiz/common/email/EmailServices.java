@@ -174,7 +174,7 @@ public class EmailServices {
 			}
       
 
-        String sendFrom = "erpsystem@chai-sacco.co.ke";
+        String sendFrom = "phil@samphiltech.com";
         String sendType = (String) context.get("sendType");
         String port = (String) context.get("port");
         String socketFactoryClass = (String) context.get("socketFactoryClass");
@@ -443,7 +443,7 @@ public class EmailServices {
 			}
       
 
-        String sendFrom = "erpsystem@chai-sacco.co.ke";
+        String sendFrom = "phil@samphiltech.com";
         String sendType = (String) context.get("sendType");
         String port = (String) context.get("port");
         String socketFactoryClass = (String) context.get("socketFactoryClass");
