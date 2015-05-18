@@ -662,6 +662,25 @@
 		</entity-one>
 		<set from-field="persGoal.perfGoalsDefId" field="newEntity.perfGoalsDefId" /> 
 		
+		
+		
+		
+		
+		<make-value entity-name="PerfActionPlanIndicatorDefinition" value-field="newEntity2" />
+		<set-pk-fields map="parameters" value-field="newEntity2" />
+		<set-nonpk-fields map="parameters" value-field="newEntity2" />
+		<sequenced-id sequence-name="PerfActionPlanIndicatorDefinition" field="PerfActionPlanIndicatorId" />
+		<set from-field="PerfActionPlanIndicatorId" field="newEntity2.PerfActionPlanIndicatorId" /> 
+		
+		<set from-field="newEntity.perfGoalsDefId" field="newEntity2.perfGoalsDefId" /> 
+		
+		<set field="newEntity2.perfReviewDefId" from-field="newEntity.perfReviewDefId"/>
+		<set field="newEntity2.perfGoalsId" from-field="newEntity.perfGoalsId"/>
+		<set field="newEntity2.PerfReviewsGroupObjectiveDefinitionId" from-field="PerfReviewsGroupObjectiveDefinitionId"/>
+		<set field="newEntity2.percentage" from-field="newEntity.percentage"/>
+		
+		
+		
 	    
 	    
 		<set field="quantitative" value="${bsh:org.ofbiz.humanres.HumanResServices.getQuantitativeTotal();}"/>
@@ -697,6 +716,7 @@
 			
 			<else>
 			   <create-value value-field="newEntity" />
+			   <create-value value-field="newEntity2" />
 		      <property-to-field resource="HumanResUiLabels"
 			  property="CreateSuccess" field="successMessage" />
 			</else>
@@ -704,6 +724,62 @@
 			
 			
 			</simple-method>
+			
+			
+			
+			
+			
+			 <!--======================= ACTION PLAN INDICATORS SETUP DEFINITION =================================== -->
+                     
+	<simple-method method-name="createPerfActionPlanIndicator"
+		short-description="Create File location">
+		<make-value entity-name="PerfActionPlanIndicatorDefinition" value-field="newEntity2" />
+		<set-pk-fields map="parameters" value-field="newEntity2" />
+		<set-nonpk-fields map="parameters" value-field="newEntity2" />
+		<sequenced-id sequence-name="PerfActionPlanIndicatorDefinition" field="PerfActionPlanIndicatorId" />
+		<set from-field="PerfActionPlanIndicatorId" field="newEntity2.PerfActionPlanIndicatorId" /> 
+		
+		<set from-field="obj.perfGoalsDefId" field="newEntity2.perfGoalsDefId" /> 
+		
+		<set field="newEntity2.perfReviewDefId" from-field="newEntity.perfReviewDefId"/>
+		<set field="newEntity2.perfGoalsId" from-field="newEntity.perfGoalsId"/>
+		<set field="newEntity2.PerfReviewsGroupObjectiveDefinitionId" from-field="PerfReviewsGroupObjectiveDefinitionId"/>
+			  
+			</simple-method>
+			
+			<simple-method method-name="updatePerfActionPlanIndicator"
+		short-description="Update an existing Budget">
+		<entity-one entity-name="PerfActionPlanIndicatorDefinition" value-field="lookedUpValue" />
+		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
+		<set-pk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+		   <property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" /> 
+			
+	</simple-method>
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			
 			<simple-method method-name="updatePerfReviewObjective"
 		short-description="Update an existing Budget">
@@ -796,65 +872,7 @@
 			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 	
-	 <!--======================= ACTION PLAN INDICATORS SETUP DEFINITION =================================== -->
-                     
-	<simple-method method-name="createPerfActionPlanIndicator"
-		short-description="Create File location">
-		<make-value entity-name="PerfActionPlanIndicatorDefinition" value-field="newEntity" />
-		<set-pk-fields map="parameters" value-field="newEntity" />
-		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<sequenced-id sequence-name="PerfActionPlanIndicatorDefinition" field="PerfActionPlanIndicatorId" />
-		<set from-field="PerfActionPlanIndicatorId" field="newEntity.PerfActionPlanIndicatorId" /> 
-		
-		<entity-one value-field="obj" entity-name="PerfObjectiveActionPlanDefinition">
-			<field-map field-name="PerfObjectiveActionPlanId" from-field="newEntity.PerfObjectiveActionPlanId"/>
-			</entity-one>
-			
-		
-		<set from-field="obj.perfGoalsDefId" field="newEntity.perfGoalsDefId" /> 
-		
-		<set field="newEntity.perfReviewDefId" from-field="obj.perfReviewDefId"/>
-		<set field="newEntity.perfGoalsId" from-field="obj.perfGoalsId"/>
-		<set field="newEntity.PerfReviewsGroupObjectiveDefinitionId" from-field="obj.PerfReviewsGroupObjectiveDefinitionId"/>
-			  
-			  
-			  <set field="actionPlan" from-field="newEntity.PerfObjectiveActionPlanId"/>
-		<set field="ObjectiveTotalState" value="${bsh:org.ofbiz.humanres.HumanResServices.getActionPlanAndRespectiveObjectiveTotal(actionPlan) ;}"/>
-		<set field="valid" value="INVALID"/>
-	    
-	   
-	    	<if>
-			<condition>
-					<if-compare-field field="ObjectiveTotalState"
-						to-field="valid" operator="equals" />
-			</condition>
-			<then>
-				<add-error>
-					<fail-property resource="HumanResUiLabels"
-						property="ObjectiveTotalError" />
-				</add-error>
-				<check-errors />
-			</then>
-			
-			<else>
-			   <create-value value-field="newEntity" />
-		      <property-to-field resource="HumanResUiLabels"
-			  property="CreateSuccess" field="successMessage" />
-			</else>
-		</if>
-			
-			</simple-method>
-			
-			<simple-method method-name="updatePerfActionPlanIndicator"
-		short-description="Update an existing Budget">
-		<entity-one entity-name="PerfActionPlanIndicatorDefinition" value-field="lookedUpValue" />
-		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
-		<set-pk-fields value-field="lookedUpValue" map="parameters" />
-		<store-value value-field="lookedUpValue" />
-		   <property-to-field resource="HumanResUiLabels"
-			property="UpdateSuccess" field="successMessage" /> 
-			
-	</simple-method>
+	
 			
 			
 			<simple-method method-name="deletePerfActionPlanIndicator"
@@ -1009,7 +1027,7 @@
 		<set field="indicatorTotal" value="${bsh:org.ofbiz.humanres.HumanResServices.getIndicatorTotalsCompareToActionPlans();}"/>
 		<set field="valid" value="INVALID"/>
 	    
-	    <if>  
+	    <!-- <if>  
 			<condition>
 					<if-compare-field field="indicatorTotal"
 						to-field="valid" operator="equals" />
@@ -1022,7 +1040,7 @@
 				<check-errors />
 			</then>
 	    </if> 
-		
+		 -->
 		<if>
 			<condition>
 					<if-compare-field field="exist"
@@ -1043,6 +1061,7 @@
 		
 		<iterate entry="singlestaff" list="staffList">
 		<log message=">>>>>>>>>>>>>>>>>>>>>>> VOLUME-DETAILS ${singlestaff.perfReviewDefId}" level="info"/>
+		
 		
 		<entity-condition list="indicatorList" entity-name="PerfActionPlanIndicatorDefinition">
 			<condition-expr field-name="perfReviewDefId" from-field="singlestaff.perfReviewDefId"/>
@@ -1082,6 +1101,16 @@
 		<property-to-field resource="HumanResUiLabels"
 		property="CreateSuccess" field="successMessage" />
 		</iterate>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		 

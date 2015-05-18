@@ -3050,6 +3050,7 @@ public class HumanResServices {
 						EntityCondition.makeCondition("year",
 								EntityOperator.EQUALS, year)),
 						EntityOperator.AND);
+		
 
 		try {
 			holidaysELI = delegator.findList("PerfPartyReview",
@@ -4899,7 +4900,6 @@ public class HumanResServices {
 			maxtotalpercentage = maxtotalpercentage.add(genericValue
 					.getBigDecimal("scoreOne").stripTrailingZeros());
 			count++;
-
 		}
 
 		String f = String.valueOf(totalpercentage);

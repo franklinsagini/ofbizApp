@@ -42,17 +42,16 @@ under the License.
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
-            <fo:table-column column-width="20pt"/>
-            <fo:table-column column-width="85pt"/>
-            <fo:table-column column-width="80pt"/>
-            <fo:table-column column-width="80pt"/>
-            <fo:table-column column-width="80pt"/>
-            <fo:table-column column-width="38pt"/>
-            <fo:table-column column-width="38pt"/>
-            <fo:table-column column-width="38pt"/>
-            <fo:table-column column-width="38pt"/>
-            <fo:table-column column-width="38pt"/>
-            <fo:table-column column-width="38pt"/>
+            <fo:table-column column-width="30pt"/>
+            <fo:table-column column-width="150pt"/>
+            
+            <fo:table-column column-width="150pt"/>
+            <fo:table-column column-width="40pt"/>
+            <fo:table-column column-width="40pt"/>
+            <fo:table-column column-width="40pt"/>
+            <fo:table-column column-width="40pt"/>
+            <fo:table-column column-width="40pt"/>
+            <fo:table-column column-width="40pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
@@ -64,12 +63,7 @@ under the License.
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block>Strategic Objective</fo:block>
                     </fo:table-cell>
-                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block>Action Plan</fo:block>
-                    </fo:table-cell>
-                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block>Indicator</fo:block>
-                    </fo:table-cell>
+                    
                      <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block>Max Score</fo:block>
                     </fo:table-cell>
@@ -104,12 +98,7 @@ under the License.
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${score.objectiveName?if_exists}</fo:block>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${score.actionPlanName?if_exists}</fo:block>
-                        </fo:table-cell>
-                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${score.indicatorName?if_exists}</fo:block>
-                        </fo:table-cell>
+                        
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block text-align="right">${score.maxScore?if_exists} %</fo:block>
                         </fo:table-cell>
@@ -143,14 +132,7 @@ under the License.
                                 <fo:block text-align="right">
                                 </fo:block>
                             </fo:table-cell>
-                             <fo:table-cell padding="2pt" border="1pt solid" border-width="0mm" font-size="10pt">
-                                <fo:block text-align="right">
-                                </fo:block>
-                            </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width="0mm" font-size="12pt">
-                                <fo:block text-align="left" >
-                                </fo:block>
-                            </fo:table-cell>
+                            
                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" font-size="10pt">
                                 <fo:block text-align="right">Total Score
                                 </fo:block>
