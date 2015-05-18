@@ -37,7 +37,7 @@
         <menu-item name="PerfReview" title="${uiLabelMap.HumanResPerfReview}"><link target="perfGoalsDef"/></menu-item>
         <!-- <menu-item name="Training" title="${uiLabelMap.HumanResTraining}"><link target="TrainingCalendar"/></menu-item> -->
         <menu-item name="staffTraining" title="${uiLabelMap.HumanResTraining}"><link target="staffTraining"/></menu-item>
-        <menu-item name="Leave" title="${uiLabelMap.HumanResEmplLeave}"><link target="FindEmplLeaves"/></menu-item>
+        <menu-item name="Leave" title="${uiLabelMap.HumanResEmplLeave}"><link target="CloseFinacialYear"/></menu-item>
         <menu-item name="EmpSeparation" title="Separation Management"><link target="separationApplication"/></menu-item>
         <menu-item name="employeeReports" title="Employee Reports"><link target="staffList"/></menu-item>
         <menu-item name="GlobalHRSettings" title="${uiLabelMap.HumanResGlobalHRSettings}" selected-style="selected"><link target="globalHRSettings"/></menu-item>
@@ -608,7 +608,7 @@
     <menu name="EmplLeaveTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="Employee Leave" type="simple" menu-container-style="button-bar tab-bar"
         default-selected-style="selected" selected-menuitem-context-field-name="tabButtonItem">
-        <menu-item name="EmployeeLeave" title="${uiLabelMap.HumanResEmployeeLeave}">
+       <!--  <menu-item name="EmployeeLeave" title="${uiLabelMap.HumanResEmployeeLeave}">
             <link target="FindEmplLeaves"/>
         </menu-item>
         <menu-item name="Approval" title="${uiLabelMap.HumanResLeaveApproval}">
@@ -617,7 +617,7 @@
         </menu-item>
           <menu-item name="leaveCalender" title="Leave Calendar">
             <link target="leaveCalender"/>
-        </menu-item>
+        </menu-item> -->
         <menu-item name="CloseFinacialYear" title="Close Finacial Year">
             <condition><if-has-permission permission="HUMANRES" action="_APPROVE"/></condition>
             <link target="CloseFinacialYear"/>
@@ -632,36 +632,36 @@
             <link target="ActiveEmplLeaves"/>
         </menu-item>
 
-        <menu-item name="schedule" title="schedule Leave Balances">
+      <!--   <menu-item name="schedule" title="schedule Leave Balances">
             <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
-            <!-- <link target="LeaveBalances"/> -->
+            <link target="LeaveBalances"/>
             <link target="scheduleInterestCalculationsLeave"/>
         </menu-item>
 
         <menu-item name="scheduleMail" title="schedule Mail Email Notification">
             <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
-            <!-- <link target="LeaveBalances"/> -->
+            <link target="LeaveBalances"/>
             <link target="scheduleSendEmailNotification"/>
         </menu-item> 
         
         
          <menu-item name="scheduleMail2" title="schedule Mail Email Notification non staff">
             <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
-            <!-- <link target="LeaveBalances"/> -->
+            <link target="LeaveBalances"/>
             <link target="scheduleSendEmailNotificationNonStaff"/>
         </menu-item>
 
         <menu-item name="scheduleDisableLogins" title="schedule Login Disable">
             <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
-            <!-- <link target="LeaveBalances"/> -->
+            <link target="LeaveBalances"/>
             <link target="scheduleDisableLogins"/>
         </menu-item> 
 
         <menu-item name="SaveEmail_ToBeSendafterwards" title="Save Scheduled Handover Mail">
             <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
-            <!-- <link target="LeaveBalances"/> -->
+            <link target="LeaveBalances"/>
             <link target="SaveEmail_ToBeSendafterwards"/>
-        </menu-item>
+        </menu-item> -->
 
          
        <!--  <menu-item name="openingLeaveBalance" title="Opening Leave Balances">
@@ -673,12 +673,15 @@
 	<menu name="UniversalEmplLeaveTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="Employee Leave" type="simple" menu-container-style="button-bar tab-bar"
         default-selected-style="selected" selected-menuitem-context-field-name="tabButtonItem">
-        <menu-item name="EmployeeLeave" title="Employee Leave
-">
+        <menu-item name="EmployeeLeave" title="Employee Leave">
             <link target="FindEmplLeaves"/>
         </menu-item>
           <menu-item name="leaveCalender" title="Leave Calendar">
             <link target="leaveCalender"/>
+        </menu-item>
+        
+        <menu-item name="LeaveApprovals" title="${uiLabelMap.HumanResLeaveApproval}">
+            <link target="LeaveApprovals"/>
         </menu-item>
 
 
