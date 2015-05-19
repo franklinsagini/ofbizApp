@@ -3,4 +3,61 @@
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
 
+	   <form name="NewOnlineStation" type="single" target="createOnlineStationItem"
+        focus-field-name="stationId" header-row-style="header-row" default-table-style="basic-table" default-map-name="onlineStationItemContext">
+        
+       
+        <field name="stationId" title="Station" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<drop-down allow-empty="true" >
+       			<entity-options description="${name} - ${stationNumber}" entity-name="Station"></entity-options>
+       		</drop-down>
+        </field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+	<form name="manageOnlineStations" type="list" list-name="listIt"
+		paginate-target="manageOnlineStations" default-entity-name="OnlineStationItem"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="onlineStationItem">
+		
+		<field name="onlineStationItemId"><hidden/></field>
+		
+		<field name="stationId" title="Station">
+			<display-entity description="${stationNumber} ${name}"
+				entity-name="Station" also-hidden="false"></display-entity>
+			
+		</field>
+		
+		<field name="createdStamp" title="Created">
+			<display type="date-time" />
+		</field>
+		
+		<field name="createdBy" title="Created By">
+			<display />
+		</field>
+		
+		
+		<!-- field name="addToClearList" title="Add To Clear List"
+			widget-style="buttontext" use-when="(&quot;${bsh:org.ofbiz.loans.LoanServices.alloweToClear(loanApplicationId);}&quot;.equals(&quot;${yes}&quot;)&amp;&amp;(isAddedToClear==null))||(&quot;${bsh:org.ofbiz.loans.LoanServices.alloweToClear(loanApplicationId);}&quot;.equals(&quot;${yes}&quot;)&amp;&amp;!isAddedToClear.equals(&quot;${yes}&quot;))" >
+			<hyperlink  target="addToClearList" description="Add To Clear List "
+				also-hidden="true" >
+				
+				<parameter param-name="loanApplicationId" />
+				<parameter param-name="partyId"/>
+			</hyperlink>
+		</field -->
+		
+		<field name="removeStationOnline" title="Remove Station Online"
+			widget-style="buttontext">
+			<hyperlink target="removeStationOnline" description="Remove Station Online"
+				also-hidden="false">
+				<parameter param-name="onlineStationItemId" />
+			</hyperlink>
+		</field>
+		
+		
+	</form>
+
+
 </forms>
