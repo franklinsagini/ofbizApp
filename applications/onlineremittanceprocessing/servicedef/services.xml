@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>OnlineRemittanceProcessing Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+
+    <service name="noSyntaxError" engine="interface">
+        <description>
+            Dummy service to prevent empty files and syntax error - Remove when the 1st real service will be added here 
+        </description>
+    </service>
+    
+    <!-- OnlineStationItem -->
+    <service name="createOnlineStationItem" engine="simple" default-entity-name="OnlineStationItem"
+             location="component://onlineremittanceprocessing/script/org/ofbiz/onlineremittanceprocessing/OnlineRemittanceProcessingServices.xml" invoke="createOnlineStationItem" auth="true">
+        <description>Create OnlineStationItem</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    <service name="updateOnlineStationItem" engine="simple" default-entity-name="OnlineStationItem"
+             location="component://onlineremittanceprocessing/script/org/ofbiz/onlineremittanceprocessing/OnlineRemittanceProcessingServices.xml" invoke="updateOnlineStationItem" auth="true">
+        <description>Update OnlineStationItem</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+	
+	<service name="deleteOnlineStationItem" engine="simple" default-entity-name="OnlineStationItem"
+             location="component://onlineremittanceprocessing/script/org/ofbiz/onlineremittanceprocessing/OnlineRemittanceProcessingServices.xml" invoke="deleteOnlineStationItem" auth="true">
+        <description>Delete OnlineStationItem</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service> 
+    
+    <!-- PushMonthYear -->
+    <service name="createPushMonthYear" engine="simple" default-entity-name="PushMonthYear"
+             location="component://onlineremittanceprocessing/script/org/ofbiz/onlineremittanceprocessing/OnlineRemittanceProcessingServices.xml" invoke="createPushMonthYear" auth="true">
+        <description>Create PushMonthYear</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    <service name="updatePushMonthYear" engine="simple" default-entity-name="PushMonthYear"
+             location="component://onlineremittanceprocessing/script/org/ofbiz/onlineremittanceprocessing/OnlineRemittanceProcessingServices.xml" invoke="updatePushMonthYear" auth="true">
+        <description>Update PushMonthYear</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+	
+	<service name="deletePushMonthYear" engine="simple" default-entity-name="PushMonthYear"
+             location="component://onlineremittanceprocessing/script/org/ofbiz/onlineremittanceprocessing/OnlineRemittanceProcessingServices.xml" invoke="deletePushMonthYear" auth="true">
+        <description>Delete PushMonthYear</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service> 
+    
+    
+</services>
