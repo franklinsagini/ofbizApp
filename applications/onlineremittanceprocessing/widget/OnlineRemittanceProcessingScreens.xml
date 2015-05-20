@@ -156,5 +156,96 @@
 			</widgets>
 		</section>
 	</screen>
+	
+		<!-- 
+		showStationPushStatus
+	
+	 -->
+	 <screen name="showStationPushStatus">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Station Push Status" />
+				<set field="headerItem" value="pushMonthYear" />
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="createPushMonthYearItem" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+				
+				<property-to-field field="defaultCountryGeoId"
+					resource="general" property="KEN" default="KEN" />
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+
+						<section>
+							<widgets>
+								<screenlet title="Push/Pull Month Year">
+									<include-form name="NewPushMonthYear"
+										location="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<!-- screenlet> <include-form name="FindLoansForwarded" location="component://loansprocessing/widget/loansprocessingForms.xml"/> 
+									</screenlet -->
+								<screenlet title="Push/Pull (Month Year)">
+									<include-form name="pushMonthYear"
+										location="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+
+
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	 
+	 <!-- showStationPullStatus -->
+	 <screen name="showStationPullStatus">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Station Pull Status" />
+				<set field="headerItem" value="showStationPullStatus" />
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="createPushMonthYearItem" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+				
+				<property-to-field field="defaultCountryGeoId"
+					resource="general" property="KEN" default="KEN" />
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+
+						<section>
+							<widgets>
+								<screenlet title="Push/Pull Month Year">
+									<include-form name="NewPushMonthYear"
+										location="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<!-- screenlet> <include-form name="FindLoansForwarded" location="component://loansprocessing/widget/loansprocessingForms.xml"/> 
+									</screenlet -->
+								<screenlet title="Push/Pull (Month Year)">
+									<include-form name="pushMonthYear"
+										location="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+
+
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
 
 </screens>
