@@ -11,6 +11,7 @@
         </description>
     </service>
     
+    <!-- OnlineStationItem -->
     <service name="createOnlineStationItem" engine="simple" default-entity-name="OnlineStationItem"
              location="component://onlineremittanceprocessing/script/org/ofbiz/onlineremittanceprocessing/OnlineRemittanceProcessingServices.xml" invoke="createOnlineStationItem" auth="true">
         <description>Create OnlineStationItem</description>
@@ -33,5 +34,30 @@
         <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service> 
+    
+    <!-- PushMonthYear -->
+    <service name="createPushMonthYear" engine="simple" default-entity-name="PushMonthYear"
+             location="component://onlineremittanceprocessing/script/org/ofbiz/onlineremittanceprocessing/OnlineRemittanceProcessingServices.xml" invoke="createPushMonthYear" auth="true">
+        <description>Create PushMonthYear</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    <service name="updatePushMonthYear" engine="simple" default-entity-name="PushMonthYear"
+             location="component://onlineremittanceprocessing/script/org/ofbiz/onlineremittanceprocessing/OnlineRemittanceProcessingServices.xml" invoke="updatePushMonthYear" auth="true">
+        <description>Update PushMonthYear</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+	
+	<service name="deletePushMonthYear" engine="simple" default-entity-name="PushMonthYear"
+             location="component://onlineremittanceprocessing/script/org/ofbiz/onlineremittanceprocessing/OnlineRemittanceProcessingServices.xml" invoke="deletePushMonthYear" auth="true">
+        <description>Delete PushMonthYear</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service> 
+    
     
 </services>

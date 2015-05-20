@@ -2,13 +2,10 @@ package org.ofbiz.onlineremittanceprocessing;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import javolution.util.FastMap;
 
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
@@ -146,5 +143,44 @@ public class OnlineRemittanceProcessingServices {
 		
 		return stationCount;
 	}
+	
+	/***
+	 * Push All Stations
+	 * pushAllStations
+	 ***/
+	public static String pushAllStations(HttpServletRequest request,
+			HttpServletResponse response) {
+		// Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		HttpSession session = request.getSession();
+		GenericValue userLogin = (GenericValue) session
+				.getAttribute("userLogin");
+		String userLoginId = userLogin.getString("userLoginId");
+
+		
+
+		return "success";
+	}
+
+	
+	/****
+	 * Pull All Stations
+	 * pullAllStations
+	 * */
+	public static String pullAllStations(HttpServletRequest request,
+			HttpServletResponse response) {
+		// Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		HttpSession session = request.getSession();
+		GenericValue userLogin = (GenericValue) session
+				.getAttribute("userLogin");
+		String userLoginId = userLogin.getString("userLoginId");
+
+
+		return "success";
+	}
+	
 
 }

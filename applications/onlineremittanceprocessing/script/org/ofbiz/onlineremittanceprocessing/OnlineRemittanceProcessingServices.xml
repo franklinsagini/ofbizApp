@@ -20,7 +20,8 @@ under the License.
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
-        
+     
+     <!-- OnlineStationItem -->   
      <simple-method method-name="createOnlineStationItem" short-description="Create OnlineStationItem">
         <make-value entity-name="OnlineStationItem" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
@@ -41,6 +42,30 @@ under the License.
     
     <simple-method method-name="deleteOnlineStationItem" short-description="Delete OnlineStationItem">
         <entity-one entity-name="OnlineStationItem" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- PushMonthYear -->
+    <simple-method method-name="createPushMonthYear" short-description="Create PushMonthYear">
+        <make-value entity-name="PushMonthYear" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set field="entityName" value="PushMonthYear"></set>
+        <set field="newEntity.pushMonthYearId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updatePushMonthYear" short-description="Update PushMonthYear">
+        <entity-one entity-name="PushMonthYear" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deletePushMonthYear" short-description="Delete PushMonthYear">
+        <entity-one entity-name="PushMonthYear" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     

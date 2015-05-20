@@ -29,9 +29,32 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="manageOnlineStations" />
 	</request-map>
-
-
-
+	
+	<request-map uri="pushMonthYear">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="pushMonthYear" />
+	</request-map>
+	
+	<request-map uri="pushAllStations">
+		<security auth="true" https="true" />
+		<event type="java"
+			path="org.ofbiz.onlineremittanceprocessing.OnlineRemittanceProcessingServices"
+			invoke="pushAllStations" />
+		<response name="success" type="request-redirect" value="pushMonthYear">
+		</response>
+		<response name="error" type="view" value="pushMonthYear" />
+	</request-map>
+	
+	<request-map uri="pullAllStations">
+		<security auth="true" https="true" />
+		<event type="java"
+			path="org.ofbiz.onlineremittanceprocessing.OnlineRemittanceProcessingServices"
+			invoke="pullAllStations" />
+		<response name="success" type="request-redirect" value="pushMonthYear">
+		</response>
+		<response name="error" type="view" value="pushMonthYear" />
+	</request-map>
+	
 	<request-map uri="createOnlineStationItem">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createOnlineStationItem" />
@@ -52,6 +75,30 @@
 		<response name="success" type="request-redirect" value="manageOnlineStations"></response>
 		<response name="error" type="view" value="manageOnlineStations" />
 	</request-map>
+	
+	<!-- PushMonthYear -->
+	<request-map uri="createPushMonthYear">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createPushMonthYear" />
+		<response name="success" type="request-redirect" value="pushMonthYear"></response>
+		<response name="error" type="view" value="pushMonthYear" />
+	</request-map>
+
+	<request-map uri="updatePushMonthYear">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updatePushMonthYear" />
+		<response name="success" type="request-redirect" value="pushMonthYear"></response>
+		<response name="error" type="view" value="pushMonthYear" />
+	</request-map>
+
+	<request-map uri="deletePushMonthYear">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deletePushMonthYear" />
+		<response name="success" type="request-redirect" value="pushMonthYear"></response>
+		<response name="error" type="view" value="pushMonthYear" />
+	</request-map>
+	
+	<!-- end pushMonthYear -->
 
 	<request-map uri="addAllStationsOnline">
 		<security auth="true" https="true" />
@@ -93,4 +140,9 @@
 
 	<view-map name="manageOnlineStations" type="screen"
 		page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#manageOnlineStations" />
+		
+	<!-- pushMonthYear -->
+		<view-map name="pushMonthYear" type="screen"
+		page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#pushMonthYear" />
+	
 </site-conf>
