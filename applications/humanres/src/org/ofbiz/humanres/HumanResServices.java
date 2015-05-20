@@ -2115,8 +2115,7 @@ public class HumanResServices {
 	// ========================== ALL STAFF QUARTERLY TOTALS
 	// =================================
 
-	public static BigDecimal getFirstQuarterTotalPartyPerformance(String party,
-			String year) {
+	public static BigDecimal getFirstQuarterTotalPartyPerformance(String party,	String year) {
 		BigDecimal totalpercentage = BigDecimal.ZERO;
 		BigDecimal maxtotalpercentage = BigDecimal.ZERO;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -2148,38 +2147,21 @@ public class HumanResServices {
 		}
 
 		for (GenericValue genericValue : holidaysELI) {
-			totalpercentage = totalpercentage.add(genericValue.getBigDecimal(
-					"scoreFour").stripTrailingZeros());
-			maxtotalpercentage = maxtotalpercentage.add(genericValue
-					.getBigDecimal("scoreOne").stripTrailingZeros());
-			count++;
+
+			totalpercentage = genericValue.getBigDecimal("scoreFour").stripTrailingZeros();
+			maxtotalpercentage = genericValue.getBigDecimal("scoreOne").stripTrailingZeros();
+			
+			
+				BigDecimal five = new BigDecimal(5);
+				BigDecimal staffScoreDivideCountBy5 = totalpercentage.divide(five, 20, RoundingMode.HALF_UP);
+				BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5.multiply(maxtotalpercentage);
+				BigDecimal four = new BigDecimal(4);
+				QuarterScore = QuarterScore.add(staffScoreDivideCountBy5MultiplyMaxScore.divide(four, 2, RoundingMode.HALF_UP));
+				
+				
+				log.info("++++++++++++++ QuarterScore >>>>>>>>>>>>>++++++++++++++++" + QuarterScore);
 
 		}
-
-		String f = String.valueOf(totalpercentage);
-		log.info("++++++++++++++q1party++++++++++++++++" + party);
-		log.info("++++++++++++++q1totalpercentage++++++++++++++++" + f);
-		log.info("++++++++++++++q1maxtotalpercentage++++++++++++++++"
-				+ maxtotalpercentage);
-		log.info("++++++++++++++q1count++++++++++++++++" + count);
-
-		if (count == 0) {
-			QuarterScore = BigDecimal.ZERO;
-		} else {
-
-			BigDecimal newCount = new BigDecimal(count);
-			BigDecimal staffScoreDivideCount = totalpercentage.divide(newCount,
-					20, RoundingMode.HALF_UP);
-			BigDecimal five = new BigDecimal(5);
-			BigDecimal staffScoreDivideCountBy5 = staffScoreDivideCount.divide(
-					five, 20, RoundingMode.HALF_UP);
-			BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5
-					.multiply(maxtotalpercentage);
-			BigDecimal four = new BigDecimal(4);
-			QuarterScore = staffScoreDivideCountBy5MultiplyMaxScore.divide(
-					four, 2, RoundingMode.HALF_UP);
-		}
-
 		return QuarterScore;
 	}
 
@@ -2216,34 +2198,19 @@ public class HumanResServices {
 		}
 
 		for (GenericValue genericValue : holidaysELI) {
-			totalpercentage = totalpercentage.add(genericValue.getBigDecimal(
-					"scoreFour").stripTrailingZeros());
-			maxtotalpercentage = maxtotalpercentage.add(genericValue
-					.getBigDecimal("scoreOne").stripTrailingZeros());
-			count++;
+			totalpercentage = genericValue.getBigDecimal("scoreFour").stripTrailingZeros();
+			maxtotalpercentage = genericValue.getBigDecimal("scoreOne").stripTrailingZeros();
+			
+			
+				BigDecimal five = new BigDecimal(5);
+				BigDecimal staffScoreDivideCountBy5 = totalpercentage.divide(five, 20, RoundingMode.HALF_UP);
+				BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5.multiply(maxtotalpercentage);
+				BigDecimal four = new BigDecimal(4);
+				QuarterScore = QuarterScore.add(staffScoreDivideCountBy5MultiplyMaxScore.divide(four, 2, RoundingMode.HALF_UP));
+				
+				
+				log.info("++++++++++++++ QuarterScore >>>>>>>>>>>>>++++++++++++++++" + QuarterScore);
 
-		}
-
-		String f = String.valueOf(totalpercentage);
-		log.info("++++++++++++++q2party++++++++++++++++" + party);
-		log.info("++++++++++++++q2totalpercentage++++++++++++++++" + f);
-		log.info("++++++++++++++q2maxtotalpercentage++++++++++++++++"
-				+ maxtotalpercentage);
-		log.info("++++++++++++++q2count++++++++++++++++" + count);
-		if (count == 0) {
-			QuarterScore = BigDecimal.ZERO;
-		} else {
-			BigDecimal newCount = new BigDecimal(count);
-			BigDecimal staffScoreDivideCount = totalpercentage.divide(newCount,
-					20, RoundingMode.HALF_UP);
-			BigDecimal five = new BigDecimal(5);
-			BigDecimal staffScoreDivideCountBy5 = staffScoreDivideCount.divide(
-					five, 20, RoundingMode.HALF_UP);
-			BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5
-					.multiply(maxtotalpercentage);
-			BigDecimal four = new BigDecimal(4);
-			QuarterScore = staffScoreDivideCountBy5MultiplyMaxScore.divide(
-					four, 2, RoundingMode.HALF_UP);
 		}
 
 		return QuarterScore;
@@ -2282,34 +2249,19 @@ public class HumanResServices {
 		}
 
 		for (GenericValue genericValue : holidaysELI) {
-			totalpercentage = totalpercentage.add(genericValue.getBigDecimal(
-					"scoreFour").stripTrailingZeros());
-			maxtotalpercentage = maxtotalpercentage.add(genericValue
-					.getBigDecimal("scoreOne").stripTrailingZeros());
-			count++;
+			totalpercentage = genericValue.getBigDecimal("scoreFour").stripTrailingZeros();
+			maxtotalpercentage = genericValue.getBigDecimal("scoreOne").stripTrailingZeros();
+			
+			
+				BigDecimal five = new BigDecimal(5);
+				BigDecimal staffScoreDivideCountBy5 = totalpercentage.divide(five, 20, RoundingMode.HALF_UP);
+				BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5.multiply(maxtotalpercentage);
+				BigDecimal four = new BigDecimal(4);
+				QuarterScore = QuarterScore.add(staffScoreDivideCountBy5MultiplyMaxScore.divide(four, 2, RoundingMode.HALF_UP));
+				
+				
+				log.info("++++++++++++++ QuarterScore >>>>>>>>>>>>>++++++++++++++++" + QuarterScore);
 
-		}
-
-		String f = String.valueOf(totalpercentage);
-		log.info("++++++++++++++q3party++++++++++++++++" + party);
-		log.info("++++++++++++++q3totalpercentage++++++++++++++++" + f);
-		log.info("++++++++++++++q3maxtotalpercentage++++++++++++++++"
-				+ maxtotalpercentage);
-		log.info("++++++++++++++q3count++++++++++++++++" + count);
-		if (count == 0) {
-			QuarterScore = BigDecimal.ZERO;
-		} else {
-			BigDecimal newCount = new BigDecimal(count);
-			BigDecimal staffScoreDivideCount = totalpercentage.divide(newCount,
-					20, RoundingMode.HALF_UP);
-			BigDecimal five = new BigDecimal(5);
-			BigDecimal staffScoreDivideCountBy5 = staffScoreDivideCount.divide(
-					five, 20, RoundingMode.HALF_UP);
-			BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5
-					.multiply(maxtotalpercentage);
-			BigDecimal four = new BigDecimal(4);
-			QuarterScore = staffScoreDivideCountBy5MultiplyMaxScore.divide(
-					four, 2, RoundingMode.HALF_UP);
 		}
 
 		return QuarterScore;
@@ -2348,35 +2300,18 @@ public class HumanResServices {
 		}
 
 		for (GenericValue genericValue : holidaysELI) {
-			totalpercentage = totalpercentage.add(genericValue.getBigDecimal(
-					"scoreFour").stripTrailingZeros());
-			maxtotalpercentage = maxtotalpercentage.add(genericValue
-					.getBigDecimal("scoreOne").stripTrailingZeros());
-			count++;
-
-		}
-
-		String f = String.valueOf(totalpercentage);
-		log.info("++++++++++++++q4party++++++++++++++++" + party);
-		log.info("++++++++++++++q4totalpercentage++++++++++++++++" + f);
-		log.info("++++++++++++++q4maxtotalpercentage++++++++++++++++"
-				+ maxtotalpercentage);
-		log.info("++++++++++++++q4count++++++++++++++++" + count);
-
-		if (count == 0) {
-			QuarterScore = BigDecimal.ZERO;
-		} else {
-			BigDecimal newCount = new BigDecimal(count);
-			BigDecimal staffScoreDivideCount = totalpercentage.divide(newCount,
-					20, RoundingMode.HALF_UP);
-			BigDecimal five = new BigDecimal(5);
-			BigDecimal staffScoreDivideCountBy5 = staffScoreDivideCount.divide(
-					five, 20, RoundingMode.HALF_UP);
-			BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5
-					.multiply(maxtotalpercentage);
-			BigDecimal four = new BigDecimal(4);
-			QuarterScore = staffScoreDivideCountBy5MultiplyMaxScore.divide(
-					four, 2, RoundingMode.HALF_UP);
+			totalpercentage = genericValue.getBigDecimal("scoreFour").stripTrailingZeros();
+			maxtotalpercentage = genericValue.getBigDecimal("scoreOne").stripTrailingZeros();
+			
+			
+				BigDecimal five = new BigDecimal(5);
+				BigDecimal staffScoreDivideCountBy5 = totalpercentage.divide(five, 20, RoundingMode.HALF_UP);
+				BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5.multiply(maxtotalpercentage);
+				BigDecimal four = new BigDecimal(4);
+				QuarterScore = QuarterScore.add(staffScoreDivideCountBy5MultiplyMaxScore.divide(four, 2, RoundingMode.HALF_UP));
+				
+				
+				log.info("++++++++++++++ QuarterScore >>>>>>>>>>>>>++++++++++++++++" + QuarterScore);
 
 		}
 
@@ -3326,37 +3261,23 @@ public class HumanResServices {
 		}
 
 		for (GenericValue genericValue : holidaysELI) {
-			totalpercentage = totalpercentage.add(genericValue.getBigDecimal(
-					"scoreFour").stripTrailingZeros());
-			maxtotalpercentage = maxtotalpercentage.add(genericValue
-					.getBigDecimal("scoreOne").stripTrailingZeros());
-			count++;
+			
+			totalpercentage = genericValue.getBigDecimal("scoreFour").stripTrailingZeros();
+			maxtotalpercentage = genericValue.getBigDecimal("scoreOne").stripTrailingZeros();
+			
+			
+				BigDecimal five = new BigDecimal(5);
+				BigDecimal staffScoreDivideCountBy5 = totalpercentage.divide(five, 20, RoundingMode.HALF_UP);
+				BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5.multiply(maxtotalpercentage);
+				BigDecimal four = new BigDecimal(4);
+				QuarterScore = QuarterScore.add(staffScoreDivideCountBy5MultiplyMaxScore.divide(four, 2, RoundingMode.HALF_UP));
+				
+				
+				log.info("++++++++++++++ QuarterScore >>>>>>>>>>>>>++++++++++++++++" + QuarterScore);
 
 		}
 
-		String f = String.valueOf(totalpercentage);
-		log.info("++++++++++++++q1party++++++++++++++++" + party);
-		log.info("++++++++++++++q1totalpercentage++++++++++++++++" + f);
-		log.info("++++++++++++++q1maxtotalpercentage++++++++++++++++"
-				+ maxtotalpercentage);
-		log.info("++++++++++++++q1count++++++++++++++++" + count);
-
-		if (count == 0) {
-			QuarterScore = BigDecimal.ZERO;
-		} else {
-
-			BigDecimal newCount = new BigDecimal(count);
-			BigDecimal staffScoreDivideCount = totalpercentage.divide(newCount,
-					20, RoundingMode.HALF_UP);
-			BigDecimal five = new BigDecimal(5);
-			BigDecimal staffScoreDivideCountBy5 = staffScoreDivideCount.divide(
-					five, 20, RoundingMode.HALF_UP);
-			BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5
-					.multiply(maxtotalpercentage);
-			BigDecimal four = new BigDecimal(4);
-			QuarterScore = staffScoreDivideCountBy5MultiplyMaxScore.divide(
-					four, 2, RoundingMode.HALF_UP);
-		}
+		
 
 		return QuarterScore;
 	}
@@ -3396,34 +3317,21 @@ public class HumanResServices {
 		}
 
 		for (GenericValue genericValue : holidaysELI) {
-			totalpercentage = totalpercentage.add(genericValue.getBigDecimal(
-					"scoreFour").stripTrailingZeros());
-			maxtotalpercentage = maxtotalpercentage.add(genericValue
-					.getBigDecimal("scoreOne").stripTrailingZeros());
-			count++;
+			totalpercentage = genericValue.getBigDecimal("scoreFour").stripTrailingZeros();
+			maxtotalpercentage = genericValue.getBigDecimal("scoreOne").stripTrailingZeros();
+			
+			
+				BigDecimal five = new BigDecimal(5);
+				BigDecimal staffScoreDivideCountBy5 = totalpercentage.divide(five, 20, RoundingMode.HALF_UP);
+				BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5.multiply(maxtotalpercentage);
+				BigDecimal four = new BigDecimal(4);
+				QuarterScore = QuarterScore.add(staffScoreDivideCountBy5MultiplyMaxScore.divide(four, 2, RoundingMode.HALF_UP));
+				
+				
+				log.info("++++++++++++++ QuarterScore >>>>>>>>>>>>>++++++++++++++++" + QuarterScore);
 
-		}
+		
 
-		String f = String.valueOf(totalpercentage);
-		log.info("++++++++++++++q2party++++++++++++++++" + party);
-		log.info("++++++++++++++q2totalpercentage++++++++++++++++" + f);
-		log.info("++++++++++++++q2maxtotalpercentage++++++++++++++++"
-				+ maxtotalpercentage);
-		log.info("++++++++++++++q2count++++++++++++++++" + count);
-		if (count == 0) {
-			QuarterScore = BigDecimal.ZERO;
-		} else {
-			BigDecimal newCount = new BigDecimal(count);
-			BigDecimal staffScoreDivideCount = totalpercentage.divide(newCount,
-					20, RoundingMode.HALF_UP);
-			BigDecimal five = new BigDecimal(5);
-			BigDecimal staffScoreDivideCountBy5 = staffScoreDivideCount.divide(
-					five, 20, RoundingMode.HALF_UP);
-			BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5
-					.multiply(maxtotalpercentage);
-			BigDecimal four = new BigDecimal(4);
-			QuarterScore = staffScoreDivideCountBy5MultiplyMaxScore.divide(
-					four, 2, RoundingMode.HALF_UP);
 		}
 
 		return QuarterScore;
@@ -3464,36 +3372,22 @@ public class HumanResServices {
 		}
 
 		for (GenericValue genericValue : holidaysELI) {
-			totalpercentage = totalpercentage.add(genericValue.getBigDecimal(
-					"scoreFour").stripTrailingZeros());
-			maxtotalpercentage = maxtotalpercentage.add(genericValue
-					.getBigDecimal("scoreOne").stripTrailingZeros());
-			count++;
+			totalpercentage = genericValue.getBigDecimal("scoreFour").stripTrailingZeros();
+			maxtotalpercentage = genericValue.getBigDecimal("scoreOne").stripTrailingZeros();
+			
+			
+				BigDecimal five = new BigDecimal(5);
+				BigDecimal staffScoreDivideCountBy5 = totalpercentage.divide(five, 20, RoundingMode.HALF_UP);
+				BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5.multiply(maxtotalpercentage);
+				BigDecimal four = new BigDecimal(4);
+				QuarterScore = QuarterScore.add(staffScoreDivideCountBy5MultiplyMaxScore.divide(four, 2, RoundingMode.HALF_UP));
+				
+				
+				log.info("++++++++++++++ QuarterScore >>>>>>>>>>>>>++++++++++++++++" + QuarterScore);
+
+		
 
 		}
-
-		String f = String.valueOf(totalpercentage);
-		log.info("++++++++++++++q3party++++++++++++++++" + party);
-		log.info("++++++++++++++q3totalpercentage++++++++++++++++" + f);
-		log.info("++++++++++++++q3maxtotalpercentage++++++++++++++++"
-				+ maxtotalpercentage);
-		log.info("++++++++++++++q3count++++++++++++++++" + count);
-		if (count == 0) {
-			QuarterScore = BigDecimal.ZERO;
-		} else {
-			BigDecimal newCount = new BigDecimal(count);
-			BigDecimal staffScoreDivideCount = totalpercentage.divide(newCount,
-					20, RoundingMode.HALF_UP);
-			BigDecimal five = new BigDecimal(5);
-			BigDecimal staffScoreDivideCountBy5 = staffScoreDivideCount.divide(
-					five, 20, RoundingMode.HALF_UP);
-			BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5
-					.multiply(maxtotalpercentage);
-			BigDecimal four = new BigDecimal(4);
-			QuarterScore = staffScoreDivideCountBy5MultiplyMaxScore.divide(
-					four, 2, RoundingMode.HALF_UP);
-		}
-
 		return QuarterScore;
 	}
 
@@ -3532,35 +3426,20 @@ public class HumanResServices {
 		}
 
 		for (GenericValue genericValue : holidaysELI) {
-			totalpercentage = totalpercentage.add(genericValue.getBigDecimal(
-					"scoreFour").stripTrailingZeros());
-			maxtotalpercentage = maxtotalpercentage.add(genericValue
-					.getBigDecimal("scoreOne").stripTrailingZeros());
-			count++;
+			totalpercentage = genericValue.getBigDecimal("scoreFour").stripTrailingZeros();
+			maxtotalpercentage = genericValue.getBigDecimal("scoreOne").stripTrailingZeros();
+			
+			
+				BigDecimal five = new BigDecimal(5);
+				BigDecimal staffScoreDivideCountBy5 = totalpercentage.divide(five, 20, RoundingMode.HALF_UP);
+				BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5.multiply(maxtotalpercentage);
+				BigDecimal four = new BigDecimal(4);
+				QuarterScore = QuarterScore.add(staffScoreDivideCountBy5MultiplyMaxScore.divide(four, 2, RoundingMode.HALF_UP));
+				
+				
+				log.info("++++++++++++++ QuarterScore >>>>>>>>>>>>>++++++++++++++++" + QuarterScore);
 
-		}
-
-		String f = String.valueOf(totalpercentage);
-		log.info("++++++++++++++q4party++++++++++++++++" + party);
-		log.info("++++++++++++++q4totalpercentage++++++++++++++++" + f);
-		log.info("++++++++++++++q4maxtotalpercentage++++++++++++++++"
-				+ maxtotalpercentage);
-		log.info("++++++++++++++q4count++++++++++++++++" + count);
-
-		if (count == 0) {
-			QuarterScore = BigDecimal.ZERO;
-		} else {
-			BigDecimal newCount = new BigDecimal(count);
-			BigDecimal staffScoreDivideCount = totalpercentage.divide(newCount,
-					20, RoundingMode.HALF_UP);
-			BigDecimal five = new BigDecimal(5);
-			BigDecimal staffScoreDivideCountBy5 = staffScoreDivideCount.divide(
-					five, 20, RoundingMode.HALF_UP);
-			BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5
-					.multiply(maxtotalpercentage);
-			BigDecimal four = new BigDecimal(4);
-			QuarterScore = staffScoreDivideCountBy5MultiplyMaxScore.divide(
-					four, 2, RoundingMode.HALF_UP);
+		
 
 		}
 
@@ -3682,6 +3561,380 @@ public class HumanResServices {
 		return qString + " %";
 
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	// ========================== SINGLE STAFF QUARTERLY TOTALS PER QUANTITATIVE GOAL =================================
+
+		public static BigDecimal getFirstQuarterTotalPartyPerformancePerQuantitativeGoal(
+				String party, String year, String goalType) {
+			BigDecimal totalpercentage = BigDecimal.ZERO;
+			BigDecimal maxtotalpercentage = BigDecimal.ZERO;
+			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+			List<GenericValue> holidaysELI = null;
+			String quarter = year + "-Quarter-1";
+			int count = 0;
+			BigDecimal QuarterScore = BigDecimal.ZERO;
+
+			EntityConditionList<EntityExpr> totalConditions = EntityCondition
+					.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+							"partyId", EntityOperator.EQUALS, party),
+							EntityCondition.makeCondition("quarter",
+									EntityOperator.EQUALS, quarter),
+							EntityCondition.makeCondition("perfGoalsId",
+									EntityOperator.EQUALS, goalType),
+							EntityCondition.makeCondition("year",
+									EntityOperator.EQUALS, year)),
+							EntityOperator.AND);
+
+			try {
+				holidaysELI = delegator.findList("PerfPartyReview",
+						totalConditions, null, null, null, false);
+				/*
+				 * holidaysELI = delegator.findList("PerfPartyReview",
+				 * EntityCondition.makeCondition("partyId", year), null, null, null,
+				 * false);
+				 */
+
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+
+			for (GenericValue genericValue : holidaysELI) {
+				
+				totalpercentage = genericValue.getBigDecimal("scoreFour").stripTrailingZeros();
+				maxtotalpercentage = genericValue.getBigDecimal("scoreOne").stripTrailingZeros();
+				
+				
+					BigDecimal five = new BigDecimal(5);
+					BigDecimal staffScoreDivideCountBy5 = totalpercentage.divide(five, 20, RoundingMode.HALF_UP);
+					BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5.multiply(maxtotalpercentage);
+					BigDecimal four = new BigDecimal(4);
+					QuarterScore = QuarterScore.add(staffScoreDivideCountBy5MultiplyMaxScore.divide(four, 2, RoundingMode.HALF_UP));
+					
+					
+					log.info("++++++++++++++ QuarterScore >>>>>>>>>>>>>++++++++++++++++" + QuarterScore);
+
+			}
+
+			
+
+			return QuarterScore;
+		}
+
+		public static BigDecimal getSecondQuarterTotalPartyPerformancePerQuantitativeGoal(
+				String party, String year, String goalType) {
+			BigDecimal totalpercentage = BigDecimal.ZERO;
+			BigDecimal maxtotalpercentage = BigDecimal.ZERO;
+			BigDecimal QuarterScore = BigDecimal.ZERO;
+			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+			List<GenericValue> holidaysELI = null;
+			String quarter = year + "-Quarter-2";
+			int count = 0;
+
+			EntityConditionList<EntityExpr> totalConditions = EntityCondition
+					.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+							"partyId", EntityOperator.EQUALS, party),
+							EntityCondition.makeCondition("quarter",
+									EntityOperator.EQUALS, quarter),
+							EntityCondition.makeCondition("perfGoalsId",
+									EntityOperator.EQUALS, goalType),
+							EntityCondition.makeCondition("year",
+									EntityOperator.EQUALS, year)),
+							EntityOperator.AND);
+
+			try {
+				holidaysELI = delegator.findList("PerfPartyReview",
+						totalConditions, null, null, null, false);
+				/*
+				 * holidaysELI = delegator.findList("PerfPartyReview",
+				 * EntityCondition.makeCondition("partyId", year), null, null, null,
+				 * false);
+				 */
+
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+
+			for (GenericValue genericValue : holidaysELI) {
+				totalpercentage = genericValue.getBigDecimal("scoreFour").stripTrailingZeros();
+				maxtotalpercentage = genericValue.getBigDecimal("scoreOne").stripTrailingZeros();
+				
+				
+					BigDecimal five = new BigDecimal(5);
+					BigDecimal staffScoreDivideCountBy5 = totalpercentage.divide(five, 20, RoundingMode.HALF_UP);
+					BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5.multiply(maxtotalpercentage);
+					BigDecimal four = new BigDecimal(4);
+					QuarterScore = QuarterScore.add(staffScoreDivideCountBy5MultiplyMaxScore.divide(four, 2, RoundingMode.HALF_UP));
+					
+					
+					log.info("++++++++++++++ QuarterScore >>>>>>>>>>>>>++++++++++++++++" + QuarterScore);
+
+			
+
+			}
+
+			return QuarterScore;
+		}
+
+		public static BigDecimal getThirdQuarterTotalPartyPerformancePerQuantitativeGoal(
+				String party, String year, String goalType) {
+			BigDecimal totalpercentage = BigDecimal.ZERO;
+			BigDecimal maxtotalpercentage = BigDecimal.ZERO;
+			BigDecimal QuarterScore = BigDecimal.ZERO;
+			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+			List<GenericValue> holidaysELI = null;
+			String quarter = year + "-Quarter-3";
+			int count = 0;
+
+			EntityConditionList<EntityExpr> totalConditions = EntityCondition
+					.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+							"partyId", EntityOperator.EQUALS, party),
+							EntityCondition.makeCondition("quarter",
+									EntityOperator.EQUALS, quarter),
+							EntityCondition.makeCondition("perfGoalsId",
+									EntityOperator.EQUALS, goalType),
+							EntityCondition.makeCondition("year",
+									EntityOperator.EQUALS, year)),
+							EntityOperator.AND);
+
+			try {
+				holidaysELI = delegator.findList("PerfPartyReview",
+						totalConditions, null, null, null, false);
+				/*
+				 * holidaysELI = delegator.findList("PerfPartyReview",
+				 * EntityCondition.makeCondition("partyId", year), null, null, null,
+				 * false);
+				 */
+
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+
+			for (GenericValue genericValue : holidaysELI) {
+				totalpercentage = genericValue.getBigDecimal("scoreFour").stripTrailingZeros();
+				maxtotalpercentage = genericValue.getBigDecimal("scoreOne").stripTrailingZeros();
+				
+				
+					BigDecimal five = new BigDecimal(5);
+					BigDecimal staffScoreDivideCountBy5 = totalpercentage.divide(five, 20, RoundingMode.HALF_UP);
+					BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5.multiply(maxtotalpercentage);
+					BigDecimal four = new BigDecimal(4);
+					QuarterScore = QuarterScore.add(staffScoreDivideCountBy5MultiplyMaxScore.divide(four, 2, RoundingMode.HALF_UP));
+					
+					
+					log.info("++++++++++++++ QuarterScore >>>>>>>>>>>>>++++++++++++++++" + QuarterScore);
+
+			
+
+			}
+			return QuarterScore;
+		}
+
+		public static BigDecimal getFourthQuarterTotalPartyPerformancePerQuantitativeGoal(
+				String party, String year, String goalType) {
+			BigDecimal totalpercentage = BigDecimal.ZERO;
+			BigDecimal maxtotalpercentage = BigDecimal.ZERO;
+			BigDecimal QuarterScore = BigDecimal.ZERO;
+			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+			List<GenericValue> holidaysELI = null;
+			String quarter = year + "-Quarter-4";
+			int count = 0;
+
+			EntityConditionList<EntityExpr> totalConditions = EntityCondition
+					.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+							"partyId", EntityOperator.EQUALS, party),
+							EntityCondition.makeCondition("quarter",
+									EntityOperator.EQUALS, quarter),
+							EntityCondition.makeCondition("perfGoalsId",
+									EntityOperator.EQUALS, goalType),
+							EntityCondition.makeCondition("year",
+									EntityOperator.EQUALS, year)),
+							EntityOperator.AND);
+
+			try {
+				holidaysELI = delegator.findList("PerfPartyReview",
+						totalConditions, null, null, null, false);
+				/*
+				 * holidaysELI = delegator.findList("PerfPartyReview",
+				 * EntityCondition.makeCondition("partyId", year), null, null, null,
+				 * false);
+				 */
+
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+
+			for (GenericValue genericValue : holidaysELI) {
+				totalpercentage = genericValue.getBigDecimal("scoreFour").stripTrailingZeros();
+				maxtotalpercentage = genericValue.getBigDecimal("scoreOne").stripTrailingZeros();
+				
+				
+					BigDecimal five = new BigDecimal(5);
+					BigDecimal staffScoreDivideCountBy5 = totalpercentage.divide(five, 20, RoundingMode.HALF_UP);
+					BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5.multiply(maxtotalpercentage);
+					BigDecimal four = new BigDecimal(4);
+					QuarterScore = QuarterScore.add(staffScoreDivideCountBy5MultiplyMaxScore.divide(four, 2, RoundingMode.HALF_UP));
+					
+					
+					log.info("++++++++++++++ QuarterScore >>>>>>>>>>>>>++++++++++++++++" + QuarterScore);
+
+			
+
+			}
+
+			return QuarterScore;
+		}
+
+		public static String getMaxTotalPartyPerformancePerQuantitativeGoal(String party,
+				String year, String goalType) {
+			BigDecimal totalpercentage = BigDecimal.ZERO;
+			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+			List<GenericValue> holidaysELI = null;
+			String quarter = year + "-Quarter-1";
+
+			EntityConditionList<EntityExpr> totalConditions = EntityCondition
+					.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+							"partyId", EntityOperator.EQUALS, party),
+							EntityCondition.makeCondition("perfGoalsId",
+									EntityOperator.EQUALS, goalType),
+							EntityCondition.makeCondition("quarter",
+									EntityOperator.EQUALS, quarter),
+							EntityCondition.makeCondition("year",
+									EntityOperator.EQUALS, year)),
+							EntityOperator.AND);
+
+			try {
+				holidaysELI = delegator.findList("PerfPartyReview",
+						totalConditions, null, null, null, false);
+				/*
+				 * holidaysELI = delegator.findList("PerfPartyReview",
+				 * EntityCondition.makeCondition("partyId", year), null, null, null,
+				 * false);
+				 */
+
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+
+			for (GenericValue genericValue : holidaysELI) {
+				totalpercentage = totalpercentage.add(genericValue.getBigDecimal(
+						"scoreOne").stripTrailingZeros());
+
+			}
+
+			String f = String.valueOf(totalpercentage);
+			log.info("++++++++++++++q2party++++++++++++++++" + party);
+			log.info("++++++++++++++q2totalpercentage++++++++++++++++" + f);
+
+			return f + " %";
+		}
+
+		public static BigDecimal getFourQuartersTotalPartyPerformancePerQuantitativeGoal(
+				String party, String year, String goalType) {
+			BigDecimal q1 = getFirstQuarterTotalPartyPerformancePerQuantitativeGoal(party, year,
+					goalType);
+			BigDecimal q2 = getSecondQuarterTotalPartyPerformancePerQuantitativeGoal(party,
+					year, goalType);
+			BigDecimal q3 = getThirdQuarterTotalPartyPerformancePerQuantitativeGoal(party, year,
+					goalType);
+			BigDecimal q4 = getFourthQuarterTotalPartyPerformancePerQuantitativeGoal(party,
+					year, goalType);
+			BigDecimal q12 = q1.add(q2);
+			BigDecimal q123 = q12.add(q3);
+			BigDecimal q1234 = q123.add(q4);
+
+			return q1234;
+		}
+
+		public static String Q1StringPerQuantitativeGoal(String party, String year,
+				String goalType) {
+			String qString = null;
+			BigDecimal score = getFirstQuarterTotalPartyPerformancePerQuantitativeGoal(party,
+					year, goalType);
+			qString = String.valueOf(score);
+
+			return qString + " %";
+
+		}
+
+		public static String Q2StringPerQuantitativeGoal(String party, String year,
+				String goalType) {
+			String qString = null;
+			BigDecimal score = getSecondQuarterTotalPartyPerformancePerQuantitativeGoal(party,
+					year, goalType);
+			qString = String.valueOf(score);
+
+			return qString + " %";
+
+		}
+
+		public static String Q3StringPerQuantitativeGoal(String party, String year,
+				String goalType) {
+			String qString = null;
+			BigDecimal score = getThirdQuarterTotalPartyPerformancePerQuantitativeGoal(party,
+					year, goalType);
+			qString = String.valueOf(score);
+
+			return qString + " %";
+
+		}
+
+		public static String Q4StringPerQuantitativeGoal(String party, String year,
+				String goalType) {
+			String qString = null;
+			BigDecimal score = getFourthQuarterTotalPartyPerformancePerQuantitativeGoal(party,
+					year, goalType);
+			qString = String.valueOf(score);
+
+			return qString + " %";
+
+		}
+
+		public static String TotalScoreStringPerQuantitativeGoal(String party, String year,
+				String goalType) {
+			String qString = null;
+			BigDecimal score = getFourQuartersTotalPartyPerformancePerQuantitativeGoal(party,
+					year, goalType);
+			qString = String.valueOf(score);
+
+			return qString + " %";
+
+		}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	public static String StaffBonusOnSalary(String party, String year) {
 		String bonus = null;
@@ -4109,36 +4362,19 @@ public class HumanResServices {
 		}
 
 		for (GenericValue genericValue : holidaysELI) {
-			totalpercentage = totalpercentage.add(genericValue.getBigDecimal(
-					"scoreTwo").stripTrailingZeros());
-			maxtotalpercentage = maxtotalpercentage.add(genericValue
-					.getBigDecimal("scoreOne").stripTrailingZeros());
-			count++;
+			totalpercentage = genericValue.getBigDecimal("scoreTwo").stripTrailingZeros();
+			maxtotalpercentage = genericValue.getBigDecimal("scoreOne").stripTrailingZeros();
+			
+			
+				BigDecimal five = new BigDecimal(5);
+				BigDecimal staffScoreDivideCountBy5 = totalpercentage.divide(five, 20, RoundingMode.HALF_UP);
+				BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5.multiply(maxtotalpercentage);
+				BigDecimal four = new BigDecimal(4);
+				QuarterScore = QuarterScore.add(staffScoreDivideCountBy5MultiplyMaxScore.divide(four, 2, RoundingMode.HALF_UP));
+				
+				
+				log.info("++++++++++++++ QuarterScore >>>>>>>>>>>>>++++++++++++++++" + QuarterScore);
 
-		}
-
-		String f = String.valueOf(totalpercentage);
-		log.info("++++++++++++++q1party++++++++++++++++" + party);
-		log.info("++++++++++++++q1totalpercentage++++++++++++++++" + f);
-		log.info("++++++++++++++q1maxtotalpercentage++++++++++++++++"
-				+ maxtotalpercentage);
-		log.info("++++++++++++++q1count++++++++++++++++" + count);
-
-		if (count == 0) {
-			QuarterScore = BigDecimal.ZERO;
-		} else {
-
-			BigDecimal newCount = new BigDecimal(count);
-			BigDecimal staffScoreDivideCount = totalpercentage.divide(newCount,
-					20, RoundingMode.HALF_UP);
-			BigDecimal five = new BigDecimal(5);
-			BigDecimal staffScoreDivideCountBy5 = staffScoreDivideCount.divide(
-					five, 20, RoundingMode.HALF_UP);
-			BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5
-					.multiply(maxtotalpercentage);
-			BigDecimal four = new BigDecimal(4);
-			QuarterScore = staffScoreDivideCountBy5MultiplyMaxScore.divide(
-					four, 2, RoundingMode.HALF_UP);
 		}
 
 		return QuarterScore;
@@ -4179,34 +4415,19 @@ public class HumanResServices {
 		}
 
 		for (GenericValue genericValue : holidaysELI) {
-			totalpercentage = totalpercentage.add(genericValue.getBigDecimal(
-					"scoreTwo").stripTrailingZeros());
-			maxtotalpercentage = maxtotalpercentage.add(genericValue
-					.getBigDecimal("scoreOne").stripTrailingZeros());
-			count++;
+			totalpercentage = genericValue.getBigDecimal("scoreTwo").stripTrailingZeros();
+			maxtotalpercentage = genericValue.getBigDecimal("scoreOne").stripTrailingZeros();
+			
+			
+				BigDecimal five = new BigDecimal(5);
+				BigDecimal staffScoreDivideCountBy5 = totalpercentage.divide(five, 20, RoundingMode.HALF_UP);
+				BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5.multiply(maxtotalpercentage);
+				BigDecimal four = new BigDecimal(4);
+				QuarterScore = QuarterScore.add(staffScoreDivideCountBy5MultiplyMaxScore.divide(four, 2, RoundingMode.HALF_UP));
+				
+				
+				log.info("++++++++++++++ QuarterScore >>>>>>>>>>>>>++++++++++++++++" + QuarterScore);
 
-		}
-
-		String f = String.valueOf(totalpercentage);
-		log.info("++++++++++++++q2party++++++++++++++++" + party);
-		log.info("++++++++++++++q2totalpercentage++++++++++++++++" + f);
-		log.info("++++++++++++++q2maxtotalpercentage++++++++++++++++"
-				+ maxtotalpercentage);
-		log.info("++++++++++++++q2count++++++++++++++++" + count);
-		if (count == 0) {
-			QuarterScore = BigDecimal.ZERO;
-		} else {
-			BigDecimal newCount = new BigDecimal(count);
-			BigDecimal staffScoreDivideCount = totalpercentage.divide(newCount,
-					20, RoundingMode.HALF_UP);
-			BigDecimal five = new BigDecimal(5);
-			BigDecimal staffScoreDivideCountBy5 = staffScoreDivideCount.divide(
-					five, 20, RoundingMode.HALF_UP);
-			BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5
-					.multiply(maxtotalpercentage);
-			BigDecimal four = new BigDecimal(4);
-			QuarterScore = staffScoreDivideCountBy5MultiplyMaxScore.divide(
-					four, 2, RoundingMode.HALF_UP);
 		}
 
 		return QuarterScore;
@@ -4247,34 +4468,19 @@ public class HumanResServices {
 		}
 
 		for (GenericValue genericValue : holidaysELI) {
-			totalpercentage = totalpercentage.add(genericValue.getBigDecimal(
-					"scoreTwo").stripTrailingZeros());
-			maxtotalpercentage = maxtotalpercentage.add(genericValue
-					.getBigDecimal("scoreOne").stripTrailingZeros());
-			count++;
+			totalpercentage = genericValue.getBigDecimal("scoreTwo").stripTrailingZeros();
+			maxtotalpercentage = genericValue.getBigDecimal("scoreOne").stripTrailingZeros();
+			
+			
+				BigDecimal five = new BigDecimal(5);
+				BigDecimal staffScoreDivideCountBy5 = totalpercentage.divide(five, 20, RoundingMode.HALF_UP);
+				BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5.multiply(maxtotalpercentage);
+				BigDecimal four = new BigDecimal(4);
+				QuarterScore = QuarterScore.add(staffScoreDivideCountBy5MultiplyMaxScore.divide(four, 2, RoundingMode.HALF_UP));
+				
+				
+				log.info("++++++++++++++ QuarterScore >>>>>>>>>>>>>++++++++++++++++" + QuarterScore);
 
-		}
-
-		String f = String.valueOf(totalpercentage);
-		log.info("++++++++++++++q3party++++++++++++++++" + party);
-		log.info("++++++++++++++q3totalpercentage++++++++++++++++" + f);
-		log.info("++++++++++++++q3maxtotalpercentage++++++++++++++++"
-				+ maxtotalpercentage);
-		log.info("++++++++++++++q3count++++++++++++++++" + count);
-		if (count == 0) {
-			QuarterScore = BigDecimal.ZERO;
-		} else {
-			BigDecimal newCount = new BigDecimal(count);
-			BigDecimal staffScoreDivideCount = totalpercentage.divide(newCount,
-					20, RoundingMode.HALF_UP);
-			BigDecimal five = new BigDecimal(5);
-			BigDecimal staffScoreDivideCountBy5 = staffScoreDivideCount.divide(
-					five, 20, RoundingMode.HALF_UP);
-			BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5
-					.multiply(maxtotalpercentage);
-			BigDecimal four = new BigDecimal(4);
-			QuarterScore = staffScoreDivideCountBy5MultiplyMaxScore.divide(
-					four, 2, RoundingMode.HALF_UP);
 		}
 
 		return QuarterScore;
@@ -4315,38 +4521,20 @@ public class HumanResServices {
 		}
 
 		for (GenericValue genericValue : holidaysELI) {
-			totalpercentage = totalpercentage.add(genericValue.getBigDecimal(
-					"scoreTwo").stripTrailingZeros());
-			maxtotalpercentage = maxtotalpercentage.add(genericValue
-					.getBigDecimal("scoreOne").stripTrailingZeros());
-			count++;
+			totalpercentage = genericValue.getBigDecimal("scoreTwo").stripTrailingZeros();
+			maxtotalpercentage = genericValue.getBigDecimal("scoreOne").stripTrailingZeros();
+			
+			
+				BigDecimal five = new BigDecimal(5);
+				BigDecimal staffScoreDivideCountBy5 = totalpercentage.divide(five, 20, RoundingMode.HALF_UP);
+				BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5.multiply(maxtotalpercentage);
+				BigDecimal four = new BigDecimal(4);
+				QuarterScore = QuarterScore.add(staffScoreDivideCountBy5MultiplyMaxScore.divide(four, 2, RoundingMode.HALF_UP));
+				
+				
+				log.info("++++++++++++++ QuarterScore >>>>>>>>>>>>>++++++++++++++++" + QuarterScore);
 
 		}
-
-		String f = String.valueOf(totalpercentage);
-		log.info("++++++++++++++q4party++++++++++++++++" + party);
-		log.info("++++++++++++++q4totalpercentage++++++++++++++++" + f);
-		log.info("++++++++++++++q4maxtotalpercentage++++++++++++++++"
-				+ maxtotalpercentage);
-		log.info("++++++++++++++q4count++++++++++++++++" + count);
-
-		if (count == 0) {
-			QuarterScore = BigDecimal.ZERO;
-		} else {
-			BigDecimal newCount = new BigDecimal(count);
-			BigDecimal staffScoreDivideCount = totalpercentage.divide(newCount,
-					20, RoundingMode.HALF_UP);
-			BigDecimal five = new BigDecimal(5);
-			BigDecimal staffScoreDivideCountBy5 = staffScoreDivideCount.divide(
-					five, 20, RoundingMode.HALF_UP);
-			BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5
-					.multiply(maxtotalpercentage);
-			BigDecimal four = new BigDecimal(4);
-			QuarterScore = staffScoreDivideCountBy5MultiplyMaxScore.divide(
-					four, 2, RoundingMode.HALF_UP);
-
-		}
-
 		return QuarterScore;
 	}
 
@@ -4825,36 +5013,19 @@ public class HumanResServices {
 		}
 
 		for (GenericValue genericValue : holidaysELI) {
-			totalpercentage = totalpercentage.add(genericValue.getBigDecimal(
-					"scoreThree").stripTrailingZeros());
-			maxtotalpercentage = maxtotalpercentage.add(genericValue
-					.getBigDecimal("scoreOne").stripTrailingZeros());
-			count++;
+			totalpercentage = genericValue.getBigDecimal("scoreThree").stripTrailingZeros();
+			maxtotalpercentage = genericValue.getBigDecimal("scoreOne").stripTrailingZeros();
+			
+			
+				BigDecimal five = new BigDecimal(5);
+				BigDecimal staffScoreDivideCountBy5 = totalpercentage.divide(five, 20, RoundingMode.HALF_UP);
+				BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5.multiply(maxtotalpercentage);
+				BigDecimal four = new BigDecimal(4);
+				QuarterScore = QuarterScore.add(staffScoreDivideCountBy5MultiplyMaxScore.divide(four, 2, RoundingMode.HALF_UP));
+				
+				
+				log.info("++++++++++++++ QuarterScore >>>>>>>>>>>>>++++++++++++++++" + QuarterScore);
 
-		}
-
-		String f = String.valueOf(totalpercentage);
-		log.info("++++++++++++++q1party++++++++++++++++" + party);
-		log.info("++++++++++++++q1totalpercentage++++++++++++++++" + f);
-		log.info("++++++++++++++q1maxtotalpercentage++++++++++++++++"
-				+ maxtotalpercentage);
-		log.info("++++++++++++++q1count++++++++++++++++" + count);
-
-		if (count == 0) {
-			QuarterScore = BigDecimal.ZERO;
-		} else {
-
-			BigDecimal newCount = new BigDecimal(count);
-			BigDecimal staffScoreDivideCount = totalpercentage.divide(newCount,
-					20, RoundingMode.HALF_UP);
-			BigDecimal five = new BigDecimal(5);
-			BigDecimal staffScoreDivideCountBy5 = staffScoreDivideCount.divide(
-					five, 20, RoundingMode.HALF_UP);
-			BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5
-					.multiply(maxtotalpercentage);
-			BigDecimal four = new BigDecimal(4);
-			QuarterScore = staffScoreDivideCountBy5MultiplyMaxScore.divide(
-					four, 2, RoundingMode.HALF_UP);
 		}
 
 		return QuarterScore;
@@ -4895,33 +5066,19 @@ public class HumanResServices {
 		}
 
 		for (GenericValue genericValue : holidaysELI) {
-			totalpercentage = totalpercentage.add(genericValue.getBigDecimal(
-					"scoreThree").stripTrailingZeros());
-			maxtotalpercentage = maxtotalpercentage.add(genericValue
-					.getBigDecimal("scoreOne").stripTrailingZeros());
-			count++;
-		}
+			totalpercentage = genericValue.getBigDecimal("scoreThree").stripTrailingZeros();
+			maxtotalpercentage = genericValue.getBigDecimal("scoreOne").stripTrailingZeros();
+			
+			
+				BigDecimal five = new BigDecimal(5);
+				BigDecimal staffScoreDivideCountBy5 = totalpercentage.divide(five, 20, RoundingMode.HALF_UP);
+				BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5.multiply(maxtotalpercentage);
+				BigDecimal four = new BigDecimal(4);
+				QuarterScore = QuarterScore.add(staffScoreDivideCountBy5MultiplyMaxScore.divide(four, 2, RoundingMode.HALF_UP));
+				
+				
+				log.info("++++++++++++++ QuarterScore >>>>>>>>>>>>>++++++++++++++++" + QuarterScore);
 
-		String f = String.valueOf(totalpercentage);
-		log.info("++++++++++++++q2party++++++++++++++++" + party);
-		log.info("++++++++++++++q2totalpercentage++++++++++++++++" + f);
-		log.info("++++++++++++++q2maxtotalpercentage++++++++++++++++"
-				+ maxtotalpercentage);
-		log.info("++++++++++++++q2count++++++++++++++++" + count);
-		if (count == 0) {
-			QuarterScore = BigDecimal.ZERO;
-		} else {
-			BigDecimal newCount = new BigDecimal(count);
-			BigDecimal staffScoreDivideCount = totalpercentage.divide(newCount,
-					20, RoundingMode.HALF_UP);
-			BigDecimal five = new BigDecimal(5);
-			BigDecimal staffScoreDivideCountBy5 = staffScoreDivideCount.divide(
-					five, 20, RoundingMode.HALF_UP);
-			BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5
-					.multiply(maxtotalpercentage);
-			BigDecimal four = new BigDecimal(4);
-			QuarterScore = staffScoreDivideCountBy5MultiplyMaxScore.divide(
-					four, 2, RoundingMode.HALF_UP);
 		}
 
 		return QuarterScore;
@@ -4962,34 +5119,19 @@ public class HumanResServices {
 		}
 
 		for (GenericValue genericValue : holidaysELI) {
-			totalpercentage = totalpercentage.add(genericValue.getBigDecimal(
-					"scoreThree").stripTrailingZeros());
-			maxtotalpercentage = maxtotalpercentage.add(genericValue
-					.getBigDecimal("scoreOne").stripTrailingZeros());
-			count++;
+			totalpercentage = genericValue.getBigDecimal("scoreThree").stripTrailingZeros();
+			maxtotalpercentage = genericValue.getBigDecimal("scoreOne").stripTrailingZeros();
+			
+			
+				BigDecimal five = new BigDecimal(5);
+				BigDecimal staffScoreDivideCountBy5 = totalpercentage.divide(five, 20, RoundingMode.HALF_UP);
+				BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5.multiply(maxtotalpercentage);
+				BigDecimal four = new BigDecimal(4);
+				QuarterScore = QuarterScore.add(staffScoreDivideCountBy5MultiplyMaxScore.divide(four, 2, RoundingMode.HALF_UP));
+				
+				
+				log.info("++++++++++++++ QuarterScore >>>>>>>>>>>>>++++++++++++++++" + QuarterScore);
 
-		}
-
-		String f = String.valueOf(totalpercentage);
-		log.info("++++++++++++++q3party++++++++++++++++" + party);
-		log.info("++++++++++++++q3totalpercentage++++++++++++++++" + f);
-		log.info("++++++++++++++q3maxtotalpercentage++++++++++++++++"
-				+ maxtotalpercentage);
-		log.info("++++++++++++++q3count++++++++++++++++" + count);
-		if (count == 0) {
-			QuarterScore = BigDecimal.ZERO;
-		} else {
-			BigDecimal newCount = new BigDecimal(count);
-			BigDecimal staffScoreDivideCount = totalpercentage.divide(newCount,
-					20, RoundingMode.HALF_UP);
-			BigDecimal five = new BigDecimal(5);
-			BigDecimal staffScoreDivideCountBy5 = staffScoreDivideCount.divide(
-					five, 20, RoundingMode.HALF_UP);
-			BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5
-					.multiply(maxtotalpercentage);
-			BigDecimal four = new BigDecimal(4);
-			QuarterScore = staffScoreDivideCountBy5MultiplyMaxScore.divide(
-					four, 2, RoundingMode.HALF_UP);
 		}
 
 		return QuarterScore;
@@ -5030,35 +5172,18 @@ public class HumanResServices {
 		}
 
 		for (GenericValue genericValue : holidaysELI) {
-			totalpercentage = totalpercentage.add(genericValue.getBigDecimal(
-					"scoreThree").stripTrailingZeros());
-			maxtotalpercentage = maxtotalpercentage.add(genericValue
-					.getBigDecimal("scoreOne").stripTrailingZeros());
-			count++;
-
-		}
-
-		String f = String.valueOf(totalpercentage);
-		log.info("++++++++++++++q4party++++++++++++++++" + party);
-		log.info("++++++++++++++q4totalpercentage++++++++++++++++" + f);
-		log.info("++++++++++++++q4maxtotalpercentage++++++++++++++++"
-				+ maxtotalpercentage);
-		log.info("++++++++++++++q4count++++++++++++++++" + count);
-
-		if (count == 0) {
-			QuarterScore = BigDecimal.ZERO;
-		} else {
-			BigDecimal newCount = new BigDecimal(count);
-			BigDecimal staffScoreDivideCount = totalpercentage.divide(newCount,
-					20, RoundingMode.HALF_UP);
-			BigDecimal five = new BigDecimal(5);
-			BigDecimal staffScoreDivideCountBy5 = staffScoreDivideCount.divide(
-					five, 20, RoundingMode.HALF_UP);
-			BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5
-					.multiply(maxtotalpercentage);
-			BigDecimal four = new BigDecimal(4);
-			QuarterScore = staffScoreDivideCountBy5MultiplyMaxScore.divide(
-					four, 2, RoundingMode.HALF_UP);
+			totalpercentage = genericValue.getBigDecimal("scoreThree").stripTrailingZeros();
+			maxtotalpercentage = genericValue.getBigDecimal("scoreOne").stripTrailingZeros();
+			
+			
+				BigDecimal five = new BigDecimal(5);
+				BigDecimal staffScoreDivideCountBy5 = totalpercentage.divide(five, 20, RoundingMode.HALF_UP);
+				BigDecimal staffScoreDivideCountBy5MultiplyMaxScore = staffScoreDivideCountBy5.multiply(maxtotalpercentage);
+				BigDecimal four = new BigDecimal(4);
+				QuarterScore = QuarterScore.add(staffScoreDivideCountBy5MultiplyMaxScore.divide(four, 2, RoundingMode.HALF_UP));
+				
+				
+				log.info("++++++++++++++ QuarterScore >>>>>>>>>>>>>++++++++++++++++" + QuarterScore);
 
 		}
 
