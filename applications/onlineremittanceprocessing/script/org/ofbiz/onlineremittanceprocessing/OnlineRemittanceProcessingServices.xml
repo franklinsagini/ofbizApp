@@ -69,4 +69,77 @@ under the License.
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     
+    <!-- pushAllStations -->
+    <simple-method method-name="pushAllStations" short-description="Pull All Stations">
+        <entity-one entity-name="PushMonthYear" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set field="pushMonthYearId" from-field="lookedUpValue.pushMonthYearId" type="Long"/>
+        <set field="pushStatus" value="${bsh:org.ofbiz.onlineremittanceprocessing.OnlineRemittanceProcessingServices.pushAllStations(userLogin, pushMonthYearId);}"></set>
+        <!-- store-value value-field="lookedUpValue"/ -->
+        
+        <log message="NNNNNNNNNNNNNNN Next is PUSH ID" level="info"/>
+    	<log message="${pushMonthYearId}" level="info"/>
+		<set field="successstatus" value="success" type="String"/>
+		
+		
+		<if> 
+            <condition> 
+                   <if-compare-field to-field="successstatus" operator="equals" field="pushStatus"></if-compare-field>
+            </condition> 
+            <then> 
+                <add-error> 
+                    <fail-property resource="OnlineRemittanceProcessingUiLabels.xml"  
+                        property="pushError" /> 
+                </add-error> 
+                <check-errors /> 
+            </then> 
+             
+            <else>
+            	<!-- call-simple-method method-name="saveTreasuryTransfer" scope="inline"></call-simple-method>
+        		<set field="repayLoan" value="${bsh:org.ofbiz.treasurymanagement.TreasuryAccounting.postTreasuryTransfer(newEntity, userLogin);}" type="String"/ -->
+
+                <property-to-field resource="OnlineRemittanceProcessingUiLabels.xml" 
+            	property="pushSuccess" field="successMessage" /> 
+            </else> 
+        </if>
+        
+    </simple-method>
+    
+    <!-- pullAllStations -->
+    <simple-method method-name="pullAllStations" short-description="Pull All Stations">
+       <entity-one entity-name="PushMonthYear" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set field="pushMonthYearId" from-field="lookedUpValue.pushMonthYearId" type="Long"/>
+        
+        <set field="pullStatus" value="${bsh:org.ofbiz.onlineremittanceprocessing.OnlineRemittanceProcessingServices.pullAllStations(userLogin, pushMonthYearId);}"></set>
+    	
+    	<log message="NNNNNNNNNNNNNN Next is Pull ID" level="info"/>
+    	<log message="${pushMonthYearId}" level="info"/>
+   		<set field="successstatus" value="success" type="String"/>
+		
+		
+		<if> 
+            <condition> 
+                   <if-compare-field to-field="successstatus" operator="equals" field="pullStatus"></if-compare-field>
+            </condition> 
+            <then> 
+                <add-error> 
+                    <fail-property resource="OnlineRemittanceProcessingUiLabels.xml"  
+                        property="pullError" /> 
+                </add-error> 
+                <check-errors /> 
+            </then> 
+             
+            <else>
+            	<!-- call-simple-method method-name="saveTreasuryTransfer" scope="inline"></call-simple-method>
+        		<set field="repayLoan" value="${bsh:org.ofbiz.treasurymanagement.TreasuryAccounting.postTreasuryTransfer(newEntity, userLogin);}" type="String"/ -->
+
+                <property-to-field resource="OnlineRemittanceProcessingUiLabels.xml" 
+            	property="pullSuccess" field="successMessage" /> 
+            </else> 
+        </if>
+    
+    </simple-method>
+    
+    
 </simple-methods>

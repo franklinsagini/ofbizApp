@@ -60,4 +60,23 @@
     </service> 
     
     
+    <!-- pushAllStations -->
+    <service name="pushAllStations" engine="simple" default-entity-name="PushMonthYear"
+             location="component://onlineremittanceprocessing/script/org/ofbiz/onlineremittanceprocessing/OnlineRemittanceProcessingServices.xml" invoke="pushAllStations" auth="true">
+        <description>Push All Stations</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    <!-- pullAllStations -->
+      <service name="pullAllStations" engine="simple" default-entity-name="PushMonthYear"
+             location="component://onlineremittanceprocessing/script/org/ofbiz/onlineremittanceprocessing/OnlineRemittanceProcessingServices.xml" invoke="pullAllStations" auth="true">
+        <description>Pull All Stations</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    
 </services>

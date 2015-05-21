@@ -134,6 +134,7 @@
 			widget-style="buttontext">
 			<hyperlink target="pushAllStations" description="Push All Stations"
 				also-hidden="false">
+				<parameter param-name="pushMonthYearId"/>
 			</hyperlink>
 		</field>
 		
@@ -141,6 +142,7 @@
 			widget-style="buttontext">
 			<hyperlink target="pullAllStations" description="Pull All Stations"
 				also-hidden="false">
+				<parameter param-name="pushMonthYearId"/>
 			</hyperlink>
 		</field>
 		
@@ -159,5 +161,109 @@
 			</hyperlink>
 		</field>
 	</form>
+	
+	<!-- showStationPushStatus -->
+		<form name="showStationPushStatus" type="list" list-name="listIt"
+		paginate-target="showStationPushStatus" default-entity-name="PushMonthYearItem"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="onlineStationItem">
+		<actions>
+            <entity-condition entity-name="PushMonthYearItem">
+            	<order-by field-name="-pushMonthYearItemId"/>
+            </entity-condition>
+        </actions>
+		<field name="pushMonthYearItemId"><hidden/></field>
+		
+		<field name="stationId" title="Station">
+			<display-entity description="${stationNumber} ${name}"
+				entity-name="Station" also-hidden="false"></display-entity>
+			
+		</field>
+		
+		<field name="employerCode" title="Employer Code">
+			<display></display>
+		</field>
+		
+		<field name="employerName" title="Employer Name">
+			<display></display>
+		</field>
+		
+		
+		<field name="createdStamp" title="Created">
+			<display type="date-time" />
+		</field>
+		
+		<field name="createdBy" title="Created By">
+			<display />
+		</field>
+		
+		<field name="pushed" title="Pushed	">
+			<display />
+		</field>
+		
+		<!-- field name="addToClearList" title="Add To Clear List"
+			widget-style="buttontext" use-when="(&quot;${bsh:org.ofbiz.loans.LoanServices.alloweToClear(loanApplicationId);}&quot;.equals(&quot;${yes}&quot;)&amp;&amp;(isAddedToClear==null))||(&quot;${bsh:org.ofbiz.loans.LoanServices.alloweToClear(loanApplicationId);}&quot;.equals(&quot;${yes}&quot;)&amp;&amp;!isAddedToClear.equals(&quot;${yes}&quot;))" >
+			<hyperlink  target="addToClearList" description="Add To Clear List "
+				also-hidden="true" >
+				
+				<parameter param-name="loanApplicationId" />
+				<parameter param-name="partyId"/>
+			</hyperlink>
+		</field -->
+
+	</form>
+	
+	<!-- showStationPullStatus -->
+	<form name="showStationPullStatus" type="list" list-name="listIt"
+		paginate-target="showStationPullStatus" default-entity-name="PullMonthYearItem"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="onlineStationItem">
+		<actions>
+            <entity-condition entity-name="PullMonthYearItem">
+            	<order-by field-name="-pullMonthYearItemId"/>
+            </entity-condition>
+        </actions>
+		<field name="pullMonthYearItemId"><hidden/></field>
+		
+		<field name="stationId" title="Station">
+			<display-entity description="${stationNumber} ${name}"
+				entity-name="Station" also-hidden="false"></display-entity>
+			
+		</field>
+		
+		<field name="employerCode" title="Employer Code">
+			<display></display>
+		</field>
+		
+		<field name="employerName" title="Employer Name">
+			<display></display>
+		</field>
+		
+		
+		<field name="createdStamp" title="Created">
+			<display type="date-time" />
+		</field>
+		
+		<field name="createdBy" title="Created By">
+			<display />
+		</field>
+		
+		<field name="pulled" title="Status">
+			<display />
+		</field>
+		
+		<!-- field name="addToClearList" title="Add To Clear List"
+			widget-style="buttontext" use-when="(&quot;${bsh:org.ofbiz.loans.LoanServices.alloweToClear(loanApplicationId);}&quot;.equals(&quot;${yes}&quot;)&amp;&amp;(isAddedToClear==null))||(&quot;${bsh:org.ofbiz.loans.LoanServices.alloweToClear(loanApplicationId);}&quot;.equals(&quot;${yes}&quot;)&amp;&amp;!isAddedToClear.equals(&quot;${yes}&quot;))" >
+			<hyperlink  target="addToClearList" description="Add To Clear List "
+				also-hidden="true" >
+				
+				<parameter param-name="loanApplicationId" />
+				<parameter param-name="partyId"/>
+			</hyperlink>
+		</field -->
+
+	</form>
+	
+	
 
 </forms>
