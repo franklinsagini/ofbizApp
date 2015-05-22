@@ -397,5 +397,25 @@
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
     
+    
+     <!--======================= REGISTRY STAFF =================================== -->
+	
+	<service name="createRegistryStaff" engine="simple" default-entity-name="RegistryStaff"
+	location="component://registry/script/org/ofbiz/registry/FileServices.xml" 
+	invoke="createRegistryStaff" auth="true">
+		<description>Create File Request header record</description>
+		<auto-attributes include="pk" mode="IN" optional="true" />
+		<auto-attributes include="nonpk" mode="IN" optional="true" />
+	</service>
+
+
+	<service name="deleteRegistryStaff" engine="simple"	default-entity-name="RegistryStaff"
+		location="component://registry/script/org/ofbiz/registry/FileServices.xml" 
+		invoke="deleteRegistryStaff" auth="true">
+		<description>remove file type</description>
+		<auto-attributes mode="IN" include="pk" optional="true" />
+		<auto-attributes mode="IN" include="nonpk" optional="true" />
+	</service>
+    
  
  </services>

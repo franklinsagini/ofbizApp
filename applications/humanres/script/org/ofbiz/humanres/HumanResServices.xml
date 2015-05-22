@@ -760,27 +760,6 @@
 			
 			
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 			<simple-method method-name="updatePerfReviewObjective"
 		short-description="Update an existing Budget">
 		<entity-one entity-name="PerfReviewsGroupObjectiveDefinition" value-field="lookedUpValue" />
@@ -1024,10 +1003,10 @@
 			
 		<simple-method method-name="openReviewPeriod" short-description="create KPI Definition">
 		<set field="exist" value="${bsh:org.ofbiz.humanres.HumanResServices.findExistanceOfOpenPeriod();}"/>
-		<set field="indicatorTotal" value="${bsh:org.ofbiz.humanres.HumanResServices.getIndicatorTotalsCompareToActionPlans();}"/>
+		<set field="indicatorTotal" value="${bsh:org.ofbiz.humanres.HumanResServices.getObjectiveAndRespectivePerspectiveTotalAndCompare();}"/>
 		<set field="valid" value="INVALID"/>
 	    
-	    <!-- <if>  
+	     <if>  
 			<condition>
 					<if-compare-field field="indicatorTotal"
 						to-field="valid" operator="equals" />
@@ -1040,7 +1019,7 @@
 				<check-errors />
 			</then>
 	    </if> 
-		 -->
+		 
 		<if>
 			<condition>
 					<if-compare-field field="exist"
