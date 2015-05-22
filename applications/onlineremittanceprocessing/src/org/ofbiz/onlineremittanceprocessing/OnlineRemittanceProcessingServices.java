@@ -2,11 +2,13 @@ package org.ofbiz.onlineremittanceprocessing;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
@@ -16,6 +18,9 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.party.party.SaccoUtility;
 
 public class OnlineRemittanceProcessingServices {
+	
+	private static Logger log = Logger
+			.getLogger(OnlineRemittanceProcessingServices.class);
 
 	/****
 	 * Adds all stations online - to the online list
@@ -103,22 +108,20 @@ public class OnlineRemittanceProcessingServices {
 	public static String removeStationOnline(HttpServletRequest request,
 			HttpServletResponse response) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		
-		String onlineStationItemIdStr = (String) request.getParameter("onlineStationItemId");
-		
+
+		String onlineStationItemIdStr = (String) request
+				.getParameter("onlineStationItemId");
+
 		onlineStationItemIdStr = onlineStationItemIdStr.replaceAll(",", "");
 		Long onlineStationItemId = Long.valueOf(onlineStationItemIdStr);
-		
-		
+
 		try {
-			delegator.removeByCondition("OnlineStationItem", EntityCondition.makeCondition("onlineStationItemId",
-										onlineStationItemId));
+			delegator.removeByCondition("OnlineStationItem", EntityCondition
+					.makeCondition("onlineStationItemId", onlineStationItemId));
 		} catch (GenericEntityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
 
 		return "success";
 	}
@@ -140,13 +143,12 @@ public class OnlineRemittanceProcessingServices {
 		}
 
 		stationCount = (long) olineStationItemELI.size();
-		
+
 		return stationCount;
 	}
-	
+
 	/***
-	 * Push All Stations
-	 * pushAllStations
+	 * Push All Stations pushAllStations
 	 ***/
 	public static String pushAllStations(HttpServletRequest request,
 			HttpServletResponse response) {
@@ -158,15 +160,11 @@ public class OnlineRemittanceProcessingServices {
 				.getAttribute("userLogin");
 		String userLoginId = userLogin.getString("userLoginId");
 
-		
-
 		return "success";
 	}
 
-	
 	/****
-	 * Pull All Stations
-	 * pullAllStations
+	 * Pull All Stations pullAllStations
 	 * */
 	public static String pullAllStations(HttpServletRequest request,
 			HttpServletResponse response) {
@@ -178,9 +176,31 @@ public class OnlineRemittanceProcessingServices {
 				.getAttribute("userLogin");
 		String userLoginId = userLogin.getString("userLoginId");
 
+		return "success";
+	}
+
+	/****
+	 * Overload the push and pull all stations methods to be called from the
+	 * service (xml services) methods
+	 * */
+	public static String pushAllStations(Map<String, String> userLogin, Long pushMonthYearId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String userLoginId = userLogin.get("userLoginId");
+		
+		
+		log.info(" The push is being done by ///////////////// "+userLoginId);
+		log.info(" The Pull pushMonthYear is ................ "+pushMonthYearId);
 
 		return "success";
 	}
-	
+
+	public static String pullAllStations(Map<String, String> userLogin, Long pushMonthYearId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String userLoginId = userLogin.get("userLoginId");
+
+		log.info(" The Pull is being done by ................ "+userLoginId);
+		log.info(" The Pull pushMonthYear is ................ "+pushMonthYearId);
+		return "success";
+	}
 
 }

@@ -35,7 +35,7 @@
 		<response name="success" type="view" value="pushMonthYear" />
 	</request-map>
 	
-	<request-map uri="pushAllStations">
+	<!-- request-map uri="pushAllStations">
 		<security auth="true" https="true" />
 		<event type="java"
 			path="org.ofbiz.onlineremittanceprocessing.OnlineRemittanceProcessingServices"
@@ -51,6 +51,24 @@
 			path="org.ofbiz.onlineremittanceprocessing.OnlineRemittanceProcessingServices"
 			invoke="pullAllStations" />
 		<response name="success" type="request-redirect" value="pushMonthYear">
+		</response>
+		<response name="error" type="view" value="pushMonthYear" />
+	</request-map -->
+	
+	<request-map uri="pushAllStations">
+		<security https="true" auth="true" />
+		<event type="service" invoke="pushAllStations" />
+		<response name="success" type="request-redirect" value="pushMonthYear">
+			<redirect-parameter name="pushMonthYearId"/>
+		</response>
+		<response name="error" type="view" value="pushMonthYear" />
+	</request-map>
+	
+	<request-map uri="pullAllStations">
+		<security https="true" auth="true" />
+		<event type="service" invoke="pullAllStations" />
+		<response name="success" type="request-redirect" value="pushMonthYear">
+			<redirect-parameter name="pushMonthYearId"/>
 		</response>
 		<response name="error" type="view" value="pushMonthYear" />
 	</request-map>
