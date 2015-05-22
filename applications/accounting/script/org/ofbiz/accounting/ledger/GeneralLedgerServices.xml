@@ -1919,6 +1919,7 @@ under the License.
         </call-service>
         <field-to-result field="acctgTransId" result-name="acctgTransId"/>
     </simple-method>
+
     <simple-method method-name="createAcctgTransAndEntriesForIncomingPayment" short-description="Create an accounting transaction for an incoming payment" >
         <call-simple-method method-name="getGlArithmeticSettingsInline"/>
 
@@ -1930,6 +1931,7 @@ under the License.
             <field field="payment" type="org.ofbiz.entity.GenericValue"/>
         </call-class-method>
 
+        <!-- A way of ensuring that we are only dealing with Incoming Payments -->
         <if-compare field="isReceiptValue" operator="equals" value="true" type="Boolean">
             <set field="origAmount" from-field="payment.actualCurrencyAmount"/>
             <set field="origCurrencyUomId" from-field="payment.actualCurrencyUomId"/>
