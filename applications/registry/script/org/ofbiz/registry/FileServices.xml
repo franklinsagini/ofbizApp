@@ -647,12 +647,16 @@
 		 <set field="registryFile.selectedToBeMoved" value="REQUESTED"/>
 		 <set field="registryFile.Reason" from-field="parameters.Reason"/>
 		
+		<entity-one value-field="memberBranch" entity-name="Member">
+		<field-map field-name="partyId" from-field="partyId"/>
+		</entity-one>
 		
-		   <entity-condition list="personList" entity-name="Person">
-				<condition-expr field-name="departmentId" value="2"/>
+		   <entity-condition list="regStaff" entity-name="RegistryStaff">
+				<condition-expr field-name="branchId" from-field="memberBranch.branchId"/>
 		</entity-condition>
 		
-		<iterate entry="email" list="personList">
+		
+		<iterate entry="email" list="regStaff">
         
         <set field="emailparty" value="${email.partyId}"/>
 		 <call-simple-method method-name="fileRequestEmailInformation" scope="inline"></call-simple-method>
@@ -763,8 +767,12 @@
 		 	<field-map field-name="partyId" from-field="party"/>
 		 </entity-one>
 		 
+		 <entity-one entity-name="Person" value-field="requester">
+		 	<field-map field-name="partyId" from-field="userLogin.partyId"/>
+		 </entity-one>
+		 
 		 <set field="newEntity.partyId" from-field="emailparty"/> 
-		<set field="newEntity.body" value="A file belonging to:- [${reg.firstName} ${reg.lastName}] has been requested. Please log onto the system for details. " />
+		<set field="newEntity.body" value="A file belonging to:- [${reg.firstName} ${reg.lastName}] -Payroll Number:- [reg.payrollNumber] has been requested by:- [${requester.firstName} ${requester.lastName} (payroll-${requester.employeeNumber})]. Please log onto the system for details. " />
 		 <set field="newEntity.subject" value="File Request"/>
 		<set field="newEntity.sendStatus" value="NOTSEND" />
 		<create-value value-field="newEntity" />
@@ -1525,11 +1533,16 @@
 		
 		
 		
-	 <entity-condition list="personList" entity-name="Person">
-				<condition-expr field-name="departmentId" value="2"/>
+	<entity-one value-field="memberBranch" entity-name="Member">
+		<field-map field-name="partyId" from-field="partyId"/>
+		</entity-one>
+		
+		   <entity-condition list="regStaff" entity-name="RegistryStaff">
+				<condition-expr field-name="branchId" from-field="memberBranch.branchId"/>
 		</entity-condition>
 		
-		<iterate entry="email" list="personList">
+		
+		<iterate entry="email" list="regStaff">
 		
 		 <entity-one entity-name="Person" value-field="p">
 		 	<field-map field-name="partyId" value="${userLogin.partyId}"/>
@@ -1633,8 +1646,12 @@
 		 	<field-map field-name="partyId" from-field="party"/>
 		 </entity-one>
 		 
+		 <entity-one entity-name="Person" value-field="requester">
+		 	<field-map field-name="partyId" from-field="userLogin.partyId"/>
+		 </entity-one>
+		 
 		 <set field="newEntity.partyId" from-field="emailpartysa"/> 
-		<set field="newEntity.body" value="A file belonging to:- [${reg.firstName} ${reg.lastName}] has been released back to Registry. If you don't receive the file(s), please communicate to [${releaser}] " />
+		<set field="newEntity.body" value="A file belonging to:- [${reg.firstName} ${reg.lastName}] -Payroll Number:- [reg.payrollNumber] has been released back to Registry by:- [${requester.firstName} ${requester.lastName} (payroll-${requester.employeeNumber})]. If you don't receive the file(s), please communicate to them." />
 		 <set field="newEntity.subject" value="File Request"/>
 		<set field="newEntity.sendStatus" value="NOTSEND" />
 		<create-value value-field="newEntity" />
@@ -1805,11 +1822,16 @@
 		
 		<call-simple-method method-name="deleteFromQue" scope="inline"></call-simple-method>
 		
-		 <entity-condition list="personList" entity-name="Person">
-				<condition-expr field-name="departmentId" value="2"/>
+		 <entity-one value-field="memberBranch" entity-name="Member">
+		<field-map field-name="partyId" from-field="partyId"/>
+		</entity-one>
+		
+		   <entity-condition list="regStaff" entity-name="RegistryStaff">
+				<condition-expr field-name="branchId" from-field="memberBranch.branchId"/>
 		</entity-condition>
 		
-		<iterate entry="email" list="personList">
+		
+		<iterate entry="email" list="regStaff">
         
         <set field="emailparty" value="${email.partyId}"/>
 		 <call-simple-method method-name="fileNewRequesterEmailInformation" scope="inline"></call-simple-method>
@@ -1875,7 +1897,7 @@
 		 </entity-one>
 		 
 		 <set field="newEntity.partyId" from-field="emailparty"/> 
-		<set field="newEntity.body" value="A Request For a file belonging to:- [${reg.firstName} ${reg.lastName}] has been Waiting For file to be returned. Please log onto the system for details now that the file is back. " />
+		<set field="newEntity.body" value="A Request For a file belonging to:- [${reg.firstName} ${reg.lastName}] -Payroll Number:- [reg.payrollNumber] has been Waiting For file to be returned. Please log onto the system for details now that the file is back. " />
 		 <set field="newEntity.subject" value="File Request"/>
 		<set field="newEntity.sendStatus" value="NOTSEND" />
 		<create-value value-field="newEntity" />
@@ -2097,6 +2119,38 @@
 		</entity-one>
 		 <remove-value value-field="openVol" />
 		</iterate>
+	</simple-method>
+	
+	
+	 <!--======================= REGISTRY STAFF =================================== -->
+                     
+	<simple-method method-name="createRegistryStaff" short-description="Create File location">
+		<make-value entity-name="RegistryStaff" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="RegistryStaff" field="staffId" />
+		<set from-field="staffId" field="newEntity.staffId" /> 
+		
+		<entity-one value-field="bran" entity-name="Person">
+			<field-map field-name="partyId" from-field="newEntity.partyId"/>
+			</entity-one>
+		
+		<set from-field="bran.branchId" field="newEntity.branchId" /> 
+	    
+	   <create-value value-field="newEntity" />
+      <property-to-field resource="HumanResUiLabels"
+	  property="CreateSuccess" field="successMessage" />
+			
+			</simple-method>
+			
+			
+			<simple-method method-name="deleteRegistryStaff"
+		short-description="Remove an file type">
+		<set field="staffId" from-field="parameters.staffId" />
+		<entity-one entity-name="RegistryStaff" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 	
 

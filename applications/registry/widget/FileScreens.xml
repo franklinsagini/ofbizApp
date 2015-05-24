@@ -864,7 +864,7 @@
 		<section>
 			<actions>
 				<set field="titleProperty" value="file type" />
-				<set field="headerItem" value="addfiletype" />
+				<set field="headerItem" value="periodSetup" />
 				<set field="tabButtonItem" value="addfiletype" />
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createfiletype" />
@@ -1249,7 +1249,7 @@
 		<section>
 			<actions>
 				<set field="titleProperty" value="fileActivity" />
-				<set field="headerItem" value="fileActivity" />
+				<set field="headerItem" value="periodSetup" />
 				<set field="tabButtonItem" value="fileActivity" />
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createfileActivity" />
@@ -1987,7 +1987,7 @@
 	<screen name="registryFileSettingsMaxNumberOfFiles">
 		<section>
 			<actions>
-				<set field="headerItem" value="maxnumberRequested" />
+				<set field="headerItem" value="periodSetup" />
 				<set field="tabButtonItem" value="maxnumberRequested" />
 				<set field="titleProperty" value="PageTitleFindInvoice" />
 				<set field="findFileCtx" from-field="parameters" />
@@ -2019,6 +2019,45 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	
+	<!-- ====================================================== Registry Staff  ====================================================== -->
+	<screen name="registryStaffScreen">
+		<section>
+			<actions>
+				<set field="headerItem" value="periodSetup" />
+				<set field="tabButtonItem" value="regStaff" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+							<include-menu name="registrySettingsMenuBar" location="component://registry/widget/RegistryMenus.xml" />
+							<container style="leftclear">
+											<label style="h1"
+												text="Registry Staff"/>
+										</container>
+										
+									<screenlet title="New Registry Staff">
+									<include-form name="RegistryStaffForm" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+								
+								<screenlet title="Registry Staff">
+									<include-form name="listRegistryStaffForm" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
 	
 	 <screen name="addingSubDocuments">
 		<section>

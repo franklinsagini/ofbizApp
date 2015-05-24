@@ -45,6 +45,12 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="maxnumberRequested" />
 	</request-map>
+	
+	<request-map uri="regStaff">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="regStaff" />
+	</request-map>
+	
 
 
 
@@ -145,6 +151,22 @@
       <request-map uri="lookupFileParty"><security https="true" auth="true"/>
      	<response name="success" type="view" value="lookupFileParty"/>
      </request-map>
+     
+     <!--======================= REGISTRY STAFF =================================== -->
+
+	<request-map uri="createRegistryStaff">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createRegistryStaff" />
+		<response name="success" type="request-redirect-noparam" value="regStaff"/>
+		<response name="error" type="request-redirect-noparam" value="regStaff"/>
+	</request-map>
+
+	<request-map uri="deleteRegistryStaff">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteRegistryStaff" />
+		<response name="success" type="request-redirect-noparam" value="regStaff"/>
+		<response name="error" type="request-redirect-noparam" value="regStaff" />
+	</request-map>
 
     <!--  =====================================================FILES VIEWS============================================================ -->
 
@@ -905,6 +927,7 @@
 	<view-map name="editfiletypeURL" type="screen" page="component://registry/widget/FileScreens.xml#filetype" />
 	<view-map name="periodSetup" type="screen" page="component://registry/widget/FileScreens.xml#registryFileSettings" />
 	<view-map name="maxnumberRequested" type="screen" page="component://registry/widget/FileScreens.xml#registryFileSettingsMaxNumberOfFiles" />
+	<view-map name="regStaff" type="screen" page="component://registry/widget/FileScreens.xml#registryStaffScreen" />
 	<view-map name="editfiles" type="screen" page="component://registry/widget/FileScreens.xml#files" />
 	<view-map name="editfile" type="screen" page="component://registry/widget/FileScreens.xml#documents" />
 	<view-map name="findfiles" type="screen" page="component://registry/widget/FileScreens.xml#FindFile" />

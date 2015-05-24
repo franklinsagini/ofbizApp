@@ -5662,40 +5662,31 @@ public class HumanResServices {
 		List<GenericValue> indicatorsTotalELI = null;
 		GenericValue actionPlan = null;
 		String state = null;
-		String goalDef = "QNT_GOALS";
 		BigDecimal ActionPlanTotal = BigDecimal.ZERO;
-		String actionPlanId;
+		String objectiveId;
 		String groupId;
+		String PerspectiveId = null;
 
-		EntityConditionList<EntityExpr> indicatorConditions = EntityCondition
-				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"perfGoalsDefId", EntityOperator.EQUALS, goalDef)),
-						EntityOperator.AND);
 
 		try {
-			indicatorsELI = delegator.findList(
-					"PerfActionPlanIndicatorDefinition", indicatorConditions,
-					null, null, null, false);
+			indicatorsELI = delegator.findList("PerfReviewsGroupObjectiveDefinition", null,	null, null, null, false);
 
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
 
 		for (GenericValue genericValue : indicatorsELI) {
-			actionPlanId = genericValue.getString("PerfObjectiveActionPlanId");
 			groupId = genericValue.getString("perfReviewDefId");
+			PerspectiveId = genericValue.getString("perfGoalsId");
 
 			EntityConditionList<EntityExpr> indicatorTotalConditions = EntityCondition
 					.makeCondition(UtilMisc.toList(EntityCondition
-							.makeCondition("PerfObjectiveActionPlanId",
-									EntityOperator.EQUALS, actionPlanId),
-							EntityCondition.makeCondition("perfReviewDefId",
-									EntityOperator.EQUALS, groupId)),
+					.makeCondition("perfGoalsId",EntityOperator.EQUALS, PerspectiveId),
+							EntityCondition.makeCondition("perfReviewDefId",EntityOperator.EQUALS, groupId)),
 							EntityOperator.AND);
 
 			try {
-				indicatorsTotalELI = delegator.findList(
-						"PerfActionPlanIndicatorDefinition",
+				indicatorsTotalELI = delegator.findList("PerfReviewsGroupObjectiveDefinition",
 						indicatorTotalConditions, null, null, null, false);
 
 			} catch (GenericEntityException e) {
@@ -5703,23 +5694,19 @@ public class HumanResServices {
 			}
 
 			for (GenericValue genericValue2 : indicatorsTotalELI) {
-				totalpercentage = totalpercentage.add(genericValue2
-						.getBigDecimal("percentage").stripTrailingZeros());
+				totalpercentage = totalpercentage.add(genericValue2.getBigDecimal("percentage").stripTrailingZeros());
+				
 			}
 
 			try {
-				actionPlan = delegator.findOne(
-						"PerfObjectiveActionPlanDefinition", UtilMisc.toMap(
-								"PerfObjectiveActionPlanId", actionPlanId),
-						false);
+				actionPlan = delegator.findOne(	"PerfGoals", UtilMisc.toMap("perfGoalsId", PerspectiveId),	false);
 
 			} catch (GenericEntityException e) {
 				e.printStackTrace();
 			}
 
 			if (actionPlan != null) {
-				ActionPlanTotal = actionPlan.getBigDecimal("percentage")
-						.stripTrailingZeros();
+				ActionPlanTotal = actionPlan.getBigDecimal("percentage").stripTrailingZeros();
 			} else {
 
 			}
@@ -5822,6 +5809,75 @@ public class HumanResServices {
 
 		return results;
 	}
+	
+	
+	
+	public static String getObjectiveAndRespectivePerspectiveTotalAndCompare() {
+		BigDecimal totalpercentage = BigDecimal.ZERO;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> allObjectiveInThisPerspectiveELI = null;
+		List<GenericValue> UsedObjective = null;
+		String state = null;
+		BigDecimal perspectiveTotal = BigDecimal.ZERO;
+		String groupId;
+		String perspectiveId;
+		GenericValue Perspective = null;
+
+		try {
+			UsedObjective = delegator.findList("PerfReviewsGroupObjectiveDefinition", null,	null, null, null, false);
+
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		
+		for (GenericValue genericValue : UsedObjective) {
+			groupId = genericValue.getString("perfReviewDefId");
+			perspectiveId = genericValue.getString("perfGoalsId");
+			
+			
+			try {
+				Perspective = delegator.findOne("PerfGoals", UtilMisc.toMap("perfGoalsId", perspectiveId), false);
+
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+
+			perspectiveTotal = Perspective.getBigDecimal("percentage").stripTrailingZeros();
+
+			EntityConditionList<EntityExpr> quantitativetotalConditions = EntityCondition
+					.makeCondition(UtilMisc.toList(EntityCondition.makeCondition("perfReviewDefId",EntityOperator.EQUALS, groupId),
+							EntityCondition.makeCondition("perfGoalsId", EntityOperator.EQUALS, perspectiveId)),EntityOperator.AND);
+
+			try {
+				allObjectiveInThisPerspectiveELI = delegator.findList(
+						"PerfReviewsGroupObjectiveDefinition",
+						quantitativetotalConditions, null, null, null, false);
+
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+
+			for (GenericValue genericValue2 : allObjectiveInThisPerspectiveELI) {
+				totalpercentage = totalpercentage.add(genericValue2.getBigDecimal("percentage").stripTrailingZeros());
+			}
+			
+			log.info("=============>>>>>>>>>>> Objective Total >>>>>>>>" + totalpercentage);
+			log.info("=============>>>>>>>>>>> Perspective Total >>>>>>>>" + perspectiveTotal);
+
+			if (totalpercentage.compareTo(perspectiveTotal) == 0) {
+				state = "VALID";
+			} else {
+				state = "INVALID";
+
+			}
+		}
+
+		
+
+		return state;
+	}
+
 	
 
 
