@@ -1,5 +1,7 @@
 package org.ofbiz.onlineremittanceprocessing;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -13,9 +15,17 @@ import org.ofbiz.accountholdertransactions.LoanUtilities;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
+import org.ofbiz.entity.GenericDataSourceException;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.datasource.GenericHelperInfo;
+import org.ofbiz.entity.jdbc.SQLProcessor;
+import org.ofbiz.entity.transaction.GenericTransactionException;
+import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.party.party.SaccoUtility;
 
 public class OnlineRemittanceProcessingServices {
@@ -325,28 +335,299 @@ public class OnlineRemittanceProcessingServices {
 	public static String pushStation(Map<String, String> userLogin, Long pushMonthYearItemId){
 		
 		//Get PushMonthYearItem item
-		
+		GenericValue pushMonthYearItem = getPushMonthYearItem(pushMonthYearItemId);
 		//Get station from the PushMonthYear and see if it exists
+		//Get station from the PullMonthYearItem and see if it exists
+		GenericValue station = LoanUtilities.getStation(pushMonthYearItem.getString("stationId"));
+		String employerCode = station.getString("employerCode");
+		employerCode = employerCode.trim();
+		
+		//Concatenate Month and Year to get month to use in getting the data
+		GenericValue pullMonthYear = getPullMonthYear(pushMonthYearItem.getLong("pushMonthYearId"));
+		
+		String month = pullMonthYear.getLong("month").toString()+pullMonthYear.getLong("year").toString();
+		month = month.trim();
+		
 		
 		//If not exist return no data
+		List<GenericValue> expectedPaymentSentELI = null;
+		expectedPaymentSentELI = getExpectedPaymentSentList(employerCode, month);
+	
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String helperOnlineStations = delegator.getGroupHelperName("org.ofbiz.onlinestations");
 		
+		SQLProcessor sqlproc = new SQLProcessor(new GenericHelperInfo("org.ofbiz.onlinestations", helperOnlineStations));
+		//If not exist return no data
+		try {
+			sqlproc.prepareStatement("SELECT * FROM expected where ((employercode = ?) and (Month = ?) and (SE = 'REQ'))");
+
+			sqlproc.setValue(employerCode);
+			sqlproc.setValue(month);
+			//	sqlproc.set("employercode", employerCode);
+		} catch (GenericDataSourceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		ResultSet rsExpected = null;
+		try {
+		 rsExpected = sqlproc.executeQuery();
+		} catch (GenericDataSourceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		GenericValue member = null;
+		String names = "";
 		//If already pushed say data already pulled
+		for (GenericValue genericValue : expectedPaymentSentELI) {
+			//Add this to the exp
+			member = LoanUtilities.getMemberGivenPayrollNumber(genericValue.getString("payrollNo"));
+			names = getNames(member);
+			try {
+				sqlproc.prepareStatement("INSERT INTO expected ([employercode], [Month], [Loan No], [Emp No], [Rem Code], [Amount], [Rem code Description], [PayrollNo], [Name], [status], [SE] ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+				sqlproc.setValue(employerCode);
+				sqlproc.setValue(month);
+				sqlproc.setValue(genericValue.getString("loanNo").trim());
+				sqlproc.setValue(member.getString("employeeNumber"));
+				sqlproc.setValue(genericValue.getString("remitanceCode"));
+				sqlproc.setValue(genericValue.getBigDecimal("amount"));
+				sqlproc.setValue(genericValue.getString("remitanceDescription"));
+				sqlproc.setValue(member.getString("payrollNumber"));
+				sqlproc.setValue(names);
+				sqlproc.setValue("Active");
+				sqlproc.setValue("REQ");
+			} catch (GenericDataSourceException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (GenericEntityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			try {
+				sqlproc.executeUpdate();
+			} catch (GenericDataSourceException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
 		
 		return "success";
 	}
 	
 	
+	private static List<GenericValue> getExpectedPaymentSentList(
+			String employerCode, String month) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> expectedPaymentReceivedELI = new ArrayList<GenericValue>();
+
+		EntityConditionList<EntityExpr> expectedPaymentSentConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"employerCode", EntityOperator.EQUALS,
+						employerCode.trim()), EntityCondition.makeCondition(
+						"month", EntityOperator.EQUALS, month)
+
+				), EntityOperator.AND);
+
+		try {
+			expectedPaymentReceivedELI = delegator.findList(
+					"ExpectedPaymentSent", expectedPaymentSentConditions,
+					null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		return expectedPaymentReceivedELI;
+	}
+
+	private static GenericValue getPushMonthYearItem(Long pushMonthYearItemId) {
+		GenericValue pushMonthYearItem = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			pushMonthYearItem = delegator.findOne("PushMonthYearItem",
+					UtilMisc.toMap("pushMonthYearItemId", pushMonthYearItemId), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		return pushMonthYearItem;
+	}
+
 	public static String pullStation(Map<String, String> userLogin, Long pushMonthYearItemId){
 		
 		//Get PullMonthYearItem item
+		GenericValue pullMonthYearItem = getPullMonthYearItem(pushMonthYearItemId);
 		
 		//Get station from the PullMonthYearItem and see if it exists
+		GenericValue station = LoanUtilities.getStation(pullMonthYearItem.getString("stationId"));
+		String employerCode = station.getString("employerCode");
 		
+		//Concatenate Month and Year to get month to use in getting the data
+		GenericValue pullMonthYear = getPullMonthYear(pullMonthYearItem.getLong("pushMonthYearId"));
+		
+		
+		String month = pullMonthYear.getLong("month").toString()+pullMonthYear.getLong("year").toString();
+		month = month.trim();
+		
+		//org.ofbiz.onlinestations
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		String helperOnlineStations = delegator.getGroupHelperName("org.ofbiz.onlinestations");
+		
+		SQLProcessor sqlproc = new SQLProcessor(new GenericHelperInfo("org.ofbiz.onlinestations", helperOnlineStations));
 		//If not exist return no data
+		try {
+			sqlproc.prepareStatement("SELECT * FROM expected where ((employercode = ?) and (Month = ?) and (SE = 'Rem'))");
+
+			sqlproc.setValue(employerCode);
+			sqlproc.setValue(month);
+			//	sqlproc.set("employercode", employerCode);
+		} catch (GenericDataSourceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		ResultSet rsExpected = null;
+		try {
+		 rsExpected = sqlproc.executeQuery();
+		} catch (GenericDataSourceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		int count = 0;
+		try {
+			while((rsExpected != null) && (rsExpected.next())){
+				//Get the pulled item and add to list
+				count = count + 1;
+				log.info(count+" Employer Code "+rsExpected.getString("employercode")+" Month "+rsExpected.getDouble("Month")+" Amount "+rsExpected.getDouble("Amount"));
+				
+				String payrollNo = rsExpected.getString("PayrollNo");
+				String remitanceCode = rsExpected.getString("Rem Code");
+				String loanNo = rsExpected.getString("Loan No");
+				String remitanceDescription = rsExpected.getString("Rem code Description");
+				
+				createExpectation(station, month, (String)userLogin.get("userLoginId"), rsExpected.getDouble("Amount"), payrollNo, remitanceCode, loanNo, remitanceDescription);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		//If already pulled say data already pulled
 		
 		return "success";
+	}
+
+	private static void createExpectation(GenericValue station, String month,
+			String userLoginId, double amount, String payrollNo, String remitanceCode, String loanNo, String remitanceDescription) {
+		// TODO Auto-generated method stub
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		String branchId = station.getString("branchId");
+		String stationNumber = station.getString("stationNumber").trim();
+		String stationName = station.getString("name");
+		String employerCode = station.getString("employerCode");
+		// String employerCode = station.getString("employerCode");
+		String employerName = station.getString("employerName").trim();
+		
+		GenericValue expectedPaymentReceived = null;
+		//GenericValue member = LoanUtilities.getMemberGivenPayrollNumber(payrollNo);
+		GenericValue member = LoanUtilities.getMemberGivenEmployeeNumber(payrollNo);
+		
+		String employeeNames = getNames(member);
+		
+		expectedPaymentReceived = delegator.makeValue("ExpectedPaymentReceived",
+				UtilMisc.toMap("isActive", "Y", "branchId",
+						member.getString("branchId"), "remitanceCode",
+						remitanceCode, "stationNumber", stationNumber,
+						"stationName", stationName,
+
+						"payrollNo", member.getString("payrollNumber"),
+						"employerCode", employerCode, "employeeNumber",
+						member.getString("employeeNumber"), "memberNumber",
+						member.getString("memberNumber"),
+
+						"loanNo", loanNo, "employerNo", employerName, "amount",
+						amount, "remitanceDescription",
+						remitanceDescription, "employeeName",
+						employeeNames, "expectationType",
+						"", "month", month));
+		
+		//accountProduct.getString("code")
+		try {
+			delegator.createOrStore(expectedPaymentReceived);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			TransactionUtil.commit();
+		} catch (GenericTransactionException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static GenericValue getPullMonthYear(Long pushMonthYearId) {
+		GenericValue pushMonthYear = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			pushMonthYear = delegator.findOne("PushMonthYear",
+					UtilMisc.toMap("pushMonthYearId", pushMonthYearId), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		return pushMonthYear;
+	}
+
+	private static GenericValue getPullMonthYearItem(Long pushMonthYearItemId) {
+		GenericValue pullMonthYearItem = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			pullMonthYearItem = delegator.findOne("PullMonthYearItem",
+					UtilMisc.toMap("pushMonthYearItemId", pushMonthYearItemId), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		return pullMonthYearItem;
+	}
+	
+	
+	private static String getNames(GenericValue member) {
+		String employeeNames = "";
+
+		if (member.getString("firstName") != null) {
+			employeeNames = employeeNames + member.getString("firstName");
+		}
+
+		if (member.getString("middleName") != null) {
+			employeeNames = employeeNames + " "
+					+ member.getString("middleName");
+		}
+
+		if (member.getString("lastName") != null) {
+			employeeNames = employeeNames + " " + member.getString("lastName");
+		}
+
+		return employeeNames;
 	}
 
 }
