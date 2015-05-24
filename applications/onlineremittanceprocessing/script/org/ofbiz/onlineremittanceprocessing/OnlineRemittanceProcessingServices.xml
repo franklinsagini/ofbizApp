@@ -121,7 +121,8 @@ under the License.
     	<log message="NNNNNNNNNNNNNN Next is Pull ID" level="info"/>
     	<log message="${pushMonthYearId}" level="info"/>
    		<set field="successstatus" value="success" type="String"/>
-		
+   		
+        
 		
 		<if> 
             <condition> 
@@ -143,6 +144,7 @@ under the License.
             	property="pullSuccess" field="successMessage" /> 
             </else> 
         </if>
+        
     
     </simple-method>
     
@@ -158,6 +160,23 @@ under the License.
         <log message="NNNNNNNNNNNNNNN Pushing a station" level="info"/>
     	<log message="${pushMonthYearItemId}" level="info"/>
 		<set field="successstatus" value="success" type="String"/>
+		
+		<set field="alreadypushed" value="alreadypushed" type="String"/>
+		
+		<if>
+			 <condition> 
+                   <if-compare-field to-field="alreadypushed" operator="equals" field="pushStatus"></if-compare-field>
+            </condition> 
+            <then> 
+                <add-error> 
+                    <fail-property resource="OnlineRemittanceProcessingUiLabels.xml"  
+                        property="pushStationAlreadyPushedError" /> 
+                </add-error> 
+                <check-errors /> 
+            </then>
+			<else>
+			
+		
 		
 		
 		<if> 
@@ -181,6 +200,9 @@ under the License.
             </else> 
         </if>
         
+        </else>
+        </if>
+        
     </simple-method>
     
     
@@ -197,6 +219,21 @@ under the License.
     	<log message="${pullMonthYearItemId}" level="info"/>
 		<set field="successstatus" value="success" type="String"/>
 		
+		<set field="alreadypulled" value="alreadypulled" type="String"/>
+		
+		<if>
+			 <condition> 
+                   <if-compare-field to-field="alreadypulled" operator="equals" field="pullStatus"></if-compare-field>
+            </condition> 
+            <then> 
+                <add-error> 
+                    <fail-property resource="OnlineRemittanceProcessingUiLabels.xml"  
+                        property="pullStationAlreadyPulledError" /> 
+                </add-error> 
+                <check-errors /> 
+            </then>
+		
+		<else>
 		
 		<if> 
             <condition> 
@@ -217,6 +254,8 @@ under the License.
                 <property-to-field resource="OnlineRemittanceProcessingUiLabels.xml" 
             	property="pullStationSuccess" field="successMessage" /> 
             </else> 
+        </if>
+        </else>
         </if>
         
     </simple-method>

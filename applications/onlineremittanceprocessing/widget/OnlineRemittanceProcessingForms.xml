@@ -151,6 +151,7 @@
 			widget-style="buttontext">
 			<hyperlink target="showStationPushStatus" description="Show Station Push Status"
 				also-hidden="false">
+				<parameter param-name="pushMonthYearId"/>
 			</hyperlink>
 		</field>
 		
@@ -158,6 +159,7 @@
 			widget-style="buttontext">
 			<hyperlink target="showStationPullStatus" description="Show Station Pull Status"
 				also-hidden="false">
+				<parameter param-name="pushMonthYearId"/>
 			</hyperlink>
 		</field>
 	</form>
@@ -169,6 +171,7 @@
 		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="onlineStationItem">
 		<actions>
             <entity-condition entity-name="PushMonthYearItem">
+            	<condition-expr field-name="pushMonthYearId" operator="equals" from-field="pushMonthYearId"/>
             	<order-by field-name="-pushMonthYearItemId"/>
             </entity-condition>
         </actions>
@@ -229,6 +232,7 @@
 		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="onlineStationItem">
 		<actions>
             <entity-condition entity-name="PullMonthYearItem">
+            	<condition-expr field-name="pushMonthYearId" operator="equals" from-field="pushMonthYearId"/>
             	<order-by field-name="-pullMonthYearItemId"/>
             </entity-condition>
         </actions>
