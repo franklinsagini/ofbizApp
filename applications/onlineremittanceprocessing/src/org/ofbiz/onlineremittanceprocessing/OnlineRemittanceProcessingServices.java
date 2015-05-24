@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.ofbiz.accountholdertransactions.LoanUtilities;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
@@ -200,6 +201,151 @@ public class OnlineRemittanceProcessingServices {
 
 		log.info(" The Pull is being done by ................ "+userLoginId);
 		log.info(" The Pull pushMonthYear is ................ "+pushMonthYearId);
+		return "success";
+	}
+	
+	public static String createPushAndPullStationItems(Long pushMonthYearId, Map<String, String> userLogin){
+		
+		//Create the PushMonthYearItem
+		log.info("Will be creating PUSH Records");
+		List<GenericValue> onlineStationItemList = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		onlineStationItemList = getOnlineStations();
+		
+		List<GenericValue> pushItemList = new ArrayList<GenericValue>();
+		
+		String userLoginId = (String) userLogin.get("userLoginId");
+		for (GenericValue genericValue : onlineStationItemList) {
+			//Create a PUSH Reccord Item
+			pushItemList.add(createPushRecord(pushMonthYearId, genericValue, userLoginId));
+		}
+
+		//Save the PUSH Reccords
+
+		try {
+			delegator.storeAll(pushItemList);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+ 		List<GenericValue> pullItemList = new ArrayList<GenericValue>();
+		//Create the PullMonthYearItem
+		for (GenericValue genericValue : onlineStationItemList) {
+			//Create a PULL Record Item
+			pullItemList.add(createPullRecord(pushMonthYearId, genericValue, userLoginId));
+		}
+		
+		//Save the PULL Records
+		try {
+			delegator.storeAll(pullItemList);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		log.info("Will be creating PULL Records");
+		
+		return "success";
+		
+	}
+
+	/***
+	 * Creating the PULL Records
+	 * 
+	 * */
+	private static GenericValue createPullRecord(Long pushMonthYearId,
+			GenericValue genericValue, String userLoginId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		GenericValue pullMonthYearItem = null;
+		
+		Long pullMonthYearItemId = delegator.getNextSeqIdLong("PullMonthYearItem", 1);
+		
+		String stationId = genericValue.getString("stationId");
+		GenericValue station =	LoanUtilities.getStation(stationId);
+		
+		String employerCode = station.getString("employerCode");
+		String employerName = station.getString("employerName");
+		
+		pullMonthYearItem = delegator.makeValidValue("PullMonthYearItem",
+				UtilMisc.toMap("pullMonthYearItemId", pullMonthYearItemId,
+						"isActive", "Y", "createdBy", userLoginId, 
+						
+						"stationId", stationId,
+						
+						"employerCode", employerCode,
+						"employerName", employerName, 
+						
+						"pulled", "N"));
+		
+		return pullMonthYearItem;
+	}
+
+	private static GenericValue createPushRecord(Long pushMonthYearId,
+			GenericValue genericValue, String userLoginId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		GenericValue pushMonthYearItem = null;
+		
+		Long pushMonthYearItemId = delegator.getNextSeqIdLong("PushMonthYearItem", 1);
+		
+		String stationId = genericValue.getString("stationId");
+		GenericValue station =	LoanUtilities.getStation(stationId);
+		
+		String employerCode = station.getString("employerCode");
+		String employerName = station.getString("employerName");
+		
+		pushMonthYearItem = delegator.makeValidValue("PushMonthYearItem",
+				UtilMisc.toMap("pushMonthYearItemId", pushMonthYearItemId,
+						"isActive", "Y", "createdBy", userLoginId, 
+						
+						"stationId", stationId,
+						
+						"employerCode", employerCode,
+						"employerName", employerName, 
+						
+						"pushed", "N"));
+		
+		return pushMonthYearItem;
+	}
+
+	private static List<GenericValue> getOnlineStations() {
+		// TODO Auto-generated method stub
+		//OnlineStationItem
+		List<GenericValue> onlineStationItemELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			onlineStationItemELI = delegator.findList("OnlineStationItem", null, null, null, null,
+					false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		return onlineStationItemELI;
+	}
+	
+	public static String pushStation(Map<String, String> userLogin, Long pushMonthYearItemId){
+		
+		//Get PushMonthYearItem item
+		
+		//Get station from the PushMonthYear and see if it exists
+		
+		//If not exist return no data
+		
+		//If already pushed say data already pulled
+		
+		return "success";
+	}
+	
+	
+	public static String pullStation(Map<String, String> userLogin, Long pushMonthYearItemId){
+		
+		//Get PullMonthYearItem item
+		
+		//Get station from the PullMonthYearItem and see if it exists
+		
+		//If not exist return no data
+		
+		//If already pulled say data already pulled
+		
 		return "success";
 	}
 

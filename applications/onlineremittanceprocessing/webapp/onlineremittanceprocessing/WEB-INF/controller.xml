@@ -167,6 +167,29 @@
 		</response>
 		<response name="error" type="view" value="manageOnlineStations" />
 	</request-map>
+	
+	
+	<!-- pushStation -->
+	<request-map uri="pushStation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="pushStation" />
+		<response name="success" type="request-redirect" value="showStationPushStatus">
+			<redirect-parameter name="pushMonthYearId"/>
+			<redirect-parameter name="stationId"/>
+		</response>
+		<response name="error" type="view" value="showStationPushStatus" />
+	</request-map>
+	
+	<!-- pullStation -->
+	<request-map uri="pullStation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="pullStation" />
+		<response name="success" type="request-redirect" value="showStationPullStatus">
+			<redirect-parameter name="pushMonthYearId"/>
+			<redirect-parameter name="stationId"/>
+		</response>
+		<response name="error" type="view" value="showStationPullStatus" />
+	</request-map>
 
 	<!-- View Mappings -->
 	<view-map name="main" type="screen"

@@ -56,6 +56,11 @@ under the License.
         <set field="newEntity.isActive" value="Y"/>
 	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <create-value value-field="newEntity"/>
+        
+        
+        <!-- Create Push (PushMonthYearItem) and Pull (PullMonthYearItem) year Items -->
+        <set field="pushMonthYearId" value="${newEntity.pushMonthYearId}" type="Long"/>
+        <set field="status" value="${bsh:org.ofbiz.onlineremittanceprocessing.OnlineRemittanceProcessingServices.createPushAndPullStationItems(pushMonthYearId, userLogin);}"></set>
     </simple-method>
     
      <simple-method method-name="updatePushMonthYear" short-description="Update PushMonthYear">
@@ -70,7 +75,7 @@ under the License.
     </simple-method>
     
     <!-- pushAllStations -->
-    <simple-method method-name="pushAllStations" short-description="Pull All Stations">
+    <simple-method method-name="pushAllStations" short-description="Push All Stations">
         <entity-one entity-name="PushMonthYear" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
         <set field="pushMonthYearId" from-field="lookedUpValue.pushMonthYearId" type="Long"/>
@@ -139,6 +144,81 @@ under the License.
             </else> 
         </if>
     
+    </simple-method>
+    
+    <!-- pushStation -->
+    <!-- To Push a station to the online DB -->
+     <simple-method method-name="pushStation" short-description="Push a Station">
+        <entity-one entity-name="PushMonthYearItem" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set field="pushMonthYearItemId" from-field="lookedUpValue.pushMonthYearItemId" type="Long"/>
+        <set field="pushStatus" value="${bsh:org.ofbiz.onlineremittanceprocessing.OnlineRemittanceProcessingServices.pushStation(userLogin, pushMonthYearItemId);}"></set>
+        <!-- store-value value-field="lookedUpValue"/ -->
+        
+        <log message="NNNNNNNNNNNNNNN Pushing a station" level="info"/>
+    	<log message="${pushMonthYearItemId}" level="info"/>
+		<set field="successstatus" value="success" type="String"/>
+		
+		
+		<if> 
+            <condition> 
+                   <if-compare-field to-field="successstatus" operator="not-equals" field="pushStatus"></if-compare-field>
+            </condition> 
+            <then> 
+                <add-error> 
+                    <fail-property resource="OnlineRemittanceProcessingUiLabels.xml"  
+                        property="pushStationError" /> 
+                </add-error> 
+                <check-errors /> 
+            </then> 
+             
+            <else>
+            	<!-- call-simple-method method-name="saveTreasuryTransfer" scope="inline"></call-simple-method>
+        		<set field="repayLoan" value="${bsh:org.ofbiz.treasurymanagement.TreasuryAccounting.postTreasuryTransfer(newEntity, userLogin);}" type="String"/ -->
+
+                <property-to-field resource="OnlineRemittanceProcessingUiLabels.xml" 
+            	property="pushStationSuccess" field="successMessage" /> 
+            </else> 
+        </if>
+        
+    </simple-method>
+    
+    
+    <!-- pullStation -->
+    <!-- To Pull a station to the online DB -->
+    <simple-method method-name="pullStation" short-description="Pull a Station">
+        <entity-one entity-name="PullMonthYearItem" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set field="pullMonthYearItemId" from-field="lookedUpValue.pullMonthYearItemId" type="Long"/>
+        <set field="pullStatus" value="${bsh:org.ofbiz.onlineremittanceprocessing.OnlineRemittanceProcessingServices.pullStation(userLogin, pushMonthYearItemId);}"></set>
+        <!-- store-value value-field="lookedUpValue"/ -->
+        
+        <log message="NNNNNNNNNNNNNNN Pulling a station" level="info"/>
+    	<log message="${pullMonthYearItemId}" level="info"/>
+		<set field="successstatus" value="success" type="String"/>
+		
+		
+		<if> 
+            <condition> 
+                   <if-compare-field to-field="successstatus" operator="not-equals" field="pullStatus"></if-compare-field>
+            </condition> 
+            <then> 
+                <add-error> 
+                    <fail-property resource="OnlineRemittanceProcessingUiLabels.xml"  
+                        property="pullStationError" /> 
+                </add-error> 
+                <check-errors /> 
+            </then> 
+             
+            <else>
+            	<!-- call-simple-method method-name="saveTreasuryTransfer" scope="inline"></call-simple-method>
+        		<set field="repayLoan" value="${bsh:org.ofbiz.treasurymanagement.TreasuryAccounting.postTreasuryTransfer(newEntity, userLogin);}" type="String"/ -->
+
+                <property-to-field resource="OnlineRemittanceProcessingUiLabels.xml" 
+            	property="pullStationSuccess" field="successMessage" /> 
+            </else> 
+        </if>
+        
     </simple-method>
     
     
