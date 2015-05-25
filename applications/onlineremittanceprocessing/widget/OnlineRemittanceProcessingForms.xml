@@ -170,10 +170,20 @@
 		separate-columns="true" odd-row-style="alternate-row"
 		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="onlineStationItem">
 		<actions>
-            <entity-condition entity-name="PushMonthYearItem">
+            <!-- entity-condition entity-name="PushMonthYearItem">
             	<condition-expr field-name="pushMonthYearId" operator="equals" from-field="pushMonthYearId"/>
             	<order-by field-name="-pushMonthYearItemId"/>
-            </entity-condition>
+            </entity-condition -->
+             <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="pushMonthYearItemCtx"/>
+                <field-map field-name="entityName" value="PushMonthYearItem"/>
+                <!-- field-map field-name="orderBy" from-field="parameters.sortField"/ -->
+                <field-map field-name="orderBy" value="-pushMonthYearItemId"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+                
+                
+            </service>
         </actions>
 		<field name="pushMonthYearItemId"><hidden/></field>
 		
@@ -188,6 +198,10 @@
 		</field>
 		
 		<field name="employerName" title="Employer Name">
+			<display></display>
+		</field>
+		
+		<field name="Onlinecode" title="Online Code">
 			<display></display>
 		</field>
 		
@@ -219,7 +233,7 @@
 			<hyperlink target="pushStation" description="Push Station"
 				also-hidden="false">
 				<parameter param-name="stationId"/>
-				<parameter param-name="pushMonthYearId"/>
+				<parameter param-name="pushMonthYearItemId"/>
 			</hyperlink>
 		</field>
 
@@ -231,10 +245,22 @@
 		separate-columns="true" odd-row-style="alternate-row"
 		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="onlineStationItem">
 		<actions>
-            <entity-condition entity-name="PullMonthYearItem">
+            <!-- entity-condition entity-name="PullMonthYearItem">
             	<condition-expr field-name="pushMonthYearId" operator="equals" from-field="pushMonthYearId"/>
             	<order-by field-name="-pullMonthYearItemId"/>
-            </entity-condition>
+            </entity-condition -->
+            
+            
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="pullMonthYearItemCtx"/>
+                <field-map field-name="entityName" value="PullMonthYearItem"/>
+                <!-- field-map field-name="orderBy" from-field="parameters.sortField"/ -->
+                <field-map field-name="orderBy" value="-pullMonthYearItemId"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+                <!-- field-map field-name="pushMonthYearId" from-field="pushMonthYearId"/ -->
+                
+            </service>
         </actions>
 		<field name="pullMonthYearItemId"><hidden/></field>
 		
@@ -249,6 +275,10 @@
 		</field>
 		
 		<field name="employerName" title="Employer Name">
+			<display></display>
+		</field>
+		
+		<field name="Onlinecode" title="Online Code">
 			<display></display>
 		</field>
 		
@@ -280,12 +310,39 @@
 			<hyperlink target="pullStation" description="Pull Station"
 				also-hidden="false">
 				<parameter param-name="stationId"/>
-				<parameter param-name="pushMonthYearId"/>
+				<parameter param-name="pullMonthYearItemId"/>
 			</hyperlink>
 		</field>
 
 	</form>
 	
+	<!-- FindStationPushStatus -->
+	<form name="FindStationPushStatus" type="single" target="showStationPushStatus" default-entity-name="PushMonthYearItem">
+        
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="pushMonthYearId"><hidden value="${pushMonthYearId}"/></field>
+        
+        <!-- field-map field-name="pushMonthYearId" from-field="pushMonthYearId"/ -->
+        <field name="employerCode" title="Employer Code" position="1"><text-find/></field>
+ 		<field name="employerName" title="Employer Name" position="2"><text-find/></field>
+
+		<field name="Onlinecode" title="Online Code" ><text-find/></field>
+        
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
+    </form>
+	
+	<!-- FindStationPullStatus -->
+	<form name="FindStationPullStatus" type="single" target="showStationPullStatus" default-entity-name="PullMonthYearItem">
+ 		<field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+ 		<field name="pushMonthYearId"><hidden value="${pushMonthYearId}"/></field>
+ 		
+        <field name="employerCode" title="Employer Code" position="1"><text-find/></field>
+ 		<field name="employerName" title="Employer Name" position="2"><text-find/></field>
+
+		<field name="Onlinecode" title="Online Code" position="1"><text-find/></field>
+        
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
+    </form>
 	
 
 </forms>
