@@ -40,14 +40,14 @@ Goal_QuantitativeGroup.eachWithIndex { Goal_QuantitativeGroupItem, index2 ->
 
 	perspectiveId = Goal_QuantitativeGroupItem.perfGoalsId
 	ObjectiveId = Goal_QuantitativeGroupItem.PerfReviewsGroupObjectiveDefinitionId
-	ActionPlanId = Goal_QuantitativeGroupItem.PerfObjectiveActionPlanId
+	//ActionPlanId = Goal_QuantitativeGroupItem.PerfObjectiveActionPlanId
 	Indicator = Goal_QuantitativeGroupItem.PerfActionPlanIndicatorId
-	IndicatorDescription = Goal_QuantitativeGroupItem.actionPlanIndicatorDescription
+	//IndicatorDescription = Goal_QuantitativeGroupItem.actionPlanIndicatorDescription
 	MaxPossibleScore = Goal_QuantitativeGroupItem.percentage
 
 	perspective = delegator.findOne("PerfGoals", [perfGoalsId : perspectiveId], false);
 	Objective = delegator.findOne("PerfReviewsGroupObjectiveDefinition", [PerfReviewsGroupObjectiveDefinitionId : ObjectiveId], false);
-	ActionPlan = delegator.findOne("PerfObjectiveActionPlanDefinition", [PerfObjectiveActionPlanId : ActionPlanId], false);
+	//ActionPlan = delegator.findOne("PerfObjectiveActionPlanDefinition", [PerfObjectiveActionPlanId : ActionPlanId], false);
 	
 
 
@@ -58,8 +58,7 @@ QNT_q4 = org.ofbiz.humanres.HumanResServices.PartyPerformancePerIndicatorQ4Strin
 QNT_all4qstotalScore = org.ofbiz.humanres.HumanResServices.PartyPerformancePerIndicatorTotalScoreString(partyId, year, Indicator)
 
 
-	Goal_QuantitativeScorelist.add([perspective :perspective.goal, Objective :Objective.objectiveDescription, 
-		ActionPlan : ActionPlan.objectiveActionPlanDescription, IndicatorDescription : IndicatorDescription, MaxPossibleScore : MaxPossibleScore,
+	Goal_QuantitativeScorelist.add([perspective :perspective.goal, Objective :Objective.objectiveDescription, MaxPossibleScore : MaxPossibleScore,
 		 Q1 : QNT_q1, Q2 : QNT_q2, Q3 : QNT_q3, Q4 : QNT_q4, Total : QNT_all4qstotalScore]);
 
 QNT_Totalq1 = org.ofbiz.humanres.HumanResServices.Q1StringSingle(partyId, year, Goal_Quantitative)

@@ -2251,5 +2251,60 @@
 		
 		 <field name="submitButton" title="Save Volume" widget-style="smallSubmit"><submit button-type="button"/></field>
 	</form>
+	
+	
+	
+	
+	<!--======================= REGISTRY STAFF =================================== -->
+
+	<form name="RegistryStaffForm" type="single"
+		target="createRegistryStaff" focus-field-name="name" header-row-style="header-row"
+		default-table-style="basic-table" default-map-name="perfReviewsDefContext">
+		<actions>
+		</actions>
+
+         <field name="staffId"><hidden /></field>
+		<field name="partyId" title="Select Staff">
+			<lookup target-form-name="LookupEmployee"></lookup>
+		</field>
+
+		<field name="submitButton" title="${uiLabelMap.CommonSave}"
+			widget-style="smallSubmit">
+			<submit button-type="button" />
+		</field>
+	</form>
+
+	<form name="listRegistryStaffForm" type="list" list-name="listIt"
+		use-row-submit="true" title="Selected Monument" separate-columns="true"
+		paginate-target="RegistryStaffForm" target=""
+		default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="RegistryStaff">
+			<order-by field-name="staffId"/>
+			</entity-condition>
+		</actions>
+		<field name="staffId">
+			<hidden />
+		</field>
+		<field name="partyId" title="Staff">
+			<display-entity entity-name="Person" description="${firstName} ${lastName}"/>
+		</field>
+		<field name="branchId" title="Staff Branch">
+			<display-entity entity-name="PartyGroup" description="${groupName}" key-field-name="partyId"/>
+		</field>
+	
+
+
+		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"
+			widget-style="buttontext">
+			<hyperlink target="deleteRegistryStaff" description="${uiLabelMap.CommonDelete}"
+				also-hidden="false" request-confirmation="true"
+				confirmation-message="Remove Staff?">
+				<parameter param-name="staffId" />
+			</hyperlink>
+		</field>
+
+
+	</form>
 
 </forms>

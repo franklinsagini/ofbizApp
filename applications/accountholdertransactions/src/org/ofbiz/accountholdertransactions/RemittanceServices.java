@@ -740,6 +740,7 @@ public class RemittanceServices {
 						employerName.trim(),
 
 						"stationNumber", stationNumber,
+						"Onlinecode", station.getString("Onlinecode"),
 
 						"stationName", stationName, "month", month));
 		try {

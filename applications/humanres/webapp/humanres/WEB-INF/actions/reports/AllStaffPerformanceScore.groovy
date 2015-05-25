@@ -10,6 +10,8 @@ import org.ofbiz.entity.util.EntityFindOptions;
 exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder();
 
 year = parameters.year
+Goal_Quantitative = "QNT_GOALS"
+Goal_Qualitative = "QTT_GOALS"
 scorelist = [];
 
 allStaffUnderReview = delegator.findList("StaffInPerfReviewGroup", null, null, null, null, false);
@@ -22,7 +24,9 @@ q1 = org.ofbiz.humanres.HumanResServices.Q1String(party, year)
 q2 = org.ofbiz.humanres.HumanResServices.Q2String(party, year)
 q3 = org.ofbiz.humanres.HumanResServices.Q3String(party, year)
 q4 = org.ofbiz.humanres.HumanResServices.Q4String(party, year)
-all4qstotalScore = org.ofbiz.humanres.HumanResServices.TotalScoreString(party, year)
+//all4qstotalScore = org.ofbiz.humanres.HumanResServices.TotalScoreString(party, year)
+
+all4qstotalScore = org.ofbiz.humanres.HumanResServices.getFourQuartersTotalPartyPerformanceOfQualAndQuantiGoalsToString(party, year, Goal_Quantitative, Goal_Qualitative)
 
 bonus = org.ofbiz.humanres.HumanResServices.StaffBonusOnSalary(party, year)
 increment = org.ofbiz.humanres.HumanResServices.StaffSalaryIncrement(party, year)

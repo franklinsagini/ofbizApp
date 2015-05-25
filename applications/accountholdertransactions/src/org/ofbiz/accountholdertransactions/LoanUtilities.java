@@ -1472,5 +1472,53 @@ public class LoanUtilities {
 		
 	}
 
+	public static GenericValue getMemberGivenPayrollNumber(String payrollNo) {
+		List<GenericValue> memberELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		payrollNo = payrollNo.trim();
+		try {
+			memberELI = delegator.findList("Member",
+					EntityCondition.makeCondition("payrollNumber", payrollNo),
+					null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		GenericValue member = null;
+
+		for (GenericValue genericValue : memberELI) {
+			member = genericValue;
+		}
+		
+		return member;
+		
+	}
+
+	public static GenericValue getMemberGivenEmployeeNumber(String employeeNumber) {
+		// TODO Auto-generated method stub
+		//employeeNumber
+		
+		List<GenericValue> memberELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		employeeNumber = employeeNumber.trim();
+		try {
+			memberELI = delegator.findList("Member",
+					EntityCondition.makeCondition("employeeNumber", employeeNumber),
+					null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		GenericValue member = null;
+
+		for (GenericValue genericValue : memberELI) {
+			member = genericValue;
+		}
+		
+		return member;
+	}
+
 
 }

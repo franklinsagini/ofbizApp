@@ -494,6 +494,7 @@
 
 	function guarantorValidation(loanApplicationId){
     	var reqUrl = '/loansprocessing/control/validateGuarantor';
+    	var isBoardMember = true;
     	var isEmployee = true;
     	var isOldEnough = false;
     	var isSelf = true;
@@ -529,6 +530,7 @@
 			     data   : {'loanApplicationId': loanApplicationId, 'guarantorId': guarantorId}, 
 			     success : function(data){
 			     			isEmployee 	= data.isEmployee;
+			     			isBoardMember = data.isBoardMember;
 			     			isOldEnough = data.isOldEnough;
 			     			isSelf 		= data.isSelf;
 			     			hasDeposits = data.hasDeposits;
@@ -564,6 +566,11 @@
 		if (alreadyAdded){
 			alert(' Member cannot guarantee same loan twice ! ');
 			return false;
+		}
+		
+		if (isBoardMember){
+			alert(' A Board member cannot guarantee a loan ! ');
+			return false;		
 		}
     	
     	return true;

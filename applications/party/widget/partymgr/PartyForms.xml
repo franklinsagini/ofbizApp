@@ -1027,7 +1027,16 @@ Gender
             </drop-down>
         </field>
 
-
+		
+		<field name="memberCategory" title="Member Category" widget-style="required" required-field="true">
+            <drop-down allow-empty="false" >
+                <option key="MEMBER" description="Member"/>
+                <option key="EMPLOYEE" description="Employee"/>
+                <option key="DELEGATE" description="Delegate"/>
+                <option key="BOARDMEMBER" description="Board Member"/>
+            </drop-down>
+        </field>
+		
 
        <field name="employeeNumber" title="${uiLabelMap.MemberEmployeeNumber}" required-field="true" widget-style="required"><text size="30" maxlength="60"/></field>
        <!-- field name="employeeType" title="${uiLabelMap.MemberEmployeeType}" required-field="true" widget-style="required"><text size="30" maxlength="60"/></field>
@@ -1200,6 +1209,24 @@ Gender
         <field name="mobileNumber" title="Phone Number" position="2">
         	<text-find></text-find>
         </field>
+        
+         <field name="memberTypeId" title="Member Type" position="1">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name}" entity-name="MemberType" >
+        			<entity-order-by field-name="name"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        
+        <field name="memberCategory" title="Member Category" position="2">
+            <drop-down allow-empty="true" >
+                <option key="MEMBER" description="Member"/>
+                <option key="EMPLOYEE" description="Employee"/>
+                <option key="DELEGATE" description="Delegate"/>
+                <option key="BOARDMEMBER" description="Board Member"/>
+            </drop-down>
+        </field>
+        
         <field name="stationId" title="Station">
             <drop-down allow-empty="true" current-description="">
                 <entity-options description="${name}" key-field-name="stationId" entity-name="Station">
@@ -1208,16 +1235,7 @@ Gender
             </drop-down>
         </field>
         
-        <field name="memberTypeId" title="Member Type" position="2">
-        	<drop-down allow-empty="true">
-        		<entity-options description="${name}" entity-name="MemberType" >
-        			<entity-order-by field-name="name"/>
-        		</entity-options>
-        	</drop-down>
-        </field>
-        
-
-        <field name="branchId" title="Branch">
+        <field name="branchId" title="Branch" position="2">
             <drop-down allow-empty="true" current-description="">
                 <!-- entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/ -->
                 <list-options key-name="partyId" list-name="banchesList" description="${groupName}"/>
@@ -1294,6 +1312,10 @@ Gender
         <field name="memberTypeId" title="Member Type">
         	<display-entity entity-name="MemberType" description="${name}" key-field-name="memberTypeId">
         	</display-entity>
+        </field>
+        
+        <field name="memberCategory" title="Member Category">
+            <display></display>
         </field>
         
         
@@ -2294,6 +2316,23 @@ Gender
         <field name="mobileNumber" title="Phone Number" position="2">
         	<text-find></text-find>
         </field>
+        <field name="memberTypeId" title="Member Type" position="1">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name}" entity-name="MemberType" >
+        			<entity-order-by field-name="name"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        
+        <field name="memberCategory" title="Member Category" position="2">
+            <drop-down allow-empty="true" >
+                <option key="MEMBER" description="Member"/>
+                <option key="EMPLOYEE" description="Employee"/>
+                <option key="DELEGATE" description="Delegate"/>
+                <option key="BOARDMEMBER" description="Board Member"/>
+            </drop-down>
+        </field>
+        
         <field name="stationId" title="Station">
             <drop-down allow-empty="true" current-description="">
                 <entity-options description="${name}" key-field-name="stationId" entity-name="Station">
@@ -2302,13 +2341,13 @@ Gender
             </drop-down>
         </field>
         
-        <field name="memberTypeId" title="Member Type" position="2">
-        	<drop-down allow-empty="true">
-        		<entity-options description="${name}" entity-name="MemberType" >
-        			<entity-order-by field-name="name"/>
-        		</entity-options>
-        	</drop-down>
+        <field name="branchId" title="Branch" position="2">
+            <drop-down allow-empty="true" current-description="">
+                <!-- entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/ -->
+                <list-options key-name="partyId" list-name="banchesList" description="${groupName}"/>
+            </drop-down>
         </field>
+        
         
         <field name="joinDate">
         	<date-find default-option-from="greaterThanFromDayStart" default-option-thru="upThruDay" type="date" />
@@ -2366,6 +2405,10 @@ Gender
         <field name="memberTypeId" title="Member Type">
         	<display-entity entity-name="MemberType" description="${name}" key-field-name="memberTypeId">
         	</display-entity>
+        </field>
+        
+         <field name="memberCategory" title="Member Category" >
+            <display></display>
         </field>
         
         <field name="joinDate" title="Joined">
@@ -2439,6 +2482,23 @@ Gender
          <field name="mobileNumber" title="Phone Number" position="2">
         	<text-find></text-find>
         </field>
+       <field name="memberTypeId" title="Member Type" position="1">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name}" entity-name="MemberType" >
+        			<entity-order-by field-name="name"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        
+        <field name="memberCategory" title="Member Category" position="2">
+            <drop-down allow-empty="true" >
+                <option key="MEMBER" description="Member"/>
+                <option key="EMPLOYEE" description="Employee"/>
+                <option key="DELEGATE" description="Delegate"/>
+                <option key="BOARDMEMBER" description="Board Member"/>
+            </drop-down>
+        </field>
+        
         <field name="stationId" title="Station">
             <drop-down allow-empty="true" current-description="">
                 <entity-options description="${name}" key-field-name="stationId" entity-name="Station">
@@ -2447,17 +2507,10 @@ Gender
             </drop-down>
         </field>
         
-        <field name="memberTypeId" title="Member Type" position="2">
-        	<drop-down allow-empty="true">
-        		<entity-options description="${name}" entity-name="MemberType" >
-        			<entity-order-by field-name="name"/>
-        		</entity-options>
-        	</drop-down>
-        </field>
-        <field name="branchId" title="Branch">
+        <field name="branchId" title="Branch" position="2">
             <drop-down allow-empty="true" current-description="">
                 <!-- entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/ -->
-                <list-options key-name="partyId" list-name="branchesList" description="${groupName}"/>
+                <list-options key-name="partyId" list-name="banchesList" description="${groupName}"/>
             </drop-down>
         </field>
         <field name="joinDate">
@@ -2512,6 +2565,10 @@ Gender
         <field name="memberTypeId" title="Member Type">
         	<display-entity entity-name="MemberType" description="${name}" key-field-name="memberTypeId">
         	</display-entity>
+        </field>
+        
+        <field name="memberCategory" title="Member Category">
+            <display></display>
         </field>
         
         <field name="stationId" title="Station">
