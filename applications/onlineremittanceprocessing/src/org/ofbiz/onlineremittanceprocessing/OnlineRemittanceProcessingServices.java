@@ -580,7 +580,8 @@ public class OnlineRemittanceProcessingServices {
 				
 				String payrollNo = rsExpected.getString("PayrollNo");
 				String remitanceCode = rsExpected.getString("Rem Code");
-				String loanNo = rsExpected.getString("Loan No");
+				String loanNo = String.valueOf(rsExpected.getLong("Loan No"));
+				
 				String remitanceDescription = rsExpected.getString("Rem code Description");
 				
 				createExpectation(station, month, (String)userLogin.get("userLoginId"), rsExpected.getBigDecimal("Amount"), payrollNo, remitanceCode, loanNo, remitanceDescription);
