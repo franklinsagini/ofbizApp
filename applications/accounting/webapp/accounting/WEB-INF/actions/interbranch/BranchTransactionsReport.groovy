@@ -20,7 +20,7 @@ if (fundingTypeId == "1") {
   mainAndExprs.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, "206"));
   mainAndExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, branchId));
 
-entriesList = delegator.findList("AcctgTransAndEntries", EntityCondition.makeCondition(mainAndExprs, EntityOperator.AND), UtilMisc.toSet("transactionDate", "acctgTransId", "accountName","acctgTransTypeId", "debitCreditFlag", "amount"), UtilMisc.toList("acctgTransEntrySeqId"), null, false);
+entriesList = delegator.findList("AcctgTransEntry", EntityCondition.makeCondition(mainAndExprs, EntityOperator.AND), UtilMisc.toSet("transactionDate", "acctgTransId", "accountName","acctgTransTypeId", "debitCreditFlag", "amount"), UtilMisc.toList("acctgTransEntrySeqId"), null, false);
 
 }
 if (fundingTypeId == "2") {
