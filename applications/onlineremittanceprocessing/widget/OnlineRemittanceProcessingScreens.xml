@@ -168,7 +168,9 @@
 				<set field="headerItem" value="pushMonthYear" />
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createPushMonthYearItem" />
+				<set field="pushMonthYearItemCtx" from-field="parameters" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+				<set field="pushMonthYearId" from-field="parameters.pushMonthYearId" type="Long" global="true"/>
 				
 				<property-to-field field="defaultCountryGeoId"
 					resource="general" property="KEN" default="KEN" />
@@ -181,6 +183,10 @@
 							<widgets>
 								<!-- screenlet> <include-form name="FindLoansForwarded" location="component://loansprocessing/widget/loansprocessingForms.xml"/> 
 									</screenlet -->
+								<screenlet title="Find Station">
+									<include-form name="FindStationPushStatus"
+										location="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingForms.xml" />
+								</screenlet>
 								<screenlet title="Station Push Status">
 									<include-form name="showStationPushStatus"
 										location="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingForms.xml" />
@@ -200,9 +206,10 @@
 				<set field="titleProperty" value="Station Pull Status" />
 				<set field="headerItem" value="showStationPullStatus" />
 				<set field="displayPassword" value="Y" />
-				<set field="target" value="createPushMonthYearItem" />
+				<set field="target" value="createPullMonthYearItem" />
+				<set field="pullMonthYearItemCtx" from-field="parameters" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				
+				<set field="pushMonthYearId" from-field="parameters.pushMonthYearId" type="Long" global="true"/>
 				<property-to-field field="defaultCountryGeoId"
 					resource="general" property="KEN" default="KEN" />
 			</actions>
@@ -213,8 +220,11 @@
 
 						<section name="search-results">
 							<widgets>
-								<!-- screenlet> <include-form name="FindLoansForwarded" location="component://loansprocessing/widget/loansprocessingForms.xml"/> 
-									</screenlet -->
+								<screenlet title="Find Station">
+									<include-form name="FindStationPullStatus"
+										location="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingForms.xml" />
+								</screenlet>
+
 								<screenlet title="Station Pull Status">
 									<include-form name="showStationPullStatus"
 										location="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingForms.xml" />
