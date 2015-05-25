@@ -62,9 +62,9 @@ public class LoansProcessingServices {
 		BigDecimal bdmaxLoanAmt = loanApplication.getBigDecimal("maxLoanAmt");
 
 		if (loanApplication.getBigDecimal("maxLoanAmt") != null)
-		if (bdLoanAmt.compareTo(bdmaxLoanAmt) == 1) {
-			bdLoanAmt = bdmaxLoanAmt;
-		}
+			if (bdLoanAmt.compareTo(bdmaxLoanAmt) == 1) {
+				bdLoanAmt = bdmaxLoanAmt;
+			}
 
 		Long repaymentPeriod = loanApplication.getLong("repaymentPeriod");
 
@@ -107,9 +107,9 @@ public class LoansProcessingServices {
 		BigDecimal bdmaxLoanAmt = loanApplication.getBigDecimal("maxLoanAmt");
 
 		if (loanApplication.getBigDecimal("maxLoanAmt") != null)
-		if (bdLoanAmt.compareTo(bdmaxLoanAmt) == 1) {
-			bdLoanAmt = bdmaxLoanAmt;
-		}
+			if (bdLoanAmt.compareTo(bdmaxLoanAmt) == 1) {
+				bdLoanAmt = bdmaxLoanAmt;
+			}
 
 		bdInsuranceAmount = bdInsuranceRate.multiply(
 				bdLoanAmt.setScale(6, RoundingMode.HALF_UP)).divide(
@@ -451,7 +451,7 @@ public class LoansProcessingServices {
 			createGuarantorLoans(bdGuarantorLoanAmount, loanGuarantor,
 					loanApplication, userLoginId);
 		}
-		
+
 		try {
 			delegator.createOrStore(loanApplication);
 		} catch (GenericEntityException e) {
@@ -471,19 +471,19 @@ public class LoansProcessingServices {
 		Long loanApplicationId = delegator.getNextSeqIdLong("LoanApplication",
 				1);
 		GenericValue newLoanApplication;
-		
-		Long defaulterLoanProductId = LoanUtilities.getLoanProductGivenCode(DEFAULTER_LOAN_CODE).getLong("loanProductId");
-		
+
+		Long defaulterLoanProductId = LoanUtilities.getLoanProductGivenCode(
+				DEFAULTER_LOAN_CODE).getLong("loanProductId");
+
 		newLoanApplication = delegator.makeValue("LoanApplication", UtilMisc
 				.toMap("loanApplicationId", loanApplicationId,
 						"parentLoanApplicationId",
 						loanApplication.getLong("loanApplicationId"), "loanNo",
 						String.valueOf(loanApplicationId), "createdBy",
 						userLoginId, "isActive", "Y", "partyId",
-						loanGuarantor.getLong("guarantorId"), 
-						
-						"loanProductId",
-						defaulterLoanProductId,
+						loanGuarantor.getLong("guarantorId"),
+
+						"loanProductId", defaulterLoanProductId,
 						"interestRatePM",
 						loanApplication.getBigDecimal("interestRatePM")
 
@@ -496,8 +496,9 @@ public class LoansProcessingServices {
 						bdGuarantorLoanAmount, "loanStatusId", loanStatusId,
 						"deductionType",
 						loanApplication.getString("deductionType"),
-						
-						"originalLoanProductId", loanApplication.getLong("loanProductId"),
+
+						"originalLoanProductId",
+						loanApplication.getLong("loanProductId"),
 
 						"accountProductId",
 						loanApplication.getLong("accountProductId")
@@ -551,11 +552,11 @@ public class LoansProcessingServices {
 		 * */
 		Long loanStatusId = getLoanApplication(loanApplicationId).getLong(
 				"loanStatusId");
-		
-		if ((getLoanStatus("FORWARDEDLOANS").equals(loanStatusId) )
+
+		if ((getLoanStatus("FORWARDEDLOANS").equals(loanStatusId))
 				|| (getLoanStatus("RETURNEDTOAPPRAISAL").equals(loanStatusId))
-				
-				) {
+
+		) {
 			return true;
 		} else {
 			return false;
@@ -596,44 +597,49 @@ public class LoansProcessingServices {
 		}
 	}
 
-	
-	
 	public static String validateGuarantor(HttpServletRequest request,
 			HttpServletResponse response) {
 		Map<String, Object> result = FastMap.newInstance();
-		Long loanApplicationId = Long.valueOf((String) request.getParameter("loanApplicationId"));
-		Long guarantorId = Long.valueOf((String) request.getParameter("guarantorId"));
-		
+		Long loanApplicationId = Long.valueOf((String) request
+				.getParameter("loanApplicationId"));
+		Long guarantorId = Long.valueOf((String) request
+				.getParameter("guarantorId"));
+
 		/***
 		 * 
-		 * 	isEmployee 	= data.isEmployee;
-			
-			isSelf 		= data.isSelf;
-			isOldEnough = data.isOldEnough;
-			hasDeposits = data.hasDeposits;
-
+		 * isEmployee = data.isEmployee;
+		 * 
+		 * isSelf = data.isSelf; isOldEnough = data.isOldEnough; hasDeposits =
+		 * data.hasDeposits;
+		 * 
 		 * 
 		 * **/
-		 Boolean isEmployee = guarantorIsAnEmployee(guarantorId);
+		Boolean isEmployee = guarantorIsAnEmployee(guarantorId);
 		
+		if (!isEmployee){
+			isEmployee = guarantorIsSaccoEmployee(guarantorId);
+		}
+
 		Boolean isSelf = guarantorIsSelf(guarantorId, loanApplicationId);
-		
-		Boolean alreadyAdded = memberAlreadyGuaranteedTheLoan(guarantorId, loanApplicationId);
-		
+
+		Boolean alreadyAdded = memberAlreadyGuaranteedTheLoan(guarantorId,
+				loanApplicationId);
+
 		Boolean isOldEnough = LoanUtilities.isOldEnough(guarantorId.toString());
-		
+
 		Boolean hasDeposits = guarantorHasDeposits(guarantorId);
-		
-		
+
+		Boolean isBoardMember = guarantorIsBoardMember(guarantorId);
+
 		result.put("isEmployee", isEmployee);
 		result.put("isSelf", isSelf);
 
 		result.put("isOldEnough", isOldEnough);
 		result.put("hasDeposits", hasDeposits);
-		
+
 		result.put("alreadyAdded", alreadyAdded);
-		
-		
+
+		result.put("isBoardMember", isBoardMember);
 
 		Gson gson = new Gson();
 		String json = gson.toJson(result);
@@ -671,19 +677,47 @@ public class LoansProcessingServices {
 		return json;
 	}
 
+	
+	/***
+	 * Check if the member trying to guarantee is a Board Member
+	 * */
+	private static Boolean guarantorIsBoardMember(Long guarantorId) {
+		GenericValue member = LoanUtilities.getMember(guarantorId);
+
+		if (member == null)
+			return false;
+
+		if (member.getString("memberCategory").equals("BOARDMEMBER"))
+			return true;
+
+		return false;
+	}
+	
+	private static Boolean guarantorIsSaccoEmployee(Long guarantorId) {
+		
+		GenericValue member = LoanUtilities.getMember(guarantorId);
+
+		if (member == null)
+			return false;
+
+		if (member.getString("memberCategory").equals("EMPLOYEE"))
+			return true;
+
+		return false;
+	}
+
 	private static Boolean memberAlreadyGuaranteedTheLoan(Long guarantorId,
 			Long loanApplicationId) {
 		List<GenericValue> loanGuarantorELI = null; // =
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		
+
 		EntityConditionList<EntityExpr> loanGuarantorConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"loanApplicationId", EntityOperator.EQUALS,
-						loanApplicationId), EntityCondition
-						.makeCondition("guarantorId",
-								EntityOperator.EQUALS, guarantorId)),
+						loanApplicationId), EntityCondition.makeCondition(
+						"guarantorId", EntityOperator.EQUALS, guarantorId)),
 						EntityOperator.AND);
-		
+
 		try {
 			loanGuarantorELI = delegator.findList("LoanGuarantor",
 					loanGuarantorConditions, null, null, null, false);
@@ -691,40 +725,43 @@ public class LoansProcessingServices {
 			e.printStackTrace();
 		}
 
-		//return loanGuarantorELI;
+		// return loanGuarantorELI;
 		if (loanGuarantorELI.size() > 0)
 			return true;
-		
+
 		return false;
 	}
 
 	private static Boolean guarantorHasDeposits(Long guarantorId) {
 		// TODO Auto-generated method stub
-		//LoanServices.
-		//AccHolderTransactionServices.MEMBER_DEPOSIT_CODE
-		Long accountProductId = LoanUtilities.getMemberDepositsAccountId(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE);
-		BigDecimal bdTotalAmount = AccHolderTransactionServices.getAccountTotalBalance(accountProductId,
-				guarantorId);
-		
+		// LoanServices.
+		// AccHolderTransactionServices.MEMBER_DEPOSIT_CODE
+		Long accountProductId = LoanUtilities
+				.getMemberDepositsAccountId(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE);
+		BigDecimal bdTotalAmount = AccHolderTransactionServices
+				.getAccountTotalBalance(accountProductId, guarantorId);
+
 		if (bdTotalAmount.compareTo(BigDecimal.ZERO) == 1)
 			return true;
-		
+
 		return false;
 	}
 
 	private static Boolean guarantorIsSelf(Long guarantorId,
 			Long loanApplicationId) {
-		
-		//GenericValue guarantorMember = LoanUtilities.getMember(guarantorId.toString());
-		GenericValue loanApplyingMember = LoanUtilities.getMemberGiveLoanApplicationId(loanApplicationId);
-		
+
+		// GenericValue guarantorMember =
+		// LoanUtilities.getMember(guarantorId.toString());
+		GenericValue loanApplyingMember = LoanUtilities
+				.getMemberGiveLoanApplicationId(loanApplicationId);
+
 		Long memberPartyId = loanApplyingMember.getLong("partyId");
-		
+
 		// TODO Auto-generated method stub
-		
+
 		if (guarantorId.compareTo(memberPartyId) == 0)
 			return true;
-		
+
 		return false;
 	}
 
@@ -735,26 +772,26 @@ public class LoansProcessingServices {
 		// TODO Auto-generated method stub
 		GenericValue member = LoanUtilities.getMember(partyId);
 		String payrollNumber = member.getString("payrollNumber");
-		
-		//Find Employee Given Payroll Number
+
+		// Find Employee Given Payroll Number
 		List<GenericValue> personELI = new ArrayList<GenericValue>();
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		EntityConditionList<EntityExpr> personConditions = EntityCondition
-				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"employeeNumber", EntityOperator.EQUALS, payrollNumber)),
-						EntityOperator.AND);
+				.makeCondition(
+						UtilMisc.toList(EntityCondition.makeCondition(
+								"employeeNumber", EntityOperator.EQUALS,
+								payrollNumber)), EntityOperator.AND);
 		try {
-			personELI = delegator.findList("Person",
-					personConditions, null, null, null, false);
+			personELI = delegator.findList("Person", personConditions, null,
+					null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-		
+
 		if (personELI.size() > 0)
 			return true;
-		
+
 		return false;
 	}
 
-	
 }

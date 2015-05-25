@@ -2981,6 +2981,7 @@ public class LoanServices {
 
 		result.put("otherLoansProcessing",
 				otherLoansInProcessing(loanApplicationId));
+		
 		result.put("otherLoanNoRepayment",
 				otherLoanWithoutRepayment(loanApplicationId));
 		
@@ -3027,8 +3028,48 @@ public class LoanServices {
 	}
 
 	private static Boolean otherLoanUnderpayment(Long loanApplicationId) {
+		
+		
+		List<GenericValue> loanApplicationELI = null;
+		GenericValue loanApplication = getLoanApplication(loanApplicationId);
+		Long loanDisbursedStatusId = getLoanStatusId("DISBURSED");
+		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
+				.makeCondition(
+						UtilMisc.toList(EntityCondition.makeCondition(
+								"loanStatusId", EntityOperator.EQUALS,
+								loanDisbursedStatusId),
+								EntityCondition
+										.makeCondition("partyId",
+												EntityOperator.EQUALS,
+												loanApplication.getLong("partyId"))), EntityOperator.AND);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					loanApplicationConditions, null, null, null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		
 
+		Boolean loanUnderPaid = false;
+		
+		for (GenericValue genericValue : loanApplicationELI) {
+			
+			if (loanIsUnderPaid(genericValue.getLong("loanApplicationId"))){
+				loanUnderPaid = true;
+			}
+		}
+		//loanUnderPaid = existsAnUnderPaidLoan(loanApplicationId);
+		
+		
+		return loanUnderPaid;
+	}
+
+	private static boolean loanIsUnderPaid(Long loanApplicationId) {
 		BigDecimal bdTotalRepaidAmt = getLoansRepaidByLoanApplicationId(loanApplicationId);
+		
+		log.info("BBBBBBBBBB loanApplicationId "+loanApplicationId);
 		
 		BigDecimal monthlyRepaymentAmt = LoansProcessingServices.getMonthlyLoanRepayment(loanApplicationId.toString());
 		BigDecimal firstMonthInsuranceAmt = LoansProcessingServices.getInsuranceAmount(loanApplicationId.toString());
@@ -3037,6 +3078,10 @@ public class LoanServices {
 		
 		
 	//	BigDecimal bdFirstRepaymentExpected = 
+		log.info("BBBBBBBBBB bdTotalRepaidAmt "+bdTotalRepaidAmt);
+		log.info("BBBBBBBBBB monthlyRepaymentAmt "+monthlyRepaymentAmt);
+		log.info("BBBBBBBBBB firstMonthInsuranceAmt "+firstMonthInsuranceAmt);
+		log.info("BBBBBBBBBB loanDeductionAmt "+loanDeductionAmt);
 		
 		if ((bdTotalRepaidAmt == null) || (loanDeductionAmt == null) || (bdTotalRepaidAmt.compareTo(loanDeductionAmt) == -1))
 		{
