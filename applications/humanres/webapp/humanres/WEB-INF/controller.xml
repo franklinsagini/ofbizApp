@@ -3244,9 +3244,10 @@
 		<security https="true" auth="true" />
 		<event type="java" path="org.ofbiz.humanres.SeparateEmployee"
 			invoke="separateEmployee"></event>
-		<response name="success" type="view" value="separationApplication" />
-		<response name="error" type="view" value="separationApplication" />
+		<response name="success" type="request-redirect-noparam" value="separationApplication" />
+		<response name="error" type="request-redirect-noparam" value="separationApplication" />
 	</request-map>
+	
 
 	<request-map uri="separationSummaryReport">
 		<security https="true" auth="true" />
@@ -3919,6 +3920,25 @@
 		<response name="success" type="view" value="StaffTrainingHistoryCSV" />
 	</request-map>
 	
+	<request-map uri="staffSeparatedReportPDF">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="staffSeparatedReportPDF" />
+	</request-map>
+	
+	<request-map uri="staffSeparatedReportCSV.csv">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="staffSeparatedReportCSV" />
+	</request-map>
+	
+	
+	<view-map name="staffSeparatedReportPDF" type="screenfop"
+		page="component://humanres/widget/ReportScreens.xml#staffSeparatedReportPDF"
+		content-type="application/pdf" encoding="none" />
+		
+	<view-map name="staffSeparatedReportCSV" type="screencsv"
+		page="component://humanres/widget/ReportScreens.xml#staffSeparatedReportCSV"
+		content-type="text/csv" encoding="none" />
+		
 	<view-map name="StaffPerformancePerDepartmentPDF" type="screenfop"
 		page="component://humanres/widget/PerfReportScreens.xml#StaffPerformancePerDepartmentPDF"
 		content-type="application/pdf" encoding="none" />
