@@ -957,7 +957,10 @@ public class RemittanceServices {
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"employerCode", EntityOperator.EQUALS,
 						employerCode.trim()), EntityCondition.makeCondition(
-						"month", EntityOperator.EQUALS, month)
+						"month", EntityOperator.EQUALS, month),
+						
+						 EntityCondition.makeCondition(
+									"expectationType", EntityOperator.NOT_EQUAL, "BALANCE")
 
 				), EntityOperator.AND);
 
