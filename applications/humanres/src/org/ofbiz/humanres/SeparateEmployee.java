@@ -57,7 +57,7 @@ public class SeparateEmployee {
 			}
 		}
 		
-		return null;
+		return partyId;
 	}
 
 	private static void updatePersonalDetails(Delegator delegator,

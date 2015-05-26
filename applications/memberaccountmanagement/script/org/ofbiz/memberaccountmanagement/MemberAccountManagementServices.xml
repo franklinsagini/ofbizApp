@@ -36,6 +36,30 @@ under the License.
       			<call-simple-method method-name="updateMemberAccountVoucher"></call-simple-method>
       		</else>
       	</if-empty>
+      	
+      	 <set field="memberAccountVoucherId" from-field="newEntity.memberAccountVoucherId" type="Long"/>
+        <set field="voucherStatus" value="${bsh:org.ofbiz.memberaccountmanagement.MemberAccountManagementServices.createMemberAccountVoucherTransaction(userLogin, memberAccountVoucherId);}"></set>
+    
+   		<set field="successstatus" value="success" type="String"/>
+   		 <if> 
+            <condition> 
+                   <if-compare-field to-field="successstatus" operator="not-equals" field="voucherStatus"></if-compare-field>
+            </condition> 
+            <then> 
+                <add-error> 
+                    <fail-property resource="MemberAccountManagementUiLabels.xml"  
+                        property="voucherError" /> 
+                </add-error> 
+                <check-errors /> 
+            </then> 
+             
+            <else>
+            	<!-- call-simple-method method-name="saveTreasuryTransfer" scope="inline"></call-simple-method>
+        		<set field="repayLoan" value="${bsh:org.ofbiz.treasurymanagement.TreasuryAccounting.postTreasuryTransfer(newEntity, userLogin);}" type="String"/ -->
+               <property-to-field resource="MemberAccountManagementUiLabels.xml" 
+            	property="voucherSuccess" field="successMessage" /> 
+            </else> 
+        </if>
     </simple-method>
     
     <simple-method method-name="updateMemberAccountVoucher" short-description="Update MemberAccountVoucher">

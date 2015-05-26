@@ -5832,8 +5832,28 @@ public class HumanResServices {
 		
 		
 		for (GenericValue genericValue : UsedObjective) {
+			totalpercentage = BigDecimal.ZERO;
 			groupId = genericValue.getString("perfReviewDefId");
 			perspectiveId = genericValue.getString("perfGoalsId");
+			
+			log.info("=============>>>>>>>>>>> GroupId  >>>>>>>>" + groupId);
+			log.info("=============>>>>>>>>>>> perspectiveId  >>>>>>>>" + perspectiveId);
+			
+			EntityConditionList<EntityExpr> quantitativetotalConditions = EntityCondition
+					.makeCondition(UtilMisc.toList(EntityCondition.makeCondition("perfReviewDefId",EntityOperator.EQUALS, groupId),
+							EntityCondition.makeCondition("perfGoalsId", EntityOperator.EQUALS, perspectiveId)),EntityOperator.AND);
+			
+			
+			try {
+				allObjectiveInThisPerspectiveELI = delegator.findList("PerfReviewsGroupObjectiveDefinition", quantitativetotalConditions, null, null, null, false);
+
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+
+			for (GenericValue genericValue2 : allObjectiveInThisPerspectiveELI) {
+				totalpercentage = totalpercentage.add(genericValue2.getBigDecimal("percentage").stripTrailingZeros());
+			}
 			
 			
 			try {
@@ -5845,22 +5865,6 @@ public class HumanResServices {
 
 			perspectiveTotal = Perspective.getBigDecimal("percentage").stripTrailingZeros();
 
-			EntityConditionList<EntityExpr> quantitativetotalConditions = EntityCondition
-					.makeCondition(UtilMisc.toList(EntityCondition.makeCondition("perfReviewDefId",EntityOperator.EQUALS, groupId),
-							EntityCondition.makeCondition("perfGoalsId", EntityOperator.EQUALS, perspectiveId)),EntityOperator.AND);
-
-			try {
-				allObjectiveInThisPerspectiveELI = delegator.findList(
-						"PerfReviewsGroupObjectiveDefinition",
-						quantitativetotalConditions, null, null, null, false);
-
-			} catch (GenericEntityException e) {
-				e.printStackTrace();
-			}
-
-			for (GenericValue genericValue2 : allObjectiveInThisPerspectiveELI) {
-				totalpercentage = totalpercentage.add(genericValue2.getBigDecimal("percentage").stripTrailingZeros());
-			}
 			
 			log.info("=============>>>>>>>>>>> Objective Total >>>>>>>>" + totalpercentage);
 			log.info("=============>>>>>>>>>>> Perspective Total >>>>>>>>" + perspectiveTotal);

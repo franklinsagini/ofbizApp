@@ -243,10 +243,26 @@ public class RemittanceServices {
 			String expectationType = "";
 			String remitanceDescription = loanProduct.getString("name");
 
+			String remitanceCodeBal = "";
+			String expectationTypeBal = "";
+			String remitanceDescriptionBal = "";
+
 			if (loanExpectation.getString("repaymentName").equals("PRINCIPAL")) {
 				remitanceCode = loanProduct.getString("code") + "A";
 				remitanceDescription = remitanceDescription + " PRINCIPAL";
 				expectationType = "PRINCIPAL";
+
+				// Add Balance (Loan Balance)
+				remitanceCodeBal = loanProduct.getString("code") + "D";
+				expectationTypeBal = "BALANCE";
+				remitanceDescriptionBal = loanProduct.getString("name")
+						+ " BALANCE";
+
+				addExpectationBalance(remitanceCodeBal, expectationTypeBal,
+						remitanceDescriptionBal, member, loanApplication,
+						loanExpectation, station, month, stationNumber,
+						stationName, employerCode, employerName, employeeNames);
+
 			} else if (loanExpectation.getString("repaymentName").equals(
 					"INTEREST")) {
 				remitanceCode = loanProduct.getString("code") + "B";
@@ -298,6 +314,46 @@ public class RemittanceServices {
 				e.printStackTrace();
 			}
 
+		}
+
+	}
+
+	private static void addExpectationBalance(String remitanceCodeBal,
+			String expectationTypeBal, String remitanceDescriptionBal,
+			GenericValue member, GenericValue loanApplication,
+			GenericValue loanExpectation, GenericValue station, String month,
+			String stationNumber, String stationName, String employerCode,
+			String employerName, String employeeNames) {
+		
+		
+		BigDecimal bdLoanBalance = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplication.getLong("loanApplicationId"));
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		GenericValue expectedPaymentSent = null;
+		expectedPaymentSent = delegator.makeValue("ExpectedPaymentSent",
+				UtilMisc.toMap("isActive", "Y", "branchId",
+						member.getString("branchId"), "remitanceCode",
+						remitanceCodeBal, "stationNumber", stationNumber,
+						"stationName", stationName,
+
+						"payrollNo", member.getString("payrollNumber"),
+						"employerCode", employerCode,
+
+						"employeeNumber", member.getString("employeeNumber"),
+						"memberNumber", member.getString("memberNumber"),
+
+						"loanNo", loanApplication.getString("loanNo"),
+						"employerNo", employerName, "amount",
+						bdLoanBalance,
+						"remitanceDescription", remitanceDescriptionBal,
+						"employeeName", employeeNames, "expectationType",
+						expectationTypeBal, "month", month));
+		
+		try {
+			delegator.createOrStore(expectedPaymentSent);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}
@@ -739,8 +795,8 @@ public class RemittanceServices {
 						"employerCode", employerCode.trim(), "employerName",
 						employerName.trim(),
 
-						"stationNumber", stationNumber,
-						"Onlinecode", station.getString("Onlinecode"),
+						"stationNumber", stationNumber, "Onlinecode",
+						station.getString("Onlinecode"),
 
 						"stationName", stationName, "month", month));
 		try {
@@ -901,7 +957,10 @@ public class RemittanceServices {
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"employerCode", EntityOperator.EQUALS,
 						employerCode.trim()), EntityCondition.makeCondition(
-						"month", EntityOperator.EQUALS, month)
+						"month", EntityOperator.EQUALS, month),
+						
+						 EntityCondition.makeCondition(
+									"expectationType", EntityOperator.NOT_EQUAL, "BALANCE")
 
 				), EntityOperator.AND);
 

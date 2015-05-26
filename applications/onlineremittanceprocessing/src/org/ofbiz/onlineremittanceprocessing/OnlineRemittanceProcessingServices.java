@@ -1,5 +1,6 @@
 package org.ofbiz.onlineremittanceprocessing;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -285,7 +286,7 @@ public class OnlineRemittanceProcessingServices {
 						
 						"employerCode", onlineCode,
 						"employerName", employerName, 
-						
+						"Onlinecode", onlineCode,
 						"pulled", "N"));
 		
 		return pullMonthYearItem;
@@ -313,7 +314,10 @@ public class OnlineRemittanceProcessingServices {
 						"stationId", stationId,
 						
 						"employerCode", onlineCode,
-						"employerName", employerName, 
+						"employerName", employerName,
+						
+						"Onlinecode", onlineCode,
+						
 						
 						"pushed", "N"));
 		
@@ -429,6 +433,9 @@ public class OnlineRemittanceProcessingServices {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		String helperOnlineStations = delegator.getGroupHelperName("org.ofbiz.onlinestations");
 		
+		
+		log.info(" Attempting to check if pushed !!! ");
+		
 		SQLProcessor sqlproc = new SQLProcessor(new GenericHelperInfo("org.ofbiz.onlinestations", helperOnlineStations));
 		//If not exist return no data
 		try {
@@ -513,8 +520,9 @@ public class OnlineRemittanceProcessingServices {
 		
 		//Get station from the PullMonthYearItem and see if it exists
 		GenericValue station = LoanUtilities.getStation(pullMonthYearItem.getString("stationId"));
-		String employerCode = station.getString("employerCode");
-		employerCode = employerCode.trim();
+		String employerCodet = station.getString("employerCode");
+		String Onlinecode = station.getString("Onlinecode");
+		Onlinecode = Onlinecode.trim();
 		//Concatenate Month and Year to get month to use in getting the data
 		GenericValue pullMonthYear = getPullMonthYear(pullMonthYearItem.getLong("pushMonthYearId"));
 		
@@ -524,9 +532,12 @@ public class OnlineRemittanceProcessingServices {
 		//The Month Data for the Month Must not have been received
 		// TODO
 		Boolean alreadyPulled = false;
-		alreadyPulled = getStationAlreadyPulled(employerCode, month);
+		log.info(" PPPPPPPPPPP Just before checking if pulled !!!");
+		alreadyPulled = getStationAlreadyPulled(employerCodet, month);
 		if (alreadyPulled)
 			return "alreadypulled";
+		
+		log.info(" PPPPPPPPPPP Now going to pull !!!");
 		
 		//org.ofbiz.onlinestations
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -538,7 +549,7 @@ public class OnlineRemittanceProcessingServices {
 		try {
 			sqlproc.prepareStatement("SELECT * FROM expected where ((employercode = ?) and (Month = ?) and (SE = 'Rem'))");
 
-			sqlproc.setValue(employerCode);
+			sqlproc.setValue(Onlinecode);
 			sqlproc.setValue(month);
 			//	sqlproc.set("employercode", employerCode);
 		} catch (GenericDataSourceException e) {
@@ -565,14 +576,15 @@ public class OnlineRemittanceProcessingServices {
 			while((rsExpected != null) && (rsExpected.next())){
 				//Get the pulled item and add to list
 				count = count + 1;
-				log.info(count+" Employer Code "+rsExpected.getString("employercode")+" Month "+rsExpected.getDouble("Month")+" Amount "+rsExpected.getDouble("Amount"));
+				log.info(count+" Employer Code "+rsExpected.getString("employercode")+" Month "+rsExpected.getString("Month")+" Amount "+rsExpected.getBigDecimal("Amount"));
 				
 				String payrollNo = rsExpected.getString("PayrollNo");
 				String remitanceCode = rsExpected.getString("Rem Code");
-				String loanNo = rsExpected.getString("Loan No");
+				String loanNo = String.valueOf(rsExpected.getLong("Loan No"));
+				
 				String remitanceDescription = rsExpected.getString("Rem code Description");
 				
-				createExpectation(station, month, (String)userLogin.get("userLoginId"), rsExpected.getDouble("Amount"), payrollNo, remitanceCode, loanNo, remitanceDescription);
+				createExpectation(station, month, (String)userLogin.get("userLoginId"), rsExpected.getBigDecimal("Amount"), payrollNo, remitanceCode, loanNo, remitanceDescription);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -624,7 +636,7 @@ public class OnlineRemittanceProcessingServices {
 	}
 
 	private static void createExpectation(GenericValue station, String month,
-			String userLoginId, double amount, String payrollNo, String remitanceCode, String loanNo, String remitanceDescription) {
+			String userLoginId, BigDecimal amount, String payrollNo, String remitanceCode, String loanNo, String remitanceDescription) {
 		// TODO Auto-generated method stub
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		
@@ -684,12 +696,12 @@ public class OnlineRemittanceProcessingServices {
 		return pushMonthYear;
 	}
 
-	private static GenericValue getPullMonthYearItem(Long pushMonthYearItemId) {
+	private static GenericValue getPullMonthYearItem(Long pullMonthYearItemId) {
 		GenericValue pullMonthYearItem = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
 			pullMonthYearItem = delegator.findOne("PullMonthYearItem",
-					UtilMisc.toMap("pushMonthYearItemId", pushMonthYearItemId), false);
+					UtilMisc.toMap("pullMonthYearItemId", pullMonthYearItemId), false);
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
