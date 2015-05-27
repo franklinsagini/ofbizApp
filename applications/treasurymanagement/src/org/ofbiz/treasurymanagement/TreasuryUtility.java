@@ -1091,6 +1091,12 @@ public class TreasuryUtility {
 		String partyId = userLogin.get("partyId");
 
 		GenericValue teller = getTeller(partyId);
+		
+		
+		if (!tellerOpened(userLogin)){
+			return false;
+		}
+		
 		BigDecimal bdTellerBalance = getTellerBalance(userLogin);
 
 		if (teller != null) // check that the teller assigned is of type teller
@@ -1100,6 +1106,84 @@ public class TreasuryUtility {
 			}
 		}
 
+		return false;
+	}
+	
+	public static Boolean tellerOpened(Map<String, String> userLogin) {
+
+		// Get the teller assigned to this partyId (name for Treasury where
+		// employeeResponsible is the guy logged in)
+		String partyId = userLogin.get("partyId");
+
+		GenericValue teller = getTeller(partyId);
+		
+		//Check if there is a transfer for today
+		String destinationTreasury = null;
+		
+		destinationTreasury = teller.getString("treasuryId");
+		
+		Boolean todayTransferExists =  false;
+		
+		todayTransferExists = todayTransfer(destinationTreasury);
+		
+		// BigDecimal bdTellerBalance = getTellerBalance(userLogin);
+		//
+		// if (teller != null) // check that the teller assigned is of type
+		// teller
+		// {
+		// if (bdTellerBalance.compareTo(BigDecimal.ZERO) == 1) {
+		// return true;
+		// }
+		// }
+		
+		return todayTransferExists;
+	}
+
+	private static Boolean todayTransfer(String destinationTreasury) {
+		
+		/****
+		 * 
+		 * **/
+		List<GenericValue> treasuryTransferELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		// Set calendar to truncate current time timestamp to Year, Month and
+		// Day only (exclude hour, minute and seconds)
+		//Date currentDate = new java.util.Date();
+		//Timestamp date = new Timestamp()
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(Calendar.getInstance().getTimeInMillis());
+		// Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.MILLISECOND, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+
+		// UtilDateTime.
+		log.info("################## The time is "
+				+ new Timestamp(calendar.getTimeInMillis()));
+		log.info("################## The treasury is " + destinationTreasury);
+
+		EntityConditionList<EntityExpr> transferConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"destinationTreasury", EntityOperator.EQUALS, destinationTreasury),
+						EntityCondition.makeCondition("createdStamp",
+								EntityOperator.GREATER_THAN_EQUAL_TO, new Timestamp(
+										calendar.getTimeInMillis()))),
+						EntityOperator.AND);
+
+		try {
+			treasuryTransferELI = delegator.findList("TreasuryTransfer",
+					transferConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		
+		if ((treasuryTransferELI != null) && (treasuryTransferELI.size() > 0))
+			return true;
+		
 		return false;
 	}
 

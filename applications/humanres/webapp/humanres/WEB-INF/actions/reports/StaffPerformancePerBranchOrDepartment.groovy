@@ -36,8 +36,8 @@ class QualitativeGoalScore{
 class QuantitativeGoalScore{
 	def name
 	def objectiveName
-	def actionPlanName
-	def indicatorName
+	//def actionPlanName
+	//def indicatorName
 	def maxScore
 	def quarterOne
 	def quarterTwo
@@ -116,14 +116,14 @@ ReviewGroup1.eachWithIndex { ReviewGroup1Item, index ->
 			
 			perspectiveId = Goal_QuantitativeGroupItem.perfGoalsId
 			ObjectiveId = Goal_QuantitativeGroupItem.PerfReviewsGroupObjectiveDefinitionId
-			ActionPlanId = Goal_QuantitativeGroupItem.PerfObjectiveActionPlanId
+			//ActionPlanId = Goal_QuantitativeGroupItem.PerfObjectiveActionPlanId
 			Indicator = Goal_QuantitativeGroupItem.PerfActionPlanIndicatorId
-			IndicatorDescription = Goal_QuantitativeGroupItem.actionPlanIndicatorDescription
+			//IndicatorDescription = Goal_QuantitativeGroupItem.actionPlanIndicatorDescription
 			MaxPossibleScore = Goal_QuantitativeGroupItem.percentage
 
 			perspective = delegator.findOne("PerfGoals", [perfGoalsId : perspectiveId], false);
 			Objective = delegator.findOne("PerfReviewsGroupObjectiveDefinition", [PerfReviewsGroupObjectiveDefinitionId : ObjectiveId], false);
-			ActionPlan = delegator.findOne("PerfObjectiveActionPlanDefinition", [PerfObjectiveActionPlanId : ActionPlanId], false);
+			//ActionPlan = delegator.findOne("PerfObjectiveActionPlanDefinition", [PerfObjectiveActionPlanId : ActionPlanId], false);
 
 
 
@@ -138,8 +138,8 @@ ReviewGroup1.eachWithIndex { ReviewGroup1Item, index ->
 
 			quantitativeGoal.name = perspective.goal
 			quantitativeGoal.objectiveName = Objective.objectiveDescription
-			quantitativeGoal.actionPlanName = ActionPlan.objectiveActionPlanDescription
-			quantitativeGoal.indicatorName =IndicatorDescription
+			//quantitativeGoal.actionPlanName = ActionPlan.objectiveActionPlanDescription
+			//quantitativeGoal.indicatorName =IndicatorDescription
 			quantitativeGoal.maxScore = MaxPossibleScore
 			quantitativeGoal.quarterOne = QNT_q1
 			quantitativeGoal.quarterTwo = QNT_q2

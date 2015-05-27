@@ -28,6 +28,9 @@
 
 			<field name="comment" type="name" enable-audit-log="true"></field>
 			
+			<field name="accountTransactionId" type="id"   enable-audit-log="true"></field>
+			<field name="acctgTransId" type="id"   enable-audit-log="true"></field>
+			
 			<prim-key field="memberAccountVoucherId"/>
 
     	<relation type="one" fk-name="MEMBERACCOUNTVOUCHERSOURCEPARTY_MEMBER" rel-entity-name="Member">
@@ -46,6 +49,53 @@
 
       <relation type="one" fk-name="MEMBERACCOUNTACCSOURCE_MEMBERACCOUNT" rel-entity-name="MemberAccount">
             <key-map field-name="destMemberAccountId" rel-field-name="memberAccountId"/>
+        </relation>
+     </entity>
+
+<entity entity-name="MemberLoansVoucher" package-name="org.ofbiz.memberaccountmanagement" title="MemberLoans Journal Voucher Entity">
+     		<field name="memberLoansVoucherId" type="id-vlong-int"></field>
+     		<field name="createdBy" type="id"></field>
+     		<field name="updatedBy" type="id"></field>
+     		<field name="isActive" type="indicator"></field>
+     		<field name="sourcePartyId" type="id-vlong-int"  enable-audit-log="true"></field>
+     		<field name="sourceLoanApplicationId" type="id-vlong-int"  enable-audit-log="true"></field>
+     		
+     		<field name="destPartyId" type="id-vlong-int"  enable-audit-log="true"></field>
+     		<field name="destLoanApplicationId" type="id-vlong-int"  enable-audit-log="true"></field>
+     		
+     		<field name="amountInSourceRepaid" type="fixed-point" enable-audit-log="true"></field>
+     		<field name="amountInDestinationRepaid" type="fixed-point" enable-audit-log="true"></field>
+     		
+     		
+     		<field name="principalAmount" type="fixed-point" enable-audit-log="true"></field>
+     		<field name="interestAmount" type="fixed-point" enable-audit-log="true"></field>
+     		<field name="insuranceAmount" type="fixed-point" enable-audit-log="true"></field>
+     		
+     		<field name="amount" type="fixed-point" enable-audit-log="true"></field>
+
+			<field name="comment" type="name" enable-audit-log="true"></field>
+			
+			<field name="loanRepaymentId" type="id"   enable-audit-log="true"></field>
+			<field name="acctgTransId" type="id"   enable-audit-log="true"></field>
+			
+			<prim-key field="memberLoansVoucherId"/>
+
+    	<relation type="one" fk-name="MEMBERACCOUNTVOUCHERSOURCEPARTY_MEMBER" rel-entity-name="Member">
+            <key-map field-name="sourcePartyId" rel-field-name="partyId"/>
+        </relation>
+        
+        <relation type="one" fk-name="MEMBERACCOUNTVOUCHERDESTPARTY_MEMBER" rel-entity-name="Member">
+            <key-map field-name="destPartyId" rel-field-name="partyId"/>
+        </relation>
+
+       
+
+      <relation type="one" fk-name="MEMBERACCOUNTACCSOURCE_MEMBERACCOUNT" rel-entity-name="LoanApplication">
+            <key-map field-name="sourceLoanApplicationId" rel-field-name="loanApplicationId"/>
+        </relation>
+
+      <relation type="one" fk-name="MEMBERACCOUNTACCSOURCE_MEMBERACCOUNT" rel-entity-name="LoanApplication">
+            <key-map field-name="destLoanApplicationId" rel-field-name="loanApplicationId"/>
         </relation>
      </entity>
 

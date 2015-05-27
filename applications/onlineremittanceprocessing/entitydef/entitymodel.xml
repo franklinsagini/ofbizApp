@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entitymodel.xsd">
+    <!-- ========================================================= -->
+    <!-- ======================== Defaults ======================= -->
+    <!-- ========================================================= -->
+    <title>Entity of OnlineRemittanceProcessing Component</title>
+    <description>None</description>
+    <copyright></copyright>
+    <version></version>
+    
+    <entity entity-name="OnlineStationItem" package-name="org.ofbiz.onlineremittanceprocessing"
+		title="OnlineStationItem">
+		<field name="onlineStationItemId" type="id-vlong-int" enable-audit-log="true"></field>
+		
+		<field name="stationId" type="id" enable-audit-log="true"></field>
+		
+		<field name="isActive" type="indicator" enable-audit-log="true"></field>
+		<field name="createdBy" type="id" enable-audit-log="true"></field>
+		<field name="updatedBy" type="id" enable-audit-log="true"></field>
+		
+		
+		<prim-key field="stationId"/>
+	</entity>
+	
+	
+	<entity entity-name="PushMonthYear" package-name="org.ofbiz.onlineremittanceprocessing"
+		title="PushMonthYear">
+		<field name="pushMonthYearId" type="id-vlong-int" enable-audit-log="true"></field>
+		
+		<field name="isActive" type="indicator" enable-audit-log="true"></field>
+		<field name="createdBy" type="id" enable-audit-log="true"></field>
+		<field name="updatedBy" type="id" enable-audit-log="true"></field>
+		
+		
+		<field name="month" type="id-vlong-int" enable-audit-log="true"></field>
+		<field name="year" type="id-vlong-int" enable-audit-log="true"></field>
+		
+		<prim-key field="pushMonthYearId"/>
+	</entity>
+	
+	
+	
+	<entity entity-name="PushMonthYearItem" package-name="org.ofbiz.onlineremittanceprocessing"
+		title="PushMonthYearItem">
+		<field name="pushMonthYearItemId" type="id-vlong-int" enable-audit-log="true"></field>
+		<field name="pushMonthYearId" type="id-vlong-int" enable-audit-log="true"></field>
+		<field name="isActive" type="indicator" enable-audit-log="true"></field>
+		<field name="createdBy" type="id" enable-audit-log="true"></field>
+		<field name="updatedBy" type="id" enable-audit-log="true"></field>
+		
+		
+		<field name="stationId" type="id" enable-audit-log="true"></field>
+		<field name="employerCode" type="id" enable-audit-log="true"></field>
+		<field name="employerName" type="name" enable-audit-log="true"></field>
+		
+		<field name="Onlinecode" type="id"  enable-audit-log="true"></field>
+		
+		<field name="pushed"  type="indicator" enable-audit-log="true"></field>
+		
+		<prim-key field="pushMonthYearItemId"/>
+	</entity>
+	
+		<entity entity-name="PullMonthYearItem" package-name="org.ofbiz.onlineremittanceprocessing"
+		title="PullMonthYearItem">
+		<field name="pullMonthYearItemId" type="id-vlong-int" enable-audit-log="true"></field>
+		<field name="pushMonthYearId" type="id-vlong-int" enable-audit-log="true"></field>
+		<field name="isActive" type="indicator" enable-audit-log="true"></field>
+		<field name="createdBy" type="id" enable-audit-log="true"></field>
+		<field name="updatedBy" type="id" enable-audit-log="true"></field>
+		
+		
+		<field name="stationId" type="id" enable-audit-log="true"></field>
+		<field name="employerCode" type="id" enable-audit-log="true"></field>
+		<field name="employerName" type="name" enable-audit-log="true"></field>
+		
+		<field name="Onlinecode" type="id"  enable-audit-log="true"></field>
+		
+		<field name="pulled"  type="indicator" enable-audit-log="true"></field>
+		
+		<prim-key field="pullMonthYearItemId"/>
+	</entity>
+
+</entitymodel>

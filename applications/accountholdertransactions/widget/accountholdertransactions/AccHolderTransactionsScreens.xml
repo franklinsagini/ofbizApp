@@ -1603,6 +1603,15 @@
 					value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.getEmployerName(employerCode);}"
 					type="String" />
 				<set field="month" from-field="parameters.month" />
+				<set field="totalExpected" global="true"
+					value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.getTotalExpected(employerCode, month);}"
+					type="BigDecimal" />
+				<set field="totalRemitted" global="true"
+					value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.getTotalRemitted(employerCode, month);}"
+					type="BigDecimal" />
+				<set field="totalChequeAmount" global="true"
+					value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.getTotalRemittedChequeAmount(employerCode, month);}"
+					type="BigDecimal" />
 
 				<entity-one entity-name="ExpectedPaymentSent"
 					value-field="expectedPaymentSentContext" />
@@ -1657,6 +1666,26 @@
 								<screenlet title="Expected Payment Breakdown">
 									<include-form name="listExpectedPaymentSentBreakdown"
 										location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml" />
+								</screenlet>
+								
+								
+																<screenlet>
+									<!-- include-form name="listExpectedPaymentReceivedBreakdownTotals" 
+										location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/ -->
+									<section>
+										<widgets>
+											<container style="button-bar">
+												<label style="h3">Total Expected : Kshs. ${totalExpected}
+												</label>
+												<label style="h3">Total Received (Schedule) : Kshs.
+													${totalRemitted} </label>
+												<label style="h3">Total Received (Cheque Amount) : Kshs.
+													${totalChequeAmount} </label>
+
+
+											</container>
+										</widgets>
+									</section>
 								</screenlet>
 							</widgets>
 						</section>
