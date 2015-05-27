@@ -22,6 +22,17 @@
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
 
+    <simple-method method-name="createPaymentType" short-description="create Payment Type">
+            <make-value entity-name="PaymentType" value-field="newEntity"/>
+            <set-pk-fields map="parameters" value-field="newEntity"/>
+            <set-nonpk-fields map="parameters" value-field="newEntity"/>
+            <set value="N" field="newEntity.hasTable"/>
+            <sequenced-id sequence-name="PaymentType" field="paymentTypeId"/>
+            <now-timestamp field="newEntity.createdDate"/>
+            <set from-field="paymentTypeId" field="newEntity.paymentTypeId"/>
+            <create-value value-field="newEntity"/>
+    </simple-method>
+
     <simple-method method-name="createFundingType" short-description="create Funding Type">
             <make-value entity-name="FundingTypes" value-field="newEntity"/>
              <set-pk-fields map="parameters" value-field="newEntity"/>

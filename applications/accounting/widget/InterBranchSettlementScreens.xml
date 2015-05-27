@@ -21,6 +21,60 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
+
+
+    <screen name="EditPaymentType">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Inter Branch Settlement: Funding Types Setup"/>
+                <set field="labelTitleProperty" value="Inter Branch Settlement: Funding Types Setup"/>
+                <set field="tabButtonItem" value="PaymentTypes"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                <entity-one entity-name="FundingTypes" value-field="fundingTypesContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="GlobalGLSettingsDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <!-- <include-menu name="SASRASetupTabBar" location="component://accounting/widget/AccountingMenus.xml"/> -->
+                        <screenlet title="Payments: Payment Types">
+                            <include-form name="PaymentType" location="component://accounting/widget/InterBranchSettlementForms.xml"/>
+                        </screenlet>
+                         <include-form name="PaymentTypeList" location="component://accounting/widget/InterBranchSettlementForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="GlAccountType">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Inter Branch Settlement: Funding Types Setup"/>
+                <set field="labelTitleProperty" value="Inter Branch Settlement: Funding Types Setup"/>
+                <set field="tabButtonItem" value="GlAccountType"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                <entity-one entity-name="FundingTypes" value-field="fundingTypesContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="GlobalGLSettingsDecorator" location="component://accounting/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <!-- <include-menu name="SASRASetupTabBar" location="component://accounting/widget/AccountingMenus.xml"/> -->
+                        <screenlet title="Payments: Payment Types">
+                            <include-form name="PaymentType" location="component://accounting/widget/InterBranchSettlementForms.xml"/>
+                        </screenlet>
+                         <include-form name="PaymentTypeList" location="component://accounting/widget/InterBranchSettlementForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+<!-- ==================================INTER BRANCH================================================= -->
+
     <screen name="FundingTypes">
         <section>
             <actions>
