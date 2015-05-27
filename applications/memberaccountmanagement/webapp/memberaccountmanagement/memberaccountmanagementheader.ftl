@@ -1,9 +1,7 @@
 <script type="text/javascript">
 
    jQuery(document).ready(function(){
-
-
-		
+	
 	jQuery('select[name="sourceMemberAccountId"]').change(function(){
          var memberAccountId = this.value;
          var reqUrl = '/accountholdertransactions/control/availableamount';
@@ -14,6 +12,20 @@
          var memberAccountId = this.value;
          var reqUrl = '/accountholdertransactions/control/availableamount';
          getDestinationAccountBalance(reqUrl, memberAccountId);
+        });
+        
+        //Get Loan Repaid Total
+        
+      jQuery('select[name="sourceLoanApplicationId"]').change(function(){
+         var loanApplicationId = this.value;
+         var reqUrl = '/memberaccountmanagement/control/totalrepaid';
+         getSourceRepaidAmount(reqUrl, loanApplicationId);
+        });
+      
+     jQuery('select[name="destLoanApplicationId"]').change(function(){
+         var loanApplicationId = this.value;
+         var reqUrl = '/memberaccountmanagement/control/totalrepaid';
+         getDestinationRepaidAmount(reqUrl, loanApplicationId);
         });
 
      });
@@ -64,7 +76,7 @@
          sourceMemberAccounts(reqUrl, partyId);
     }
     
-     function sourceMemberAccounts(reqUrl, partyId){
+  function sourceMemberAccounts(reqUrl, partyId){
     jQuery.ajax({
 
      url    : reqUrl,
@@ -91,7 +103,7 @@
          destinationMemberAccounts(reqUrl, partyId);
     }
     
-     function destinationMemberAccounts(reqUrl, partyId){
+    function destinationMemberAccounts(reqUrl, partyId){
     jQuery.ajax({
 
      url    : reqUrl,
@@ -113,5 +125,101 @@
     });
     }
     
+    
+    function getSourceMemberLoans(partyId){
+    	 var reqUrl = '/memberaccountmanagement/control/memberloanslist';
+         sourceMemberLoans(reqUrl, partyId);
+    }
+    
+    function getDestinationMemberLoans(partyId){
+    	 var reqUrl = '/memberaccountmanagement/control/memberloanslist';
+         destinationMemberLoans(reqUrl, partyId);
+    }
+    
+    //To Source Loans
+    function sourceMemberLoans(reqUrl, partyId){
+    jQuery.ajax({
+
+     url    : reqUrl,
+     type   : 'GET',
+     data   : {'partyId': partyId}, //here you can pass the parameters to  
+                                                   //the request if any.
+     success : function(data){
+				var options =  jQuery('select[name="sourceLoanApplicationId"]');
+				options.empty();
+				options.append($("<option />").val('').text('Please select Account ..'));
+				$.each(data, function(item, itemvalue) {
+				    options.append($("<option />").val(item).text(itemvalue));
+				});
+               },
+      error : function(errorData){
+
+              alert("Some error occurred while processing the request");
+              }
+    });
+    }
+    
+    //To Destination Loans
+    function destinationMemberLoans(reqUrl, partyId){
+    jQuery.ajax({
+
+     url    : reqUrl,
+     type   : 'GET',
+     data   : {'partyId': partyId}, //here you can pass the parameters to  
+                                                   //the request if any.
+     success : function(data){
+				var options =  jQuery('select[name="destLoanApplicationId"]');
+				options.empty();
+				options.append($("<option />").val('').text('Please select Account ..'));
+				$.each(data, function(item, itemvalue) {
+				    options.append($("<option />").val(item).text(itemvalue));
+				});
+               },
+      error : function(errorData){
+
+              alert("Some error occurred while processing the request");
+              }
+    });
+    }
+    
+    
+    //Repaid Amount
+     function getSourceRepaidAmount(reqUrl, loanApplicationId){
+    jQuery.ajax({
+
+     url    : reqUrl,
+     type   : 'GET',
+     data   : {'loanApplicationId': loanApplicationId}, //here you can pass the parameters to  
+                                                   //the request if any.
+     success : function(data){
+     			
+				 $('input[name="amountInSourceRepaid"]').val(data.amountInSourceRepaid);
+
+               },
+      error : function(errorData){
+
+              alert("Some error occurred while processing the request");
+              }
+    });
+    }
+    
+    function getDestinationRepaidAmount(reqUrl, loanApplicationId){
+    jQuery.ajax({
+
+     url    : reqUrl,
+     type   : 'GET',
+     data   : {'loanApplicationId': loanApplicationId}, //here you can pass the parameters to  
+                                                   //the request if any.
+     success : function(data){
+     			
+				 $('input[name="amountInDestinationRepaid"]').val(data.amountInDestinationRepaid);
+
+               },
+      error : function(errorData){
+
+              alert("Some error occurred while processing the request");
+              }
+    });
+    }
    
    </script>
