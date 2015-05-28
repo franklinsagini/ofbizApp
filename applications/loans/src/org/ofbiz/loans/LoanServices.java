@@ -27,6 +27,7 @@ import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
+import org.ofbiz.accountholdertransactions.LoanRepayments;
 import org.ofbiz.accountholdertransactions.LoanUtilities;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
@@ -2167,10 +2168,14 @@ public class LoanServices {
 		BigDecimal bdRemainingBalance = BigDecimal.ZERO;
 
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		bdRemainingBalance = getLoanAmount(delegator,
-				String.valueOf(loanApplicationId)).subtract(
-				getLoansRepaidByLoanApplicationId(loanApplicationId));
-
+//		bdRemainingBalance = getLoanAmount(delegator,
+//				String.valueOf(loanApplicationId)).subtract(
+//				getLoansRepaidByLoanApplicationId(loanApplicationId));
+		
+		bdRemainingBalance = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
+		
+		bdRemainingBalance = bdRemainingBalance.add(LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString()));
+		bdRemainingBalance = bdRemainingBalance.add(LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString()));
 		return bdRemainingBalance;
 
 	}
