@@ -1954,12 +1954,12 @@ public class LoanServices {
 				//Add Interest and insurance if they are -ve
 				
 				//TODO need some clarification on calculating the total paid amount
-				if ((genericValue.getBigDecimal("interestAmount") != null) && (genericValue.getBigDecimal("interestAmount").compareTo(BigDecimal.ZERO) == 1)){
+				if ((genericValue.getBigDecimal("interestAmount") != null) && (genericValue.getBigDecimal("interestAmount").compareTo(BigDecimal.ZERO) == -1)){
 					bdTotalRepayment = bdTotalRepayment.add(genericValue
 							.getBigDecimal("interestAmount"));
 				}
 				
-				if ((genericValue.getBigDecimal("insuranceAmount") != null) && (genericValue.getBigDecimal("insuranceAmount").compareTo(BigDecimal.ZERO) == 1)){
+				if ((genericValue.getBigDecimal("insuranceAmount") != null) && (genericValue.getBigDecimal("insuranceAmount").compareTo(BigDecimal.ZERO) == -1)){
 					bdTotalRepayment = bdTotalRepayment.add(genericValue
 							.getBigDecimal("insuranceAmount"));
 				}
