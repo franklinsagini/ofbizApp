@@ -27,6 +27,36 @@
          var reqUrl = '/memberaccountmanagement/control/totalrepaid';
          getDestinationRepaidAmount(reqUrl, loanApplicationId);
         });
+        
+     jQuery('input[name="principalAmount"]').change(function(){
+
+         var principalAmount = this.value;
+         var interestAmount = jQuery('input[name="interestAmount"]').val();
+         var insuranceAmount = jQuery('input[name="insuranceAmount"]').val();
+         
+         getAmountTotal(principalAmount, interestAmount, insuranceAmount);
+        });
+        
+       
+       jQuery('input[name="interestAmount"]').change(function(){
+
+         var interestAmount = this.value;
+         var principalAmount = jQuery('input[name="principalAmount"]').val();
+         var insuranceAmount = jQuery('input[name="insuranceAmount"]').val();
+         
+         getAmountTotal(principalAmount, interestAmount, insuranceAmount);
+        });
+        
+        
+       jQuery('input[name="insuranceAmount"]').change(function(){
+
+         var insuranceAmount = this.value;
+         var interestAmount = jQuery('input[name="interestAmount"]').val();
+         var principalAmount = jQuery('input[name="principalAmount"]').val();
+         
+         getAmountTotal(principalAmount, interestAmount, insuranceAmount);
+        });
+      
 
      });
      
@@ -220,6 +250,26 @@
               alert("Some error occurred while processing the request");
               }
     });
+    }
+    
+    
+    function getAmountTotal(principalAmount, interestAmount, insuranceAmount){
+    
+    	if (principalAmount == '')
+    		principalAmount = 0;
+
+    	if (interestAmount == '')
+    		interestAmount = 0;
+
+
+    	if (insuranceAmount == '')
+    		insuranceAmount = 0;
+    		
+    	var amount = parseFloat(principalAmount, 10) + parseFloat(interestAmount, 10) + parseFloat(insuranceAmount, 10);
+    	
+    	$('input[name="amount"]').val(amount);
+    	$('input[name="amountDisplay"]').val(amount);
+    	
     }
    
    </script>
