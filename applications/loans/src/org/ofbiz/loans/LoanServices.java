@@ -1175,6 +1175,9 @@ public class LoanServices {
 		// Get Number of Guarantors
 		Integer guarantersCount = getNumberOfGuarantors(delegator,
 				loanApplicationId);
+		
+		if (guarantersCount.intValue() <= 0)
+			return "";
 
 		// Computer, Percentage and Value for each Gurantor
 		BigDecimal bdGuaranteedPercentage = new BigDecimal(100).divide(
@@ -1187,6 +1190,37 @@ public class LoanServices {
 
 		updateGuarantors(bdGuaranteedPercentage, bdGuaranteedValue,
 				loanApplicationId, delegator);
+
+		return "";
+	}
+	
+	
+	public static String generateGuarantorPercentages(Long loanApplicationId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		// Get Loan Amount
+		BigDecimal bdLoanAmt = getLoanAmount(delegator, loanApplicationId.toString());
+		// Get Number of Guarantors
+		Integer guarantersCount = getNumberOfGuarantors(delegator,
+				loanApplicationId.toString());
+		
+		//if (!(guarantersCount.compareTo(new Integer(0)) > 1))
+		
+		
+		
+		if (guarantersCount.intValue() <= 0)
+			return "";
+
+		// Computer, Percentage and Value for each Gurantor
+		BigDecimal bdGuaranteedPercentage = new BigDecimal(100).divide(
+				new BigDecimal(guarantersCount), 6, RoundingMode.HALF_UP);
+		BigDecimal bdGuaranteedValue = bdLoanAmt.divide(new BigDecimal(
+				guarantersCount), 6, RoundingMode.HALF_UP);
+
+		// Update Gurantors with the Value of bdGuaranteedPercentage and
+		// bdGuaranteedValue
+
+		updateGuarantors(bdGuaranteedPercentage, bdGuaranteedValue,
+				loanApplicationId.toString(), delegator);
 
 		return "";
 	}

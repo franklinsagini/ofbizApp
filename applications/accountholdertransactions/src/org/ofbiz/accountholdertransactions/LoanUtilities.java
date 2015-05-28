@@ -291,7 +291,7 @@ public class LoanUtilities {
 
 		int duration = getMemberDurations(member.getDate("joinDate"));
 
-		if (duration < 6) {
+		if (duration < 3) {
 			oldEnough = false;
 		} else {
 			oldEnough = true;

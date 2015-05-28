@@ -257,6 +257,11 @@ under the License.
 		separate-columns="true" odd-row-style="alternate-row"
 		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="loanGuarantor">
 		
+		<actions>
+			<set field="statusName" value="FORWARDEDLOANS"/>
+	   		<set field="loanFowardedStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(statusName);}" type="Long"/> 
+			
+		</actions>
         <field name="loanGuarantorId"> <hidden/> </field>
         <field name="guarantorId" title="Guarantor">
                 <display-entity entity-name="Member" key-field-name="partyId"  description="${firstName} ${middleName} ${lastName}" also-hidden="false"/>
@@ -278,6 +283,16 @@ under the License.
         <field name="myGuaranteedLoans" title="My Guaranteed Loans" widget-style="buttontext">
             <hyperlink target="myGuaranteedLoans" description="My Guaranteed Loans" also-hidden="false">
                 <parameter param-name="guarantorId"/>
+            </hyperlink>
+        </field>
+        
+        
+        
+        <field name="deleteGuarantor" title="Delete Guarantor" widget-style="buttontext" use-when="${currentLoanStatusId}==${loanFowardedStatusId}">
+            <hyperlink target="deleteGuarantor" description="Delete Guarantor" also-hidden="false">
+                <parameter param-name="guarantorId"/>
+                <parameter param-name="loanGuarantorId"/>
+                <parameter param-name="loanApplicationId"/>
             </hyperlink>
         </field>
 		

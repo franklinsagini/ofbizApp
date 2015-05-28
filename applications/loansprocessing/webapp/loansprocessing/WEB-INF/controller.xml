@@ -128,8 +128,10 @@
 	<request-map uri="deleteLoanDeductionEvaluation">
 		<security https="true" auth="true" />
 		<event type="service" invoke="deleteLoanDeductionEvaluation" />
-		<response name="success" type="request-redirect-noparam"
-			value="addDeductions"></response>
+		<response name="success" type="request-redirect"
+			value="addDeductions" save-current-view="true">
+				<redirect-parameter name="loanApplicationId"/>
+			</response>
 		<response name="error" type="view" value="addDeductions" />
 	</request-map>
 	
@@ -194,6 +196,15 @@
 		<response name="success" type="view" value="viewapplicationprofile"
 			save-home-view="true" />
 	</request-map>
+	
+	
+		<request-map uri="viewguarantorapplicationprofile">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="viewguarantorapplicationprofile">
+			<redirect-parameter name="loanApplicationId"/>
+		</response>
+	</request-map>
+	
 
 	<!-- Loan Application Security -->
 	<!-- Start LoanApplicationSecurity -->
@@ -600,6 +611,15 @@
 		<response name="success" type="none">
 		</response>
 	</request-map>
+	
+	<request-map uri="deleteGuarantor" track-visit="true">
+		<event type="java" path="org.ofbiz.loansprocessing.LoansProcessingServices" invoke="deleteGuarantor"  name="preprocessor" />	
+		<response name="success" type="view" value="viewapplicationprofile" >
+			<redirect-parameter name="loanApplicationId"/>
+		</response>
+	</request-map>
+	
+	
 
 
 	<!-- View Mappings -->

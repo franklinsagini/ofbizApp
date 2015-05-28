@@ -676,8 +676,44 @@ public class LoansProcessingServices {
 
 		return json;
 	}
-
 	
+	
+	/*****
+	 * Delete Guarantor Record
+	 * */
+	public static String deleteGuarantor(HttpServletRequest request,
+			HttpServletResponse response) {
+		Long loanGuarantorId = Long.valueOf((String) request.getParameter("loanGuarantorId"));
+		Long loanApplicationId = Long.valueOf((String) request.getParameter("loanApplicationId"));
+		
+		log.info(" LLLLLLL Loan Guarantor ID "+loanGuarantorId);
+		//Find and delete loan guarantor record
+		Delegator delegator =  DelegatorFactoryImpl.getDelegator(null);
+		try {
+			delegator.removeByCondition("LoanGuarantor", EntityCondition.makeCondition("loanGuarantorId", loanGuarantorId));
+		} catch (GenericEntityException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		
+		//Update Guarantors
+		LoanServices.generateGuarantorPercentages(loanApplicationId);
+		
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write("");
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+		return "";
+	}	
 	/***
 	 * Check if the member trying to guarantee is a Board Member
 	 * */
@@ -685,6 +721,9 @@ public class LoansProcessingServices {
 		GenericValue member = LoanUtilities.getMember(guarantorId);
 
 		if (member == null)
+			return false;
+		
+		if (member.getString("memberCategory") == null)
 			return false;
 
 		if (member.getString("memberCategory").equals("BOARDMEMBER"))
@@ -698,6 +737,9 @@ public class LoansProcessingServices {
 		GenericValue member = LoanUtilities.getMember(guarantorId);
 
 		if (member == null)
+			return false;
+		
+		if (member.getString("memberCategory") == null)
 			return false;
 
 		if (member.getString("memberCategory").equals("EMPLOYEE"))

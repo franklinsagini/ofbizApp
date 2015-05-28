@@ -562,6 +562,10 @@
             	<condition-expr field-name="loanApplicationId" operator="equals" from-field="loanApplicationId"/>
             	<order-by field-name="-loanDeductionEvaluationId"/>
             </entity-condition>
+            
+			<set field="statusName" value="FORWARDEDLOANS"/>
+	   		<set field="loanFowardedStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(statusName);}" type="Long"/> 
+			
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateLoanDeductionEvaluation"/>
         <!-- field name="skillTypeId">
@@ -581,7 +585,13 @@
 	       
         <field name="twothirdAmt" title="Two Third Amount"  ><display></display></field>
         <field name="violationDecision" title="Violation Verdict"  ><display></display></field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+    	<field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext" use-when="${currentLoanStatusId}==${loanFowardedStatusId}">
+            <hyperlink target="deleteLoanDeductionEvaluation" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="loanApplicationId"/>
+                <parameter param-name="loanDeductionEvaluationId"/>
+            </hyperlink>
+        </field>
     </form>
     
     <!-- appraisal -->
