@@ -155,6 +155,7 @@ under the License.
                                
                             <#else>
                                 <fo:block>${releasedTo.firstName?if_exists} ${releasedTo.lastName?if_exists}</fo:block>
+                            
                             </#if>
                         </fo:table-cell>
 						
