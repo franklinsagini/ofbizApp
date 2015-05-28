@@ -2376,7 +2376,25 @@ under the License.
 		<attribute name="message" type="String" mode="IN"/>
 	</service> -->
 	
-	
+	<service name="sendMailNow" engine="java"	location="org.ofbiz.common.email.EmailServices" invoke="sendStaffMail_verge">
+    <description>Send E-Mail Service. partyId and communicationEventId aren't used by sendMail
+    but are passed down to storeEmailAsCommunication during the SECA chain. See sendMailInterface for more comments.</description>
+    <implements service="sendMailOnePartInterface"/>
+   <!--  <attribute name="message" type="String" mode="IN"/> -->
+      <auto-attributes mode="OUT" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    
+    <service name="sendMailNow_NonStaff" engine="java"	location="org.ofbiz.common.email.EmailServices" invoke="sendMail_verge">
+    <description>Send E-Mail Service. partyId and communicationEventId aren't used by sendMail
+    but are passed down to storeEmailAsCommunication during the SECA chain. See sendMailInterface for more comments.</description>
+    <implements service="sendMailOnePartInterface"/>
+   <!--  <attribute name="message" type="String" mode="IN"/> -->
+      <auto-attributes mode="OUT" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
 	
 	<service name="sendScheduledEmailNotificationNonStaff" engine="java"	location="org.ofbiz.common.email.EmailServices" invoke="sendMail_verge">
     <description>Send E-Mail Service. partyId and communicationEventId aren't used by sendMail
