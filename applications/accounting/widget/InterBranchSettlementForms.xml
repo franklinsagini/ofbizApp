@@ -41,7 +41,51 @@ under the License.
         <field use-when="fundingTypesContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
 
+<!-- ======================================PAYMENT TYPE +++++++++++++++++++++++++++++++++++++++++++++ -->
+    <form name="PaymentType" type="single" target="createPaymentType" focus-field-name="paymentTypeName" header-row-style="header-row" default-table-style="basic-table"
+        default-map-name="fundingTypesContext">
+        <alt-target use-when="fundingTypesContext!=null" target="UpdateSasraReport"/>
 
+        <field name="paymentTypeId">
+            <hidden/>
+        </field>
+
+        <field name="paymentTypeId" use-when="fundingTypesContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+            <display />
+        </field>
+
+        <field name="description" title="Name">
+            <text size="25"></text>
+        </field>
+
+        <field name="parentTypeId" title="Parent Type">
+            <drop-down allow-empty="false">
+                <entity-options key-field-name="paymentTypeId" description="${description}" entity-name="PaymentType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+
+                <!-- submitButton -->
+        <field use-when="fundingTypesContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field use-when="fundingTypesContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+    </form>
+
+    <form name="PaymentTypeList" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="UpdateSasraReport"
+        paginate-target="createFundingType" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="FundingTypes"></entity-condition>
+        </actions>
+        <field name="fundingTypeId"><display /></field>
+        <field name="fundingTypeName" title="Funding Type">
+            <display />
+        </field>
+         <field name="Contribution Limits">
+            <hyperlink target="FundingTypeRules" description="Contribution Limits">
+                <parameter param-name="fundingTypeId"/>
+            </hyperlink>
+        </field>
+    </form>
 
 
     <form name="FundingTypesList" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="UpdateSasraReport"
