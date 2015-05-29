@@ -463,7 +463,7 @@
 				}
 				
 				if (!isNotSixMonthOldNotFromOtherSacco){
-					alert('Must have been a member for at least 6 months or be from another sacco!!! ');
+					alert('Must have been a member for at least 3 months or be from another sacco!!! ');
 					return false;
 				}
 				
@@ -559,7 +559,7 @@
 		}
 		
 		if (!isOldEnough){
-			alert(' Member must have been in a sacco for 6 months to guarantee! ');
+			alert(' Member must have been in a sacco for 3 months to guarantee! ');
 			return false;
 		}
 		

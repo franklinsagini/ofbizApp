@@ -362,9 +362,10 @@ under the License.
                  <entity-and entity-name="LoanGuarantor" list="loanGuarantorsList">
                     <field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/>
                     <!--  order-by field-name="-changeDate"/ -->
+                    <order-by field-name="-loanGuarantorId"/>
                 </entity-and>
                 
-                
+                <set field="currentLoanStatusId" from-field="lookupLoanApplication.loanStatusId" type="Long" global="true"/>
                 
                 <entity-and list="partyContentList" entity-name="PartyContent">
                     <field-map field-name="partyId" from-field="parameters.partyId"/>
