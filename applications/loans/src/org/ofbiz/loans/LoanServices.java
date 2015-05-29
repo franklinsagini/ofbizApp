@@ -27,6 +27,7 @@ import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
+import org.ofbiz.accountholdertransactions.LoanRepayments;
 import org.ofbiz.accountholdertransactions.LoanUtilities;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
@@ -1175,6 +1176,9 @@ public class LoanServices {
 		// Get Number of Guarantors
 		Integer guarantersCount = getNumberOfGuarantors(delegator,
 				loanApplicationId);
+		
+		if (guarantersCount.intValue() <= 0)
+			return "";
 
 		// Computer, Percentage and Value for each Gurantor
 		BigDecimal bdGuaranteedPercentage = new BigDecimal(100).divide(
@@ -1187,6 +1191,37 @@ public class LoanServices {
 
 		updateGuarantors(bdGuaranteedPercentage, bdGuaranteedValue,
 				loanApplicationId, delegator);
+
+		return "";
+	}
+	
+	
+	public static String generateGuarantorPercentages(Long loanApplicationId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		// Get Loan Amount
+		BigDecimal bdLoanAmt = getLoanAmount(delegator, loanApplicationId.toString());
+		// Get Number of Guarantors
+		Integer guarantersCount = getNumberOfGuarantors(delegator,
+				loanApplicationId.toString());
+		
+		//if (!(guarantersCount.compareTo(new Integer(0)) > 1))
+		
+		
+		
+		if (guarantersCount.intValue() <= 0)
+			return "";
+
+		// Computer, Percentage and Value for each Gurantor
+		BigDecimal bdGuaranteedPercentage = new BigDecimal(100).divide(
+				new BigDecimal(guarantersCount), 6, RoundingMode.HALF_UP);
+		BigDecimal bdGuaranteedValue = bdLoanAmt.divide(new BigDecimal(
+				guarantersCount), 6, RoundingMode.HALF_UP);
+
+		// Update Gurantors with the Value of bdGuaranteedPercentage and
+		// bdGuaranteedValue
+
+		updateGuarantors(bdGuaranteedPercentage, bdGuaranteedValue,
+				loanApplicationId.toString(), delegator);
 
 		return "";
 	}
@@ -1915,6 +1950,19 @@ public class LoanServices {
 			if (genericValue.getBigDecimal("principalAmount") != null) {
 				bdTotalRepayment = bdTotalRepayment.add(genericValue
 						.getBigDecimal("principalAmount"));
+				
+				//Add Interest and insurance if they are -ve
+				
+				//TODO need some clarification on calculating the total paid amount
+				if ((genericValue.getBigDecimal("interestAmount") != null) && (genericValue.getBigDecimal("interestAmount").compareTo(BigDecimal.ZERO) == -1)){
+					bdTotalRepayment = bdTotalRepayment.add(genericValue
+							.getBigDecimal("interestAmount"));
+				}
+				
+				if ((genericValue.getBigDecimal("insuranceAmount") != null) && (genericValue.getBigDecimal("insuranceAmount").compareTo(BigDecimal.ZERO) == -1)){
+					bdTotalRepayment = bdTotalRepayment.add(genericValue
+							.getBigDecimal("insuranceAmount"));
+				}
 			}
 		}
 
@@ -2133,10 +2181,14 @@ public class LoanServices {
 		BigDecimal bdRemainingBalance = BigDecimal.ZERO;
 
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		bdRemainingBalance = getLoanAmount(delegator,
-				String.valueOf(loanApplicationId)).subtract(
-				getLoansRepaidByLoanApplicationId(loanApplicationId));
-
+//		bdRemainingBalance = getLoanAmount(delegator,
+//				String.valueOf(loanApplicationId)).subtract(
+//				getLoansRepaidByLoanApplicationId(loanApplicationId));
+		
+		bdRemainingBalance = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
+		
+		bdRemainingBalance = bdRemainingBalance.add(LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString()));
+		bdRemainingBalance = bdRemainingBalance.add(LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString()));
 		return bdRemainingBalance;
 
 	}
