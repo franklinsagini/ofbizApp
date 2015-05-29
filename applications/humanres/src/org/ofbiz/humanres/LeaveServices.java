@@ -668,8 +668,9 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 			String workflowDocumentTypeId = leave.getString("workflowDocumentTypeId");
 			String documentApprovalId = leave.getString("documentApprovalId");
 			double leaveDuration = leave.getDouble("leaveDuration");
+			String handover = leave.getString("handedOverTo");
 			Map carryOverLeaveDaysUsed = null;
-			GenericValue documentApproval = null; GenericValue leavelog = null; GenericValue emailRecord_approver = null; GenericValue emailRecord_applicant = null;
+			GenericValue documentApproval = null; GenericValue leavelog = null; GenericValue emailRecord_handover = null; GenericValue emailRecord_approver = null; GenericValue emailRecord_applicant = null;
 			documentApproval =  WorkflowServices.doFoward(delegator, organizationUnitId,	workflowDocumentTypeId, documentApprovalId);
 		log.info("=====================" +documentApproval);
 		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> WORKFLOW-DOC: " + workflowDocumentTypeId);
@@ -695,6 +696,22 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 					log.info("PPPPPPPPPPPPPPPPPPPPPPPP        carryOverLeaveDaysUsed" +carryOverLeaveDaysUsed);
 					log.info("gggggggggggg            leaveDurationRemainder" +carryOverLeaveDaysUsed.get("leaveDurationRemainder"));
 				}
+				
+				
+				GenericValue staff = null;
+
+				try {
+					staff = delegator.findOne("Person",
+							UtilMisc.toMap("partyId", partyId), false);
+				} catch (GenericEntityException e) {
+					Debug.logWarning(e.getMessage(), null);
+				}
+				
+				String payroll = staff.getString("employeeNumber");
+				String fname = staff.getString("firstName");
+				String sname = staff.getString("lastName");
+				
+
 
 
 			leavelog = delegator.makeValue("LeaveStatusLog", "leaveStsLogId", delegator.getNextSeqId("LeaveStatusLog"), 
@@ -714,12 +731,18 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		            "subject", "Leave Status", 
 		            "body", "Your Leave Application has a status:-["+approvalStatuslog+"]",
 		            "sendStatus", "NOTSEND");
-        
+			
+			emailRecord_handover = delegator.makeValue("StaffScheduledMail", "msgId", delegator.getNextSeqId("StaffScheduledMail"), 
+					"partyId", handover,
+		            "subject", "Responsibility Handover", 
+		            "body", "Leave application of ["+fname+" "+sname+"] Payroll:-["+payroll+"] has reached the status of:-["+approvalStatuslog+"] and they are handing over their resiponsibilities to you. Communicate to them for more information",
+		            "sendStatus", "NOTSEND");
 
 			try {
 				leavelog.create();
 				emailRecord_approver.create();
 				emailRecord_applicant.create();
+				emailRecord_handover.create();
 				
 			} catch (GenericEntityException e1) {
 				// TODO Auto-generated catch block
