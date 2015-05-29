@@ -360,6 +360,18 @@ public class MemberAccountManagementServices {
 		BigDecimal totalInsuranceDue = LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString());
 		BigDecimal totalPrincipalDue = LoanRepayments.getTotalPrincipaByLoanDue(loanApplicationId.toString());
 		
+		if (interestAmount == null)
+			interestAmount = BigDecimal.ZERO;
+		
+		if (insuranceAmount == null)
+			insuranceAmount = BigDecimal.ZERO;
+		
+		if (insuranceAmount == null)
+			insuranceAmount = BigDecimal.ZERO;
+
+		if (principalAmount == null)
+			principalAmount = BigDecimal.ZERO;
+		
 		BigDecimal loanInterest = interestAmount.multiply(new BigDecimal(-1));
 		BigDecimal loanInsurance = insuranceAmount.multiply(new BigDecimal(-1));
 		BigDecimal loanPrincipal = principalAmount.multiply(new BigDecimal(-1));
