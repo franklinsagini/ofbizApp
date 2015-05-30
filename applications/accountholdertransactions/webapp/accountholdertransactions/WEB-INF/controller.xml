@@ -578,6 +578,8 @@
 		<security https="true" auth="true" />
 		<event type="service" invoke="createExpectedPaymentSent" />
 		<response name="success" type="request-redirect" value="expectedPaymentBreakdown">
+			<redirect-parameter name="month"/>
+			<redirect-parameter name="employerCode"/>
 		</response>
 		<response name="error" type="view" value="expectedPaymentBreakdown" />
 	</request-map>
@@ -650,12 +652,22 @@
 	</request-map>
 
 	<!-- processReceivedPaymentBreakdown -->
-	<request-map uri="processReceivedPaymentBreakdown">
+	<!-- request-map uri="processReceivedPaymentBreakdown">
 		<security auth="true" https="true" />
 		<event type="java"
 			path="org.ofbiz.accountholdertransactions.RemittanceServices" invoke="processReceivedPaymentBreakdown" />
 		<response name="success" type="view" value="receivedPaymentBreakdown">
 			<redirect-parameter name="stationNumber" />
+			<redirect-parameter name="month" />
+		</response>
+		<response name="error" type="view" value="receivedPaymentBreakdownFailed" />
+	</request-map -->
+	
+	<request-map uri="processReceivedPaymentBreakdown">
+		<security https="true" auth="true" />
+		<event type="service" invoke="processReceivedPaymentBreakdown" />
+		<response name="success" type="request-redirect" value="receivedPaymentBreakdown">
+			<redirect-parameter name="employerCode" />
 			<redirect-parameter name="month" />
 		</response>
 		<response name="error" type="view" value="receivedPaymentBreakdownFailed" />

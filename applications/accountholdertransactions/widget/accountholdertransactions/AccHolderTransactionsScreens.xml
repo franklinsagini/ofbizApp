@@ -1595,6 +1595,7 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createExpectedPaymentSent" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+				<set field="expectedPaymentBreakdownCtx" from-field="parameters" />
 				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
 					property="KEN" default="KEN"/ -->
 				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
@@ -1663,6 +1664,10 @@
 
 						<section name="Expected Payment Breakdown">
 							<widgets>
+								<screenlet title="Find Expected Payment Sent">
+									<include-form name="FindExpectedPaymentSent"
+										location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml" />
+								</screenlet>
 								<screenlet title="Expected Payment Breakdown">
 									<include-form name="listExpectedPaymentSentBreakdown"
 										location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml" />
@@ -1705,6 +1710,7 @@
 
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createExpectedPaymentReceived" />
+				<set field="receivedPaymentBreakdownCtx" from-field="parameters" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
 				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
 					property="KEN" default="KEN"/ -->
@@ -1782,11 +1788,14 @@
 													</link> <link target="receivedPaymentBreakdowncsv" text="Generate Received 
 													Payment Breakdown CSV" style="buttontext"> <image url-mode="raw" src="${iconsLocation}/page_excel.png"/> 
 													</link -->
-
+												<!-- ?month=${month}&amp;employerCode=${employerCode} -->
 												<link
-													target="processReceivedPaymentBreakdown?month=${month}&amp;employerCode=${employerCode}"
+													target="processReceivedPaymentBreakdown"
 													text="Process Received Payments" style="buttontext">
+													<parameter param-name="month"/>
+													<parameter param-name="employerCode"/>
 													<image url-mode="raw" src="${iconsLocation}/add.png" />
+													
 												</link>
 
 											</container>
@@ -1823,6 +1832,10 @@
 
 						<section name="Received Payment Breakdown">
 							<widgets>
+							  <screenlet title="Find Expected Payment Sent">
+									<include-form name="FindExpectedPaymentReceived"
+										location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml" />
+								</screenlet>
 								<screenlet title="Received Payment Breakdown">
 									<include-form name="listExpectedPaymentReceivedBreakdown"
 										location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml" />

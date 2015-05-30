@@ -324,10 +324,11 @@ public class RemittanceServices {
 			GenericValue loanExpectation, GenericValue station, String month,
 			String stationNumber, String stationName, String employerCode,
 			String employerName, String employeeNames) {
-		
-		
-		BigDecimal bdLoanBalance = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplication.getLong("loanApplicationId"));
-		
+
+		BigDecimal bdLoanBalance = LoansProcessingServices
+				.getTotalLoanBalancesByLoanApplicationId(loanApplication
+						.getLong("loanApplicationId"));
+
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		GenericValue expectedPaymentSent = null;
 		expectedPaymentSent = delegator.makeValue("ExpectedPaymentSent",
@@ -343,12 +344,11 @@ public class RemittanceServices {
 						"memberNumber", member.getString("memberNumber"),
 
 						"loanNo", loanApplication.getString("loanNo"),
-						"employerNo", employerName, "amount",
-						bdLoanBalance,
+						"employerNo", employerName, "amount", bdLoanBalance,
 						"remitanceDescription", remitanceDescriptionBal,
 						"employeeName", employeeNames, "expectationType",
 						expectationTypeBal, "month", month));
-		
+
 		try {
 			delegator.createOrStore(expectedPaymentSent);
 		} catch (GenericEntityException e) {
@@ -958,9 +958,9 @@ public class RemittanceServices {
 						"employerCode", EntityOperator.EQUALS,
 						employerCode.trim()), EntityCondition.makeCondition(
 						"month", EntityOperator.EQUALS, month),
-						
-						 EntityCondition.makeCondition(
-									"expectationType", EntityOperator.NOT_EQUAL, "BALANCE")
+
+				EntityCondition.makeCondition("expectationType",
+						EntityOperator.NOT_EQUAL, "BALANCE")
 
 				), EntityOperator.AND);
 
@@ -1163,6 +1163,104 @@ public class RemittanceServices {
 
 		return totalAmount;
 	}
+	
+	/****
+	 * @author Japheth Odonya  @when May 30, 2015 11:43:49 PM
+	 * 
+	 * Check that the station has already been processed
+	 * 
+	 * */
+	public static synchronized String checkStationAlreadyProcessed(Map<String, String> userLogin, String employerCode, String month){
+		employerCode = employerCode.trim();
+		month = month.trim();
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		EntityConditionList<EntityExpr> expectedPaymentReceivedConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"employerCode", EntityOperator.EQUALS,
+						employerCode.trim()), EntityCondition.makeCondition(
+						"month", EntityOperator.EQUALS, month),
+						EntityCondition.makeCondition("processed",
+								EntityOperator.EQUALS, null)
+
+				), EntityOperator.AND);
+		
+		List<GenericValue> expectedPaymentReceivedELI = new ArrayList<GenericValue>();
+
+		try {
+			expectedPaymentReceivedELI = delegator.findList(
+					"ExpectedPaymentReceived",
+					expectedPaymentReceivedConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if ((expectedPaymentReceivedELI == null) || (expectedPaymentReceivedELI.size() < 1)){
+			log.info("NNNNNNNN  processed already");
+			return "processed";
+		}
+		
+		log.info("NNNNNNNN Not processed yet");
+		return "notprocessed";
+	}
+
+	/***
+	 * @author Japheth Odonya  @when May 30, 2015 11:25:45 PM
+	 * Check that all the Payroll Numbers in the Received actually exist in the system,
+	 * otherwise complain and dont continue
+	 * */
+	public static synchronized String checkMembersPayrollNumbersExist(
+			Map<String, String> userLogin, String employerCode, String month) {
+
+		employerCode = employerCode.trim();
+		// (String) request.getParameter("employerCode")
+		// .trim();
+		month = month.trim();
+
+		log.info("SSSSSSSSSSSSSSS  Employer Code " + employerCode);
+		log.info("SSSSSSSSSSSSSSS  Month " + month);
+
+		if (!AllPayrollCodesExist(employerCode, month)) {
+			return "fail";
+		}
+
+		return "success";
+	}
+
+	/***
+	 * @author Japheth Odonya  @when May 30, 2015 11:27:22 PM
+	 * Check that all members being processed actually have 
+	 * FOSA Savings Account
+	 * 999 account code, if any of them does not have then do not continue
+	 * 
+	 * */
+	public static synchronized String checkMembersHaveFosaSavingsAccount(
+			Map<String, String> userLogin, String employerCode, String month) {
+		return "success";
+	}
+
+	/***
+	 * @author Japheth Odonya  @when May 30, 2015 11:27:33 PM
+	 * Check that all members do have a Member Deposit Account,
+	 * (code 901)
+	 * if any of them does not have then do not continue
+	 * */
+	public static synchronized String checkMembersHaveMemberDepositAccount(
+			Map<String, String> userLogin, String employerCode, String month) {
+		return "success";
+	}
+
+	/***
+	 * @author Japheth Odonya  @when May 30, 2015 11:28:15 PM
+	 * Check that each of the members has a Share Capital Account, if any of the members does not have a 
+	 * share capital account (code 902) then do not procede
+	 * */
+	public static synchronized String checkMembersHaveShareCapitalAccount(
+			Map<String, String> userLogin, String employerCode, String month) {
+		return "success";
+	}
 
 	/****
 	 * @author Japheth Odonya @when Sep 23, 2014 8:40:10 AM
@@ -1170,15 +1268,16 @@ public class RemittanceServices {
 	 *         Update Process Received Payments
 	 * 
 	 * */
+	// HttpServletRequest request, HttpServletResponse response
 	public static synchronized String processReceivedPaymentBreakdown(
-			HttpServletRequest request, HttpServletResponse response) {
+			Map<String, String> userLogin, String employerCode, String month) {
 		countActions++;
 		log.info(" TTTTTTT The time is "
 				+ new DateTime(Calendar.getInstance().getTimeInMillis())
 				+ " CCCC counted " + countActions);
-		session = request.getSession();
-		Map<String, String> userLogin = (Map<String, String>) session
-				.getAttribute("userLogin");
+		// session = request.getSession();
+		// Map<String, String> userLogin = (Map<String, String>) session
+		// .getAttribute("userLogin");
 
 		// request
 		// .getAttribute("userLogin");
@@ -1205,17 +1304,19 @@ public class RemittanceServices {
 		// }
 
 		// Update Receipts to show generated and post
-		Delegator delegator = (Delegator) request.getAttribute("delegator");
-		String employerCode = (String) request.getParameter("employerCode")
-				.trim();
-		String month = (String) request.getParameter("month");
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		// (Delegator) request.getAttribute("delegator");
+		employerCode = employerCode.trim();
+		// (String) request.getParameter("employerCode")
+		// .trim();
+		month = month.trim();
 
 		log.info("SSSSSSSSSSSSSSS  Employer Code " + employerCode);
 		log.info("SSSSSSSSSSSSSSS  Month " + month);
 
-		if (!AllPayrollCodesExist(employerCode, month)) {
-			return "fail";
-		}
+		// if (!AllPayrollCodesExist(employerCode, month)) {
+		// return "fail";
+		// }
 		/**
 		 * <field name="processed" type="indicator"></field> <field
 		 * name="dateProcessed" type="date-time"></field>
@@ -1472,19 +1573,19 @@ public class RemittanceServices {
 					bdInsurance, branchId, acctgTransId, acctgTransType);
 		}
 
-		Writer out;
-		try {
-			out = response.getWriter();
-			out.write("");
-			out.flush();
-		} catch (IOException e) {
-			try {
-				throw new EventHandlerException(
-						"Unable to get response writer", e);
-			} catch (EventHandlerException e1) {
-				e1.printStackTrace();
-			}
-		}
+		// Writer out;
+		// try {
+		// out = response.getWriter();
+		// out.write("");
+		// out.flush();
+		// } catch (IOException e) {
+		// try {
+		// throw new EventHandlerException(
+		// "Unable to get response writer", e);
+		// } catch (EventHandlerException e1) {
+		// e1.printStackTrace();
+		// }
+		// }
 		return "success";
 	}
 
