@@ -32,7 +32,7 @@ import org.ofbiz.party.party.SaccoUtility;
 public class OnlineRemittanceProcessingServices {
 	
 	public static String SYSTEMSHARECAPITALCODE = "902";
-	public static String KTDASTATIONSHARECAPITALCODE = "D136";
+	public static String ONLINESTATIONSHARECAPITALCODE = "D136";
 	
 	private static Logger log = Logger
 			.getLogger(OnlineRemittanceProcessingServices.class);
@@ -380,6 +380,8 @@ public class OnlineRemittanceProcessingServices {
 
 		GenericValue member = null;
 		String names = "";
+		String systemShareCapitalCode = "";
+		String onlineShareCapitalCode = "";
 		//If already pushed say data already pulled
 		for (GenericValue genericValue : expectedPaymentSentELI) {
 			//Add this to the exp
@@ -393,9 +395,25 @@ public class OnlineRemittanceProcessingServices {
 				sqlproc.setValue(member.getString("employeeNumber"));
 				
 				//if remittance code is the share capital code then 
+				systemShareCapitalCode = getSystemShareCapitalCode();
+				
+				if ((systemShareCapitalCode == null) || (systemShareCapitalCode.equals("")))
+					systemShareCapitalCode = SYSTEMSHARECAPITALCODE;
+				
+				onlineShareCapitalCode = getOnlineShareCapitalCode();
+				if ((onlineShareCapitalCode == null) || (onlineShareCapitalCode.equals("")))
+					onlineShareCapitalCode = ONLINESTATIONSHARECAPITALCODE;
+				
+				//Check if the code in the data being processes is a code of intrest - the share capital code in this case
+				if (genericValue.getString("remitanceCode").trim().equals(systemShareCapitalCode.trim())){
+					//Replace the code with the online code
+					sqlproc.setValue(onlineShareCapitalCode);
+				} else{
+					//Leave the code as is
+					sqlproc.setValue(genericValue.getString("remitanceCode"));
+				}
 				
 				
-				sqlproc.setValue(genericValue.getString("remitanceCode"));
 				sqlproc.setValue(genericValue.getBigDecimal("amount"));
 				sqlproc.setValue(genericValue.getString("remitanceDescription"));
 				sqlproc.setValue(member.getString("payrollNumber"));
@@ -435,6 +453,54 @@ public class OnlineRemittanceProcessingServices {
 	}
 	
 	
+	private static String getSystemShareCapitalCode() {
+		GenericValue stationProductCodeMap = null;
+		List<GenericValue> stationProductCodeMapELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<String> stationCodeMapOrderFields = new ArrayList<String>();
+		stationCodeMapOrderFields.add("-stationProductCodeMapId");
+		try {
+			stationProductCodeMapELI = delegator.findList("StationProductCodeMap",
+					null, null, stationCodeMapOrderFields,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		if (stationProductCodeMapELI == null)
+			return null;
+		if (stationProductCodeMapELI.size() < 1)
+			return  null;
+			
+
+		stationProductCodeMap = stationProductCodeMapELI.get(0);
+		return stationProductCodeMap.getString("systemShareCapitalCode");
+	}
+	
+	private static String getOnlineShareCapitalCode() {
+		GenericValue stationProductCodeMap = null;
+		List<GenericValue> stationProductCodeMapELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<String> stationCodeMapOrderFields = new ArrayList<String>();
+		stationCodeMapOrderFields.add("-stationProductCodeMapId");
+		try {
+			stationProductCodeMapELI = delegator.findList("StationProductCodeMap",
+					null, null, stationCodeMapOrderFields,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		if (stationProductCodeMapELI == null)
+			return null;
+		if (stationProductCodeMapELI.size() < 1)
+			return  null;
+			
+
+		stationProductCodeMap = stationProductCodeMapELI.get(0);
+		return stationProductCodeMap.getString("onlineShareCapitalCode");
+	}
+
 	private static Boolean stationAlreadyPushed(String employerCode,
 			String month) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -579,6 +645,8 @@ public class OnlineRemittanceProcessingServices {
 		}
 		
 		int count = 0;
+		String onlineShareCapitalCode = "";
+		String systemShareCapitalCode = "";
 		try {
 			while((rsExpected != null) && (rsExpected.next())){
 				//Get the pulled item and add to list
@@ -586,7 +654,24 @@ public class OnlineRemittanceProcessingServices {
 				log.info(count+" Employer Code "+rsExpected.getString("employercode")+" Month "+rsExpected.getString("Month")+" Amount "+rsExpected.getBigDecimal("Amount"));
 				
 				String payrollNo = rsExpected.getString("PayrollNo");
+				
+				//if remittance code is the share capital code then 
+				systemShareCapitalCode = getSystemShareCapitalCode();
+				
+				if ((systemShareCapitalCode == null) || (systemShareCapitalCode.equals("")))
+					systemShareCapitalCode = SYSTEMSHARECAPITALCODE;
+				
+				onlineShareCapitalCode = getOnlineShareCapitalCode();
+				if ((onlineShareCapitalCode == null) || (onlineShareCapitalCode.equals("")))
+					onlineShareCapitalCode = ONLINESTATIONSHARECAPITALCODE;
+				
 				String remitanceCode = rsExpected.getString("Rem Code");
+				//Check if the code in the data being processes is a code of intrest - the share capital code in this case
+				if (remitanceCode.trim().equals(onlineShareCapitalCode.trim())){
+					//Replace the code with the System Share Capital Code
+					remitanceCode = systemShareCapitalCode;
+				} 
+				
 				String loanNo = String.valueOf(rsExpected.getLong("Loan No"));
 				
 				String remitanceDescription = rsExpected.getString("Rem code Description");
