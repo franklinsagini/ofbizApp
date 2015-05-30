@@ -31,6 +31,9 @@ import org.ofbiz.party.party.SaccoUtility;
 
 public class OnlineRemittanceProcessingServices {
 	
+	public static String SYSTEMSHARECAPITALCODE = "902";
+	public static String KTDASTATIONSHARECAPITALCODE = "D136";
+	
 	private static Logger log = Logger
 			.getLogger(OnlineRemittanceProcessingServices.class);
 
@@ -388,6 +391,10 @@ public class OnlineRemittanceProcessingServices {
 				sqlproc.setValue(month);
 				sqlproc.setValue(genericValue.getString("loanNo").trim());
 				sqlproc.setValue(member.getString("employeeNumber"));
+				
+				//if remittance code is the share capital code then 
+				
+				
 				sqlproc.setValue(genericValue.getString("remitanceCode"));
 				sqlproc.setValue(genericValue.getBigDecimal("amount"));
 				sqlproc.setValue(genericValue.getString("remitanceDescription"));

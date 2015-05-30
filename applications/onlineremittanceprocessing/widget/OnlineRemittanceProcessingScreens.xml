@@ -157,6 +157,49 @@
 		</section>
 	</screen>
 	
+	<!-- stationCodeMap -->
+	<screen name="stationProductCodeMap">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Map Station Product Code" />
+				<set field="headerItem" value="StationProductCodeMap" />
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="createStationProductCodeMap" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+				
+				<property-to-field field="defaultCountryGeoId"
+					resource="general" property="KEN" default="KEN" />
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+
+						<section>
+							<widgets>
+								<screenlet title="Map Station Product Code">
+									<include-form name="NewStationProductCodeMap"
+										location="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<!-- screenlet> <include-form name="FindLoansForwarded" location="component://loansprocessing/widget/loansprocessingForms.xml"/> 
+									</screenlet -->
+								<screenlet title="Map Station Product Code">
+									<include-form name="listStationProductCodeMap"
+										location="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+
+
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
 		<!-- 
 		showStationPushStatus
 	
