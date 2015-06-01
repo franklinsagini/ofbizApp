@@ -670,8 +670,20 @@
 			<redirect-parameter name="employerCode" />
 			<redirect-parameter name="month" />
 		</response>
-		<response name="error" type="view" value="receivedPaymentBreakdownFailed" />
+		<response name="error" type="view" value="receivedPaymentBreakdown" />
 	</request-map>
+	
+	<!-- removeReceivedImportedPaymentBreakdown -->
+		<request-map uri="removeReceivedImportedPaymentBreakdown">
+		<security https="true" auth="true" />
+		<event type="service" invoke="removeReceivedImportedPaymentBreakdown" />
+		<response name="success" type="request-redirect" value="receivedPaymentBreakdown">
+			<redirect-parameter name="employerCode" />
+			<redirect-parameter name="month" />
+		</response>
+		<response name="error" type="view" value="receivedPaymentBreakdown" />
+	</request-map>
+	
 
 	<request-map uri="codesSetup">
 		<security https="true" auth="true" />

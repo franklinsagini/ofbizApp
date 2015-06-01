@@ -701,14 +701,17 @@ under the License.
     	<alias entity-alias="M" name="stationId" group-by="true" />
     </view-entity>
     
-   	<entity entity-name="MissingMemberLog" package-name="org.ofbiz.salaryprocessing"
+   	<entity entity-name="MissingMemberLog" package-name="org.ofbiz.accountholdertransactions"
 		title="MissingMemberLog Entity">
 		
 		<field name="missingMemberLogId" type="id-vlong-int"   enable-audit-log="true"></field>
 		<field name="isActive" type="indicator"   enable-audit-log="true"></field>
 		<field name="createdBy" type="id"   enable-audit-log="true"></field>
 		<field name="employerCode" type="id"   enable-audit-log="true"></field>
+		<field name="employerName" type="name"   enable-audit-log="true"></field>
+		
 		<field name="payrollNumber" type="id"   enable-audit-log="true"></field>
+		<field name="names" type="name"   enable-audit-log="true"></field>
 		<field name="month" type="id"   enable-audit-log="true"></field>
 		<prim-key field="missingMemberLogId"/>
 	</entity>
@@ -737,6 +740,17 @@ under the License.
     		</entity-condition -->
     	</view-link>
     	
+    </view-entity>
+    
+    <!-- Received Payroll Numbers -->
+    <view-entity entity-name="ExpectedPaymentReceivedPayrolls" package-name="org.ofbiz.accountholdertransactions">
+    	<member-entity entity-alias="PR" entity-name="ExpectedPaymentReceived"></member-entity>
+    	<!-- member-entity entity-alias="TR" entity-name="Treasury"></member-entity>
+    	<alias entity-alias="TT" name="sourceTreasury" group-by="true"></alias>
+    	<alias entity-alias="TR" name="name" group-by="true"/ --> 
+    	<alias entity-alias="PR" name="payrollNo" group-by="true" />
+    	<alias entity-alias="PR" name="employerCode" group-by="true" />
+    	<alias entity-alias="PR" name="month" group-by="true"  />
     </view-entity>
     
 </entitymodel>

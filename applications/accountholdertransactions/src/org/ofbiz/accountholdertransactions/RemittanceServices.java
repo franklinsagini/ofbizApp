@@ -54,6 +54,7 @@ public class RemittanceServices {
 	public static Logger log = Logger.getLogger(RemittanceServices.class);
 	public static String MEMBER_DEPOSIT_CODE = "901";
 	public static String SHARE_CAPITAL_CODE = "902";
+	public static String FOSA_SAVINGS_CODE = "999";
 	public static Long countActions;
 
 	public static HttpSession session;
@@ -1163,19 +1164,20 @@ public class RemittanceServices {
 
 		return totalAmount;
 	}
-	
+
 	/****
-	 * @author Japheth Odonya  @when May 30, 2015 11:43:49 PM
+	 * @author Japheth Odonya @when May 30, 2015 11:43:49 PM
 	 * 
-	 * Check that the station has already been processed
+	 *         Check that the station has already been processed
 	 * 
 	 * */
-	public static synchronized String checkStationAlreadyProcessed(Map<String, String> userLogin, String employerCode, String month){
+	public static synchronized String checkStationAlreadyProcessed(
+			Map<String, String> userLogin, String employerCode, String month) {
 		employerCode = employerCode.trim();
 		month = month.trim();
-		
+
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		
+
 		EntityConditionList<EntityExpr> expectedPaymentReceivedConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"employerCode", EntityOperator.EQUALS,
@@ -1185,7 +1187,7 @@ public class RemittanceServices {
 								EntityOperator.EQUALS, null)
 
 				), EntityOperator.AND);
-		
+
 		List<GenericValue> expectedPaymentReceivedELI = new ArrayList<GenericValue>();
 
 		try {
@@ -1196,20 +1198,21 @@ public class RemittanceServices {
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
-		
-		if ((expectedPaymentReceivedELI == null) || (expectedPaymentReceivedELI.size() < 1)){
+
+		if ((expectedPaymentReceivedELI == null)
+				|| (expectedPaymentReceivedELI.size() < 1)) {
 			log.info("NNNNNNNN  processed already");
 			return "processed";
 		}
-		
+
 		log.info("NNNNNNNN Not processed yet");
 		return "notprocessed";
 	}
 
 	/***
-	 * @author Japheth Odonya  @when May 30, 2015 11:25:45 PM
-	 * Check that all the Payroll Numbers in the Received actually exist in the system,
-	 * otherwise complain and dont continue
+	 * @author Japheth Odonya @when May 30, 2015 11:25:45 PM Check that all the
+	 *         Payroll Numbers in the Received actually exist in the system,
+	 *         otherwise complain and dont continue
 	 * */
 	public static synchronized String checkMembersPayrollNumbersExist(
 			Map<String, String> userLogin, String employerCode, String month) {
@@ -1230,35 +1233,267 @@ public class RemittanceServices {
 	}
 
 	/***
-	 * @author Japheth Odonya  @when May 30, 2015 11:27:22 PM
-	 * Check that all members being processed actually have 
-	 * FOSA Savings Account
-	 * 999 account code, if any of them does not have then do not continue
+	 * @author Japheth Odonya @when May 30, 2015 11:27:22 PM Check that all
+	 *         members being processed actually have FOSA Savings Account 999
+	 *         account code, if any of them does not have then do not continue
 	 * 
 	 * */
 	public static synchronized String checkMembersHaveFosaSavingsAccount(
 			Map<String, String> userLogin, String employerCode, String month) {
+		
+		log.info("FFFFFFFFFFFF Checking FOSA Savings!!!!!!!!!!!!!! ");
+
+		// Get all payroll numbers and make sure the members have FOSA Savings
+		// Account
+		List<GenericValue> receivedPayrollELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		EntityConditionList<EntityExpr> receivedPayrollsConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"employerCode", EntityOperator.EQUALS, employerCode),
+
+				EntityCondition.makeCondition("month", EntityOperator.EQUALS,
+						month)
+
+				), EntityOperator.AND);
+		try {
+			receivedPayrollELI = delegator.findList(
+					"ExpectedPaymentReceivedPayrolls",
+					receivedPayrollsConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		Boolean failed = false;
+		// Clear the missing log - delete everything from it
+		clearMissingMember(month, employerCode);
+		String payrollNo = "";
+		Long count = 0L;
+		List<GenericValue> listMissingMemberLogELI = new ArrayList<GenericValue>();
+		for (GenericValue genericValue : receivedPayrollELI) {
+			payrollNo = genericValue.getString("payrollNo");
+			log.info(++count+"FFFFFFFFFFFF Checking FOSA Savings!!!!!!!!!!!!!! for "+payrollNo);
+			if (!hasAccount(FOSA_SAVINGS_CODE, payrollNo.trim())) {
+				failed = true;
+
+				// Add the member to the missing log
+				log.info("AAAAAAAAAAAAAAAA Adding a member!!!!!!!!!!!!!! for "+payrollNo);
+				addMissingMemberLog(userLogin, payrollNo, month, employerCode);
+			}
+
+		}
+
+		if (failed){
+			try {
+				TransactionUtil.begin();
+			} catch (GenericTransactionException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			try {
+				delegator.storeAll(listMissingMemberLogELI);
+			} catch (GenericEntityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				TransactionUtil.begin();
+			} catch (GenericTransactionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return "failed";
+		}
+		
+		log.info(" RRRRRRRR Received Payrolls Count is --- "
+				+ receivedPayrollELI.size());
+
 		return "success";
 	}
 
 	/***
-	 * @author Japheth Odonya  @when May 30, 2015 11:27:33 PM
-	 * Check that all members do have a Member Deposit Account,
-	 * (code 901)
-	 * if any of them does not have then do not continue
+	 * @author Japheth Odonya @when Jun 1, 2015 1:31:56 PM
+	 * 
+	 *         Clear the Missing Member Log of the records for the Month and
+	 *         Employer Code
+	 * */
+	private static void clearMissingMember(String month, String employerCode) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		EntityConditionList<EntityExpr> receivedPayrollsConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"employerCode", EntityOperator.EQUALS, employerCode),
+
+				EntityCondition.makeCondition("month", EntityOperator.EQUALS,
+						month)
+
+				), EntityOperator.AND);
+
+		try {
+			delegator.removeByCondition("MissingMemberLog",
+					receivedPayrollsConditions);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/****
+	 * @author Japheth Odonya @when Jun 1, 2015 1:29:50 PM Adding a member to
+	 *         the missing member log, it could include the members missing FOSA
+	 *         Savings Account, Payroll Numbers, Member Deposits or Share
+	 *         Capital
+	 * */
+	private static void addMissingMemberLog(Map<String, String> userLogin,
+			String payrollNo, String month, String employerCode) {
+		GenericValue missingMemberLog = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		Long missingMemberLogId = delegator.getNextSeqIdLong(
+				"MissingMemberLog");
+		
+		String names = LoanUtilities.getMemberName(payrollNo);
+		
+		GenericValue station = LoanUtilities.getStation(LoanUtilities.getStationId(employerCode));
+		
+		missingMemberLog = delegator.makeValue("MissingMemberLog", UtilMisc
+				.toMap("missingMemberLogId", missingMemberLogId, "isActive",
+						"Y", "createdBy", userLogin.get("userLoginId"),
+						"employerCode", employerCode.trim(),
+						
+						"payrollNumber",
+						payrollNo,
+						
+						"employerName",
+						station.getString("employerName"),
+						
+						"names",
+						names,
+						
+
+						"month", month.trim()));
+		
+		log.info(" for Reall .... FFFFFFF Just added a Missing Member Log");
+		
+		try {
+			TransactionUtil.begin();
+			delegator.create(missingMemberLog);
+			TransactionUtil.commit();
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private static boolean hasAccount(String accountCode, String payrollNo) {
+		// TODO Check of a member , given payroll number has an account of the
+		// product given
+		Long accountProductId = LoanUtilities.getAccountProductGivenCodeId(
+				accountCode).getLong("accountProductId");
+
+		Long partyId = LoanUtilities.getMemberId(payrollNo);
+
+		Long memberAccountId = LoanUtilities
+				.getMemberAccountIdFromMemberAccount(partyId, accountProductId);
+
+		if (memberAccountId != null)
+			return true;
+
+		return false;
+	}
+
+	/***
+	 * @author Japheth Odonya @when May 30, 2015 11:27:33 PM Check that all
+	 *         members do have a Member Deposit Account, (code 901) if any of
+	 *         them does not have then do not continue
 	 * */
 	public static synchronized String checkMembersHaveMemberDepositAccount(
 			Map<String, String> userLogin, String employerCode, String month) {
+		List<GenericValue> receivedPayrollELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		EntityConditionList<EntityExpr> receivedPayrollsConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"employerCode", EntityOperator.EQUALS, employerCode),
+
+				EntityCondition.makeCondition("month", EntityOperator.EQUALS,
+						month)
+
+				), EntityOperator.AND);
+		try {
+			receivedPayrollELI = delegator.findList(
+					"ExpectedPaymentReceivedPayrolls",
+					receivedPayrollsConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		Boolean failed = false;
+		// Clear the missing log - delete everything from it
+		clearMissingMember(month, employerCode);
+		String payrollNo = "";
+		for (GenericValue genericValue : receivedPayrollELI) {
+			payrollNo = genericValue.getString("payrollNo");
+			if (!hasAccount(MEMBER_DEPOSIT_CODE, payrollNo.trim())) {
+				failed = true;
+
+				// Add the member to the missing log
+				addMissingMemberLog(userLogin, payrollNo, month, employerCode);
+			}
+
+		}
+
+		if (failed){
+			return "failed";
+		}
+		log.info(" RRRRRRRR Received Payrolls Count is --- "
+				+ receivedPayrollELI.size());
+
 		return "success";
 	}
 
 	/***
-	 * @author Japheth Odonya  @when May 30, 2015 11:28:15 PM
-	 * Check that each of the members has a Share Capital Account, if any of the members does not have a 
-	 * share capital account (code 902) then do not procede
+	 * @author Japheth Odonya @when May 30, 2015 11:28:15 PM Check that each of
+	 *         the members has a Share Capital Account, if any of the members
+	 *         does not have a share capital account (code 902) then do not
+	 *         procede
 	 * */
 	public static synchronized String checkMembersHaveShareCapitalAccount(
 			Map<String, String> userLogin, String employerCode, String month) {
+		List<GenericValue> receivedPayrollELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		EntityConditionList<EntityExpr> receivedPayrollsConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"employerCode", EntityOperator.EQUALS, employerCode),
+
+				EntityCondition.makeCondition("month", EntityOperator.EQUALS,
+						month)
+
+				), EntityOperator.AND);
+		try {
+			receivedPayrollELI = delegator.findList(
+					"ExpectedPaymentReceivedPayrolls",
+					receivedPayrollsConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		Boolean failed = false;
+		// Clear the missing log - delete everything from it
+		clearMissingMember(month, employerCode);
+		String payrollNo = "";
+		for (GenericValue genericValue : receivedPayrollELI) {
+			payrollNo = genericValue.getString("payrollNo");
+			if (!hasAccount(SHARE_CAPITAL_CODE, payrollNo.trim())) {
+				failed = true;
+
+				// Add the member to the missing log
+				addMissingMemberLog(userLogin, payrollNo, month, employerCode);
+			}
+
+		}
+
+		if (failed){
+			return "failed";
+		}
+		
+		log.info(" RRRRRRRR Received Payrolls Count is --- "
+				+ receivedPayrollELI.size());
+
 		return "success";
 	}
 
@@ -2177,7 +2412,7 @@ public class RemittanceServices {
 		log.info("SSSSSSSSSSSSSSS  Month " + month);
 
 		// Get Received Records and Delete them
-		removeReceivedRecords(employerCode, month);
+		//removeReceivedRecords(employerCode, month);
 
 		// Get the Missing Records and Delete them
 		removeMissingLog(employerCode, month);
@@ -2277,7 +2512,7 @@ public class RemittanceServices {
 						"employerCode", EntityOperator.EQUALS,
 						employerCode.trim()), EntityCondition.makeCondition(
 						"month", EntityOperator.EQUALS, month), EntityCondition
-						.makeCondition("processed", EntityOperator.EQUALS, "Y")
+						.makeCondition("processed", EntityOperator.EQUALS, null)
 
 				), EntityOperator.AND);
 
@@ -2292,9 +2527,9 @@ public class RemittanceServices {
 		}
 
 		if (expectedPaymentReceivedELI.size() > 0) {
-			return true;
-		} else {
 			return false;
+		} else {
+			return true;
 		}
 	}
 
@@ -2317,6 +2552,40 @@ public class RemittanceServices {
 
 		return (totalRemitted.compareTo(chequeAmount) == 0);
 
+	}
+
+	/****
+	 * @author Japheth Odonya  @when Jun 1, 2015 2:25:37 PM
+	 * 
+	 * Deleting the Records for Received expectations for the specified month and employercode
+	 * 
+	 * */
+	public static String deleteReceivedPaymentBreakdown(
+			Map<String, String> userLogin, String employerCode, String month) {
+
+		// DELETE FROM ExpectedPaymentReceived ALL THE DATA MONTH AND EMPLOYER
+		// CODE
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		EntityConditionList<EntityExpr> receivedPayrollsConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"employerCode", EntityOperator.EQUALS, employerCode),
+
+				EntityCondition.makeCondition("month", EntityOperator.EQUALS,
+						month)
+
+				), EntityOperator.AND);
+
+		try {
+			delegator.removeByCondition("ExpectedPaymentReceived",
+					receivedPayrollsConditions);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "fail";
+		}
+
+		return "success";
 	}
 
 }
