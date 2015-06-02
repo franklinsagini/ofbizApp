@@ -713,6 +713,13 @@ under the License.
 		<field name="payrollNumber" type="id"   enable-audit-log="true"></field>
 		<field name="names" type="name"   enable-audit-log="true"></field>
 		<field name="month" type="id"   enable-audit-log="true"></field>
+		
+		
+		<field name="code" type="id"   enable-audit-log="true"></field>
+		<field name="productName" type="name"   enable-audit-log="true"></field>
+		
+		<field name="loanNo" type="name"   enable-audit-log="true"></field>
+		
 		<prim-key field="missingMemberLogId"/>
 	</entity>
 	
@@ -751,6 +758,35 @@ under the License.
     	<alias entity-alias="PR" name="payrollNo" group-by="true" />
     	<alias entity-alias="PR" name="employerCode" group-by="true" />
     	<alias entity-alias="PR" name="month" group-by="true"  />
+    </view-entity>
+    
+    <view-entity entity-name="ExpectedPaymentReceivedProducts" package-name="org.ofbiz.accountholdertransactions">
+    	<member-entity entity-alias="PR" entity-name="ExpectedPaymentReceived"></member-entity>
+    	<!-- member-entity entity-alias="TR" entity-name="Treasury"></member-entity>
+    	<alias entity-alias="TT" name="sourceTreasury" group-by="true"></alias>
+    	<alias entity-alias="TR" name="name" group-by="true"/ --> 
+    	<alias entity-alias="PR" name="loanNo" group-by="true" />
+    	<alias entity-alias="PR" name="remitanceCode" group-by="true" />
+    	<alias entity-alias="PR" name="employerCode" group-by="true" />
+    	<alias entity-alias="PR" name="month" group-by="true"  />
+    	
+    	<!-- entity-condition>
+    		<condition-expr field-name="loanNo" operator="equals" value="0"/>
+    	</entity-condition -->
+    </view-entity>
+    
+     <view-entity entity-name="ExpectedPaymentReceivedLoans" package-name="org.ofbiz.accountholdertransactions">
+    	<member-entity entity-alias="PR" entity-name="ExpectedPaymentReceived"></member-entity>
+    	<!-- member-entity entity-alias="TR" entity-name="Treasury"></member-entity>
+    	<alias entity-alias="TT" name="sourceTreasury" group-by="true"></alias>
+    	<alias entity-alias="TR" name="name" group-by="true"/ --> 
+    	<alias entity-alias="PR" name="loanNo" group-by="true" />
+    	<alias entity-alias="PR" name="employerCode" group-by="true" />
+    	<alias entity-alias="PR" name="month" group-by="true"  />
+    	
+    	<!-- entity-condition>
+    		<condition-expr field-name="loanNo" operator="equals" value="0"/>
+    	</entity-condition -->
     </view-entity>
     
 </entitymodel>

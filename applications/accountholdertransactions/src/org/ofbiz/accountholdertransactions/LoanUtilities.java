@@ -109,6 +109,31 @@ public class LoanUtilities {
 		}
 		return loanApplication;
 	}
+	
+	/***
+	 * @author Japheth Odonya  @when Jun 1, 2015 11:06:53 PM
+	 * 
+	 * Get the loanApplication entity given the loanNo
+	 * */
+	public static GenericValue getLoanApplicationEntityGivenLoanNo(String loanNo) {
+		GenericValue loanApplication = null;
+		List<GenericValue> loanApplicationELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					EntityCondition.makeCondition("loanNo", loanNo), null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue genericValue : loanApplicationELI) {
+			loanApplication = genericValue;
+		}
+
+		return loanApplication;
+	}
+		
 
 	public static GenericValue getLoanProduct(Long loanProductId) {
 		GenericValue loanProduct = null;
@@ -1085,6 +1110,28 @@ public class LoanUtilities {
 
 		return memberNames;
 	}
+	
+	
+//	public static GenericValue getMemberGivenEmployeeNumber(String employeeNumber) {
+//		GenericValue member = null;
+//
+//		List<GenericValue> memberELI = null; // =
+//		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+//		try {
+//			memberELI = delegator.findList("Member",
+//					EntityCondition.makeCondition("employeeNumber", employeeNumber),
+//					null, null, null, false);
+//		} catch (GenericEntityException e) {
+//			e.printStackTrace();
+//		}
+//
+//		for (GenericValue genericValue : memberELI) {
+//			member = genericValue;
+//		}
+//
+//		return member;
+//	}
+
 
 	public static GenericValue getSalaryMonthYear(Long salaryMonthIdLong) {
 		GenericValue salaryMonthYear = null;
@@ -1518,6 +1565,94 @@ public class LoanUtilities {
 		}
 		
 		return member;
+	}
+	
+	
+	public static GenericValue getMemberGivenEmployeeNumber(String employeeNumber, String onlineCode) {
+		// TODO Auto-generated method stub
+		//employeeNumber
+		//Get all station ids where online code is online code
+		List<String> listStationId = getListStationId(onlineCode);
+		
+		//Get Member whose employer number is employerNumber and station Id is one of the IDs on the list
+		GenericValue member = null;
+		
+
+		GenericValue tempMember = null;
+		for (String stationId : listStationId) {
+			stationId = stationId.trim();
+			tempMember = getMember(employeeNumber, stationId);
+			
+			if (tempMember != null){
+				member = tempMember;
+				log.info("PPPPPPP Successful Assignment !!!!");
+			}
+			
+			
+		}
+		
+		return member;
+	}
+
+	private static GenericValue getMember(String employeeNumber,
+			String stationId) {
+		Long stationIdLong = Long.valueOf(stationId);
+		
+		EntityConditionList<EntityExpr> memberConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"stationId", EntityOperator.EQUALS,
+						stationIdLong),
+
+				EntityCondition.makeCondition("employeeNumber", EntityOperator.EQUALS,
+						employeeNumber.trim())
+
+				), EntityOperator.AND);
+		
+		log.info("WWWWWWWW will compare Station for member");
+		log.info("WWWWWWWWW Station ID "+stationId);
+		log.info("WWWWWWWWW Employee Number "+employeeNumber);
+
+		List<GenericValue> listMemberELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			listMemberELI = delegator.findList("Member",
+					memberConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		log.info("WWWWWWWWW List Size "+listMemberELI.size());
+		GenericValue member = null;
+		for (GenericValue genericValue : listMemberELI) {
+			member = genericValue;
+		}
+		
+		return member;
+	}
+
+	private static List<String> getListStationId(String onlineCode) {
+		List<GenericValue> stationELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		onlineCode = onlineCode.trim();
+		try {
+			stationELI = delegator.findList("Station",
+					EntityCondition.makeCondition("Onlinecode", onlineCode),
+					null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		List<String> listStationId = new ArrayList<String>();
+
+		for (GenericValue genericValue : stationELI) {
+			listStationId.add(genericValue.getString("stationId"));
+		}
+		
+		log.info(" SSSSSSSS station IDs "+listStationId.size());
+		
+		return listStationId;
 	}
 
 

@@ -1276,7 +1276,7 @@ public class RemittanceServices {
 
 				// Add the member to the missing log
 				log.info("AAAAAAAAAAAAAAAA Adding a member!!!!!!!!!!!!!! for "+payrollNo);
-				addMissingMemberLog(userLogin, payrollNo, month, employerCode);
+				addMissingMemberLog(userLogin, payrollNo, month, employerCode, FOSA_SAVINGS_CODE, null);
 			}
 
 		}
@@ -1343,7 +1343,7 @@ public class RemittanceServices {
 	 *         Capital
 	 * */
 	private static void addMissingMemberLog(Map<String, String> userLogin,
-			String payrollNo, String month, String employerCode) {
+			String payrollNo, String month, String employerCode, String productCode, String loanNo) {
 		GenericValue missingMemberLog = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		Long missingMemberLogId = delegator.getNextSeqIdLong(
@@ -1352,6 +1352,28 @@ public class RemittanceServices {
 		String names = LoanUtilities.getMemberName(payrollNo);
 		
 		GenericValue station = LoanUtilities.getStation(LoanUtilities.getStationId(employerCode));
+		
+		String productName = "";
+		
+		if (productCode != null){
+			GenericValue product = LoanUtilities.getAccountProductGivenCodeId(productCode);
+			
+			if (product != null)
+				productName = product.getString("name");
+		}
+		
+		if (loanNo != null){
+			log.info("WWWWWW Will get loan WWWWWWWW");
+			
+			GenericValue loanApplication = LoanUtilities.getLoanApplicationEntityGivenLoanNo(loanNo);
+			if (loanApplication != null){
+			GenericValue loanProduct = LoanUtilities.getLoanProduct(loanApplication.getLong("loanProductId"));
+			
+			if (loanProduct != null)
+				productName = loanProduct.getString("name");
+			}
+			
+		}
 		
 		missingMemberLog = delegator.makeValue("MissingMemberLog", UtilMisc
 				.toMap("missingMemberLogId", missingMemberLogId, "isActive",
@@ -1367,6 +1389,13 @@ public class RemittanceServices {
 						"names",
 						names,
 						
+						"loanNo",
+						loanNo,
+						
+						
+						"code", productCode,
+						
+						"productName", productName,
 
 						"month", month.trim()));
 		
@@ -1433,7 +1462,7 @@ public class RemittanceServices {
 				failed = true;
 
 				// Add the member to the missing log
-				addMissingMemberLog(userLogin, payrollNo, month, employerCode);
+				addMissingMemberLog(userLogin, payrollNo, month, employerCode, MEMBER_DEPOSIT_CODE, null);
 			}
 
 		}
@@ -1482,7 +1511,7 @@ public class RemittanceServices {
 				failed = true;
 
 				// Add the member to the missing log
-				addMissingMemberLog(userLogin, payrollNo, month, employerCode);
+				addMissingMemberLog(userLogin, payrollNo, month, employerCode, SHARE_CAPITAL_CODE, null);
 			}
 
 		}
@@ -1629,8 +1658,9 @@ public class RemittanceServices {
 
 					// AccHolderTransactionServices.cashDepositt(transactionAmount,
 					// memberAccountId, userLogin, withdrawalType)
+					log.info("PPPPPPPP Product Code is "+code+" Payroll Number is "+expectedPaymentReceived.getString("payrollNo"));
 					AccHolderTransactionServices.cashDeposit(transactionAmount,
-							memberAccountId, null, month + " Remittance");
+							memberAccountId, userLogin, month + " Remittance");
 					// Increment bdAccount with this amount
 					bdAccount = bdAccount.add(expectedPaymentReceived
 							.getBigDecimal("amount"));
@@ -1643,7 +1673,7 @@ public class RemittanceServices {
 					Long memberAccountId = getMemberAccountId(code,
 							expectedPaymentReceived.getString("payrollNo"));
 					AccHolderTransactionServices.cashDeposit(transactionAmount,
-							memberAccountId, null, month + " Remittance");
+							memberAccountId, userLogin, month + " Remittance");
 
 					// Increment Share Total
 					bdSharesTotal = bdSharesTotal.add(expectedPaymentReceived
@@ -2586,6 +2616,247 @@ public class RemittanceServices {
 		}
 
 		return "success";
+	}
+	
+	
+	/***
+	 * @author Japheth Odonya  @when Jun 1, 2015 7:51:43 PM
+	 * 
+	 * Get all existing products in the remittance and for each 
+	 * if the member is not subscribed to the product then dont proceede
+	 ****/
+	public static synchronized String checkAnyProductWithMissingProductOnMember(Map<String, String> userLogin, String employerCode, String month){
+		clearMissingMember(month, employerCode);
+		/***
+		 * Get list of products
+		 * 
+		 * */
+		List<GenericValue> receivedProductsELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		EntityConditionList<EntityExpr> receivedProductsConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"employerCode", EntityOperator.EQUALS, employerCode),
+
+				EntityCondition.makeCondition("month", EntityOperator.EQUALS,
+						month),
+						
+						EntityCondition.makeCondition("loanNo", EntityOperator.EQUALS,
+								"0")
+
+				), EntityOperator.AND);
+		try {
+			receivedProductsELI = delegator.findList(
+					"ExpectedPaymentReceivedProducts",
+					receivedProductsConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		log.info(" AAAAAAAAA All the Products Received .... Count is #### "+receivedProductsELI.size());
+		Long count = 0L;
+		String productCode = "";
+		List<String> productCodeList = new ArrayList<String>();
+		for (GenericValue genericValue : receivedProductsELI) {
+			productCode = genericValue.getString("remitanceCode");
+			
+			if (!(productCode.equals(FOSA_SAVINGS_CODE.trim())) && !(productCode.equals(MEMBER_DEPOSIT_CODE.trim())) && !(productCode.equals(SHARE_CAPITAL_CODE.trim()))){
+				productCodeList.add(productCode);
+			}
+			
+		}
+		
+		//Check that anyone remitting this product has an account for the product, otherwise
+		//Add him to the mising list
+		log.info(" LLLLLLL List to process is LLLLLLLLLLLLLLLL ");
+		Long prodCount = 0L;
+		Boolean failed = false;
+		for (String code : productCodeList) {
+			log.info(++prodCount+" PPPPPPPP --- "+code);
+			if (checkAllUsersRemittingProductMissAccount(userLogin, code, month, employerCode))
+				failed = true;
+		}
+		
+		if (failed)
+			return "failed";
+		
+		return "success";
+	}
+
+	/***
+	 * Check all members remitting for product code code,
+	 * that each actually has an account for that product
+	 * */
+	private static boolean checkAllUsersRemittingProductMissAccount(Map<String, String> userLogin,
+			String code, String month, String employerCode) {
+		
+		//Get all members remitting for remittance code code
+		List<GenericValue> receivedExpectedELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		EntityConditionList<EntityExpr> receivedExpectedConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"employerCode", EntityOperator.EQUALS, employerCode),
+
+				EntityCondition.makeCondition("month", EntityOperator.EQUALS,
+						month),
+						
+						EntityCondition.makeCondition("remitanceCode", EntityOperator.EQUALS,
+								code)
+
+				), EntityOperator.AND);
+		try {
+			receivedExpectedELI = delegator.findList(
+					"ExpectedPaymentReceived",
+					receivedExpectedConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		String payrollNo = "";
+		Long count = 0L;
+		Boolean failed = false;
+		for (GenericValue genericValue : receivedExpectedELI) {
+			//Check that this member is subscribed to this product
+			payrollNo = genericValue.getString("payrollNo");
+			log.info(++count+"FFFFFFFFFFFF "+code+" !!!!!!!!!!!!!! for "+payrollNo);
+			if (!hasAccount(code, payrollNo.trim())) {
+				failed = true;
+
+				// Add the member to the missing log
+				log.info("AAAAAAAAAAAAAAAA Adding a member!!!!!!!!!!!!!! for "+payrollNo);
+				addMissingMemberLog(userLogin, payrollNo, month, employerCode, code, null);
+			}
+		}
+		return failed;
+	}
+	
+	
+	
+	
+	/****
+	 * @author Japheth Odonya  @when Jun 1, 2015 10:26:15 PM
+	 * Ensure that all loans remitted with data do exist in the system
+	 * 
+	 * */
+	public static synchronized String checkAllLoansRemittedExist(Map<String, String> userLogin, String employerCode, String month){
+		//clearMissingMember(month, employerCode);
+		/***
+		 * Get list of products
+		 ***/
+		log.info("CCCCCCCCC To check loans ");
+		List<GenericValue> receivedLoansELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		EntityConditionList<EntityExpr> receivedLoansConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"employerCode", EntityOperator.EQUALS, employerCode),
+
+				EntityCondition.makeCondition("month", EntityOperator.EQUALS,
+						month),
+						
+						EntityCondition.makeCondition("loanNo", EntityOperator.NOT_EQUAL,
+								"0")
+
+				), EntityOperator.AND);
+		try {
+			receivedLoansELI = delegator.findList(
+					"ExpectedPaymentReceivedLoans",
+					receivedLoansConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		log.info("CCCCCCCCC Loans Count "+receivedLoansELI.size());
+		String loanNo = "";
+		Boolean missingLoan = false;
+		for (GenericValue genericValue : receivedLoansELI) {
+			//Check that loanNo exists in the system
+			
+			loanNo = genericValue.getString("loanNo").trim();
+			log.info("CCCCCCCCC Loans Checking "+loanNo);
+			if (loanIsMissing(userLogin, loanNo, employerCode, month)){
+				missingLoan = true;
+			}
+			
+		}
+		
+		if (missingLoan){
+			return "failed";
+		}
+		
+		return "success";
+	}
+
+	/****
+	 * @author Japheth Odonya  @when Jun 1, 2015 10:40:28 PM
+	 * 
+	 * Return true is loan exists , false otherwise
+	 * 
+	 * */
+	private static boolean loanIsMissing(Map<String, String> userLogin,
+			String loanNo, String employerCode, String month) {
+		
+		loanNo = loanNo.trim();
+		List<GenericValue> loanApplicationELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanNo", EntityOperator.EQUALS, loanNo.trim())
+
+				), EntityOperator.AND);
+		try {
+			loanApplicationELI = delegator.findList(
+					"LoanApplication",
+					loanApplicationConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		String payrollNo = getPayrollNumber(loanNo, employerCode, month );
+		
+		log.info(" SSSSSSSSSSS THE SIZE "+loanApplicationELI.size());
+		
+		if ((loanApplicationELI == null) || (loanApplicationELI.size() < 1)){
+			log.info("TTTTT To add Loan TTTTTTTT to the missing");
+			addMissingMemberLog(userLogin, payrollNo, month, employerCode, null, loanNo);
+			
+			return true;
+		}
+		
+		return false;
+	}
+
+	private static String getPayrollNumber(String loanNo, String employerCode,
+			String month) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> expectedPaymentReceivedELI = new ArrayList<GenericValue>();
+
+		EntityConditionList<EntityExpr> expectedPaymentReceivedConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"employerCode", EntityOperator.EQUALS,
+						employerCode.trim()), EntityCondition.makeCondition(
+						"month", EntityOperator.EQUALS, month),
+						
+						EntityCondition.makeCondition(
+								"loanNo", EntityOperator.EQUALS, loanNo)
+
+				), EntityOperator.AND);
+
+		try {
+			expectedPaymentReceivedELI = delegator.findList(
+					"ExpectedPaymentReceived",
+					expectedPaymentReceivedConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		GenericValue expectedPaymentReceived = null;
+		
+		for (GenericValue genericValue : expectedPaymentReceivedELI) {
+			expectedPaymentReceived = genericValue;
+		}
+		
+		if (expectedPaymentReceived != null)
+			return expectedPaymentReceived.getString("payrollNo");
+		
+		return null;
 	}
 
 }

@@ -982,170 +982,231 @@
 
 		<create-value value-field="transactionParent" />
 	</simple-method>
-	
-	
+
+
 	<!-- processReceivedPaymentBreakdown -->
-	<simple-method method-name="processReceivedPaymentBreakdown" short-description="Process Received Payment Breakdown">
-        <!-- entity-one entity-name="PullMonthYearItem" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <set field="pullMonthYearItemId" from-field="lookedUpValue.pullMonthYearItemId" type="Long"/ -->
-        <set field="employerCode" from-field="parameters.employerCode" />
-        <set field="month" from-field="parameters.month" />
-        <!-- set field="processingStatus" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.processReceivedPaymentBreakdown(userLogin, employerCode, month);}"></set -->
-        <!-- store-value value-field="lookedUpValue"/ -->
-        
-        <log message="NNNNNNNNNNNNNNN Processing Received Payment Breakdown" level="info"/>
-    	<log message="${employerCode}" level="info"/>
-    	<log message="${month}" level="info"/>
-		<set field="successstatus" value="success" type="String"/>
-		
-		<set field="missingPayrollNumbers" value="missingPayrollNumbers" type="String"/>
-		<set field="missingFosaSavingsAccounts" value="missingFosaSavingsAccounts" type="String"/>
-		
-		
-		<set field="processingStatus" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.checkStationAlreadyProcessed(userLogin, employerCode, month);}"></set>
-		<set field="processed" value="processed"/>
-		<set field="notprocessed" value="notprocessed"/>
-		
+	<simple-method method-name="processReceivedPaymentBreakdown"
+		short-description="Process Received Payment Breakdown">
+		<!-- entity-one entity-name="PullMonthYearItem" value-field="lookedUpValue"/> 
+			<set-nonpk-fields value-field="lookedUpValue" map="parameters"/> <set field="pullMonthYearItemId" 
+			from-field="lookedUpValue.pullMonthYearItemId" type="Long"/ -->
+		<set field="employerCode" from-field="parameters.employerCode" />
+		<set field="month" from-field="parameters.month" />
+		<!-- set field="processingStatus" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.processReceivedPaymentBreakdown(userLogin, 
+			employerCode, month);}"></set -->
+		<!-- store-value value-field="lookedUpValue"/ -->
+
+		<log message="NNNNNNNNNNNNNNN Processing Received Payment Breakdown"
+			level="info" />
+		<log message="${employerCode}" level="info" />
+		<log message="${month}" level="info" />
+		<set field="successstatus" value="success" type="String" />
+
+		<set field="missingPayrollNumbers" value="missingPayrollNumbers"
+			type="String" />
+		<set field="missingFosaSavingsAccounts" value="missingFosaSavingsAccounts"
+			type="String" />
+
+
+		<set field="processingStatus"
+			value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.checkStationAlreadyProcessed(userLogin, employerCode, month);}"></set>
+		<set field="processed" value="processed" />
+		<set field="notprocessed" value="notprocessed" />
+
 		<if>
 			<condition>
 				<if-compare operator="equals" value="processed" field="processingStatus"></if-compare>
 			</condition>
-			<then> 
-                <add-error> 
-                    <fail-property resource="AccountHolderTransactionsUILabels.xml"  
-                        property="alreadyProcessedError" /> 
-                </add-error> 
-                <check-errors /> 
-            </then>
-             <else>
-            	<!-- call-simple-method method-name="saveTreasuryTransfer" scope="inline"></call-simple-method>
-        		<set field="repayLoan" value="${bsh:org.ofbiz.treasurymanagement.TreasuryAccounting.postTreasuryTransfer(newEntity, userLogin);}" type="String"/ -->
+			<then>
+				<add-error>
+					<fail-property resource="AccountHolderTransactionsUILabels.xml"
+						property="alreadyProcessedError" />
+				</add-error>
+				<check-errors />
+			</then>
+			<else>
+				<!-- call-simple-method method-name="saveTreasuryTransfer" scope="inline"></call-simple-method> 
+					<set field="repayLoan" value="${bsh:org.ofbiz.treasurymanagement.TreasuryAccounting.postTreasuryTransfer(newEntity, 
+					userLogin);}" type="String"/ -->
 
-                <!-- property-to-field resource="AccountHolderTransactionsUILabels.xml" 
-            	property="notProcessedSuccess" field="successMessage" /> 
-            	<check-errors / --> 
-            	<set field="processingStatus" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.checkMembersPayrollNumbersExist(userLogin, employerCode, month);}"></set>
-           
-           		<if>
-           			<condition>
-           				<if-compare operator="equals" value="fail" field="processingStatus"></if-compare>
-           			</condition>
-           			<then> 
-		                <add-error> 
-		                    <fail-property resource="AccountHolderTransactionsUILabels.xml"  
-		                        property="missingPayrollNumbersError" /> 
-		                </add-error> 
-		                <check-errors /> 
-            		</then>
-            		<else>
-            			<!-- property-to-field resource="AccountHolderTransactionsUILabels.xml" 
-            			property="allPayrollNumbersSuccess" field="successMessage" / --> 
-        
-        				<!-- Now Check for FOSA Savings Account for each member -->
-        				<set field="fosaSavingsStatus" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.checkMembersHaveFosaSavingsAccount(userLogin, employerCode, month);}"></set>
-        				
-        				<if>
-        					<condition>
-        						<if-compare operator="not-equals" value="success" field="fosaSavingsStatus"></if-compare>
-        					</condition>
-        					<then>
-        						<add-error> 
-		                    <fail-property resource="AccountHolderTransactionsUILabels.xml"  
-		                        property="missingFOSASavingsAccountsError" /> 
-			                </add-error> 
-			                <check-errors /> 
-        					</then>
-        					<else>
-        						<!-- Then Check for Member Deposits Account for each member -->
-        						<set field="memberDepositStatus" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.checkMembersHaveMemberDepositAccount(userLogin, employerCode, month);}"></set>
-        						<if>
-        							<condition>
-        								<if-compare operator="not-equals" value="success" field="memberDepositStatus"></if-compare>
-        							</condition>
-        							<then>
-        								<add-error> 
-					                    <fail-property resource="AccountHolderTransactionsUILabels.xml"  
-					                        property="missingMemberDepositAccountsError" /> 
-						                </add-error> 
-						                <check-errors /> 
-        							</then>
-        							<else>
-        								<!-- Then Check for Share Capital Account for each member -->
-        								<set field="shareCapitalStatus" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.checkMembersHaveShareCapitalAccount(userLogin, employerCode, month);}"></set>
-        							<if>
-        								<condition>
-        									<if-compare operator="not-equals" value="success" field="shareCapitalStatus"></if-compare>
-        								</condition>
-        								<then>
-        								<add-error> 
-					                    <fail-property resource="AccountHolderTransactionsUILabels.xml"  
-					                        property="missingShareCapitalAccountsError" /> 
-						                </add-error> 
-						                <check-errors /> 
-        							</then>
-        							<else>
-        								<!-- Then finally process the remittance when all is fine -->
-        								<set field="processingStatus" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.processReceivedPaymentBreakdown(userLogin, employerCode, month);}"></set>
-        								
-        								<if>
-        									<condition>
-        										<if-compare operator="not-equals" value="success" field="processingStatus"></if-compare>
-        									</condition>
-        									<then>
-		        								<add-error> 
-							                    <fail-property resource="AccountHolderTransactionsUILabels.xml"  
-							                        property="remittanceProcessingError" /> 
-								                </add-error> 
-								                <check-errors /> 
-        									</then>
-        									<else>
-        										<property-to-field resource="AccountHolderTransactionsUILabels.xml" 
-            									property="remittanceProcessingSuccess" field="successMessage" /> 
-        									</else>
-        								</if>
-        							</else>
-        							</if>
-        							</else>
-        						</if>
-        					</else>
-        				</if>
-            		</else>
-           		</if>
-            </else> 
+				<!-- property-to-field resource="AccountHolderTransactionsUILabels.xml" 
+					property="notProcessedSuccess" field="successMessage" /> <check-errors / -->
+				<set field="processingStatus"
+					value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.checkMembersPayrollNumbersExist(userLogin, employerCode, month);}"></set>
+
+				<if>
+					<condition>
+						<if-compare operator="equals" value="fail" field="processingStatus"></if-compare>
+					</condition>
+					<then>
+						<add-error>
+							<fail-property resource="AccountHolderTransactionsUILabels.xml"
+								property="missingPayrollNumbersError" />
+						</add-error>
+						<check-errors />
+					</then>
+					<else>
+						<!-- property-to-field resource="AccountHolderTransactionsUILabels.xml" 
+							property="allPayrollNumbersSuccess" field="successMessage" / -->
+
+						<!-- Now Check for FOSA Savings Account for each member -->
+						<set field="fosaSavingsStatus"
+							value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.checkMembersHaveFosaSavingsAccount(userLogin, employerCode, month);}"></set>
+
+						<if>
+							<condition>
+								<if-compare operator="not-equals" value="success"
+									field="fosaSavingsStatus"></if-compare>
+							</condition>
+							<then>
+								<add-error>
+									<fail-property resource="AccountHolderTransactionsUILabels.xml"
+										property="missingFOSASavingsAccountsError" />
+								</add-error>
+								<check-errors />
+							</then>
+							<else>
+								<!-- Then Check for Member Deposits Account for each member -->
+								<set field="memberDepositStatus"
+									value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.checkMembersHaveMemberDepositAccount(userLogin, employerCode, month);}"></set>
+								<if>
+									<condition>
+										<if-compare operator="not-equals" value="success"
+											field="memberDepositStatus"></if-compare>
+									</condition>
+									<then>
+										<add-error>
+											<fail-property resource="AccountHolderTransactionsUILabels.xml"
+												property="missingMemberDepositAccountsError" />
+										</add-error>
+										<check-errors />
+									</then>
+									<else>
+										<!-- Then Check for Share Capital Account for each member -->
+										<set field="shareCapitalStatus"
+											value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.checkMembersHaveShareCapitalAccount(userLogin, employerCode, month);}"></set>
+										<if>
+											<condition>
+												<if-compare operator="not-equals" value="success"
+													field="shareCapitalStatus"></if-compare>
+											</condition>
+											<then>
+												<add-error>
+													<fail-property resource="AccountHolderTransactionsUILabels.xml"
+														property="missingShareCapitalAccountsError" />
+												</add-error>
+												<check-errors />
+											</then>
+											<else>
+
+												<set field="checkProducts"
+													value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.checkAnyProductWithMissingProductOnMember(userLogin, employerCode, month);}" />
+
+												<if>
+													<condition>
+														<if-compare operator="not-equals" value="success"
+															field="checkProducts"></if-compare>
+													</condition>
+													<then>
+														<!-- still products with missing subscription -->
+														<add-error>
+															<fail-property resource="AccountHolderTransactionsUILabels.xml"
+																property="accountProductsError" />
+														</add-error>
+														<check-errors />
+
+													</then>
+													<else>
+														<!-- Check Loans , that they exist -->
+														<set field="checkLoanStatus"
+															value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.checkAllLoansRemittedExist(userLogin, employerCode, month);}" />
+														<if>
+															<condition>
+																<if-compare operator="not-equals" value="success"
+																	field="checkLoanStatus"></if-compare>
+															</condition>
+															<then>
+																<add-error>
+																	<fail-property resource="AccountHolderTransactionsUILabels.xml"
+																		property="missingLoanNosError" />
+																</add-error>
+																<check-errors />
+															</then>
+															<else>
+																<!-- Then finally process the remittance when all is fine -->
+																<!-- Then finally process the remittance when all is fine -->
+																<set field="processingStatus"
+																	value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.processReceivedPaymentBreakdown(userLogin, employerCode, month);}"></set>
+																<if>
+																	<condition>
+																		<if-compare operator="not-equals" value="success"
+																			field="processingStatus"></if-compare>
+																	</condition>
+																	<then>
+																		<add-error>
+																			<fail-property
+																				resource="AccountHolderTransactionsUILabels.xml"
+																				property="remittanceProcessingError" />
+																		</add-error>
+																		<check-errors />
+																	</then>
+																	<else>
+																		<property-to-field
+																			resource="AccountHolderTransactionsUILabels.xml"
+																			property="remittanceProcessingSuccess" field="successMessage" />
+																	</else>
+
+																</if>
+															</else>
+														</if>
+													</else>
+												</if>
+											</else>
+										</if>
+									</else>
+								</if>
+							</else>
+						</if>
+					</else>
+				</if>
+			</else>
 		</if>
-    </simple-method>
-    
-    <!-- removeReceivedImportedPaymentBreakdown -->
-    <simple-method method-name="removeReceivedImportedPaymentBreakdown" short-description="Removed/Delete Received Payment Breakdown">
-        <!-- entity-one entity-name="PullMonthYearItem" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <set field="pullMonthYearItemId" from-field="lookedUpValue.pullMonthYearItemId" type="Long"/ -->
-        <set field="employerCode" from-field="parameters.employerCode" />
-        <set field="month" from-field="parameters.month" />
-        <!-- set field="processingStatus" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.processReceivedPaymentBreakdown(userLogin, employerCode, month);}"></set -->
-        <!-- store-value value-field="lookedUpValue"/ -->
-        
-        <log message="NNNNNNNNNNNNNNN Processing Received Payment Breakdown" level="info"/>
-    	<log message="${employerCode}" level="info"/>
-    	<log message="${month}" level="info"/>
-    	<set field="deleteStatus" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.deleteReceivedPaymentBreakdown(userLogin, employerCode, month);}"></set>
-    	
-    	<if>
-    		<condition>
-    			<if-compare operator="not-equals" value="success" field="deleteStatus"></if-compare>
-    		</condition>
-    		<then>
-    			<add-error> 
-	                 <fail-property resource="AccountHolderTransactionsUILabels.xml"  
-	                     property="deleteRemittanceError" /> 
-	              </add-error> 
-	              <check-errors /> 
-    		</then>
-    		<else>
-					<property-to-field resource="AccountHolderTransactionsUILabels.xml" 
-								property="deleteRemittanceSuccess" field="successMessage" /> 
-    		</else>
-    	</if>
-    </simple-method>
+	</simple-method>
+
+	<!-- removeReceivedImportedPaymentBreakdown -->
+	<simple-method method-name="removeReceivedImportedPaymentBreakdown"
+		short-description="Removed/Delete Received Payment Breakdown">
+		<!-- entity-one entity-name="PullMonthYearItem" value-field="lookedUpValue"/> 
+			<set-nonpk-fields value-field="lookedUpValue" map="parameters"/> <set field="pullMonthYearItemId" 
+			from-field="lookedUpValue.pullMonthYearItemId" type="Long"/ -->
+		<set field="employerCode" from-field="parameters.employerCode" />
+		<set field="month" from-field="parameters.month" />
+		<!-- set field="processingStatus" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.processReceivedPaymentBreakdown(userLogin, 
+			employerCode, month);}"></set -->
+		<!-- store-value value-field="lookedUpValue"/ -->
+
+		<log message="NNNNNNNNNNNNNNN Processing Received Payment Breakdown"
+			level="info" />
+		<log message="${employerCode}" level="info" />
+		<log message="${month}" level="info" />
+		<set field="deleteStatus"
+			value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.deleteReceivedPaymentBreakdown(userLogin, employerCode, month);}"></set>
+
+		<if>
+			<condition>
+				<if-compare operator="not-equals" value="success" field="deleteStatus"></if-compare>
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="AccountHolderTransactionsUILabels.xml"
+						property="deleteRemittanceError" />
+				</add-error>
+				<check-errors />
+			</then>
+			<else>
+				<property-to-field resource="AccountHolderTransactionsUILabels.xml"
+					property="deleteRemittanceSuccess" field="successMessage" />
+			</else>
+		</if>
+	</simple-method>
 </simple-methods>
