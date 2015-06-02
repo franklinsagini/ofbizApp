@@ -239,4 +239,44 @@ under the License.
     
    			return isEnough;
     }
+    
+    function checkTellerLimit(){
+    
+    	var transactionAmount = jQuery('input[name="transactionAmount"]').val();
+    	transactionAmount = transactionAmount.replace(/,/g, '');
+    	
+      	//isTellerBalanceEnough
+     	var reqUrl = '/accountholdertransactions/control/isTellerOverLimit';
+    	var isTellerOverLimit = tellerOverLimit(reqUrl, transactionAmount);
+	     if (isTellerOverLimit == true){
+	    	alert("This transaction will overflow the teller limit, please transfer to treasury first before continuing with the transaction!");
+	    	return false;
+	    }
+    	return true;
+    }
+    
+    
+     function tellerOverLimit(reqUrl, transactionAmount){
+        var isOverLimit = false;
+    	jQuery.ajax({
+
+     		url    : reqUrl,
+     		type   : 'GET',
+    		data   : {'transactionAmount':transactionAmount}, //here you can pass the parameters to  
+                                                   //the request if any.
+     			success : function(data){
+				
+					if (data.TELLEROVERLIMIT == true)
+					{
+						isOverLimit = true;
+					} else{
+						isOverLimit = false;
+					}
+			
+               },
+      		async : false
+    		});
+    
+   			return isOverLimit;
+    }
 </script>
