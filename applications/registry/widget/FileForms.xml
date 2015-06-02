@@ -407,7 +407,7 @@
 		<display default-value="FILE ALREADY REQUESTED"/>
 		</field>
 		
-		<field name="currentPossesser" title="Requested By/Currently With" use-when="${status == 'REQUESTED'}||${status == 'ISSUED'}">
+		<field name="currentPossesser" title="Currently With" use-when="${status == 'REQUESTED'}||${status == 'ISSUED'}">
 		<display-entity key-field-name="partyId" entity-name="Person" description="${firstName}  ${lastName}"></display-entity>
 		</field>
 		<field name="fileLocation" title="Location" use-when="${status == 'REQUESTED'}||${status == 'ISSUED'}">
@@ -418,6 +418,12 @@
 			<hyperlink also-hidden="false" description="Request File" target="goRequestFile">
 				<parameter param-name="partyId" />
 				<parameter param-name="status" /> 
+			</hyperlink>
+		</field>
+		
+		 <field name="filesRequestQueue" title="-" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="File Request Queue" target="regFileQueue">
+				<parameter param-name="partyId" />
 			</hyperlink>
 		</field>
 		
@@ -2303,6 +2309,33 @@
 				<parameter param-name="staffId" />
 			</hyperlink>
 		</field>
+
+
+	</form>
+	
+	
+	<form name="listRegistryFileQueuForm" type="list" list-name="listIt"
+		use-row-submit="true" title="Selected Monument" separate-columns="true"
+		paginate-target="RegistryStaffForm" target=""
+		default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="RegistryFileRequestQueu">
+			<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+			<order-by field-name="requestDate"/>
+			</entity-condition>
+		</actions>
+		<field name="queId">
+			<hidden />
+		</field>
+		<field name="requester" title="Staff">
+			<display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"/>
+		</field>
+		<field name="Reason" title="Activity">
+			<display-entity entity-name="RegistryFileActivity" description="${activity}" key-field-name="activityId"/>
+		</field>
+		<field name="requestDate"><display/></field>
+	
+
 
 
 	</form>

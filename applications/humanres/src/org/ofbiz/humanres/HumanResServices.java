@@ -5863,7 +5863,11 @@ public class HumanResServices {
 				e.printStackTrace();
 			}
 
-			perspectiveTotal = Perspective.getBigDecimal("percentage").stripTrailingZeros();
+			if (Perspective != null) {
+				String s = Perspective.getString("percentage");
+				int t = Integer.parseInt(s);
+				perspectiveTotal = new BigDecimal(t);
+			}
 
 			
 			log.info("=============>>>>>>>>>>> Objective Total >>>>>>>>" + totalpercentage);
@@ -5883,6 +5887,144 @@ public class HumanResServices {
 	}
 
 	
+	      /* ============================== % TOTAL VALIDATION AT OBJECTIVE CREATION ======================================*/
+	    		   
+	
+	public static String getObjectiveAndRespectivePerspectiveTotalAndCompareAtObjectiveCreation(String groupid, String goalId, BigDecimal percentage) {
+		BigDecimal totalpercentage = BigDecimal.ZERO;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> UsedObjective = null;
+		String state = null;
+		BigDecimal perspectiveTotal = BigDecimal.ZERO;
+		GenericValue Perspective = null;
+		
+		EntityConditionList<EntityExpr> quantitativetotalConditions = EntityCondition
+		.makeCondition(UtilMisc.toList(EntityCondition.makeCondition("perfReviewDefId",EntityOperator.EQUALS, groupid),
+				EntityCondition.makeCondition("perfGoalsId", EntityOperator.EQUALS, goalId)),EntityOperator.AND);
+
+		try {
+			UsedObjective = delegator.findList("PerfReviewsGroupObjectiveDefinition", quantitativetotalConditions,	null, null, null, false);
+
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		
+		for (GenericValue genericValue : UsedObjective) {
+			
+			totalpercentage = totalpercentage.add(genericValue.getBigDecimal("percentage").stripTrailingZeros());
+			
+			log.info("=============>>>>>>>>>>> Single  >>>>>>>>" + totalpercentage);
+			
+		}
+		
+		log.info("=============>>>>>>>>>>> TotalInDb  >>>>>>>>" + totalpercentage);
+			
+			try {
+				Perspective = delegator.findOne("PerfGoals", UtilMisc.toMap("perfGoalsId", goalId), false);
+
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+			if (Perspective != null) {
+				String s = Perspective.getString("percentage");
+				int t = Integer.parseInt(s);
+				perspectiveTotal = new BigDecimal(t);
+				//perspectiveTotal = Perspective.getBigDecimal("percentage").stripTrailingZeros();
+			}
+
+			
+
+			BigDecimal g =percentage.stripTrailingZeros();
+			BigDecimal totalInDb = totalpercentage.add(g);
+			log.info("=============>>>>>>>>>>> Objective Total >>>>>>>>" + totalInDb);
+			log.info("=============>>>>>>>>>>> Perspective Total >>>>>>>>" + perspectiveTotal);
+			
+			
+
+			if ((totalInDb).compareTo(perspectiveTotal) == -1 || (totalInDb).compareTo(perspectiveTotal) == 0) {
+				state = "VALID";
+			} else {
+				state = "INVALID";
+
+			}
+		
+
+		
+
+		return state;
+	}
+
+	
+	
+	 /* ============================== % TOTAL VALIDATION AT PERSPECTIVE CREATION ======================================*/
+	   
+	
+		public static String getPerspectiveAndRespectiveGoalTotalAndCompareAtPerspectiveCreation(String goalDefId, BigDecimal percentage) {
+			BigDecimal totalpercentage = BigDecimal.ZERO;
+			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+			List<GenericValue> UsedObjective = null;
+			String state = null;
+			BigDecimal perspectiveTotal = BigDecimal.ZERO;
+			GenericValue Goal = null;
+			
+			EntityConditionList<EntityExpr> quantitativetotalConditions = EntityCondition
+			.makeCondition(UtilMisc.toList(EntityCondition.makeCondition("perfGoalsDefId", EntityOperator.EQUALS, goalDefId)),EntityOperator.AND);
+
+			try {
+				UsedObjective = delegator.findList("PerfGoals", quantitativetotalConditions,	null, null, null, false);
+
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+			
+			
+			for (GenericValue genericValue : UsedObjective) {
+				
+				totalpercentage = totalpercentage.add(genericValue.getBigDecimal("percentage").stripTrailingZeros());
+				
+				log.info("=============>>>>>>>>>>> Single  >>>>>>>>" + totalpercentage);
+				
+			}
+			
+			log.info("=============>>>>>>>>>>> TotalInDb  >>>>>>>>" + totalpercentage);
+				
+				try {
+					Goal = delegator.findOne("PerfGoalsDef", UtilMisc.toMap("perfGoalsDefId", goalDefId), false);
+
+				} catch (GenericEntityException e) {
+					e.printStackTrace();
+				}
+				if (Goal != null) {
+					String s = Goal.getString("percentage");
+					int t = Integer.parseInt(s);
+					perspectiveTotal = new BigDecimal(t);
+				}
+
+				
+
+				BigDecimal g =percentage.stripTrailingZeros();
+				BigDecimal totalInDb = totalpercentage.add(g);
+				log.info("=============>>>>>>>>>>> Objective Total >>>>>>>>" + totalInDb);
+				log.info("=============>>>>>>>>>>> Perspective Total >>>>>>>>" + perspectiveTotal);
+				
+				
+
+				if ((totalInDb).compareTo(perspectiveTotal) == -1 || (totalInDb).compareTo(perspectiveTotal) == 0) {
+					state = "VALID";
+				} else {
+					state = "INVALID";
+
+				}
+			
+
+			
+
+			return state;
+		}
+
+		
+
 
 
 }

@@ -3,12 +3,16 @@ package org.ofbiz.humanres;
 import java.io.IOException;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -38,8 +42,12 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 //import org.ofbiz.registry.FileServices;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.GenericDispatcherFactory;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.calendar.RecurrenceRule;
 import org.ofbiz.webapp.event.EventHandlerException;
 import org.ofbiz.workflow.WorkflowServices;
 
@@ -1006,6 +1014,443 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
 		return result;
 	}
+	
+	
+	
+	
+	/* ====================================== GET FIRST APPROVER ON LEAVE WORKFLOW ===========================================*/
+	                 
+	public static String getFirstWorkflowApprover(String leaveid) {
+		
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+
+		GenericValue leavesELI = null; 
+		GenericValue workflowELI = null; 
+		GenericValue workflowResponsibleStaff = null; 
+		List <GenericValue> getWorkflowELI = null;
+		List <GenericValue> getWorkflowResponsibleStaffELI = null;
+		String party = null;
+		String partyWorkFlow = null;
+		String WorkFlowPartyResponsible = null;
+
+		try {
+			
+			leavesELI = delegator.findOne("EmplLeave",
+							UtilMisc.toMap("leaveId", leaveid), false);
+					
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		if (leavesELI != null) {
+			party = leavesELI.getString("partyId");
+		} else {
+
+		}
+		
+		try {
+			getWorkflowELI = delegator.findList("LeaveWorkFlowStaffMapping",	EntityCondition.makeCondition("partyId", party), null,null, null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+			
+		}
+		
+		if (getWorkflowELI.size() > 0) {
+			workflowELI = getWorkflowELI.get(0);
+			partyWorkFlow = workflowELI.getString("leaveWorkFlowId");
+		}
+		
+		EntityConditionList<EntityExpr> workflowConditions = EntityCondition.makeCondition(UtilMisc.toList(
+					EntityCondition.makeCondition("leaveWorkFlowId", EntityOperator.EQUALS, partyWorkFlow),
+					EntityCondition.makeCondition("isFirst", EntityOperator.EQUALS, "YES")),
+						EntityOperator.AND);
+		
+		try {
+			getWorkflowResponsibleStaffELI = delegator.findList("LeaveWorkFlowResponsibleStaff", workflowConditions, null,null, null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+			
+		}
+		
+		if (getWorkflowResponsibleStaffELI.size() > 0) {
+			workflowResponsibleStaff = getWorkflowResponsibleStaffELI.get(0);
+			WorkFlowPartyResponsible = workflowResponsibleStaff.getString("responsibleEmployee");
+		}
+
+		
+
+		return WorkFlowPartyResponsible;
+	}
+	
+	
+	
+	
+	public static String ForwardMyLeaveApplication(HttpServletRequest request, HttpServletResponse response) {
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+	       GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+			String user = userLogin.getString("partyId");
+			String leaveid = (String) request.getParameter("leaveId");
+			List<GenericValue> toBeStored = FastList.newInstance();
+			GenericValue leavesELI = null; 
+			GenericValue partyELI = null; 
+			GenericValue emailRecord_firstApprover = null;
+			String firstApprover = 	getFirstWorkflowApprover(leaveid);	
+			
+			try {
+				
+				leavesELI = delegator.findOne("EmplLeave",
+								UtilMisc.toMap("leaveId", leaveid), false);
+						
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+			
+			if (leavesELI != null) {
+				leavesELI.set("responsibleEmployee", firstApprover);
+				
+				String party = leavesELI.getString("partyId");
+				
+				try {
+					
+					partyELI = delegator.findOne("Person",	UtilMisc.toMap("partyId", party), false);
+							
+				} catch (GenericEntityException e) {
+					e.printStackTrace();
+				}
+				
+				String fname = null;
+				String sname = null;
+				String payrolll = null;
+				
+					fname = partyELI.getString("firstName");
+					sname = partyELI.getString("lastName");
+					payrolll = partyELI.getString("employeeNumber");
+					String fullName = " "+fname+" "+sname;
+				
+				emailRecord_firstApprover = delegator.makeValue("StaffScheduledMail", "msgId", delegator.getNextSeqId("StaffScheduledMail"), 
+						"partyId", firstApprover,
+			            "subject", "LEAVE APPROVAL", 
+			            "body", "Leave Application has been Send to you for approval by :"+fullName+" Payroll :"+payrolll,
+			            "sendStatus", "NOTSEND");
+				
+				
+				toBeStored.add(leavesELI);
+				toBeStored.add(emailRecord_firstApprover);
+			} else {
+
+			}
+			
+			
+			try {
+				delegator.storeAll(toBeStored);
+				SendScheduledMail(request, response);
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+			
+			
+			
+		return leaveid;
+	}
+	
+	
+	
+
+	
+	
+	
+	/* ================================= APPROVE LEAVE ===========================================================*/
+	
+	public static String approveLeave(HttpServletRequest request, HttpServletResponse response) {
+		
+		Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+       GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+		String user = userLogin.getString("partyId");
+		String leaveid = (String) request.getParameter("leaveId");
+		
+		
+	
+		List<GenericValue> toBeStored = FastList.newInstance();
+		
+		GenericValue leavesELI = null; 
+		GenericValue workflowELI = null; 
+		GenericValue forwardedToName = null;
+		GenericValue workflowResponsibleStaff = null; 
+		GenericValue workflowNextResponsibleStaff = null; 
+		List <GenericValue> getWorkflowELI = null; 
+		List <GenericValue> getWorkflowNextResponsibleStaffELI = null;
+		List <GenericValue> getWorkflowResponsibleStaffELI = null;
+		String party = null;
+		String partyWorkFlow = null;
+		String isThemLast = null;
+		String nextResponsibleStaff = null;
+		String email_To_StaffHandedOver = null;
+		String leaveStart = null;
+		String leaveStop = null;
+		String leaveDuration = null;
+
+		try {
+			
+			leavesELI = delegator.findOne("EmplLeave",
+							UtilMisc.toMap("leaveId", leaveid), false);
+					
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		if (leavesELI != null) {
+			party = leavesELI.getString("partyId");
+			email_To_StaffHandedOver = leavesELI.getString("handedOverTo");
+			leaveDuration = leavesELI.getString("leaveDuration");
+			leaveStart = leavesELI.getString("fromDate");
+			leaveStop = leavesELI.getString("thruDate");
+		} else {
+
+		}
+		
+		try {
+			getWorkflowELI = delegator.findList("LeaveWorkFlowStaffMapping",	EntityCondition.makeCondition("partyId", party), null,null, null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+			
+		}
+		
+		if (getWorkflowELI.size() > 0) {
+			workflowELI = getWorkflowELI.get(0);
+			partyWorkFlow = workflowELI.getString("leaveWorkFlowId");
+		}
+		
+		EntityConditionList<EntityExpr> workflowConditions = EntityCondition.makeCondition(UtilMisc.toList(
+					EntityCondition.makeCondition("leaveWorkFlowId", EntityOperator.EQUALS, partyWorkFlow),
+					EntityCondition.makeCondition("responsibleEmployee", EntityOperator.EQUALS, user)),
+						EntityOperator.AND);
+		
+		try {
+			getWorkflowResponsibleStaffELI = delegator.findList("LeaveWorkFlowResponsibleStaff", workflowConditions, null,null, null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+			
+		}
+		
+		if (getWorkflowResponsibleStaffELI.size() > 0) {
+			workflowResponsibleStaff = getWorkflowResponsibleStaffELI.get(0);
+			isThemLast = workflowResponsibleStaff.getString("isLast");
+		}
+		
+		if (isThemLast.equalsIgnoreCase("YES")) {
+			
+			leavesELI.set("approvalStatus", "Approved");
+			leavesELI.set("applicationStatus", "Approved");
+			
+			
+			GenericValue emailRecord_handover = null;
+			GenericValue emailRecord_applicant = null; 
+			GenericValue staff = null;
+
+			try {
+				staff = delegator.findOne("Person",
+						UtilMisc.toMap("partyId", party), false);
+			} catch (GenericEntityException e) {
+				Debug.logWarning(e.getMessage(), null);
+			}
+			
+			String payroll = staff.getString("employeeNumber");
+			String fname = staff.getString("firstName");
+			String sname = staff.getString("lastName");
+			emailRecord_handover = delegator.makeValue("StaffScheduledMail", "msgId", delegator.getNextSeqId("StaffScheduledMail"), 
+					"partyId", email_To_StaffHandedOver,
+		            "subject", "RESPONSIBILITIES HANDOVER", 
+		            "body", "Leave application of ["+fname+" "+sname+"] Payroll:-["+payroll+"] has been Approved and they are handing over their resiponsibilities to you. Communicate to them for more information",
+		            "sendStatus", "NOTSEND");
+			
+			emailRecord_applicant = delegator.makeValue("StaffScheduledMail", "msgId", delegator.getNextSeqId("StaffScheduledMail"), 
+					"partyId", party,
+		            "subject", "LEAVE FORWARDED", 
+		            "body", "Your leave application has been been APPROVED. Duration of leave is :"+leaveDuration+" days, It starts on :"+leaveStart+" and end on :"+leaveStop,
+		            "sendStatus", "NOTSEND");
+			toBeStored.add(leavesELI);
+			toBeStored.add(emailRecord_handover);
+			toBeStored.add(emailRecord_applicant);
+		} else if(isThemLast.equalsIgnoreCase("NO")){
+			
+			EntityConditionList<EntityExpr> workflowNextStaffConditions = EntityCondition.makeCondition(UtilMisc.toList(
+					EntityCondition.makeCondition("leaveWorkFlowId", EntityOperator.EQUALS, partyWorkFlow),
+					EntityCondition.makeCondition("comeAfter", EntityOperator.EQUALS, user)),
+						EntityOperator.AND);
+		
+		try {
+			getWorkflowNextResponsibleStaffELI = delegator.findList("LeaveWorkFlowResponsibleStaff", workflowNextStaffConditions, null,null, null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+			
+		}
+		
+		if (getWorkflowNextResponsibleStaffELI.size() > 0) {
+			workflowNextResponsibleStaff = getWorkflowNextResponsibleStaffELI.get(0);
+			nextResponsibleStaff = workflowNextResponsibleStaff.getString("responsibleEmployee");
+		}
+		
+        try {
+			
+			forwardedToName = delegator.findOne("Person",
+							UtilMisc.toMap("partyId", nextResponsibleStaff), false);
+					
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		String fname = null;
+		String sname = null;
+		String payrolll = null;
+		
+			fname = forwardedToName.getString("firstName");
+			sname = forwardedToName.getString("lastName");
+			payrolll = forwardedToName.getString("employeeNumber");
+			String fullName = " "+fname+" "+sname;
+			
+			
+			
+		leavesELI.set("responsibleEmployee", nextResponsibleStaff);
+		leavesELI.set("applicationStatus", "Application Forwarded to"+fullName);
+		leavesELI.set("approvalStatus", "Application Forwarded to"+fullName);
+		
+		GenericValue Applicantstaff = null;
+
+		try {
+			Applicantstaff = delegator.findOne("Person",
+					UtilMisc.toMap("partyId", party), false);
+		} catch (GenericEntityException e) {
+			Debug.logWarning(e.getMessage(), null);
+		}
+		
+		String staffpayroll = Applicantstaff.getString("employeeNumber");
+		String staffirstname = Applicantstaff.getString("firstName");
+		String staflastsname = Applicantstaff.getString("lastName");
+		String staffullName = " "+staffirstname+" "+staflastsname;
+
+		GenericValue emailRecord_approver = null; GenericValue emailRecord_applicant = null; 
+		emailRecord_approver = delegator.makeValue("StaffScheduledMail", "msgId", delegator.getNextSeqId("StaffScheduledMail"), 
+				"partyId", nextResponsibleStaff,
+	            "subject", "LEAVE APPROVAL", 
+	            "body", "Leave application of ["+staffullName+"] Payroll:-["+staffpayroll+"]  has been forwarded to you and it requires your approval. Please log onto the System for details",
+	            "sendStatus", "NOTSEND");
+		
+		emailRecord_applicant = delegator.makeValue("StaffScheduledMail", "msgId", delegator.getNextSeqId("StaffScheduledMail"), 
+				"partyId", party,
+	            "subject", "LEAVE FORWARDED", 
+	            "body", "Your leave application has been been forwarded to :"+fullName+" Payroll :"+payrolll+" For approval",
+	            "sendStatus", "NOTSEND");
+		toBeStored.add(leavesELI);
+		toBeStored.add(emailRecord_approver);
+		toBeStored.add(emailRecord_applicant);
+
+		}
+
+		try {
+			delegator.storeAll(toBeStored);
+			SendScheduledMail(request, response);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		return leaveid;
+	}
+	
+	public static String validateWorkflowName(String workflow) {
+		String state = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+	     List<GenericValue> getWorkflowELI = null;
+		
+		try {
+			getWorkflowELI = delegator.findList("LeaveWorkFlow",null, null,null, null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+			
+		}
+		
+		for (GenericValue genericValue : getWorkflowELI) {
+			String dbWorkflowName = genericValue.getString("name");
+			
+			log.info("-----++++++-----DB-----------------" +dbWorkflowName);
+			log.info("-----++++++-----USER-----------------" +workflow);
+			
+			if (dbWorkflowName == workflow) {
+				state = "INVALID";
+			} else {
+				state = "VALID";
+			}
+			
+		}
+		
+		
+		return state;
+		
+	}
+	
+	public static String validateWorkflowStaffMapping(String party) {
+		String state = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+	     List<GenericValue> getWorkflowELI = null;
+		
+		try {
+			getWorkflowELI = delegator.findList("LeaveWorkFlowStaffMapping",null, null,null, null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+			
+		}
+		
+		for (GenericValue genericValue : getWorkflowELI) {
+			String dbWorkflowName = genericValue.getString("partyId");
+			
+			log.info("-----++++++-----DB-----------------" +dbWorkflowName);
+			log.info("-----++++++-----USER-----------------" +party);
+			
+			if (dbWorkflowName.equals(party)) {
+				state = "INVALID";
+			} else {
+				state = "VALID";
+			}
+			
+		}
+		
+		
+		return state;
+		
+	}
+	
+	/* SEND SCHEDULED EMAIL NOTIFICATION */
+
+	public static String SendScheduledMail(HttpServletRequest request, HttpServletResponse response) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		LocalDispatcher dispatcher = (new GenericDispatcherFactory()).createLocalDispatcher("interestcalculations", delegator);
+
+		Map<String, String> context = UtilMisc.toMap("message",	"Email Sending Testing !!");
+		try {
+			dispatcher.runAsync("sendScheduledEmailNotificationToStaff", context);
+		} catch (GenericServiceException e) {
+			e.printStackTrace();
+		}
+
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write("");
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+		return "";
+
+	}
+	
+	
+	
 	
 	
 	

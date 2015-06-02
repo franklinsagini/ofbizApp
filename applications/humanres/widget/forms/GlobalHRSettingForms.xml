@@ -746,4 +746,187 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
 	
+	
+	
+	
+	                              <!-- WORK FLOWS FOR LEAVE MANAGEMENT -->
+	
+	<form name="AddLeaveWorkflow" type="single" target="createWorkflow" default-map-name="skillType"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="leaveWorkFlowId"><hidden/></field>
+        <field name="name" title="WorkFlow Identification" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="buttontext"><submit button-type="button"/></field>
+    </form>
+	
+	
+        <form name="ListLeaveWorkflows" type="multi" use-row-submit="true"
+		title="Selected Monument" separate-columns="true" paginate-target="AddLeaveWorkflow"
+		target="updateWorkflow" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="LeaveWorkFlow"><order-by field-name="leaveWorkFlowId"/></entity-condition>
+        </actions>
+        <field name="leaveWorkFlowId"><hidden/></field>
+        <field name="name" title="WorkFlow Identification"><text/></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteWorkflow" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete ${name} Work Flow?">
+                <parameter param-name="leaveWorkFlowId"/>
+            </hyperlink>
+        </field>
+        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
+        <field name="submitButton" title="Update" widget-style="smallSubmit"><submit/></field>
+    </form>
+	
+	
+	<form name="AddLeaveWorkFlowResponsibleStaff" type="single" target="createWorkflowResponsibleStaff" default-map-name="skillType"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="leaveWorkFlowResponsibleStaffId"><hidden/></field>
+        
+        <field name="responsibleEmployee" required-field="true"><lookup target-form-name="LookupEmployee"/></field>
+        
+        <field name="leaveWorkFlowId" title="Workflow"  tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+            <drop-down allow-empty="true">
+                <entity-options description="${name}" key-field-name="leaveWorkFlowId" entity-name="LeaveWorkFlow">
+                    <entity-order-by field-name="name"/>
+                </entity-options>
+            </drop-down>
+        </field>
+         <field name="isFirst" title="Is First On Workflow" tooltip="(If Yes Leave Applicant Forwards the Leave To This Person)" required-field="true">
+            <drop-down allow-empty="true">
+                <option key="YES" description="YES"/>
+                <option key="NO" description="NO"/>
+            </drop-down>
+        </field>
+        <field name="isLast" title="Is Last On Workflow" tooltip="(If Yes This is the final person who approves the leave)" required-field="true">
+            <drop-down allow-empty="true">
+                <option key="YES" description="YES"/>
+                <option key="NO" description="NO"/>
+            </drop-down>
+        </field>
+         <field name="comeBefore"  title="Next Staff On Workflow">
+            <drop-down allow-empty="true">
+                <entity-options description="${fName} ${sName}" key-field-name="responsibleEmployee" entity-name="LeaveWorkFlowResponsibleStaff">
+                    <entity-order-by field-name="fName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        
+         <field name="comeAfter"  title="Previous Staff On Workflow">
+            <drop-down allow-empty="true">
+                <entity-options description="${fName} ${sName}" key-field-name="responsibleEmployee" entity-name="LeaveWorkFlowResponsibleStaff">
+                    <entity-order-by field-name="fName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="buttontext"><submit button-type="button"/></field>
+    </form>
+    
+    
+    
+     <form name="FindEmployeeResponsibleForWorkflow" type="single" target="findEmployeesResponsible" default-entity-name="LeaveWorkFlowResponsibleStaff">
+    <actions>
+		<entity-condition entity-name="LeaveWorkFlowResponsibleStaff">
+                <order-by field-name="leaveWorkFlowResponsibleStaffId"/>
+            </entity-condition>
+			</actions>
+		 <field name="leaveWorkFlowId" title="Select Workflow" >
+            <drop-down allow-empty="true">
+            	<entity-options description="${name}" entity-name="LeaveWorkFlow"></entity-options>
+            </drop-down>
+        </field>
+		 <field name="noConditionFind"><hidden value="Y"/></field><!-- if this isn't there then with all fields empty no query will be done -->        
+        <field name="searchButton" title="Find" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+	
+	
+        
+         <form name="ListLeaveWorkFlowResponsibleStaff" type="multi" use-row-submit="true"
+		title="Selected Monument" separate-columns="true" paginate-target="AddLeaveWorkFlowResponsibleStaff"
+		target="updateWorkflowResponsibleStaff" default-table-style="basic-table hover-bar">
+		
+        <actions>
+            <entity-condition entity-name="LeaveWorkFlowResponsibleStaff"><order-by field-name="leaveWorkFlowResponsibleStaffId"/></entity-condition>
+            
+            <set field="inputFields" from-field="parameters"/>
+        	<service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="employeeCtx"/>
+                <field-map field-name="entityName" value="LeaveWorkFlowResponsibleStaff"/>
+				<field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="leaveWorkFlowResponsibleStaffId"><hidden/></field>
+        <field name="responsibleEmployee"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
+         <field name="leaveWorkFlowId"><display-entity entity-name="LeaveWorkFlow" key-field-name="leaveWorkFlowId" description="${name}"></display-entity></field>
+       <field name="isFirst" title="Is First On Workflow"  required-field="true">
+            <drop-down allow-empty="true">
+                <option key="YES" description="YES"/>
+                <option key="NO" description="NO"/>
+            </drop-down>
+        </field>
+        <field name="isLast" title="Is Last On Workflow" required-field="true">
+            <drop-down allow-empty="true">
+                <option key="YES" description="YES"/>
+                <option key="NO" description="NO"/>
+            </drop-down>
+        </field>
+         <field name="comeBefore"  title="Next Staff On Workflow">
+            <drop-down allow-empty="true">
+                <entity-options description="${fName} ${sName}" key-field-name="responsibleEmployee" entity-name="LeaveWorkFlowResponsibleStaff">
+                    <entity-order-by field-name="fName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        
+         <field name="comeAfter"  title="Previous Staff On Workflow">
+            <drop-down allow-empty="true">
+                <entity-options description="${fName} ${sName}" key-field-name="responsibleEmployee" entity-name="LeaveWorkFlowResponsibleStaff">
+                    <entity-order-by field-name="fName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteWorkflowResponsibleStaff" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete Responsible Staff from workflow?">
+                <parameter param-name="leaveWorkFlowResponsibleStaffId"/>
+            </hyperlink>
+        </field>
+        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>
+    </form>
+	
+	<form name="AddLeaveWorkFlowStaffMapping" type="single" target="createWorkflowStaffMapping" default-map-name="skillType"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="leaveWorkFlowStaffMappingId"><hidden/></field>
+        <field name="partyId" required-field="true" widget-style="required"><lookup target-form-name="LookupEmployee"/></field>
+         <field name="leaveWorkFlowId" title="Workflow"  tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+            <drop-down allow-empty="true">
+                <entity-options description="${name}" key-field-name="leaveWorkFlowId" entity-name="LeaveWorkFlow">
+                    <entity-order-by field-name="name"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="buttontext"><submit button-type="button"/></field>
+    </form>
+	
+	
+          <form name="ListLeaveWorkFlowStaffMapping" type="multi" use-row-submit="true"
+		title="Selected Monument" separate-columns="true" paginate-target="AddLeaveWorkFlowStaffMapping"
+		target="updateWorkflowStaffMapping" default-table-style="basic-table hover-bar">
+		
+        <actions>
+            <entity-condition entity-name="LeaveWorkFlowStaffMapping"><order-by field-name="leaveWorkFlowStaffMappingId"/></entity-condition>
+        </actions>
+        <field name="leaveWorkFlowStaffMappingId"><hidden/></field>
+         <field name="partyId"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
+         <field name="leaveWorkFlowId"><display-entity entity-name="LeaveWorkFlow" key-field-name="leaveWorkFlowId" description="${name}"></display-entity></field>
+         
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteWorkflowStaffMapping" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete Staff from workflow?">
+                <parameter param-name="leaveWorkFlowStaffMappingId"/>
+            </hyperlink>
+        </field>
+    </form>
+    
+	
 </forms>

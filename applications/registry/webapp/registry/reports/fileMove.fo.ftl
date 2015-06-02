@@ -153,8 +153,7 @@ under the License.
                             <#if releasedTo?has_content>
                              
                                <fo:block>${releasedTo.firstName?if_exists} ${releasedTo.lastName?if_exists}</fo:block>
-                            <#else>
-                                
+                            <#else> 
                             <fo:block>${movement.releasedTo?if_exists}</fo:block>
                             </#if>
                         </fo:table-cell>

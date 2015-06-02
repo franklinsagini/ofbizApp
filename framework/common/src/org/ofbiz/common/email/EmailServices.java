@@ -29,6 +29,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.security.Security;
 import java.util.Date;
 import java.util.List;
@@ -311,48 +312,58 @@ public class EmailServices {
         }
 
         Transport trans = null;
-        try {
-            trans = session.getTransport("smtp");
-            if (!useSmtpAuth) {
-                trans.connect();
-            } else {
-                trans.connect(sendVia, authUser, authPass);
-            }
-            trans.sendMessage(mail, mail.getAllRecipients());
-            results.put("messageWrapper", new MimeMessageWrapper(session, mail));
-            results.put("messageId", mail.getMessageID());
-            trans.close();
-        } catch (SendFailedException e) {
-            // message code prefix may be used by calling services to determine the cause of the failure
-            Debug.logError(e, "[ADDRERR] Address error when sending message to [" + sendTo + "] from [" + sendFrom + "] cc [" + sendCc + "] bcc [" + sendBcc + "] subject [" + subject + "]", module);
-            List<SMTPAddressFailedException> failedAddresses = FastList.newInstance();
-            Exception nestedException = null;
-            while ((nestedException = e.getNextException()) != null && nestedException instanceof MessagingException) {
-                if (nestedException instanceof SMTPAddressFailedException) {
-                    SMTPAddressFailedException safe = (SMTPAddressFailedException) nestedException;
-                    Debug.logError("Failed to send message to [" + safe.getAddress() + "], return code [" + safe.getReturnCode() + "], return message [" + safe.getMessage() + "]", module);
-                    failedAddresses.add(safe);
-                    break;
-                }
-            }
-           
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendAddressError", UtilMisc.toMap("sendTo", sendTo, "sendFrom", sendFrom, "sendCc", sendCc, "sendBcc", sendBcc, "subject", subject), locale));
+        
+        if (netIsAvailable()) {
             
-        } catch (MessagingException e) {
-            // message code prefix may be used by calling services to determine the cause of the failure
-            Debug.logError(e, "[CON] Connection error when sending message to [" + sendTo + "] from [" + sendFrom + "] cc [" + sendCc + "] bcc [" + sendBcc + "] subject [" + subject + "]", module);
-            Debug.logError("Email message that could not be sent to [" + sendTo + "] had context: " + context, module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendConnectionError", UtilMisc.toMap("sendTo", sendTo, "sendFrom", sendFrom, "sendCc", sendCc, "sendBcc", sendBcc, "subject", subject), locale));
-        }
+       
         
-        scheduled_mails.set("sendStatus", "SEND");
-        
-        try {
-			delegator.createOrStore(scheduled_mails);
-		} catch (GenericEntityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+        	
+        	 try {
+                 trans = session.getTransport("smtp");
+                 if (!useSmtpAuth) {
+                     trans.connect();
+                 } else {
+                     trans.connect(sendVia, authUser, authPass);
+                 }
+                 trans.sendMessage(mail, mail.getAllRecipients());
+                 results.put("messageWrapper", new MimeMessageWrapper(session, mail));
+                 results.put("messageId", mail.getMessageID());
+                 trans.close();
+             } catch (SendFailedException e) {
+                 // message code prefix may be used by calling services to determine the cause of the failure
+                 Debug.logError(e, "[ADDRERR] Address error when sending message to [" + sendTo + "] from [" + sendFrom + "] cc [" + sendCc + "] bcc [" + sendBcc + "] subject [" + subject + "]", module);
+                 List<SMTPAddressFailedException> failedAddresses = FastList.newInstance();
+                 Exception nestedException = null;
+                 while ((nestedException = e.getNextException()) != null && nestedException instanceof MessagingException) {
+                     if (nestedException instanceof SMTPAddressFailedException) {
+                         SMTPAddressFailedException safe = (SMTPAddressFailedException) nestedException;
+                         Debug.logError("Failed to send message to [" + safe.getAddress() + "], return code [" + safe.getReturnCode() + "], return message [" + safe.getMessage() + "]", module);
+                         failedAddresses.add(safe);
+                         break;
+                     }
+                 }
+                
+                     return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendAddressError", UtilMisc.toMap("sendTo", sendTo, "sendFrom", sendFrom, "sendCc", sendCc, "sendBcc", sendBcc, "subject", subject), locale));
+                 
+             } catch (MessagingException e) {
+                 // message code prefix may be used by calling services to determine the cause of the failure
+                 Debug.logError(e, "[CON] Connection error when sending message to [" + sendTo + "] from [" + sendFrom + "] cc [" + sendCc + "] bcc [" + sendBcc + "] subject [" + subject + "]", module);
+                 Debug.logError("Email message that could not be sent to [" + sendTo + "] had context: " + context, module);
+                 return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendConnectionError", UtilMisc.toMap("sendTo", sendTo, "sendFrom", sendFrom, "sendCc", sendCc, "sendBcc", sendBcc, "subject", subject), locale));
+             }
+             
+             scheduled_mails.set("sendStatus", "SEND");
+             
+             try {
+     			delegator.createOrStore(scheduled_mails);
+     		} catch (GenericEntityException e) {
+     			// TODO Auto-generated catch block
+     			e.printStackTrace();
+     		}
+        } else {
+
 		}
+       
       }
         return results;
     }
@@ -580,6 +591,8 @@ public class EmailServices {
         }
 
         Transport trans = null;
+        if (netIsAvailable()) {
+		
         try {
             trans = session.getTransport("smtp");
             if (!useSmtpAuth) {
@@ -622,6 +635,11 @@ public class EmailServices {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+        
+        } else {
+
+		}
+        
       }
         return results;
     }
@@ -1522,4 +1540,18 @@ public class EmailServices {
             throw new IOException("Cannot write to this read-only resource");
         }
     }
+    
+    
+    public static boolean netIsAvailable() {                                                                                                                                                                                                 
+	    try {                                                                                                                                                                                                                                 
+	        final URL url = new URL("http://www.google.com");                                                                                                                                                                                 
+	        final URLConnection conn = url.openConnection();                                                                                                                                                                                  
+	        conn.connect();                                                                                                                                                                                                                   
+	        return true;                                                                                                                                                                                                                      
+	    } catch (MalformedURLException e) {                                                                                                                                                                                                   
+	        throw new RuntimeException(e);                                                                                                                                                                                                    
+	    } catch (IOException e) {                                                                                                                                                                                                             
+	        return false;                                                                                                                                                                                                                     
+	    }                                                                                                                                                                                                                                     
+	} 
 }
