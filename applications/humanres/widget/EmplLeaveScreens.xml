@@ -708,10 +708,14 @@
 								<screenlet>	
 									
 						<container style="button-bar">
-						 <link target="forwardApplication" style="buttontext create" text="APPROVE EMPLOYEE LEAVE"  height="500" width="500">
+						<!-- <link target="forwardApplication" style="buttontext create" text="APPROVE EMPLOYEE LEAVE"  height="500" width="500">
                 		<parameter param-name="partyId"/>
                 		<parameter param-name="fromDate"/>
                 		<parameter param-name="leaveTypeId"/>
+                		<parameter param-name="leaveId" />
+            			</link> -->
+						
+						 <link target="approveApplication" style="buttontext create" text="APPROVE EMPLOYEE LEAVE"  height="500" width="500">
                 		<parameter param-name="leaveId" />
             			</link>
 								
@@ -721,12 +725,6 @@
                         <parameter param-name="leaveTypeId"/>
                          <parameter param-name="leaveId" />
 						</link>
-						<!-- <link target="popupSentBack" link-type="ajax-window" height="500" width="500" text="SEND BACK LEAVE APPLICATION" style="buttontext create">
-						<parameter param-name="partyId"/>
-                        <parameter param-name="fromDate"/>
-                        <parameter param-name="leaveTypeId"/>
-                         <parameter param-name="leaveId" />
-						</link> -->
 						</container>
 						
 						<container style="button-bar">
@@ -760,6 +758,96 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	
+	
+	<screen name="viewEmplLeaveDetailsForHome">
+		<section>
+			<actions>
+				<property-map resource="HumanResUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<set field="titleProperty" value="findLeaveApprovals" />
+				<!-- <set field="tabButtonItem" value="invoiceOverview" /> -->
+				<set field="partyId" from-field="parameters.partyId" />
+				<set field="fromDate" from-field="parameters.fromDate" />
+				<set field="leaveTypeId" from-field="parameters.leaveTypeId" />
+				<set field="leaveId" from-field="parameters.leaveId" />
+
+				<entity-one entity-name="EmplLeaveView" value-field="empleave" />
+				<entity-and entity-name="EmplLeave" list="emplLeaves">
+					<field-map from-field="parameters.partyId" field-name="partyId" />
+					<field-map from-field="parameters.fromDate" field-name="fromDate" />
+					<field-map from-field="parameters.leaveTypeId" field-name="leaveTypeId" />
+					<field-map from-field="parameters.leaveId" field-name="leaveId" />					
+					<!-- <order-by field-name="leaveId" /> -->
+				</entity-and>
+				<entity-and entity-name="LeaveStatusLog" list="leaveLogs">
+					<field-map from-field="parameters.partyId" field-name="partyId" />
+					<!-- <field-map from-field="parameters.leaveId" field-name="leaveId" /> -->
+				</entity-and>
+				<entity-and entity-name="EmplLeave" list="listIt">
+					<field-map from-field="parameters.partyId" field-name="partyId" />
+				</entity-and>
+				<entity-one entity-name="Person" value-field="memberContext"/>
+
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<include-menu name="UniversalEmplLeaveTabBar"
+							location="component://humanres/widget/HumanresMenus.xml" />
+						<section>
+							<widgets>
+								<screenlet>	
+									
+						<container style="button-bar">
+						
+						 <link target="approveApplication" style="buttontext create" text="APPROVE EMPLOYEE LEAVE"  height="500" width="500">
+                		<parameter param-name="leaveId" />
+            			</link>
+								
+						<link target="popup" link-type="ajax-window" height="400" width="700" text="REJECT EMPLOYEE LEAVE" style="buttontext create">
+						<parameter param-name="partyId"/>
+                        <parameter param-name="fromDate"/>
+                        <parameter param-name="leaveTypeId"/>
+                         <parameter param-name="leaveId" />
+						</link>
+						</container>
+						
+						<container style="button-bar">
+						
+						</container>
+								</screenlet>
+								<screenlet title="${uiLabelMap.StaffLeaveDetails} : ${memberContext.firstName} ${memberContext.lastName}">
+									<include-form name="ListMyLeaves"
+										location="component://humanres/widget/forms/EmplLeaveForms.xml" />
+								</screenlet> 
+								<screenlet>	
+								
+								</screenlet>
+								<!-- <container style="lefthalf"> 
+									<screenlet title="${uiLabelMap.HumanResStaffHistory} : ${memberContext.firstName} ${memberContext.lastName}"
+										navigation-form-name="ListEmplLeaves">
+										<include-form name="ListEmplLeaves"
+											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
+									</screenlet>
+								</container> -->
+							<!-- 	<container style="righthalf">
+									<screenlet title="${uiLabelMap.LeaveLogs} : ${memberContext.firstName} ${memberContext.lastName}"					navigation-form-name="ListLeaveLogs">
+										<include-form name="ListLeaveLogs"
+											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
+									</screenlet>
+								 </container>  --> 
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	
 	
 	
 	
@@ -932,7 +1020,7 @@
 			</actions>
 			<widgets>
 				
-				
+				<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 					<screenlet> 
                                     
@@ -967,6 +1055,7 @@
 					
 						
 					</decorator-section>
+					</decorator-screen>
 			</widgets>
 		</section>
 	</screen>

@@ -59,6 +59,11 @@
 		<response name="success" type="view" value="fileRquestScreen" />
 	</request-map>
 	
+		<request-map uri="regFileQueue">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="regFileQueue" />
+	</request-map>
+	
 	<request-map uri="regFileReceive">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="fileReceiveScreen" />
@@ -137,6 +142,18 @@
         <response name="success" type="view" value="documentOverviewViewMap"/>
     </request-map>
     
+    <request-map uri="viewEmplLeaveDetails">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="viewEmplLeaveDetails" />
+	</request-map>
+	
+	<!-- ================REJECT LEAVE WITH REASON========================= -->
+	<request-map uri="rejectLeaveWithReason">
+		<security https="true" auth="true" />
+		<event type="service" invoke="rejectLeaveWithReason" />
+		<response name="success" type="view" value="viewEmplLeaveDetails" />
+	</request-map>
+    
     <!-- Volume Overview -->
     <request-map uri="volumeOverviewURL">
         <security https="true" auth="true"/>
@@ -175,17 +192,31 @@
         <response name="success" type="request-redirect-noparam" value="leaveCalender"/>
     </request-map>
 	
-	<request-map uri="forwardApplication">
-        <security auth="true" https="true"/>
-        <event type="java" path="org.ofbiz.humanres.LeaveServices" invoke="forwardApplication"/>
-    <response name="success" type="view" value="humanresource">
-    <redirect-parameter name="partyId"/>
-    <redirect-parameter name="fromDate"/>
-    <redirect-parameter name="leaveTypeId"/>
-    <redirect-parameter name="leaveId"/>
-    </response>
-    <response name="error" type="view" value="humanresource" />
-    </request-map>
+    
+   <request-map uri="approveApplication">
+		<security auth="true" https="true" />
+		<event type="java" path="org.ofbiz.humanres.LeaveServices"
+			invoke="approveLeave" />
+		<response name="success" type="view" value="LeaveApprovals"/>
+		<response name="error" type="view" value="LeaveApprovals" />
+	</request-map> 
+	
+	<!-- <request-map uri="SubmitApplication">
+		<security https="true" auth="true" />
+		<event type="service" invoke="SubmitApplication" />
+		<response name="success" type="request-redirect-noparam" value="FindEmplLeaves" />
+		<response name="error" type="view" value="FindEmplLeaves" />
+	</request-map> -->
+	
+	  <request-map uri="SubmitApplication">
+		<security auth="true" https="true" />
+		<event type="java" path="org.ofbiz.humanres.LeaveServices"
+			invoke="ForwardMyLeaveApplication" />
+		<response name="success" type="view" value="FindEmplLeaves"/>
+		<response name="error" type="view" value="FindEmplLeaves" />
+	</request-map> 
+	
+	
 	
 	 <request-map uri="createEmplLeaveExt">
         <security https="true" auth="true"/>
@@ -372,6 +403,9 @@
 	   
 	   <view-map name="staffTrainingNeeds" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#PerfHODReviewAddStaffWithTrainingNeedScreen"/>
 	   <view-map name="addStaffToTrainingList" type="screen"	page="component://humanres/widget/PersonTrainingScreens.xml#AddStaffWithTrainingNeedsScreen"/>
+	   <view-map name="viewEmplLeaveDetails" type="screen"	page="component://humanres/widget/EmplLeaveScreens.xml#viewEmplLeaveDetailsForHome" />
+	   
+	   
 	   
 	   <view-map name="HarmonizedReviewStaff" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#PerfHarmonizedReviewingsScreen"/>
 	   <view-map name="HODreviewStaff" type="screen"	page="component://chaisacco/widget/chaisaccoScreens.xml#PerfHODReviewingsScreen"/>
@@ -384,6 +418,7 @@
 	<view-map name="documentOverviewViewMap" type="screen" page="component://registry/widget/FileScreens.xml#RegistryDocumentOverviewScreen"/>
 	<view-map name="volumeOverviewURL" type="screen" page="component://registry/widget/FileScreens.xml#RegistryVolumeOverviewScreen"/>
 
+	<view-map name="regFileQueue" type="screen"	page="component://registry/widget/FileScreens.xml#FileQueuScreen" />
 	<view-map name="requestingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#requestingFiles" />
 	<view-map name="releasingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#releasingFiles" />
 	<view-map name="releaseFileToAnotherStaff" type="screen"	page="component://registry/widget/FileScreens.xml#releaseFileToAnotherStaff" />

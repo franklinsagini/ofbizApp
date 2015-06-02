@@ -343,6 +343,52 @@
         
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
     </form>
+    
+    <!-- NewStationProductCodeMap -->
+    	<form name="NewStationProductCodeMap" type="single" target="createStationProductCodeMap"
+        focus-field-name="onlineShareCapitalCode" header-row-style="header-row" default-table-style="basic-table" default-map-name="stationProductCodeMapContext">
+        
+        <field name="onlineShareCapitalCode" title="Online Share Capital Code" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<text size="25" default-value="D136"></text>
+        </field>
+
+        <field name="systemShareCapitalCode" title="System Share Capital Code" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<text size="25" default-value="902"></text>
+        </field>
+       
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+
+    <!-- listStationProductCodeMap -->
+    	<form name="listStationProductCodeMap" type="list" list-name="listIt"
+		paginate-target="stationProductCodeMap" default-entity-name="StationProductCodeMap"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="stationProductCodeMap">
+		<actions>
+            <entity-condition entity-name="StationProductCodeMap">
+            	<order-by field-name="-stationProductCodeMapId"/>
+            </entity-condition>
+        </actions>
+		<field name="stationProductCodeMapId"><hidden/></field>
+		
+		<field name="onlineShareCapitalCode" title="Online Share Capital Code">
+			<display></display>
+		</field>
+		
+		<field name="systemShareCapitalCode" title="System Share Capital Code">
+			<display></display>
+		</field>
+		
+		
+		<field name="createdStamp" title="Created">
+			<display type="date-time" />
+		</field>
+		
+		<field name="createdBy" title="Created By">
+			<display />
+		</field>
+	</form>
 	
 
 </forms>
