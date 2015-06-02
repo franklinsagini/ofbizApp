@@ -1276,7 +1276,7 @@ public class RemittanceServices {
 
 				// Add the member to the missing log
 				log.info("AAAAAAAAAAAAAAAA Adding a member!!!!!!!!!!!!!! for "+payrollNo);
-				addMissingMemberLog(userLogin, payrollNo, month, employerCode, FOSA_SAVINGS_CODE, null);
+				addMissingMemberLog(userLogin, payrollNo, month, employerCode, FOSA_SAVINGS_CODE, null, null);
 			}
 
 		}
@@ -1342,8 +1342,8 @@ public class RemittanceServices {
 	 *         Savings Account, Payroll Numbers, Member Deposits or Share
 	 *         Capital
 	 * */
-	private static void addMissingMemberLog(Map<String, String> userLogin,
-			String payrollNo, String month, String employerCode, String productCode, String loanNo) {
+	public static void addMissingMemberLog(Map<String, String> userLogin,
+			String payrollNo, String month, String employerCode, String productCode, String loanNo, String employeeNumber) {
 		GenericValue missingMemberLog = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		Long missingMemberLogId = delegator.getNextSeqIdLong(
@@ -1394,6 +1394,9 @@ public class RemittanceServices {
 						
 						
 						"code", productCode,
+						
+						
+						"employeeNumber", employeeNumber,
 						
 						"productName", productName,
 
@@ -1462,7 +1465,7 @@ public class RemittanceServices {
 				failed = true;
 
 				// Add the member to the missing log
-				addMissingMemberLog(userLogin, payrollNo, month, employerCode, MEMBER_DEPOSIT_CODE, null);
+				addMissingMemberLog(userLogin, payrollNo, month, employerCode, MEMBER_DEPOSIT_CODE, null, null);
 			}
 
 		}
@@ -1511,7 +1514,7 @@ public class RemittanceServices {
 				failed = true;
 
 				// Add the member to the missing log
-				addMissingMemberLog(userLogin, payrollNo, month, employerCode, SHARE_CAPITAL_CODE, null);
+				addMissingMemberLog(userLogin, payrollNo, month, employerCode, SHARE_CAPITAL_CODE, null, null);
 			}
 
 		}
@@ -2722,7 +2725,7 @@ public class RemittanceServices {
 
 				// Add the member to the missing log
 				log.info("AAAAAAAAAAAAAAAA Adding a member!!!!!!!!!!!!!! for "+payrollNo);
-				addMissingMemberLog(userLogin, payrollNo, month, employerCode, code, null);
+				addMissingMemberLog(userLogin, payrollNo, month, employerCode, code, null, null);
 			}
 		}
 		return failed;
@@ -2814,7 +2817,7 @@ public class RemittanceServices {
 		
 		if ((loanApplicationELI == null) || (loanApplicationELI.size() < 1)){
 			log.info("TTTTT To add Loan TTTTTTTT to the missing");
-			addMissingMemberLog(userLogin, payrollNo, month, employerCode, null, loanNo);
+			addMissingMemberLog(userLogin, payrollNo, month, employerCode, null, loanNo, null);
 			
 			return true;
 		}

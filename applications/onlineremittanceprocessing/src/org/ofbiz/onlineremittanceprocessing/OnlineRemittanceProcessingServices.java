@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.ofbiz.accountholdertransactions.LoanUtilities;
+import org.ofbiz.accountholdertransactions.RemittanceServices;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
@@ -610,7 +611,7 @@ public class OnlineRemittanceProcessingServices {
 		// Get station from the PullMonthYearItem and see if it exists
 		GenericValue station = LoanUtilities.getStation(pullMonthYearItem
 				.getString("stationId"));
-		String employerCodet = station.getString("employerCode");
+		String employerCode = station.getString("employerCode");
 		String Onlinecode = station.getString("Onlinecode");
 		Onlinecode = Onlinecode.trim();
 		// Concatenate Month and Year to get month to use in getting the data
@@ -625,7 +626,7 @@ public class OnlineRemittanceProcessingServices {
 		// TODO
 		Boolean alreadyPulled = false;
 		log.info(" PPPPPPPPPPP Just before checking if pulled !!!");
-		alreadyPulled = getStationAlreadyPulled(employerCodet, month);
+		alreadyPulled = getStationAlreadyPulled(employerCode, month);
 		if (alreadyPulled)
 			return "alreadypulled";
 
@@ -704,6 +705,8 @@ public class OnlineRemittanceProcessingServices {
 					
 					//Add a missing member (member number for station)
 					//TODO
+					//String employerCode = LoanUtilities.getS
+					RemittanceServices.addMissingMemberLog(userLogin, payrollNo, month, employerCode, rsExpected.getString("Rem Code"), String.valueOf(rsExpected.getLong("Loan No")), employeeNumber);
 				}
 				// rsExpected.getString("PayrollNo");
 				// if remittance code is the share capital code then
@@ -753,6 +756,7 @@ public class OnlineRemittanceProcessingServices {
 
 		if (missingMember){
 			//Delete records added for this station and month
+			RemittanceServices.deleteReceivedPaymentBreakdown(userLogin, employerCode, month);
 			// TODO
 			return "failed";
 		}

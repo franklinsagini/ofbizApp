@@ -1066,6 +1066,27 @@ public class LoanUtilities {
 		}
 		return stationIdList;
 	}
+	
+	public static GenericValue getStationGivenOnlineCode(String onlineCode) {
+		List<GenericValue> stationELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			stationELI = delegator
+					.findList("Station", EntityCondition.makeCondition(
+							"Onlinecode", onlineCode.trim()), null, null, null,
+							false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		GenericValue station = null;
+
+		for (GenericValue genericValue : stationELI) {
+			station = genericValue;
+		}
+		
+		return station;
+	}
 
 	public static String getBranchName(String fromBranchId) {
 
