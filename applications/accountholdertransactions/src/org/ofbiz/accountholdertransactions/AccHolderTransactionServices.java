@@ -19,10 +19,12 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import javolution.util.FastMap;
 
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 import org.ofbiz.accountholdertransactions.model.ATMTransaction;
@@ -4158,6 +4160,86 @@ public class AccHolderTransactionServices {
 		}
 
 		return json;
+	}
+	
+	/****
+	 * Check teller 
+	 * 
+	 * */
+	// HttpServletRequest request, HttpServletResponse response
+	public static synchronized String checkTellerLimitOnDeposit(HttpServletRequest request, HttpServletResponse response) {
+	
+		HttpSession session;
+		session = request.getSession();
+		Map<String, String> userLogin = (Map<String, String>) session.getAttribute("userLogin");
+
+		// request
+		// .getAttribute("userLogin");
+		// if (session.getAttribute(userLogin.get("userLoginId")) == null)
+		// {
+		// log.info(" LLLLLLLLLLL Yet to start Processing LLLLLLLLLLLLL, will set startedProcessing and start ...the user is "+userLogin.get("userLoginId"));
+		// session.setAttribute(userLogin.get("userLoginId"), true);
+		// } else {
+		// log.info(" SSSSSSSSSSS Started Process , wont do processing the user is "+userLogin.get("userLoginId"));
+		//
+		// }
+		Map<String, Object> result = FastMap.newInstance();
+		
+		//LoanUtilities.get
+		
+
+		String treasuryId = TreasuryUtility.getTellerId(userLogin);
+		//(String) request.getParameter("treasuryId");
+
+		//Long memberAccountId = Long.valueOf(request
+		//		.getParameter("memberAccountId"));
+
+		BigDecimal transactionAmount = new BigDecimal(
+				request.getParameter("transactionAmount"));
+		
+		log.info(" TTTTTTT Transaction Amount ---- "+transactionAmount);
+		log.info(" TTTTTTT Treasury ID ---- "+treasuryId);
+		
+		Boolean tellerOverLimit = TreasuryUtility.isTellerOverLimit(userLogin,treasuryId, transactionAmount);
+
+		result.put("TELLEROVERLIMIT", tellerOverLimit);
+
+		Gson gson = new Gson();
+		String json = gson.toJson(result);
+
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
+		return json;
+
 	}
 
 }

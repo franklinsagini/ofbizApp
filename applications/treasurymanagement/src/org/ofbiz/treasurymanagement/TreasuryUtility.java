@@ -44,9 +44,10 @@ public class TreasuryUtility {
 
 		return bdTellerBalance;
 	}
-	
-	//getTellerBalance
-	public static BigDecimal getTellerBalanceWithOpeningBalance(Map<String, String> userLogin) {
+
+	// getTellerBalance
+	public static BigDecimal getTellerBalanceWithOpeningBalance(
+			Map<String, String> userLogin) {
 
 		BigDecimal bdTellerBalance = BigDecimal.ZERO;
 
@@ -55,26 +56,28 @@ public class TreasuryUtility {
 		BigDecimal bdTotalAllocated = getTotalAllocated(userLogin);
 		BigDecimal bdTotalCashDeposits = getTotalCashDepositToday(userLogin);
 		BigDecimal bdTotalCashWithdrawals = getTotalCashWithdrawalToday(userLogin);
-		
+
 		String partyId = userLogin.get("partyId");
 		String treasuryId = getTeller(partyId).getString("treasuryId");
-		
-		//Date date = new Date
+
+		// Date date = new Date
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.MILLISECOND, 0);
 		calendar.set(Calendar.SECOND, 0);
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.HOUR_OF_DAY, 0);
-		
+
 		Date date = new Date(calendar.getTimeInMillis());
 
 		BigDecimal bdOpeningBalance = getOpeningBalance(treasuryId, date);
-		BigDecimal bdDeallocatedAmount = getTotalDeAllocatedToday(userLogin, new Timestamp(date.getTime()));
-		bdTellerBalance = bdTotalAllocated.add(bdOpeningBalance).add(bdTotalCashDeposits).subtract(
-				bdTotalCashWithdrawals);
+		BigDecimal bdDeallocatedAmount = getTotalDeAllocatedToday(userLogin,
+				new Timestamp(date.getTime()));
+		bdTellerBalance = bdTotalAllocated.add(bdOpeningBalance)
+				.add(bdTotalCashDeposits).subtract(bdTotalCashWithdrawals);
 		bdTellerBalance = bdTellerBalance.subtract(bdDeallocatedAmount);
 		log.info("DDDDDDDD DDDDDDDDDDD ########## ");
-		log.info("DDDDDDDD AMount Deallocated is ########## "+bdDeallocatedAmount);
+		log.info("DDDDDDDD AMount Deallocated is ########## "
+				+ bdDeallocatedAmount);
 
 		return bdTellerBalance;
 	}
@@ -193,19 +196,20 @@ public class TreasuryUtility {
 		}
 		return bdBalance;
 	}
-	
-	public static BigDecimal getOpeningBalance(Map<String, String> userLogin){
-		
+
+	public static BigDecimal getOpeningBalance(Map<String, String> userLogin) {
+
 		String partyId = userLogin.get("partyId");
 		String treasuryId = getTeller(partyId).getString("treasuryId");
-		
+
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.MILLISECOND, 0);
 		calendar.set(Calendar.SECOND, 0);
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.HOUR_OF_DAY, 0);
-		
-		return getOpeningBalance(treasuryId, new Date(calendar.getTimeInMillis()));
+
+		return getOpeningBalance(treasuryId,
+				new Date(calendar.getTimeInMillis()));
 	}
 
 	public static BigDecimal getOpeningBalance(String treasuryId, Date date) {
@@ -226,16 +230,17 @@ public class TreasuryUtility {
 		Map<String, String> userLogin = new HashMap<String, String>();
 		userLogin.put("userLoginId", userLoginId);
 		userLogin.put("partyId", partyId);
-		
-		
-		String treasuryTypeName = TreasuryReconciliation.getTreasuryTypeName(treasuryId);
-		if (treasuryTypeName.equals("BANK"))
-		{
-			
+
+		String treasuryTypeName = TreasuryReconciliation
+				.getTreasuryTypeName(treasuryId);
+		if (treasuryTypeName.equals("BANK")) {
+
 			log.info("IIIIIIIII Its a BANK !!!!!!!!!!!!!!!!!!!!! ");
-			String glAccountId = TreasuryReconciliation.getTreasuryAccountId(treasuryId);
-			bdBalance = TreasuryAccounting.getAccountBalance(glAccountId, transactionDate);
-			
+			String glAccountId = TreasuryReconciliation
+					.getTreasuryAccountId(treasuryId);
+			bdBalance = TreasuryAccounting.getAccountBalance(glAccountId,
+					transactionDate);
+
 			return bdBalance;
 		}
 
@@ -487,9 +492,9 @@ public class TreasuryUtility {
 
 		return bdAmountAllocated;
 	}
-	
-	public static BigDecimal getTotalDeAllocatedToday(Map<String, String> userLogin,
-			Timestamp date) {
+
+	public static BigDecimal getTotalDeAllocatedToday(
+			Map<String, String> userLogin, Timestamp date) {
 		// Get Treasury ID
 		String partyId = userLogin.get("partyId");
 		String treasuryId = getTeller(partyId).getString("treasuryId");
@@ -511,8 +516,9 @@ public class TreasuryUtility {
 
 		return bdAmountAllocated;
 	}
-	
-	public static BigDecimal getTotalDeAllocatedToday(Map<String, String> userLogin) {
+
+	public static BigDecimal getTotalDeAllocatedToday(
+			Map<String, String> userLogin) {
 		// Get Treasury ID
 		String partyId = userLogin.get("partyId");
 		String treasuryId = getTeller(partyId).getString("treasuryId");
@@ -796,7 +802,7 @@ public class TreasuryUtility {
 		}
 		return treasuryTransferList;
 	}
-	
+
 	private static List<GenericValue> getTreasuryTransferOutListToday(
 			String treasuryId, Timestamp date) {
 		List<GenericValue> treasuryTransferELI = null;
@@ -822,8 +828,8 @@ public class TreasuryUtility {
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"sourceTreasury", EntityOperator.EQUALS, treasuryId),
 						EntityCondition.makeCondition("createdStamp",
-								EntityOperator.GREATER_THAN_EQUAL_TO, new Timestamp(
-										calendar.getTimeInMillis()))),
+								EntityOperator.GREATER_THAN_EQUAL_TO,
+								new Timestamp(calendar.getTimeInMillis()))),
 						EntityOperator.AND);
 
 		try {
@@ -965,9 +971,9 @@ public class TreasuryUtility {
 		}
 		return bdBalance;
 	}
-	
-	
-	public static BigDecimal getTotalCashDepositToday(Map<String, String> userLogin) {
+
+	public static BigDecimal getTotalCashDepositToday(
+			Map<String, String> userLogin) {
 		// TODO Auto-generated method stub
 		String createdBy = userLogin.get("userLoginId");
 
@@ -977,8 +983,7 @@ public class TreasuryUtility {
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.HOUR_OF_DAY, 0);
 
-		 Timestamp tstampDateCreated = new
-		 Timestamp(calendar.getTimeInMillis());
+		Timestamp tstampDateCreated = new Timestamp(calendar.getTimeInMillis());
 
 		List<GenericValue> cashDepositELI = null;
 
@@ -987,15 +992,11 @@ public class TreasuryUtility {
 						"createdBy", EntityOperator.EQUALS, createdBy),
 						EntityCondition.makeCondition("transactionType",
 								EntityOperator.EQUALS, "CASHDEPOSIT")
-						
-								 ,
-							 EntityCondition
-							 .makeCondition("createdStamp",
-							 EntityOperator.GREATER_THAN_EQUAL_TO, tstampDateCreated)
-						),
-						EntityOperator.AND);
 
-		
+						, EntityCondition.makeCondition("createdStamp",
+								EntityOperator.GREATER_THAN_EQUAL_TO,
+								tstampDateCreated)), EntityOperator.AND);
+
 		log.info(" ############ Cash Deposit createdBy : " + createdBy);
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
@@ -1013,7 +1014,7 @@ public class TreasuryUtility {
 		}
 		return bdBalance;
 	}
-	
+
 	public static BigDecimal getTotalCashWithdrawalToday(
 			Map<String, String> userLogin) {
 		// TODO Auto-generated method stub
@@ -1025,8 +1026,7 @@ public class TreasuryUtility {
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.HOUR_OF_DAY, 0);
 
-		 Timestamp tstampDateCreated = new
-		 Timestamp(calendar.getTimeInMillis());
+		Timestamp tstampDateCreated = new Timestamp(calendar.getTimeInMillis());
 
 		List<GenericValue> cashWithdrawalELI = null;
 		// CASHWITHDRAWAL
@@ -1035,15 +1035,12 @@ public class TreasuryUtility {
 						"createdBy", EntityOperator.EQUALS, createdBy),
 						EntityCondition.makeCondition("transactionType",
 								EntityOperator.EQUALS, "CASHWITHDRAWAL"),
-								
-								 EntityCondition
-								 .makeCondition("createdStamp",
-								 EntityOperator.GREATER_THAN_EQUAL_TO, tstampDateCreated)),
-						EntityOperator.AND);
+
+						EntityCondition.makeCondition("createdStamp",
+								EntityOperator.GREATER_THAN_EQUAL_TO,
+								tstampDateCreated)), EntityOperator.AND);
 
 		log.info(" ############ Cash withdrawal createdBy : " + createdBy);
-
-		
 
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 
@@ -1091,12 +1088,11 @@ public class TreasuryUtility {
 		String partyId = userLogin.get("partyId");
 
 		GenericValue teller = getTeller(partyId);
-		
-		
-		if (!tellerOpened(userLogin)){
+
+		if (!tellerOpened(userLogin)) {
 			return false;
 		}
-		
+
 		BigDecimal bdTellerBalance = getTellerBalance(userLogin);
 
 		if (teller != null) // check that the teller assigned is of type teller
@@ -1108,7 +1104,7 @@ public class TreasuryUtility {
 
 		return false;
 	}
-	
+
 	public static Boolean tellerOpened(Map<String, String> userLogin) {
 
 		// Get the teller assigned to this partyId (name for Treasury where
@@ -1116,16 +1112,16 @@ public class TreasuryUtility {
 		String partyId = userLogin.get("partyId");
 
 		GenericValue teller = getTeller(partyId);
-		
-		//Check if there is a transfer for today
+
+		// Check if there is a transfer for today
 		String destinationTreasury = null;
-		
+
 		destinationTreasury = teller.getString("treasuryId");
-		
-		Boolean todayTransferExists =  false;
-		
+
+		Boolean todayTransferExists = false;
+
 		todayTransferExists = todayTransfer(destinationTreasury);
-		
+
 		// BigDecimal bdTellerBalance = getTellerBalance(userLogin);
 		//
 		// if (teller != null) // check that the teller assigned is of type
@@ -1135,12 +1131,12 @@ public class TreasuryUtility {
 		// return true;
 		// }
 		// }
-		
+
 		return todayTransferExists;
 	}
 
 	private static Boolean todayTransfer(String destinationTreasury) {
-		
+
 		/****
 		 * 
 		 * **/
@@ -1149,8 +1145,8 @@ public class TreasuryUtility {
 
 		// Set calendar to truncate current time timestamp to Year, Month and
 		// Day only (exclude hour, minute and seconds)
-		//Date currentDate = new java.util.Date();
-		//Timestamp date = new Timestamp()
+		// Date currentDate = new java.util.Date();
+		// Timestamp date = new Timestamp()
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(Calendar.getInstance().getTimeInMillis());
 		// Calendar calendar = Calendar.getInstance();
@@ -1166,10 +1162,10 @@ public class TreasuryUtility {
 
 		EntityConditionList<EntityExpr> transferConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"destinationTreasury", EntityOperator.EQUALS, destinationTreasury),
-						EntityCondition.makeCondition("createdStamp",
-								EntityOperator.GREATER_THAN_EQUAL_TO, new Timestamp(
-										calendar.getTimeInMillis()))),
+						"destinationTreasury", EntityOperator.EQUALS,
+						destinationTreasury), EntityCondition.makeCondition(
+						"createdStamp", EntityOperator.GREATER_THAN_EQUAL_TO,
+						new Timestamp(calendar.getTimeInMillis()))),
 						EntityOperator.AND);
 
 		try {
@@ -1180,10 +1176,9 @@ public class TreasuryUtility {
 			e2.printStackTrace();
 		}
 
-		
 		if ((treasuryTransferELI != null) && (treasuryTransferELI.size() > 0))
 			return true;
-		
+
 		return false;
 	}
 
@@ -1303,6 +1298,72 @@ public class TreasuryUtility {
 		}
 
 		return finAccountName;
+	}
+
+	public static Boolean isTellerOverLimit(Map<String, String> userLogin,
+			String treasuryId, BigDecimal transactionAmount) {
+		// TODO Auto-generated method stub
+
+		// Date date = new Date(Calendar.getInstance().getTimeInMillis());
+		BigDecimal bdTreasuryBalance = getTellerBalanceWithOpeningBalance(userLogin);
+
+		// TreasuryReconciliation.getTotalBalance(treasuryId, date);
+		// getTellerBalance(userLogin);
+		BigDecimal bdTreasuryLimitAmount = getTellerLimit(treasuryId);
+
+		log.info("TTTTTTTTTTT Teller Limit amount is " + bdTreasuryLimitAmount);
+		log.info("TTTTTTTTTTT Treasury Balance amount is " + bdTreasuryBalance);
+		log.info("TTTTTTTTTTT Transaction amount is " + transactionAmount);
+
+		BigDecimal bdBalanceAfterTransaction = bdTreasuryBalance
+				.add(transactionAmount);
+		log.info("TTTTTTTTTTT Balance after transaction amount is "
+				+ bdBalanceAfterTransaction);
+
+		if (bdBalanceAfterTransaction.compareTo(bdTreasuryLimitAmount) == 1)
+			return true;
+
+		return false;
+	}
+
+	/***
+	 * @author Japheth Odonya @when Jun 2, 2015 3:28:27 PM Get the limit for
+	 *         teller or any other treasy type
+	 * */
+	public static BigDecimal getTellerLimit(String treasuryId) {
+		List<GenericValue> treasuryELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			treasuryELI = delegator.findList("Treasury",
+					EntityCondition.makeCondition("treasuryId", treasuryId),
+					null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		String treasuryTypeId = "";
+		for (GenericValue genericValue : treasuryELI) {
+			treasuryTypeId = genericValue.getString("treasuryTypeId");
+		}
+
+		// get the limit for the treasury type
+		List<GenericValue> treasuryTypeELI = null; // =
+		try {
+			treasuryTypeELI = delegator.findList("TreasuryType",
+					EntityCondition.makeCondition("treasuryTypeId",
+							treasuryTypeId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		BigDecimal bdTreasuryLimt = BigDecimal.ZERO;
+		GenericValue treasuryType = null;
+		for (GenericValue genericValue : treasuryTypeELI) {
+			treasuryType = genericValue;
+		}
+
+		bdTreasuryLimt = treasuryType.getBigDecimal("limitAmount");
+		return bdTreasuryLimt;
 	}
 
 }
