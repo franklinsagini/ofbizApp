@@ -421,9 +421,13 @@ public class EmailServices {
 		            e.printStackTrace();
 		       } 
 		      if (email!=null) {
-		    	  sendTo = email.getString("emailAddress");
-		    	  body = genericValue.getString("body");
-		    	  subject = genericValue.getString("subject");
+		    	  
+		    	  if (email.getString("emailAddress") != null) {
+		    		  sendTo = email.getString("emailAddress");
+			    	  body = genericValue.getString("body");
+			    	  subject = genericValue.getString("subject");
+				}
+		    	 
 		    	  
 		    	  results.put("communicationEventId", communicationEventId);
 		          results.put("partyId", partyId);
@@ -600,6 +604,7 @@ public class EmailServices {
             } else {
                 trans.connect(sendVia, authUser, authPass);
             }
+            
             trans.sendMessage(mail, mail.getAllRecipients());
             results.put("messageWrapper", new MimeMessageWrapper(session, mail));
             results.put("messageId", mail.getMessageID());
