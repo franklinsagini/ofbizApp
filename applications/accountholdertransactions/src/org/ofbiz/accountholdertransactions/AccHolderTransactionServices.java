@@ -913,7 +913,8 @@ public class AccHolderTransactionServices {
 						entrySequenceId, "partyId", partyId, "glAccountTypeId",
 						acctgTransType, "glAccountId", loanReceivableAccount,
 
-						"organizationPartyId", "Company", "amount",
+						//"organizationPartyId", "Company", "amount",
+						"organizationPartyId", partyId, "amount",
 						bdLoanAmount, "currencyUomId", "KES", "origAmount",
 						bdLoanAmount, "origCurrencyUomId", "KES",
 						"debitCreditFlag", postingType, "reconcileStatusId",
@@ -1693,16 +1694,36 @@ public class AccHolderTransactionServices {
 		Delegator delegator = stationAccountTransaction.getDelegator();
 		BigDecimal transactionAmount = stationAccountTransaction
 				.getBigDecimal("transactionAmount");
-		String partyId = (String) userLogin.get("partyId");
+		//String partyId = (String) userLogin.get("partyId");
 
 		// Get Member Branch
-		String branchId;
-		branchId = getBranch(partyId);
+		//String branchId;
+		//branchId = getBranch(partyId);
+		Long branchId = stationAccountTransaction.getLong("branchId");
+		
 
 		// Debit Cash/Bank Account
 
 		String memberDepositAccountId = getMemberDepositAccount(
 				stationAccountTransaction, "STATIONACCOUNTPAYMENT");
+		String cashAccountId = getCashAccount(stationAccountTransaction,
+				"STATIONACCOUNTPAYMENT");
+		
+		//Check that the two accounts member deposits and cash deposit accounts are mapped to
+		// the branch - 
+		
+		if ((memberDepositAccountId == null) || (memberDepositAccountId.equals("")))
+			return "stationdepositaccountnotset";
+		
+		if ((cashAccountId == null) || (cashAccountId.equals("")))
+			return "stationdepositaccountnotset";
+		
+		if(!LoanUtilities.organizationAccountMapped(memberDepositAccountId, branchId.toString()))
+			return "accountsnotmapped";
+		 
+		if(!LoanUtilities.organizationAccountMapped(cashAccountId, branchId.toString()))
+			return "accountsnotmapped";
+		
 		String postingType = "D";
 		String entrySequenceId = "00001";
 		try {
@@ -1710,7 +1731,7 @@ public class AccHolderTransactionServices {
 		} catch (GenericTransactionException e) {
 			e.printStackTrace();
 		}
-		postTransactionEntry(delegator, transactionAmount, branchId,
+		postTransactionEntry(delegator, transactionAmount, branchId.toString(),
 				memberDepositAccountId, postingType, acctgTransId,
 				acctgTransType, entrySequenceId);
 		try {
@@ -1719,8 +1740,7 @@ public class AccHolderTransactionServices {
 			e.printStackTrace();
 		}
 		// Credit Station Deposit Account
-		String cashAccountId = getCashAccount(stationAccountTransaction,
-				"STATIONACCOUNTPAYMENT");
+		
 		postingType = "C";
 		entrySequenceId = "00002";
 		try {
@@ -1728,12 +1748,21 @@ public class AccHolderTransactionServices {
 		} catch (GenericTransactionException e) {
 			e.printStackTrace();
 		}
-		postTransactionEntry(delegator, transactionAmount, branchId,
+		postTransactionEntry(delegator, transactionAmount, branchId.toString(),
 				cashAccountId, postingType, acctgTransId, acctgTransType,
 				entrySequenceId);
 		try {
 			TransactionUtil.commit();
 		} catch (GenericTransactionException e) {
+			e.printStackTrace();
+		}
+		
+		//Update the station transaction with acctgTransId
+		stationAccountTransaction.set("acctgTransId", acctgTransId);
+		try {
+			delegator.createOrStore(stationAccountTransaction);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

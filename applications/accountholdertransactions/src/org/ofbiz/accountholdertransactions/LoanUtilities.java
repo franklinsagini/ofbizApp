@@ -1675,6 +1675,44 @@ public class LoanUtilities {
 		
 		return listStationId;
 	}
+	
+	
+	/****
+	 * @author Japheth Odonya  @when Jun 3, 2015 9:56:25 PM
+	 * 
+	 * Check if account is mapped to a branch
+	 * 
+	 * returns false if not
+	 * returns true is mapped
+	 * */
+	public static boolean organizationAccountMapped(
+			String treasuryAccountId, String branchId) {
+		
+		List<GenericValue> glAccountOrganizationELI = null;
+		Delegator delegator =  DelegatorFactoryImpl.getDelegator(null);
+		EntityConditionList<EntityExpr> glAccountOrganizationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition
+						.makeCondition("glAccountId", EntityOperator.EQUALS,
+								treasuryAccountId),
+						EntityCondition
+								.makeCondition("organizationPartyId", EntityOperator.EQUALS,
+										branchId)
+								
+
+				), EntityOperator.AND);
+
+		try {
+			glAccountOrganizationELI = delegator.findList("GlAccountOrganization", glAccountOrganizationConditions, null,
+					null, null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if ((glAccountOrganizationELI == null) || (!(glAccountOrganizationELI.size() > 0)))
+			return false;
+		
+		return true;
+	}
 
 
 }

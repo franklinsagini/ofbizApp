@@ -1349,7 +1349,9 @@ public class RemittanceServices {
 		Long missingMemberLogId = delegator.getNextSeqIdLong(
 				"MissingMemberLog");
 		
-		String names = LoanUtilities.getMemberName(payrollNo);
+		String names = "";
+		if ((payrollNo != null) && (!payrollNo.equals("")))		
+			names =	LoanUtilities.getMemberName(payrollNo);
 		
 		GenericValue station = LoanUtilities.getStation(LoanUtilities.getStationId(employerCode));
 		
