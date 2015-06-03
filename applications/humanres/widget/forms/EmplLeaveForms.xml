@@ -621,8 +621,8 @@
 		<field name="approvalStatus" title="Approval Status">
 			<display />
 		</field>
-		
-		<field name="ApproveLeaves" title="${uiLabelMap.viewdetails}" widget-style="buttontext" use-when="${responsibleEmployee != 'responsibleEmployee'}">
+		<field name="responsibleEmployee"><hidden/></field>
+		<field name="ApproveLeaves" title="${uiLabelMap.viewdetails}" widget-style="buttontext" use-when="${(approvalStatus != 'Approved') &amp;&amp; (approvalStatus != 'Rejected')&amp;&amp; (responsibleEmployee == ${userLogin.partyId})}">
 			<hyperlink target="viewEmplLeaveDetails" description="${uiLabelMap.viewdetails}">
 			    <parameter param-name="leaveId" />
 				<parameter param-name="partyId" value="${partyId}" />
