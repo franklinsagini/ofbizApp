@@ -21,26 +21,6 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
-    <form name="FundingTypes" type="single" target="createFundingType" focus-field-name="fundingTypeName" header-row-style="header-row" default-table-style="basic-table"
-        default-map-name="fundingTypesContext">
-        <alt-target use-when="fundingTypesContext!=null" target="UpdateSasraReport"/>
-
-        <field name="fundingTypeId">
-            <hidden/>
-        </field>
-
-        <field name="fundingTypeId" use-when="fundingTypesContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}">
-            <display />
-        </field>
-
-        <field name="fundingTypeName" title="Name">
-            <text size="25"></text>
-        </field>
-                <!-- submitButton -->
-        <field use-when="fundingTypesContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
-        <field use-when="fundingTypesContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
-    </form>
-
 <!-- ======================================PAYMENT TYPE +++++++++++++++++++++++++++++++++++++++++++++ -->
     <form name="PaymentType" type="single" target="createPaymentType" focus-field-name="paymentTypeName" header-row-style="header-row" default-table-style="basic-table"
         default-map-name="fundingTypesContext">
@@ -72,21 +52,151 @@ under the License.
     </form>
 
     <form name="PaymentTypeList" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="UpdateSasraReport"
-        paginate-target="createFundingType" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        paginate-target="editPaymentType" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <entity-condition entity-name="FundingTypes"></entity-condition>
+            <entity-condition entity-name="PaymentType"></entity-condition>
         </actions>
-        <field name="fundingTypeId"><display /></field>
-        <field name="fundingTypeName" title="Funding Type">
+        <field name="paymentTypeId"><display /></field>
+        <field name="description" title="Name">
             <display />
         </field>
-         <field name="Contribution Limits">
-            <hyperlink target="FundingTypeRules" description="Contribution Limits">
-                <parameter param-name="fundingTypeId"/>
-            </hyperlink>
+        <field name="parentTypeId" title="Parent Payment Type">
+            <display-entity entity-name="PaymentType" description="${description}" key-field-name="paymentTypeId"/>
         </field>
     </form>
 
+    <form name="PaymentMethodType" type="single" target="createPaymentMethodType" focus-field-name="Name" header-row-style="header-row" default-table-style="basic-table"
+        >
+        <!-- <alt-target use-when="fundingTypesContext!=null" target="UpdateSasraReport"/> -->
+
+        <field name="paymentMethodTypeId">
+            <hidden/>
+        </field>
+
+        <field name="description" title="Name">
+            <text size="25"></text>
+        </field>
+
+        <field name="defaultGlAccountId" title="Default Gl Account">
+            <drop-down allow-empty="true">
+                <entity-options key-field-name="glAccountId" entity-name="GlAccount" description="${accountCode} - ${accountName} [${glAccountId}].">
+                    <entity-order-by field-name="accountCode"/>
+                </entity-options>
+            </drop-down>
+        </field>
+
+                <!-- submitButton -->
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <!-- <field use-when="fundingTypesContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field> -->
+    </form>
+
+    <form name="GlAccountType" type="single" target="createGlAccountType" focus-field-name="paymentTypeName" header-row-style="header-row" default-table-style="basic-table"
+        default-map-name="fundingTypesContext">
+        <alt-target use-when="fundingTypesContext!=null" target="UpdateSasraReport"/>
+
+        <field name="glAccountTypeId">
+            <hidden/>
+        </field>
+
+        <field name="glAccountTypeId" use-when="fundingTypesContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+            <display />
+        </field>
+
+        <field name="description" title="Name">
+            <text size="25"></text>
+        </field>
+
+        <field name="parentTypeId" title="Gl Account Type">
+            <drop-down allow-empty="false">
+                <entity-options key-field-name="glAccountTypeId" description="${description}" entity-name="GlAccountType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+
+                <!-- submitButton -->
+        <field use-when="fundingTypesContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field use-when="fundingTypesContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+    </form>
+
+    <form name="GlAccountTypeList" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="UpdateSasraReport"
+        paginate-target="GlAccountType" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="GlAccountType"></entity-condition>
+        </actions>
+        <field name="glAccountTypeId"><display /></field>
+        <field name="description" title="Name">
+            <display />
+        </field>
+        <field name="parentTypeId" title="Parent GL Account Type">
+            <display-entity entity-name="GlAccountType" description="${description}" key-field-name="glAccountTypeId"/>
+        </field>
+    </form>
+
+    <form name="AcctgTransType" type="single" target="createAcctgTransType" focus-field-name="description" header-row-style="header-row" default-table-style="basic-table"
+        default-map-name="fundingTypesContext">
+        <alt-target use-when="fundingTypesContext!=null" target="UpdateSasraReport"/>
+
+        <field name="acctgTransTypeId">
+            <hidden/>
+        </field>
+
+        <field name="acctgTransTypeId" use-when="fundingTypesContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+            <display />
+        </field>
+
+        <field name="description" title="Accounting Transaction Type">
+            <text size="25"></text>
+        </field>
+
+        <field name="parentTypeId" title="Parent Accounting Transaction Type">
+            <drop-down allow-empty="false">
+                <entity-options key-field-name="acctgTransTypeId" description="${description}" entity-name="AcctgTransType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+
+                <!-- submitButton -->
+        <field use-when="fundingTypesContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field use-when="fundingTypesContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+    </form>
+
+    <form name="AcctgTransTypeList" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="UpdateSasraReport"
+        paginate-target="AcctgTransType" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="AcctgTransType"></entity-condition>
+        </actions>
+        <field name="acctgTransTypeId"><display /></field>
+        <field name="description" title="Name">
+            <display />
+        </field>
+        <field name="parentTypeId" title="Parent GL Account Type">
+            <display-entity entity-name="AcctgTransType" description="${description}" key-field-name="acctgTransTypeId"/>
+        </field>
+    </form>
+
+<!-- ===========================================INTER BRANCH============================================================================================= -->
+
+    <form name="FundingTypes" type="single" target="createFundingType" focus-field-name="fundingTypeName" header-row-style="header-row" default-table-style="basic-table"
+        default-map-name="fundingTypesContext">
+        <alt-target use-when="fundingTypesContext!=null" target="UpdateSasraReport"/>
+
+        <field name="fundingTypeId">
+            <hidden/>
+        </field>
+
+        <field name="fundingTypeId" use-when="fundingTypesContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+            <display />
+        </field>
+
+        <field name="fundingTypeName" title="Name">
+            <text size="25"></text>
+        </field>
+                <!-- submitButton -->
+        <field use-when="fundingTypesContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field use-when="fundingTypesContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+    </form>
 
     <form name="FundingTypesList" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="UpdateSasraReport"
         paginate-target="createFundingType" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
