@@ -1758,7 +1758,7 @@ public class RemittanceServices {
 				.getAccountHolderTransactionSetupRecord(
 						"STATIONACCOUNTPAYMENT", delegator);
 		String debitAccountId = accountHolderTransactionSetup
-				.getString("cashAccountId");
+				.getString("memberDepositAccId");
 
 		String acctgTransType = "STATION_DEPOSIT";
 
