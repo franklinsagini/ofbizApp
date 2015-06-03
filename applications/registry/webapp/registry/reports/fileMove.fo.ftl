@@ -150,11 +150,11 @@ under the License.
                             </#if>
                         </fo:table-cell> -->
 						 <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if movement.releasedTo?if_exists == "REGISTRY">
-                             <fo:block>${movement.releasedTo?if_exists}</fo:block>
-                               
-                            <#else>
-                                <fo:block>${releasedTo.firstName?if_exists} ${releasedTo.lastName?if_exists}</fo:block>
+                            <#if releasedTo?has_content>
+                             
+                               <fo:block>${releasedTo.firstName?if_exists} ${releasedTo.lastName?if_exists}</fo:block>
+                            <#else> 
+                            <fo:block>${movement.releasedTo?if_exists}</fo:block>
                             </#if>
                         </fo:table-cell>
 						

@@ -391,9 +391,6 @@
 		</field>
 		<field name="leaveDuration">
 			<display />
-		</field>		
-		<field name="carryOverUsed">
-			<display />
 		</field>
 		<field name="applicationStatus" title="Application Status">
 			<display />
@@ -417,7 +414,7 @@
 			</display-entity>
 		</field>
 		
-		<field name="forwardLeave" title="${uiLabelMap.forward}"
+		<!-- <field name="forwardLeave" title="${uiLabelMap.forward}"
 			widget-style="buttontext" use-when="${responsibleEmployee=='NEW'}">
 			<hyperlink also-hidden="false" description="${uiLabelMap.forward}"
 				target="forwardApplication">
@@ -425,6 +422,14 @@
 				<parameter param-name="leaveId" />
 				<parameter param-name="leaveTypeId" />
 				<parameter param-name="fromDate" />
+			</hyperlink>
+		</field> -->
+		
+		<field name="forwardApplication" title="Submit"
+			widget-style="buttontext" use-when="${responsibleEmployee=='NEW'}">
+			<hyperlink also-hidden="false" description="Forward Application"
+				target="SubmitApplication">
+				<parameter param-name="leaveId" />
 			</hyperlink>
 		</field>
 		
@@ -616,16 +621,8 @@
 		<field name="approvalStatus" title="Approval Status">
 			<display />
 		</field>
-<!-- 		<field name="ApproveLeave" title="${uiLabelMap.viewdetails}"
-			widget-style="buttontext">
-			<hyperlink target="EditEmplLeaveStatus" description="${uiLabelMap.viewdetails}">
-				<parameter param-name="partyId" value="${partyId}" />
-				<parameter param-name="fromDate" />
-				<parameter param-name="leaveTypeId" />
-				<parameter param-name="leaveId" />
-			</hyperlink>
-		</field> -->
-		<field name="ApproveLeaves" title="${uiLabelMap.viewdetails}" widget-style="buttontext" use-when="${approvalStatus != 'Rejected'}&amp;&amp;${approvalStatus != 'Approved'}">
+		<field name="responsibleEmployee"><hidden/></field>
+		<field name="ApproveLeaves" title="${uiLabelMap.viewdetails}" widget-style="buttontext" use-when="${(approvalStatus != 'Approved') &amp;&amp; (approvalStatus != 'Rejected')&amp;&amp; (responsibleEmployee == ${userLogin.partyId})}">
 			<hyperlink target="viewEmplLeaveDetails" description="${uiLabelMap.viewdetails}">
 			    <parameter param-name="leaveId" />
 				<parameter param-name="partyId" value="${partyId}" />

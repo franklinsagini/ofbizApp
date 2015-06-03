@@ -95,6 +95,8 @@
             </widgets>
         </section>
     </screen>
+	
+	
     <screen name="EditResponsibilityTypes">
         <section>
             <actions>
@@ -719,6 +721,133 @@
             </widgets>
         </section>
     </screen>
+    
+    <screen name="leaveWorkflowScreens">
+		<section>
+			<actions>
+				<set field="titleProperty" value="leave" />
+				 <set field="headerItem" value="GlobalHRSettings"/>
+				 <set field="tabButtonItem" value="leaveWorkflow"/>
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+				
+
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+				<decorator-section name="pre-body">
+						<include-menu name="GlobalHRSettingMenus"
+							location="component://humanres/widget/HumanresMenus.xml" />
+							
+							<include-menu name="leaveWorkFlowSettingsTabBar"
+					location="component://humanres/widget/HumanresMenus.xml"/>
+					</decorator-section>
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								  <screenlet title="Add Workflows">
+                            <include-form name="AddLeaveWorkflow" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        </screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="WorkFlows">
+									 <include-form name="ListLeaveWorkflows" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	 <screen name="workFlowResponsibleStaffScreens">
+		<section>
+			<actions>
+				<set field="titleProperty" value="leave" />
+				 <set field="headerItem" value="GlobalHRSettings"/>
+				 <set field="tabButtonItem" value="workFlowResponsibleStaff"/>
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+				<set field="employeeCtx" from-field="parameters"/>
+
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+				<decorator-section name="pre-body">
+						<include-menu name="GlobalHRSettingMenus"
+							location="component://humanres/widget/HumanresMenus.xml" />
+							
+							<include-menu name="leaveWorkFlowSettingsTabBar"
+					location="component://humanres/widget/HumanresMenus.xml"/>
+					</decorator-section>
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								  <screenlet title="Add Responsible Staff">
+                            <include-form name="AddLeaveWorkFlowResponsibleStaff" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        </screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+							<screenlet title="Workflow Responsible Staff">
+								     <include-form name="FindEmployeeResponsibleForWorkflow" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+								
+									 <include-form name="ListLeaveWorkFlowResponsibleStaff" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	 <screen name="WorkflowStaffMappingScreens">
+		<section>
+			<actions>
+				<set field="titleProperty" value="leave" />
+				 <set field="headerItem" value="GlobalHRSettings"/>
+				 <set field="tabButtonItem" value="WorkflowStaffMapping"/>
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+				
+
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+				<decorator-section name="pre-body">
+						<include-menu name="GlobalHRSettingMenus"
+							location="component://humanres/widget/HumanresMenus.xml" />
+							
+							<include-menu name="leaveWorkFlowSettingsTabBar"
+					location="component://humanres/widget/HumanresMenus.xml"/>
+					</decorator-section>
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								  <screenlet title="Add Staff To Workflow">
+                            <include-form name="AddLeaveWorkFlowStaffMapping" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        </screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="Staff in Workflow">
+									 <include-form name="ListLeaveWorkFlowStaffMapping" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	
+	
+	
+	   
     
     
 </screens>

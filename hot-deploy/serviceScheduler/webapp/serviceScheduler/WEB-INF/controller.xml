@@ -72,6 +72,29 @@
 	</request-map>
 	
 	
+	<!-- <request-map uri="sendMailNow">
+		<security auth="true" https="true" />
+		<event type="java" path="org.ofbiz.common.email.EmailServices" invoke="sendStaffMail_verge" />
+		<response name="success" type="view" value="main"></response>
+		<response name="error" type="view" value="main" />
+	</request-map> -->
+	
+	
+	<request-map uri="sendMailNow">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="sendMailNow" />
+		<response name="success" type="view" value="main"></response>
+		<response name="error" type="view" value="main" />
+	</request-map>
+	
+	<request-map uri="sendMailNow_NonStaff">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="sendMailNow_NonStaff" />
+		<response name="success" type="view" value="main"></response>
+		<response name="error" type="view" value="main" />
+	</request-map>
+	
+	
 	
 	
 	

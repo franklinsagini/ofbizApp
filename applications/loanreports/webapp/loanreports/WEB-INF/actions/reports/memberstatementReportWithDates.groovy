@@ -277,7 +277,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 	allRepayments.eachWithIndex { loanRepaymentItem, repaymentIndex ->
 
 		//Add Insurance is insurance amount greater than ZERO
-		if ((loanRepaymentItem.insuranceAmount != null) && (loanRepaymentItem.insuranceAmount.compareTo(BigDecimal.ZERO) == 1)){
+		if ((loanRepaymentItem.insuranceAmount != null) && (loanRepaymentItem.insuranceAmount.compareTo(BigDecimal.ZERO) != 0)){
 			loanTransaction = new MemberTransaction()
 			loanTransaction.transactionDate = loanRepaymentItem.createdStamp
 
@@ -293,7 +293,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 
 
 		//Add Interest if interest amount is greater than ZERO
-		if ((loanRepaymentItem.interestAmount != null) && (loanRepaymentItem.interestAmount.compareTo(BigDecimal.ZERO) == 1)){
+		if ((loanRepaymentItem.interestAmount != null) && (loanRepaymentItem.interestAmount.compareTo(BigDecimal.ZERO) != 0)){
 			loanTransaction = new MemberTransaction()
 			loanTransaction.transactionDate = loanRepaymentItem.createdStamp
 
@@ -309,7 +309,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 
 
 		//Add Principal if principal amount is greater than ZERO
-		if ((loanRepaymentItem.principalAmount != null) && (loanRepaymentItem.principalAmount.compareTo(BigDecimal.ZERO) == 1)){
+		if ((loanRepaymentItem.principalAmount != null) && (loanRepaymentItem.principalAmount.compareTo(BigDecimal.ZERO) != 0)){
 			loanTransaction = new MemberTransaction()
 			loanTransaction.transactionDate = loanRepaymentItem.createdStamp
 

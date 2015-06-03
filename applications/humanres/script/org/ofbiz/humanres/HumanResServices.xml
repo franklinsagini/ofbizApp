@@ -681,14 +681,30 @@
 		
 		
 		
-	    
+	    <set field="perc" from-field="newEntity.percentage"/>
+	    <set field="goal" from-field="newEntity.perfGoalsId"/>
+	    <set field="group" from-field="newEntity.perfReviewDefId"/>
 	    
 		<set field="quantitative" value="${bsh:org.ofbiz.humanres.HumanResServices.getQuantitativeTotal();}"/>
 		<set field="qualitative" value="${bsh:org.ofbiz.humanres.HumanResServices.getQualitativeTotal();}"/>
+		<set field="GoalObjectiveTotal" value="${bsh:org.ofbiz.humanres.HumanResServices.getObjectiveAndRespectivePerspectiveTotalAndCompareAtObjectiveCreation(group, goal, perc);}"/>
 		<set field="valid" value="INVALID"/>
 	    
 	    
 	    <if>
+			<condition>
+					<if-compare-field field="GoalObjectiveTotal"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="ObjectiveGoalTotalError" />
+				</add-error>
+				<check-errors />
+			</then>
+			</if>
+			<if>
 			<condition>
 					<if-compare-field field="quantitative"
 						to-field="valid" operator="equals" />
@@ -885,7 +901,7 @@
 		
 		<set field="party" value="${newEntity.partyId}"/>
 		<set field="exist" value="${bsh:org.ofbiz.humanres.HumanResServices.findExistanceOfStaffInReviewGroups(party);}"/>
-		<set field="indicatorTotal" value="${bsh:org.ofbiz.humanres.HumanResServices.getIndicatorTotalsCompareToActionPlans();}"/>
+		<set field="indicatorTotal" value="${bsh:org.ofbiz.humanres.HumanResServices.getObjectiveAndRespectivePerspectiveTotalAndCompare();}"/>
 		<set field="valid" value="INVALID"/>
 	    
 	    <if>
@@ -926,7 +942,7 @@
 			
 			<simple-method method-name="removeStaffToReviewGroup"
 		short-description="Remove an file type">
-		<set field="partyId" from-field="parameters.partyId" />
+		<set field="StaffInPerfReviewGroupId" from-field="parameters.StaffInPerfReviewGroupId" />
 		<entity-one entity-name="StaffInPerfReviewGroup" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
 		<property-to-field resource="HumanResUiLabels"
@@ -1270,6 +1286,8 @@
     </simple-method>
 			
 	
+	
+		   
     
      <!-- ============== PERFORMANCE GOALS MANAGEMENT ================= -->
      
@@ -1281,12 +1299,30 @@
         <sequenced-id sequence-name="PerfGoals" field="perfGoalsId"/>
         <now-timestamp field="newEntity.createdDate"/>
         <set from-field="perfGoalsId" field="newEntity.perfGoalsId"/>
+        
+         <set field="perc" from-field="newEntity.percentage"/>
+	     <set field="goal" from-field="newEntity.perfGoalsDefId"/>
        
 
 
-      <set field="exist" value="${bsh:org.ofbiz.humanres.HumanResServices.getTotal();}"/>
+        <set field="exist" value="${bsh:org.ofbiz.humanres.HumanResServices.getTotal();}"/>
+        <set field="GoalPerspectiveValid" value="${bsh:org.ofbiz.humanres.HumanResServices.getPerspectiveAndRespectiveGoalTotalAndCompareAtPerspectiveCreation(goal, perc);}"/>
 		<set field="valid" value="INVALID"/>
 		
+		
+		 <if>
+			<condition>
+					<if-compare-field field="GoalPerspectiveValid"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="PerspectiveGoalTotalError" />
+				</add-error>
+				<check-errors />
+			</then>
+			</if>
 		<if>
 			<condition>
 					<if-compare-field field="exist"
@@ -4307,5 +4343,205 @@
 		
 		
 	</simple-method>
+	
+	
+	
+	 <!--======================= LEAVE WORKFLOW SETUP =================================== -->
+                     
+	<simple-method method-name="createWorkflow"
+		short-description="Create File location">
+		<make-value entity-name="LeaveWorkFlow" value-field="newEntity2" />
+		<set-pk-fields map="parameters" value-field="newEntity2" />
+		<set-nonpk-fields map="parameters" value-field="newEntity2" />
+		<sequenced-id sequence-name="LeaveWorkFlow" field="leaveWorkFlowId" />
+		<set from-field="leaveWorkFlowId" field="newEntity2.leaveWorkFlowId" /> 
+		
+		<set field="leaveWorkflow" from-field="newEntity2.name"/>
+		<set field="validWorkflow" value="${bsh:org.ofbiz.humanres.LeaveServices.validateWorkflowName(leaveWorkflow);}"/>
+		
+		
+		<if>
+			<condition>
+						<if-compare operator="equals" value="INVALID" field="validWorkflow"></if-compare>
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels" 
+						property="doubleWorkflowError" />
+				</add-error>
+				<check-errors />
+			</then>
+			
+			<else>
+			    <create-value value-field="newEntity2" />
+		<property-to-field resource="HumanResUiLabels"
+			property="CreateSuccess" field="successMessage" />
+			</else>
+		</if>
+			  
+			</simple-method>
+			
+			<simple-method method-name="updateWorkflow"
+		short-description="Update an existing Budget">
+		<entity-one entity-name="LeaveWorkFlow" value-field="lookedUpValue" />
+		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
+		<set-pk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+		   <property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" /> 
+			
+	</simple-method>
+		
+			
+			
+			<simple-method method-name="deleteWorkflow"
+		short-description="Remove an file type">
+		<set field="leaveWorkFlowId" from-field="parameters.leaveWorkFlowId" />
+		<entity-one entity-name="LeaveWorkFlow" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
+	</simple-method>
+	
+	
+	
+	 <!--======================= LEAVE WORKFLOW RESPONSIBLE STAFF SETUP =================================== -->
+                     
+	<simple-method method-name="createWorkflowResponsibleStaff"
+		short-description="Create File location">
+		<make-value entity-name="LeaveWorkFlowResponsibleStaff" value-field="newEntity2" />
+		<set-pk-fields map="parameters" value-field="newEntity2" />
+		<set-nonpk-fields map="parameters" value-field="newEntity2" />
+		<sequenced-id sequence-name="LeaveWorkFlowResponsibleStaff" field="leaveWorkFlowResponsibleStaffId" />
+		<set from-field="leaveWorkFlowResponsibleStaffId" field="newEntity2.leaveWorkFlowResponsibleStaffId" />
+		
+		<set field="staff" from-field="newEntity2.responsibleEmployee"/>
+		<entity-one value-field="staffNames" entity-name="Person">
+		<field-map field-name="partyId" from-field="staff"/>
+		</entity-one> 
+		<set field="newEntity2.fName" from-field="staffNames.firstName"/>
+		<set field="newEntity2.sName" from-field="staffNames.lastName"/>
+		<create-value value-field="newEntity2"/>
+			  
+			</simple-method>
+			
+			<simple-method method-name="updateWorkflowResponsibleStaff"
+		short-description="Update an existing Budget">
+		<entity-one entity-name="LeaveWorkFlowResponsibleStaff" value-field="lookedUpValue" />
+		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
+		<set-pk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+		   <property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" /> 
+			
+	</simple-method>
+		
+			
+			
+			<simple-method method-name="deleteWorkflowResponsibleStaff"
+		short-description="Remove an file type">
+		<set field="leaveWorkFlowResponsibleStaffId" from-field="parameters.leaveWorkFlowResponsibleStaffId" />
+		<entity-one entity-name="LeaveWorkFlowResponsibleStaff" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
+	</simple-method>
+	
+	<!--======================= LEAVE WORKFLOW  STAFF MAPPING SETUP =================================== -->
+                     
+	<simple-method method-name="createWorkflowStaffMapping"
+		short-description="Create File location">
+		<make-value entity-name="LeaveWorkFlowStaffMapping" value-field="newEntity2" />
+		<set-pk-fields map="parameters" value-field="newEntity2" />
+		<set-nonpk-fields map="parameters" value-field="newEntity2" />
+		<sequenced-id sequence-name="LeaveWorkFlowStaffMapping" field="leaveWorkFlowStaffMappingId" />
+		<set from-field="leaveWorkFlowStaffMappingId" field="newEntity2.leaveWorkFlowStaffMappingId" /> 
+		
+			
+		<set field="leaveWorkflow" from-field="newEntity2.partyId"/>
+		<set field="validStaff" value="${bsh:org.ofbiz.humanres.LeaveServices.validateWorkflowStaffMapping(leaveWorkflow);}"/>
+		
+		
+		<if>
+			<condition>
+						<if-compare operator="equals" value="INVALID" field="validStaff"></if-compare>
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels" 
+						property="doubleStaffWorkflowError" />
+				</add-error>
+				<check-errors />
+			</then>
+			
+			<else>
+			    <create-value value-field="newEntity2" />
+		<property-to-field resource="HumanResUiLabels"
+			property="CreateSuccess" field="successMessage" />
+			</else>
+		</if>
+			  
+			</simple-method>
+			
+			<simple-method method-name="updateWorkflowStaffMapping"
+		short-description="Update an existing Budget">
+		<entity-one entity-name="LeaveWorkFlowStaffMapping" value-field="lookedUpValue" />
+		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
+		<set-pk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+		   <property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" /> 
+			
+	</simple-method>
+		
+			
+			
+			<simple-method method-name="deleteWorkflowStaffMapping"
+		short-description="Remove an file type">
+		<set field="leaveWorkFlowStaffMappingId" from-field="parameters.leaveWorkFlowStaffMappingId" />
+		<entity-one entity-name="LeaveWorkFlowStaffMapping" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
+	</simple-method>
+	
+	
+	<!-- ========================= SUBMIT LEAVE APPLICATION ============================ -->
+	
+	<simple-method method-name="SubmitApplication"
+		short-description="Update an existing Budget">
+		<entity-one entity-name="EmplLeave" value-field="lookedUpValue" />
+		<set-nonpk-fields map="parameters" value-field="lookedUpValue" />
+		<set-pk-fields value-field="lookedUpValue" map="parameters" />
+		
+		<set field="leave" from-field="parameters.leaveId"/>
+		<set field="lookedUpValue.responsibleEmployee" value="${bsh:org.ofbiz.humanres.LeaveServices.getFirstWorkflowApprover(leave);}"/>
+		<store-value value-field="lookedUpValue" />
+		
+		<call-simple-method method-name="firstApproverEmailInformation" scope="inline"></call-simple-method>
+		   <property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" /> 
+			
+	</simple-method>
+	
+	
+	<simple-method method-name="firstApproverEmailInformation">
+		<make-value entity-name="StaffScheduledMail" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="StaffScheduledMail" field="msgId" />
+		<set from-field="msgId" field="newEntity.msgId" />
+		
+		<entity-one value-field="staff" entity-name="Person">
+		<field-map field-name="partyId" from-field="lookedUpValue.partyId"/>
+		</entity-one>
+		
+		 <set field="newEntity.partyId" from-field="lookedUpValue.responsibleEmployee"/> 
+		<set field="newEntity.body" value="Leave Application has been Send to you for approval by :${staff.firstName} ${staff.lastName} Payroll : ${staff.employeeNumber}" />
+		 <set field="newEntity.subject" value="LEAVE APPROVAL"/>
+		<set field="newEntity.sendStatus" value="NOTSEND" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+		
 
 </simple-methods>

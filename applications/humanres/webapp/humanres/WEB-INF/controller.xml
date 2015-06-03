@@ -65,6 +65,29 @@
 		<response name="success" type="view" value="popup"
 			save-home-view="true" />
 	</request-map>
+	
+		<request-map uri="leaveWorkflow">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="leaveWorkflow"
+			save-home-view="true" />
+	</request-map>
+	
+	<request-map uri="workFlowResponsibleStaff">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="workFlowResponsibleStaff"
+			save-home-view="true" />
+	</request-map>
+	
+	<request-map uri="findEmployeesResponsible">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="workFlowResponsibleStaff" />
+	</request-map>
+	
+	<request-map uri="WorkflowStaffMapping">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="WorkflowStaffMapping"
+			save-home-view="true" />
+	</request-map>
 
 	<request-map uri="payrollPrefix">
 		<security https="true" auth="true" />
@@ -451,6 +474,8 @@
 		<response name="success" type="view" value="LeaveBalances"></response>
 		<response name="error" type="view" value="LeaveBalances" />
 	</request-map>
+	
+	
 
 	<request-map uri="closeFinacialYearCompassionate">
 		<security auth="true" https="true" />
@@ -470,7 +495,15 @@
 			<redirect-parameter name="leaveId" />
 		</response>
 		<response name="error" type="view" value="FindLeaveApprovals" />
-	</request-map>
+	</request-map>  
+	
+	<request-map uri="approveApplication">
+		<security auth="true" https="true" />
+		<event type="java" path="org.ofbiz.humanres.LeaveServices"
+			invoke="approveLeave" />
+		<response name="success" type="request-redirect-noparam" value="FindLeaveApprovals"/>
+		<response name="error" type="view" value="FindLeaveApprovals" />
+	</request-map> 
 
 
 	<request-map uri="emplleavebalance">
@@ -1174,10 +1207,10 @@
 	<request-map uri="deletePerfReviewObjective">
 		<security https="true" auth="true" />
 		<event type="service" invoke="deletePerfReviewObjective" />
-		<response name="success" type="request-redirect" value="setupReviewObjectives">
+		<response name="success" type="view" value="setupReviewObjectives">
 			<redirect-parameter name="perfReviewDefId" />
 		</response>
-		<response name="error" type="request-redirect-noparam" value="setupReviewObjectives" />
+		<response name="error" type="view" value="setupReviewObjectives" />
 	</request-map>
 
 
@@ -1305,6 +1338,77 @@
 		<response name="error" type="request-redirect-noparam" value="reviewPeriod" />
 	</request-map>
 
+
+
+<!--======================= LEAVE WORKFLOW SETUP =================================== -->
+
+	<request-map uri="createWorkflow">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createWorkflow" />
+		<response name="success" type="request-redirect-noparam" value="leaveWorkflow"/>
+		<response name="error" type="request-redirect-noparam" value="leaveWorkflow"/>
+	</request-map>
+
+	<request-map uri="updateWorkflow">
+		<security https="true" auth="true" />
+		<event type="service-multi" invoke="updateWorkflow" />
+		<response name="success" type="view" value="leaveWorkflow"/>
+		<response name="error" type="view" value="leaveWorkflow" />
+	</request-map>
+
+	<request-map uri="deleteWorkflow">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteWorkflow" />
+		<response name="success" type="view" value="leaveWorkflow"/>
+		<response name="error" type="view" value="leaveWorkflow" />
+	</request-map>
+	
+	<!--======================= LEAVE WORKFLOW RESPONSIBLE STAFF SETUP =================================== -->
+
+	<request-map uri="createWorkflowResponsibleStaff">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createWorkflowResponsibleStaff" />
+		<response name="success" type="request-redirect-noparam" value="workFlowResponsibleStaff"/>
+		<response name="error" type="request-redirect-noparam" value="workFlowResponsibleStaff"/>
+	</request-map>
+
+	<request-map uri="updateWorkflowResponsibleStaff">
+		<security https="true" auth="true" />
+		<event type="service-multi" invoke="updateWorkflowResponsibleStaff" />
+		<response name="success" type="view" value="workFlowResponsibleStaff"/>
+		<response name="error" type="view" value="workFlowResponsibleStaff" />
+	</request-map>
+
+	<request-map uri="deleteWorkflowResponsibleStaff">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteWorkflowResponsibleStaff" />
+		<response name="success" type="view" value="workFlowResponsibleStaff"/>
+		<response name="error" type="view" value="workFlowResponsibleStaff" />
+	</request-map>
+	
+	<!--======================= LEAVE WORKFLOW  STAFF MAPPING SETUP =================================== -->
+
+	<request-map uri="createWorkflowStaffMapping">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createWorkflowStaffMapping" />
+		<response name="success" type="request-redirect-noparam" value="WorkflowStaffMapping"/>
+		<response name="error" type="request-redirect-noparam" value="WorkflowStaffMapping"/>
+	</request-map>
+
+	<request-map uri="updateWorkflowStaffMapping">
+		<security https="true" auth="true" />
+		<event type="service-multi" invoke="updateWorkflowStaffMapping" />
+		<response name="success" type="view" value="WorkflowStaffMapping"/>
+		<response name="error" type="view" value="WorkflowStaffMapping" />
+	</request-map>
+
+	<request-map uri="deleteWorkflowStaffMapping">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteWorkflowStaffMapping" />
+		<response name="success" type="view" value="WorkflowStaffMapping"/>
+		<response name="error" type="view" value="WorkflowStaffMapping" />
+	</request-map>
+	
 
 
 
@@ -2442,6 +2546,17 @@
 			value="FindEmplLeaves" />
 		<response name="error" type="view" value="EditEmplLeave" />
 	</request-map>
+	
+	<request-map uri="SubmitApplication">
+		<security https="true" auth="true" />
+		<event type="service" invoke="SubmitApplication" />
+		<response name="success" type="request-redirect-noparam" value="FindEmplLeaves" />
+		<response name="error" type="view" value="FindEmplLeaves" />
+	</request-map>
+	
+	
+	
+	
 
 
 	<request-map uri="updateEmplLeaveExt">
@@ -4674,5 +4789,13 @@
 		page="component://humanres/widget/TrainingReportScreens.xml#TrainingSummaryReport" />
 	<view-map name="separationSummaryReport" type="screen"
 		page="component://humanres/widget/ReportScreens.xml#SeparationSummaryReport" />
+		
+		<view-map name="leaveWorkflow" type="screen"
+		page="component://humanres/widget/GlobalHRSettingScreens.xml#leaveWorkflowScreens" />
+		<view-map name="workFlowResponsibleStaff" type="screen"
+		page="component://humanres/widget/GlobalHRSettingScreens.xml#workFlowResponsibleStaffScreens" />
+		<view-map name="WorkflowStaffMapping" type="screen"
+		page="component://humanres/widget/GlobalHRSettingScreens.xml#WorkflowStaffMappingScreens" />
+		
 
 </site-conf>

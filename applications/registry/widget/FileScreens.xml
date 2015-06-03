@@ -2130,6 +2130,50 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	
+	<screen name="FileQueuScreen">
+		<section>
+			<actions>
+				<set field="headerItem" value="registry" />
+				<set field="tabButtonItem" value="find" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+				
+				<entity-one value-field="member" entity-name="Member">
+				<field-map field-name="partyId" from-field="partyId"/>
+				</entity-one>
+				
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+							
+							<container style="leftclear">
+											<label style="h1"
+												text="Request Queue for ${member.firstName} ${member.lastName}'s File (Starting with first in the queue)" />
+										</container>
+										<container>
+										
+										<link target="regFileRequest" style="buttontext create" text="Back To File Request Page"  height="500" width="500">
+										<parameter param-name="partyId"/>
+            			                  </link>
+            			                  
+										</container>
+								<screenlet title="File">
+									<include-form name="listRegistryFileQueuForm" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
     
 
 
