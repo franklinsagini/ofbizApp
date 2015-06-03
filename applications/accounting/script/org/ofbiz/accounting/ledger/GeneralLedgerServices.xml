@@ -2430,10 +2430,13 @@ under the License.
 
         <set field="amountAppliedTotal" type="BigDecimal" value="0"/>
         <entity-one entity-name="Payment" value-field="payment"/>
+
+        <!-- Find if its a disbursement - Outgoing Payment -->
         <call-class-method class-name="org.ofbiz.accounting.util.UtilAccounting" method-name="isDisbursement" ret-field="isDisbursement">
             <field field="payment" type="org.ofbiz.entity.GenericValue"/>
         </call-class-method>
 
+        <!-- A way to ensure we are only working with Outgoing Payment -->
         <if-compare value="true" field="isDisbursement" operator="equals" type="Boolean">
             <set field="organizationPartyId" from-field="payment.partyIdFrom"/>
             <set field="partyId" from-field="payment.partyIdTo"/>
