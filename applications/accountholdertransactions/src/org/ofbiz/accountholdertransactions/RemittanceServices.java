@@ -5,7 +5,6 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -14,7 +13,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,7 +21,6 @@ import javax.servlet.http.HttpSession;
 import javolution.util.FastMap;
 
 import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
@@ -1240,7 +1237,7 @@ public class RemittanceServices {
 	 * */
 	public static synchronized String checkMembersHaveFosaSavingsAccount(
 			Map<String, String> userLogin, String employerCode, String month) {
-		
+
 		log.info("FFFFFFFFFFFF Checking FOSA Savings!!!!!!!!!!!!!! ");
 
 		// Get all payroll numbers and make sure the members have FOSA Savings
@@ -1270,18 +1267,22 @@ public class RemittanceServices {
 		List<GenericValue> listMissingMemberLogELI = new ArrayList<GenericValue>();
 		for (GenericValue genericValue : receivedPayrollELI) {
 			payrollNo = genericValue.getString("payrollNo");
-			log.info(++count+"FFFFFFFFFFFF Checking FOSA Savings!!!!!!!!!!!!!! for "+payrollNo);
+			log.info(++count
+					+ "FFFFFFFFFFFF Checking FOSA Savings!!!!!!!!!!!!!! for "
+					+ payrollNo);
 			if (!hasAccount(FOSA_SAVINGS_CODE, payrollNo.trim())) {
 				failed = true;
 
 				// Add the member to the missing log
-				log.info("AAAAAAAAAAAAAAAA Adding a member!!!!!!!!!!!!!! for "+payrollNo);
-				addMissingMemberLog(userLogin, payrollNo, month, employerCode, FOSA_SAVINGS_CODE, null, null);
+				log.info("AAAAAAAAAAAAAAAA Adding a member!!!!!!!!!!!!!! for "
+						+ payrollNo);
+				addMissingMemberLog(userLogin, payrollNo, month, employerCode,
+						FOSA_SAVINGS_CODE, null, null);
 			}
 
 		}
 
-		if (failed){
+		if (failed) {
 			try {
 				TransactionUtil.begin();
 			} catch (GenericTransactionException e1) {
@@ -1302,7 +1303,7 @@ public class RemittanceServices {
 			}
 			return "failed";
 		}
-		
+
 		log.info(" RRRRRRRR Received Payrolls Count is --- "
 				+ receivedPayrollELI.size());
 
@@ -1343,69 +1344,69 @@ public class RemittanceServices {
 	 *         Capital
 	 * */
 	public static void addMissingMemberLog(Map<String, String> userLogin,
-			String payrollNo, String month, String employerCode, String productCode, String loanNo, String employeeNumber) {
+			String payrollNo, String month, String employerCode,
+			String productCode, String loanNo, String employeeNumber) {
 		GenericValue missingMemberLog = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		Long missingMemberLogId = delegator.getNextSeqIdLong(
-				"MissingMemberLog");
-		
+		Long missingMemberLogId = delegator
+				.getNextSeqIdLong("MissingMemberLog");
+
 		String names = "";
-		if ((payrollNo != null) && (!payrollNo.equals("")))		
-			names =	LoanUtilities.getMemberName(payrollNo);
-		
-		GenericValue station = LoanUtilities.getStation(LoanUtilities.getStationId(employerCode));
-		
+		if ((payrollNo != null) && (!payrollNo.equals("")))
+			names = LoanUtilities.getMemberName(payrollNo);
+
+		GenericValue station = LoanUtilities.getStation(LoanUtilities
+				.getStationId(employerCode));
+
 		String productName = "";
-		
-		if (productCode != null){
-			GenericValue product = LoanUtilities.getAccountProductGivenCodeId(productCode);
-			
+
+		if (productCode != null) {
+			GenericValue product = LoanUtilities
+					.getAccountProductGivenCodeId(productCode);
+
 			if (product != null)
 				productName = product.getString("name");
 		}
-		
-		if (loanNo != null){
+
+		if (loanNo != null) {
 			log.info("WWWWWW Will get loan WWWWWWWW");
-			
-			GenericValue loanApplication = LoanUtilities.getLoanApplicationEntityGivenLoanNo(loanNo);
-			if (loanApplication != null){
-			GenericValue loanProduct = LoanUtilities.getLoanProduct(loanApplication.getLong("loanProductId"));
-			
-			if (loanProduct != null)
-				productName = loanProduct.getString("name");
+
+			GenericValue loanApplication = LoanUtilities
+					.getLoanApplicationEntityGivenLoanNo(loanNo);
+			if (loanApplication != null) {
+				GenericValue loanProduct = LoanUtilities
+						.getLoanProduct(loanApplication
+								.getLong("loanProductId"));
+
+				if (loanProduct != null)
+					productName = loanProduct.getString("name");
 			}
-			
+
 		}
-		
+
 		missingMemberLog = delegator.makeValue("MissingMemberLog", UtilMisc
 				.toMap("missingMemberLogId", missingMemberLogId, "isActive",
 						"Y", "createdBy", userLogin.get("userLoginId"),
 						"employerCode", employerCode.trim(),
-						
-						"payrollNumber",
-						payrollNo,
-						
-						"employerName",
-						station.getString("employerName"),
-						
-						"names",
-						names,
-						
-						"loanNo",
-						loanNo,
-						
-						
+
+						"payrollNumber", payrollNo,
+
+						"employerName", station.getString("employerName"),
+
+						"names", names,
+
+						"loanNo", loanNo,
+
 						"code", productCode,
-						
-						
+
 						"employeeNumber", employeeNumber,
-						
+
 						"productName", productName,
 
 						"month", month.trim()));
-		
+
 		log.info(" for Reall .... FFFFFFF Just added a Missing Member Log");
-		
+
 		try {
 			TransactionUtil.begin();
 			delegator.create(missingMemberLog);
@@ -1467,12 +1468,13 @@ public class RemittanceServices {
 				failed = true;
 
 				// Add the member to the missing log
-				addMissingMemberLog(userLogin, payrollNo, month, employerCode, MEMBER_DEPOSIT_CODE, null, null);
+				addMissingMemberLog(userLogin, payrollNo, month, employerCode,
+						MEMBER_DEPOSIT_CODE, null, null);
 			}
 
 		}
 
-		if (failed){
+		if (failed) {
 			return "failed";
 		}
 		log.info(" RRRRRRRR Received Payrolls Count is --- "
@@ -1516,15 +1518,16 @@ public class RemittanceServices {
 				failed = true;
 
 				// Add the member to the missing log
-				addMissingMemberLog(userLogin, payrollNo, month, employerCode, SHARE_CAPITAL_CODE, null, null);
+				addMissingMemberLog(userLogin, payrollNo, month, employerCode,
+						SHARE_CAPITAL_CODE, null, null);
 			}
 
 		}
 
-		if (failed){
+		if (failed) {
 			return "failed";
 		}
-		
+
 		log.info(" RRRRRRRR Received Payrolls Count is --- "
 				+ receivedPayrollELI.size());
 
@@ -1541,36 +1544,6 @@ public class RemittanceServices {
 	public static synchronized String processReceivedPaymentBreakdown(
 			Map<String, String> userLogin, String employerCode, String month) {
 		countActions++;
-		log.info(" TTTTTTT The time is "
-				+ new DateTime(Calendar.getInstance().getTimeInMillis())
-				+ " CCCC counted " + countActions);
-		// session = request.getSession();
-		// Map<String, String> userLogin = (Map<String, String>) session
-		// .getAttribute("userLogin");
-
-		// request
-		// .getAttribute("userLogin");
-		// if (session.getAttribute(userLogin.get("userLoginId")) == null)
-		// {
-		// log.info(" LLLLLLLLLLL Yet to start Processing LLLLLLLLLLLLL, will set startedProcessing and start ...the user is "+userLogin.get("userLoginId"));
-		// session.setAttribute(userLogin.get("userLoginId"), true);
-		// } else {
-		// log.info(" SSSSSSSSSSS Started Process , wont do processing the user is "+userLogin.get("userLoginId"));
-		//
-		// }
-		//
-		// if (true){
-		// log.info("IIIII Sleeping for 5 seconds .. ");
-		//
-		// try {
-		// TimeUnit.SECONDS.sleep(5);
-		// } catch (InterruptedException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// session.removeAttribute(userLogin.get("userLoginId"));
-		// return "";
-		// }
 
 		// Update Receipts to show generated and post
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -1582,6 +1555,176 @@ public class RemittanceServices {
 
 		log.info("SSSSSSSSSSSSSSS  Employer Code " + employerCode);
 		log.info("SSSSSSSSSSSSSSS  Month " + month);
+
+		List<ProductTotal> listAccountProductRemitted = getAccountProductsRemittedList(
+				employerCode, month);
+		Boolean accountProductMissGLAccount = false;
+		Boolean accountProductNotMapped = false;
+
+		String branchId = LoanUtilities.getBranchId(employerCode);
+
+		if (branchId == null) {
+			log.info(" MMMMMMM Missing Branch ######");
+			return "stationmusthavebranch";
+		} else {
+			log.info(" MMMMMMM Branch is  ######" + branchId);
+
+		}
+
+		String missingProductNames = "";
+		String missingProductMapped = "";
+		List<String> listRemittedAccountProductList = new ArrayList<String>();
+		for (ProductTotal productTotal : listAccountProductRemitted) {
+			log.info("PPPPPPPPPPPP  Product Code " + productTotal.getCode()
+					+ "  total " + productTotal.getAmount());
+			listRemittedAccountProductList.add(productTotal.getCode().trim());
+			if (LoanUtilities.missingGLAccount(productTotal.getCode())) {
+				accountProductMissGLAccount = true;
+
+				if (missingProductNames.equals("")) {
+					missingProductNames = " Missing accounts for "
+							+ productTotal.getName();
+				} else {
+					missingProductNames = missingProductNames + ", "
+							+ productTotal.getName();
+				}
+			}
+
+			if (!accountProductMissGLAccount)
+				if (LoanUtilities.notAccountsNotMapped(branchId,
+						productTotal.getCode())) {
+					accountProductNotMapped = true;
+
+					if (missingProductMapped.equals("")) {
+						missingProductMapped = " Missing account mappings to "
+								+ LoanUtilities.getBranchName(branchId)
+								+ " for " + productTotal.getName();
+					} else {
+						missingProductMapped = missingProductMapped + ", "
+								+ productTotal.getName();
+					}
+				}
+		}
+
+		if (accountProductMissGLAccount) {
+
+			log.info(" MMMMMMM Missing GL Account on Account Product  ######");
+			return missingProductNames;
+			// "accountproductmissingglaccount";
+		} else {
+			log.info(" MMMMMMM  GL Account on Account Product Ok  ######");
+		}
+
+		if (accountProductNotMapped) {
+			log.info(" MMMMMMM  GL Account on Account Product Not mapped  ######");
+
+			return missingProductMapped;
+
+			// "accountproductglaccountnotmappedtobranch";
+		} else {
+			log.info(" MMMMMMM  GL Account on Account Product All mapped  ######");
+
+		}
+		
+		/****
+		 * Check for
+		 * 	PRINCIPALPAYMENT
+		 *  INTERESTPAYMENT
+		 *  INSURANCEPAYMENT
+		 * 
+		 * */
+		
+		//Station Account Payment
+		String loanRelatedAccountId = null;
+		GenericValue loanRelatedAccounts = null;
+		loanRelatedAccounts = LoanRepayments
+		.getAccountHolderTransactionSetupRecord(
+				"STATIONACCOUNTPAYMENT", delegator);
+		
+		if (loanRelatedAccounts == null){
+			return "Please ensure that STATION Payment Account is set in the Accounts Setup and mapped properly";
+		}
+		
+		loanRelatedAccountId = loanRelatedAccounts
+		.getString("memberDepositAccId");
+		
+		if ((loanRelatedAccountId == null) || (loanRelatedAccountId.equals(""))){
+			return "Please ensure that STATION Payment Account is set in the Accounts Setup and mapped properly";
+		}
+		
+		if (!LoanUtilities.organizationAccountMapped(loanRelatedAccountId, branchId)){
+			return "Please ensure that STATION Payment Account has a mapping for the branch "+LoanUtilities.getBranchName(branchId)+" in the General Ledger ";
+
+		}
+		
+		//Principal
+		loanRelatedAccountId = null;
+		loanRelatedAccounts = null;
+		loanRelatedAccounts = LoanRepayments
+		.getAccountHolderTransactionSetupRecord(
+				"PRINCIPALPAYMENT", delegator);
+		
+		if (loanRelatedAccounts == null){
+			return "Please ensure that Principal Payment Account is set in the Accounts Setup and mapped properly";
+		}
+		
+		loanRelatedAccountId = loanRelatedAccounts
+		.getString("memberDepositAccId");
+		
+		if ((loanRelatedAccountId == null) || (loanRelatedAccountId.equals(""))){
+			return "Please ensure that Principal Payment Account is set in the Accounts Setup and mapped properly";
+		}
+		
+		if (!LoanUtilities.organizationAccountMapped(loanRelatedAccountId, branchId)){
+			return "Please ensure that Principal Payment Account has a mapping for the branch "+LoanUtilities.getBranchName(branchId)+" in the General Ledger ";
+
+		}
+		
+		//Interest
+		loanRelatedAccountId = null;
+		loanRelatedAccounts = null;
+		loanRelatedAccounts = LoanRepayments
+		.getAccountHolderTransactionSetupRecord(
+				"INTERESTPAYMENT", delegator);
+		
+		if (loanRelatedAccounts == null){
+			return "Please ensure that Interest Payment Account is set in the Accounts Setup and mapped properly";
+		}
+		
+		loanRelatedAccountId = loanRelatedAccounts
+		.getString("memberDepositAccId");
+		
+		if ((loanRelatedAccountId == null) || (loanRelatedAccountId.equals(""))){
+			return "Please ensure that Interest Payment Account is set in the Accounts Setup and mapped properly";
+		}
+		
+		if (!LoanUtilities.organizationAccountMapped(loanRelatedAccountId, branchId)){
+			return "Please ensure that Interest Payment Account has a mapping for the branch "+LoanUtilities.getBranchName(branchId)+" in the General Ledger ";
+
+		}
+		
+		//Insurance
+		loanRelatedAccountId = null;
+		loanRelatedAccounts = null;
+		loanRelatedAccounts = LoanRepayments
+		.getAccountHolderTransactionSetupRecord(
+				"INSURANCEPAYMENT", delegator);
+		
+		if (loanRelatedAccounts == null){
+			return "Please ensure that Insurance Payment Account is set in the Accounts Setup and mapped properly";
+		}
+		
+		loanRelatedAccountId = loanRelatedAccounts
+		.getString("memberDepositAccId");
+		
+		if ((loanRelatedAccountId == null) || (loanRelatedAccountId.equals(""))){
+			return "Please ensure that Insurance Payment Account is set in the Accounts Setup and mapped properly";
+		}
+		
+		if (!LoanUtilities.organizationAccountMapped(loanRelatedAccountId, branchId)){
+			return "Please ensure that Insurance Payment Account has a mapping for the branch "+LoanUtilities.getBranchName(branchId)+" in the General Ledger ";
+
+		}
 
 		// if (!AllPayrollCodesExist(employerCode, month)) {
 		// return "fail";
@@ -1618,9 +1761,20 @@ public class RemittanceServices {
 		BigDecimal bdAccount = BigDecimal.ZERO;
 		BigDecimal bdTotal = BigDecimal.ZERO;
 
+		GenericValue accountHolderTransactionSetup = null;
+		// Get Account to debit - the Station Debit Account
+		accountHolderTransactionSetup = LoanRepayments
+				.getAccountHolderTransactionSetupRecord(
+						"STATIONACCOUNTPAYMENT", delegator);
+
+		String acctgTransType = "STATION_DEPOSIT";
+		// Create the Account Trans Record
+		String acctgTransId = createAccountingTransaction(
+				accountHolderTransactionSetup, acctgTransType, branchId);
+
 		List<String> accountProductCodesList = getAccountProductCodesList();
 
-		String branchId = "";
+		// String branchId = "";
 		log.info(" SSSSSSSSSSSSSS Number of Records is "
 				+ expectedPaymentReceivedELI.size());
 		for (GenericValue expectedPaymentReceived : expectedPaymentReceivedELI) {
@@ -1629,21 +1783,23 @@ public class RemittanceServices {
 			 * Can either be an account, an INTEREST INSURANCE PRINCIPAL
 			 * */
 
-			if (branchId.equals("")) {
-				branchId = getMemberByPayrollNo(
-						expectedPaymentReceived.getString("payrollNo"))
-						.getString("branchId");
-			}
+			// if (branchId.equals("")) {
+			// branchId = getMemberByPayrollNo(
+			// expectedPaymentReceived.getString("payrollNo"))
+			// .getString("branchId");
+			// }
 
 			/**
 			 * PRINCIPAL INTEREST INSURANCE ACCOUNT SHARES
 			 * 
 			 * */
 
-			for (String code : accountProductCodesList) {
+			// for (String code : accountProductCodesList) {
+			for (String code : listRemittedAccountProductList) {
+
 				if (expectedPaymentReceived.getString("remitanceCode").equals(
-						code)
-						&& !(code.equals(SHARE_CAPITAL_CODE))) {
+						code)) {
+					// && !(code.equals(SHARE_CAPITAL_CODE))
 					// Add a member account transaction from this expectation to
 					// the account of this code
 					BigDecimal transactionAmount = expectedPaymentReceived
@@ -1663,27 +1819,34 @@ public class RemittanceServices {
 
 					// AccHolderTransactionServices.cashDepositt(transactionAmount,
 					// memberAccountId, userLogin, withdrawalType)
-					log.info("PPPPPPPP Product Code is "+code+" Payroll Number is "+expectedPaymentReceived.getString("payrollNo"));
-					AccHolderTransactionServices.cashDeposit(transactionAmount,
-							memberAccountId, userLogin, month + " Remittance");
+					log.info("PPPPPPPP Product Code is " + code
+							+ " Payroll Number is "
+							+ expectedPaymentReceived.getString("payrollNo"));
+					AccHolderTransactionServices
+							.cashDepositFromStationProcessing(
+									transactionAmount, memberAccountId,
+									userLogin, month + " Remittance",
+									acctgTransId);
 					// Increment bdAccount with this amount
 					bdAccount = bdAccount.add(expectedPaymentReceived
 							.getBigDecimal("amount"));
-				} else if (expectedPaymentReceived.getString("remitanceCode")
-						.equals(code) && (code.equals(SHARE_CAPITAL_CODE))) {
-					// Add member account transaction from this expection to the
-					// account of this code
-					BigDecimal transactionAmount = expectedPaymentReceived
-							.getBigDecimal("amount");
-					Long memberAccountId = getMemberAccountId(code,
-							expectedPaymentReceived.getString("payrollNo"));
-					AccHolderTransactionServices.cashDeposit(transactionAmount,
-							memberAccountId, userLogin, month + " Remittance");
-
-					// Increment Share Total
-					bdSharesTotal = bdSharesTotal.add(expectedPaymentReceived
-							.getBigDecimal("amount"));
 				}
+
+				// else if (expectedPaymentReceived.getString("remitanceCode")
+				// .equals(code) && (code.equals(SHARE_CAPITAL_CODE))) {
+				// // Add member account transaction from this expection to the
+				// // account of this code
+				// BigDecimal transactionAmount = expectedPaymentReceived
+				// .getBigDecimal("amount");
+				// Long memberAccountId = getMemberAccountId(code,
+				// expectedPaymentReceived.getString("payrollNo"));
+				// AccHolderTransactionServices.cashDeposit(transactionAmount,
+				// memberAccountId, userLogin, month + " Remittance");
+				//
+				// // Increment Share Total
+				// bdSharesTotal = bdSharesTotal.add(expectedPaymentReceived
+				// .getBigDecimal("amount"));
+				// }
 			}
 
 			// if (expectedPaymentReceived.getString("expectationType").equals(
@@ -1716,7 +1879,7 @@ public class RemittanceServices {
 
 					// Save the Repayment to loan_repayment (LoanRepayment)
 
-					saveLoanRepayment(expectedPaymentReceived);
+					saveLoanRepayment(expectedPaymentReceived, acctgTransId);
 
 				} else if (expectedPaymentReceived.getString("remitanceCode")
 						.equals(remittanceCodeInterest)) {
@@ -1748,23 +1911,13 @@ public class RemittanceServices {
 		// Ommit Shares and Member Deposits from the Debit because they are
 		// being posted individually - per
 		// transaction
-		bdTotal = bdTotal.subtract(bdAccount);
-		bdTotal = bdTotal.subtract(bdSharesTotal);
+		// bdTotal = bdTotal.subtract(bdAccount);
+		// bdTotal = bdTotal.subtract(bdSharesTotal);
 
 		String postingType = "D";
-		GenericValue accountHolderTransactionSetup = null;
-		// Get Account to debit - the Station Debit Account
-		accountHolderTransactionSetup = LoanRepayments
-				.getAccountHolderTransactionSetupRecord(
-						"STATIONACCOUNTPAYMENT", delegator);
 		String debitAccountId = accountHolderTransactionSetup
 				.getString("memberDepositAccId");
 
-		String acctgTransType = "STATION_DEPOSIT";
-
-		// Create the Account Trans Record
-		String acctgTransId = createAccountingTransaction(
-				accountHolderTransactionSetup, acctgTransType, branchId);
 		// Do the posting
 		String entrySequenceId = "00001";
 		// postTransaction(debitAccountId, postingType, entrySequenceId,
@@ -1805,6 +1958,28 @@ public class RemittanceServices {
 		// bdAccount, branchId, acctgTransId, acctgTransType);
 		// }
 
+		// Credit each of the account products
+		int sequenceId = 1;
+		String sequenceString = "";
+
+		for (ProductTotal productEnt : listAccountProductRemitted) {
+			sequenceId = sequenceId + 1;
+
+			sequenceString = "0000" + sequenceId;
+			entrySequenceId = sequenceString;
+			postingType = "C";
+			creditAccountId = LoanUtilities
+					.getGLAccountIDForAccountProduct(productEnt.getCode()
+							.trim());
+
+			if (productEnt.getAmount().compareTo(BigDecimal.ZERO) == 1) {
+				postTransaction(creditAccountId, postingType, entrySequenceId,
+						productEnt.getAmount(), branchId, acctgTransId,
+						acctgTransType);
+			}
+
+		}
+
 		// PRINCIPALPAYMENT
 		accountHolderTransactionSetup = LoanRepayments
 				.getAccountHolderTransactionSetupRecord("PRINCIPALPAYMENT",
@@ -1812,7 +1987,11 @@ public class RemittanceServices {
 		creditAccountId = accountHolderTransactionSetup
 				.getString("memberDepositAccId");
 		postingType = "C";
-		entrySequenceId = "00004";
+
+		sequenceId = sequenceId + 1;
+		sequenceString = "0000" + sequenceId;
+
+		entrySequenceId = sequenceString;
 		if (bdPrincipal.compareTo(BigDecimal.ZERO) == 1) {
 			postTransaction(creditAccountId, postingType, entrySequenceId,
 					bdPrincipal, branchId, acctgTransId, acctgTransType);
@@ -1824,7 +2003,11 @@ public class RemittanceServices {
 		creditAccountId = accountHolderTransactionSetup
 				.getString("memberDepositAccId");
 		postingType = "C";
-		entrySequenceId = "00005";
+
+		sequenceId = sequenceId + 1;
+		sequenceString = "0000" + sequenceId;
+
+		entrySequenceId = sequenceString;
 
 		if (bdInterest.compareTo(BigDecimal.ZERO) == 1) {
 			postTransaction(creditAccountId, postingType, entrySequenceId,
@@ -1837,7 +2020,12 @@ public class RemittanceServices {
 		creditAccountId = accountHolderTransactionSetup
 				.getString("memberDepositAccId");
 		postingType = "C";
-		entrySequenceId = "00006";
+
+		sequenceId = sequenceId + 1;
+		sequenceString = "0000" + sequenceId;
+
+		entrySequenceId = sequenceString;
+
 		if (bdInsurance.compareTo(BigDecimal.ZERO) == 1) {
 			postTransaction(creditAccountId, postingType, entrySequenceId,
 					bdInsurance, branchId, acctgTransId, acctgTransType);
@@ -1856,7 +2044,57 @@ public class RemittanceServices {
 		// e1.printStackTrace();
 		// }
 		// }
-		return "success";
+		//return "Successufully Processed remittance for "+bdTotal+" shillings, the transaction ID is "+acctgTransId;
+		return "Successufully Processed remittance";
+	}
+
+	/****
+	 * @author Japheth Odonya @when Jun 4, 2015 12:38:50 AM
+	 * 
+	 *         Returns a list of account product codes in the remitted data
+	 * 
+	 * */
+	private static List<ProductTotal> getAccountProductsRemittedList(
+			String employerCode, String month) {
+		// TODO Auto-generated method stub
+		List<GenericValue> receivedProductsELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		EntityConditionList<EntityExpr> receivedProductsConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"employerCode", EntityOperator.EQUALS, employerCode),
+
+				EntityCondition.makeCondition("month", EntityOperator.EQUALS,
+						month),
+
+				EntityCondition.makeCondition("loanNo", EntityOperator.EQUALS,
+						"0")
+
+				), EntityOperator.AND);
+		try {
+			receivedProductsELI = delegator.findList(
+					"ExpectedPaymentReceivedProductTotal",
+					receivedProductsConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		log.info(" AAAAAAAAA All the Products Received .... Count is #### "
+				+ receivedProductsELI.size());
+
+		List<ProductTotal> productCodeList = new ArrayList<ProductTotal>();
+		ProductTotal productTotal;
+		for (GenericValue genericValue : receivedProductsELI) {
+			productTotal = new ProductTotal();
+			productTotal
+					.setCode(genericValue.getString("remitanceCode").trim());
+			productTotal.setAmount(genericValue.getBigDecimal("amount"));
+			productTotal.setName(LoanUtilities.getAccountProductGivenCodeId(
+					genericValue.getString("remitanceCode").trim()).getString(
+					"name"));
+			productCodeList.add(productTotal);
+		}
+
+		return productCodeList;
 	}
 
 	private static boolean AllPayrollCodesExist(String employerCode,
@@ -2112,6 +2350,89 @@ public class RemittanceServices {
 
 	}
 
+	// acctgTransId
+	private static void saveLoanRepayment(GenericValue expectedPaymentReceived,
+			String acctgTransId) {
+		BigDecimal loanPrincipal = BigDecimal.ZERO;
+		BigDecimal loanInterest = BigDecimal.ZERO;
+		BigDecimal loanInsurance = BigDecimal.ZERO;
+
+		// Loan Principal
+		loanPrincipal = expectedPaymentReceived.getBigDecimal("amount");
+		// Get This Loan's Interest
+
+		String loanProductCode = LoanUtilities
+				.getLoanProductCodeGivenLoanNo(expectedPaymentReceived
+						.getString("loanNo"));
+
+		String remittanceCodePrincipal = loanProductCode + "A";
+		String remittanceCodeInterest = loanProductCode + "B";
+		String remittanceCodeInsurance = loanProductCode + "C";
+
+		loanInterest = getLoanInterestOrInsurance(
+				expectedPaymentReceived.getString("loanNo"),
+				expectedPaymentReceived.getString("month"),
+				remittanceCodeInterest);
+		// Get This Loan's Insurance
+		loanInsurance = getLoanInterestOrInsurance(
+				expectedPaymentReceived.getString("loanNo"),
+				expectedPaymentReceived.getString("month"),
+				remittanceCodeInsurance);
+		// Sum Principal, Interest and Insurance
+
+		BigDecimal transactionAmount = loanPrincipal.add(loanInterest).add(
+				loanInsurance);
+
+		BigDecimal bdLoanAmt = getLoanAmount(expectedPaymentReceived
+				.getString("loanNo"));
+
+		BigDecimal totalInterestDue = getLoanInterestOrInsuranceDue(
+				expectedPaymentReceived.getString("loanNo"),
+				expectedPaymentReceived.getString("month"),
+				remittanceCodeInterest);
+		BigDecimal totalInsuranceDue = getLoanInterestOrInsuranceDue(
+				expectedPaymentReceived.getString("loanNo"),
+				expectedPaymentReceived.getString("month"),
+				remittanceCodeInsurance);
+		BigDecimal totalPrincipalDue = getLoanInterestOrInsuranceDue(
+				expectedPaymentReceived.getString("loanNo"),
+				expectedPaymentReceived.getString("month"),
+				remittanceCodePrincipal);
+		BigDecimal totalLoanDue = totalInterestDue.add(totalInsuranceDue).add(
+				totalPrincipalDue);
+
+		Long loanApplicationId = getLoanApplicationId(expectedPaymentReceived
+				.getString("loanNo"));
+		Long partyId = getLoanPartyId(expectedPaymentReceived
+				.getString("loanNo"));
+		GenericValue loanRepayment = null;
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		Long loanRepaymentId = delegator.getNextSeqIdLong("LoanRepayment", 1);
+		loanRepayment = delegator.makeValue("LoanRepayment", UtilMisc.toMap(
+				"loanRepaymentId", loanRepaymentId, "isActive", "Y",
+				"createdBy", "admin", "partyId", partyId, "loanApplicationId",
+				loanApplicationId,
+
+				"loanNo", expectedPaymentReceived.getString("loanNo"),
+				"loanAmt", bdLoanAmt,
+
+				"totalLoanDue", totalLoanDue, "totalInterestDue",
+				totalInterestDue, "totalInsuranceDue", totalInsuranceDue,
+				"totalPrincipalDue", totalPrincipalDue, "interestAmount",
+				loanInterest, "insuranceAmount", loanInsurance,
+				"principalAmount", loanPrincipal, "transactionAmount",
+				transactionAmount, "acctgTransId", acctgTransId));
+		try {
+			delegator.createOrStore(loanRepayment);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		// delegator.removeAll(dummyPKs)
+
+	}
+
 	private static Long getLoanPartyId(String loanNo) {
 		List<GenericValue> loanApplicationELI = null; // =
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -2234,9 +2555,9 @@ public class RemittanceServices {
 		} catch (GenericTransactionException e) {
 			e.printStackTrace();
 		}
-		LoanRepayments.postTransactionEntry(delegator, bdTotal, branchId,
-				debitAccountId, postingType, acctgTransId, acctgTransType,
-				entrySequenceId);
+		LoanRepayments.postTransactionEntryVersion2(delegator, bdTotal,
+				branchId, debitAccountId, postingType, acctgTransId,
+				acctgTransType, entrySequenceId);
 
 		try {
 			TransactionUtil.commit();
@@ -2447,7 +2768,7 @@ public class RemittanceServices {
 		log.info("SSSSSSSSSSSSSSS  Month " + month);
 
 		// Get Received Records and Delete them
-		//removeReceivedRecords(employerCode, month);
+		// removeReceivedRecords(employerCode, month);
 
 		// Get the Missing Records and Delete them
 		removeMissingLog(employerCode, month);
@@ -2546,8 +2867,9 @@ public class RemittanceServices {
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"employerCode", EntityOperator.EQUALS,
 						employerCode.trim()), EntityCondition.makeCondition(
-						"month", EntityOperator.EQUALS, month), EntityCondition
-						.makeCondition("processed", EntityOperator.EQUALS, null)
+						"month", EntityOperator.EQUALS, month),
+						EntityCondition.makeCondition("processed",
+								EntityOperator.EQUALS, null)
 
 				), EntityOperator.AND);
 
@@ -2590,9 +2912,10 @@ public class RemittanceServices {
 	}
 
 	/****
-	 * @author Japheth Odonya  @when Jun 1, 2015 2:25:37 PM
+	 * @author Japheth Odonya @when Jun 1, 2015 2:25:37 PM
 	 * 
-	 * Deleting the Records for Received expectations for the specified month and employercode
+	 *         Deleting the Records for Received expectations for the specified
+	 *         month and employercode
 	 * 
 	 * */
 	public static String deleteReceivedPaymentBreakdown(
@@ -2622,15 +2945,15 @@ public class RemittanceServices {
 
 		return "success";
 	}
-	
-	
+
 	/***
-	 * @author Japheth Odonya  @when Jun 1, 2015 7:51:43 PM
+	 * @author Japheth Odonya @when Jun 1, 2015 7:51:43 PM
 	 * 
-	 * Get all existing products in the remittance and for each 
-	 * if the member is not subscribed to the product then dont proceede
+	 *         Get all existing products in the remittance and for each if the
+	 *         member is not subscribed to the product then dont proceede
 	 ****/
-	public static synchronized String checkAnyProductWithMissingProductOnMember(Map<String, String> userLogin, String employerCode, String month){
+	public static synchronized String checkAnyProductWithMissingProductOnMember(
+			Map<String, String> userLogin, String employerCode, String month) {
 		clearMissingMember(month, employerCode);
 		/***
 		 * Get list of products
@@ -2644,9 +2967,9 @@ public class RemittanceServices {
 
 				EntityCondition.makeCondition("month", EntityOperator.EQUALS,
 						month),
-						
-						EntityCondition.makeCondition("loanNo", EntityOperator.EQUALS,
-								"0")
+
+				EntityCondition.makeCondition("loanNo", EntityOperator.EQUALS,
+						"0")
 
 				), EntityOperator.AND);
 		try {
@@ -2656,45 +2979,51 @@ public class RemittanceServices {
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-		
-		log.info(" AAAAAAAAA All the Products Received .... Count is #### "+receivedProductsELI.size());
+
+		log.info(" AAAAAAAAA All the Products Received .... Count is #### "
+				+ receivedProductsELI.size());
 		Long count = 0L;
 		String productCode = "";
 		List<String> productCodeList = new ArrayList<String>();
 		for (GenericValue genericValue : receivedProductsELI) {
 			productCode = genericValue.getString("remitanceCode");
-			
-			if (!(productCode.equals(FOSA_SAVINGS_CODE.trim())) && !(productCode.equals(MEMBER_DEPOSIT_CODE.trim())) && !(productCode.equals(SHARE_CAPITAL_CODE.trim()))){
+
+			if (!(productCode.equals(FOSA_SAVINGS_CODE.trim()))
+					&& !(productCode.equals(MEMBER_DEPOSIT_CODE.trim()))
+					&& !(productCode.equals(SHARE_CAPITAL_CODE.trim()))) {
 				productCodeList.add(productCode);
 			}
-			
+
 		}
-		
-		//Check that anyone remitting this product has an account for the product, otherwise
-		//Add him to the mising list
+
+		// Check that anyone remitting this product has an account for the
+		// product, otherwise
+		// Add him to the mising list
 		log.info(" LLLLLLL List to process is LLLLLLLLLLLLLLLL ");
 		Long prodCount = 0L;
 		Boolean failed = false;
 		for (String code : productCodeList) {
-			log.info(++prodCount+" PPPPPPPP --- "+code);
-			if (checkAllUsersRemittingProductMissAccount(userLogin, code, month, employerCode))
+			log.info(++prodCount + " PPPPPPPP --- " + code);
+			if (checkAllUsersRemittingProductMissAccount(userLogin, code,
+					month, employerCode))
 				failed = true;
 		}
-		
+
 		if (failed)
 			return "failed";
-		
+
 		return "success";
 	}
 
 	/***
-	 * Check all members remitting for product code code,
-	 * that each actually has an account for that product
+	 * Check all members remitting for product code code, that each actually has
+	 * an account for that product
 	 * */
-	private static boolean checkAllUsersRemittingProductMissAccount(Map<String, String> userLogin,
-			String code, String month, String employerCode) {
-		
-		//Get all members remitting for remittance code code
+	private static boolean checkAllUsersRemittingProductMissAccount(
+			Map<String, String> userLogin, String code, String month,
+			String employerCode) {
+
+		// Get all members remitting for remittance code code
 		List<GenericValue> receivedExpectedELI = new ArrayList<GenericValue>();
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		EntityConditionList<EntityExpr> receivedExpectedConditions = EntityCondition
@@ -2703,14 +3032,13 @@ public class RemittanceServices {
 
 				EntityCondition.makeCondition("month", EntityOperator.EQUALS,
 						month),
-						
-						EntityCondition.makeCondition("remitanceCode", EntityOperator.EQUALS,
-								code)
+
+				EntityCondition.makeCondition("remitanceCode",
+						EntityOperator.EQUALS, code)
 
 				), EntityOperator.AND);
 		try {
-			receivedExpectedELI = delegator.findList(
-					"ExpectedPaymentReceived",
+			receivedExpectedELI = delegator.findList("ExpectedPaymentReceived",
 					receivedExpectedConditions, null, null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
@@ -2719,30 +3047,31 @@ public class RemittanceServices {
 		Long count = 0L;
 		Boolean failed = false;
 		for (GenericValue genericValue : receivedExpectedELI) {
-			//Check that this member is subscribed to this product
+			// Check that this member is subscribed to this product
 			payrollNo = genericValue.getString("payrollNo");
-			log.info(++count+"FFFFFFFFFFFF "+code+" !!!!!!!!!!!!!! for "+payrollNo);
+			log.info(++count + "FFFFFFFFFFFF " + code + " !!!!!!!!!!!!!! for "
+					+ payrollNo);
 			if (!hasAccount(code, payrollNo.trim())) {
 				failed = true;
 
 				// Add the member to the missing log
-				log.info("AAAAAAAAAAAAAAAA Adding a member!!!!!!!!!!!!!! for "+payrollNo);
-				addMissingMemberLog(userLogin, payrollNo, month, employerCode, code, null, null);
+				log.info("AAAAAAAAAAAAAAAA Adding a member!!!!!!!!!!!!!! for "
+						+ payrollNo);
+				addMissingMemberLog(userLogin, payrollNo, month, employerCode,
+						code, null, null);
 			}
 		}
 		return failed;
 	}
-	
-	
-	
-	
+
 	/****
-	 * @author Japheth Odonya  @when Jun 1, 2015 10:26:15 PM
-	 * Ensure that all loans remitted with data do exist in the system
+	 * @author Japheth Odonya @when Jun 1, 2015 10:26:15 PM Ensure that all
+	 *         loans remitted with data do exist in the system
 	 * 
 	 * */
-	public static synchronized String checkAllLoansRemittedExist(Map<String, String> userLogin, String employerCode, String month){
-		//clearMissingMember(month, employerCode);
+	public static synchronized String checkAllLoansRemittedExist(
+			Map<String, String> userLogin, String employerCode, String month) {
+		// clearMissingMember(month, employerCode);
 		/***
 		 * Get list of products
 		 ***/
@@ -2755,49 +3084,49 @@ public class RemittanceServices {
 
 				EntityCondition.makeCondition("month", EntityOperator.EQUALS,
 						month),
-						
-						EntityCondition.makeCondition("loanNo", EntityOperator.NOT_EQUAL,
-								"0")
+
+				EntityCondition.makeCondition("loanNo",
+						EntityOperator.NOT_EQUAL, "0")
 
 				), EntityOperator.AND);
 		try {
 			receivedLoansELI = delegator.findList(
-					"ExpectedPaymentReceivedLoans",
-					receivedLoansConditions, null, null, null, false);
+					"ExpectedPaymentReceivedLoans", receivedLoansConditions,
+					null, null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-		
-		log.info("CCCCCCCCC Loans Count "+receivedLoansELI.size());
+
+		log.info("CCCCCCCCC Loans Count " + receivedLoansELI.size());
 		String loanNo = "";
 		Boolean missingLoan = false;
 		for (GenericValue genericValue : receivedLoansELI) {
-			//Check that loanNo exists in the system
-			
+			// Check that loanNo exists in the system
+
 			loanNo = genericValue.getString("loanNo").trim();
-			log.info("CCCCCCCCC Loans Checking "+loanNo);
-			if (loanIsMissing(userLogin, loanNo, employerCode, month)){
+			log.info("CCCCCCCCC Loans Checking " + loanNo);
+			if (loanIsMissing(userLogin, loanNo, employerCode, month)) {
 				missingLoan = true;
 			}
-			
+
 		}
-		
-		if (missingLoan){
+
+		if (missingLoan) {
 			return "failed";
 		}
-		
+
 		return "success";
 	}
 
 	/****
-	 * @author Japheth Odonya  @when Jun 1, 2015 10:40:28 PM
+	 * @author Japheth Odonya @when Jun 1, 2015 10:40:28 PM
 	 * 
-	 * Return true is loan exists , false otherwise
+	 *         Return true is loan exists , false otherwise
 	 * 
 	 * */
 	private static boolean loanIsMissing(Map<String, String> userLogin,
 			String loanNo, String employerCode, String month) {
-		
+
 		loanNo = loanNo.trim();
 		List<GenericValue> loanApplicationELI = new ArrayList<GenericValue>();
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -2807,23 +3136,23 @@ public class RemittanceServices {
 
 				), EntityOperator.AND);
 		try {
-			loanApplicationELI = delegator.findList(
-					"LoanApplication",
+			loanApplicationELI = delegator.findList("LoanApplication",
 					loanApplicationConditions, null, null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-		String payrollNo = getPayrollNumber(loanNo, employerCode, month );
-		
-		log.info(" SSSSSSSSSSS THE SIZE "+loanApplicationELI.size());
-		
-		if ((loanApplicationELI == null) || (loanApplicationELI.size() < 1)){
+		String payrollNo = getPayrollNumber(loanNo, employerCode, month);
+
+		log.info(" SSSSSSSSSSS THE SIZE " + loanApplicationELI.size());
+
+		if ((loanApplicationELI == null) || (loanApplicationELI.size() < 1)) {
 			log.info("TTTTT To add Loan TTTTTTTT to the missing");
-			addMissingMemberLog(userLogin, payrollNo, month, employerCode, null, loanNo, null);
-			
+			addMissingMemberLog(userLogin, payrollNo, month, employerCode,
+					null, loanNo, null);
+
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -2837,9 +3166,9 @@ public class RemittanceServices {
 						"employerCode", EntityOperator.EQUALS,
 						employerCode.trim()), EntityCondition.makeCondition(
 						"month", EntityOperator.EQUALS, month),
-						
-						EntityCondition.makeCondition(
-								"loanNo", EntityOperator.EQUALS, loanNo)
+
+				EntityCondition.makeCondition("loanNo", EntityOperator.EQUALS,
+						loanNo)
 
 				), EntityOperator.AND);
 
@@ -2851,16 +3180,16 @@ public class RemittanceServices {
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
-		
+
 		GenericValue expectedPaymentReceived = null;
-		
+
 		for (GenericValue genericValue : expectedPaymentReceivedELI) {
 			expectedPaymentReceived = genericValue;
 		}
-		
+
 		if (expectedPaymentReceived != null)
 			return expectedPaymentReceived.getString("payrollNo");
-		
+
 		return null;
 	}
 

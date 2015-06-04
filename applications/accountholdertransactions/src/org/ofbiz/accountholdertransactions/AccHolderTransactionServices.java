@@ -3561,6 +3561,55 @@ public class AccHolderTransactionServices {
 		return accountTransactionParent.getString("accountTransactionParentId");
 	}
 	
+	/***
+	 * Cash Deposit From Station processing
+	 * 
+	 * Does not post to the GL
+	 * **/
+	public static String cashDepositFromStationProcessing(BigDecimal transactionAmount,
+			Long memberAccountId, Map<String, String> userLogin,
+			String withdrawalType, String acctgTransId) {
+
+		log.info(" Transaction Amount ---- " + transactionAmount);
+		log.info(" Transaction MA ---- " + memberAccountId);
+
+		// log.info(" UserLogin ---- " + userLogin.get("userLoginId"));
+		log.info(" Transaction Amount ---- " + transactionAmount);
+		if (userLogin == null) {
+			userLogin = new HashMap<String, String>();
+			userLogin.put("userLoginId", "admin");
+		}
+
+		// Save Parent
+		GenericValue accountTransactionParent = createAccountTransactionParent(
+				memberAccountId, userLogin);
+		String transactionType = withdrawalType;
+
+		// Set the the Treasury ID
+		// String treasuryId = TreasuryUtility.getTellerId(userLogin);
+		// accountTransaction.set("treasuryId", treasuryId);
+		// addChargesToTransaction(accountTransaction, userLogin,
+		// transactionType);
+		// increaseDecrease
+
+		GenericValue accountTransaction = null;
+		accountTransaction = createTransactionVer2(transactionType, userLogin, memberAccountId.toString(), transactionAmount, null, accountTransactionParent.getString("accountTransactionParentId"), acctgTransId);
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			delegator.createOrStore(accountTransaction);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//		createTransaction(accountTransaction, transactionType, userLogin,
+//				memberAccountId.toString(), transactionAmount, null,
+//				accountTransactionParent.getString("accountTransactionParentId"));
+		//postCashDeposit(memberAccountId, userLogin, transactionAmount);
+		// postCashWithdrawalTransaction(accountTransaction, userLogin);
+
+		return accountTransactionParent.getString("accountTransactionParentId");
+	}
 	
 	public static String memberAccountJournalVoucher(BigDecimal transactionAmount,
 			Long memberAccountId, Map<String, String> userLogin,
