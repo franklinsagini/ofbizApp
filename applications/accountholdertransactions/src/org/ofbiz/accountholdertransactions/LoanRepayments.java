@@ -1007,6 +1007,37 @@ public class LoanRepayments {
 			log.error("Could post an entry");
 		}
 	}
+	
+	
+	/***
+	 * @author Japheth Odonya  @when Jun 4, 2015 12:14:36 PM
+	 * 
+	 * Updated Posting Method, factors in the branch
+	 * */
+	public static void postTransactionEntryVersion2(Delegator delegator,
+			BigDecimal bdLoanAmount, String branchId,
+			String loanReceivableAccount, String postingType,
+			String acctgTransId, String acctgTransType, String entrySequenceId) {
+		GenericValue acctgTransEntry;
+		acctgTransEntry = delegator.makeValidValue("AcctgTransEntry", UtilMisc
+				.toMap("acctgTransId", acctgTransId, "acctgTransEntrySeqId",
+						entrySequenceId, "partyId", branchId, "glAccountTypeId",
+						acctgTransType, "glAccountId", loanReceivableAccount,
+
+						"organizationPartyId", branchId, "amount",
+						bdLoanAmount, "currencyUomId", "KES", "origAmount",
+						bdLoanAmount, "origCurrencyUomId", "KES",
+						"debitCreditFlag", postingType, "reconcileStatusId",
+						"AES_NOT_RECONCILED"));
+
+		try {
+			delegator.createOrStore(acctgTransEntry);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("Could post an entry");
+		}
+	}
+
 
 	/***
 	 * @author Japheth Odonya @when Sep 11, 2014 6:50:38 PM Totals Due By Member

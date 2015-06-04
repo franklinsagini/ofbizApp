@@ -1060,14 +1060,23 @@
 		<set field="processed" value="processed" />
 		<set field="notprocessed" value="notprocessed" />
 
+		<!-- test code -->
+		<!-- set field="processingStatus"
+			value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.processReceivedPaymentBreakdown(userLogin, employerCode, month);}"></set -->
+		
+		
 		<if>
 			<condition>
+				<!-- if-compare operator="not-equals" value="11" field="processingStatus"></if-compare -->
 				<if-compare operator="equals" value="processed" field="processingStatus"></if-compare>
 			</condition>
 			<then>
 				<add-error>
-					<fail-property resource="AccountHolderTransactionsUILabels.xml"
-						property="alreadyProcessedError" />
+					<!-- fail-message message="${processingStatus}"/ -->
+					<fail-property resource="AccountHolderTransactionsUILabels.xml" 
+						property="alreadyProcessedError"  />
+						 
+						<!--  property="alreadyProcessedError" -->
 				</add-error>
 				<check-errors />
 			</then>
@@ -1184,16 +1193,21 @@
 																<!-- Then finally process the remittance when all is fine -->
 																<set field="processingStatus"
 																	value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.processReceivedPaymentBreakdown(userLogin, employerCode, month);}"></set>
+																
+																<set field="processInfo" value="Successufully Processed remittance"/>
 																<if>
 																	<condition>
-																		<if-compare operator="not-equals" value="success"
+																		<if-compare operator="not-equals" value="Successufully Processed remittance"
 																			field="processingStatus"></if-compare>
 																	</condition>
 																	<then>
 																		<add-error>
-																			<fail-property
+																			<fail-message message="${processingStatus}"/>
+																			<!-- fail-property
 																				resource="AccountHolderTransactionsUILabels.xml"
-																				property="remittanceProcessingError" />
+																				 / -->
+																				 
+																				 <!-- property="remittanceProcessingError" -->
 																		</add-error>
 																		<check-errors />
 																	</then>

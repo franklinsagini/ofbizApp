@@ -1714,5 +1714,103 @@ public class LoanUtilities {
 		return true;
 	}
 
+	
+	/***
+	 * Get Branch ID given employer code
+	 * */
+	public static String getBranchId(String employerCode) {
+		List<GenericValue> stationELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		employerCode = employerCode.trim();
+		try {
+			stationELI = delegator.findList("Station",
+					EntityCondition.makeCondition("employerCode", employerCode),
+					null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		GenericValue station = null;
+		for (GenericValue genericValue : stationELI) {
+			station = genericValue;
+		}
+		
+		if (station != null)
+			return station.getString("branchId");
+		
+		return null;
+	}
+
+	/***
+	 * @author Japheth Odonya  @when Jun 4, 2015 10:41:12 AM
+	 * 
+	 * Check that an account product actually does have an account set in the setup
+	 * 
+	 * (Will need to credit this account)
+	 * 
+	 * Returns true is missing, false if set already
+	 * */
+	public static boolean missingGLAccount(String code) {
+
+		GenericValue accountProduct = null;
+		accountProduct = getAccountProductGivenCodeId(code.trim());
+		
+		if (accountProduct == null)
+			return true;
+		
+		String glAccountId = accountProduct.getString("glAccountId");
+		
+		if (glAccountId == null)
+			return true;
+		
+		return false;
+	}
+
+	
+	/***
+	 * @author Japheth Odonya  @when Jun 4, 2015 10:46:14 AM
+	 * 
+	 * Get if an account product is already mapped to the branch provided
+	 * */
+	public static boolean notAccountsNotMapped(String branchId, String code) {
+		code = code.trim();
+		
+		GenericValue accountProduct = null;
+		accountProduct = getAccountProductGivenCodeId(code.trim());
+		
+		String glAccountId = accountProduct.getString("glAccountId");
+		
+		if (glAccountId == null)
+			return true;
+		
+		if (!organizationAccountMapped(glAccountId, branchId))
+			return true;
+			
+		return false;
+	}
+	
+	
+	/***
+	 * @author Japheth Odonya  @when Jun 4, 2015 12:44:23 PM
+	 * 
+	 * Get GL Account ID
+	 * */
+	
+	public static String getGLAccountIDForAccountProduct(String code) {
+
+		GenericValue accountProduct = null;
+		accountProduct = getAccountProductGivenCodeId(code.trim());
+		
+		if (accountProduct == null)
+			return null;
+		
+		String glAccountId = null;
+				
+		glAccountId = accountProduct.getString("glAccountId");
+		
+		return glAccountId;
+	}
+
 
 }

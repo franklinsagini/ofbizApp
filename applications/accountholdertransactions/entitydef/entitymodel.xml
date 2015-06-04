@@ -364,6 +364,8 @@ under the License.
          <field name="principalAmount" type="currency-amount"   enable-audit-log="true"></field>
          <field name="excessAmount" type="currency-amount"   enable-audit-log="true"></field>
          
+          <field name="acctgTransId" type="id"   enable-audit-log="true"></field>
+         
          <field name="transactionAmount" type="currency-amount"   enable-audit-log="true"></field>
         <prim-key field="loanRepaymentId"/>
         
@@ -788,6 +790,24 @@ under the License.
     	<alias entity-alias="PR" name="employerCode" group-by="true" />
     	<alias entity-alias="PR" name="month" group-by="true"  />
     	
+    	<!-- entity-condition>
+    		<condition-expr field-name="loanNo" operator="equals" value="0"/>
+    	</entity-condition -->
+    </view-entity>
+    
+    
+    
+    
+   <view-entity entity-name="ExpectedPaymentReceivedProductTotal" package-name="org.ofbiz.accountholdertransactions">
+    	<member-entity entity-alias="PR" entity-name="ExpectedPaymentReceived"></member-entity>
+    	<!-- member-entity entity-alias="TR" entity-name="Treasury"></member-entity>
+    	<alias entity-alias="TT" name="sourceTreasury" group-by="true"></alias>
+    	<alias entity-alias="TR" name="name" group-by="true"/ --> 
+    	<alias entity-alias="PR" name="loanNo" group-by="true" />
+    	<alias entity-alias="PR" name="remitanceCode" group-by="true" />
+    	<alias entity-alias="PR" name="employerCode" group-by="true" />
+    	<alias entity-alias="PR" name="month" group-by="true"  />
+    	<alias entity-alias="PR" name="amount" function="sum"/>
     	<!-- entity-condition>
     		<condition-expr field-name="loanNo" operator="equals" value="0"/>
     	</entity-condition -->
