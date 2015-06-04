@@ -796,6 +796,53 @@
 		<set field="postStatus"
 			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.postStationTransaction(newEntity, userLogin);}"
 			type="String" />
+		
+		<if>
+			<condition>
+				<if-compare operator="equals" value="stationdepositaccountnotset" field="postStatus"></if-compare>
+			</condition>
+			<then>
+				<add-error> 
+                    <fail-property resource="AccountHolderTransactionsUILabels.xml"  
+                        property="stationDepositAccountError" /> 
+                </add-error> 
+                <check-errors /> 
+			</then>
+			<else>
+				<if>
+					<condition>
+						<if-compare operator="equals" value="accountsnotmapped" field="postStatus"></if-compare>
+					</condition>
+					<then>
+						<add-error> 
+	                    	<fail-property resource="AccountHolderTransactionsUILabels.xml"  
+	                        	property="stationDepositAccountMappingError" /> 
+		                </add-error> 
+		                <check-errors /> 
+					</then>
+					<else>
+						<if>
+							<condition>
+								<if-compare operator="equals" value="POSTED" field="postStatus"></if-compare>
+							</condition>
+							<then>
+								<property-to-field resource="AccountHolderTransactionsUILabels.xml" 
+            					property="stationDepositAccountPostingSuccess" field="successMessage" /> 
+							</then>
+							<else>
+								<add-error> 
+			                    	<fail-property resource="AccountHolderTransactionsUILabels.xml"  
+			                        	property="stationDepositError" /> 
+				                </add-error> 
+				                <check-errors /> 
+							</else>
+						</if>
+					</else>
+				</if>
+			
+			</else>
+		</if>	
+		
 		<entity-one value-field="stationEntity" entity-name="Station">
 			<field-map field-name="stationId" from-field="newEntity.stationId" />
 		</entity-one>

@@ -1349,7 +1349,9 @@ public class RemittanceServices {
 		Long missingMemberLogId = delegator.getNextSeqIdLong(
 				"MissingMemberLog");
 		
-		String names = LoanUtilities.getMemberName(payrollNo);
+		String names = "";
+		if ((payrollNo != null) && (!payrollNo.equals("")))		
+			names =	LoanUtilities.getMemberName(payrollNo);
 		
 		GenericValue station = LoanUtilities.getStation(LoanUtilities.getStationId(employerCode));
 		
@@ -1756,7 +1758,7 @@ public class RemittanceServices {
 				.getAccountHolderTransactionSetupRecord(
 						"STATIONACCOUNTPAYMENT", delegator);
 		String debitAccountId = accountHolderTransactionSetup
-				.getString("cashAccountId");
+				.getString("memberDepositAccId");
 
 		String acctgTransType = "STATION_DEPOSIT";
 
