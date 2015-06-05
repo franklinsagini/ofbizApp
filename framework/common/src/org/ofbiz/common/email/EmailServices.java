@@ -175,7 +175,8 @@ public class EmailServices {
 			}
       
 
-        String sendFrom = "phil@samphiltech.com";
+        //String sendFrom = "phil@samphiltech.com";
+        String sendFrom = (String) context.get("sendFrom");
         String sendType = (String) context.get("sendType");
         String port = (String) context.get("port");
         String socketFactoryClass = (String) context.get("socketFactoryClass");
@@ -206,6 +207,9 @@ public class EmailServices {
             }
             if (UtilValidate.isNotEmpty(authUser)) {
                 useSmtpAuth = true;
+            }
+            if (UtilValidate.isEmpty(sendFrom)) {
+                port = EntityUtilProperties.getPropertyValue("general.properties", "defaultFromEmailAddress", delegator);
             }
             if (UtilValidate.isEmpty(port)) {
                 port = EntityUtilProperties.getPropertyValue("general.properties", "mail.smtp.port", delegator);
@@ -456,7 +460,8 @@ public class EmailServices {
 		    		  
 		    		  
 
-		    	        String sendFrom = "phil@samphiltech.com";
+		    	       // String sendFrom = "phil@samphiltech.com";
+		    	        String sendFrom = (String) context.get("sendFrom");
 		    	        String sendType = (String) context.get("sendType");
 		    	        String port = (String) context.get("port");
 		    	        String socketFactoryClass = (String) context.get("socketFactoryClass");
@@ -487,6 +492,9 @@ public class EmailServices {
 		    	            }
 		    	            if (UtilValidate.isNotEmpty(authUser)) {
 		    	                useSmtpAuth = true;
+		    	            }
+		    	            if (UtilValidate.isEmpty(sendFrom)) {
+		    	                port = EntityUtilProperties.getPropertyValue("general.properties", "defaultFromEmailAddress", delegator);
 		    	            }
 		    	            if (UtilValidate.isEmpty(port)) {
 		    	                port = EntityUtilProperties.getPropertyValue("general.properties", "mail.smtp.port", delegator);
