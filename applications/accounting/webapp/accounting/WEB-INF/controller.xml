@@ -57,6 +57,13 @@ under the License.
         <response name="error" type="view" value="editPaymentType" />
     </request-map>
 
+    <request-map uri="createPaymentMethodType">
+        <security https="true" auth="true" />
+        <event type="service" invoke="createPaymentMethodType" />
+        <response name="success" type="view" value="EditPaymentMethodType"/>
+        <response name="error" type="view" value="EditPaymentMethodType" />
+    </request-map>
+
     <request-map uri="GlAccountType">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="GlAccountType"/>
@@ -67,6 +74,18 @@ under the License.
         <event type="service" invoke="createGlAccountType" />
         <response name="success" type="request-redirect-noparam" value="GlAccountType" />
         <response name="error" type="view" value="GlAccountType" />
+    </request-map>
+
+    <request-map uri="AcctgTransType">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AcctgTransType"/>
+    </request-map>
+
+    <request-map uri="createAcctgTransType">
+        <security https="true" auth="true" />
+        <event type="service" invoke="createAcctgTransType" />
+        <response name="success" type="request-redirect-noparam" value="AcctgTransType" />
+        <response name="error" type="view" value="AcctgTransType" />
     </request-map>
 
 
@@ -3325,6 +3344,7 @@ under the License.
     <view-map name="SetupGlJournals" type="screen" page="component://accounting/widget/GlSetupScreens.xml#SetupGlJournals"/>
     <view-map name="ViewFXConversions" type="screen" page="component://accounting/widget/GlobalGlAccountsScreens.xml#ViewFXConversions"/>
     <view-map name="GlAccountType" type="screen" page="component://accounting/widget/InterBranchSettlementScreens.xml#GlAccountType"/>
+    <view-map name="AcctgTransType" type="screen" page="component://accounting/widget/InterBranchSettlementScreens.xml#AcctgTransType"/>
     <view-map name="editPaymentType" type="screen" page="component://accounting/widget/InterBranchSettlementScreens.xml#EditPaymentType"/>
     <view-map name="ViewRateAmounts" type="screen" page="component://accounting/widget/GlobalGlAccountsScreens.xml#ViewRateAmounts"/>
     <view-map name="GlAccountTypeDefaults" type="screen" page="component://accounting/widget/GlSetupScreens.xml#GlAccountTypeDefaults"/>

@@ -1229,7 +1229,10 @@ public class TreasuryUtility {
 		// Get the teller assigned to this partyId (name for Treasury where
 		// employeeResponsible is the guy logged in)
 		String partyId = userLogin.get("partyId");
-		treasuryId = getTeller(partyId).getString("treasuryId");
+		GenericValue teller = getTeller(partyId);
+		
+		if (teller != null)
+			treasuryId = teller.getString("treasuryId");
 
 		return treasuryId;
 	}
