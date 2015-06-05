@@ -3034,11 +3034,27 @@ public class LoanServices {
 		result.put("otherLoansProcessing",
 				otherLoansInProcessing(loanApplicationId));
 		
+		
 		result.put("otherLoanNoRepayment",
 				otherLoanWithoutRepayment(loanApplicationId));
-		
-		result.put("otherLoanUnderpayment",
-				otherLoanUnderpayment(loanApplicationId));
+		List<LoanUnderpay> listLoanUnderpays = otherLoanUnderpayment(loanApplicationId);
+		if (listLoanUnderpays.size() > 0){
+			result.put("otherLoanUnderpayment",
+				true);
+			
+			//Get a list of loan number
+			List<String> listLoanNos = new ArrayList<String>();
+			for (LoanUnderpay underPay : listLoanUnderpays) {
+				listLoanNos.add(underPay.getLoanNo());
+			}
+			result.put("underPaidLoans",
+					listLoanNos);
+		} else{
+			result.put("otherLoanUnderpayment",
+					false);
+			result.put("underPaidLoans",
+					"");
+		}
 		
 		result.put("anotherRunningLoanOfSameType",
 				otherRunningLoanOfSameType(loanApplicationId));
@@ -3079,7 +3095,7 @@ public class LoanServices {
 		return json;
 	}
 
-	private static Boolean otherLoanUnderpayment(Long loanApplicationId) {
+	private static List<LoanUnderpay> otherLoanUnderpayment(Long loanApplicationId) {
 		
 		
 		List<GenericValue> loanApplicationELI = null;
@@ -3105,17 +3121,24 @@ public class LoanServices {
 		
 
 		Boolean loanUnderPaid = false;
-		
+		List<LoanUnderpay> listUnderpaidLoans = new ArrayList<LoanUnderpay>();
+		LoanUnderpay loanUnderpay = null;
 		for (GenericValue genericValue : loanApplicationELI) {
 			
 			if (loanIsUnderPaid(genericValue.getLong("loanApplicationId"))){
 				loanUnderPaid = true;
+				
+				loanUnderpay = new LoanUnderpay();
+				loanUnderpay.setLoanApplicationId(genericValue.getLong("loanApplicationId"));
+				loanUnderpay.setUnderPaid(true);
+				
+				listUnderpaidLoans.add(loanUnderpay);
 			}
 		}
 		//loanUnderPaid = existsAnUnderPaidLoan(loanApplicationId);
 		
 		
-		return loanUnderPaid;
+		return listUnderpaidLoans;
 	}
 
 	private static boolean loanIsUnderPaid(Long loanApplicationId) {

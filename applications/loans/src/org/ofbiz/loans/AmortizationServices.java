@@ -84,11 +84,11 @@ public class AmortizationServices {
 				"interestRatePM").divide(new BigDecimal(ONEHUNDRED));
 		//openingRepaymentPeriod
 		int iRepaymentPeriod;
-//		if (loanApplication.getLong("openingRepaymentPeriod") != null){
-//			iRepaymentPeriod = loanApplication.getLong("openingRepaymentPeriod").intValue();
-//		} else{
-			iRepaymentPeriod = loanApplication.getLong("repaymentPeriod").intValue();
-	//	}
+		//if (loanApplication.getLong("openingRepaymentPeriod") != null){
+		//	iRepaymentPeriod = loanApplication.getLong("openingRepaymentPeriod").intValue();
+		//} else{
+		iRepaymentPeriod = loanApplication.getLong("repaymentPeriod").intValue();
+		//}
 			
 		 
 		BigDecimal dbRepaymentPrincipalAmt, bdRepaymentInterestAmt;
