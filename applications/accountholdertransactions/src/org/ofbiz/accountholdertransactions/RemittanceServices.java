@@ -1578,7 +1578,7 @@ public class RemittanceServices {
 			log.info("PPPPPPPPPPPP  Product Code " + productTotal.getCode()
 					+ "  total " + productTotal.getAmount());
 			listRemittedAccountProductList.add(productTotal.getCode().trim());
-			if (LoanUtilities.missingGLAccount(productTotal.getCode())) {
+			if (LoanUtilities.missingGLAccount(productTotal.getCode().trim())) {
 				accountProductMissGLAccount = true;
 
 				if (missingProductNames.equals("")) {

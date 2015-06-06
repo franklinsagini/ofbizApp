@@ -230,7 +230,7 @@
     	var otherLoansProcessing = false;
     	var otherLoanNoRepayment = false;
     	var otherLoanUnderpayment = true;
-    	var underPaidLoans = "";
+    	var underPaidLoans = "00900";
     	jQuery.ajax({
 
 			     url    : reqUrl,
@@ -242,7 +242,7 @@
 			     			otherLoanNoRepayment = data.otherLoanNoRepayment;
 			     			otherLoanUnderpayment = data.otherLoanUnderpayment;
 			     			anotherRunningLoanOfSameType = data.anotherRunningLoanOfSameType;
-			     			underPaidLoans = data.underPaidLoans;
+			     			//underPaidLoans = data.underPaidLoans;
 			               },
 			      error : function(errorData){
 			
@@ -263,7 +263,7 @@
 		}
 		
 		if (otherLoanUnderpayment){
-			alert(' Previous loan has been underpaid, make sure you pay atleast the full expected amount !'+underPaidLoans);
+			alert(' Previous loan has been underpaid, make sure you pay atleast the full expected amount !. The underpaid loans are '+underPaidLoans);
 			return false;
 		}
 		

@@ -3044,11 +3044,22 @@ public class LoanServices {
 			
 			//Get a list of loan number
 			List<String> listLoanNos = new ArrayList<String>();
+			String underPaidLoansString = "";
 			for (LoanUnderpay underPay : listLoanUnderpays) {
 				listLoanNos.add(underPay.getLoanNo());
+				//underPaidLoansString = 
+				if (underPaidLoansString.equals(""))
+				{
+					underPaidLoansString = underPay.getLoanNo();
+				} else{
+					underPaidLoansString = ", "+underPay.getLoanNo();
+				}
 			}
+			
+			//Convert Underpaid Loans to JSON
+			//String underPaidLoansJSON = new Gson().toJson(listLoanNos);
 			result.put("underPaidLoans",
-					listLoanNos);
+					underPaidLoansString);
 		} else{
 			result.put("otherLoanUnderpayment",
 					false);
