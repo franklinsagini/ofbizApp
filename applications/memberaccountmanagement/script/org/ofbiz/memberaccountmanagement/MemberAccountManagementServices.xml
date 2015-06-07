@@ -133,5 +133,62 @@ under the License.
         <store-value value-field="memberAccountVoucher"/>
     </simple-method>
     
+    <!-- GeneralMemberVoucher -->
+    <simple-method method-name="createGeneralMemberVoucher" short-description="Create GeneralMemberVoucher">
+      	<if-empty field="parameters.generalMemberVoucherId">
+	      		<make-value entity-name="GeneralMemberVoucher" value-field="newEntity"/>
+		        <set-pk-fields map="parameters" value-field="newEntity"/>
+		        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+		        <set field="entityName" value="GeneralMemberVoucher"></set>
+        		<set field="newEntity.generalMemberVoucherId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+		        <set field="newEntity.isActive" value="Y"/>
+		        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+		        <set field="newEntity.branchId" from-field="userLogin.partyId"/>
+		        <create-value value-field="newEntity"/>
+      		<else>
+      			<call-simple-method method-name="updateGeneralMemberVoucher"></call-simple-method>
+      		</else>
+      	</if-empty>
+      	
+      	 <set field="generalMemberVoucherId" from-field="newEntity.generalMemberVoucherId" type="Long"/>
+        <set field="voucherStatus" value="${bsh:org.ofbiz.memberaccountmanagement.MemberAccountManagementServices.createMemberAccountVoucherTransaction(userLogin, memberAccountVoucherId);}"></set>
+    
+   		<set field="successstatus" value="success" type="String"/>
+   		 <if> 
+            <condition> 
+                   <if-compare-field to-field="successstatus" operator="not-equals" field="voucherStatus"></if-compare-field>
+            </condition> 
+            <then> 
+                <add-error> 
+                    <fail-property resource="MemberAccountManagementUiLabels.xml"  
+                        property="voucherError" /> 
+                </add-error> 
+                <check-errors /> 
+            </then> 
+             
+            <else>
+            	<!-- call-simple-method method-name="saveTreasuryTransfer" scope="inline"></call-simple-method>
+        		<set field="repayLoan" value="${bsh:org.ofbiz.treasurymanagement.TreasuryAccounting.postTreasuryTransfer(newEntity, userLogin);}" type="String"/ -->
+               <property-to-field resource="MemberAccountManagementUiLabels.xml" 
+            	property="voucherSuccess" field="successMessage" /> 
+            </else> 
+        </if>
+    </simple-method>
+    
+    <simple-method method-name="updateGeneralMemberVoucher" short-description="Update GeneralMemberVoucher">
+        <entity-one entity-name="GeneralMemberVoucher" value-field="generalMemberVoucher"/>
+        <set-nonpk-fields value-field="generalMemberVoucher" map="parameters"/>
+        <set field="generalMemberVoucher.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="generalMemberVoucher"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteGeneralMemberVoucher" short-description="Delete GeneralMemberVoucher">
+        <entity-one entity-name="GeneralMemberVoucher" value-field="generalMemberVoucher"/>
+        <set field="generalMemberVoucher.isActive" value="N"/>
+        <set field="generalMemberVoucher.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="generalMemberVoucher"/>
+    </simple-method>
+    
+    
 
 </simple-methods>
