@@ -21,8 +21,48 @@
     -->
 
     <!-- Request Mappings -->
-    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
+    <!-- request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map -->
+    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="defaultermanagement"/></request-map>
     
+   <!-- defaultermanagement -->
+   <request-map uri="defaultermanagement">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="defaultermanagement" save-home-view="true" />
+  </request-map> 
+
+  
+   <!-- defaultermanagementPDF -->
+   <request-map uri="defaultermanagementPDF">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="defaultermanagementPDF" save-home-view="true" />
+  </request-map>
+ 
+ 
+    <request-map uri="defaultermanagementcsv">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="defaultermanagementcsv" save-home-view="true" />
+  </request-map> 
+ 
+  <!-- defaultermanagementExcel -->
+   <request-map uri="defaultermanagementExcel">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="defaultermanagementExcel" save-home-view="true" />
+  </request-map>
+  
+  
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://defaultermanagement/widget/DefaultManagementScreens.xml#main"/>
+    
+    <!-- 
+    	memberstatementreportWithDates
+    	memberstatementreportWithDatesPDF
+    	memberAccountDetailsCSV
+     -->
+    <view-map name="defaultermanagement" type="screen" page="component://defaultermanagement/widget/DefaultManagementScreens.xml#defaultermanagement"/>
+   
+    <view-map name="defaultermanagementcsv" type="screen" page="component://defaultermanagement/widget/DefaultManagementScreens.xml#defaultermanagementcsv"/>
+   
+    <view-map name="defaultermanagementPDF" type="screenfop" page="component://defaultermanagement/widget/DefaultManagementScreens.xml#defaultermanagementPDF" content-type="application/pdf" encoding="none"/>
+    <view-map name="defaultermanagementExcel" type="screencsv" page="component://defaultermanagement/widget/DefaultManagementScreens.xml#defaultermanagementExcel" content-type="text/csv" encoding="none"/>
+    
 </site-conf>
