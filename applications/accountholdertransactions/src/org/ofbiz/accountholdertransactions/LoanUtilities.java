@@ -312,6 +312,34 @@ public class LoanUtilities {
 		}
 		return accountProduct;
 	}
+	
+	public static GenericValue getAccountProductGivenMemberAccountId(Long memberAccountId) {
+		
+		GenericValue memberAccount = getMemberAccount(memberAccountId);
+		Long accountProductId = memberAccount.getLong("accountProductId");
+		
+		GenericValue accountProduct = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			accountProduct = delegator.findOne("AccountProduct",
+					UtilMisc.toMap("accountProductId", accountProductId), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		return accountProduct;
+	}
+
+	public static GenericValue getMemberAccount(Long memberAccountId) {
+		GenericValue memberAccount = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			memberAccount = delegator.findOne("MemberAccount",
+					UtilMisc.toMap("memberAccountId", memberAccountId), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		return memberAccount;
+	}
 
 	/***
 	 * Get Loan Status

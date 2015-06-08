@@ -4319,5 +4319,140 @@ public class AccHolderTransactionServices {
 		return json;
 
 	}
+	
+	/***
+	 * Get GL Account ID
+	 * 
+	 * */
+	public static String getGlAccount(HttpServletRequest request,
+			HttpServletResponse response) {
+		Map<String, Object> result = FastMap.newInstance();
+		String memberAccountId = (String) request
+				.getParameter("memberAccountId");
+		log.info(" ######### The Member Account is #########" + memberAccountId);
+		memberAccountId = memberAccountId.replaceAll(",", "");
+		
+		String glAccountId = null;
+		
+		GenericValue accountProduct = LoanUtilities.getAccountProductGivenMemberAccountId(Long.valueOf(memberAccountId));
+		
+
+		
+		glAccountId = accountProduct.getString("glAccountId");
+		result.put("glAccountId", glAccountId);
+		log.info("TTTTTTTTTTTTT The GL Account is --- "+glAccountId);
+
+		Gson gson = new Gson();
+		String json = gson.toJson(result);
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+		return json;
+	}
+	
+	/****
+	 * @author Japheth Odonya  @when Jun 8, 2015 12:37:38 PM
+	 * 
+	 * getGlLoanAccount
+	 * 
+	 * PRINCIPAL
+	 * INTERESTCHARGE
+	 * INTERESTPAID
+	 * INSURANCECHARGE
+	 * INSURANCEPAYMENT
+	 * 
+	 * */
+	public static String getGlLoanAccount(HttpServletRequest request,
+			HttpServletResponse response) {
+		Map<String, Object> result = FastMap.newInstance();
+		String sourceType = (String) request
+				.getParameter("sourceType");
+		log.info(" ######### The sourceType is #########" + sourceType);
+		//memberAccountId = memberAccountId.replaceAll(",", "");
+		
+		String glAccountId = null;
+		String accountType = "";
+		if (sourceType.equals("PRINCIPAL")){
+			accountType = "PRINCIPALPAYMENT";
+			//glAccountId = getGLAccount
+			
+		} else if (sourceType.equals("INTERESTCHARGE"))
+		{
+			accountType = "INTERESTACCRUAL";
+		} else if (sourceType.equals("INTERESTPAID"))
+		{
+			accountType = "INTERESTPAYMENT";
+		} else if (sourceType.equals("INSURANCECHARGE")){
+			accountType = "INSURANCEACCRUAL";
+		} else if (sourceType.equals("INSURANCEPAYMENT")){
+			accountType = "INSURANCEPAYMENT";
+		}
+		
+		GenericValue accountHolderTransactionSetup = getAccountHolderTransactionSetup(accountType);
+		//glAccountId = accountHolderTransactionSetup.getString(name)
+				
+		glAccountId = accountHolderTransactionSetup.getString("memberDepositAccId");
+		
+		//GenericValue accountProduct = LoanUtilities.getAccountProductGivenMemberAccountId(Long.valueOf(memberAccountId));
+		
+		//glAccountId = accountProduct.getString("glAccountId");
+		result.put("glAccountId", glAccountId);
+		log.info("TTTTTTTTTTTTT The GL Account is --- "+glAccountId);
+
+		Gson gson = new Gson();
+		String json = gson.toJson(result);
+		// set the X-JSON content type
+		response.setContentType("application/x-json");
+		// jsonStr.length is not reliable for unicode characters
+		try {
+			response.setContentLength(json.getBytes("UTF8").length);
+		} catch (UnsupportedEncodingException e) {
+			try {
+				throw new EventHandlerException("Problems with Json encoding",
+						e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+		// return the JSON String
+		Writer out;
+		try {
+			out = response.getWriter();
+			out.write(json);
+			out.flush();
+		} catch (IOException e) {
+			try {
+				throw new EventHandlerException(
+						"Unable to get response writer", e);
+			} catch (EventHandlerException e1) {
+				e1.printStackTrace();
+			}
+		}
+		return json;
+	}
 
 }
