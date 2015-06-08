@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+	<!-- defaultermanagementForm -->
+    <form name="defaultermanagementForm" type="single" target="defaultermanagementPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+
+        <!-- field name="partyId" title="Member" widget-style="required" required-field="true"><lookup target-form-name="LookupActiveMember"/></field -->
+        <field name="stationId" title="Station / Employer">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name} - ${stationNumber} - ${employerCode}" entity-name="Station">
+        			<entity-order-by field-name="name"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    
+    <form name="defaultermanagementcsvForm" type="single" target="defaultermanagementExcel" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+
+        <!-- field name="partyId" title="Member" widget-style="required" required-field="true"><lookup target-form-name="LookupActiveMember"/></field -->
+        <field name="stationId" title="Station / Employer">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name} - ${stationNumber} - ${employerCode}" entity-name="Station">
+        			<entity-order-by field-name="name"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    <form name="defaultermanagementExportData" list-name="memAccountDetalis" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="AccountCode" title="Account Code"><display/></field>
+        <field name="AccountType" title="Account Type"><display/></field>
+        <field name="AccountNo" title="Account Number"><display/></field>
+        <field name="AccountBalance" title="Account Balance"><display/></field>
+        
+    </form>
+
+</forms>

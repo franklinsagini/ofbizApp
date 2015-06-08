@@ -98,5 +98,66 @@
             <key-map field-name="destLoanApplicationId" rel-field-name="loanApplicationId"/>
         </relation>
      </entity>
+     
+     <!-- GeneralMemberVoucher -->
+     <entity entity-name="GeneralMemberVoucher" package-name="org.ofbiz.memberaccountmanagement" title="MemberAccount Journal Voucher Entity">
+     		<field name="generalMemberVoucherId" type="id-vlong-int"></field>
+     		<field name="createdBy" type="id"></field>
+     		<field name="updatedBy" type="id"></field>
+     		<field name="isActive" type="indicator"></field>
+     		
+     		<field name="sourceType" type="id"></field>
+     		<field name="sourcePartyId" type="id-vlong-int"  enable-audit-log="true"></field>
+     		<field name="sourceMemberAccountId" type="id-vlong-int"  enable-audit-log="true"></field>
+     		<field name="sourceLoanApplicationId" type="id-vlong-int"  enable-audit-log="true"></field>
+     		
+     		<field name="amountInSource" type="fixed-point" enable-audit-log="true"></field>
+     		
+     		
+     		<field name="destinationType" type="id"></field>
+     		<field name="destPartyId" type="id-vlong-int"  enable-audit-log="true"></field>
+     		<field name="destMemberAccountId" type="id-vlong-int"  enable-audit-log="true"></field>
+     		<field name="destLoanApplicationId" type="id-vlong-int"  enable-audit-log="true"></field>
+     		
+     		<field name="amountInDestination" type="fixed-point" enable-audit-log="true"></field>
+     		
+     		<field name="amount" type="fixed-point" enable-audit-log="true"></field>
+			<field name="comment" type="name" enable-audit-log="true"></field>
+			
+			<field name="accountTransactionId" type="id"   enable-audit-log="true"></field>
+			<field name="acctgTransId" type="id"   enable-audit-log="true"></field>
+			
+			<!-- GL Account -->
+			<field name="sourceglAccountId" type="id"  enable-audit-log="true"></field>
+			<field name="destglAccountId" type="id"  enable-audit-log="true"></field>
+			
+			<prim-key field="generalMemberVoucherId"/>
+
+    	<relation type="one" fk-name="GENERALMEMBERVOUCHERSOURCEPARTY_MEMBER" rel-entity-name="Member">
+            <key-map field-name="sourcePartyId" rel-field-name="partyId"/>
+        </relation>
+        
+        <relation type="one" fk-name="GENERALMEMBERDESTPARTY_MEMBER" rel-entity-name="Member">
+            <key-map field-name="destPartyId" rel-field-name="partyId"/>
+        </relation>
+
+       
+
+      <relation type="one" fk-name="GENERALMEMBERSOURCE_MEMBERACCOUNT" rel-entity-name="MemberAccount">
+            <key-map field-name="sourceMemberAccountId" rel-field-name="memberAccountId"/>
+        </relation>
+
+      <relation type="one" fk-name="GENERALMEMBERSOURCE_MEMBERACCOUNT" rel-entity-name="MemberAccount">
+            <key-map field-name="destMemberAccountId" rel-field-name="memberAccountId"/>
+        </relation>
+        
+        <relation type="one" fk-name="GENERALMEMBERSOURCE_GLACCOUNT" rel-entity-name="GlAccount">
+            <key-map field-name="destMemberAccountId" rel-field-name="glAccountId"/>
+        </relation>
+        
+        <relation type="one" fk-name="GENERALMEMBERDEST_GLACCOUNT" rel-entity-name="GlAccount">
+            <key-map field-name="destMemberAccountId" rel-field-name="glAccountId"/>
+        </relation>
+     </entity>
 
 </entitymodel>
