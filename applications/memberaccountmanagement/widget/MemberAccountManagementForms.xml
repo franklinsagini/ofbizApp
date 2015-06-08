@@ -302,8 +302,7 @@
         <field name="generalMemberVoucherId"><hidden/></field>
         
         <field name="sourceType" title="Source Type"   widget-style="required" required-field="true">
-			<drop-down>
-			</drop-down>
+			<display></display>
 		</field>
         
         <field name="sourcePartyId" title="From (Member)">
@@ -314,7 +313,9 @@
                 <display-entity entity-name="MemberAccount" key-field-name="memberAccountId"  description="${accountNo} - ${accountName}" also-hidden="false"/>
         </field>
         
-        
+       <field name="destinationType" title="Destination Type"  >
+			<display></display>
+		</field>
         <field name="destPartyId" title="To (Member)">
                 <display-entity entity-name="Member" key-field-name="partyId"  description="${firstName} ${middleName} ${lastName}" also-hidden="false"/>
         </field>
@@ -333,6 +334,20 @@
         	<display></display>
         </field>
         
+        <field name="sourceglAccountId" title="Debit Account (To Debit)" widget-style="required" required-field="true">
+       		<!-- drop-down allow-empty="true">
+       			<list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/>
+       		</drop-down -->
+       		<display-entity entity-name="GlAccount" key-field-name="glAccountId" description="${accountName} - ${accountCode}"></display-entity>
+        </field>
+        
+        <field name="destglAccountId" title="Credit Account (To Credit)" widget-style="required" required-field="true">
+       		<!-- drop-down allow-empty="true">
+       			<list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/>
+       		</drop-down -->
+       		<display-entity entity-name="GlAccount" key-field-name="glAccountId" description="${accountName} - ${accountCode}"></display-entity>
+        </field>
+        
         <field name="createdBy">
         	<display></display>
         </field>
@@ -342,6 +357,10 @@
         </field>
         
         <field name="comment">
+        	<display></display>
+        </field>
+        
+        <field name="acctgTransId" title="Transaction #">
         	<display></display>
         </field>
         

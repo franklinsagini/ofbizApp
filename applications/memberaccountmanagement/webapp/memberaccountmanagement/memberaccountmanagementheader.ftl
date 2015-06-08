@@ -289,8 +289,11 @@
      data   : {'loanApplicationId': loanApplicationId}, //here you can pass the parameters to  
                                                    //the request if any.
      success : function(data){
+     
+     			alert(data.amountInSourceRepaid);
      			
 				 $('input[name="amountInSourceRepaid"]').val(data.amountInSourceRepaid);
+				 $('input[name="amountInSource"]').val(data.amountInSourceRepaid);
 
                },
       error : function(errorData){
@@ -310,6 +313,8 @@
      success : function(data){
      			
 				 $('input[name="amountInDestinationRepaid"]').val(data.amountInDestinationRepaid);
+				 $('input[name="amountInDestination"]').val(data.amountInDestinationRepaid);
+
 
                },
       error : function(errorData){
@@ -437,7 +442,7 @@
 				// alert(glAccountId);
 				// $('option[value=glAccountId]').prop('selected',true);
 				
-				$('#sourceglAccountId').val(glAccountId);
+				$('#destglAccountId').val(glAccountId);
 				//$('#sourceglAccountId').text(glAccountId);
 
                },

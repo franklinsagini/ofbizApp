@@ -4454,5 +4454,163 @@ public class AccHolderTransactionServices {
 		}
 		return json;
 	}
+	
+	/****
+	 * @author Japheth Odonya  @when Jun 8, 2015 3:43:24 PM
+	 * 
+	 * General Member Voucher
+	 * */
+	public static String generalMemberVoucher(BigDecimal transactionAmount,
+			Long memberAccountId, Map<String, String> userLogin,
+			String transactionType, Long generalMemberVoucherId) {
+
+		log.info(" Transaction Amount ---- " + transactionAmount);
+		log.info(" Transaction MA ---- " + memberAccountId);
+
+		// log.info(" UserLogin ---- " + userLogin.get("userLoginId"));
+		log.info(" Transaction Amount ---- " + transactionAmount);
+		if (userLogin == null) {
+			userLogin = new HashMap<String, String>();
+			userLogin.put("userLoginId", "admin");
+		}
+
+		// Save Parent
+		GenericValue accountTransactionParent = createAccountTransactionParent(
+				memberAccountId, userLogin);
+
+		// Set the the Treasury ID
+		// String treasuryId = TreasuryUtility.getTellerId(userLogin);
+		// accountTransaction.set("treasuryId", treasuryId);
+		// addChargesToTransaction(accountTransaction, userLogin,
+		// transactionType);
+		// increaseDecrease
+
+		GenericValue accountTransaction = null;
+		//String acctgTransId = postCashDeposit(memberAccountId, userLogin, transactionAmount);
+		
+		//GenericValue, String, Map<String,String>, String, BigDecimal, String, String, String
+		//GenericValue, String, Map<String,String>, String, BigDecimal, null, String
+		
+		createTransactionGeneralVoucherVersion(accountTransaction, transactionType, userLogin,
+				memberAccountId.toString(), transactionAmount, null,
+				accountTransactionParent
+						.getString("accountTransactionParentId"), generalMemberVoucherId);
+		
+		// postCashWithdrawalTransaction(accountTransaction, userLogin);
+
+		return accountTransactionParent.getString("accountTransactionParentId");
+	}
+	
+	
+	private static void createTransactionGeneralVoucherVersion(GenericValue loanApplication,
+			String transactionType, Map<String, String> userLogin,
+			String memberAccountId, BigDecimal transactionAmount,
+			String productChargeId, String accountTransactionParentId, Long generalMemberVoucherId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);// loanApplication.getDelegator();
+		GenericValue accountTransaction;
+		String accountTransactionId = delegator
+				.getNextSeqId("AccountTransaction");
+		String createdBy = (String) userLogin.get("userLoginId");
+		String updatedBy = (String) userLogin.get("userLoginId");
+		String branchId = getEmployeeBranch((String) userLogin.get("partyId"));
+
+		String partyId = getMemberPartyId(memberAccountId);
+		// loanApplication.getString("partyId");
+
+		String increaseDecrease;
+
+		if (productChargeId == null) {
+			increaseDecrease = "I";
+		} else {
+			increaseDecrease = "D";
+		}
+
+		// Check for withdrawal and deposit - overrides the earlier settings for
+		// product charges
+		if (productChargeId == null) {
+			if (((transactionType != null) && (transactionType
+					.equals("CASHWITHDRAWAL")))
+					|| ((transactionType != null) && (transactionType
+							.equals("ATMWITHDRAWAL")))
+
+					|| ((transactionType != null) && (transactionType
+							.equals("VISAWITHDRAW")))
+
+					|| ((transactionType != null) && (transactionType
+							.equals("MSACCOWITHDRAWAL")))
+
+					|| ((transactionType != null) && (transactionType
+							.equals("LOANCLEARANCE")))
+							
+					|| ((transactionType != null) && (transactionType
+							.equals("LOANCLEARANCECHARGES")))
+					
+					|| ((transactionType != null) && (transactionType
+							.equals("MEMBERACCOUNTJVDEC")))
+							
+
+					|| ((transactionType != null) && (transactionType
+							.equals("POSCASHPURCHASE")))) {
+				increaseDecrease = "D";
+			}
+
+			if (((transactionType != null)
+					&& (transactionType.equals("CASHDEPOSIT")))
+
+					|| ((transactionType != null)
+					&& (transactionType.equals("MSACCODEPOSIT")))
+					
+					|| ((transactionType != null)
+					&& (transactionType.equals("MEMBERACCOUNTJVINC")))
+					) {
+				increaseDecrease = "I";
+			}
+		}
+
+		Long memberAccountIdLong = null;
+		Long productChargeIdLong = null;
+		Long partyIdLong = null;
+
+		if (productChargeId != null) {
+			productChargeId = productChargeId.replaceAll(",", "");
+			productChargeIdLong = Long.valueOf(productChargeId);
+		}
+		if (memberAccountId != null) {
+			memberAccountId = memberAccountId.replaceAll(",", "");
+			memberAccountIdLong = Long.valueOf(memberAccountId);
+		}
+
+		if (partyId != null) {
+			partyId = partyId.replaceAll(",", "");
+			partyIdLong = Long.valueOf(partyId);
+		}
+
+		// "partyId", Long.valueOf(partyId),
+
+		String treasuryId = null;
+
+		if (loanApplication != null)
+			treasuryId = loanApplication.getString("treasuryId");
+
+		accountTransaction = delegator.makeValidValue("AccountTransaction",
+				UtilMisc.toMap("accountTransactionId", accountTransactionId,
+						"isActive", "Y", "createdBy", createdBy, "updatedBy",
+						updatedBy, "branchId", branchId, "partyId",
+						partyIdLong, "increaseDecrease", increaseDecrease,
+						"memberAccountId", memberAccountIdLong,
+						"productChargeId", productChargeIdLong,
+						"transactionAmount", transactionAmount,
+						"transactionType", transactionType, "treasuryId",
+						treasuryId, "accountTransactionParentId",
+						accountTransactionParentId, "generalMemberVoucherId", generalMemberVoucherId));
+		try {
+			delegator.createOrStore(accountTransaction);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("Could not create Transaction");
+		}
+	}
+	
+	
 
 }

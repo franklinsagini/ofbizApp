@@ -150,7 +150,7 @@ under the License.
       		</else>
       	</if-empty>
       	
-      	 <set field="generalMemberVoucherId" from-field="newEntity.generalMemberVoucherId" type="Long"/>
+      	<set field="generalMemberVoucherId" from-field="newEntity.generalMemberVoucherId" type="Long"/>
         <set field="voucherStatus" value="${bsh:org.ofbiz.memberaccountmanagement.MemberAccountManagementServices.createMemberAccountVoucherTransaction(userLogin, memberAccountVoucherId);}"></set>
     
    		<set field="successstatus" value="success" type="String"/>
@@ -167,12 +167,14 @@ under the License.
             </then> 
              
             <else>
-            	<!-- call-simple-method method-name="saveTreasuryTransfer" scope="inline"></call-simple-method>
-        		<set field="repayLoan" value="${bsh:org.ofbiz.treasurymanagement.TreasuryAccounting.postTreasuryTransfer(newEntity, userLogin);}" type="String"/ -->
+            	
                <property-to-field resource="MemberAccountManagementUiLabels.xml" 
             	property="voucherSuccess" field="successMessage" /> 
             </else> 
         </if>
+        
+        <!-- call-simple-method method-name="saveTreasuryTransfer" scope="inline"></call-simple-method>
+        		<set field="repayLoan" value="${bsh:org.ofbiz.treasurymanagement.TreasuryAccounting.postTreasuryTransfer(newEntity, userLogin);}" type="String"/ -->
     </simple-method>
     
     <simple-method method-name="updateGeneralMemberVoucher" short-description="Update GeneralMemberVoucher">
