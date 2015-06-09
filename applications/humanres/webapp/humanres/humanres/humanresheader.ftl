@@ -165,6 +165,9 @@
 	     			 $('input[name="confirmationdate"]').parent().parent().parent().hide();
 	     			 $('input[name="contractEnd"]').parent().parent().parent().show();
 	     			 $('select[name="contractPeriod"]').parent().parent().parent().show();
+	     			 $('select[name="isManagement"]').parent().parent().parent().hide();
+	     			 $('select[name="payGradeId"]').parent().parent().parent().hide();
+	     			 $('select[name="emplPositionTypeId"]').parent().parent().parent().hide();
 					 
 	               },
 	      error : function(errorData){
@@ -187,7 +190,9 @@
 	     			 $('input[name="confirmationdate"]').parent().parent().parent().show();
 	     			 $('input[name="contractEnd"]').parent().parent().parent().hide();
 	     			 $('select[name="contractPeriod"]').parent().parent().parent().hide();
-					 
+					 $('select[name="isManagement"]').parent().parent().parent().show();
+	     			 $('select[name="payGradeId"]').parent().parent().parent().show();
+	     			 $('select[name="emplPositionTypeId"]').parent().parent().parent().show();
 	               },
 	      error : function(errorData){
 	
