@@ -316,7 +316,7 @@ under the License.
 								
                                </fo:block>
                             </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" background-color="${zebra(defaultedItem_index)}">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" background-color="${zebra(defaultedItem_index)}" text-align="right">
                                 <fo:block>
                               
                                  <#if (defaultedItem.shareAmount??)>
@@ -354,10 +354,7 @@ under the License.
             </fo:table>
         </fo:block>
         
-        
-        </#list>
-        
-                <fo:block space-after.optimum="10pt" font-size="9pt">
+        <fo:block space-after.optimum="10pt" font-size="9pt">
             <fo:table table-layout="fixed" width="100%">
                 <fo:table-column column-width="30pt"/>
                 <fo:table-column column-width="50pt"/>
@@ -383,7 +380,7 @@ under the License.
                 <fo:table-header>
                     <fo:table-row font-weight="bold">
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm" text-align="left">
-                            <fo:block>Total</fo:block>
+                            <fo:block>Sub Total</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm" text-align="left">
                             <fo:block>${loanCount}</fo:block>
@@ -501,6 +498,11 @@ under the License.
                 </fo:table-body>
             </fo:table>
         </fo:block>
+        
+        
+        </#list>
+        
+            
 
     <#else>
         <fo:block text-align="center">NO DATA FOUND</fo:block>
