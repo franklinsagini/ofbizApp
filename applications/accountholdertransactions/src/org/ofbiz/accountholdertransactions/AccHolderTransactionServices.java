@@ -3104,6 +3104,31 @@ public class AccHolderTransactionServices {
 		}
 
 	}
+	
+
+	private static void createPayrollPostingEntry(BigDecimal amount,
+			String acctgTransId, String postingType, String glAccountId ) {
+		GenericValue acctgTransEntry = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		acctgTransEntry = delegator
+				.makeValidValue("AcctgTransEntry", UtilMisc.toMap(
+						"acctgTransId", acctgTransId,
+
+						"acctgTransEntrySeqId", "1", "partyId", "Company",
+						"glAccountTypeId", "MEMBER_DEPOSIT", "glAccountId",
+						glAccountId,
+						"organizationPartyId", "Company", "amount", amount,
+						"currencyUomId", "KES", "origAmount", amount,
+						"origCurrencyUomId", "KES", "debitCreditFlag",
+						postingType, "reconcileStatusId", "AES_NOT_RECONCILED"));
+		try {
+			delegator.createOrStore(acctgTransEntry);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("Could not create acctgTransEntry");
+		}
+
+	}
 
 	private static void createMemberCashEntry(BigDecimal amount,
 			String acctgTransId, String postingType) {
@@ -3661,6 +3686,56 @@ public class AccHolderTransactionServices {
 		createMemberDepositEntry(amount, acctgTransId, "C");
 		createMemberCashEntry(amount, acctgTransId, "D");
 
+	}
+	
+	
+	
+	/****
+	 * @author Japheth Odonya  @when Jun 9, 2015 11:49:12 PM
+	 * 
+	 * Posting HQ Salaries
+	 * 
+	 * */
+	public static void postPayrollSalariesHQ(
+			Map<String, String> userLogin, 
+			
+			BigDecimal bdNSSF, BigDecimal bdNHIF,
+			BigDecimal bdPENSION, BigDecimal bdPAYE, 	BigDecimal bdNETPAY,
+			BigDecimal bdSalaries,
+			
+			String NSSFAccountId, String NHIFAccountId, String PENSIONAccountId,
+			String PAYEAccountId, String NETPAYAccountId, String SalariesAccountId
+			) {
+		// ..
+		
+		if (userLogin == null) {
+			userLogin = new HashMap<String, String>();
+			userLogin.put("userLoginId", "admin");
+		}
+			
+		GenericValue accountTransaction = null;
+		String acctgTransId = creatAccountTransRecord(accountTransaction,
+				userLogin);
+		
+		
+		//createMemberDepositEntry(amount, acctgTransId, "C");
+		//createMemberCashEntry(amount, acctgTransId, "D");
+		
+		//Debit NSSF
+		createPayrollPostingEntry(bdNSSF, acctgTransId, "D", NSSFAccountId);
+		//Debit NHIF
+		createPayrollPostingEntry(bdNHIF, acctgTransId, "D", NHIFAccountId);
+		//Debit PENSION
+		createPayrollPostingEntry(bdPENSION, acctgTransId, "D", PENSIONAccountId);
+		//Debit PAYE
+		createPayrollPostingEntry(bdPAYE, acctgTransId, "D", PAYEAccountId);
+		
+		//Debit NEYPAY
+		createPayrollPostingEntry(bdNETPAY, acctgTransId, "D", NETPAYAccountId);
+		
+		//Credit Salaries
+		createPayrollPostingEntry(bdSalaries, acctgTransId, "C", SalariesAccountId);
+		
 	}
 	
 	

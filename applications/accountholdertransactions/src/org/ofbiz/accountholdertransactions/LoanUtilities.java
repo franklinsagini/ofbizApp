@@ -2085,6 +2085,30 @@ public class LoanUtilities {
 
 		return memberAccountId;
 	}
+	
+	public static Timestamp getLoanLastRepaymentDate(String loanNo){
+		Timestamp lastRepaymentDate = null;
+		GenericValue loanApplication = getLoanApplicationEntityGivenLoanNo(loanNo);
+		
+		lastRepaymentDate = loanApplication.getTimestamp("lastRepaymentDate");
+		
+		Timestamp lastRepayFromTransaction = getLastRepaymentDateFromTransaction(loanNo);
+		
+		if (lastRepayFromTransaction == null)
+			return lastRepaymentDate;
+		
+		
+		
+		return lastRepaymentDate;
+	}
+
+	/***
+	 * Get last repayment date from LoanRepayment
+	 * */
+	private static Timestamp getLastRepaymentDateFromTransaction(String loanNo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 
 

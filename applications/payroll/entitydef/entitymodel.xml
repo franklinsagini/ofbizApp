@@ -366,6 +366,7 @@ under the License.
 		<field name="closed" type="indicator"></field>
 		<field name="elementName" type="name"></field>
         <field name="amount" type="currency-amount"></field>
+        <field name="TotalAmount" type="currency-amount"></field>
 		<prim-key field="payrollPeriodSummaryId"/>
 		 <relation type="one" fk-name="management_period" rel-entity-name="PayrollPeriod">
             <key-map field-name="payrollPeriodId"/>
@@ -639,5 +640,23 @@ under the License.
         </view-link>
             
 	</view-entity>
+	
+	<entity entity-name="PayrollPostingAccount" package-name="org.ofbiz.payroll"
+		title="Payroll Posting Account">
+		<field name="payrollPostingAccountId" type="id-ne"  enable-audit-log="true"></field>
+		
+		<field name="isActive" type="indicator" enable-audit-log="true"></field>
+        	<field name="createdBy" type="name" enable-audit-log="true"></field>
+        	<field name="updatedBy" type="name" enable-audit-log="true"></field>
+		
+		<field name="payrollElement" type="id"  enable-audit-log="true"></field>
+		<field name="glAccountId" type="id"  enable-audit-log="true"></field>
+		
+		<prim-key field="payrollPostingAccountId"/>
+		 <relation type="one" fk-name="PayrollPostingAccount_GLAccount" rel-entity-name="GlAccount">
+            <key-map field-name="glAccountId"/>
+        </relation>
+         
+	</entity>
 	
 </entitymodel>
