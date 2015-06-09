@@ -310,10 +310,25 @@ public class PartyServices {
 		List<GenericValue> listUpdates = new ArrayList<GenericValue>();
 		// String payGradeId = (String) context.get("payGradeId");
 		String emplPositionTypeId = (String) context.get("emplPositionTypeId");
+		String emplPositionId = null;
+		if (emplPositionTypeId != null) {
+			log.info("######### emplPositionTypeId here>>>>>>>>>>>>>>>>>>>>>   "+ emplPositionTypeId);
+			emplPositionId = getempPositionId(delegator, emplPositionTypeId);
+		} else if(emplPositionTypeId == null){
+			
+			emplPositionTypeId = "NA";
+			emplPositionId = "NA";
+		}
+		
+		
+		
+		
+		
+		
+		
+		
 
-		log.info("######### emplPositionTypeId here>>>>>>>>>>>>>>>>>>>>>   "
-				+ emplPositionTypeId);
-		String emplPositionId = getempPositionId(delegator, emplPositionTypeId);
+		
 
 		String branchId = (String) context.get("branchId");
 		String departmentId = (String) context.get("departmentId");
