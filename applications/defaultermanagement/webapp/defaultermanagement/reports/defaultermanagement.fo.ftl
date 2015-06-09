@@ -65,6 +65,13 @@ under the License.
         </fo:list-block -->
         <fo:block><fo:leader/></fo:block>
 
+		<#function zebra index>
+		  <#if (index % 2) == 0>
+		    <#return "white" />
+		  <#else>
+		    <#return "#C0D9AF" />
+		  </#if>
+		</#function>
 
 		 <#list listStationDefaulted as stationDefaulted>
 		 <#-- assign totalAmount = statement.itemTotal -->
@@ -72,18 +79,18 @@ under the License.
         <fo:list-block provisional-distance-between-starts="2in" font-size="10pt" margin-left="0.2in">
             <fo:list-item>
                 <fo:list-item-label>
-                    <fo:block font-weight="bold">${stationDefaulted.employerName}</fo:block>
+                    <fo:block font-weight="bold">Employer Name</fo:block>
                 </fo:list-item-label>
                 <fo:list-item-body start-indent="body-start()">
-                    <fo:block></fo:block>
+                    <fo:block>${stationDefaulted.employerName}</fo:block>
                 </fo:list-item-body>
             </fo:list-item>
             <fo:list-item>
                 <fo:list-item-label>
-                    <fo:block font-weight="bold">${stationDefaulted.employerCode}</fo:block>
+                    <fo:block font-weight="bold">Employer Code</fo:block>
                 </fo:list-item-label>
                 <fo:list-item-body start-indent="body-start()">
-                    <fo:block></fo:block>
+                    <fo:block>${stationDefaulted.employerCode}</fo:block>
                 </fo:list-item-body>
             </fo:list-item>
             
@@ -116,18 +123,18 @@ under the License.
         <fo:block space-after.optimum="10pt" font-size="9pt">
             <fo:table table-layout="fixed" width="100%">
                 <fo:table-column column-width="30pt"/>
-                <fo:table-column column-width="70pt"/>
                 <fo:table-column column-width="50pt"/>
+                <fo:table-column column-width="55"/>
                 <fo:table-column column-width="50pt"/>
                 <fo:table-column column-width="50pt"/>
                 
                 <fo:table-column column-width="50pt"/>
-                <fo:table-column column-width="50pt"/>
-                <fo:table-column column-width="50pt"/>
-                <fo:table-column column-width="50pt"/>
+                <fo:table-column column-width="45pt"/>
+                <fo:table-column column-width="80pt"/>
+                <fo:table-column column-width="45pt"/>
                 <fo:table-column column-width="20pt"/>
                 
-                <fo:table-column column-width="40pt"/>
+                <fo:table-column column-width="50pt"/>
                 <fo:table-column column-width="50pt"/>
 
                 <#-- fo:table-column column-width="75pt"/>
@@ -138,10 +145,10 @@ under the License.
                 <fo:table-column column-width="60pt"/ -->
                 <fo:table-header>
                     <fo:table-row font-weight="bold">
-                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm" text-align="left">
                             <fo:block>Loan No</fo:block>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm" text-align="left">
                             <fo:block>Loan Type</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm"  text-align="right">
@@ -160,10 +167,10 @@ under the License.
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                             <fo:block>Payroll No</fo:block>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm"  text-align="right">
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm"  text-align="left">
                             <fo:block>Name</fo:block>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm"  text-align="right">
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm"  text-align="left">
                             <fo:block>Status</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm"  text-align="right">
@@ -174,7 +181,7 @@ under the License.
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm"  text-align="right">
                             <fo:block>Shares</fo:block>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm"  text-align="right">
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm"  text-align="left">
                             <fo:block>Terms Of Service</fo:block>
                         </fo:table-cell>
 
@@ -196,12 +203,17 @@ under the License.
                     </fo:table-row>
                 </fo:table-header>
                 <fo:table-body>
+                <#assign loanCount=0>
+                <#assign totalDisbursed=0>
+                <#assign totalBalance=0>
+                <#assign totalShares=0>
+                
                     <#list stationDefaulted.listOfDefaultedLoans as defaultedItem>
                     
-                    
-                    	
+                    	<#assign loanCount=loanCount+1>
+       	                
                         <fo:table-row>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" background-color="${zebra(defaultedItem_index)}" text-align="left">
                                 <fo:block>
                                 <#if defaultedItem.loanNo?? >
                                 
@@ -211,10 +223,10 @@ under the License.
                                 <#-- ${defaultedItem.transactionDate?date} -->
                                 </fo:block>
                             </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" background-color="${zebra(defaultedItem_index)}" text-align="left">
                                 <fo:block>${defaultedItem.loanType?if_exists}</fo:block>
                             </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right" background-color="${zebra(defaultedItem_index)}">
                                 <fo:block >
                                 
                                 <#-- (transaction.increaseDecrease = 'D') &&  -->
@@ -222,11 +234,12 @@ under the License.
                                 	
                                 		
                                 		   ${defaultedItem.loanAmt?string(",##0.00")}
+                                		   <#assign totalDisbursed= totalDisbursed + defaultedItem.loanAmt>
 								  
 								</#if>
                                 </fo:block>
                             </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right" background-color="${zebra(defaultedItem_index)}">
                                 <fo:block>
                                 <#-- (transaction.increaseDecrease = 'I') && -->
                                 	
@@ -234,12 +247,12 @@ under the License.
                                 	
                                 		
                                 		 ${defaultedItem.loanBalance?string(",##0.00")}
-								  
+                                		 <#assign totalBalance = totalBalance + defaultedItem.loanBalance>
 								</#if>
 								
                                 </fo:block>
                             </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="left" background-color="${zebra(defaultedItem_index)}">
                                 <fo:block>
                               
 								    ${defaultedItem.disbursementDate?string["dd/MM/yyyy"]}
@@ -257,7 +270,7 @@ under the License.
                                </fo:block>
                             </fo:table-cell -->
                             
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" background-color="${zebra(defaultedItem_index)}">
                                 <fo:block>
                               
                                 <#if (defaultedItem.lastPaid??)>
@@ -267,7 +280,7 @@ under the License.
                                </fo:block>
                             </fo:table-cell>
                             
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" background-color="${zebra(defaultedItem_index)}">
                                 <fo:block>
                               
                                 <#if (defaultedItem.payrollNo??)>
@@ -276,7 +289,7 @@ under the License.
 								
                                </fo:block>
                             </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" background-color="${zebra(defaultedItem_index)}">
                                 <fo:block>
                               
                                 <#if (defaultedItem.name??)>
@@ -285,7 +298,7 @@ under the License.
 								
                                </fo:block>
                             </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" background-color="${zebra(defaultedItem_index)}">
                                 <fo:block>
                               
                                <#if (defaultedItem.memberStatus??)>
@@ -294,7 +307,7 @@ under the License.
 								
                                </fo:block>
                             </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" background-color="${zebra(defaultedItem_index)}">
                                 <fo:block>
                               
                                 <#if (defaultedItem.timeDifference??)>
@@ -303,16 +316,18 @@ under the License.
 								
                                </fo:block>
                             </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" background-color="${zebra(defaultedItem_index)}">
                                 <fo:block>
                               
                                  <#if (defaultedItem.shareAmount??)>
-								   ${defaultedItem.shareAmount} 
+								   ${defaultedItem.shareAmount?string(",##0.00")} 
+								   
+								   <#assign totalShares= totalShares + defaultedItem.shareAmount>
 								</#if>
 								
                                </fo:block>
                             </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" background-color="${zebra(defaultedItem_index)}">
                                 <fo:block>
                               
                                  <#if (defaultedItem.termsOfService??)>
@@ -341,6 +356,151 @@ under the License.
         
         
         </#list>
+        
+                <fo:block space-after.optimum="10pt" font-size="9pt">
+            <fo:table table-layout="fixed" width="100%">
+                <fo:table-column column-width="30pt"/>
+                <fo:table-column column-width="50pt"/>
+                <fo:table-column column-width="55pt"/>
+                <fo:table-column column-width="50pt"/>
+                <fo:table-column column-width="50pt"/>
+                
+                <fo:table-column column-width="50pt"/>
+                <fo:table-column column-width="45pt"/>
+                <fo:table-column column-width="80pt"/>
+                <fo:table-column column-width="45pt"/>
+                <fo:table-column column-width="20pt"/>
+                
+                <fo:table-column column-width="50pt"/>
+                <fo:table-column column-width="50pt"/>
+
+                <#-- fo:table-column column-width="75pt"/>
+                < fo:table-column column-width="60pt"/>
+                <fo:table-column column-width="60pt"/>
+                <fo:table-column column-width="60pt"/>
+                <fo:table-column column-width="60pt"/>
+                <fo:table-column column-width="60pt"/ -->
+                <fo:table-header>
+                    <fo:table-row font-weight="bold">
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm" text-align="left">
+                            <fo:block>Total</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm" text-align="left">
+                            <fo:block>${loanCount}</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm"  text-align="right">
+                            <fo:block>${totalDisbursed?string(",##0.00")}</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm"  text-align="right">
+                            <fo:block>${totalBalance?string(",##0.00")}</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm"  text-align="left">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm"  text-align="left">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm"  text-align="left">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm"  text-align="left">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm"  text-align="right">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+
+
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm"  text-align="right">
+                            <fo:block>${totalShares?string(",##0.00")}</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm"  text-align="left">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+
+                         <#-- fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Balance</fo:block>
+                        </fo:table-cell>
+                        < fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Insurance Due</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Insurance Paid</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Principal Due</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Principal Paid</fo:block>
+                        </fo:table-cell -->
+                    </fo:table-row>
+                </fo:table-header>
+                <fo:table-body>
+                
+                <fo:table-row>
+                	    <fo:table-cell padding="2pt" background-color="white" border="0pt solid" border-width="0" text-align="left">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt"  background-color="white" border="0pt solid" border-width="0"  text-align="left">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt"  background-color="white" border="0pt solid" border-width="0"   text-align="right">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt"  background-color="white" border="0pt solid" border-width="0"   text-align="right">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt"  background-color="white" border="0pt solid" border-width="0"   text-align="left">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+
+                        <fo:table-cell padding="2pt"  background-color="white" border="0pt solid" border-width="0"   text-align="left">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt"  background-color="white" border="0pt solid" border-width="0" >
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt"  background-color="white" border="0pt solid" border-width="0"   text-align="left">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt"  background-color="white" border="0pt solid" border-width="0"   text-align="left">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt"  background-color="white" border="0pt solid" border-width="0"   text-align="right">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+
+
+                        <fo:table-cell padding="2pt"  background-color="white" border="0pt solid" border-width="0"   text-align="right">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt"  background-color="white" border="0pt solid" border-width="0"   text-align="left">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+
+                         <#-- fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Balance</fo:block>
+                        </fo:table-cell>
+                        < fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Insurance Due</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Insurance Paid</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Principal Due</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Principal Paid</fo:block>
+                        </fo:table-cell -->
+                </fo:table-row>
+                </fo:table-body>
+            </fo:table>
+        </fo:block>
 
     <#else>
         <fo:block text-align="center">NO DATA FOUND</fo:block>
