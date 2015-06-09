@@ -53,11 +53,14 @@ if (partyRelationships) {
     for(partyRelationship in partyRelationships) {
         partyGroup = delegator.findOne("PartyGroup", [partyId : partyRelationship.getString("partyIdTo")], false);
         partyGroupMap = FastMap.newInstance();
+		
+		if (partyGroup != null){
         partyGroupMap.put("partyId", partyGroup.getString("partyId"));
         partyGroupMap.put("groupName", partyGroup.getString("groupName"));
         completedTreeContext.add(partyGroupMap);
 
         subtopLists.addAll(partyRelationship.getString("partyIdTo"));
+		}
     }
 
     partyRootMap.put("child", completedTreeContext);
