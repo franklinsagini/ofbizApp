@@ -2015,9 +2015,14 @@ public class LoanUtilities {
 	public static Long getTimeDifferenceInMonths(Timestamp fromDate, Timestamp toDate){
 		int timeTiff = 0;
 		
-		timeTiff = Months.monthsBetween(new LocalDate(fromDate.getTime()), new LocalDate(toDate.getTime())).getMonths();
+		if (fromDate != null){
+			timeTiff = Months.monthsBetween(new LocalDate(fromDate.getTime()), new LocalDate(toDate.getTime())).getMonths();
+			return new Long(timeTiff);
+		} else{
+			return null;
+		}
 		
-		return new Long(timeTiff);
+		
 	}
 	
 	/****
