@@ -52,9 +52,10 @@ if (partyRelationships) {
     //child
     for(partyRelationship in partyRelationships) {
         partyGroup = delegator.findOne("PartyGroup", [partyId : partyRelationship.getString("partyIdTo")], false);
-        partyGroupMap = FastMap.newInstance();
-		
 		if (partyGroup != null){
+		 partyGroupMap = FastMap.newInstance();
+		
+		
         partyGroupMap.put("partyId", partyGroup.getString("partyId"));
         partyGroupMap.put("groupName", partyGroup.getString("groupName"));
         completedTreeContext.add(partyGroupMap);
