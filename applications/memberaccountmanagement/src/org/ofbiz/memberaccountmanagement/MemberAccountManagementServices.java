@@ -251,6 +251,20 @@ public class MemberAccountManagementServices {
 	}
 	
 	
+	private static GenericValue getGeneralMemberVoucher(Long generalMemberVoucherId) {
+		GenericValue generalMemberVoucher = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			generalMemberVoucher = delegator.findOne("GeneralMemberVoucher",
+					UtilMisc.toMap("generalMemberVoucherId", generalMemberVoucherId), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		return generalMemberVoucher;
+	}
+	
+	
 	private static GenericValue getMemberLoansVoucher(Long memberLoansVoucherId) {
 		GenericValue memberLoansVoucher = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -447,6 +461,30 @@ public class MemberAccountManagementServices {
 			}
 		}
 		return json;
+	}
+	
+	
+	public static String createGeneralMemberVoucherTransaction(Map<String, String> userLogin, Long generalMemberVoucherId){
+		//Find GeneralMemberVoucher
+		GenericValue generalMemberVoucher = getGeneralMemberVoucher(generalMemberVoucherId);
+		//Decrease the source
+		log.info("//////////////////////// Posting the voucher");
+		BigDecimal amount = generalMemberVoucher.getBigDecimal("amount");
+		Long memberAccountId = generalMemberVoucher.getLong("sourceMemberAccountId");
+		String transactionType = "MEMBERACCOUNTJVDEC";
+		
+		//AccHolderTransactionServices.cashDeposit(amount, memberAccountId, userLogin, transactionType);
+		
+		AccHolderTransactionServices.generalMemberVoucher(amount, memberAccountId, userLogin, transactionType, generalMemberVoucherId);
+		memberAccountId = generalMemberVoucher.getLong("destMemberAccountId");
+		transactionType = "MEMBERACCOUNTJVINC";
+
+		AccHolderTransactionServices.generalMemberVoucher(amount, memberAccountId, userLogin, transactionType, generalMemberVoucherId);
+
+		log.info("//////////////////////// Posted the voucher");
+		
+		
+		return "success";
 	}
 
 }

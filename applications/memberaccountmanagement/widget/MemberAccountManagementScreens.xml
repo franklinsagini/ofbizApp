@@ -59,6 +59,48 @@
         </section>
     </screen>
     
+    <!-- generalMemberVoucher -->
+        <screen name="generalMemberVoucher">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Create General Member Vooucher"/>
+                <set field="headerItem" value="generalMemberVoucher"/>
+                <set field="tabButtonItem" value="generalMemberVoucher" />
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createGeneralMemberVoucher"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+
+                            <widgets>
+                            	<!-- screenlet>
+									<include-menu  name="memberNotificationSetupsTabBar" location="component://membernotification/widget/MemberNotificationMenus.xml"/>
+								</screenlet -->
+                                <screenlet title="General Member Voucher">
+                                    <include-form name="generalMemberVoucher" location="component://memberaccountmanagement/widget/MemberAccountManagementForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">Cant Create General Member Voucher</label>
+                            </fail-widgets>
+                        </section>
+
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="General Member Voucher">
+                        			<include-form name="listGeneralMemberVoucher" location="component://memberaccountmanagement/widget/MemberAccountManagementForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <!-- memberLoansVoucher -->
         <screen name="memberLoansVoucher">
         <section>

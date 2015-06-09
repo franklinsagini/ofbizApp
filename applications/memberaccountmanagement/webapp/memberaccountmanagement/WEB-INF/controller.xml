@@ -21,7 +21,14 @@
     -->
 
     <!-- Request Mappings -->
-    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
+    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="generalMemberVoucher"/></request-map>
+    
+    
+    
+    <request-map uri="generalMemberVoucher">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="generalMemberVoucher"/>
+    </request-map>
     
     <request-map uri="memberAccountVoucher">
     	<security https="true" auth="true"/>
@@ -59,6 +66,33 @@
 			value="memberAccountVoucher"></response>
 		<response name="error" type="view" value="memberAccountVoucher" />
 	</request-map>
+	
+	<!-- generalMemberVoucher GeneralMemberVoucher -->
+	    <request-map uri="createGeneralMemberVoucher">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createGeneralMemberVoucher" />
+		<response name="success" type="request-redirect"
+			value="generalMemberVoucher">
+			</response>
+		<response name="error" type="view" value="generalMemberVoucher" />
+	</request-map>
+	
+	<request-map uri="updateGeneralMemberVoucher">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateGeneralMemberVoucher" />
+		<response name="success" type="request-redirect-noparam"
+			value="generalMemberVoucher"></response>
+		<response name="error" type="view" value="generalMemberVoucher" />
+	</request-map>
+	
+	<request-map uri="deleteGeneralMemberVoucher">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteGeneralMemberVoucher" />
+		<response name="success" type="request-redirect-noparam"
+			value="generalMemberVoucher"></response>
+		<response name="error" type="view" value="generalMemberVoucher" />
+	</request-map>
+	
 	
 	<!-- MemberLoansVoucher -->
 	<request-map uri="createMemberLoansVoucher">
@@ -125,6 +159,27 @@
 		</response>
 	</request-map>
 	
+		<request-map uri="glaccount">
+		<!-- event type="java" path="org.ofbiz.loans.events.LoanEvent" invoke="getMember"/ -->
+		<event type="java"
+			path="org.ofbiz.accountholdertransactions.AccHolderTransactionServices"
+			invoke="getGlAccount" />
+		<response name="success" type="none">
+		</response>
+	</request-map>
+	
+	<request-map uri="glloanaccount">
+		<!-- event type="java" path="org.ofbiz.loans.events.LoanEvent" invoke="getMember"/ -->
+		<event type="java"
+			path="org.ofbiz.accountholdertransactions.AccHolderTransactionServices"
+			invoke="getGlLoanAccount" />
+		<response name="success" type="none">
+		</response>
+	</request-map>
+	
+	
+	
+	
 	    <request-map uri="totalrepaid">
 		<!-- event type="java" path="org.ofbiz.loans.events.LoanEvent" invoke="getMember"/ -->
 		<event type="java"
@@ -145,6 +200,10 @@
    	
    	<view-map name="memberLoansVoucher" type="screen" page="component://memberaccountmanagement/widget/MemberAccountManagementScreens.xml#memberLoansVoucher"/>
    	
+   	
+   	<!-- GeneralMemberVoucher -->
+   	<view-map name="generalMemberVoucher" type="screen" page="component://memberaccountmanagement/widget/MemberAccountManagementScreens.xml#generalMemberVoucher"/>
+
    	<view-map name="LookupActiveMember" type="screen"
 		page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember" /> 
 		
