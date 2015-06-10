@@ -3,7 +3,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 
 stationId = parameters.stationId
-partyId = parameters.stationId
+partyId = parameters.partyId
 
 //Get Station Number
 member = null;
