@@ -228,7 +228,7 @@ under the License.
             </fo:table>
         </fo:block>
         
-        <fo:block space-after.optimum="10pt" font-size="9pt">
+        <#-- fo:block space-after.optimum="10pt" font-size="9pt">
             <fo:table table-layout="fixed" width="100%">
                 <fo:table-column column-width="60pt"/>
                 <fo:table-column column-width="100pt"/>
@@ -239,7 +239,7 @@ under the License.
                 <fo:table-header>
                     <fo:table-row font-weight="bold">
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm" text-align="left">
-                            <fo:block>Total Total</fo:block>
+                            <fo:block></fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm" text-align="left">
                             <fo:block></fo:block>
@@ -282,7 +282,7 @@ under the License.
                 </fo:table-row>
                 </fo:table-body>
             </fo:table>
-        </fo:block>
+        </fo:block -->
         </#list>
     <#else>
         <fo:block text-align="center">NO DATA FOUND</fo:block>
