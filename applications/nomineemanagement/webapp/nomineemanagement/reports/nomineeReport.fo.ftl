@@ -131,12 +131,12 @@ under the License.
         <#-- Loan Details -->
         <fo:block space-after.optimum="10pt" font-size="9pt">
             <fo:table table-layout="fixed" width="100%">
-                <fo:table-column column-width="30pt"/>
-                <fo:table-column column-width="50pt"/>
-                <fo:table-column column-width="55"/>
-                <fo:table-column column-width="50pt"/>
-                <fo:table-column column-width="50pt"/>
-                <fo:table-column column-width="50pt"/>
+                <fo:table-column column-width="60pt"/>
+                <fo:table-column column-width="100pt"/>
+                <fo:table-column column-width="110"/>
+                <fo:table-column column-width="100pt"/>
+                <fo:table-column column-width="100pt"/>
+                <fo:table-column column-width="100pt"/>
 
                 <#-- fo:table-column column-width="75pt"/>
                 < fo:table-column column-width="60pt"/>
@@ -193,33 +193,33 @@ under the License.
                     <#assign nomineeCount = nomineeCount + 1>
        	                
                         <fo:table-row>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  text-align="left">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  background-color="${zebra(nominee_index)}"  text-align="left">
                                 <fo:block>
                                 	${nomineeCount}
                                 </fo:block>
                             </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  text-align="left">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  background-color="${zebra(nominee_index)}"  text-align="left">
                                 <fo:block>${nominee.firstName?if_exists}</fo:block>
                             </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right" >
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  background-color="${zebra(nominee_index)}" text-align="left" >
                                 <fo:block>
                                 ${nominee.middleName?if_exists}
                                 </fo:block>
                             </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right" >
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"   background-color="${zebra(nominee_index)}" text-align="right" >
                                 <fo:block>
                                  ${nominee.lastName?if_exists}
                                 </fo:block>
                             </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="left">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  background-color="${zebra(nominee_index)}" text-align="left">
                                 <fo:block>
-								  ${nominee.percentage}   								
+								  ${nominee.percentage?if_exists}   								
                                </fo:block>
                             </fo:table-cell>
                             
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" >
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"   background-color="${zebra(nominee_index)}" >
                                 <fo:block>
-								${nominee.name}
+								${nominee.name?if_exists}
                                </fo:block>
                             </fo:table-cell>
                         </fo:table-row>
@@ -230,12 +230,12 @@ under the License.
         
         <fo:block space-after.optimum="10pt" font-size="9pt">
             <fo:table table-layout="fixed" width="100%">
-                <fo:table-column column-width="30pt"/>
-                <fo:table-column column-width="50pt"/>
-                <fo:table-column column-width="55pt"/>
-                <fo:table-column column-width="50pt"/>
-                <fo:table-column column-width="50pt"/>                
-                <fo:table-column column-width="50pt"/>
+                <fo:table-column column-width="60pt"/>
+                <fo:table-column column-width="100pt"/>
+                <fo:table-column column-width="110"/>
+                <fo:table-column column-width="100pt"/>
+                <fo:table-column column-width="100pt"/>
+                <fo:table-column column-width="100pt"/>
                 <fo:table-header>
                     <fo:table-row font-weight="bold">
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm" text-align="left">
