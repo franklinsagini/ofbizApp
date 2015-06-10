@@ -61,68 +61,68 @@ public class ClosePayroll {
 		}
 		
 		//post
-		//Get the items to post
-		BigDecimal bdNSSF = BigDecimal.ZERO;
-		BigDecimal bdNHIF = BigDecimal.ZERO;
-		BigDecimal bdPENSION = BigDecimal.ZERO;
-		BigDecimal bdPAYE = BigDecimal.ZERO;
-		BigDecimal bdNETPAY = BigDecimal.ZERO;
-		BigDecimal bdSalaries = BigDecimal.ZERO;
-		
-		String NSSFAccountId = "";
-		String NHIFAccountId = "";
-		String PENSIONAccountId = "";
-		String PAYEAccountId = "";
-		String NETPAYAccountId = "";
-		String SalariesAccountId = "";
-		
-		List<GenericValue> payrollPeriodSummaryELI = null;
-		try {
-			payrollPeriodSummaryELI = delegator.findList("PayrollPeriodSummary",
-					EntityCondition.makeCondition("payrollPeriodId", oldPayrollPeriodId),
-					null, null, null, false);
-		} catch (GenericEntityException e) {
-			e.printStackTrace();
-		}
-		
-		GenericValue payrollPeriod = null;
-		for (GenericValue genericValue : payrollPeriodSummaryELI) {
-			//station = genericValue;
-			
-			if (genericValue.getString("elementName").equals("NSSF")){
-				bdNSSF = genericValue.getBigDecimal("amount");
-			}
-			
-			else if (genericValue.getString("elementName").equals("NHIF")){
-				bdNHIF = genericValue.getBigDecimal("TotalAmount");
-			}
-			
-			else if (genericValue.getString("elementName").equals("PENSION")){
-				bdPENSION = genericValue.getBigDecimal("TotalAmount");
-			}
-
-			else if (genericValue.getString("elementName").equals("PAYE")){
-				bdPAYE = genericValue.getBigDecimal("TotalAmount");
-			}
-			
-			else if (genericValue.getString("elementName").equals("NETPAY")){
-				bdNETPAY = genericValue.getBigDecimal("TotalAmount");
-			}
-			
-		}
-		
-		bdSalaries = bdNSSF.add(bdNHIF).add(bdPENSION).add(bdPAYE).add(bdNETPAY);
-		
-		//Get Account IDs 
-		
-		List<GenericValue> payrollPostingAccountELI = null;
-		try {
-			payrollPeriodSummaryELI = delegator.findList("PayrollPostingAccount",
-					null,
-					null, null, null, false);
-		} catch (GenericEntityException e) {
-			e.printStackTrace();
-		}
+//		//Get the items to post
+//		BigDecimal bdNSSF = BigDecimal.ZERO;
+//		BigDecimal bdNHIF = BigDecimal.ZERO;
+//		BigDecimal bdPENSION = BigDecimal.ZERO;
+//		BigDecimal bdPAYE = BigDecimal.ZERO;
+//		BigDecimal bdNETPAY = BigDecimal.ZERO;
+//		BigDecimal bdSalaries = BigDecimal.ZERO;
+//		
+//		String NSSFAccountId = "";
+//		String NHIFAccountId = "";
+//		String PENSIONAccountId = "";
+//		String PAYEAccountId = "";
+//		String NETPAYAccountId = "";
+//		String SalariesAccountId = "";
+//		
+//		List<GenericValue> payrollPeriodSummaryELI = null;
+//		try {
+//			payrollPeriodSummaryELI = delegator.findList("PayrollPeriodSummary",
+//					EntityCondition.makeCondition("payrollPeriodId", oldPayrollPeriodId),
+//					null, null, null, false);
+//		} catch (GenericEntityException e) {
+//			e.printStackTrace();
+//		}
+//		
+//		GenericValue payrollPeriod = null;
+//		for (GenericValue genericValue : payrollPeriodSummaryELI) {
+//			//station = genericValue;
+//			
+//			if (genericValue.getString("elementName").equals("NSSF")){
+//				bdNSSF = genericValue.getBigDecimal("amount");
+//			}
+//			
+//			else if (genericValue.getString("elementName").equals("NHIF")){
+//				bdNHIF = genericValue.getBigDecimal("TotalAmount");
+//			}
+//			
+//			else if (genericValue.getString("elementName").equals("PENSION")){
+//				bdPENSION = genericValue.getBigDecimal("TotalAmount");
+//			}
+//
+//			else if (genericValue.getString("elementName").equals("PAYE")){
+//				bdPAYE = genericValue.getBigDecimal("TotalAmount");
+//			}
+//			
+//			else if (genericValue.getString("elementName").equals("NETPAY")){
+//				bdNETPAY = genericValue.getBigDecimal("TotalAmount");
+//			}
+//			
+//		}
+//		
+//		bdSalaries = bdNSSF.add(bdNHIF).add(bdPENSION).add(bdPAYE).add(bdNETPAY);
+//		
+//		//Get Account IDs 
+//		
+//		List<GenericValue> payrollPostingAccountELI = null;
+//		try {
+//			payrollPeriodSummaryELI = delegator.findList("PayrollPostingAccount",
+//					null,
+//					null, null, null, false);
+//		} catch (GenericEntityException e) {
+//			e.printStackTrace();
+//		}
 		
 //		GenericValue payrollPostingAccount = null;
 //		for (GenericValue genericValue : payrollPostingAccountELI) {
