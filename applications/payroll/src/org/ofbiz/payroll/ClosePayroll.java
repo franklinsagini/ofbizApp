@@ -124,33 +124,33 @@ public class ClosePayroll {
 			e.printStackTrace();
 		}
 		
-		GenericValue payrollPostingAccount = null;
-		for (GenericValue genericValue : payrollPostingAccountELI) {
-			//station = genericValue;
-			
-			if (genericValue.getString("payrollElement").equals("NSSF")){
-				NSSFAccountId = genericValue.getString("glAccountId");
-			}
-			
-			else if (genericValue.getString("payrollElement").equals("NHIF")){
-				NHIFAccountId = genericValue.getString("glAccountId");
-			}
-			
-			else if (genericValue.getString("payrollElement").equals("PENSION")){
-				PENSIONAccountId = genericValue.getString("glAccountId");
-			}
-
-			else if (genericValue.getString("payrollElement").equals("PAYE")){
-				PAYEAccountId = genericValue.getString("glAccountId");
-			}
-			
-			else if (genericValue.getString("payrollElement").equals("NETPAY")){
-				NETPAYAccountId = genericValue.getString("glAccountId");
-			}
-			
-		}
-		
-		AccHolderTransactionServices.postPayrollSalariesHQ(userLogin, bdNSSF, bdNHIF, bdPENSION, bdPAYE, bdNETPAY, bdSalaries, NSSFAccountId, NHIFAccountId, PENSIONAccountId, PAYEAccountId, NETPAYAccountId, SalariesAccountId);
+//		GenericValue payrollPostingAccount = null;
+//		for (GenericValue genericValue : payrollPostingAccountELI) {
+//			//station = genericValue;
+//			
+//			if (genericValue.getString("payrollElement").equals("NSSF")){
+//				NSSFAccountId = genericValue.getString("glAccountId");
+//			}
+//			
+//			else if (genericValue.getString("payrollElement").equals("NHIF")){
+//				NHIFAccountId = genericValue.getString("glAccountId");
+//			}
+//			
+//			else if (genericValue.getString("payrollElement").equals("PENSION")){
+//				PENSIONAccountId = genericValue.getString("glAccountId");
+//			}
+//
+//			else if (genericValue.getString("payrollElement").equals("PAYE")){
+//				PAYEAccountId = genericValue.getString("glAccountId");
+//			}
+//			
+//			else if (genericValue.getString("payrollElement").equals("NETPAY")){
+//				NETPAYAccountId = genericValue.getString("glAccountId");
+//			}
+//			
+//		}
+//		
+//		AccHolderTransactionServices.postPayrollSalariesHQ(userLogin, bdNSSF, bdNHIF, bdPENSION, bdPAYE, bdNETPAY, bdSalaries, NSSFAccountId, NHIFAccountId, PENSIONAccountId, PAYEAccountId, NETPAYAccountId, SalariesAccountId);
 		
 		Writer out;
 		try {
