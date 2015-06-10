@@ -2,12 +2,16 @@ package org.ofbiz.payroll;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -28,6 +32,9 @@ public class ClosePayroll {
 		List<GenericValue> employeesELI = null;
 		// String partyId = party.getString("partyId");
 		log.info("######### Old payrollPeriodId is :::: " + oldPayrollPeriodId);
+		HttpSession session;
+		session = request.getSession();
+		Map<String, String> userLogin = (Map<String, String>) session.getAttribute("userLogin");
 
 
 		try {
@@ -52,6 +59,98 @@ public class ClosePayroll {
 				e.printStackTrace();
 			}
 		}
+		
+		//post
+		//Get the items to post
+		BigDecimal bdNSSF = BigDecimal.ZERO;
+		BigDecimal bdNHIF = BigDecimal.ZERO;
+		BigDecimal bdPENSION = BigDecimal.ZERO;
+		BigDecimal bdPAYE = BigDecimal.ZERO;
+		BigDecimal bdNETPAY = BigDecimal.ZERO;
+		BigDecimal bdSalaries = BigDecimal.ZERO;
+		
+		String NSSFAccountId = "";
+		String NHIFAccountId = "";
+		String PENSIONAccountId = "";
+		String PAYEAccountId = "";
+		String NETPAYAccountId = "";
+		String SalariesAccountId = "";
+		
+		List<GenericValue> payrollPeriodSummaryELI = null;
+		try {
+			payrollPeriodSummaryELI = delegator.findList("PayrollPeriodSummary",
+					EntityCondition.makeCondition("payrollPeriodId", oldPayrollPeriodId),
+					null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		GenericValue payrollPeriod = null;
+		for (GenericValue genericValue : payrollPeriodSummaryELI) {
+			//station = genericValue;
+			
+			if (genericValue.getString("elementName").equals("NSSF")){
+				bdNSSF = genericValue.getBigDecimal("TotalAmount");
+			}
+			
+			else if (genericValue.getString("elementName").equals("NHIF")){
+				bdNHIF = genericValue.getBigDecimal("TotalAmount");
+			}
+			
+			else if (genericValue.getString("elementName").equals("PENSION")){
+				bdPENSION = genericValue.getBigDecimal("TotalAmount");
+			}
+
+			else if (genericValue.getString("elementName").equals("PAYE")){
+				bdPAYE = genericValue.getBigDecimal("TotalAmount");
+			}
+			
+			else if (genericValue.getString("elementName").equals("NETPAY")){
+				bdNETPAY = genericValue.getBigDecimal("TotalAmount");
+			}
+			
+		}
+		
+		bdSalaries = bdNSSF.add(bdNHIF).add(bdPENSION).add(bdPAYE).add(bdNETPAY);
+		
+		//Get Account IDs 
+		
+		List<GenericValue> payrollPostingAccountELI = null;
+		try {
+			payrollPeriodSummaryELI = delegator.findList("PayrollPostingAccount",
+					null,
+					null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		GenericValue payrollPostingAccount = null;
+		for (GenericValue genericValue : payrollPostingAccountELI) {
+			//station = genericValue;
+			
+			if (genericValue.getString("payrollElement").equals("NSSF")){
+				NSSFAccountId = genericValue.getString("glAccountId");
+			}
+			
+			else if (genericValue.getString("payrollElement").equals("NHIF")){
+				NHIFAccountId = genericValue.getString("glAccountId");
+			}
+			
+			else if (genericValue.getString("payrollElement").equals("PENSION")){
+				PENSIONAccountId = genericValue.getString("glAccountId");
+			}
+
+			else if (genericValue.getString("payrollElement").equals("PAYE")){
+				PAYEAccountId = genericValue.getString("glAccountId");
+			}
+			
+			else if (genericValue.getString("payrollElement").equals("NETPAY")){
+				NETPAYAccountId = genericValue.getString("glAccountId");
+			}
+			
+		}
+		
+		AccHolderTransactionServices.postPayrollSalariesHQ(userLogin, bdNSSF, bdNHIF, bdPENSION, bdPAYE, bdNETPAY, bdSalaries, NSSFAccountId, NHIFAccountId, PENSIONAccountId, PAYEAccountId, NETPAYAccountId, SalariesAccountId);
 		
 		Writer out;
 		try {

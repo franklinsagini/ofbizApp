@@ -580,6 +580,51 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
     
+    <!-- NewPayrollPostingAccount -->
+        <form name="NewPayrollPostingAccount" type="single" target="createPayrollPostingAccount"
+        focus-field-name="payrollElement" header-row-style="header-row" default-table-style="basic-table" default-map-name="payrollPostingAccountContext">
+        
+        <actions>
+        	<entity-condition entity-name="PayrollPostingAccount"></entity-condition>
+        	
+        	
+        </actions>
+        
+        <field name="payrollPostingAccountId"><hidden/></field>
+        <field name="payrollElement" title="Payroll Element" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
+         <field name="glAccountId" title="Account (Posting Account)" widget-style="required" required-field="true">
+       		<drop-down allow-empty="true">
+       			<!-- list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/ -->
+       			
+       			<entity-options description="${accountName} - ${accountCode}" entity-name="GlAccount"></entity-options>
+       		</drop-down>
+        </field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        </form>
+    
+    <!-- listPayrollPostingAccount -->
+            <form name="listPayrollPostingAccount" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updatePayrollPostingAccount" paginate-target="payrollPostingAccount"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+       <actions>
+        
+        	<entity-condition entity-name="PayrollPostingAccount"></entity-condition>
+             
+        </actions>
+        <field name="payrollPostingAccountId"><hidden/></field>
+		<field name="payrollElement" title="Payroll Element" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+         <field name="glAccountId" title="Account (Posting Account)" widget-style="required" required-field="true">
+       		<drop-down allow-empty="true">
+       			<!-- list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/ -->
+       			
+       			<entity-options description="${accountName} - ${accountCode}" entity-name="GlAccount">
+       				<entity-order-by field-name="accountName"/>
+       			</entity-options>
+       		</drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
+    
     
    <!-- New Payroll Year -->
     <form name="NewPayrollYear" type="single" target="createPayrollYear"

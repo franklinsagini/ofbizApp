@@ -473,7 +473,7 @@ public class MemberAccountManagementServices {
 		Long memberAccountId = generalMemberVoucher.getLong("sourceMemberAccountId");
 		String transactionType = "MEMBERACCOUNTJVDEC";
 		
-		//AccHolderTransactionServices.cashDeposit(amount, memberAccountId, userLogin, transactionType);
+		AccHolderTransactionServices.cashDeposit(amount, memberAccountId, userLogin, transactionType);
 		
 		AccHolderTransactionServices.generalMemberVoucher(amount, memberAccountId, userLogin, transactionType, generalMemberVoucherId);
 		memberAccountId = generalMemberVoucher.getLong("destMemberAccountId");
