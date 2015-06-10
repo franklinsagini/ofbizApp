@@ -230,6 +230,51 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <!-- payrollPostingAccount -->
+        <screen name="payrollPostingAccount">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Payroll Posting Account"/>
+                <set field="headerItem" value="payrollPostingAccount"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPayrollPostingAccount"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                <entity-condition entity-name="PayrollPostingAccount" list="payrollPostingAccountList">
+        		</entity-condition>
+                <entity-one entity-name="PayrollPostingAccount" value-field="payrollPostingAccountContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PAYROLLMANAGEMENT" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="New Payroll Posting Account">
+                                    <include-form name="NewPayrollPostingAccount" location="component://payroll/widget/payroll/PayrollForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Payroll Posting Account List">
+                        			<include-form name="listPayrollPostingAccount" location="component://payroll/widget/payroll/PayrollForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
     <!-- Payroll Year -->    
     <screen name="NewPayrollYear">

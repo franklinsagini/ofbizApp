@@ -44,6 +44,7 @@ subtopLists =  FastList.newInstance();
 partyRelationships = EntityUtil.filterByDate(delegator.findByAnd("PartyRelationship", [partyIdFrom : partyId, partyRelationshipTypeId : "GROUP_ROLLUP"], null, false));
 if (partyRelationships) {
     //root
+	if (partyId != null){
     partyRoot = delegator.findOne("PartyGroup", [partyId : partyId], false);
     partyRootMap = FastMap.newInstance();
     partyRootMap.put("partyId", partyId);
@@ -52,16 +53,21 @@ if (partyRelationships) {
     //child
     for(partyRelationship in partyRelationships) {
         partyGroup = delegator.findOne("PartyGroup", [partyId : partyRelationship.getString("partyIdTo")], false);
-        partyGroupMap = FastMap.newInstance();
+		if (partyGroup != null){
+		 partyGroupMap = FastMap.newInstance();
+		
+		
         partyGroupMap.put("partyId", partyGroup.getString("partyId"));
         partyGroupMap.put("groupName", partyGroup.getString("groupName"));
         completedTreeContext.add(partyGroupMap);
 
         subtopLists.addAll(partyRelationship.getString("partyIdTo"));
+		}
     }
 
     partyRootMap.put("child", completedTreeContext);
     completedTree.add(partyRootMap);
+	}
 
 }
 // The complete tree list for the category tree

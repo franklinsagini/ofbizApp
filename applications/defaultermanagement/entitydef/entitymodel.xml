@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entitymodel.xsd">
+    <!-- ========================================================= -->
+    <!-- ======================== Defaults ======================= -->
+    <!-- ========================================================= -->
+    <title>Entity of DefaultManagement Component</title>
+    <description>None</description>
+    <copyright></copyright>
+    <version></version>
+    
+    <view-entity entity-name="DefaultedLoans" package-name="org.ofbiz.defaultermanagement">
+    	<member-entity entity-alias="LAPP" entity-name="LoanApplication"></member-entity>
+    	<member-entity entity-alias="M" entity-name="Member"></member-entity>
+    	<member-entity entity-alias="S" entity-name="Station"></member-entity>
+    	<member-entity entity-alias="LP" entity-name="LoanProduct"></member-entity>
+    	<member-entity entity-alias="MS" entity-name="MemberStatus"></member-entity>
+    	<member-entity entity-alias="ET" entity-name="EmploymentType"></member-entity>
+    	
+    	<alias entity-alias="LAPP" name="loanApplicationId"></alias>
+    	<alias entity-alias="LAPP" name="loanNo"></alias>
+    	<alias entity-alias="LAPP" name="loanStatusId"></alias>
+    	
+    	<alias entity-alias="LP" name="loanProductId"></alias>
+    	<alias entity-alias="LP" name="name" col-alias="loanProductName"></alias>
+    	<alias entity-alias="LP" name="code" col-alias="loanProductCode"></alias>
+    	
+    	<alias entity-alias="LAPP" name="loanAmt"></alias>
+    	<alias entity-alias="LAPP" name="disbursementDate"></alias>
+    	<alias entity-alias="LAPP" name="lastRepaymentDate"></alias>
+    	
+    	<alias entity-alias="M" name="partyId"></alias>
+    	<alias entity-alias="M" name="payrollNumber"></alias>
+    	
+    	<alias entity-alias="M" name="firstName"></alias>
+    	<alias entity-alias="M" name="middleName"></alias>
+    	<alias entity-alias="M" name="lastName"></alias>
+    	
+    	<alias entity-alias="MS" name="memberStatusId"></alias>
+    	<alias entity-alias="MS" name="name" col-alias="memberStatusName"></alias>
+    	
+    	<alias entity-alias="S" name="stationId"></alias>
+    	
+    	<alias entity-alias="S" name="name" col-alias="stationName"></alias>
+    	<alias entity-alias="S" name="stationNumber"></alias>
+    	<alias entity-alias="S" name="employerCode"></alias>
+    	<alias entity-alias="S" name="employerName"></alias>
+    	
+    	<alias entity-alias="ET" name="employmentTypeId"></alias>
+    	<alias entity-alias="ET" name="name" col-alias="employmentTypeName"></alias>
+    	
+    	<view-link  entity-alias="LAPP" rel-entity-alias="M">
+    		<key-map field-name="partyId" rel-field-name="partyId"/>
+    		<!-- entity-condition>
+    			<condition-expr entity-alias="T" field-name="treasuryTypeId" operator="equals" rel-entity-alias="TR" rel-field-name="sourceTreasuryType"/>
+    		</entity-condition -->
+    	</view-link>
+    	
+    	<view-link  entity-alias="LAPP" rel-entity-alias="LP">
+    		<key-map field-name="loanProductId" rel-field-name="loanProductId"/>
+    		<entity-condition>
+    			<condition-expr entity-alias="LAPP" field-name="loanStatusId" operator="equals" value="10030"/>
+    		</entity-condition>
+    	</view-link>
+    	
+    	<view-link  entity-alias="M" rel-entity-alias="S">
+    		<key-map field-name="stationId" rel-field-name="stationId"/>
+    	</view-link>
+    	
+    	<view-link  entity-alias="M" rel-entity-alias="MS">
+    		<key-map field-name="memberStatusId" rel-field-name="memberStatusId"/>
+    	</view-link>
+    	
+    	<view-link  entity-alias="M" rel-entity-alias="ET">
+    		<key-map field-name="employmentTypeId" rel-field-name="employmentTypeId"/>
+    	</view-link>
+    	
+    </view-entity>
+    
+    <!-- Defaulted Unattached Loans -->
+        <view-entity entity-name="DefaultedUnattchedLoans" package-name="org.ofbiz.defaultermanagement">
+    	<member-entity entity-alias="LAPP" entity-name="LoanApplication"></member-entity>
+    	<member-entity entity-alias="M" entity-name="Member"></member-entity>
+    	<member-entity entity-alias="S" entity-name="Station"></member-entity>
+    	<member-entity entity-alias="LP" entity-name="LoanProduct"></member-entity>
+    	<member-entity entity-alias="MS" entity-name="MemberStatus"></member-entity>
+    	<member-entity entity-alias="ET" entity-name="EmploymentType"></member-entity>
+    	
+    	<alias entity-alias="LAPP" name="loanApplicationId"></alias>
+    	<alias entity-alias="LAPP" name="loanNo"></alias>
+    	<alias entity-alias="LAPP" name="loanStatusId"></alias>
+    	
+    	<alias entity-alias="LP" name="loanProductId"></alias>
+    	<alias entity-alias="LP" name="name" col-alias="loanProductName"></alias>
+    	<alias entity-alias="LP" name="code" col-alias="loanProductCode"></alias>
+    	
+    	<alias entity-alias="LAPP" name="loanAmt"></alias>
+    	<alias entity-alias="LAPP" name="disbursementDate"></alias>
+    	<alias entity-alias="LAPP" name="lastRepaymentDate"></alias>
+    	
+    	<alias entity-alias="M" name="partyId"></alias>
+    	<alias entity-alias="M" name="payrollNumber"></alias>
+    	
+    	<alias entity-alias="M" name="firstName"></alias>
+    	<alias entity-alias="M" name="middleName"></alias>
+    	<alias entity-alias="M" name="lastName"></alias>
+    	
+    	<alias entity-alias="MS" name="memberStatusId"></alias>
+    	<alias entity-alias="MS" name="name" col-alias="memberStatusName"></alias>
+    	
+    	<alias entity-alias="S" name="stationId"></alias>
+    	
+    	<alias entity-alias="S" name="name" col-alias="stationName"></alias>
+    	<alias entity-alias="S" name="stationNumber"></alias>
+    	<alias entity-alias="S" name="employerCode"></alias>
+    	<alias entity-alias="S" name="employerName"></alias>
+    	
+    	<alias entity-alias="ET" name="employmentTypeId"></alias>
+    	<alias entity-alias="ET" name="name" col-alias="employmentTypeName"></alias>
+    	
+    	<view-link  entity-alias="LAPP" rel-entity-alias="M">
+    		<key-map field-name="partyId" rel-field-name="partyId"/>
+    		<!-- entity-condition>
+    			<condition-expr entity-alias="T" field-name="treasuryTypeId" operator="equals" rel-entity-alias="TR" rel-field-name="sourceTreasuryType"/>
+    		</entity-condition -->
+    	</view-link>
+    	
+    	<view-link  entity-alias="LAPP" rel-entity-alias="LP">
+    		<key-map field-name="loanProductId" rel-field-name="loanProductId"/>
+    		<entity-condition>
+    			<condition-expr entity-alias="LAPP" field-name="loanStatusId" operator="equals" value="6"/>
+    		</entity-condition>
+    	</view-link>
+    	
+    	<view-link  entity-alias="M" rel-entity-alias="S">
+    		<key-map field-name="stationId" rel-field-name="stationId"/>
+    	</view-link>
+    	
+    	<view-link  entity-alias="M" rel-entity-alias="MS">
+    		<key-map field-name="memberStatusId" rel-field-name="memberStatusId"/>
+    	</view-link>
+    	
+    	<view-link  entity-alias="M" rel-entity-alias="ET">
+    		<key-map field-name="employmentTypeId" rel-field-name="employmentTypeId"/>
+    	</view-link>
+    	
+    </view-entity>
+    
+    
+    <!-- view-entity entity-name="StationEmployer" package-name="org.ofbiz.defaultermanagement">
+    	<member-entity entity-alias="S" entity-name="Station"></member-entity>
+    	<alias entity-alias="S" name="employerCode" group-by="true"></alias>
+    	<alias entity-alias="S" name="employerName"></alias>
+    </view-entity -->
+    
+    
+    <!-- StationEmployer -->
+    <view-entity entity-name="StationEmployer" package-name="org.ofbiz.defaultermanagement">
+    	<member-entity entity-alias="LAPP" entity-name="LoanApplication"></member-entity>
+    	<member-entity entity-alias="M" entity-name="Member"></member-entity>
+    	<member-entity entity-alias="S" entity-name="Station"></member-entity>
+    	
+    	<alias entity-alias="S" name="employerCode" group-by="true"></alias>
+    	<alias entity-alias="LAPP" name="loanNo" function="count" col-alias="loanCount"></alias>
+    	<alias entity-alias="LAPP" name="loanAmt" function="sum" col-alias="loanAmt"></alias>
+    	
+    	<view-link  entity-alias="LAPP" rel-entity-alias="M">
+    		<key-map field-name="partyId" rel-field-name="partyId"/>
+    		<entity-condition>
+    			<condition-expr entity-alias="LAPP" field-name="loanStatusId" operator="equals" value="10030"/>
+    		</entity-condition>
+    		<!-- entity-condition>
+    			<condition-expr entity-alias="T" field-name="treasuryTypeId" operator="equals" rel-entity-alias="TR" rel-field-name="sourceTreasuryType"/>
+    		</entity-condition -->
+    	</view-link>
+    	<view-link  entity-alias="M" rel-entity-alias="S">
+    		<key-map field-name="stationId" rel-field-name="stationId"/>
+    	</view-link>
+    </view-entity> 
+    
+        <view-entity entity-name="DisbursedLoansStationEmployer" package-name="org.ofbiz.defaultermanagement">
+    	<member-entity entity-alias="LAPP" entity-name="LoanApplication"></member-entity>
+    	<member-entity entity-alias="M" entity-name="Member"></member-entity>
+    	<member-entity entity-alias="S" entity-name="Station"></member-entity>
+    	
+    	<alias entity-alias="S" name="employerCode" group-by="true"></alias>
+    	<alias entity-alias="LAPP" name="loanNo" function="count" col-alias="loanCount"></alias>
+    	<alias entity-alias="LAPP" name="loanAmt" function="sum" col-alias="loanAmt"></alias>
+    	
+    	<view-link  entity-alias="LAPP" rel-entity-alias="M">
+    		<key-map field-name="partyId" rel-field-name="partyId"/>
+    		<entity-condition>
+    			<condition-expr entity-alias="LAPP" field-name="loanStatusId" operator="equals" value="6"/>
+    		</entity-condition>
+    		<!-- entity-condition>
+    			<condition-expr entity-alias="T" field-name="treasuryTypeId" operator="equals" rel-entity-alias="TR" rel-field-name="sourceTreasuryType"/>
+    		</entity-condition -->
+    	</view-link>
+    	<view-link  entity-alias="M" rel-entity-alias="S">
+    		<key-map field-name="stationId" rel-field-name="stationId"/>
+    	</view-link>
+    </view-entity>  
+</entitymodel>

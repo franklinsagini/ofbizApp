@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="main">
+        <section>
+            <actions>
+                <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
+            </actions>
+            <widgets>
+                <decorator-screen name="DefaultManagementCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+     <!-- defaultermanagement -->
+     <screen name="defaultermanagement">
+        <section>
+            <actions>
+                <set field="headerItem" value="defaultermanagement" />
+                <set field="tabButtonItem" value="defaultermanagement" />
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <!-- include-menu name="MemberReportsTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/ -->
+                        <!-- container style="lefthalf">
+                            <screenlet title="Member Listing Report">
+                                <include-form name="memeberListingForm" location="component://party/widget/partymgr/MemberReportForms.xml"/>
+                            </screenlet>
+                        </container -->
+                        <!-- style="righthalf" -->
+                        <container>
+                            <screenlet title="Defaulter Management">
+                                <!--  include-form name="memberstatementreportWithDatesForm" location="component://loanreports/widget/LoanReportsForms.xml"/ -->
+                                <include-form name="defaultermanagementForm" location="component://defaultermanagement/widget/DefaultManagementForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- defaultermanagementcsv -->
+        <screen name="defaultermanagementcsv">
+        <section>
+            <actions>
+                <set field="headerItem" value="defaultermanagementcsv" />
+                <set field="tabButtonItem" value="defaultermanagementcsv" />
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <!-- include-menu name="MemberReportsTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/ -->
+                        <!-- container style="lefthalf">
+                            <screenlet title="Member Listing Report">
+                                <include-form name="memeberListingForm" location="component://party/widget/partymgr/MemberReportForms.xml"/>
+                            </screenlet>
+                        </container -->
+                        <!-- style="righthalf" -->
+                        <container>
+                            <screenlet title="Defaulter Management">
+                                <!--  include-form name="memberstatementreportWithDatesForm" location="component://loanreports/widget/LoanReportsForms.xml"/ -->
+                                <include-form name="defaultermanagementcsvForm" location="component://defaultermanagement/widget/DefaultManagementForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- defaultermanagementPDF -->
+    <screen name="defaultermanagementPDF">
+        <section>
+            <actions>
+                <set field="viewSize" value="99999"/>
+                <!-- script location="component://party/webapp/partymgr/WEB-INF/actions/reports/loanDetails.groovy"/ -->
+                <script location="component://defaultermanagement/webapp/defaultermanagement/WEB-INF/actions/reports/defaultermanagement.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <!-- xsl-fo><html-template location="component://party/webapp/partymgr/member/reports/loanDetails.fo.ftl"/></xsl-fo -->
+                            <xsl-fo><html-template location="component://defaultermanagement/webapp/defaultermanagement/reports/defaultermanagement.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	
+	<!-- defaultermanagementExcel -->
+	<screen name="defaultermanagementExcel">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+				<entity-one value-field="member" entity-name="Member">
+			   <field-map field-name="partyId" value="${parameters.partyId}"/>
+		       </entity-one>
+			   <set field="stationId" from-field = "member.stationId" type="String"/>
+			   <entity-one value-field="st" entity-name="Station">
+				<field-map field-name="stationId" from-field="stationId"/>
+		       </entity-one>
+                <script location="component://loanreports/webapp/loanreports/WEB-INF/actions/reports/memberAccountBalanceExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="MEMBER ACCOUNTS DETAILS"/>
+					<label style="h3" text="Member Name: ${member.firstName} ${member.lastName}"/>
+					<label style="h3" text="Member Number: ${member.memberNumber}"/>
+					<label style="h3" text="Member Station: ${st.stationNumber}-${st.name}"/>
+                </container>
+                
+				<include-form name="defaultermanagementExportData" location="component://defaultermanagement/widget/DefaultManagementForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- defaultermanagementUnattached -->
+    
+         <screen name="defaultermanagementUnattached">
+        <section>
+            <actions>
+                <set field="headerItem" value="defaultermanagementUnattached" />
+                <set field="tabButtonItem" value="defaultermanagementUnattached" />
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <!-- include-menu name="MemberReportsTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/ -->
+                        <!-- container style="lefthalf">
+                            <screenlet title="Member Listing Report">
+                                <include-form name="memeberListingForm" location="component://party/widget/partymgr/MemberReportForms.xml"/>
+                            </screenlet>
+                        </container -->
+                        <!-- style="righthalf" -->
+                        <container>
+                            <screenlet title="Defaulter Management (Unattached Loans)">
+                                <!--  include-form name="memberstatementreportWithDatesForm" location="component://loanreports/widget/LoanReportsForms.xml"/ -->
+                                <include-form name="defaultermanagementUnattachedForm" location="component://defaultermanagement/widget/DefaultManagementForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- defaultermanagementUnattachedPDF -->
+	 <screen name="defaultermanagementUnattachedPDF">
+        <section>
+            <actions>
+                <set field="viewSize" value="99999"/>
+                <!-- script location="component://party/webapp/partymgr/WEB-INF/actions/reports/loanDetails.groovy"/ -->
+                <script location="component://defaultermanagement/webapp/defaultermanagement/WEB-INF/actions/reports/defaultermanagementUnattached.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <!-- xsl-fo><html-template location="component://party/webapp/partymgr/member/reports/loanDetails.fo.ftl"/></xsl-fo -->
+                            <xsl-fo><html-template location="component://defaultermanagement/webapp/defaultermanagement/reports/defaultermanagementUnattached.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+</screens>
