@@ -90,7 +90,7 @@ public class ClosePayroll {
 			//station = genericValue;
 			
 			if (genericValue.getString("elementName").equals("NSSF")){
-				bdNSSF = genericValue.getBigDecimal("TotalAmount");
+				bdNSSF = genericValue.getBigDecimal("amount");
 			}
 			
 			else if (genericValue.getString("elementName").equals("NHIF")){
