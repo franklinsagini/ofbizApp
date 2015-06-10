@@ -8,5 +8,34 @@
     <description>None</description>
     <copyright></copyright>
     <version></version>
+    
+      <view-entity entity-name="MemberNomineeMapped" package-name="org.ofbiz.nomineemanagement">
+    	<member-entity entity-alias="M" entity-name="Member"></member-entity>
+    	<member-entity entity-alias="MN" entity-name="MemberNominee"></member-entity>
+    	<!-- member-entity entity-alias="R" entity-name="Relationship"></member-entity -->
+    	
+    	
+    	<alias entity-alias="M" name="partyId"></alias>
+    	
+    	<alias entity-alias="M" name="branchId"></alias>
+    	<alias entity-alias="M" name="stationId"></alias>
+    	<alias entity-alias="M" name="memberNumber"></alias>
+    	<alias entity-alias="M" name="payrollNumber"></alias>
+    	
+    	
+    	<alias entity-alias="MN" name="firstName"></alias>
+    	<alias entity-alias="MN" name="middleName"></alias>
+    	<alias entity-alias="MN" name="lastName"></alias>
+    	<alias entity-alias="MN" name="percentage"></alias>
+    	
+    	<view-link  entity-alias="M" rel-entity-alias="MN">
+    		<key-map field-name="partyId" rel-field-name="partyId"/>
+    		<!-- entity-condition>
+    			<condition-expr entity-alias="T" field-name="treasuryTypeId" operator="equals" rel-entity-alias="TR" rel-field-name="sourceTreasuryType"/>
+    		</entity-condition -->
+    	</view-link>
+
+    	
+    </view-entity>
 
 </entitymodel>
