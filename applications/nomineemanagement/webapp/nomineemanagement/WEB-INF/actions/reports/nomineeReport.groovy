@@ -20,6 +20,18 @@ if ((stationId != null) && (!stationId.equals(""))){
 	memberList = delegator.findByAnd("Member",  null, null, false);
 
 }
+
+if ((partyId != null) && (!partyId.equals(""))){
+	//member = delegator.findOne("Member", [stationId : stationId], false);
+	//globalEmployerCode = station.employerCode
+	
+	//Get Employers with defaulters
+	memberList = delegator.findByAnd("Member",  [partyId : partyId.toLong()], null, false);
+	
+}
+
+
+
 //Station Number
 //stationNumber = station.stationNumber
 
