@@ -79,18 +79,27 @@ under the License.
         <fo:list-block provisional-distance-between-starts="2in" font-size="10pt" margin-left="0.2in">
             <fo:list-item>
                 <fo:list-item-label>
-                    <fo:block font-weight="bold">First Name</fo:block>
+                    <fo:block font-weight="bold">Name</fo:block>
                 </fo:list-item-label>
                 <fo:list-item-body start-indent="body-start()">
-                    <fo:block></fo:block>
+                    <fo:block>${member.firstName?if_exists} ${member.middleName?if_exists} ${member.lastName?if_exists}</fo:block>
                 </fo:list-item-body>
             </fo:list-item>
             <fo:list-item>
                 <fo:list-item-label>
-                    <fo:block font-weight="bold">Last Name</fo:block>
+                    <fo:block font-weight="bold">Member No</fo:block>
                 </fo:list-item-label>
                 <fo:list-item-body start-indent="body-start()">
-                    <fo:block></fo:block>
+                    <fo:block>${member.memberNumber}</fo:block>
+                </fo:list-item-body>
+            </fo:list-item>
+            
+            <fo:list-item>
+                <fo:list-item-label>
+                    <fo:block font-weight="bold">Payroll No</fo:block>
+                </fo:list-item-label>
+                <fo:list-item-body start-indent="body-start()">
+                    <fo:block>${member.payrollNumber}</fo:block>
                 </fo:list-item-body>
             </fo:list-item>
             
@@ -159,36 +168,58 @@ under the License.
                     </fo:table-row>
                 </fo:table-header>
                 <fo:table-body>
-                
+                <fo:table-row>
+                	    <fo:table-cell padding="2pt" background-color="white" border="0pt solid" border-width="0" text-align="left">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt"  background-color="white" border="0pt solid" border-width="0"  text-align="left">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt"  background-color="white" border="0pt solid" border-width="0"   text-align="right">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt"  background-color="white" border="0pt solid" border-width="0"   text-align="right">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt"  background-color="white" border="0pt solid" border-width="0"   text-align="left">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt"  background-color="white" border="0pt solid" border-width="0"   text-align="left">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                </fo:table-row>
+                	<#assign nomineeCount = 0>
                     <#list member.listNominee as nominee>
-                    
+                    <#assign nomineeCount = nomineeCount + 1>
        	                
                         <fo:table-row>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  text-align="left">
                                 <fo:block>
+                                	${nomineeCount}
                                 </fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  text-align="left">
-                                <fo:block></fo:block>
+                                <fo:block>${nominee.firstName?if_exists}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right" >
                                 <fo:block>
+                                ${nominee.middleName?if_exists}
                                 </fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right" >
                                 <fo:block>
-                                
+                                 ${nominee.lastName?if_exists}
                                 </fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="left">
                                 <fo:block>
-								     								
+								  ${nominee.percentage}   								
                                </fo:block>
                             </fo:table-cell>
                             
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" >
                                 <fo:block>
-								
+								${nominee.name}
                                </fo:block>
                             </fo:table-cell>
                         </fo:table-row>
