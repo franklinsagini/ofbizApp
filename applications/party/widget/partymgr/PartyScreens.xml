@@ -1159,6 +1159,12 @@
 									<include-form name="NewMember"
 										location="component://party/widget/partymgr/PartyForms.xml" />
 								</screenlet>
+								
+								<screenlet title="New Members List">
+									<include-form
+										location="component://party/widget/partymgr/PartyForms.xml"
+										name="reviewnewmembers" />
+								</screenlet>
 							</widgets>
 							<fail-widgets>
 								<label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}
@@ -2673,6 +2679,25 @@
 									action="_CREATE" />
 							</condition>
 							<widgets>
+								<screenlet>
+									<section>
+
+										<widgets>
+
+											<container style="button-bar">
+
+												<link target="memberPrintout" text="Print Member Printout"
+													style="buttontext">
+													<parameter param-name="partyId" from-field="partyId"/>
+													<image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png" />
+												</link>
+
+
+											</container>
+										</widgets>
+
+									</section>
+								</screenlet>
 								<section>
 									<condition>
 										<if-compare operator="equals" value="N" field="memberHasNominees"/>
@@ -3774,6 +3799,28 @@
            <widgets>
 
                 <include-form name="listMembersByDate" location="component://party/widget/partymgr/PartyForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- memberPrintout -->
+    
+    	 <screen name="memberPrintout">
+        <section>
+            <actions>
+                <set field="viewSize" value="99999"/>
+                <!-- script location="component://party/webapp/partymgr/WEB-INF/actions/reports/loanDetails.groovy"/ -->
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/reports/memberPrintout.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <!-- xsl-fo><html-template location="component://party/webapp/partymgr/member/reports/loanDetails.fo.ftl"/></xsl-fo -->
+                            <xsl-fo><html-template location="component:/party/webapp/partymgr/reports/memberPrintout.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>
