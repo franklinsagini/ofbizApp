@@ -62,7 +62,7 @@
         	<entity-condition entity-name="Station" list="stationList"></entity-condition>
         	<entity-condition entity-name="MemberStatus" list="memberStatusList">
             </entity-condition>
-            <entity-one entity-name="MemberStatus"></entity-one>
+            <entity-one entity-name="MemberStatus" value-field="memberStatus"></entity-one>
         	<service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="memberCtx"/>
                 <field-map field-name="entityName" value="Member"/>
@@ -134,9 +134,10 @@
 		
 		
 		<field name="cardStatusId" title="Card Status">
-      		<drop-down>
+      		<!-- drop-down>
       			<entity-options description="${name}" entity-name="CardStatus" key-field-name="cardStatusId"></entity-options>
-      		</drop-down>
+      		</drop-down -->
+      		<hidden value="${cardStatusId}"/>
       	</field>
       	
 		<!-- field name="formNo" title="Form Number"  widget-style="required" required-field="true"><text></text></field -->
@@ -256,11 +257,11 @@
         	</hyperlink>
         </field -->
         <!-- use-when="applicationStatus.equals(&quot;NEW&quot;)" -->
-        <field name="applyforATM"  event="onclick"
+        <!-- field name="applyforATM"  event="onclick"
 			action="javascript: return validateCardApplication(${cardApplicationId});">
 			<hyperlink target="applyforATM?cardApplicationId=${cardApplicationId}"
 				description="Apply for ATM Card"></hyperlink>
-		</field>
+		</field -->
 		
 		  <field name="atmCardActions">
         	<hyperlink target="atmCardActions" description="ATM Card Actions">
