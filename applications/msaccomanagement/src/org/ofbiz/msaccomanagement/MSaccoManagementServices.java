@@ -150,5 +150,17 @@ public class MSaccoManagementServices {
 		return memberId;
 	}
 	
+	
+	/****
+	 * @author Japheth Odonya  @when Jun 11, 2015 6:11:32 PM
+	 * 
+	 * Check that or if mobile phone number has not been used
+	 * */
+	public static Boolean phoneNumberAlreadyUser(String phoneNumber){
+		
+		
+		return true;
+	}
+	
 
 }
