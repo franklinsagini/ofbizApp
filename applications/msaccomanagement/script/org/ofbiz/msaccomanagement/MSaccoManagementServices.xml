@@ -37,6 +37,11 @@ under the License.
         <set field="newEntity.sent" value="N"/>
         <set field="newEntity.closed" value="NO"/>
 	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+	    
+	    <set field="phonenumberalreadyused" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+	    <!-- Phone Number must not be reused -->
+	    
+	    
         <create-value value-field="newEntity"/>
     </simple-method>
     <simple-method method-name="addMSaccoLog">
