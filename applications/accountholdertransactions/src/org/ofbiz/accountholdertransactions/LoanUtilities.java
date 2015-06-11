@@ -2230,8 +2230,42 @@ public class LoanUtilities {
 		}
 	}
 
+	/****
+	 * @author Japheth Odonya  @when Jun 11, 2015 5:03:31 PM
+	 * 
+	 * Create New MSacco Application
+	 * */
 	public static void addNewMSaccoApplication(Long partyId, Map<String, String> userLogin) {
-		// TODO Auto-generated method stub
+		
+		GenericValue member = getMember(partyId);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		Long accountProductId = getAccountProductGivenCodeId(SAVINGS_ACCOUNT_CODE).getLong("accountProductId");
+		
+		Long memberAccountId = getMemberAccountIdFromMemberAccount(partyId, accountProductId);
+		
+		Long cardStatusId = getCardStatusId("NEW");
+		
+		GenericValue msaccoApplication = null;
+		String userLoginId = (String)userLogin.get("userLoginId");
+		Long msaccoApplicationId = delegator.getNextSeqIdLong(
+				"MSaccoApplication", 1);
+		msaccoApplication = delegator.makeValue("MSaccoApplication",
+				UtilMisc.toMap("msaccoApplicationId",
+						msaccoApplicationId, "isActive", "Y",
+						"createdBy", userLoginId,
+						"formNumber", msaccoApplicationId,
+						"partyId",	partyId,
+						"mobilePhoneNumber", member.getString("mobileNumber"),
+						
+						"memberAccountId", memberAccountId,
+						
+						"cardStatusId", cardStatusId));
+		try {
+			delegator.createOrStore(msaccoApplication);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
 		
 	}
 
