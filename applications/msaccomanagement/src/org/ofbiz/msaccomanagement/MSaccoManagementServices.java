@@ -158,8 +158,26 @@ public class MSaccoManagementServices {
 	 * */
 	public static Boolean phoneNumberAlreadyUser(String phoneNumber){
 		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> msaccoApplicationELI = null;
+		EntityConditionList<EntityExpr> msaccoApplicationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition
+						.makeCondition("mobilePhoneNumber",
+								EntityOperator.EQUALS, phoneNumber)),
+						EntityOperator.AND);
+
+		try {
+			msaccoApplicationELI = delegator.findList("MSaccoApplication",
+					msaccoApplicationConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
 		
-		return true;
+		if ((msaccoApplicationELI != null) && (msaccoApplicationELI.size() > 0))
+			return true;
+		
+		return false;
 	}
 	
 

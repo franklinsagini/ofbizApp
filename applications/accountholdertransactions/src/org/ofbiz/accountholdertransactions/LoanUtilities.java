@@ -2311,6 +2311,30 @@ public class LoanUtilities {
 		return cardStatusId;
 	}
 
+	
+	public static String getCardName(Long cardStatusId){
+		GenericValue cardStatus = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			cardStatus = delegator.findOne("CardStatus",
+					UtilMisc.toMap("cardStatusId", cardStatusId), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		return cardStatus.getString("name");
+	}
+
+	public static BigDecimal getMinimumBalance(Long memberAccountId) {
+		
+		GenericValue accountProduct = getAccountProductGivenMemberAccountId(memberAccountId);
+		
+		BigDecimal mimimumBalance = BigDecimal.ZERO;
+		
+		if (accountProduct.getBigDecimal("minBalanceAmt") != null)
+			mimimumBalance = accountProduct.getBigDecimal("minBalanceAmt");
+		
+		return mimimumBalance;
+	}
 
 
 }
