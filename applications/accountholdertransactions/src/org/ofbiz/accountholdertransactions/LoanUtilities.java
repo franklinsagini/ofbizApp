@@ -29,7 +29,6 @@ import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.loans.LoanServices;
 import org.ofbiz.loansprocessing.LoansProcessingServices;
-import org.ofbiz.party.party.SaccoUtility;
 
 public class LoanUtilities {
 
@@ -2202,7 +2201,7 @@ public class LoanUtilities {
 		
 		Long memberAccountId = getMemberAccountIdFromMemberAccount(partyId, accountProductId);
 		
-		Long cardStatusId = SaccoUtility.getCardStatusId("NEW");
+		Long cardStatusId = getCardStatusId("NEW");
 		
 		GenericValue cardApplication = null;
 		String userLoginId = (String)userLogin.get("userLoginId");
@@ -2251,6 +2250,31 @@ public class LoanUtilities {
 			return true;
 		
 		return false;
+	}
+	
+	
+	/***
+	 * @author Japheth Odonya  @when Jun 11, 2015 2:31:10 PM
+	 * 
+	 * Get Card Status given Card Name
+	 * */
+	public static Long getCardStatusId(String name){
+		List<GenericValue> cardStatusELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			cardStatusELI = delegator.findList("CardStatus",
+					EntityCondition.makeCondition("name",
+							name), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		Long cardStatusId = 0L;
+		 for (GenericValue genericValue : cardStatusELI) {
+			 cardStatusId = genericValue.getLong("cardStatusId");
+		 }
+		 
+		return cardStatusId;
 	}
 
 
