@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.joda.time.LocalDate;
@@ -28,6 +29,7 @@ import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.loans.LoanServices;
 import org.ofbiz.loansprocessing.LoansProcessingServices;
+import org.ofbiz.party.party.SaccoUtility;
 
 public class LoanUtilities {
 
@@ -1767,6 +1769,35 @@ public class LoanUtilities {
 		return member;
 	}
 	
+	/***
+	 * Get Member given memberNumber
+	 * 
+	 * */
+	public static GenericValue getMemberGivenMemberNumber(String memberNumber) {
+		// TODO Auto-generated method stub
+		//employeeNumber
+		
+		List<GenericValue> memberELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		memberNumber = memberNumber.trim();
+		try {
+			memberELI = delegator.findList("Member",
+					EntityCondition.makeCondition("memberNumber", memberNumber),
+					null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		GenericValue member = null;
+
+		for (GenericValue genericValue : memberELI) {
+			member = genericValue;
+		}
+		
+		return member;
+	}
+	
 	
 	public static GenericValue getMemberGivenEmployeeNumber(String employeeNumber, String onlineCode) {
 		// TODO Auto-generated method stub
@@ -2108,6 +2139,118 @@ public class LoanUtilities {
 	private static Timestamp getLastRepaymentDateFromTransaction(String loanNo) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	/***
+	 * @author Japheth Odonya  @when Jun 11, 2015 10:56:34 AM
+	 * 
+	 * Return false if ATM does notexists
+	 * Return true if ATM exist
+	 * 
+	 * */
+	public static Boolean checkATMExists(Long partyId) {
+		
+		//find list CardApplication
+		List<GenericValue> cardApplicationELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			cardApplicationELI = delegator.findList("CardApplication",
+					EntityCondition.makeCondition("partyId", partyId),
+					null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		if ((cardApplicationELI != null) && (cardApplicationELI.size() > 0)){
+			return true;
+		}
+		
+		return false;
+	}
+
+	/****
+	 * @author Japheth Odonya  @when Jun 11, 2015 10:57:12 AM
+	 * 
+	 * Return false if Msacco does not exists
+	 * Return true if Msacco exist
+	 * */
+	public static Boolean checkMsaccoExists(Long partyId) {
+		//find list MSaccoApplication
+		List<GenericValue> msaccoApplicationELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			msaccoApplicationELI = delegator.findList("MSaccoApplication",
+					EntityCondition.makeCondition("partyId", partyId),
+					null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		if ((msaccoApplicationELI != null) && (msaccoApplicationELI.size() > 0)){
+			return true;
+		}
+		
+		return false;
+	}
+
+	public static void addNewATMApplication(Long partyId, Map<String, String> userLogin) {
+		
+		GenericValue member = getMember(partyId);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		Long accountProductId = getAccountProductGivenCodeId(SAVINGS_ACCOUNT_CODE).getLong("accountProductId");
+		
+		Long memberAccountId = getMemberAccountIdFromMemberAccount(partyId, accountProductId);
+		
+		Long cardStatusId = SaccoUtility.getCardStatusId("NEW");
+		
+		GenericValue cardApplication = null;
+		String userLoginId = (String)userLogin.get("userLoginId");
+		Long cardApplicationId = delegator.getNextSeqIdLong(
+				"CardApplication", 1);
+		cardApplication = delegator.makeValue("CardApplication",
+				UtilMisc.toMap("cardApplicationId",
+						cardApplicationId, "isActive", "Y",
+						"createdBy", userLoginId,
+						
+						"partyId",	partyId,
+						
+						"idNumber", member.getString("idNumber"),
+						"payrollNumber", member.getString("payrollNumber"),
+						"memberAccountId", memberAccountId,
+						"mobilePhoneNumber", member.getString("mobileNumber"),
+						"firstName", member.getString("firstName"),
+						"middleName", member.getString("middleName"),
+						"lastName", member.getString("lastName"),
+
+						"cardStatusId", cardStatusId));
+		try {
+			delegator.createOrStore(cardApplication);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void addNewMSaccoApplication(Long partyId, Map<String, String> userLogin) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/***
+	 * Check if Member has savings account 
+	 * 
+	 * return false if does not have
+	 * */
+	public static Boolean memberHasSavingsAccount(Long partyId) {
+		GenericValue accountProduct = getAccountProductGivenCodeId(SAVINGS_ACCOUNT_CODE);
+		Long accountProductId = accountProduct.getLong("accountProductId");
+		Long memberAccountId = null;
+		memberAccountId = getMemberAccountIdFromMemberAccount(partyId, accountProductId);
+		
+		if (memberAccountId != null)
+			return true;
+		
+		return false;
 	}
 
 

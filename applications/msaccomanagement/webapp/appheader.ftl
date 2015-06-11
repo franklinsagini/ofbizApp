@@ -35,7 +35,7 @@ under the License.
      data   : {'partyId': partyId}, //here you can pass the parameters to  
                                                    //the request if any.
      success : function(data){
-				var options =  jQuery('select[name="memberAccountId"]');
+				var options =  jQuery('#NewMSaccoApplication select[name="memberAccountId"]');
 				options.empty();
 				options.append($("<option />").val('').text('Please select Account ..'));
 				$.each(data, function(item, itemvalue) {
@@ -92,7 +92,7 @@ under the License.
                                                    //the request if any.
      success : function(data){
 
-				 $('input[name="mobilePhoneNumber"]').val(data.mobileNumber);
+				 $('#NewMSaccoApplication input[name="mobilePhoneNumber"]').val(data.mobileNumber);
 
 		
                },

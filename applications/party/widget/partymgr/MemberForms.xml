@@ -236,7 +236,8 @@ under the License.
         
         <field name="relationshipId" title="Relationship"  widget-style="required" required-field="true">
             <drop-down allow-empty="true">
-                <list-options list-name="relationshipList" key-name="relationshipId" description="${name}" />
+                <!-- list-options list-name="relationshipList" key-name="relationshipId" description="${name}" / -->
+                <entity-options description="${name}" entity-name="Relationship"></entity-options>
             </drop-down>
         </field>
         
@@ -536,10 +537,22 @@ under the License.
         <field name="postalAddress" title="Postal Address"><text/></field>
         <field name="telephoneNumber" title="Telephone No."><text/></field>
         <field name="mobilePhone" title="Mobile Phone."><text/></field>
-        <field name="relationshipId" title="Relationship"  widget-style="required" required-field="true">
+        
+        <field name="genderId" title="Gender"  widget-style="required" required-field="true">
+            <drop-down allow-empty="true">
+               <entity-options description="${name}" entity-name="Gender"></entity-options>
+            </drop-down>
+        </field>
+        
+        <!-- field name="relationshipId" title="Relationship"  widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <list-options list-name="relationshipList" key-name="relationshipId" description="${name}" />
             </drop-down>
+        </field -->
+        <field name="relationshipId" title="Relationship">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name}" entity-name="Relationship"></entity-options>
+        	</drop-down>
         </field>
         <field name="isAdministrator" title="Is Administrator"><text/></field>
         <field name="percentage" title="Percentage"><text/></field>

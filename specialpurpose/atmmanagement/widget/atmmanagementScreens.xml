@@ -109,6 +109,12 @@
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="cardApplicationCtx" from-field="parameters"/>
                 <entity-one entity-name="CardApplication" value-field="cardApplicationContext"/>
+                
+                <!-- Get NEW card status ID -->
+             <set field="statusName" value="NEW"/>
+	   		<set field="cardStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getCardStatusId(statusName);}" type="Long" global="true"/> 
+                
+                
             </actions>
             <widgets>
                 <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
