@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javolution.util.FastMap;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
@@ -35,6 +36,9 @@ import com.google.gson.Gson;
 public class MemberValidation {
 	public static String BUSINESSPREFIX = "HAZ9";
 	public static Integer COUNTDIGITS = 6;
+	
+	private static Logger log = Logger
+			.getLogger(MemberValidation.class);
 
 	public static String uniqueFieldsValidation(HttpServletRequest request,
 			HttpServletResponse response) {
@@ -147,6 +151,8 @@ public class MemberValidation {
 			e.printStackTrace();
 		}
 		String state = "FREE";
+		
+		log.info("######MMMM Members List Size is "+memberELI.size());
 		
 		if (memberELI.size() > 0)
 		{

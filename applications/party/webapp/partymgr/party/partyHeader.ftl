@@ -147,7 +147,7 @@
 			     url    : reqUrl,
 			      async	: false,
 			     type   : 'GET',
-			     data   : {'idNumber': idNumber, 'pinNumber': pinNumber, 'payrollNumber': payrollNumber, 'mobileNumber': mobileNumber, 'mobileNumber': mobileNumber, 'memberType': memberType, 'stationId': stationId},
+			     data   : {'idNumber': idNumber, 'pinNumber': pinNumber, 'payrollNumber': payrollNumber, 'mobileNumber': mobileNumber, 'employeeNumber': employeeNumber, 'memberType': memberType, 'stationId': stationId},
 			     success : function(data){
 
 							idNumberState = data.idNumberState;
