@@ -126,6 +126,8 @@
 	</request-map>
 	
 	
+	
+	
 	<request-map uri="receiveCardAction">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="receiveCardAction"
@@ -228,6 +230,26 @@
 			</response>
 		<response name="error" type="view" value="cardReceipt" />
 	</request-map>
+	
+	<!-- submitCardAction -->
+	
+	<request-map uri="submitCardAction">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="submitCardAction"
+			save-current-view="true" />
+	</request-map>
+
+	<request-map uri="submitCardProcess">
+		<security https="true" auth="true" />
+		<event type="service" invoke="submitCardProcess" />
+		<response name="success" type="request-redirect"
+			value="submitCardAction">
+				<redirect-parameter name="cardApplicationId"/>
+			</response>
+		<response name="error" type="view" value="submitCardAction" />
+	</request-map>
+	
+	
 	<!-- receiveCardAction -->
 	<request-map uri="receiveCardAction">
 		<security https="true" auth="true" />
@@ -244,6 +266,9 @@
 			</response>
 		<response name="error" type="view" value="receiveCardAction" />
 	</request-map>
+	
+	
+	
 	<!-- issueCardAction -->
 	<request-map uri="issueCardAction">
 		<security https="true" auth="true" />
@@ -448,6 +473,10 @@
     
     <view-map name="atmCardActions" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#atmCardActions"/>
     <view-map name="receiveCardAction" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#receiveCardAction"/>
+    
+    <!-- submitCardAction -->
+    <view-map name="submitCardAction" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#submitCardAction"/>
+    
     <view-map name="issueCardAction" type="screen" page="component://atmmanagement/widget/atmmanagementScreens.xml#issueCardAction"/>
     
      <view-map name="cardApplicationPDF" type="screenfop" page="component://atmmanagement/widget/ATMReportScreens.xml#cardApplicationPDF" content-type="application/pdf" encoding="none"/>
