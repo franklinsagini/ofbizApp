@@ -628,14 +628,14 @@ public class ATMManagementServices {
 
 		GenericValue cardApplication = getCardApplication(cardApplicationId);
 		
-		if (cardStatusNewId != cardApplication.getLong("cardStatusId"))
+		if (cardStatusNewId == cardApplication.getLong("cardStatusId"))
 			return "Cannot activate a card in the New state, a cards to be applied, received and issued before being Activated";
 
-		if (cardStatusAppliedId != cardApplication.getLong("cardStatusId"))
+		if (cardStatusAppliedId == cardApplication.getLong("cardStatusId"))
 			return "Cannot activate a card in the APPLIED state, a cards to be applied, received and issued before being Activated";
 
 
-		if (cardStatusReceivedId != cardApplication.getLong("cardStatusId"))
+		if (cardStatusReceivedId == cardApplication.getLong("cardStatusId"))
 			return "Cannot activate a card in the RECEIVED state, a cards to be applied, received and issued before being Activated";
 
 		return "success";
