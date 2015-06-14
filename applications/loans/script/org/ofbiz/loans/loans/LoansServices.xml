@@ -193,9 +193,24 @@ under the License.
         
         
         <!-- set field="productType" value="Loan"/ -->
+        <set field="loanProductId" from-field="parameters.loanProductId" type="Long"/>
+        <set field="hasInsuranceAndAppraisalFee" value="${bsh:org.ofbiz.loans.LoanServices.productHasCharges(loanProductId);}"  type="String"/>
+        <!-- createLoanApplication -->
         
-        
-        <if-empty field="parameters.loanApplicationId">
+        <if>
+        	<condition>
+        		<if-compare operator="not-equals" value="success" field="hasInsuranceAndAppraisalFee"></if-compare>
+        	</condition>
+        	<then>
+        	 <add-error> 
+                    <fail-message message="${hasInsuranceAndAppraisalFee}"/>
+                </add-error> 
+                <check-errors /> 
+            </then> 
+             
+            <else>
+            
+            <if-empty field="parameters.loanApplicationId">
 			<call-simple-method method-name="saveLoanApplication" scope="inline"></call-simple-method>
 			<set field="charges" value="${bsh:org.ofbiz.loans.LoanServices.addCharges(newEntity, userLogin);}" type="String"/>
         
@@ -218,7 +233,11 @@ under the License.
         	<call-simple-method method-name="updateLoanApplication"></call-simple-method>
         </else>
         </if-empty>
-        
+            	
+                <property-to-field resource="LoanUiLabels.xml" 
+            property="Successfully created a new loan application!" default="Successfully created a new loan application!" field="successMessage" /> 
+            </else> 
+        </if>
         
     </simple-method>
     
