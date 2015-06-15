@@ -151,7 +151,7 @@ public class LoanAccounting {
 			e.printStackTrace();
 		}
 		result.put("disbursementResult", "posted");
-		return "";
+		return "success";
 	}
 	
 	
