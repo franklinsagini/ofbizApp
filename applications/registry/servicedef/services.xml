@@ -144,6 +144,7 @@
 	<service name="requestfiles" engine="simple" default-entity-name="RegistryRequestedFiles"
 	location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="requestfiles" auth="true">
 		<description>Create File Request header record</description>
+		<implements service="sendAllScheduledMails" optional="false"/>
 		<auto-attributes include="pk" mode="IN" optional="true" />
 		<auto-attributes include="nonpk" mode="IN" optional="true" />
 		<override name="Reason" allow-html="any"></override>
@@ -153,7 +154,7 @@
     <description>Send E-Mail Service. partyId and communicationEventId aren't used by sendMail
     but are passed down to storeEmailAsCommunication during the SECA chain. See sendMailInterface for more comments.</description>
     <implements service="sendMailOnePartInterface"/>
-    <attribute name="message" type="String" mode="IN"/>
+    <attribute name="message" type="String" mode="IN" optional="true"/>
     </service>
 	
 	<service name="sendMailOnePartInterface"  engine="interface" location="" invoke="">
