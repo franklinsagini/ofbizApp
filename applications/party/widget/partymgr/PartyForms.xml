@@ -1113,7 +1113,12 @@ Gender
 
          <field name="stationId" title="Station" required-field="true" widget-style="required">
             <drop-down allow-empty="true" >
-                <list-options list-name="stationList" key-name="stationId"  description="${name}" />
+                <!-- list-options list-name="stationList" key-name="stationId"  description="${name} - ${stationNumber}">
+                
+                </list-options -->
+                <entity-options description="${name} - ${stationNumber}" entity-name="Station">
+                	<entity-order-by field-name="name"/>
+                </entity-options>
             </drop-down>
         </field>
 
@@ -1270,6 +1275,114 @@ Gender
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
+        </actions>
+         <field name="Member Names">
+        	<hyperlink target="viewmemberprofile" description="${firstName} ${middleName} ${lastName}">
+        		<parameter param-name="partyId"/>
+        	</hyperlink>
+        </field>
+
+        <!-- field name="MEMBER_MARITAL_STATUS" title="${uiLabelMap.MemberMaritalStatus}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
+        <field name="idNumber" title="${uiLabelMap.MemberIDNumber}"><display also-hidden="false"></display></field>
+
+       <!-- field name="memberType" title="${uiLabelMap.MemberType}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
+
+       <field name="payrollNumber" title="Payroll No"><display also-hidden="false"></display></field>
+
+         <field name="memberNumber" title="Member #"><display></display></field>
+
+			<field name="employeeNumber" title="Employee No."><display></display></field>
+
+        <field name="memberNumber" title="Member No."><display></display></field>
+
+        <field name="mobileNumber" title="Mobile"><display also-hidden="false"></display></field>
+
+         <!--field name="memberStatusId" title="Status">
+         	<display-entity entity-name="MemberStatus" description="${name}" key-field-name="memberStatusId"></display-entity>
+         </field -->
+                 	<!-- drop-down>
+        		<list-options key-name="memberStatusId" list-name="listStatus" description="${name}"/>
+        	</drop-down -->
+        	<!-- display-entity  entity-name="MemberStatus" also-hidden="true"></display-entity -->
+          <!-- field name="memberStatusId" title="Status">
+
+        	<display-entity entity-name="MemberStatus" description="${name}" key-field-name="memberStatusId" ></display-entity>
+        </field -->
+
+		<field name="memberStatusId" title="Status">
+        	<display-entity entity-name="MemberStatus" description="${name}" key-field-name="memberStatusId">
+        		
+        	</display-entity>
+        </field>
+        
+        <field name="memberTypeId" title="Member Type">
+        	<display-entity entity-name="MemberType" description="${name}" key-field-name="memberTypeId">
+        	</display-entity>
+        </field>
+        
+        <field name="memberCategory" title="Member Category">
+            <display></display>
+        </field>
+        
+        
+        <field name="stationId" title="Station">
+        	<display-entity entity-name="Station" description="${name}" key-field-name="stationId">
+        		
+        	</display-entity>
+        </field>
+        
+        
+		<field name="branchId" title="Branch" header-link="reviewmembers/branchId=branchId">
+			<display-entity entity-name="PartyGroup" description="${groupName}" key-field-name="partyId"></display-entity>
+		</field>
+		<field name="joinDate" title="Joined">
+			<display type="date"></display>
+		</field>
+		
+        <field name="Edit">
+        	<hyperlink target="NewMember" description="Edit">
+        		<parameter param-name="partyId"/>
+        	</hyperlink>
+        </field>
+
+        <field name="Approve">
+        	<hyperlink target="ApproveMember" description="Approve">
+        		<parameter param-name="partyId"/>
+        	</hyperlink>
+        </field>
+
+        <field name="Reject">
+        	<hyperlink target="RejectMember" description="Reject">
+        		<parameter param-name="partyId"/>
+        	</hyperlink>
+        </field>
+
+        <field name="Change">
+        	<hyperlink target="changeMember" description="Change">
+        		<parameter param-name="partyId"/>
+        	</hyperlink>
+        </field>
+         <field name="Details">
+        	<hyperlink target="viewmemberprofile" description="${firstName} ${lastName} Details">
+        		<parameter param-name="partyId"/>
+        	</hyperlink>
+        </field>
+     </form>
+     
+     <!-- reviewnewmembers -->
+     
+         <form name="reviewnewmembers" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStation" paginate-target="reviewmembers"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+       	<!-- set field="statusName" value="NEW"/>
+				<set field="memberStatusId"value="${bsh:org.ofbiz.party.party.getMemberStatusID.SaccoUtility.getMemberStatusID(statusName);}" type="Long"/ -->
+ 		<!-- condition-expr field-name="memberStatusId" operator="equals" value="${memberStatusId}"/ -->
+        <actions>
+           	<entity-condition entity-name="Member">
+           		<condition-list>
+           			<condition-expr field-name="memberStatusId" operator="equals" value="4" />
+           		</condition-list>
+           		<order-by field-name="-partyId"/>
+           	</entity-condition>
         </actions>
          <field name="Member Names">
         	<hyperlink target="viewmemberprofile" description="${firstName} ${middleName} ${lastName}">

@@ -481,6 +481,13 @@
         </entity-one>
         <set value="${memberStatusId}" field="member.memberStatusId"/>
         <store-value value-field="member"/>
+        <set field="memberNo" value="${member.memberNumber}"/>
+        <set field="msaccoatmstatus" value="${bsh:org.ofbiz.party.party.SaccoUtility.createMSaccoATMRecords(memberNo, userLogin)}"/>
+        
+						  <property-to-field resource="PartyUiLabels.xml" 
+            				property="Successfully approved a member " field="successMessage" />
+						
+					
     </simple-method>
     
     <simple-method method-name="updateApproveMemberLog" short-description="Update Member Status Log">
@@ -757,6 +764,10 @@
         </call-simple-method>
         <create-value value-field="newEntity"/>
         
+        
+        <!-- Report that a member has successfully been created -->
+         <property-to-field resource="PartyUiLabels.xml" 
+            			property="Successfully registered new member with Member No : ${memberNo} , please add extra details like Nominees, Attachments, Referee and others !"	default="Successfully registered new member with Member No : ${memberNo} , please add extra details like Nominees, Attachments, Referee and others !" field="successMessage" />
         </if-empty>
        
       <!--  <call-simple-method method-name="saveMemberForFiling" scope="inline"></call-simple-method> --> 

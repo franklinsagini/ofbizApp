@@ -4,9 +4,11 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.ofbiz.accountholdertransactions.LoanUtilities;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
@@ -66,6 +68,54 @@ public class SaccoUtility {
 		 }
 
 		return memberStatusId;
+	}
+	
+	
+	/****
+	 * Create MSacco and ATM based on the member record is the member needs MSacco or ATM
+	 * */
+	public static String createMSaccoATMRecords(String memberNumber, Map<String, String> userLogin){
+		
+		GenericValue member = LoanUtilities.getMemberGivenMemberNumber(memberNumber);
+		
+		//atmApplication
+		//msaccoApplication
+		
+		Boolean atmExists = false;
+		Boolean msaccoExists = false;
+		
+		Long partyId = member.getLong("partyId");
+		
+		atmExists = LoanUtilities.checkATMExists(partyId);
+		msaccoExists = LoanUtilities.checkMsaccoExists(partyId);
+		
+		Boolean hasSAvingsAccount = false;
+		
+		hasSAvingsAccount = LoanUtilities.memberHasSavingsAccount(partyId);
+		
+		if (!hasSAvingsAccount)
+			return "doesnothavesavingsaccount";
+		
+		
+		if (!atmExists){
+		if (member.getString("atmApplication").equals("Y")){
+			log.info("SSSSSSSSSSSSS creating ATM application for the member no "+memberNumber);
+			
+			//Add ATM Application for a member
+			LoanUtilities.addNewATMApplication(partyId, userLogin);
+		}
+		}
+
+		if (!msaccoExists){
+		if (member.getString("msaccoApplication").equals("Y")){
+			log.info("SSSSSSSSSSSSS creating MSacco application for the member no "+memberNumber);
+			
+			//Add MSacco Application for member
+			LoanUtilities.addNewMSaccoApplication(partyId, userLogin);
+		}
+		}
+		
+		return "success";
 	}
 	
 	/**
@@ -285,5 +335,31 @@ public class SaccoUtility {
 		log.info(" The OLD DATE IS IIIIIIIIIIIIIIIIIIIII "+joinDate);
 		return joinDate;
 	}
+	
+	
+	/****
+	 * @author Japheth Odonya  @when Jun 11, 2015 8:24:29 PM
+	 * For the CARDS
+	 * 
+	 * */
+	public static Long getCardStatusId(String name){
+		List<GenericValue> cardStatusELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			cardStatusELI = delegator.findList("CardStatus",
+					EntityCondition.makeCondition("name",
+							name), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		Long cardStatusId = 0L;
+		 for (GenericValue genericValue : cardStatusELI) {
+			 cardStatusId = genericValue.getLong("cardStatusId");
+		 }
+		 
+		return cardStatusId;
+	}
+	
 
 }

@@ -63,7 +63,7 @@
         	<entity-condition entity-name="Station" list="stationList"></entity-condition>
         	<entity-condition entity-name="MemberStatus" list="memberStatusList">
             </entity-condition>
-            <entity-one entity-name="MemberStatus"></entity-one>
+            <entity-one entity-name="MemberStatus" value-field="memberStatus"></entity-one>
         	<service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="memberCtx"/>
                 <field-map field-name="entityName" value="Member"/>
@@ -113,9 +113,10 @@
 
         <field name="mobilePhoneNumber" title="Mobile Phone No." widget-style="required" required-field="true"><text></text></field>
        	<field name="cardStatusId" title="Status">
-      		<drop-down>
+      		<!-- drop-down>
       			<entity-options description="${name}" entity-name="CardStatus" key-field-name="cardStatusId"></entity-options>
-      		</drop-down>
+      		</drop-down -->
+      		<hidden value="${cardStatusId}" />
       	</field>
       	
 		<!-- field name="formNo" title="Form Number"  widget-style="required" required-field="true"><text></text></field -->
@@ -138,37 +139,56 @@
         <actions>
         	
             <entity-condition entity-name="MSaccoApplication">
+            	<order-by field-name="-msaccoApplicationId"/>
             </entity-condition>
         </actions>
                <field name="msaccoApplicationId"><hidden/></field>
         <field name="partyId" title="Member">
-        	<drop-down>
-        		<entity-options description="${firstName} ${middleName} ${lastName}" entity-name="Member">
+        	<!--drop-down>
+        		< entity-options description="${firstName} ${middleName} ${lastName}" entity-name="Member">
         			<entity-constraint name="partyId" operator="equals" value="${partyId}"/>
         		</entity-options>
-        	</drop-down>
+        		
+        	</drop-down  -->
+        	<display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName}">
+        		
+        	</display-entity>
         </field>
 
-        <field name="mobilePhoneNumber" title="Mobile Phone No." widget-style="required" required-field="true"><text></text></field>
+        <field name="mobilePhoneNumber" title="Mobile Phone No." widget-style="required" required-field="true">
+        <display></display>
+        </field>
        	
-       	<field name="formNumber" title="Form No." widget-style="required" required-field="true"><text></text></field>
+       	<field name="formNumber" title="Form No." widget-style="required" required-field="true">
+       	<display></display>
+       	
+       	</field>
        	
        	<field name="cardStatusId" title="Status">
-      		<drop-down>
+      		<!-- drop-down>
       			<entity-options description="${name}" entity-name="CardStatus" key-field-name="cardStatusId"></entity-options>
-      		</drop-down>
+      		</drop-down -->
+      		<display-entity entity-name="CardStatus"  description="${name}"></display-entity>
       	</field>
       	
 		<!-- field name="formNo" title="Form Number"  widget-style="required" required-field="true"><text></text></field -->
+		<field name="createdStamp" title="Time Created">
+			<display></display>
+		</field>
+		
+		 <field name="createdBy" title="Created By">
+			<display></display>
+		</field>
+		
 		
 		              
          <field name="memberAccountId" title="Member Account"  widget-style="required" required-field="true">
-            <drop-down allow-empty="true">
-                <!-- list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} " / -->
+            <!-- drop-down allow-empty="true">
                 <entity-options description="${accountNo} - ${accountName}" entity-name="MemberAccount" key-field-name="memberAccountId">
                 	<entity-constraint name="partyId" operator="equals" value="${partyId}"/>
                 </entity-options>
-            </drop-down>
+            </drop-down -->
+            <display-entity entity-name="MemberAccount" description="${accountNo} - ${accountName}"></display-entity>
         </field>
         
         <field name="msaccoLogs" title="Logs" widget-style="buttontext">
@@ -178,7 +198,7 @@
 			</hyperlink>
 		</field>
 		 
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
 
     </form>
     
@@ -275,6 +295,14 @@
         
         <field name="maximumTransactionAmount" title="Maximum Transaction Amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
         
+        
+        		<field name="createdStamp" title="Time Created">
+			<display></display>
+		</field>
+		
+		 <field name="createdBy" title="Created By">
+			<display></display>
+		</field>
         <field name="msaccoApproveAction" title="Action" use-when="cardStatusId != ${statusId}" widget-style="buttontext">
 			<hyperlink target="msaccoApproveAction" description="Approve"
 				also-hidden="false">
@@ -359,6 +387,14 @@
 				<parameter param-name="msaccoApplicationId" />
 			</hyperlink>
 		</field>
+		
+				<field name="createdStamp" title="Time Created">
+			<display></display>
+		</field>
+		
+		 <field name="createdBy" title="Created By">
+			<display></display>
+		</field>
         
         <field name="msaccoLogs" title="Logs" widget-style="buttontext">
 			<hyperlink target="msaccoLogs" description="M-Sacco Logs"
@@ -430,6 +466,13 @@
             <display-entity entity-name="MemberAccount" description="${accountNo} - ${accountName}"  key-field-name="memberAccountId"></display-entity>
         </field>
         
+        		<field name="createdStamp" title="Time Created">
+			<display></display>
+		</field>
+		
+		 <field name="createdBy" title="Created By">
+			<display></display>
+		</field>
         
         <field name="msaccoCancelAction" title="Action" use-when="cardStatusId!=${statusId}" widget-style="buttontext">
 			<hyperlink target="msaccoCancelAction" description="Cancel"

@@ -8,7 +8,7 @@ stationId = parameters.stationId
 station = null;
 globalEmployerCode = null;
 
-if (stationId != null){
+if ((stationId != null) && (!stationId.equals(""))){
 	station = delegator.findOne("Station", [stationId : stationId], false);
 	globalEmployerCode = station.employerCode
 	

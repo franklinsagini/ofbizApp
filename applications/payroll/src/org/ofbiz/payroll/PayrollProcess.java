@@ -175,7 +175,7 @@ public class PayrollProcess {
 				"PayrollPeriodSummary", UtilMisc.toMap(
 						"payrollPeriodSummaryId",
 						payrollPeriodSummarySequenceId, "payrollPeriodId",
-						payrollPeriodId, "elementName", Name, "TotalAmount",
+						payrollPeriodId, "elementName", Name, "amount",
 						Amount, "closed", "N"));
 		try {
 			payrollPeriodSummary = delegator

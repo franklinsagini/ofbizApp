@@ -1893,6 +1893,45 @@ under the License.
         <response name="error" type="view" value="EditProduct"/>
     </request-map>
 
+    <request-map uri="EditProductPrices">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditProductPrices"/>
+    </request-map>
+    <request-map uri="createProductPrice">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProductPrice"/>
+        <response name="success" type="request-redirect" value="EditProductPrices"><redirect-parameter name="productId"/></response>
+        <response name="error" type="view" value="EditProductPrices"/>
+    </request-map>
+
+    <request-map uri="EditProductSuppliers">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditSupplierProduct"/>
+    </request-map>
+    <request-map uri="createSupplierProduct">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createSupplierProduct"/>
+        <response name="success" type="view" value="EditSupplierProduct"/>
+        <response name="error" type="view" value="EditSupplierProduct"/>
+    </request-map>
+    <request-map uri="updateSupplierProduct">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateSupplierProduct"/>
+        <response name="success" type="view" value="EditSupplierProduct"/>
+        <response name="error" type="view" value="EditSupplierProduct"/>
+    </request-map>
+    <request-map uri="removeSupplierProduct">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeSupplierProduct"/>
+        <response name="success" type="view" value="EditSupplierProduct"/>
+        <response name="error" type="view" value="EditSupplierProduct"/>
+    </request-map>
+
+    <request-map uri="EditProductInventoryItems">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditProductInventoryItems"/>
+    </request-map>
+
     <!--
         These are just examples of reports developed using JasperReport and not really
         useful reports. In order to run them you'll have to follow the notes in the
@@ -2093,5 +2132,8 @@ under the License.
     <view-map name="EditPartyGroup" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#EditPartyGroup" />
     <view-map name="FindProduct" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#FindProduct" />
     <view-map name="EditProduct" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#EditProduct"/>
+    <view-map name="EditProductPrices" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#EditProductPrices"/>
+    <view-map name="EditSupplierProduct" type="screen" page="component://order/widget/ordermgr/OrderEntryScreens.xml#EditSupplierProduct"/>
+     <view-map name="EditProductInventoryItems" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductInventoryItems"/>
     <!-- end of view mappings -->
 </site-conf>

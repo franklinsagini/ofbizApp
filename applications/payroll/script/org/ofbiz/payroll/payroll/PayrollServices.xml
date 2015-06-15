@@ -126,6 +126,31 @@ under the License.
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     
+    <!-- PayrollPostingAccount -->
+    
+    	<simple-method method-name="createPayrollPostingAccount" short-description="Add PayrollPostingAccount">
+        <make-value entity-name="PayrollPostingAccount" value-field="newEntity"/>
+         <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+        <sequenced-id sequence-name="PayrollPostingAccount" field="payrollPostingAccountId"/>
+        <now-timestamp field="newEntity.createdDate"/>
+        <set from-field="payrollPostingAccountId" field="newEntity.payrollPostingAccountId"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updatePayrollPostingAccount" short-description="Update PayrollPostingAccount">
+        <entity-one entity-name="PayrollPostingAccount" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deletePayrollPostingAccount" short-description="Delete PayrollPostingAccount">
+        <entity-one entity-name="PayrollPostingAccount" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
     <!-- Payroll Year Starts Here -->
 	<simple-method method-name="createPayrollYear" short-description="Add Payroll Year">
         <make-value entity-name="PayrollYear" value-field="newEntity"/>

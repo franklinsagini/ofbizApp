@@ -188,7 +188,12 @@ under the License.
                             
                              <#assign branch = delegator.findOne("PartyGroup", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", member.branchId), true)/>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>${branch.groupName?if_exists}</fo:block>
+                                <fo:block>
+                                <#if branch?has_content>
+                                ${branch.groupName?if_exists}
+                                </#if>
+                                </fo:block>
+                                
                             </fo:table-cell>
                             
                            

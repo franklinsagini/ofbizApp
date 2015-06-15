@@ -12,11 +12,16 @@ import javax.servlet.http.HttpServletResponse;
 import javolution.util.FastMap;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 import com.google.gson.Gson;
@@ -31,6 +36,9 @@ import com.google.gson.Gson;
 public class MemberValidation {
 	public static String BUSINESSPREFIX = "HAZ9";
 	public static Integer COUNTDIGITS = 6;
+	
+	private static Logger log = Logger
+			.getLogger(MemberValidation.class);
 
 	public static String uniqueFieldsValidation(HttpServletRequest request,
 			HttpServletResponse response) {
@@ -42,6 +50,7 @@ public class MemberValidation {
 		String mobileNumber = (String) request.getParameter("mobileNumber");
 		String employeeNumber = (String) request.getParameter("employeeNumber");
 		String memberType = (String) request.getParameter("memberType");
+		String stationId = (String) request.getParameter("stationId");
 		
 		if (memberType.equals("BUSINESS")){
 			//Get the count of business numbers and + 1
@@ -51,6 +60,8 @@ public class MemberValidation {
 			payrollNumber = BUSINESSPREFIX+StringUtils.leftPad(String.valueOf(businessMemberCount), COUNTDIGITS, "0");
 			result.put("payrollNumber", payrollNumber);
 			System.out.println(" TTTTTTTTTTTTTPPPPPPPPPPPPP "+payrollNumber);
+		}else{
+			result.put("payrollNumber", "");
 		}
 
 		String idNumberState = "FREE";
@@ -64,7 +75,7 @@ public class MemberValidation {
 		pinNumberState = getPinNumberState(pinNumber);
 		payrollNumberState = getPayrollNumberState(payrollNumber);
 		mobileNumberState = getMobileNumberState(mobileNumber);
-		employeeNumberState = getEmployeeNumberState(employeeNumber);
+		employeeNumberState = getEmployeeNumberState(employeeNumber, stationId);
 		
 		
 		if (idNumber.length() < 6){
@@ -118,19 +129,33 @@ public class MemberValidation {
 		return json;
 	}
 
-	private static String getEmployeeNumberState(String employeeNumber) {
+	private static String getEmployeeNumberState(String employeeNumber, String stationId) {
 		List<GenericValue> memberELI = null; // =
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		stationId = stationId.replaceAll(",", "");
+		
+		EntityConditionList<EntityExpr> memberConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"employeeNumber", EntityOperator.EQUALS,
+						employeeNumber), EntityCondition
+						.makeCondition("stationId",
+								EntityOperator.EQUALS, Long.valueOf(stationId))),
+						EntityOperator.AND);
+
+		
 		try {
-			memberELI = delegator.findList("Member", EntityCondition
-					.makeCondition("employeeNumber", employeeNumber), null,
+			memberELI = delegator.findList("Member",memberConditions, null,
 					null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-
 		String state = "FREE";
-		for (GenericValue genericValue : memberELI) {
+		
+		log.info("######MMMM Members List Size is "+memberELI.size());
+		
+		if (memberELI.size() > 0)
+		{
 			state = "USED";
 		}
 
@@ -149,10 +174,10 @@ public class MemberValidation {
 		}
 
 		String state = "FREE";
-		for (GenericValue genericValue : memberELI) {
+		if (memberELI.size() > 0)
+		{
 			state = "USED";
 		}
-
 		return state;
 	}
 

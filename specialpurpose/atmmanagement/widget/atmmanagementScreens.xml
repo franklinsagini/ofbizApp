@@ -109,6 +109,12 @@
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="cardApplicationCtx" from-field="parameters"/>
                 <entity-one entity-name="CardApplication" value-field="cardApplicationContext"/>
+                
+                <!-- Get NEW card status ID -->
+             <set field="statusName" value="NEW"/>
+	   		<set field="cardStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getCardStatusId(statusName);}" type="Long" global="true"/> 
+                
+                
             </actions>
             <widgets>
                 <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
@@ -255,6 +261,74 @@
                                </container>
                                 <screenlet title="Receive Card">
                                     <include-form name="ReceiveCardLog" location="component://atmmanagement/widget/atmmanagementForms.xml"/>
+                                </screenlet>
+                               
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">Card Management Permission</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Card Logs">
+                        			<include-form name="listCardLog" location="component://atmmanagement/widget/atmmanagementForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- submitCardAction -->
+     <screen name="submitCardAction">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Submit/Apply Card"/>
+                <set field="headerItem" value="submitCardAction"/>
+                <set field="tabButtonItem" value="submitCardAction"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="submitCardProcess"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="CardLog" value-field="cardLogContext"/>
+                <entity-one entity-name="CardApplication" value-field="cardApplication">
+                	<field-map field-name="cardApplicationId" from-field="parameters.cardApplicationId"/>
+                </entity-one>
+                <set field="partyId" value="${cardApplication.partyId}"/>
+                <entity-one value-field="member" entity-name="Member">
+                	<field-map field-name="partyId" from-field="partyId"/>
+                </entity-one>
+                
+                <set field="formName" value="${cardApplication.cardApplicationId}" type="PlainString"/>
+            </actions>
+            <widgets>
+                <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+                <decorator-screen name="atmmanagementCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="ATMMANAGEMENT" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                            	<container>
+                               	<container>
+                               			
+                               			
+										<label style="h3">${member.firstName} ${member.middleName} ${member.lastName} Card Application Logs
+										</label>
+									</container>
+									<container>
+										<label style="h3">Form No : ${formName}
+										</label>
+									</container>
+                               </container>
+                                <screenlet title="Submit/Apply Card">
+                                    <include-form name="SubmitCardLog" location="component://atmmanagement/widget/atmmanagementForms.xml"/>
                                 </screenlet>
                                
                             </widgets>
@@ -756,6 +830,10 @@
                 <entity-one value-field="member" entity-name="Member">
                 	<field-map field-name="partyId" from-field="partyId"/>
                 </entity-one>
+                
+                <set field="formNumber" value="${cardApplication.cardApplicationId}" type="PlainString"/>
+                <set field="cardStatusId" value="${cardApplication.cardStatusId}" type="Long"/>
+                <set field="cardStatusName" value="${bsh:org.ofbiz.accountholdertransactions.LoanUtilities.getCardName(cardStatusId);}"/>
             </actions>
             <widgets>
                 <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
@@ -777,7 +855,12 @@
 										</label>
 									</container>
 									<container>
-										<label style="h3">Form No : ${cardApplication.cardApplicationId}
+										<label style="h3">Form No : ${formNumber}
+										</label>
+									</container>
+									
+									<container>
+										<label style="h3">Card Status : ${cardStatusName}
 										</label>
 									</container>
                                </container>
@@ -791,6 +874,10 @@
                         	<widgets>
                         		<screenlet>
                         			<container style="button-bar">
+                        					<link target="submitCardAction"  text="Submit/Apply Card" style="buttontext create">
+                        						<parameter param-name="cardApplicationId" value="${cardApplicationId}"/>
+                                                <image url-mode="raw" src="${iconsLocation}/add.png"/>
+                                            </link>
                                 		
                                             <link target="receiveCardAction?cardApplicationId=${cardApplicationId}"  text="Receive Card" style="buttontext create">
                                                 <image url-mode="raw" src="${iconsLocation}/add.png"/>

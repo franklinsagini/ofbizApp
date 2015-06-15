@@ -120,6 +120,10 @@
 		var payrollNumber = jQuery('input[name="payrollNumber"]').val();
     	var mobileNumber  = jQuery('input[name="mobileNumber"]').val();
 		var employeeNumber = jQuery('input[name="employeeNumber"]').val();
+		var stationId = jQuery('select[name="stationId"] option:selected').val();
+		
+		//jQuery('input[name="stationId"]').val();
+		
 		
 		var memberType = jQuery('select[name="memberTypeId"] option:selected').text();
 		memberType = memberType.toUpperCase();
@@ -143,7 +147,7 @@
 			     url    : reqUrl,
 			      async	: false,
 			     type   : 'GET',
-			     data   : {'idNumber': idNumber, 'pinNumber': pinNumber, 'payrollNumber': payrollNumber, 'mobileNumber': mobileNumber, 'mobileNumber': mobileNumber, 'memberType': memberType},
+			     data   : {'idNumber': idNumber, 'pinNumber': pinNumber, 'payrollNumber': payrollNumber, 'mobileNumber': mobileNumber, 'employeeNumber': employeeNumber, 'memberType': memberType, 'stationId': stationId},
 			     success : function(data){
 
 							idNumberState = data.idNumberState;
@@ -152,7 +156,10 @@
 							mobileNumberState =  data.mobileNumberState;
 							employeeNumberState =  data.employeeNumberState;
 							idNumberSize =  data.idNumberSize;
-							jQuery('input[name="payrollNumber"]').val(data.payrollNumber);
+							
+							if (data.payrollNumber != ''){
+								jQuery('input[name="payrollNumber"]').val(data.payrollNumber);
+							}
 
 					    	//alert('collateralsAvailable  inanon'+collateralsAvailable);
 							//alert('guarantorsAvailable inanon'+guarantorsAvailable);

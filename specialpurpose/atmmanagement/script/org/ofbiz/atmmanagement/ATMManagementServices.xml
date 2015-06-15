@@ -1,247 +1,399 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+	license agreements. See the NOTICE file distributed with this work for additional 
+	information regarding copyright ownership. The ASF licenses this file to 
+	you under the Apache License, Version 2.0 (the "License"); you may not use 
+	this file except in compliance with the License. You may obtain a copy of 
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
+	by applicable law or agreed to in writing, software distributed under the 
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. See the License for the specific 
+	language governing permissions and limitations under the License. -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
-<!-- CardApplication -->
-	<simple-method method-name="createCardApplication" short-description="Create CardApplication">
-		<call-simple-method method-name="saveCardApplication" scope="inline"></call-simple-method>
-		
+	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
+	<!-- CardApplication -->
+	<simple-method method-name="createCardApplication"
+		short-description="Create CardApplication">
+		<call-simple-method method-name="saveCardApplication"
+			scope="inline"></call-simple-method>
+
 		<!-- Add to logs -->
 		<call-simple-method method-name="createCardLog"></call-simple-method>
-    </simple-method>
-    
-    <simple-method method-name="saveCardApplication" use-transaction="true">
-    	<make-value entity-name="CardApplication" value-field="newEntity"/>
-        <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <now-timestamp field="newEntity.createdDate"/>
-        
-        <set field="entityName" value="CardApplication"></set>
-        <set field="newEntity.cardApplicationId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
-        
-        <set field="newEntity.isActive" value="Y"/>
-	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
-        <create-value value-field="newEntity"/>
-    </simple-method>
-    
-     <simple-method method-name="updateCardApplication" short-description="Update CardApplication">
-        <entity-one entity-name="CardApplication" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <simple-method method-name="deleteCardApplication" short-description="Delete CardApplication">
-        <entity-one entity-name="CardApplication" value-field="lookedUpValue"/>
-        <remove-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <!-- CardLog -->
-     <simple-method method-name="createCardLog" short-description="Create CardLog">
-        <make-value entity-name="CardLog" value-field="logEntity"/>
-         <set-pk-fields map="parameters" value-field="logEntity"/>
-        <set-nonpk-fields map="parameters" value-field="logEntity"/>
-        
-        <set field="entityName" value="CardLog"></set>
-        <set field="logEntity.cardLogId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
-        
-        
-        <now-timestamp field="logEntity.createdDate"/>
-        <set field="logEntity.cardApplicationId"  from-field="newEntity.cardApplicationId" />
-        <set field="logEntity.isActive" value="Y"/>
-	    <set field="logEntity.createdBy" from-field="userLogin.userLoginId"/>
-        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
-        <!-- set field="productType" value="Loan"/ -->
-        <create-value value-field="logEntity"/>
-    </simple-method>
-    
-    
-    <simple-method method-name="receiveCardProcess" short-description="Receive Card Process">
-    		 <set field="statusName" value="RECEIVED"></set>
-			<call-simple-method method-name="saveCardLog" scope="inline"></call-simple-method>
-			<set field="cardApplicationId" value="${logEntity.cardApplicationId}"/>
-			<entity-one entity-name="CardApplication" value-field="application">
-				<field-map field-name="cardApplicationId" value="${logEntity.cardApplicationId}"/>
-			</entity-one>
-			<set field="application.cardStatusId" value="${logEntity.cardStatusId}"/>
-			<set field="application.cardNumber" value="${logEntity.cardNumber}"/>
-        	<store-value value-field="application"/>
-    </simple-method>
-    
-    <simple-method method-name="issueCardProcess" short-description="Issue Card Process">
-    		 <set field="statusName" value="ISSUED"></set>
-			<call-simple-method method-name="saveCardLog" scope="inline"></call-simple-method>
-			<set field="cardApplicationId" value="${logEntity.cardApplicationId}"/>
-			<entity-one entity-name="CardApplication" value-field="application">
-				<field-map field-name="cardApplicationId" value="${logEntity.cardApplicationId}"/>
-			</entity-one>
-			<set field="application.cardStatusId" value="${logEntity.cardStatusId}"/>
-        	<store-value value-field="application"/>
-    </simple-method>
-    
-    <!-- activateCardProcess -->
-    <simple-method method-name="activateCardProcess" short-description="Activate Card Process">
-    		 <set field="statusName" value="ACTIVE"></set>
-			<call-simple-method method-name="saveCardLog" scope="inline"></call-simple-method>
-			<set field="cardApplicationId" value="${logEntity.cardApplicationId}"/>
-			<entity-one entity-name="CardApplication" value-field="application">
-				<field-map field-name="cardApplicationId" value="${logEntity.cardApplicationId}"/>
-			</entity-one>
-			<set field="application.cardStatusId" value="${logEntity.cardStatusId}"/>
-        	<store-value value-field="application"/>
-    </simple-method>
-    <!-- renewCardProcess -->
-    <simple-method method-name="renewCardProcess" short-description="Renew Card Process">
-    		 <set field="statusName" value="RENEW"></set>
-			<call-simple-method method-name="saveCardLog" scope="inline"></call-simple-method>
-			<set field="cardApplicationId" value="${logEntity.cardApplicationId}"/>
-			<entity-one entity-name="CardApplication" value-field="application">
-				<field-map field-name="cardApplicationId" value="${logEntity.cardApplicationId}"/>
-			</entity-one>
-			<set field="application.cardStatusId" value="${logEntity.cardStatusId}"/>
-        	<store-value value-field="application"/>
-    </simple-method>
-    <!-- deactivateCardProcess -->
-        <simple-method method-name="deactivateCardProcess" short-description="Deactivate Card Process">
-    		 <set field="statusName" value="DEACTIVATED"></set>
-			<call-simple-method method-name="saveCardLog" scope="inline"></call-simple-method>
-			<set field="cardApplicationId" value="${logEntity.cardApplicationId}"/>
-			<entity-one entity-name="CardApplication" value-field="application">
-				<field-map field-name="cardApplicationId" value="${logEntity.cardApplicationId}"/>
-			</entity-one>
-			<set field="application.cardStatusId" value="${logEntity.cardStatusId}"/>
-        	<store-value value-field="application"/>
-    </simple-method>
-    <!-- replaceCardProcess -->
-    <simple-method method-name="replaceCardProcess" short-description="Replace Card Process">
-    		 <set field="statusName" value="REPLACE"></set>
-			<call-simple-method method-name="saveCardLog" scope="inline"></call-simple-method>
-			<set field="cardApplicationId" value="${logEntity.cardApplicationId}"/>
-			<entity-one entity-name="CardApplication" value-field="application">
-				<field-map field-name="cardApplicationId" value="${logEntity.cardApplicationId}"/>
-			</entity-one>
-			<set field="application.cardStatusId" value="${logEntity.cardStatusId}"/>
-        	<store-value value-field="application"/>
-    </simple-method>
-    
-    <!-- receivePINProcess -->
-        <simple-method method-name="receivePINProcess" short-description="Receive PIN Process">
-    		 <set field="statusName" value="RECEIVEPIN"></set>
-			<call-simple-method method-name="saveCardLog" scope="inline"></call-simple-method>
-			<!-- set field="cardApplicationId" value="${logEntity.cardApplicationId}"/>
-			<entity-one entity-name="CardApplication" value-field="application">
-				<field-map field-name="cardApplicationId" value="${logEntity.cardApplicationId}"/>
-			</entity-one>
-			<set field="application.cardStatusId" value="${logEntity.cardStatusId}"/>
-        	<store-value value-field="application"/ -->
-    </simple-method>
-    
-    <!-- issuePINProcess -->
-    <simple-method method-name="issuePINProcess" short-description="Issue PIN Process">
-    <set field="statusName" value="ISSUEPIN"></set>
-			<call-simple-method method-name="saveCardLog" scope="inline"></call-simple-method>
-			<!-- set field="cardApplicationId" value="${logEntity.cardApplicationId}"/>
-			<entity-one entity-name="CardApplication" value-field="application">
-				<field-map field-name="cardApplicationId" value="${logEntity.cardApplicationId}"/>
-			</entity-one>
-			<set field="application.cardStatusId" value="${logEntity.cardStatusId}"/>
-        	<store-value value-field="application"/ -->
-    </simple-method>
-    
-    
-    <simple-method method-name="saveCardLog">
-    	<make-value entity-name="CardLog" value-field="logEntity"/>
-        <set-pk-fields map="parameters" value-field="logEntity"/>
-        <set-nonpk-fields map="parameters" value-field="logEntity"/>
-        <set field="entityName" value="CardLog"></set>
-        <set field="logEntity.cardLogId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
-        <now-timestamp field="logEntity.createdDate"/>
-        <set field="logEntity.isActive" value="Y"/>
-	    <set field="logEntity.createdBy" from-field="userLogin.userLoginId"/>
-        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
-        <!-- set field="productType" value="Loan"/ -->
-        <set field="logEntity.cardStatusId" value="${bsh:org.ofbiz.atmmanagement.ATMManagementServices.getCardStatus(statusName);}"/>
-        <create-value value-field="logEntity"/>
-    </simple-method>
-    
-    
+	</simple-method>
 
-    
-    
-     <simple-method method-name="updateCardLog" short-description="Update CardLog">
-        <entity-one entity-name="CardLog" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <simple-method method-name="deleteCardLog" short-description="Delete CardLog">
-        <entity-one entity-name="CardLog" value-field="lookedUpValue"/>
-        <remove-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <!-- CardReceipt -->
-     <simple-method method-name="createCardReceipt" short-description="Create CardReceipt">
-        <make-value entity-name="CardReceipt" value-field="newEntity"/>
-         <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
-        <sequenced-id sequence-name="CardReceipt" field="cardReceiptId"/>
-        <now-timestamp field="newEntity.createdDate"/>
-        <set from-field="cardReceiptId" field="newEntity.cardReceiptId"/>
-        <set field="newEntity.isActive" value="Y"/>
-	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
-        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
-        <!-- set field="productType" value="Loan"/ -->
-        <create-value value-field="newEntity"/>
-    </simple-method>
-    
-     <simple-method method-name="updateCardReceipt" short-description="Update CardReceipt">
-        <entity-one entity-name="CardReceipt" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <simple-method method-name="deleteCardReceipt" short-description="Delete CardReceipt">
-        <entity-one entity-name="CardReceipt" value-field="lookedUpValue"/>
-        <remove-value value-field="lookedUpValue"/>
-    </simple-method> 
-    
-         <simple-method method-name="createCardStatus" short-description="Create CardStatus">
-        <make-value entity-name="CardStatus" value-field="newEntity"/>
-         <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-       	<set field="entityName" value="CardStatus"></set>
-        <set field="newEntity.cardStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
-        <set field="newEntity.isActive" value="Y"/>
-	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
-        <create-value value-field="newEntity"/>
-    </simple-method>
-    
-     <simple-method method-name="updateCardStatus" short-description="Update CardStatus">
-        <entity-one entity-name="CardStatus" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <store-value value-field="lookedUpValue"/>
-    </simple-method>
-    
-    <simple-method method-name="deleteCardStatus" short-description="Delete CardStatus">
-        <entity-one entity-name="CardStatus" value-field="lookedUpValue"/>
-        <remove-value value-field="lookedUpValue"/>
-    </simple-method>   
+	<simple-method method-name="saveCardApplication"
+		use-transaction="true">
+		<make-value entity-name="CardApplication" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<now-timestamp field="newEntity.createdDate" />
+
+		<set field="entityName" value="CardApplication"></set>
+		<set field="newEntity.cardApplicationId"
+			value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+
+		<set field="newEntity.isActive" value="Y" />
+		<set field="newEntity.createdBy" from-field="userLogin.userLoginId" />
+
+		<!-- Check that there is no atm application for this member -->
+		<set field="memberId" from-field="newEntity.partyId" type="Long" />
+		<set field="memberhascardalready"
+			value="${bsh:org.ofbiz.atmmanagement.ATMManagementServices.alreadyHasAnATMCard(memberId);}"
+			type="Boolean"></set>
+
+		<if>
+			<condition>
+				<if-compare operator="equals" value="true"
+					field="memberhascardalready"></if-compare>
+			</condition>
+			<then>
+
+				<add-error>
+
+					<fail-message
+						message=" Failed to register!  The Member already has an ATM Card in the system, please search to find its status " />
+				</add-error>
+				<check-errors />
+			</then>
+			<else>
+
+				<create-value value-field="newEntity" />
+				<property-to-field resource="atmmanagementUiLabels.xml"
+					property="The ATM Application has successfully been registered !"
+					field="successMessage" />
+
+
+			</else>
+		</if>
+
+
+	</simple-method>
+
+	<simple-method method-name="updateCardApplication"
+		short-description="Update CardApplication">
+		<entity-one entity-name="CardApplication" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<simple-method method-name="deleteCardApplication"
+		short-description="Delete CardApplication">
+		<entity-one entity-name="CardApplication" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<!-- CardLog -->
+	<simple-method method-name="createCardLog"
+		short-description="Create CardLog">
+		<make-value entity-name="CardLog" value-field="logEntity" />
+		<set-pk-fields map="parameters" value-field="logEntity" />
+		<set-nonpk-fields map="parameters" value-field="logEntity" />
+
+		<set field="entityName" value="CardLog"></set>
+		<set field="logEntity.cardLogId"
+			value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+
+
+		<now-timestamp field="logEntity.createdDate" />
+		<set field="logEntity.cardApplicationId" from-field="newEntity.cardApplicationId" />
+		<set field="logEntity.isActive" value="Y" />
+		<set field="logEntity.createdBy" from-field="userLogin.userLoginId" />
+		<!-- set field="entity.loanStatus" value="DRAFT"/ -->
+		<!-- set field="productType" value="Loan"/ -->
+		<create-value value-field="logEntity" />
+	</simple-method>
+
+
+	<simple-method method-name="receiveCardProcess"
+		short-description="Receive Card Process">
+		<set field="statusName" value="RECEIVED"></set>
+		<set field="cardApplicationId" from-field="parameters.cardApplicationId"
+			type="Long" />
+		<!-- Card must have been applied -->
+		<set field="receiveStatus"
+			value="${bsh:org.ofbiz.atmmanagement.ATMManagementServices.validateCardReceive(cardApplicationId, userLogin);}" />
+		<if>
+			<condition>
+				<if-compare operator="not-equals" value="success" field="receiveStatus"></if-compare>
+			</condition>
+			<then>
+				<add-error>
+					<!-- fail-property resource="atmmanagementUiLabels.xml" property="${}" 
+						/ -->
+					<fail-message message="${receiveStatus}" />
+				</add-error>
+				<check-errors />
+			</then>
+			<else>
+
+				<call-simple-method method-name="saveCardLog"
+					scope="inline"></call-simple-method>
+				<set field="cardApplicationId" value="${logEntity.cardApplicationId}" />
+				<entity-one entity-name="CardApplication" value-field="application">
+					<field-map field-name="cardApplicationId" value="${logEntity.cardApplicationId}" />
+				</entity-one>
+				<set field="application.cardStatusId" value="${logEntity.cardStatusId}" />
+				<set field="application.cardNumber" value="${logEntity.cardNumber}" />
+				<store-value value-field="application" />
+
+				<property-to-field resource="atmmanagementUiLabels.xml"
+					property="Successfully received the ATM Card " field="successMessage" />
+
+			</else>
+		</if>
+	</simple-method>
+
+	<!-- submitCardProcess -->
+
+	<simple-method method-name="submitCardProcess"
+		short-description="Receive Card Process">
+		<set field="statusName" value="APPLIED"></set>
+
+		<set field="cardApplicationId" from-field="parameters.cardApplicationId"
+			type="Long" />
+		<set field="submitCardStatus"
+			value="${bsh:org.ofbiz.atmmanagement.ATMManagementServices.processCardSubmission(cardApplicationId,userLogin)}"
+			type="PlainString" />
+
+		<if>
+			<condition>
+				<if-compare operator="not-equals" value="success"
+					field="submitCardStatus"></if-compare>
+			</condition>
+			<then>
+				<add-error>
+					<!-- fail-property resource="atmmanagementUiLabels.xml" property="${}" 
+						/ -->
+					<fail-message message="${submitCardStatus}" />
+				</add-error>
+				<check-errors />
+			</then>
+			<else>
+
+				<call-simple-method method-name="saveCardLog"
+					scope="inline"></call-simple-method>
+				<set field="cardApplicationId" value="${logEntity.cardApplicationId}" />
+				<entity-one entity-name="CardApplication" value-field="application">
+					<field-map field-name="cardApplicationId" value="${logEntity.cardApplicationId}" />
+				</entity-one>
+				<set field="application.cardStatusId" value="${logEntity.cardStatusId}" />
+				<store-value value-field="application" />
+
+				<property-to-field resource="atmmanagementUiLabels.xml"
+					property="Successfully applied for the ATM Card " field="successMessage" />
+
+			</else>
+		</if>
+
+
+
+		<!-- set field="application.cardNumber" value="${logEntity.cardNumber}"/ -->
+	</simple-method>
+
+	<simple-method method-name="issueCardProcess"
+		short-description="Issue Card Process">
+		<set field="statusName" value="ISSUED"></set>
+		<call-simple-method method-name="saveCardLog"
+			scope="inline"></call-simple-method>
+		<set field="cardApplicationId" value="${logEntity.cardApplicationId}" />
+		<entity-one entity-name="CardApplication" value-field="application">
+			<field-map field-name="cardApplicationId" value="${logEntity.cardApplicationId}" />
+		</entity-one>
+		<set field="application.cardStatusId" value="${logEntity.cardStatusId}" />
+		<store-value value-field="application" />
+	</simple-method>
+
+	<!-- activateCardProcess -->
+	<simple-method method-name="activateCardProcess"
+		short-description="Activate Card Process">
+		<set field="statusName" value="ACTIVE"></set>
+		<set field="cardApplicationId" from-field="parameters.cardApplicationId"
+			type="Long" />
+		<set field="activateStatus"
+			value="${bsh:org.ofbiz.atmmanagement.ATMManagementServices.validateCardActivate(cardApplicationId, userLogin);}" />
+		<if>
+			<condition>
+				<if-compare operator="not-equals" value="success" field="activateStatus"></if-compare>
+			</condition>
+			<then>
+				<add-error>
+					<!-- fail-property resource="atmmanagementUiLabels.xml" property="${}" 
+						/ -->
+					<fail-message message="${activateStatus}" />
+				</add-error>
+				<check-errors />
+			</then>
+			<else>
+				<call-simple-method method-name="saveCardLog"
+					scope="inline"></call-simple-method>
+				<set field="cardApplicationId" value="${logEntity.cardApplicationId}" />
+				<entity-one entity-name="CardApplication" value-field="application">
+					<field-map field-name="cardApplicationId" value="${logEntity.cardApplicationId}" />
+				</entity-one>
+				<set field="application.cardStatusId" value="${logEntity.cardStatusId}" />
+				<store-value value-field="application" />
+
+				<property-to-field resource="atmmanagementUiLabels.xml"
+					property="Successfully actived the ATM Card " field="successMessage" />
+
+			</else>
+		</if>
+	</simple-method>
+	<!-- renewCardProcess -->
+	<simple-method method-name="renewCardProcess"
+		short-description="Renew Card Process">
+		<set field="statusName" value="RENEW"></set>
+		<call-simple-method method-name="saveCardLog"
+			scope="inline"></call-simple-method>
+		<set field="cardApplicationId" value="${logEntity.cardApplicationId}" />
+		<entity-one entity-name="CardApplication" value-field="application">
+			<field-map field-name="cardApplicationId" value="${logEntity.cardApplicationId}" />
+		</entity-one>
+		<set field="application.cardStatusId" value="${logEntity.cardStatusId}" />
+		<store-value value-field="application" />
+	</simple-method>
+	<!-- deactivateCardProcess -->
+	<simple-method method-name="deactivateCardProcess"
+		short-description="Deactivate Card Process">
+		<set field="statusName" value="DEACTIVATED"></set>
+		<call-simple-method method-name="saveCardLog"
+			scope="inline"></call-simple-method>
+		<set field="cardApplicationId" value="${logEntity.cardApplicationId}" />
+		<entity-one entity-name="CardApplication" value-field="application">
+			<field-map field-name="cardApplicationId" value="${logEntity.cardApplicationId}" />
+		</entity-one>
+		<set field="application.cardStatusId" value="${logEntity.cardStatusId}" />
+		<store-value value-field="application" />
+	</simple-method>
+	<!-- replaceCardProcess -->
+	<simple-method method-name="replaceCardProcess"
+		short-description="Replace Card Process">
+		<set field="statusName" value="REPLACE"></set>
+		<call-simple-method method-name="saveCardLog"
+			scope="inline"></call-simple-method>
+		<set field="cardApplicationId" value="${logEntity.cardApplicationId}" />
+		<entity-one entity-name="CardApplication" value-field="application">
+			<field-map field-name="cardApplicationId" value="${logEntity.cardApplicationId}" />
+		</entity-one>
+		<set field="application.cardStatusId" value="${logEntity.cardStatusId}" />
+		<store-value value-field="application" />
+	</simple-method>
+
+	<!-- receivePINProcess -->
+	<simple-method method-name="receivePINProcess"
+		short-description="Receive PIN Process">
+		<set field="statusName" value="RECEIVEPIN"></set>
+		<call-simple-method method-name="saveCardLog"
+			scope="inline"></call-simple-method>
+		<!-- set field="cardApplicationId" value="${logEntity.cardApplicationId}"/> 
+			<entity-one entity-name="CardApplication" value-field="application"> <field-map 
+			field-name="cardApplicationId" value="${logEntity.cardApplicationId}"/> </entity-one> 
+			<set field="application.cardStatusId" value="${logEntity.cardStatusId}"/> 
+			<store-value value-field="application"/ -->
+	</simple-method>
+
+	<!-- issuePINProcess -->
+	<simple-method method-name="issuePINProcess"
+		short-description="Issue PIN Process">
+		<set field="statusName" value="ISSUEPIN"></set>
+		<call-simple-method method-name="saveCardLog"
+			scope="inline"></call-simple-method>
+		<!-- set field="cardApplicationId" value="${logEntity.cardApplicationId}"/> 
+			<entity-one entity-name="CardApplication" value-field="application"> <field-map 
+			field-name="cardApplicationId" value="${logEntity.cardApplicationId}"/> </entity-one> 
+			<set field="application.cardStatusId" value="${logEntity.cardStatusId}"/> 
+			<store-value value-field="application"/ -->
+	</simple-method>
+
+
+	<simple-method method-name="saveCardLog">
+		<make-value entity-name="CardLog" value-field="logEntity" />
+		<set-pk-fields map="parameters" value-field="logEntity" />
+		<set-nonpk-fields map="parameters" value-field="logEntity" />
+		<set field="entityName" value="CardLog"></set>
+		<set field="logEntity.cardLogId"
+			value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+		<now-timestamp field="logEntity.createdDate" />
+		<set field="logEntity.isActive" value="Y" />
+		<set field="logEntity.createdBy" from-field="userLogin.userLoginId" />
+		<!-- set field="entity.loanStatus" value="DRAFT"/ -->
+		<!-- set field="productType" value="Loan"/ -->
+		<set field="logEntity.cardStatusId"
+			value="${bsh:org.ofbiz.atmmanagement.ATMManagementServices.getCardStatus(statusName);}" />
+		<create-value value-field="logEntity" />
+	</simple-method>
+
+
+
+
+
+	<simple-method method-name="updateCardLog"
+		short-description="Update CardLog">
+		<entity-one entity-name="CardLog" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<simple-method method-name="deleteCardLog"
+		short-description="Delete CardLog">
+		<entity-one entity-name="CardLog" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<!-- CardReceipt -->
+	<simple-method method-name="createCardReceipt"
+		short-description="Create CardReceipt">
+		<make-value entity-name="CardReceipt" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+		<sequenced-id sequence-name="CardReceipt" field="cardReceiptId" />
+		<now-timestamp field="newEntity.createdDate" />
+		<set from-field="cardReceiptId" field="newEntity.cardReceiptId" />
+		<set field="newEntity.isActive" value="Y" />
+		<set field="newEntity.createdBy" from-field="userLogin.userLoginId" />
+		<!-- set field="entity.loanStatus" value="DRAFT"/ -->
+		<!-- set field="productType" value="Loan"/ -->
+		<create-value value-field="newEntity" />
+	</simple-method>
+
+	<simple-method method-name="updateCardReceipt"
+		short-description="Update CardReceipt">
+		<entity-one entity-name="CardReceipt" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<simple-method method-name="deleteCardReceipt"
+		short-description="Delete CardReceipt">
+		<entity-one entity-name="CardReceipt" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<simple-method method-name="createCardStatus"
+		short-description="Create CardStatus">
+		<make-value entity-name="CardStatus" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<set field="entityName" value="CardStatus"></set>
+		<set field="newEntity.cardStatusId"
+			value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+		<set field="newEntity.isActive" value="Y" />
+		<set field="newEntity.createdBy" from-field="userLogin.userLoginId" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+
+	<simple-method method-name="updateCardStatus"
+		short-description="Update CardStatus">
+		<entity-one entity-name="CardStatus" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+	</simple-method>
+
+	<simple-method method-name="deleteCardStatus"
+		short-description="Delete CardStatus">
+		<entity-one entity-name="CardStatus" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+	</simple-method>
 </simple-methods>

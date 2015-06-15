@@ -1571,6 +1571,14 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="listsaccomembers" />
 	</request-map>
+	
+	<request-map uri="memberPrintout">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="memberPrintout">
+			<redirect-parameter name="partyId"/>
+		</response>
+	</request-map>
+	
 
 	<request-map uri="reviewmembers">
 		<security https="true" auth="true" />
@@ -3240,6 +3248,7 @@
 	<view-map name="memberRegistrationByDateExcelForm" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#memberRegistrationByDateExcelForm"/>
 	<view-map name="memberRegistrationByDateExcel" type="screencsv" page="component://party/widget/partymgr/PartyScreens.xml#memberRegistrationByDateExcel" content-type="text/csv" encoding="none"/>
 	
+	<view-map name="memberPrintout" type="screenfop" page="component://party/widget/partymgr/PartyScreens.xml#memberPrintout" content-type="application/pdf" encoding="none"/>
 	
 	<!-- end of view mappings -->
 </site-conf>

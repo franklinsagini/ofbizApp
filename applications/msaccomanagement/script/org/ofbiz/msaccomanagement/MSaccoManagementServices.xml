@@ -37,7 +37,34 @@ under the License.
         <set field="newEntity.sent" value="N"/>
         <set field="newEntity.closed" value="NO"/>
 	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
-        <create-value value-field="newEntity"/>
+	    <set field="mobilePhoneNumber" from-field="newEntity.mobilePhoneNumber"/>
+	    <set field="phonenumberalreadyused" value="${bsh:org.ofbiz.msaccomanagement.MSaccoManagementServices.phoneNumberAlreadyUser(mobilePhoneNumber);}"></set>
+	    <!-- Phone Number must not be reused -->
+	    
+	    <if>
+	    	<condition>
+	    		<if-compare operator="equals" value="true" field="phonenumberalreadyused"></if-compare>
+	    	</condition>
+	    	<then>
+	    	
+	    	<add-error> 
+
+		                        <fail-message message=" Failed to register!  The phone number ${mobilePhoneNumber} is already registered for MSACCO "/>
+		                </add-error> 
+		                <check-errors /> 
+			</then>
+			<else>
+			
+						<create-value value-field="newEntity"/>
+						  <property-to-field resource="msaccomanagementUiLabels.xml" 
+            				property="The phone number ${mobilePhoneNumber} is successfully registered for MSACCO" field="successMessage" />
+						
+	    					
+	    	</else>
+	    </if>
+	    
+	    
+        
     </simple-method>
     <simple-method method-name="addMSaccoLog">
     	<make-value entity-name="MSaccoLog" value-field="msaccoLogEntity"/>
