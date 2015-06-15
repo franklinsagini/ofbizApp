@@ -2761,144 +2761,9 @@ public class HumanResServices {
 
 	}
 
-	public static Map<String, Object> SaveEmail_ToBeSend(DispatchContext ctx,
-			Map<String, ? extends Object> context) {
-		Delegator delegator = ctx.getDelegator();
-		List<GenericValue> OnLeaveELI = null;
-		List<GenericValue> OutOfLeaveELI = null;
-		GenericValue emailRecord_HandedOver = null;
-		Map<String, Object> results = ServiceUtil.returnSuccess();
-		// Timestamp now = UtilDateTime.nowTimestamp();
+	
 
-		String now = Calendar.getInstance().getTime().toString();
-		Date noww = null;
-		try {
-			noww = new SimpleDateFormat("E MMM dd HH:mm:ss zzz yyyy", Locale.UK)
-					.parse(now);
-		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		java.sql.Date today = new java.sql.Date(noww.getTime());
-
-		LocalDate todayDate = new LocalDate(today);
-
-		LocalDate threeDaysAgo = todayDate.plusDays(4);
-
-		Date f = threeDaysAgo.toDate();
-		java.sql.Date todayPlusFourDays = new java.sql.Date(f.getTime());
-
-		EntityConditionList<EntityExpr> onLeaveConditions = EntityCondition
-				.makeCondition(UtilMisc.toList(
-						EntityCondition.makeCondition("applicationStatus",
-								EntityOperator.EQUALS, "Approved"),
-						EntityCondition.makeCondition("fromDate",
-								EntityOperator.GREATER_THAN, today),
-						EntityCondition.makeCondition("fromDate",
-								EntityOperator.LESS_THAN, todayPlusFourDays)),
-						EntityOperator.AND);
-
-		try {
-			OnLeaveELI = delegator.findList("EmplLeave", onLeaveConditions,
-					null, null, null, false);
-
-		} catch (GenericEntityException e) {
-			e.printStackTrace();
-		}
-
-		for (GenericValue genericValue : OnLeaveELI) {
-			String party = genericValue.getString("partyId");
-			String partyToGetMail = genericValue.getString("handedOverTo");
-
-			GenericValue staff = null;
-			try {
-				staff = delegator.findOne("Person",
-						UtilMisc.toMap("partyId", party), false);
-				log.info("//////////////////////////////\\\\\\\\\\\\Going On Leave++++++++++++++++"
-						+ staff);
-			} catch (GenericEntityException e) {
-				e.printStackTrace();
-				;
-			}
-
-			if (staff != null) {
-
-				emailRecord_HandedOver = delegator
-						.makeValue(
-								"StaffScheduledMail",
-								"msgId",
-								delegator.getNextSeqId("StaffScheduledMail"),
-								"partyId",
-								partyToGetMail,
-								"subject",
-								"Responsibilities Handover",
-								"body",
-								"Staff by the name:-"
-										+ staff.getString("firstName")
-										+ " "
-										+ staff.getString("lastName")
-										+ " With Payroll Number-"
-										+ staff.getString("employeeNumber")
-										+ " is scheduled to go on leave starting:-"
-										+ genericValue.getDate("fromDate")
-										+ ". You are hereby reminded that they handed over their responsibilities to you."
-										+ " Please make necessary arrangements for smooth running of all activities. Thanks",
-								"sendStatus", "NOTSEND");
-
-				try {
-					emailRecord_HandedOver.create();
-				} catch (GenericEntityException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			} else {
-
-			}
-
-		}
-
-		return results;
-	}
-
-	// ======================= SAVE EMAILS TO BE SEND LATER
-	// ===================================
-
-	public static String SaveEmail_ToBeSendScheduler(
-			HttpServletRequest request, HttpServletResponse response) {
-		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		LocalDispatcher dispatcher = (new GenericDispatcherFactory())
-				.createLocalDispatcher("interestcalculations", delegator);
-
-		Map<String, String> context = UtilMisc.toMap("message",
-				"Saving Scheduled Emails Testing !!");
-		Map<String, Object> result = new HashMap<String, Object>();
-		try {
-			long startTime = (new Date()).getTime();
-			int frequency = RecurrenceRule.SECONDLY;
-			int interval = 5;
-			int count = -1;
-			dispatcher.schedule("SaveEmail_ToBeSendLaterWhenInternetIsAvailed",
-					context, startTime, frequency, interval, count);
-		} catch (GenericServiceException e) {
-			e.printStackTrace();
-		}
-
-		Writer out;
-		try {
-			out = response.getWriter();
-			out.write("");
-			out.flush();
-		} catch (IOException e) {
-			try {
-				throw new EventHandlerException(
-						"Unable to get response writer", e);
-			} catch (EventHandlerException e1) {
-				e1.printStackTrace();
-			}
-		}
-		return "";
-
-	}
+	
 
 	/* SINGLE STAFF REPORT QUARTERLY SCORES CALCULATION */
 
@@ -2977,8 +2842,7 @@ public class HumanResServices {
 		EntityConditionList<EntityExpr> totalConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"partyId", EntityOperator.EQUALS, party),
-						EntityCondition.makeCondition(
-								"PerfActionPlanIndicatorId",
+						EntityCondition.makeCondition("PerfActionPlanIndicatorId",
 								EntityOperator.EQUALS, indicator),
 						EntityCondition.makeCondition("quarter",
 								EntityOperator.EQUALS, quarter),
@@ -6022,6 +5886,58 @@ public class HumanResServices {
 
 			return state;
 		}
+		
+		
+	/*=================================== VALIDATE SCORES BEFORE FORWARDING ======================================*/
+		
+		public static String forwardPerformanceScoresValidation(String party, String whichScore) {
+			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+			List<GenericValue> StaffScoresELI = null;
+			String state = null;
+			BigDecimal one = BigDecimal.ONE;
+
+			EntityConditionList<EntityExpr> anyZeroConditions = EntityCondition.makeCondition(UtilMisc.toList(
+					        EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, party),
+							EntityCondition.makeCondition(whichScore, EntityOperator.LESS_THAN, one)),
+							EntityOperator.AND);
+
+			
+			try {
+				StaffScoresELI = delegator.findList("PerfPartyReview",
+						anyZeroConditions, null, null, null, false);
+
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+
+			if (StaffScoresELI.size() > 0) {
+				state = "INVALID";
+			} else {
+				state = "VALID";
+			}
+
+
+			return state;
+		}
+		
+		
+		
+		
+/*=================================== VALIDATE SCORES REVIEWS ======================================*/
+		
+		public static String PerformanceScoresReviewValidation(String whichScore) {
+			String state = null;
+			
+			if (whichScore.equalsIgnoreCase("")) {
+				state = "INVALID";
+			} else {
+				state = "VALID";
+			}
+			
+			
+			return state;
+		}
+
 
 		
 
