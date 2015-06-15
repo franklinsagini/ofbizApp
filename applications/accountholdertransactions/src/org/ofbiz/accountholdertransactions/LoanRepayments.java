@@ -2376,5 +2376,33 @@ public class LoanRepayments {
 
 		return totalLoanPaid;
 	}
+	
+	/******
+	 * getTransactionId
+	 * */
+	public static String getTransactionId(GenericValue loanRepayment){
+		String acctgTransId = "";
+		Long loanRepaymentId = loanRepayment.getLong("loanRepaymentId");
+		
+		GenericValue repayment = getLoanRepayment(loanRepaymentId);
+		acctgTransId = repayment.getString("acctgTransId");
+		return acctgTransId;
+	}
+
+	private static GenericValue getLoanRepayment(Long loanRepaymentId) {
+		GenericValue loanRepayment = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanRepayment = delegator.findOne(
+					"LoanRepayment", UtilMisc.toMap(
+							"loanRepaymentId", loanRepaymentId),
+					false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("######## Cannot get Loan Repayment  ");
+		}
+
+		return loanRepayment;
+	}
 
 }
