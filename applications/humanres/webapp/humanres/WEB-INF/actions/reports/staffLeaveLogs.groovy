@@ -8,5 +8,5 @@ if (partyId) {
    staff = delegator.findOne("Person", [partyId : partyId], false);
    context.staff = staff;
 
-    context.logs = delegator.findByAnd("LeaveStatusLog", [partyId : parameters.partyId], null, false);
+    context.logs = delegator.findByAnd("staffLeaveLogs", [partyId : parameters.partyId], null, false);
 }

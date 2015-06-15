@@ -1095,6 +1095,9 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 			List<GenericValue> toBeStored = FastList.newInstance();
 			GenericValue leavesELI = null; 
 			GenericValue partyELI = null; 
+			GenericValue leaveLogs = null; 
+			GenericValue ForwaedTo = null; 
+			GenericValue LeaveTypeELI = null; 
 			GenericValue emailRecord_firstApprover = null;
 			String firstApprover = 	getFirstWorkflowApprover(leaveid);	
 			
@@ -1128,6 +1131,30 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 					sname = partyELI.getString("lastName");
 					payrolll = partyELI.getString("employeeNumber");
 					String fullName = " "+fname+" "+sname;
+					
+					
+					try {
+						
+						ForwaedTo = delegator.findOne("Person",	UtilMisc.toMap("partyId", firstApprover), false);
+								
+					} catch (GenericEntityException e) {
+						e.printStackTrace();
+					}
+					
+                       try {
+						
+						LeaveTypeELI = delegator.findOne("EmplLeaveType",	UtilMisc.toMap("leaveTypeId", leavesELI.getString("leaveTypeId")), false);
+								
+					} catch (GenericEntityException e) {
+						e.printStackTrace();
+					}
+					
+					String fname2 = null;
+					String sname2 = null;
+					
+						fname2 = ForwaedTo.getString("firstName");
+						sname2 = ForwaedTo.getString("lastName");
+						String fullName2 = " "+fname2+" "+sname2;
 				
 				emailRecord_firstApprover = delegator.makeValue("StaffScheduledMail", "msgId", delegator.getNextSeqId("StaffScheduledMail"), 
 						"partyId", firstApprover,
@@ -1135,8 +1162,16 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 			            "body", "Leave Application has been Send to you for approval by :"+fullName+" Payroll :"+payrolll,
 			            "sendStatus", "NOTSEND");
 				
+				leaveLogs = delegator.makeValue("staffLeaveLogs", "logId", delegator.getNextSeqId("staffLeaveLogs"), 
+						"partyId", party,
+			            "leaveType", LeaveTypeELI.getString("description"), 
+			            "action", "Forward to "+fullName2,
+			            "actionBy", user);
+				
+				
 				
 				toBeStored.add(leavesELI);
+				toBeStored.add(leaveLogs);
 				toBeStored.add(emailRecord_firstApprover);
 			} else {
 
@@ -1191,6 +1226,9 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		String leaveStart = null;
 		String leaveStop = null;
 		String leaveDuration = null;
+		GenericValue leaveLogs = null; 
+		GenericValue ForwaedTo = null; 
+		GenericValue LeaveTypeELI = null; 
 
 		try {
 			
@@ -1260,6 +1298,30 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 			String payroll = staff.getString("employeeNumber");
 			String fname = staff.getString("firstName");
 			String sname = staff.getString("lastName");
+			
+			try {
+				
+				ForwaedTo = delegator.findOne("Person",	UtilMisc.toMap("partyId", user), false);
+						
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+			
+               try {
+				
+				LeaveTypeELI = delegator.findOne("EmplLeaveType",	UtilMisc.toMap("leaveTypeId", leavesELI.getString("leaveTypeId")), false);
+						
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+			
+			String fname2 = null;
+			String sname2 = null;
+			
+				fname2 = ForwaedTo.getString("firstName");
+				sname2 = ForwaedTo.getString("lastName");
+				String fullName2 = " "+fname2+" "+sname2;
+				
 			emailRecord_handover = delegator.makeValue("StaffScheduledMail", "msgId", delegator.getNextSeqId("StaffScheduledMail"), 
 					"partyId", email_To_StaffHandedOver,
 		            "subject", "RESPONSIBILITIES HANDOVER", 
@@ -1271,7 +1333,15 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		            "subject", "LEAVE FORWARDED", 
 		            "body", "Your leave application has been been APPROVED. Duration of leave is :"+leaveDuration+" days, It starts on :"+leaveStart+" and end on :"+leaveStop,
 		            "sendStatus", "NOTSEND");
+			
+			leaveLogs = delegator.makeValue("staffLeaveLogs", "logId", delegator.getNextSeqId("staffLeaveLogs"), 
+					"partyId", party,
+		            "leaveType", LeaveTypeELI.getString("description"), 
+		            "action", "Approved By "+fullName2,
+		            "actionBy", user);
+			
 			toBeStored.add(leavesELI);
+			toBeStored.add(leaveLogs);
 			toBeStored.add(emailRecord_handover);
 			toBeStored.add(emailRecord_applicant);
 		} else if(isThemLast.equalsIgnoreCase("NO")){
@@ -1329,6 +1399,33 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		String staffirstname = Applicantstaff.getString("firstName");
 		String staflastsname = Applicantstaff.getString("lastName");
 		String staffullName = " "+staffirstname+" "+staflastsname;
+		
+		GenericValue ForwaedTo2 = null;
+		GenericValue LeaveTypeELI2 = null;
+		
+		try {
+			
+			ForwaedTo2 = delegator.findOne("Person",	UtilMisc.toMap("partyId", nextResponsibleStaff), false);
+					
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+           try {
+			
+			LeaveTypeELI2 = delegator.findOne("EmplLeaveType",	UtilMisc.toMap("leaveTypeId", leavesELI.getString("leaveTypeId")), false);
+					
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		String fname22 = null;
+		String sname22 = null;
+		
+			fname22 = ForwaedTo2.getString("firstName");
+			sname22 = ForwaedTo2.getString("lastName");
+			String fullName22 = " "+fname22+" "+sname22;
+			
 
 		GenericValue emailRecord_approver = null; GenericValue emailRecord_applicant = null; 
 		emailRecord_approver = delegator.makeValue("StaffScheduledMail", "msgId", delegator.getNextSeqId("StaffScheduledMail"), 
@@ -1342,7 +1439,15 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 	            "subject", "LEAVE FORWARDED", 
 	            "body", "Your leave application has been been forwarded to :"+fullName+" Payroll :"+payrolll+" For approval",
 	            "sendStatus", "NOTSEND");
+		
+		leaveLogs = delegator.makeValue("staffLeaveLogs", "logId", delegator.getNextSeqId("staffLeaveLogs"), 
+				"partyId", party,
+	            "leaveType", LeaveTypeELI2.getString("description"), 
+	            "action", "Forwarded to "+fullName22,
+	            "actionBy", user);
+		
 		toBeStored.add(leavesELI);
+		toBeStored.add(leaveLogs);
 		toBeStored.add(emailRecord_approver);
 		toBeStored.add(emailRecord_applicant);
 

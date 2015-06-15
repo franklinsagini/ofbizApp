@@ -2957,7 +2957,36 @@
 			<log message="===== Leave Rejected log stored for ${lookedUpValue.partyId} by ${userLogin.userLoginId} ===" level="info"/>
 			
 			<call-simple-method method-name="rejectEmplLeaveStatusEmailInformation" scope="inline"></call-simple-method>
+			<call-simple-method method-name="createStaffLeaveLogsReject" scope="inline"></call-simple-method>
     </simple-method>
+    
+     <!--======================= STAFF LEAVE LOGS =================================== -->
+                     
+	<simple-method method-name="createStaffLeaveLogsReject" short-description="Create File location">
+		<make-value entity-name="staffLeaveLogs" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="staffLeaveLogs" field="logId" />
+		<set from-field="logId" field="newEntity.logId" /> 
+		
+		
+		
+		<entity-one value-field="leavety" entity-name="EmplLeaveType">
+			<field-map field-name="leaveTypeId" from-field="parameters.leaveTypeId"/>
+			</entity-one>
+			
+			<entity-one value-field="approver" entity-name="Person">
+			<field-map field-name="partyId" value="${userLogin.partyId}"/>
+			</entity-one>
+		
+		<set field="newEntity.partyId" from-field="userLogin.userLoginId"/>
+		<set field="newEntity.leaveType" from-field="leavety.description"/>
+		<set field="newEntity.action" value="Leave Rejected By: ${approver.firstName} ${approver.lastName}"/>
+		<set field="newEntity.actionBy" value="${userLogin.partyId}"/>
+		
+	   <create-value value-field="newEntity" />
+			
+			</simple-method>
     
     
       <simple-method method-name="rejectEmplLeaveStatusEmailInformation">
@@ -3200,6 +3229,7 @@
 			<else>
 			    <create-value value-field="newEntity"/>
 				<create-value value-field="newStatusLog" />
+				<call-simple-method method-name="createStaffLeaveLogs" scope="inline"></call-simple-method>
 				<property-to-field resource="HumanResUiLabels"
 			property="CreateSuccess" field="successMessage" />
 			</else>
@@ -3208,6 +3238,31 @@
 		
 		
 		</simple-method>
+		
+		
+		 <!--======================= STAFF LEAVE LOGS =================================== -->
+                     
+	<simple-method method-name="createStaffLeaveLogs" short-description="Create File location">
+		<make-value entity-name="staffLeaveLogs" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="staffLeaveLogs" field="logId" />
+		<set from-field="logId" field="newEntity.logId" /> 
+		
+		<now-timestamp field="nowTimestamp" />
+		
+		<entity-one value-field="leavety" entity-name="EmplLeaveType">
+			<field-map field-name="leaveTypeId" from-field="parameters.leaveTypeId"/>
+			</entity-one>
+		
+		<set field="newEntity.partyId" value="${userLogin.partyId}"/>
+		<set field="newEntity.leaveType" from-field="leavety.description"/>
+		<set field="newEntity.action" value="Leave Application"/>
+		<set field="newEntity.actionBy" value="${userLogin.partyId}"/>
+		
+	   <create-value value-field="newEntity" />
+			
+			</simple-method>
 		
 		
 		
@@ -4467,7 +4522,7 @@
 		<entity-one entity-name="StaffWhoNeedTraining" value-field="lookedUpValue3">
         <field-map field-name="needId" from-field="singlestaffwithneeds.needId"/>
         </entity-one>
-        <set field="lookedUpValue2.trainingStageFromHod" value="FORWARDED"/>
+        <set field="lookedUpValue3.trainingStageFromHod" value="FORWARDED"/>
         <store-value value-field="lookedUpValue3"/>
 		</iterate>
 		

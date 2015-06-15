@@ -5893,13 +5893,20 @@ public class HumanResServices {
 		public static String forwardPerformanceScoresValidation(String party, String whichScore) {
 			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 			List<GenericValue> StaffScoresELI = null;
+			List<GenericValue> StaffScoresELI2 = null;
 			String state = null;
 			BigDecimal one = BigDecimal.ONE;
+			BigDecimal blank = null;
 
 			EntityConditionList<EntityExpr> anyZeroConditions = EntityCondition.makeCondition(UtilMisc.toList(
 					        EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, party),
 							EntityCondition.makeCondition(whichScore, EntityOperator.LESS_THAN, one)),
 							EntityOperator.AND);
+			
+			EntityConditionList<EntityExpr> anyblankConditions = EntityCondition.makeCondition(UtilMisc.toList(
+			        EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, party),
+					EntityCondition.makeCondition(whichScore, EntityOperator.EQUALS, blank)),
+					EntityOperator.AND);
 
 			
 			try {
@@ -5909,10 +5916,20 @@ public class HumanResServices {
 			} catch (GenericEntityException e) {
 				e.printStackTrace();
 			}
+			
+			try {
+				StaffScoresELI2 = delegator.findList("PerfPartyReview",
+						anyblankConditions, null, null, null, false);
+
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
 
 			if (StaffScoresELI.size() > 0) {
 				state = "INVALID";
-			} else {
+			}if (StaffScoresELI2.size() > 0) {
+				state = "INVALID";
+			}  else {
 				state = "VALID";
 			}
 
