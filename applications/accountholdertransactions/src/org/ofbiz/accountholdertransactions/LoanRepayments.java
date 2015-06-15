@@ -1435,15 +1435,22 @@ public class LoanRepayments {
 			}
 
 		}
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		
+		String acctgTransType = "LOAN_RECEIVABLE";
+		String acctgTransId = createAccountingTransaction(loanRepayment,
+				acctgTransType, userLogin, delegator);
 
 		principalAmount = principalAmount.add(excessAmount);
 
 		loanRepayment.set("interestAmount", interestAmount);
 		loanRepayment.set("insuranceAmount", insuranceAmount);
 		loanRepayment.set("principalAmount", principalAmount);
+		loanRepayment.set("acctgTransId", acctgTransId);
 		// loanRepayment.set("excessAmount", excessAmount);
 
-		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
 			TransactionUtil.begin();
 		} catch (GenericTransactionException e) {
@@ -1468,9 +1475,7 @@ public class LoanRepayments {
 			return "";
 		}
 		// Create Acctg Transa
-		String acctgTransType = "LOAN_RECEIVABLE";
-		String acctgTransId = createAccountingTransaction(loanRepayment,
-				acctgTransType, userLogin, delegator);
+
 		// String acctgTransId = createAccountingTransaction(loanRepayment,
 		// acctgTransType, userLogin);
 		// Debit Member Deposits with repayment amount
