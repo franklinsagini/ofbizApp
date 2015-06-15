@@ -1031,6 +1031,11 @@
 		<response name="success" type="view" value="perfGoalsDef"
 			save-home-view="true" />
 	</request-map>
+	<request-map uri="SubmittedScores">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="SubmittedScores"
+			save-home-view="true" />
+	</request-map>
 	<request-map uri="nonSubmitted">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="nonSubmitted"
@@ -1277,8 +1282,15 @@
 		<response name="error" type="request-redirect-noparam" value="setupActionPlanIndicator" />
 	</request-map>
 
-	<!--======================= ADD STAFF TO REVIEW GROUPS =================================== -->
-
+	<!--======================= RETURN REVIEW TO HOD =================================== -->
+	<request-map uri="returnToHOD">
+		<security https="true" auth="true" />
+		<event type="service" invoke="returnToHOD" />
+		<response name="success" type="view" value="SubmittedScores"/>
+		<response name="error" type="view" value="SubmittedScores" />
+	</request-map>
+	
+<!--======================= ADD STAFF TO REVIEW GROUPS =================================== -->
 	<request-map uri="addStaffToReviewGroup">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="addStaffToReviewGroup" />
@@ -4398,6 +4410,8 @@
 		page="component://humanres/widget/PerfReviewScreens.xml#NewPerfGoalDef" />
 		<view-map name="nonSubmitted" type="screen"
 		page="component://humanres/widget/PerfReviewScreens.xml#NotSubmittedScoresScreen" />
+		<view-map name="SubmittedScores" type="screen"
+		page="component://humanres/widget/PerfReviewScreens.xml#SubmittedScoresScreen" />
 	<view-map name="perfGoals" type="screen"
 		page="component://humanres/widget/PerfReviewScreens.xml#NewPerfGoal" />
 	<view-map name="FindPerfPositions" type="screen"

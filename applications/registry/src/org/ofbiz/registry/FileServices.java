@@ -1328,4 +1328,35 @@ public class FileServices {
 				
 				}
 				
+				public static String isUserTheFileOwner(String user, String fileMember){
+					Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+					String newRequester = null;
+					GenericValue fileMemberLI = null;
+					GenericValue fileUserLI = null;
+					
+					
+						try {
+							fileMemberLI = delegator.findOne("RegistryFiles", UtilMisc.toMap("partyId", fileMember), false);
+						} catch (GenericEntityException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					
+					
+						try {
+							fileUserLI = delegator.findOne("Person", UtilMisc.toMap("partyId", user), false);
+						} catch (GenericEntityException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					
+					if (fileUserLI !=null && fileMemberLI != null) {
+
+					}
+
+					
+				return newRequester; 
+				}
+				
+				
 }

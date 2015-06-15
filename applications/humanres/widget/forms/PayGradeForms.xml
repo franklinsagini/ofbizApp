@@ -30,8 +30,11 @@
     <form name="ListPayGrades" type="list" list-name="listIt" title="" target="updatePayGrade" paginate-target="FindPayGrade"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
+        <entity-condition entity-name="PayGrade">
+                <order-by field-name="payGradeName"/>
+            </entity-condition>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
-                <field-map field-name="inputFields" from-field="payGradeCtx"/>
+                <field-map field-name="inputFields" from-field="payGradeCtx"/>	
                 <field-map field-name="entityName" value="PayGrade"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
@@ -67,10 +70,10 @@
         <alt-target use-when="payGradeId==null" target="createPayGrade"/>
          <alt-target use-when="payGrade!=null" target="updatePayGrade"/>
         <!-- <auto-fields-service service-name="updatePayGrade"/> -->
-        <field use-when="payGrade!=null" name="payGradeId" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
+        <field use-when="payGrade!=null" name="payGradeId" tooltip="${uiLabelMap.CommonNotModifRecreat}" title="Job Grade"><display/></field>
         <!-- <field use-when="payGrade==null" name="payGradeId"><text/></field> -->
          <field name="payGradeId"><hidden/></field>
-        <field name="payGradeName" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
+        <field name="payGradeName" title="Job Grade Name" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
         <field name="submitButton" title="${uiLabelMap.CommonCreate}" use-when="payGrade==null" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" use-when="payGrade!=null" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
