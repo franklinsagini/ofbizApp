@@ -153,8 +153,8 @@
      </request-map>
 	
 	
-	
-	<request-map uri="processSalaryReceivedDeduct">
+	<!-- processSalaryReceivedDeduct -->
+	<!-- request-map uri="processSalaryReceivedDeduct">
 		<security auth="true" https="true" />
 		<event type="java"
 			path="org.ofbiz.salaryprocessing.SalaryProcessingServices" invoke="processSalaryReceivedDeduct" />
@@ -162,7 +162,18 @@
 			<redirect-parameter name="salaryMonthYearId"/>
 		</response>
 		<response name="error" type="view" value="memberSalary" />
-	</request-map>
+	</request-map -->
+	<request-map uri="processSalaryReceivedDeduct">
+             <security https="true" auth="true" />
+             <event type="service" invoke="processSalaryReceivedDeduct">
+             </event>
+             <response name="success" type="request-redirect" value="memberSalary">
+             	<redirect-parameter name="salaryMonthYearId"/>
+             	<redirect-parameter name="deductType"/>
+             	<redirect-parameter name="deductTypeLink"/>
+             </response>
+     </request-map>
+	
 	
 	<!-- Loan Deduction Only -->
 		<request-map uri="processSalaryReceivedLoanDeductionOnly">

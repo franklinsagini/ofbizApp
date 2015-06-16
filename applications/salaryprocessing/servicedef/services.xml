@@ -20,6 +20,15 @@
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
     
+    <!-- processSalaryReceivedDeduct -->
+    <service name="processSalaryReceivedDeduct" engine="simple" default-entity-name="SalaryMonthYear"
+             location="component://salaryprocessing/script/org/ofbiz/salaryprocessing/SalaryProcessingServices.xml" invoke="processSalaryReceivedDeduct" auth="true">
+        <description>processSalaryReceivedDeduct</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
     <!-- SalaryMonthYear -->
     <service name="createSalaryMonthYear" engine="simple" default-entity-name="SalaryMonthYear"
              location="component://salaryprocessing/script/org/ofbiz/salaryprocessing/SalaryProcessingServices.xml" invoke="createSalaryMonthYear" auth="true">
