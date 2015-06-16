@@ -7,6 +7,7 @@ depositReturnsList = [];
 statementofDepositReturnsTotalList = [];
 totalAccounts = 0
 totalAmount = BigDecimal.ZERO
+numberOfAcs = 0
 /*
 depositReturnsList = delegator.findList("StatementDepositReturns", null, UtilMisc.toSet("rangesId", "depositTypeId", "noOfAccounts", "amount"), UtilMisc.toList("rangesId"), null, false);
 
@@ -27,10 +28,11 @@ depositReturnsList = delegator.findList("StatementDepositReturns", null, UtilMis
 
 if (depositReturnsList) {
     depositReturnsList.each { depositReturn ->
+        numberOfAcs = NumberFormat.getNumberInstance().parse(depositReturn.noOfAccounts).intValue();
         range = delegator.findOne("DepositReturnsRanges", UtilMisc.toMap("rangesId", depositReturn.rangesId), true);
         depositType = delegator.findOne("DepositType", UtilMisc.toMap("depositTypeId", depositReturn.depositTypeId), true);
-        statementofDepositReturnsList.add(["minRange":range.minRange, "maxRange":range.maxRange, "depositType":depositType.name, noOfAccounts:depositReturn.noOfAccounts, amount:depositReturn.amount]);
-        totalAccounts = totalAccounts + depositReturn.noOfAccounts.toInteger()
+        statementofDepositReturnsList.add(["minRange":range.minRange, "maxRange":range.maxRange, "depositType":depositType.name, noOfAccounts:numberOfAcs, amount:depositReturn.amount]);
+
         totalAmount = totalAmount + depositReturn.amount
     }
 }

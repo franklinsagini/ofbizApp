@@ -41,6 +41,62 @@ under the License.
         </section>
     </screen>
 
+<!--     <screen name="InterOwings">
+        <section>
+            <actions>
+                <set field="titleProperty" value="AccountingPartyAccountsSummary"/>
+                <set field="tabButtonItem" value="InterOwings"/>
+                <set field="labelTitleProperty" value="AccountingPartyAccountsSummary"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyGlDecorator" location="${parameters.partyGlDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.AccountingPartyAccountsSummary}">
+                                <include-menu location="component://accounting/widget/AccountingMenus.xml" name="PartyGlShortCuts"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+ -->
+    <screen name="InterOwings">
+        <section>
+            <actions>
+                <set field="titleProperty" value="AccountingPartyAccountsSummary"/>
+                <set field="tabButtonItem" value="InterOwings"/>
+                <set field="labelTitleProperty" value="Inter Branch Owings"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
+                <entity-one entity-name="PartyNameView" value-field="currentOrganization" auto-field-map="false">
+                    <field-map field-name="partyId" from-field="organizationPartyId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+               <decorator-screen name="CommonPartyGlDecorator" location="${parameters.partyGlDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container style="lefthalf">
+                            <screenlet title="WHAT ${currentOrganization.groupName} OWES OTHER BRANCHES (PAYMENTS)">
+                                <include-form name="BranchTransactionsReport" location="component://accounting/widget/InterBranchSettlementForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="righthalf">
+                            <screenlet title="WHAT ${currentOrganization.groupName} IS OWED BY OTHER BRANCHES (RECEIPTS)">
+                                <include-form name="BranchSettlementReport" location="component://accounting/widget/InterBranchSettlementForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+
     <screen name="PartyAccountsSummary">
         <section>
             <actions>
