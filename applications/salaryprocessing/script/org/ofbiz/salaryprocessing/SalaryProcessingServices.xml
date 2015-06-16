@@ -20,6 +20,45 @@ under the License.
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
+    <!-- processSalaryReceivedNoDeduct -->
+    <simple-method method-name="processSalaryReceivedNoDeduct" short-description="process SalaryReceived No Deduct">
+        <!-- make-value entity-name="SalaryMonthYear" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set field="entityName" value="SalaryMonthYear"></set>
+        
+        <set field="newEntity.salaryMonthYearId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        <set field="newEntity.isActive" value="Y"/>
+        <set field="newEntity.salaryNumber" from-field="newEntity.salaryMonthYearId"/>
+	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/ -->
+        <set field="salaryMonthYearId" from-field="parameters.salaryMonthYearId"/>
+        
+        
+				<set field="processingStatus" value="${bsh:org.ofbiz.salaryprocessing.SalaryProcessingServices.processSalaryReceivedNoDeduct(salaryMonthYearId, userLogin);}"></set>
+				
+				<!-- success -->
+				<if>
+					<condition>
+						<if-compare operator="not-equals" value="success" field="processingStatus"></if-compare>
+					</condition>
+					<then>
+						<add-error> 
+		                    <!-- fail-property resource="SalaryProcessingUiLabels.xml"  
+		                        property="pullStationError" / --> 
+		                        <fail-message message="${processingStatus}"/>
+		                </add-error> 
+		                <check-errors /> 
+					</then>
+					<else>
+						 <property-to-field resource="SalaryProcessingUiLabels.xml" 
+            				property="Successfully processed the station" field="successMessage" />
+						
+					</else>
+				</if>
+				
+				
+    </simple-method>
     
         <!-- SalaryMonthYear -->
     <simple-method method-name="createSalaryMonthYear" short-description="Create SalaryMonthYear">

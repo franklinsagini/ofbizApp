@@ -131,7 +131,7 @@
         </request-map>
         
         <!-- Process Salary -->
-      <request-map uri="processSalaryReceivedNoDeduct">
+      <!-- request-map uri="processSalaryReceivedNoDeduct">
 		<security auth="true" https="true" />
 		<event type="java"
 			path="org.ofbiz.salaryprocessing.SalaryProcessingServices" invoke="processSalaryReceivedNoDeduct" />
@@ -139,7 +139,21 @@
 			<redirect-parameter name="salaryMonthYearId"/>
 		</response>
 		<response name="error" type="view" value="memberSalary" />
-	</request-map>
+	</request-map -->
+	<!-- createEmployerSalary -->
+	 <request-map uri="processSalaryReceivedNoDeduct">
+             <security https="true" auth="true" />
+             <event type="service" invoke="processSalaryReceivedNoDeduct">
+             </event>
+             <response name="success" type="request-redirect" value="memberSalary">
+             	<redirect-parameter name="salaryMonthYearId"/>
+             	<redirect-parameter name="deductType"/>
+             	<redirect-parameter name="deductTypeLink"/>
+             </response>
+     </request-map>
+	
+	
+	
 	<request-map uri="processSalaryReceivedDeduct">
 		<security auth="true" https="true" />
 		<event type="java"
@@ -180,12 +194,11 @@
         </request-map>
         
         <request-map uri="createEmployerSalary">
-                <security https="true" auth="true" />
-                <event type="service" invoke="createEmployerSalary" />
-                <response name="success" type="request-redirect"
-                        value="employerSalary"></response>
+             <security https="true" auth="true" />
+             <event type="service" invoke="createEmployerSalary" />
+             <response name="success" type="request-redirect" value="employerSalary"></response>
         </request-map>
-                <request-map uri="updateEmployerSalary">
+        <request-map uri="updateEmployerSalary">
                 <security https="true" auth="true" />
                 <event type="service" invoke="updateEmployerSalary" />
                 <response name="success" type="request-redirect"

@@ -1295,12 +1295,17 @@ public class AccHolderTransactionServices {
 
 					|| ((transactionType != null) && (transactionType
 							.equals("MSACCODEPOSIT")))
+							
+					|| ((transactionType != null) && (transactionType
+							.equals("SALARYPROCESSING")))
 
 					|| ((transactionType != null) && (transactionType
 							.equals("MEMBERACCOUNTJVINC")))) {
 				increaseDecrease = "I";
 			}
 		}
+		
+		//acctgTransId
 
 		Long memberAccountIdLong = null;
 		Long productChargeIdLong = null;
@@ -1338,6 +1343,131 @@ public class AccHolderTransactionServices {
 						"transactionType", transactionType, "treasuryId",
 						treasuryId, "accountTransactionParentId",
 						accountTransactionParentId));
+		try {
+			delegator.createOrStore(accountTransaction);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("Could not create Transaction");
+		}
+	}
+	
+	//acctgTransId
+	/***
+	 * Adding acctgTransId to createTransaction
+	 * 
+	 * **/
+	private static void createTransaction(GenericValue loanApplication,
+			String transactionType, Map<String, String> userLogin,
+			String memberAccountId, BigDecimal transactionAmount,
+			String productChargeId, String accountTransactionParentId, String acctgTransId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);// loanApplication.getDelegator();
+		GenericValue accountTransaction;
+		String accountTransactionId = delegator
+				.getNextSeqId("AccountTransaction");
+		String createdBy = (String) userLogin.get("userLoginId");
+		String updatedBy = (String) userLogin.get("userLoginId");
+		String branchId = getEmployeeBranch((String) userLogin.get("partyId"));
+
+		String partyId = getMemberPartyId(memberAccountId);
+		// loanApplication.getString("partyId");
+
+		String increaseDecrease;
+
+		if (productChargeId == null) {
+			increaseDecrease = "I";
+		} else {
+			increaseDecrease = "D";
+		}
+
+		// Check for withdrawal and deposit - overrides the earlier settings for
+		// product charges
+		if (productChargeId == null) {
+			if (((transactionType != null) && (transactionType
+					.equals("CASHWITHDRAWAL")))
+					|| ((transactionType != null) && (transactionType
+							.equals("ATMWITHDRAWAL")))
+
+					|| ((transactionType != null) && (transactionType
+							.equals("VISAWITHDRAW")))
+
+					|| ((transactionType != null) && (transactionType
+							.equals("MSACCOWITHDRAWAL")))
+
+					|| ((transactionType != null) && (transactionType
+							.equals("LOANCLEARANCE")))
+
+					|| ((transactionType != null) && (transactionType
+							.equals("LOANCLEARANCECHARGES")))
+
+					|| ((transactionType != null) && (transactionType
+							.equals("MEMBERACCOUNTJVDEC")))
+
+					|| ((transactionType != null) && (transactionType
+							.equals("CARDAPPLICATIONCHARGES")))
+
+					|| ((transactionType != null) && (transactionType
+							.equals("EXCISEDUTY")))
+
+					|| ((transactionType != null) && (transactionType
+							.equals("POSCASHPURCHASE")))) {
+				increaseDecrease = "D";
+			}
+
+			if (((transactionType != null) && (transactionType
+					.equals("CASHDEPOSIT")))
+
+					|| ((transactionType != null) && (transactionType
+							.equals("MSACCODEPOSIT")))
+							
+					|| ((transactionType != null) && (transactionType
+							.equals("SALARYPROCESSING")))
+
+					|| ((transactionType != null) && (transactionType
+							.equals("MEMBERACCOUNTJVINC")))) {
+				increaseDecrease = "I";
+			}
+		}
+		
+		//acctgTransId
+
+		Long memberAccountIdLong = null;
+		Long productChargeIdLong = null;
+		Long partyIdLong = null;
+
+		if (productChargeId != null) {
+			productChargeId = productChargeId.replaceAll(",", "");
+			productChargeIdLong = Long.valueOf(productChargeId);
+		}
+		if (memberAccountId != null) {
+			memberAccountId = memberAccountId.replaceAll(",", "");
+			memberAccountIdLong = Long.valueOf(memberAccountId);
+		}
+
+		if (partyId != null) {
+			partyId = partyId.replaceAll(",", "");
+			partyIdLong = Long.valueOf(partyId);
+		}
+
+		// "partyId", Long.valueOf(partyId),
+
+		String treasuryId = null;
+
+		if (loanApplication != null)
+			treasuryId = loanApplication.getString("treasuryId");
+
+		accountTransaction = delegator.makeValidValue("AccountTransaction",
+				UtilMisc.toMap("accountTransactionId", accountTransactionId,
+						"isActive", "Y", "createdBy", createdBy, "updatedBy",
+						updatedBy, "branchId", branchId, "partyId",
+						partyIdLong, "increaseDecrease", increaseDecrease,
+						"memberAccountId", memberAccountIdLong,
+						"productChargeId", productChargeIdLong,
+						"transactionAmount", transactionAmount,
+						"transactionType", transactionType, "treasuryId",
+						treasuryId, "accountTransactionParentId",
+						accountTransactionParentId, 
+						"acctgTransId", acctgTransId
+						));
 		try {
 			delegator.createOrStore(accountTransaction);
 		} catch (GenericEntityException e) {
@@ -4242,6 +4372,51 @@ public class AccHolderTransactionServices {
 
 		return accountTransactionParentId;
 	}
+	
+	//acctgTransId
+	/****
+	 * Overloaded the memberTransactionDeposit to add acctgTransId to the transaction
+	 * */
+	public static String memberTransactionDeposit(BigDecimal transactionAmount,
+			Long memberAccountId, Map<String, String> userLogin,
+			String withdrawalType, String accountTransactionParentId,
+			String productChargeId, String acctgTransId) {
+
+		log.info(" Transaction Amount ---- " + transactionAmount);
+		log.info(" Transaction MA ---- " + memberAccountId);
+
+		// log.info(" UserLogin ---- " + userLogin.get("userLoginId"));
+		log.info(" Transaction Amount ---- " + transactionAmount);
+		if (userLogin == null) {
+			userLogin = new HashMap<String, String>();
+			userLogin.put("userLoginId", "admin");
+		}
+
+		// Save Parent
+		if (accountTransactionParentId == null) {
+			GenericValue accountTransactionParent = createAccountTransactionParent(
+					memberAccountId, userLogin);
+			accountTransactionParentId = accountTransactionParent
+					.getString("accountTransactionParentId");
+		}
+		String transactionType = withdrawalType;
+
+		// Set the the Treasury ID
+		// String treasuryId = TreasuryUtility.getTellerId(userLogin);
+		// accountTransaction.set("treasuryId", treasuryId);
+		// addChargesToTransaction(accountTransaction, userLogin,
+		// transactionType);
+		// increaseDecrease
+
+		GenericValue accountTransaction = null;
+		createTransaction(accountTransaction, transactionType, userLogin,
+				memberAccountId.toString(), transactionAmount, productChargeId,
+				accountTransactionParentId, acctgTransId);
+		// postCashDeposit(memberAccountId, userLogin, transactionAmount);
+		// postCashWithdrawalTransaction(accountTransaction, userLogin);
+
+		return accountTransactionParentId;
+	}
 
 	public static Long getMemberSavingsAccountId(String payrollNumber) {
 		// TODO Auto-generated method stub
@@ -4302,7 +4477,7 @@ public class AccHolderTransactionServices {
 	/***
 	 * Post Entry
 	 * */
-	public static void createAccountPostingEntryt(BigDecimal amount,
+	public static void createAccountPostingEntry(BigDecimal amount,
 			String acctgTransId, String postingType, String glAccountId) {
 
 		GenericValue acctgTransEntry = null;
@@ -4327,7 +4502,7 @@ public class AccHolderTransactionServices {
 
 	public static void createAccountPostingEntry(BigDecimal amount,
 			String acctgTransId, String postingType, String glAccountId,
-			String entrySequence) {
+			String entrySequence, String branchId) {
 
 		GenericValue acctgTransEntry = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -4335,9 +4510,9 @@ public class AccHolderTransactionServices {
 				.makeValidValue("AcctgTransEntry", UtilMisc.toMap(
 						"acctgTransId", acctgTransId,
 
-						"acctgTransEntrySeqId", "2", "partyId", "Company",
+						"acctgTransEntrySeqId", entrySequence, "partyId", branchId,
 						"glAccountTypeId", "MEMBER_DEPOSIT", "glAccountId",
-						glAccountId, "organizationPartyId", "Company",
+						glAccountId, "organizationPartyId", branchId,
 						"amount", amount, "currencyUomId", "KES", "origAmount",
 						amount, "origCurrencyUomId", "KES", "debitCreditFlag",
 						postingType, "reconcileStatusId", "AES_NOT_RECONCILED"));
