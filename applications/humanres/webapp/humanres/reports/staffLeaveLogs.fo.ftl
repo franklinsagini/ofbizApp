@@ -38,32 +38,20 @@ under the License.
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
-			<fo:table-column column-width="100pt"/>
+			<fo:table-column column-width="120pt"/>
+            <fo:table-column column-width="200pt"/>
             <fo:table-column column-width="80pt"/>
             <fo:table-column column-width="80pt"/>
-            <fo:table-column column-width="80pt"/>
-            <fo:table-column column-width="70pt"/>
-            <fo:table-column column-width="70pt"/>
-            <fo:table-column column-width="90pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="left">Leave Type</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Approved By</fo:block>
+                        <fo:block text-align="left">Action</fo:block>
                     </fo:table-cell>
                      <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Next Approver</fo:block>
-                    </fo:table-cell>
-                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Rejected By</fo:block>
-                    </fo:table-cell>
-                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Rejection Reason</fo:block>
-                    </fo:table-cell>
-					<fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Approval Status</fo:block>
+                        <fo:block text-align="left">Action By</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="left">Date</fo:block>
@@ -73,56 +61,23 @@ under the License.
             <fo:table-body>
 
                   <#list logs as activity>
-                    <#if activity.leaveId?has_content>
-                        <#assign leave = delegator.findOne("EmplLeave", {"leaveId" : activity.leaveId}, false)/>
+                    
+					<#if activity.actionBy?has_content>
+                        <#assign approver = delegator.findOne("Person", {"partyId" : activity.actionBy}, false)/>
                     </#if>
-                    <#if leave.leaveTypeId?has_content>
-                        <#assign leaveTyp = delegator.findOne("EmplLeaveType", {"leaveTypeId" : leave.leaveTypeId}, false)/>
-                    </#if>
-                     <#if activity.approvedBy?has_content>
-                        <#assign apprvdBy = delegator.findOne("Person", {"partyId" : activity.approvedBy}, false)/>
-                    </#if>
-					<#if activity.nextApprover?has_content>
-                        <#assign nextApprvd = delegator.findOne("Person", {"partyId" : activity.nextApprover}, false)/>
-                    </#if>
-					<#if activity.rejectedBy?has_content>
-                        <#assign rejectBy = delegator.findOne("Person", {"partyId" : activity.rejectedBy}, false)/>
-                    </#if>
-                     <fo:table-row>						
+                     <fo:table-row>					
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if leaveTyp?has_content>
-                                <fo:block>${leaveTyp.description}</fo:block>
-                            <#else>
-                                <fo:block>Not Defined</fo:block>
-                            </#if>
+                                <fo:block>${activity.leaveType}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if apprvdBy?has_content>
-                                <fo:block>${apprvdBy.firstName?if_exists} ${apprvdBy.lastName?if_exists}</fo:block>
-                            <#else>
-                                <fo:block>Not Defined</fo:block>
-                            </#if>
+                                <fo:block>${activity.action?if_exists}</fo:block>
                         </fo:table-cell>
 						 <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if nextApprvd?has_content>
-                                <fo:block>${nextApprvd.firstName?if_exists} ${nextApprvd.lastName?if_exists}</fo:block>
+                            <#if approver?has_content>
+                                <fo:block>${approver.firstName?if_exists} ${approver.lastName?if_exists}</fo:block>
                             <#else>
                                 <fo:block>Not Defined</fo:block>
                             </#if>
-                        </fo:table-cell>
-						 <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if rejectBy?has_content>
-                                <fo:block>${rejectBy.firstName?if_exists} ${rejectBy.lastName?if_exists}</fo:block>
-                            <#else>
-                                <fo:block>Not Defined</fo:block>
-                            </#if>
-                        </fo:table-cell>
-                        
-                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.rejectReason?if_exists}</fo:block>
-                        </fo:table-cell>
-                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.approvalStatus?if_exists}</fo:block>
                         </fo:table-cell>
 						 <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${activity.createdStamp?if_exists}</fo:block>
