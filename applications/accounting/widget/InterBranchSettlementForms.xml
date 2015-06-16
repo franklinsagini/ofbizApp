@@ -290,18 +290,22 @@ under the License.
 
     <form name="BranchTransactionsReport" type="single" target="branchTransactionsReport" title="" header-row-style="header-row"
         default-table-style="basic-table">
-        <field name="fundingTypeId" title="Transaction Type" widget-style="required" required-field="true">
+        <actions>
+            <entity-condition entity-name="PartyAcctgPrefAndGroup" list="partyAcctgPrefAndGroup">
+                <condition-expr field-name="partyId" operator="not-equals" from-field="organizationPartyId"/>
+            </entity-condition>
+        </actions>
+        <field name="acctgTransEntryTypeId" title="Transaction Type" widget-style="required" required-field="true">
             <drop-down allow-empty="false">
-                <entity-options entity-name="FundingTypes" description="${fundingTypeName} - ${fundingTypeId}">
-                    <entity-order-by field-name="fundingTypeName"/>
+                <entity-options entity-name="AcctgTransEntryType" description="${description}">
+                    <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="organizationPartyId" title="Branch">
-            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
-                <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
-                    <entity-order-by field-name="groupName"/>
-                </entity-options>
+        <field name="partyId" title="Branch">
+            <drop-down allow-empty="false">
+                <list-options key-name="partyId" list-name="partyAcctgPrefAndGroup"
+                    description="${groupName}" />
             </drop-down>
         </field>
         <field name="submitButton" title="Run Report" widget-style="smallSubmit">
@@ -311,11 +315,22 @@ under the License.
 
     <form name="BranchSettlementReport" type="single" target="branchTransactionsReport" title="" header-row-style="header-row"
         default-table-style="basic-table">
-        <field name="organizationPartyId" title="Branch">
-            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
-                <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
-                    <entity-order-by field-name="groupName"/>
+        <actions>
+            <entity-condition entity-name="PartyAcctgPrefAndGroup" list="partyAcctgPrefAndGroup">
+                <condition-expr field-name="partyId" operator="not-equals" from-field="organizationPartyId"/>
+            </entity-condition>
+        </actions>
+        <field name="acctgTransEntryTypeId" title="Transaction Type" widget-style="required" required-field="true">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="AcctgTransEntryType" description="${description}">
+                    <entity-order-by field-name="description"/>
                 </entity-options>
+            </drop-down>
+        </field>
+        <field name="partyId" title="Branch">
+            <drop-down allow-empty="false">
+                <list-options key-name="partyId" list-name="partyAcctgPrefAndGroup"
+                    description="${groupName}" />
             </drop-down>
         </field>
         <field name="submitButton" title="Run Report" widget-style="smallSubmit">
