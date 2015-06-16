@@ -648,7 +648,42 @@
         </section>
     </screen>
     
-    
+     <!--======================= STAFF WHOSE SCORES HAVE BEEN SUBMITTED =================================== -->    
+    <screen name="SubmittedScoresScreen">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Perf Reviews"/>
+                <set field="headerItem" value="PerfReviews"/>
+                <set field="tabButtonItem" value="SubmittedScores"/>                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPerfGoals"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <entity-one entity-name="StaffInPerfReviewGroup" value-field="StaffInPerfReviewGroupContext"/>
+                
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <!-- <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/> -->
+                        <container style="leftclear">
+							<label style="h1"
+							text="Staff Whose Performance Scores Have Been Submitted" />
+					</container>
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Staff List">
+                        			<include-form name="SubmittedScoresForm" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
      
     
     

@@ -2236,7 +2236,7 @@
 		<field name="scoreOne" title="Maximum Score"><display/>
 		</field>
 		
-		<field name="scoreTwo" title="Performance">
+		<field name="scoreTwo" title="Performance" >
             <drop-down allow-empty="true">
                 <entity-options entity-name="PerfRatingType" key-field-name="points" description="${description}">
                 </entity-options>
@@ -2247,7 +2247,7 @@
 			<hidden value="Y" />
 		</field>
 		<field name="submitButton" title="Review Myself" widget-style="smallSubmit">
-			<submit />
+			<submit button-type="button" />
 		</field>
 	</form>
 	
@@ -2563,6 +2563,32 @@
 		</field>
 		<field name="hod" title="Staff HOD/Supervisor"><display-entity key-field-name="partyId" entity-name="Person" description="${firstName} ${lastName}"></display-entity>
 		</field>
+	</form>
+	
+	
+	<!-- =====================  STAFF WHOSE SCORES HAVE BEEN SUBMITTED  ===================================== -->
+	
+	 <form name="SubmittedScoresForm" type="multi" use-row-submit="true"
+		title="Selected Monument" separate-columns="true" paginate-target=""
+		target="" default-table-style="basic-table hover-bar" odd-row-style="alternate-row">
+		<actions>
+		<entity-condition entity-name="StaffInPerfReviewGroup">
+				<condition-expr field-name="stage" value="FORWARDED" operator="equals"/>
+			</entity-condition>
+		</actions>
+		
+		<field name="StaffInPerfReviewGroupId"><hidden/>
+		</field>
+		<field name="partyId" title="Staff Name"><display-entity entity-name="Person" description="${firstName} ${lastName}"></display-entity>
+		</field>
+		<field name="hod" title="Staff HOD/Supervisor"><display-entity key-field-name="partyId" entity-name="Person" description="${firstName} ${lastName}"></display-entity>
+		</field>
+		
+		 <field name="returnToHOD" title=" " widget-style="buttontext">
+			<hyperlink also-hidden="false"  description="Return To Supervisor" target="returnToHOD">
+				<parameter param-name="partyId" />
+			</hyperlink>
+		</field> 
 	</form>
 	
 	

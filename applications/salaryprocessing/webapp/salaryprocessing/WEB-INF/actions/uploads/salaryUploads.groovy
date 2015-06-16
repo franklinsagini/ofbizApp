@@ -27,8 +27,16 @@ context.nowTimestampString = UtilDateTime.nowTimestamp().toString();
 // make the image file formats
 //salaryFilenameFormat = UtilProperties.getPropertyValue('salaries', 'salary.filename.format');
 //salaryServerPath = UtilProperties.getPropertyValue('salaries', 'salaries.server.path');
+def folder = new File("/F:/projects/vergeofbiz/vergesacco/thesalary")
 
-salaryServerPath = "/F:/projects/vergeofbiz/vergesacco/thesalary";
+if (!folder.exists()){
+	salaryServerPath = "/home/online/salaries";
+} else{
+	salaryServerPath = "/F:/projects/vergeofbiz/vergesacco/thesalary";
+}
+
+
+//linussalaryServerPath = "/home/online/salaries";
 
 //salaryServerPath = FlexibleStringExpander.expandString(UtilProperties.getPropertyValue("salaries", "salaryfile.server.path"), context);
 //salaryServerPath = "";
@@ -127,6 +135,10 @@ if (fileType) {
 			//			}
 			file.renameTo(file1);
 		} catch (Exception e) {
+		
+		//Use Linux
+		//linussalaryServerPath
+		
 			e.printStackTrace();
 		}
 		

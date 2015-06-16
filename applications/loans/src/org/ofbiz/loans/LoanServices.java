@@ -3584,5 +3584,38 @@ public class LoanServices {
 		
 		return false;
 	}
+	
+	
+	/***
+	 * @author Japheth Odonya  @when Jun 14, 2015 10:00:29 PM
+	 * 
+	 * Check that Loan Product Has charges (at least two)
+	 * */
+	public static String productHasCharges(Long loanProductId){
+		
+		EntityConditionList<EntityExpr> chargesConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanProductId", EntityOperator.EQUALS,
+						loanProductId)), EntityOperator.AND);
+		
+		List<GenericValue> loanProductChargeELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		try {
+			loanProductChargeELI = delegator.findList("LoanProductCharge",
+					chargesConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		GenericValue loanProduct = LoanUtilities.getLoanProduct(loanProductId);
+
+		if ((loanProductChargeELI == null) || (loanProductChargeELI.size() < 2)){
+				return loanProduct.getString("name")+" must have at least two charges configured in setup - Insurance and Appraisal fee - please check with finance to ensure proper setup of the product!";
+		}
+		
+		return "success";
+	}
 
 }

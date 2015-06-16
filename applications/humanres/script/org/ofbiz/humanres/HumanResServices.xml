@@ -1137,7 +1137,10 @@
        <entity-one entity-name="PerfReviewPeriod" value-field="lookedUpValue">
         <field-map field-name="PerfReviewPeriodId" from-field="parameters.PerfReviewPeriodId"/>
         </entity-one>
+        
+       
         <set field="lookedUpValue.status" value="CLOSED"/>
+        
         
 		<set field="period" from-field="lookedUpValue.quarter"/>
 		<set field="exist" value="${bsh:org.ofbiz.humanres.HumanResServices.haveAllScoresBeenForwarded(period);}"/>
@@ -1157,7 +1160,18 @@
 			</then>
 			
 			<else>
+			 <entity-condition list="groups" entity-name="StaffInPerfReviewGroup">
+        <condition-expr field-name="stage" operator="not-equals" value="CLOSED"/>
+        </entity-condition>
+        <iterate entry="singlegroup" list="groups">
+        <entity-one entity-name="StaffInPerfReviewGroup" value-field="lookedUpValue2">
+        <field-map field-name="StaffInPerfReviewGroupId" from-field="singlegroup.StaffInPerfReviewGroupId"/>
+        </entity-one>
+        <set field="lookedUpValue2.stage" value="CLOSED"/>
+         <store-value value-field="lookedUpValue2"/>
+        </iterate>
 			   <store-value value-field="lookedUpValue"/>
+			  
 		      <property-to-field resource="HumanResUiLabels"
 			  property="UpdateSuccess" field="successMessage" />
 			</else>
@@ -1174,6 +1188,31 @@
     <!--======================= SUBMIT PERSONAL REVIEW SCORES =================================== -->
 			  
 		<simple-method method-name="submitPersonalReviewScores" short-description="Update PerfGoals">
+		
+		
+		<set field="score" value="scoreTwo"/>
+		<set field="party" from-field="parameters.partyId"/>
+		<set field="validate" value="${bsh:org.ofbiz.humanres.HumanResServices.forwardPerformanceScoresValidation(party, score);}"/>
+		<set field="invalid" value="INVALID"/>
+		
+		
+		<if>
+			<condition>
+					<if-compare-field field="validate"
+						to-field="invalid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="ForwardingZeroScoreError" />
+				</add-error>
+				<check-errors />
+			</then>
+			
+			<else>
+			
+		
+			
 		
 		<entity-condition list="reviews" entity-name="PerfPartyReview">
 		<condition-list>
@@ -1201,19 +1240,69 @@
         <set field="lookedUpValue2.stage" value="HOD"/>
         <store-value value-field="lookedUpValue2"/>
 		</iterate>
+		
+		</else>
+		</if>
         
     </simple-method>
     
     <!--======================= HOD REVIEW  =================================== -->
-			  <simple-method method-name="HODreviews" short-description="HOD Reviews">
+		<simple-method method-name="HODreviews" short-description="HOD Reviews">
         <entity-one entity-name="PerfPartyReview" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <store-value value-field="lookedUpValue"/>
+        
+        <set field="score" set-if-empty="true" set-if-null="true"/>
+        <set field="userScore" from-field="lookedUpValue.scoreThree"/>
+        <set field="validate" value="${bsh:org.ofbiz.humanres.HumanResServices.PerformanceScoresReviewValidation(score);}"/>
+		<set field="invalid" value="INVALID"/>
+        
+        <if>
+			<condition>
+					<if-compare-field field="validate"
+						to-field="invalid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="ForwardingZeroScoreError" />
+				</add-error>
+				<check-errors />
+			</then>
+			
+			<else>
+			 <store-value value-field="lookedUpValue"/>
+			</else>
+			</if>
+       
     </simple-method>
     
     <!--======================= SUBMIT HOD REVIEW SCORES =================================== -->
 			  
 		<simple-method method-name="submitHODReviewScores" short-description="Update PerfGoals">
+		
+		<set field="score" value="scoreThree"/>
+		<set field="party" from-field="parameters.partyId"/>
+		<set field="validate" value="${bsh:org.ofbiz.humanres.HumanResServices.forwardPerformanceScoresValidation(party, score);}"/>
+		<set field="invalid" value="INVALID"/>
+		
+		
+		<if>
+			<condition>
+					<if-compare-field field="validate"
+						to-field="invalid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="ForwardingZeroScoreError" />
+				</add-error>
+				<check-errors />
+			</then>
+			
+			<else>
+			
+		
+			
 		
 		<entity-condition list="reviews" entity-name="PerfPartyReview">
 		<condition-list>
@@ -1242,7 +1331,57 @@
         <set field="lookedUpValue2.trainingStage" value="HOD"/>
         <store-value value-field="lookedUpValue2"/>
 		</iterate>
+		
+		</else>
+		</if>
         
+    </simple-method>
+    
+     <!--======================= RETURN REVIEW TO HOD   =================================== -->
+			  <simple-method method-name="returnToHOD" short-description="Update PerfGoals">
+			  
+		<entity-condition list="staffs" entity-name="StaffInPerfReviewGroup">
+		<condition-list>
+		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+		</condition-list>
+		</entity-condition>
+		<iterate entry="singleStaff" list="staffs">
+		<entity-one entity-name="StaffInPerfReviewGroup" value-field="lookedUpValue2">
+        <field-map field-name="StaffInPerfReviewGroupId" from-field="singleStaff.StaffInPerfReviewGroupId"/>
+        </entity-one>
+        <set field="lookedUpValue2.stage" value="HARMONIZED"/>
+        <set field="lookedUpValue2.trainingStage" value="HOD"/>
+        <store-value value-field="lookedUpValue2"/>
+		</iterate>
+		
+		       <!-- LOOK FOR OPEN PERIOD -->
+		<entity-condition list="periods" entity-name="PerfReviewPeriod">
+		<condition-list>
+		<condition-expr field-name="status" value="OPEN"/>
+		</condition-list>
+		</entity-condition>
+		<iterate entry="singlePeriod" list="periods">
+		<entity-one entity-name="PerfReviewPeriod" value-field="lookedUpValue23">
+        <field-map field-name="PerfReviewPeriodId" from-field="singlePeriod.PerfReviewPeriodId"/>
+        </entity-one>
+        <set field="quater" from-field="lookedUpValue23.quarter"/>
+		
+		
+		<entity-condition list="reviews" entity-name="PerfPartyReview">
+		<condition-list>
+		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+		<condition-expr field-name="quarter" from-field="quater"/>
+		</condition-list>
+		</entity-condition>
+		<iterate entry="singlereview" list="reviews">
+		<entity-one entity-name="PerfPartyReview" value-field="lookedUpValue24">
+        <field-map field-name="reviewId" from-field="singlereview.reviewId"/>
+        </entity-one>
+        <set field="lookedUpValue24.stage" value="HARMONIZED"/>
+        <store-value value-field="lookedUpValue24"/>
+		</iterate>
+		</iterate>
+		
     </simple-method>
     
     <!--======================= HARMONIZED REVIEW  =================================== -->
@@ -1255,6 +1394,28 @@
     <!--======================= SUBMIT HARMONIZED REVIEW SCORES =================================== -->
 			  
 		<simple-method method-name="submitHarmonizedReviewScores" short-description="Update PerfGoals">
+		
+		
+		<set field="score" value="scoreFour"/>
+		<set field="party" from-field="parameters.partyId"/>
+		<set field="validate" value="${bsh:org.ofbiz.humanres.HumanResServices.forwardPerformanceScoresValidation(party, score);}"/>
+		<set field="invalid" value="INVALID"/>
+		
+		
+		<if>
+			<condition>
+					<if-compare-field field="validate"
+						to-field="invalid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="ForwardingZeroScoreError" />
+				</add-error>
+				<check-errors />
+			</then>
+			
+			<else>
 		
 		<entity-condition list="reviews" entity-name="PerfPartyReview">
 		<condition-list>
@@ -1282,6 +1443,9 @@
         <set field="lookedUpValue2.stage" value="FORWARDED"/>
         <store-value value-field="lookedUpValue2"/>
 		</iterate>
+		
+		</else>
+		</if>
         
     </simple-method>
 			
@@ -2793,7 +2957,36 @@
 			<log message="===== Leave Rejected log stored for ${lookedUpValue.partyId} by ${userLogin.userLoginId} ===" level="info"/>
 			
 			<call-simple-method method-name="rejectEmplLeaveStatusEmailInformation" scope="inline"></call-simple-method>
+			<call-simple-method method-name="createStaffLeaveLogsReject" scope="inline"></call-simple-method>
     </simple-method>
+    
+     <!--======================= STAFF LEAVE LOGS =================================== -->
+                     
+	<simple-method method-name="createStaffLeaveLogsReject" short-description="Create File location">
+		<make-value entity-name="staffLeaveLogs" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="staffLeaveLogs" field="logId" />
+		<set from-field="logId" field="newEntity.logId" /> 
+		
+		
+		
+		<entity-one value-field="leavety" entity-name="EmplLeaveType">
+			<field-map field-name="leaveTypeId" from-field="parameters.leaveTypeId"/>
+			</entity-one>
+			
+			<entity-one value-field="approver" entity-name="Person">
+			<field-map field-name="partyId" value="${userLogin.partyId}"/>
+			</entity-one>
+		
+		<set field="newEntity.partyId" from-field="userLogin.userLoginId"/>
+		<set field="newEntity.leaveType" from-field="leavety.description"/>
+		<set field="newEntity.action" value="Leave Rejected By: ${approver.firstName} ${approver.lastName}"/>
+		<set field="newEntity.actionBy" value="${userLogin.partyId}"/>
+		
+	   <create-value value-field="newEntity" />
+			
+			</simple-method>
     
     
       <simple-method method-name="rejectEmplLeaveStatusEmailInformation">
@@ -3036,6 +3229,7 @@
 			<else>
 			    <create-value value-field="newEntity"/>
 				<create-value value-field="newStatusLog" />
+				<call-simple-method method-name="createStaffLeaveLogs" scope="inline"></call-simple-method>
 				<property-to-field resource="HumanResUiLabels"
 			property="CreateSuccess" field="successMessage" />
 			</else>
@@ -3044,6 +3238,31 @@
 		
 		
 		</simple-method>
+		
+		
+		 <!--======================= STAFF LEAVE LOGS =================================== -->
+                     
+	<simple-method method-name="createStaffLeaveLogs" short-description="Create File location">
+		<make-value entity-name="staffLeaveLogs" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="staffLeaveLogs" field="logId" />
+		<set from-field="logId" field="newEntity.logId" /> 
+		
+		<now-timestamp field="nowTimestamp" />
+		
+		<entity-one value-field="leavety" entity-name="EmplLeaveType">
+			<field-map field-name="leaveTypeId" from-field="parameters.leaveTypeId"/>
+			</entity-one>
+		
+		<set field="newEntity.partyId" value="${userLogin.partyId}"/>
+		<set field="newEntity.leaveType" from-field="leavety.description"/>
+		<set field="newEntity.action" value="Leave Application"/>
+		<set field="newEntity.actionBy" value="${userLogin.partyId}"/>
+		
+	   <create-value value-field="newEntity" />
+			
+			</simple-method>
 		
 		
 		
@@ -4303,7 +4522,7 @@
 		<entity-one entity-name="StaffWhoNeedTraining" value-field="lookedUpValue3">
         <field-map field-name="needId" from-field="singlestaffwithneeds.needId"/>
         </entity-one>
-        <set field="lookedUpValue2.trainingStageFromHod" value="FORWARDED"/>
+        <set field="lookedUpValue3.trainingStageFromHod" value="FORWARDED"/>
         <store-value value-field="lookedUpValue3"/>
 		</iterate>
 		
