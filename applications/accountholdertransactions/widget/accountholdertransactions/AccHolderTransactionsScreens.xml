@@ -2144,6 +2144,42 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	
+	<!-- loanRepaymentPrintOut -->
+		<screen name="loanRepaymentPrintOut">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Loan Repayment Printout" />
+				<set field="headerItem" value="loanRepaymentPrintOut" />
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="loanRepaymentPrintOut" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+					property="KEN" default="KEN"/ -->
+				<set field="acctgTransId" from-field="parameters.acctgTransId" />
+
+
+
+				<set field="viewSize" value="99999" />
+				<script
+					location="component://accountholdertransactions/webapp/accountholdertransactions/WEB-INF/actions/reports/LoanRepaymentPrintOut.groovy" />
+			</actions>
+			<widgets>
+				<decorator-screen name="SimpleDecoratorPrintout"
+					location="component://common/widget/CommonScreens.xml">
+					<decorator-section name="body">
+						<platform-specific>
+							<xsl-fo>
+								<html-template
+									location="component://accountholdertransactions/webapp/accountholdertransactions/reports/LoanRepaymentPrintOut.fo.ftl" />
+							</xsl-fo>
+						</platform-specific>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
 
 	<!-- msaccoTransactionLogs -->
 	<screen name="msaccoTransactionLogs">

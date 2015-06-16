@@ -293,9 +293,14 @@
 	<request-map uri="createLoanRepayment">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createLoanRepayment" />
-		<response name="success" type="request-redirect" value="loanRepayment">
+		<!--response name="success" type="request-redirect" value="loanRepayment">
 			<redirect-parameter name="partyId" />
+		</response -->
+		
+		<response name="success" type="request-redirect" value="loanRepaymentPrintOut">
+			<redirect-parameter name="acctgTransId" />
 		</response>
+		
 		<response name="error" type="view" value="loanRepayment" />
 	</request-map>
 
@@ -846,6 +851,22 @@
 		<response name="error" type="view" value="receivedPaymentBreakdownFailed" />
 	</request-map>
 	
+	<!-- Loan Repayment Printout -->
+	<request-map uri="loanRepaymentPrintOut">
+		<security auth="true" https="true" />
+		<!-- response name="success" type="view" value="transactionPrintOut">
+			<redirect-parameter name="accountTransactionParentId"/>
+		</response -->
+		
+		<response name="success" type="view" value="loanRepaymentPrintOut">
+			<redirect-parameter name="acctgTransId"/>
+		</response>
+		<!-- response name="success" type="view" value="cashWithdrawal">
+			<redirect-parameter name="partyId"/>
+		</response -->
+		
+		
+	</request-map>
 	
 	
 	<!-- end of request mappings -->
@@ -942,9 +963,12 @@
 		content-type="text/csv"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#expectedPaymentBreakdowncsv" />
 
-	<view-map name="transactionPrintOut" type="screenfop"
-		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#transactionPrintOut" content-type="application/pdf" encoding="none"  />
 
+	<!-- loanRepaymentPrintOut -->
+		<view-map name="loanRepaymentPrintOut" type="screenfop"
+		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#loanRepaymentPrintOut" content-type="application/pdf" encoding="none"  />
+	
+	
 	<view-map name="printMiniStatement" type="screenfop"
 		page="component://loanreports/widget/LoanReportsScreens.xml#memberstatementreportPDF" content-type="application/pdf" encoding="none"  />
 
