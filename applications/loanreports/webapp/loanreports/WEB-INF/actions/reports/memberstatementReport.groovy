@@ -24,6 +24,7 @@ class MemberTransaction{
 	def transactionDescription
 	def increaseDecrease
 	def transactionAmount
+	def isLoanTransaction
 }
 
 expectedPaymentReceivedList = delegator.findByAnd("ExpectedPaymentReceived",  [payrollNo : payrollNo], null, false);
@@ -149,7 +150,8 @@ allLoansList.eachWithIndex { loanItem, index ->
 	loanTransaction = new MemberTransaction();
 	loanTransaction.transactionDate = loanItem.disbursementDate;
 	loanTransaction.transactionDescription = 'Loan Disbursed'
-	loanTransaction.increaseDecrease = 'I'
+	loanTransaction.increaseDecrease = 'D'
+	loanTransaction.isLoanTransaction = true
 	loanTransaction.transactionAmount = loanItem.loanAmt
 	
 	memberStatement.name = "LOAN TYPE : "+loanProduct.name;
@@ -164,7 +166,8 @@ allLoansList.eachWithIndex { loanItem, index ->
 		loanTransaction = new MemberTransaction()
 		loanTransaction.transactionDate = loanItem.createdStamp
 		loanTransaction.transactionDescription = 'Total Repaid at Opening'
-		loanTransaction.increaseDecrease = 'D'
+		loanTransaction.increaseDecrease = 'I'
+		loanTransaction.isLoanTransaction = true
 		loanTransaction.transactionAmount = (loanItem.loanAmt - loanItem.outstandingBalance)
 		memberStatement.listOfTransactions.add(loanTransaction);
 	}
@@ -183,8 +186,9 @@ allLoansList.eachWithIndex { loanItem, index ->
 			loanTransaction.transactionDescription = "Insurance Charged"
 		}
 		
-		loanTransaction.increaseDecrease = 'I'
+		loanTransaction.increaseDecrease = 'D'
 		loanTransaction.transactionAmount = interestInsurance.amountAccrued
+		loanTransaction.isLoanTransaction = true
 		
 		memberStatement.listOfTransactions.add(loanTransaction);
 		}
@@ -204,7 +208,8 @@ allLoansList.eachWithIndex { loanItem, index ->
 			loanTransaction.transactionDescription = "Insurance Paid"
 			
 			
-			loanTransaction.increaseDecrease = 'D'
+			loanTransaction.increaseDecrease = 'I'
+			loanTransaction.isLoanTransaction = true
 			loanTransaction.transactionAmount = loanRepaymentItem.insuranceAmount
 			
 			memberStatement.listOfTransactions.add(loanTransaction);
@@ -220,9 +225,9 @@ allLoansList.eachWithIndex { loanItem, index ->
 			loanTransaction.transactionDescription = "Interest Paid"
 			
 			
-			loanTransaction.increaseDecrease = 'D'
+			loanTransaction.increaseDecrease = 'I'
 			loanTransaction.transactionAmount = loanRepaymentItem.interestAmount
-			
+			loanTransaction.isLoanTransaction = true
 			memberStatement.listOfTransactions.add(loanTransaction);
 		}
 
@@ -236,7 +241,8 @@ allLoansList.eachWithIndex { loanItem, index ->
 			loanTransaction.transactionDescription = "Principal Paid"
 			
 			
-			loanTransaction.increaseDecrease = 'D'
+			loanTransaction.increaseDecrease = 'I'
+			loanTransaction.isLoanTransaction = true
 			loanTransaction.transactionAmount = loanRepaymentItem.principalAmount
 			
 			memberStatement.listOfTransactions.add(loanTransaction);
