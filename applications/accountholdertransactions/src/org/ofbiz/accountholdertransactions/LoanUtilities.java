@@ -2286,6 +2286,23 @@ public class LoanUtilities {
 		return false;
 	}
 	
+	public static boolean hasAccount(String accountCode, String payrollNo) {
+		// TODO Check of a member , given payroll number has an account of the
+		// product given
+		Long accountProductId = LoanUtilities.getAccountProductGivenCodeId(
+				accountCode).getLong("accountProductId");
+
+		Long partyId = LoanUtilities.getMemberId(payrollNo);
+
+		Long memberAccountId = LoanUtilities
+				.getMemberAccountIdFromMemberAccount(partyId, accountProductId);
+
+		if (memberAccountId != null)
+			return true;
+
+		return false;
+	}
+	
 	
 	/***
 	 * @author Japheth Odonya  @when Jun 11, 2015 2:31:10 PM

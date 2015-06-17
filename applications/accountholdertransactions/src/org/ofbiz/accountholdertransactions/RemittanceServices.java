@@ -1161,6 +1161,130 @@ public class RemittanceServices {
 
 		return totalAmount;
 	}
+	
+	/***
+	 * getTotalRemittedChequeAmountAvailable
+	 * 
+	 * */
+	public static BigDecimal getTotalRemittedChequeAmountAvailable(String employerCode,
+			String month, String year) {
+
+		// GenericValue station = findStationGivenStationNumber(stationNumber);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		// Get
+		List<GenericValue> stationAccountTransactionELI = null;
+		String monthYear = month+year;
+		monthYear = monthYear.toString();
+		// Get total amount given station and month
+		EntityConditionList<EntityExpr> stationAccountTransactionConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"employerCode", EntityOperator.EQUALS,
+						employerCode.trim()), EntityCondition.makeCondition(
+						"monthyear", EntityOperator.EQUALS, monthYear)
+
+				), EntityOperator.AND);
+
+		try {
+			stationAccountTransactionELI = delegator.findList(
+					"StationAccountTransaction",
+					stationAccountTransactionConditions, null, null, null,
+					false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		// TransactionAmount
+		BigDecimal totalAmount = BigDecimal.ZERO;
+		for (GenericValue stationAccountTransaction : stationAccountTransactionELI) {
+			if (stationAccountTransaction.getBigDecimal("transactionAmount") != null) {
+				totalAmount = totalAmount.add(stationAccountTransaction
+						.getBigDecimal("transactionAmount"));
+			}
+		}
+		
+		BigDecimal bdTotalRemittanceProcessedAmt = BigDecimal.ZERO;
+		
+		bdTotalRemittanceProcessedAmt = getTotalRemittanceProcessed(employerCode, month);
+		log.info("TTTTTTTTTT totalAmount "+totalAmount);
+		log.info("TTTTTTTTTT bdTotalRemittanceProcessedAmt "+bdTotalRemittanceProcessedAmt);
+		BigDecimal bdTotalSalaryProcessedAmt = BigDecimal.ZERO;
+		
+		log.info("EEEEEEEE employerCode == "+employerCode);
+		log.info("EEEEEEEE month == "+month);
+		bdTotalSalaryProcessedAmt = getTotalSalaryProcessed(employerCode, month);
+		log.info("TTTTTTTTTT bdTotalSalaryProcessedAmt "+bdTotalSalaryProcessedAmt);
+		totalAmount = totalAmount.subtract(bdTotalRemittanceProcessedAmt);
+		totalAmount = totalAmount.subtract(bdTotalSalaryProcessedAmt);
+		log.info("TTTTTTTTTT totalAmount after "+totalAmount);
+		return totalAmount;
+	}
+
+	private static BigDecimal getTotalSalaryProcessed(String employerCode,
+			String month) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		EntityConditionList<EntityExpr> expectedPaymentReceivedConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"employerCode", EntityOperator.EQUALS,
+						employerCode.trim()), EntityCondition.makeCondition(
+						"month", EntityOperator.EQUALS, month),
+						EntityCondition.makeCondition("processed",
+								EntityOperator.EQUALS, "Y")
+
+				), EntityOperator.AND);
+
+		List<GenericValue> expectedPaymentReceivedELI = new ArrayList<GenericValue>();
+		try {
+			expectedPaymentReceivedELI = delegator.findList(
+					"MemberSalary",
+					expectedPaymentReceivedConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		BigDecimal bdTotal = BigDecimal.ZERO;
+		
+		for (GenericValue genericValue : expectedPaymentReceivedELI) {
+			bdTotal = bdTotal.add(genericValue.getBigDecimal("netSalary"));
+		}
+		
+		return bdTotal;
+	}
+
+	private static BigDecimal getTotalRemittanceProcessed(String employerCode,
+			String month) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		EntityConditionList<EntityExpr> expectedPaymentReceivedConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"employerCode", EntityOperator.EQUALS,
+						employerCode.trim()), EntityCondition.makeCondition(
+						"month", EntityOperator.EQUALS, month),
+						EntityCondition.makeCondition("processed",
+								EntityOperator.EQUALS, "Y")
+
+				), EntityOperator.AND);
+
+		List<GenericValue> expectedPaymentReceivedELI = new ArrayList<GenericValue>();
+		try {
+			expectedPaymentReceivedELI = delegator.findList(
+					"ExpectedPaymentReceived",
+					expectedPaymentReceivedConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		BigDecimal bdTotal = BigDecimal.ZERO;
+		
+		for (GenericValue genericValue : expectedPaymentReceivedELI) {
+			bdTotal = bdTotal.add(genericValue.getBigDecimal("amount"));
+		}
+		
+		return bdTotal;
+	}
 
 	/****
 	 * @author Japheth Odonya @when May 30, 2015 11:43:49 PM
@@ -1316,7 +1440,7 @@ public class RemittanceServices {
 	 *         Clear the Missing Member Log of the records for the Month and
 	 *         Employer Code
 	 * */
-	private static void clearMissingMember(String month, String employerCode) {
+	public static void clearMissingMember(String month, String employerCode) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 
 		EntityConditionList<EntityExpr> receivedPayrollsConditions = EntityCondition
@@ -1336,6 +1460,9 @@ public class RemittanceServices {
 			e.printStackTrace();
 		}
 	}
+	
+	
+
 
 	/****
 	 * @author Japheth Odonya @when Jun 1, 2015 1:29:50 PM Adding a member to
