@@ -1407,6 +1407,12 @@ public class AccHolderTransactionServices {
 
 					|| ((transactionType != null) && (transactionType
 							.equals("EXCISEDUTY")))
+							
+					|| ((transactionType != null) && (transactionType
+							.equals("LOANREPAYMENT")))
+							
+					|| ((transactionType != null) && (transactionType
+							.equals("TOOTHERACCOUNTS")))
 
 					|| ((transactionType != null) && (transactionType
 							.equals("POSCASHPURCHASE")))) {
@@ -1421,6 +1427,9 @@ public class AccHolderTransactionServices {
 							
 					|| ((transactionType != null) && (transactionType
 							.equals("SALARYPROCESSING")))
+							
+					|| ((transactionType != null) && (transactionType
+							.equals("DEPOSITFROMSALARY")))
 
 					|| ((transactionType != null) && (transactionType
 							.equals("MEMBERACCOUNTJVINC")))) {
@@ -4372,6 +4381,8 @@ public class AccHolderTransactionServices {
 
 		return accountTransactionParentId;
 	}
+	
+	
 	
 	//acctgTransId
 	/****
