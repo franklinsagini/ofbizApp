@@ -69,6 +69,7 @@ class MemberTransaction{
 	def increaseDecrease
 	def transactionAmount
 	def isLoan
+	def isLoanTransaction
 }
 
 
@@ -234,6 +235,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 	loanTransaction.increaseDecrease = 'D'
 	loanTransaction.transactionAmount = loanItem.loanAmt
 	loanTransaction.isLoan = true
+	loanTransaction.isLoanTransaction = true
 	
 	
 	memberStatement.name = "LOAN TYPE : "+loanProduct.name;
@@ -250,6 +252,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 		loanTransaction.increaseDecrease = 'I'
 		loanTransaction.transactionAmount = (loanItem.loanAmt - loanItem.outstandingBalance)
 		//loanTransaction.isLoan = true
+		loanTransaction.isLoanTransaction = true
 		memberStatement.listOfTransactions.add(loanTransaction);
 		
 	}
@@ -271,6 +274,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 			loanTransaction.increaseDecrease = 'D'
 			loanTransaction.transactionAmount = interestInsurance.amountAccrued
 			//loanTransaction.isLoan = true
+			loanTransaction.isLoanTransaction = true
 
 			memberStatement.listOfTransactions.add(loanTransaction);
 		}
@@ -293,7 +297,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 			loanTransaction.increaseDecrease = 'I'
 			loanTransaction.transactionAmount = loanRepaymentItem.insuranceAmount
 			//loanTransaction.isLoan = true
-
+			loanTransaction.isLoanTransaction = true
 			memberStatement.listOfTransactions.add(loanTransaction);
 		}
 
@@ -310,7 +314,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 			loanTransaction.increaseDecrease = 'I'
 			loanTransaction.transactionAmount = loanRepaymentItem.interestAmount
 			//loanTransaction.isLoan = true
-
+			loanTransaction.isLoanTransaction = true
 			memberStatement.listOfTransactions.add(loanTransaction);
 		}
 
@@ -327,7 +331,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 			loanTransaction.increaseDecrease = 'I'
 			loanTransaction.transactionAmount = loanRepaymentItem.principalAmount
 			//loanTransaction.isLoan = true
-
+			loanTransaction.isLoanTransaction = true
 			memberStatement.listOfTransactions.add(loanTransaction);
 		}
 
