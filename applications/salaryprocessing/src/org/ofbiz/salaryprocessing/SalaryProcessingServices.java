@@ -329,14 +329,14 @@ public class SalaryProcessingServices {
 			// Add Salary Charge
 			bdTotalSalaryCharge = bdTotalSalaryCharge.add(bdSalaryChargeAmt);
 			AccHolderTransactionServices.memberTransactionDeposit(
-					bdTotalSalaryCharge, memberAccountId, userLogin,
+					bdSalaryChargeAmt, memberAccountId, userLogin,
 					salaryProductChargeName, accountTransactionParentId,
 					salaryProductChargeId.toString(), acctgTransId);
 			// Add Excise Duty
 			bdTotalSalaryExciseDuty = bdTotalSalaryExciseDuty
 					.add(bdSalaryExciseAmt);
 			AccHolderTransactionServices.memberTransactionDeposit(
-					bdTotalSalaryExciseDuty, memberAccountId, userLogin,
+					bdSalaryExciseAmt, memberAccountId, userLogin,
 					salaryExciseDutyName, accountTransactionParentId,
 					salaryExciseDutyId.toString(), acctgTransId);
 
@@ -807,7 +807,7 @@ public class SalaryProcessingServices {
 			// Add Salary Charge
 			bdTotalSalaryCharge = bdTotalSalaryCharge.add(bdSalaryChargeAmt);
 			AccHolderTransactionServices.memberTransactionDeposit(
-					bdTotalSalaryCharge, memberAccountId, userLogin,
+					bdSalaryChargeAmt, memberAccountId, userLogin,
 					salaryProductChargeName, accountTransactionParentId,
 					salaryProductChargeId.toString());
 			
@@ -816,7 +816,7 @@ public class SalaryProcessingServices {
 			// Add Salary Charge
 			bdTotalSalaryExciseDuty = bdTotalSalaryExciseDuty.add(bdSalaryExciseAmt);
 			AccHolderTransactionServices.memberTransactionDeposit(
-					bdTotalSalaryExciseDuty, memberAccountId, userLogin,
+					bdSalaryExciseAmt, memberAccountId, userLogin,
 					salaryExciseDutyName, accountTransactionParentId,
 					salaryExciseDutyId.toString());
 
@@ -1689,8 +1689,6 @@ public class SalaryProcessingServices {
 		{
 			return "Please make sure that the Excise Duty Account is mapped to the employee branch ("+branchName+")  in the chart of accounts, consult FINANCE";
 		}
-		
-		//doProcessing
 		
 		//TODO
 		return "This will be implemented as part of Remittance (C7) processing !";
