@@ -99,9 +99,16 @@
 				<set field="totalNetSalary"
 					value="${bsh:org.ofbiz.salaryprocessing.SalaryProcessingServices.getTotalNetSalaryAmount(salaryMonthYearId);}"
 					type="BigDecimal" />
+					
+					<set field="totalChequeAmount" global="true"
+					value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.getTotalRemittedChequeAmount(employerCode, month);}"
+					type="BigDecimal" />
+					
+				<set field="totalChequeAmountAvailable" global="true"
+					value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.getTotalRemittedChequeAmountAvailable(employerCode, month, year);}"
+					type="BigDecimal" />
+					
 				<entity-one entity-name="MemberSalary" value-field="memberSalaryContext" />
-				
-				
 			</actions>
 
 			<widgets>
@@ -123,6 +130,9 @@
 							<widgets>
 								
 								<screenlet>
+									<container>
+										<label style="h3">Employer Code : ${employerCode}</label>
+									</container>
 									
 									<container>
 										<label style="h3"> Month : ${month} Year : ${year} </label>
@@ -162,6 +172,10 @@
 							<widgets>
 								<screenlet>
 									<container>
+										<label style="h3">Employer Code : ${employerCode}</label>
+									</container>
+								
+									<container>
 										<label style="h3"> Month : ${month} Year : ${year} </label>
 
 									</container>
@@ -193,6 +207,11 @@
 							</condition>
 							<widgets>
 								<screenlet>
+								
+									<container>
+										<label style="h3">Employer Code : ${employerCode}</label>
+									</container>
+									
 									<container>
 										<label style="h3"> Month : ${month} Year : ${year} </label>
 									</container>
@@ -221,6 +240,10 @@
 							</condition>
 							<widgets>
 								<screenlet>
+									<container>
+										<label style="h3">Employer Code : ${employerCode}</label>
+									</container>
+									
 									<container>
 										<label style="h3"> Month : ${month} Year : ${year} </label>
 									</container>
@@ -257,6 +280,14 @@
 
 									<container style="button-bar">
 										<label style="h3" text="${totalNetSalary}" />
+									</container>
+								</screenlet>
+								
+								<screenlet title="Cheque Amount Available">
+									<!-- include-form name="listMemberSalaryTotals" location="component://salaryprocessing/widget/SalaryProcessingForms.xml"/ -->
+
+									<container style="button-bar">
+										<label style="h3" text="${totalChequeAmountAvailable}" />
 									</container>
 								</screenlet>
 							</widgets>
