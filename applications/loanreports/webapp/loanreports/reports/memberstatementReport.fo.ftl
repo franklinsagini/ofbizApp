@@ -164,16 +164,30 @@ under the License.
                 <fo:table-body>
                     <#list statement.listOfTransactions as transaction>
                     
-                    
+                    	
                     	<#if (transaction.increaseDecrease = 'I') && (transaction.transactionAmount??)  >
-                                	
-                               <#assign totalAmount = totalAmount + transaction.transactionAmount > 	
+                                <#if !(transaction.isLoanTransaction??)>
+                                	<#assign totalAmount = totalAmount + transaction.transactionAmount >
+                                </#if>
+                                
+                               <#if transaction.isLoanTransaction == true>
+                                	<#assign totalAmount = totalAmount - transaction.transactionAmount >
+                                </#if>	
                                 		
 						</#if>
 						
 						<#if (transaction.increaseDecrease = 'D') && (transaction.transactionAmount??)  >
-                                	
-                                <#assign totalAmount = totalAmount - transaction.transactionAmount > 	
+                                
+                                <#if !(transaction.isLoanTransaction??)>
+                                	 <#assign totalAmount = totalAmount - transaction.transactionAmount >
+                                </#if>	
+                                
+                                 <#if transaction.isLoanTransaction == true>
+                                	 <#assign totalAmount = totalAmount + transaction.transactionAmount >
+                                </#if>
+                                
+                                
+                           
                                 		
 						</#if>
                         <fo:table-row>
