@@ -249,7 +249,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 		loanTransaction.transactionDescription = 'Total Repaid at Opening'
 		loanTransaction.increaseDecrease = 'I'
 		loanTransaction.transactionAmount = (loanItem.loanAmt - loanItem.outstandingBalance)
-		loanTransaction.isLoan = true
+		//loanTransaction.isLoan = true
 		memberStatement.listOfTransactions.add(loanTransaction);
 		
 	}
@@ -270,7 +270,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 
 			loanTransaction.increaseDecrease = 'D'
 			loanTransaction.transactionAmount = interestInsurance.amountAccrued
-			loanTransaction.isLoan = true
+			//loanTransaction.isLoan = true
 
 			memberStatement.listOfTransactions.add(loanTransaction);
 		}
@@ -292,7 +292,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 
 			loanTransaction.increaseDecrease = 'I'
 			loanTransaction.transactionAmount = loanRepaymentItem.insuranceAmount
-			loanTransaction.isLoan = true
+			//loanTransaction.isLoan = true
 
 			memberStatement.listOfTransactions.add(loanTransaction);
 		}
@@ -309,7 +309,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 
 			loanTransaction.increaseDecrease = 'I'
 			loanTransaction.transactionAmount = loanRepaymentItem.interestAmount
-			loanTransaction.isLoan = true
+			//loanTransaction.isLoan = true
 
 			memberStatement.listOfTransactions.add(loanTransaction);
 		}
@@ -326,7 +326,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 
 			loanTransaction.increaseDecrease = 'I'
 			loanTransaction.transactionAmount = loanRepaymentItem.principalAmount
-			loanTransaction.isLoan = true
+			//loanTransaction.isLoan = true
 
 			memberStatement.listOfTransactions.add(loanTransaction);
 		}
