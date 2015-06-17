@@ -177,13 +177,25 @@ under the License.
                     
                     	<#if (transaction.increaseDecrease = 'I') && (transaction.transactionAmount??)  >
                                 	
-                               <#assign totalAmount = totalAmount + transaction.transactionAmount > 	
+                               <#assign totalAmount = totalAmount + transaction.transactionAmount >
+                               
+                                <#if transaction.isLoan == true>
+                                	
+                                	<#assign totalAmount = totalAmount * -1 >
+                               
+                                </#if>
+                               
                                 		
 						</#if>
 						
 						<#if (transaction.increaseDecrease = 'D') && (transaction.transactionAmount??)  >
-                                	
-                                <#assign totalAmount = totalAmount - transaction.transactionAmount > 	
+						
+								<#assign totalAmount = totalAmount - transaction.transactionAmount >
+                                <#if transaction.isLoan == true>
+                                	 
+                                	<#assign totalAmount = totalAmount * -1 >
+                               
+                                </#if>
                                 		
 						</#if>
                         <fo:table-row>

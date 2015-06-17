@@ -68,6 +68,7 @@ class MemberTransaction{
 	def transactionDescription
 	def increaseDecrease
 	def transactionAmount
+	def isLoan
 }
 
 
@@ -232,6 +233,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 	loanTransaction.transactionDescription = 'Loan Disbursed'
 	loanTransaction.increaseDecrease = 'D'
 	loanTransaction.transactionAmount = loanItem.loanAmt
+	loanTransaction.isLoan = true
 	
 	
 	memberStatement.name = "LOAN TYPE : "+loanProduct.name;
@@ -247,7 +249,9 @@ allLoansList.eachWithIndex { loanItem, index ->
 		loanTransaction.transactionDescription = 'Total Repaid at Opening'
 		loanTransaction.increaseDecrease = 'I'
 		loanTransaction.transactionAmount = (loanItem.loanAmt - loanItem.outstandingBalance)
+		loanTransaction.isLoan = true
 		memberStatement.listOfTransactions.add(loanTransaction);
+		
 	}
 
 	//Get all interest and insurance charges
@@ -266,6 +270,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 
 			loanTransaction.increaseDecrease = 'D'
 			loanTransaction.transactionAmount = interestInsurance.amountAccrued
+			loanTransaction.isLoan = true
 
 			memberStatement.listOfTransactions.add(loanTransaction);
 		}
@@ -287,6 +292,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 
 			loanTransaction.increaseDecrease = 'I'
 			loanTransaction.transactionAmount = loanRepaymentItem.insuranceAmount
+			loanTransaction.isLoan = true
 
 			memberStatement.listOfTransactions.add(loanTransaction);
 		}
@@ -303,6 +309,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 
 			loanTransaction.increaseDecrease = 'I'
 			loanTransaction.transactionAmount = loanRepaymentItem.interestAmount
+			loanTransaction.isLoan = true
 
 			memberStatement.listOfTransactions.add(loanTransaction);
 		}
@@ -319,6 +326,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 
 			loanTransaction.increaseDecrease = 'I'
 			loanTransaction.transactionAmount = loanRepaymentItem.principalAmount
+			loanTransaction.isLoan = true
 
 			memberStatement.listOfTransactions.add(loanTransaction);
 		}
