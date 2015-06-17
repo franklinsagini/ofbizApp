@@ -191,6 +191,7 @@ under the License.
 						<#if (transaction.increaseDecrease = 'D') && (transaction.transactionAmount??)  >
 						
 								<#assign totalAmount = totalAmount - transaction.transactionAmount >
+								
                                 <#if transaction.isLoan == true>
                                 	 
                                 	<#assign totalAmount = totalAmount * -1 >
