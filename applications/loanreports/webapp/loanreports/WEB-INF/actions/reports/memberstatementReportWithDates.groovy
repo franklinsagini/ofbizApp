@@ -230,7 +230,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 	loanTransaction = new MemberTransaction();
 	loanTransaction.transactionDate = loanItem.disbursementDate;
 	loanTransaction.transactionDescription = 'Loan Disbursed'
-	loanTransaction.increaseDecrease = 'I'
+	loanTransaction.increaseDecrease = 'D'
 	loanTransaction.transactionAmount = loanItem.loanAmt
 	
 	
@@ -245,7 +245,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 		loanTransaction = new MemberTransaction()
 		loanTransaction.transactionDate = loanItem.createdStamp
 		loanTransaction.transactionDescription = 'Total Repaid at Opening'
-		loanTransaction.increaseDecrease = 'D'
+		loanTransaction.increaseDecrease = 'I'
 		loanTransaction.transactionAmount = (loanItem.loanAmt - loanItem.outstandingBalance)
 		memberStatement.listOfTransactions.add(loanTransaction);
 	}
@@ -264,7 +264,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 				loanTransaction.transactionDescription = "Insurance Charged"
 			}
 
-			loanTransaction.increaseDecrease = 'I'
+			loanTransaction.increaseDecrease = 'D'
 			loanTransaction.transactionAmount = interestInsurance.amountAccrued
 
 			memberStatement.listOfTransactions.add(loanTransaction);
@@ -285,7 +285,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 			loanTransaction.transactionDescription = "Insurance Paid"
 
 
-			loanTransaction.increaseDecrease = 'D'
+			loanTransaction.increaseDecrease = 'I'
 			loanTransaction.transactionAmount = loanRepaymentItem.insuranceAmount
 
 			memberStatement.listOfTransactions.add(loanTransaction);
@@ -301,7 +301,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 			loanTransaction.transactionDescription = "Interest Paid"
 
 
-			loanTransaction.increaseDecrease = 'D'
+			loanTransaction.increaseDecrease = 'I'
 			loanTransaction.transactionAmount = loanRepaymentItem.interestAmount
 
 			memberStatement.listOfTransactions.add(loanTransaction);
@@ -317,7 +317,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 			loanTransaction.transactionDescription = "Principal Paid"
 
 
-			loanTransaction.increaseDecrease = 'D'
+			loanTransaction.increaseDecrease = 'I'
 			loanTransaction.transactionAmount = loanRepaymentItem.principalAmount
 
 			memberStatement.listOfTransactions.add(loanTransaction);
