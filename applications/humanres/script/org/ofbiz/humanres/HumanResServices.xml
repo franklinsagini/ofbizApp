@@ -2576,8 +2576,19 @@
 		<set from-field="emplPositionTypeId" field="newEntity.emplPositionTypeId" />
 		
 		<create-value value-field="newEntity" />
+		<call-simple-method method-name="createEmplPositionAtTypeCreation" scope="inline"></call-simple-method>
 		<property-to-field resource="HumanResUiLabels"
 			property="CreateSuccess" field="successMessage" />
+	</simple-method>
+	
+	<simple-method method-name="createEmplPositionAtTypeCreation"
+		short-description="Create a Employee Position">
+		<make-value entity-name="EmplPosition" value-field="newEntity2" />
+		<set-nonpk-fields map="parameters" value-field="newEntity2" />
+		<sequenced-id sequence-name="EmplPosition" field="emplPositionId" />
+		<set from-field="emplPositionId" field="newEntity2.emplPositionId" />
+		<set from-field="newEntity.emplPositionTypeId" field="newEntity2.emplPositionTypeId" />
+		<create-value value-field="newEntity2" />
 	</simple-method>
 
 	<simple-method method-name="updateEmplPositionType"
