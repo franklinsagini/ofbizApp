@@ -920,6 +920,9 @@ public class SalaryProcessingServices {
 					bdSalaryChargeAmt).subtract(bdSalaryExciseAmt);
 			for (Long loanApplicationId : listLoanApplicationIds) {
 
+				bdLoanExpectedAmt = LoanRepayments
+						.getTotalPrincipaByLoanDue(loanApplicationId.toString());
+				
 				bdLoanExpectedAmt = bdLoanExpectedAmt
 						.add(LoanRepayments
 								.getTotalInterestByLoanDue(loanApplicationId
@@ -930,8 +933,7 @@ public class SalaryProcessingServices {
 						.add(LoanRepayments
 								.getTotalInsurancByLoanDue(loanApplicationId
 										.toString()));
-				bdLoanExpectedAmt = LoanRepayments
-						.getTotalPrincipaByLoanDue(loanApplicationId.toString());
+				
 
 				bdMemberTotalLoanExpectedAmt = bdMemberTotalLoanExpectedAmt
 						.add(bdLoanExpectedAmt);
@@ -2077,6 +2079,9 @@ public class SalaryProcessingServices {
 					bdSalaryChargeAmt).subtract(bdSalaryExciseAmt);
 			for (Long loanApplicationId : listLoanApplicationIds) {
 
+				bdLoanExpectedAmt = LoanRepayments
+						.getTotalPrincipaByLoanDue(loanApplicationId.toString());
+				
 				bdLoanExpectedAmt = bdLoanExpectedAmt
 						.add(LoanRepayments
 								.getTotalInterestByLoanDue(loanApplicationId
@@ -2087,8 +2092,7 @@ public class SalaryProcessingServices {
 						.add(LoanRepayments
 								.getTotalInsurancByLoanDue(loanApplicationId
 										.toString()));
-				bdLoanExpectedAmt = LoanRepayments
-						.getTotalPrincipaByLoanDue(loanApplicationId.toString());
+				
 
 				bdMemberTotalLoanExpectedAmt = bdMemberTotalLoanExpectedAmt
 						.add(bdLoanExpectedAmt);
