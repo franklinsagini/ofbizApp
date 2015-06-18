@@ -2366,21 +2366,21 @@ public class SalaryProcessingServices {
 			// ###### Deduct the Salary Processing Fee
 			// Deduct the Salary Charge
 			// Add Salary Charge
-			bdTotalSalaryCharge = bdTotalSalaryCharge.add(bdSalaryChargeAmt);
-			AccHolderTransactionServices.memberTransactionDeposit(
-					bdSalaryChargeAmt, memberAccountId, userLogin,
-					salaryProductChargeName, accountTransactionParentId,
-					salaryProductChargeId.toString(), acctgTransId);
+//			bdTotalSalaryCharge = bdTotalSalaryCharge.add(bdSalaryChargeAmt);
+//			AccHolderTransactionServices.memberTransactionDeposit(
+//					bdSalaryChargeAmt, memberAccountId, userLogin,
+//					salaryProductChargeName, accountTransactionParentId,
+//					salaryProductChargeId.toString(), acctgTransId);
 
 			// ####### Deduct the Excise Duty
 			// Deduct the Salary Charge
 			// Add Salary Charge
-			bdTotalSalaryExciseDuty = bdTotalSalaryExciseDuty
-					.add(bdSalaryExciseAmt);
-			AccHolderTransactionServices.memberTransactionDeposit(
-					bdSalaryExciseAmt, memberAccountId, userLogin,
-					salaryExciseDutyName, accountTransactionParentId,
-					salaryExciseDutyId.toString(), acctgTransId);
+//			bdTotalSalaryExciseDuty = bdTotalSalaryExciseDuty
+//					.add(bdSalaryExciseAmt);
+//			AccHolderTransactionServices.memberTransactionDeposit(
+//					bdSalaryExciseAmt, memberAccountId, userLogin,
+//					salaryExciseDutyName, accountTransactionParentId,
+//					salaryExciseDutyId.toString(), acctgTransId);
 
 			// ####### Deduct the total Loan Deductions
 			GenericValue member = RemittanceServices
@@ -2495,8 +2495,8 @@ public class SalaryProcessingServices {
 
 		BigDecimal bdTotalCharges = bdTotalSalaryCharge
 				.add(bdTotalSalaryExciseDuty);
-		BigDecimal bdTotalMemberDepositAmt = bdTotalSalaryPosted
-				.subtract(bdTotalCharges);
+		BigDecimal bdTotalMemberDepositAmt = bdTotalSalaryPosted;
+				//.subtract(bdTotalCharges);
 
 		// Credit Member Deposits with (total net - (total charge + total excise
 		// duty))
@@ -2505,17 +2505,17 @@ public class SalaryProcessingServices {
 				bdTotalMemberDepositAmt, acctgTransId, "C",
 				savingsAccountGLAccountId, entrySequence.toString(), branchId);
 		// Credit Salary Charge with total salary charge
-		entrySequence = entrySequence + 1;
-		AccHolderTransactionServices
-				.createAccountPostingEntry(bdTotalSalaryCharge, acctgTransId,
-						"C", salaryChargeCreditAccountId,
-						entrySequence.toString(), branchId);
+//		entrySequence = entrySequence + 1;
+//		AccHolderTransactionServices
+//				.createAccountPostingEntry(bdTotalSalaryCharge, acctgTransId,
+//						"C", salaryChargeCreditAccountId,
+//						entrySequence.toString(), branchId);
 		// Credit Excise Duty with total excise duty
-		entrySequence = entrySequence + 1;
-		AccHolderTransactionServices
-				.createAccountPostingEntry(bdTotalSalaryExciseDuty,
-						acctgTransId, "C", salaryExciseCreditAccountId,
-						entrySequence.toString(), branchId);
+//		entrySequence = entrySequence + 1;
+//		AccHolderTransactionServices
+//				.createAccountPostingEntry(bdTotalSalaryExciseDuty,
+//						acctgTransId, "C", salaryExciseCreditAccountId,
+//						entrySequence.toString(), branchId);
 
 		// Posting Contributed Accounts Member Deposits, Share Capital etc
 		// Get the toal Account Amounts Contributed
