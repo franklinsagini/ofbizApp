@@ -118,11 +118,11 @@ accountTransactionList.eachWithIndex { accountItem, index ->
 			statementItem.remitanceDescription = 'Cash Withdrawal';
 		} 
 		
-		else if (accountItem.transactionType == 'TOOTHERACCOUNTS'){
+		else if (accountItem.transactionType.equals('TOOTHERACCOUNTS')){
 			statementItem.remitanceDescription = 'Transfer to other account (SALARY)';
 		}
 		
-		else if (accountItem.transactionType == 'LOANREPAYMENT'){
+		else if (accountItem.transactionType.equals('LOANREPAYMENT') ){
 			statementItem.remitanceDescription = 'Rapayment of a loan';
 		}
 		
