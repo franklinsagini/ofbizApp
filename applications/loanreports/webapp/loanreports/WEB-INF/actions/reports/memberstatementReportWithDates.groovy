@@ -455,6 +455,15 @@ allAccountProducts.eachWithIndex { memberAccount, index ->
 			memberAccountTransaction.transactionDescription = 'Repayment of a loan';
 		}
 		
+		else if (theTransaction.transactionType.equals("WITHDRAWALCOMMISSION") ){
+			memberAccountTransaction.transactionDescription = 'Withdrawal Commission';
+		}
+		
+		else if (theTransaction.transactionType.equals("EXCISEDUTY") ){
+			memberAccountTransaction.transactionDescription = 'Excise Duty';
+		}
+		
+		
 		else{
 			memberAccountTransaction.transactionDescription = theTransaction.transactionType;
 		}
