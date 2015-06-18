@@ -352,7 +352,7 @@ public class SalaryProcessingServices {
 			AccHolderTransactionServices.memberTransactionDeposit(
 					bdNetSalaryAmt, memberAccountId, userLogin,
 					"SALARYPROCESSING", accountTransactionParentId, null,
-					acctgTransId);
+					acctgTransId, null, null);
 
 			// Deduct the Salary Charge
 			// Add Salary Charge
@@ -360,14 +360,14 @@ public class SalaryProcessingServices {
 			AccHolderTransactionServices.memberTransactionDeposit(
 					bdSalaryChargeAmt, memberAccountId, userLogin,
 					salaryProductChargeName, accountTransactionParentId,
-					salaryProductChargeId.toString(), acctgTransId);
+					salaryProductChargeId.toString(), acctgTransId, null, null);
 			// Add Excise Duty
 			bdTotalSalaryExciseDuty = bdTotalSalaryExciseDuty
 					.add(bdSalaryExciseAmt);
 			AccHolderTransactionServices.memberTransactionDeposit(
 					bdSalaryExciseAmt, memberAccountId, userLogin,
 					salaryExciseDutyName, accountTransactionParentId,
-					salaryExciseDutyId.toString(), acctgTransId);
+					salaryExciseDutyId.toString(), acctgTransId, null, null);
 
 			genericValue.set("processed", "Y");
 			// listSalaryToUpdate.add(genericValue);
@@ -883,7 +883,7 @@ public class SalaryProcessingServices {
 			AccHolderTransactionServices.memberTransactionDeposit(
 					bdNetSalaryAmt, memberAccountId, userLogin,
 					"SALARYPROCESSING", accountTransactionParentId, null,
-					acctgTransId);
+					acctgTransId, null, null);
 
 			// ###### Deduct the Salary Processing Fee
 			// Deduct the Salary Charge
@@ -892,7 +892,7 @@ public class SalaryProcessingServices {
 			AccHolderTransactionServices.memberTransactionDeposit(
 					bdSalaryChargeAmt, memberAccountId, userLogin,
 					salaryProductChargeName, accountTransactionParentId,
-					salaryProductChargeId.toString(), acctgTransId);
+					salaryProductChargeId.toString(), acctgTransId, null, null);
 
 			// ####### Deduct the Excise Duty
 			// Deduct the Salary Charge
@@ -902,7 +902,7 @@ public class SalaryProcessingServices {
 			AccHolderTransactionServices.memberTransactionDeposit(
 					bdSalaryExciseAmt, memberAccountId, userLogin,
 					salaryExciseDutyName, accountTransactionParentId,
-					salaryExciseDutyId.toString(), acctgTransId);
+					salaryExciseDutyId.toString(), acctgTransId, null, null);
 
 			// ####### Deduct the total Loan Deductions
 			GenericValue member = RemittanceServices
@@ -937,10 +937,14 @@ public class SalaryProcessingServices {
 
 				bdMemberTotalLoanExpectedAmt = bdMemberTotalLoanExpectedAmt
 						.add(bdLoanExpectedAmt);
+				
+				
+				if (bdLoanExpectedAmt.compareTo(BigDecimal.ZERO) > 0){
 				AccHolderTransactionServices.memberTransactionDeposit(
 						bdLoanExpectedAmt, memberAccountId, userLogin,
 						"LOANREPAYMENT", accountTransactionParentId, null,
-						acctgTransId);
+						acctgTransId, null, loanApplicationId);
+				}
 
 				BigDecimal totalLoanDue = LoanRepayments
 						.getTotalLoanByLoanDue(loanApplicationId.toString());
@@ -1043,13 +1047,13 @@ public class SalaryProcessingServices {
 				AccHolderTransactionServices.memberTransactionDeposit(
 						bdContributingAmt, memberSavingsAccountId, userLogin,
 						"TOOTHERACCOUNTS", accountTransactionParentId, null,
-						acctgTransId);
+						acctgTransId, memberAccount.getLong("accountProductId"), null);
 				// Add to destination account e.g. member deposits
 				AccHolderTransactionServices.memberTransactionDeposit(
 						bdContributingAmt,
 						memberAccount.getLong("memberAccountId"), userLogin,
 						"DEPOSITFROMSALARY", accountTransactionParentId, null,
-						acctgTransId);
+						acctgTransId, null, null);
 				bdTotalContributingAmount = bdTotalContributingAmount
 						.add(bdContributingAmt);
 			}
@@ -2042,7 +2046,7 @@ public class SalaryProcessingServices {
 			AccHolderTransactionServices.memberTransactionDeposit(
 					bdNetSalaryAmt, memberAccountId, userLogin,
 					"SALARYPROCESSING", accountTransactionParentId, null,
-					acctgTransId);
+					acctgTransId, null, null);
 
 			// ###### Deduct the Salary Processing Fee
 			// Deduct the Salary Charge
@@ -2051,7 +2055,7 @@ public class SalaryProcessingServices {
 			AccHolderTransactionServices.memberTransactionDeposit(
 					bdSalaryChargeAmt, memberAccountId, userLogin,
 					salaryProductChargeName, accountTransactionParentId,
-					salaryProductChargeId.toString(), acctgTransId);
+					salaryProductChargeId.toString(), acctgTransId, null, null);
 
 			// ####### Deduct the Excise Duty
 			// Deduct the Salary Charge
@@ -2061,7 +2065,7 @@ public class SalaryProcessingServices {
 			AccHolderTransactionServices.memberTransactionDeposit(
 					bdSalaryExciseAmt, memberAccountId, userLogin,
 					salaryExciseDutyName, accountTransactionParentId,
-					salaryExciseDutyId.toString(), acctgTransId);
+					salaryExciseDutyId.toString(), acctgTransId, null, null);
 
 			// ####### Deduct the total Loan Deductions
 			GenericValue member = RemittanceServices
@@ -2096,10 +2100,14 @@ public class SalaryProcessingServices {
 
 				bdMemberTotalLoanExpectedAmt = bdMemberTotalLoanExpectedAmt
 						.add(bdLoanExpectedAmt);
+				
+				if (bdLoanExpectedAmt.compareTo(BigDecimal.ZERO) > 0)
+				{
 				AccHolderTransactionServices.memberTransactionDeposit(
 						bdLoanExpectedAmt, memberAccountId, userLogin,
 						"LOANREPAYMENT", accountTransactionParentId, null,
-						acctgTransId);
+						acctgTransId, null, loanApplicationId);
+				}
 
 				BigDecimal totalLoanDue = LoanRepayments
 						.getTotalLoanByLoanDue(loanApplicationId.toString());
@@ -2365,7 +2373,7 @@ public class SalaryProcessingServices {
 			AccHolderTransactionServices.memberTransactionDeposit(
 					bdNetSalaryAmt, memberAccountId, userLogin,
 					"SALARYPROCESSING", accountTransactionParentId, null,
-					acctgTransId);
+					acctgTransId, null, null);
 
 			// ###### Deduct the Salary Processing Fee
 			// Deduct the Salary Charge
@@ -2432,13 +2440,13 @@ public class SalaryProcessingServices {
 				AccHolderTransactionServices.memberTransactionDeposit(
 						bdContributingAmt, memberSavingsAccountId, userLogin,
 						"TOOTHERACCOUNTS", accountTransactionParentId, null,
-						acctgTransId);
+						acctgTransId, memberAccount.getLong("accountProductId"), null);
 				// Add to destination account e.g. member deposits
 				AccHolderTransactionServices.memberTransactionDeposit(
 						bdContributingAmt,
 						memberAccount.getLong("memberAccountId"), userLogin,
 						"DEPOSITFROMSALARY", accountTransactionParentId, null,
-						acctgTransId);
+						acctgTransId, null, null);
 				bdTotalContributingAmount = bdTotalContributingAmount
 						.add(bdContributingAmt);
 			}

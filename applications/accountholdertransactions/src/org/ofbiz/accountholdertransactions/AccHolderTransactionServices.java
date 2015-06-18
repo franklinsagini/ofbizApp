@@ -1359,7 +1359,7 @@ public class AccHolderTransactionServices {
 	private static void createTransaction(GenericValue loanApplication,
 			String transactionType, Map<String, String> userLogin,
 			String memberAccountId, BigDecimal transactionAmount,
-			String productChargeId, String accountTransactionParentId, String acctgTransId) {
+			String productChargeId, String accountTransactionParentId, String acctgTransId, Long accountProductId, Long loanApplicationId) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);// loanApplication.getDelegator();
 		GenericValue accountTransaction;
 		String accountTransactionId = delegator
@@ -1475,7 +1475,11 @@ public class AccHolderTransactionServices {
 						"transactionType", transactionType, "treasuryId",
 						treasuryId, "accountTransactionParentId",
 						accountTransactionParentId, 
-						"acctgTransId", acctgTransId
+						"acctgTransId", acctgTransId,
+						
+						"accountProductId", accountProductId,
+						
+						"loanApplicationId", loanApplicationId
 						));
 		try {
 			delegator.createOrStore(accountTransaction);
@@ -4391,7 +4395,7 @@ public class AccHolderTransactionServices {
 	public static String memberTransactionDeposit(BigDecimal transactionAmount,
 			Long memberAccountId, Map<String, String> userLogin,
 			String withdrawalType, String accountTransactionParentId,
-			String productChargeId, String acctgTransId) {
+			String productChargeId, String acctgTransId, Long accountProductId, Long loanApplicationId) {
 
 		log.info(" Transaction Amount ---- " + transactionAmount);
 		log.info(" Transaction MA ---- " + memberAccountId);
@@ -4422,7 +4426,7 @@ public class AccHolderTransactionServices {
 		GenericValue accountTransaction = null;
 		createTransaction(accountTransaction, transactionType, userLogin,
 				memberAccountId.toString(), transactionAmount, productChargeId,
-				accountTransactionParentId, acctgTransId);
+				accountTransactionParentId, acctgTransId, accountProductId, loanApplicationId);
 		// postCashDeposit(memberAccountId, userLogin, transactionAmount);
 		// postCashWithdrawalTransaction(accountTransaction, userLogin);
 
