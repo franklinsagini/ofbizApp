@@ -8,8 +8,11 @@ import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,24 +36,24 @@ import org.ofbiz.webapp.event.EventHandlerException;
 
 public class SalaryProcessingServices {
 	public static Logger log = Logger.getLogger(SalaryProcessingServices.class);
-	//AccHolderTransactionServices.
 
-	
-	//	public static synchronized String processSalaryReceivedNoDeduct(
-	//HttpServletRequest request, HttpServletResponse response)
+	// AccHolderTransactionServices.
+
+	// public static synchronized String processSalaryReceivedNoDeduct(
+	// HttpServletRequest request, HttpServletResponse response)
 	public static synchronized String processSalaryReceivedNoDeduct(
 			Long salaryMonthYearId, Map<String, String> userLogin) {
 
 		// salaryMonthYearId
-		//String salaryMonthYearId = (String) request
-		//		.getParameter("salaryMonthYearId");
+		// String salaryMonthYearId = (String) request
+		// .getParameter("salaryMonthYearId");
 
 		/***
 		 * Get month year and employerCode from SalaryMonthYear where
 		 * salaryMonthYearId is the given value
 		 * */
 		GenericValue salaryMonthYear = null;
-		//salaryMonthYearId = salaryMonthYearId.replaceAll(",", "");
+		// salaryMonthYearId = salaryMonthYearId.replaceAll(",", "");
 		Long salaryMonthIdLong = salaryMonthYearId;
 		salaryMonthYear = LoanUtilities.getSalaryMonthYear(salaryMonthIdLong);
 
@@ -59,28 +62,37 @@ public class SalaryProcessingServices {
 		String stationId = salaryMonthYear.getString("stationId");
 		stationId = stationId.replaceAll(",", "");
 		String employerCode = LoanUtilities.getStationEmployerCode(stationId);
-		
-		List<GenericValue> listMemberSalaryItems = getMemberSalaryList(month, year,
-				employerCode, salaryMonthYearId);
-		
-		log.info("SSSSSSSSSSSS salaryMonthYearId SSSSSSSS ::: "+salaryMonthYearId);
-		
-		if ((listMemberSalaryItems == null) || (listMemberSalaryItems.size() < 1)){
+
+		List<GenericValue> listMemberSalaryItems = getMemberSalaryList(month,
+				year, employerCode, salaryMonthYearId);
+
+		log.info("SSSSSSSSSSSS salaryMonthYearId SSSSSSSS ::: "
+				+ salaryMonthYearId);
+
+		if ((listMemberSalaryItems == null)
+				|| (listMemberSalaryItems.size() < 1)) {
 			return " No data to process or station already processed !";
 		}
-		
-		//Cheque that the amount available is equal to the total not salary
-		BigDecimal bdTotalNetSalaryAmt = getTotalNetSalaryAmount(salaryMonthYearId);
-		BigDecimal bdTotalChequeAmountAvailable = RemittanceServices.getTotalRemittedChequeAmountAvailable(employerCode, month, year);
 
-		//Everything to 2 decimal places
-		bdTotalNetSalaryAmt = bdTotalNetSalaryAmt.setScale(2, RoundingMode.HALF_DOWN);
-		bdTotalChequeAmountAvailable = bdTotalChequeAmountAvailable.setScale(2, RoundingMode.HALF_DOWN);
-		
-		if (bdTotalNetSalaryAmt.compareTo(bdTotalChequeAmountAvailable) != 0){
-			return "The available cheque amount must be equal to the salaries total, Total Salary Amount is "+bdTotalNetSalaryAmt+" while total cheque amounts is "+bdTotalChequeAmountAvailable;
+		// Cheque that the amount available is equal to the total not salary
+		BigDecimal bdTotalNetSalaryAmt = getTotalNetSalaryAmount(salaryMonthYearId);
+		BigDecimal bdTotalChequeAmountAvailable = RemittanceServices
+				.getTotalRemittedChequeAmountAvailable(employerCode, month,
+						year);
+
+		// Everything to 2 decimal places
+		bdTotalNetSalaryAmt = bdTotalNetSalaryAmt.setScale(2,
+				RoundingMode.HALF_DOWN);
+		bdTotalChequeAmountAvailable = bdTotalChequeAmountAvailable.setScale(2,
+				RoundingMode.HALF_DOWN);
+
+		if (bdTotalNetSalaryAmt.compareTo(bdTotalChequeAmountAvailable) != 0) {
+			return "The available cheque amount must be equal to the salaries total, Total Salary Amount is "
+					+ bdTotalNetSalaryAmt
+					+ " while total cheque amounts is "
+					+ bdTotalChequeAmountAvailable;
 		}
-		
+
 		// Remove Current Logs first
 		removeMissingPayrollNumbersLog(month, year, employerCode);
 		log.info("NOOOOOO DEDUCT LLLLLLLLLLLLLLLL Month " + month + " Year "
@@ -90,8 +102,6 @@ public class SalaryProcessingServices {
 
 		Boolean missingPayrollNumbers = getMissingPayrollNumbers(month, year,
 				employerCode, salaryMonthIdLong);
-		
-		
 
 		if (missingPayrollNumbers) {
 
@@ -111,38 +121,46 @@ public class SalaryProcessingServices {
 					+ employerCode);
 
 		}
-		
-		//Check that all members have Savings account - code 999
+
+		// Check that all members have Savings account - code 999
 		List<GenericValue> listMemberSalary = getMemberSalaryList(month, year,
 				employerCode, salaryMonthYearId);
-		Boolean missingSavingsAccount =  false;
+		Boolean missingSavingsAccount = false;
 		String missingSavingsListing = "";
-		//clearMissingMember
+		// clearMissingMember
 		RemittanceServices.clearMissingMember(month, employerCode);
-		//RemittanceServices.re
+		// RemittanceServices.re
 		for (GenericValue memberSalary : listMemberSalary) {
-			
-			//Check if member has code 999 account
-			//AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE
-			if (!LoanUtilities.hasAccount(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE, memberSalary.getString("payrollNumber"))){
+
+			// Check if member has code 999 account
+			// AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE
+			if (!LoanUtilities.hasAccount(
+					AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE,
+					memberSalary.getString("payrollNumber"))) {
 				missingSavingsAccount = true;
-				
-				if (missingSavingsListing.equals("")){
-					missingSavingsListing = memberSalary.getString("payrollNumber");
-				} else{
-					missingSavingsListing = missingSavingsListing + " , " + memberSalary.getString("payrollNumber");
+
+				if (missingSavingsListing.equals("")) {
+					missingSavingsListing = memberSalary
+							.getString("payrollNumber");
+				} else {
+					missingSavingsListing = missingSavingsListing + " , "
+							+ memberSalary.getString("payrollNumber");
 				}
-				
-				//Add User to missing accounts
-				
-				RemittanceServices.addMissingMemberLog(userLogin, memberSalary.getString("payrollNumber"), month, employerCode, AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE, null, null);
+
+				// Add User to missing accounts
+
+				RemittanceServices.addMissingMemberLog(userLogin,
+						memberSalary.getString("payrollNumber"), month,
+						employerCode,
+						AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE,
+						null, null);
 			}
 		}
-		
-		if (missingSavingsAccount){
-			return "There are member accounts missing, please check the Missing Members Members menu in Account Holders transactions . The list has these payrolls ("+missingSavingsListing+")";
+
+		if (missingSavingsAccount) {
+			return "There are member accounts missing, please check the Missing Members Members menu in Account Holders transactions . The list has these payrolls ("
+					+ missingSavingsListing + ")";
 		}
-		
 
 		// Continue Processing for Salary Without Deductions
 
@@ -151,11 +169,13 @@ public class SalaryProcessingServices {
 
 		// Get all the charges for transactiontype SALARYPROCESSING
 		List<GenericValue> listAccountProductCharge = null;
-		
-		listAccountProductCharge = LoanUtilities
-				.getAccountProductChargeList("SALARYPROCESSING", AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
-		
-		if ((listAccountProductCharge == null) || (listAccountProductCharge.size() < 2)){
+
+		listAccountProductCharge = LoanUtilities.getAccountProductChargeList(
+				"SALARYPROCESSING",
+				AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
+
+		if ((listAccountProductCharge == null)
+				|| (listAccountProductCharge.size() < 2)) {
 			return " Please check that Salary Processing Charge and its excise duty are defined with correct amount / figure for each!";
 		}
 
@@ -203,14 +223,15 @@ public class SalaryProcessingServices {
 			log.info(" CCCCCCCCCCCCCCCSSSS Salary Charge " + bdSalaryChargeAmt);
 			log.info(" CCCCCCCCCCCCCCCSSSS Excise Duty " + bdSalaryExciseAmt);
 		}
-		
-		//Check that Salary Charge and Excise duty have account set
+
+		// Check that Salary Charge and Excise duty have account set
 		GenericValue salaryProductCharge = LoanUtilities
 				.getProductCharge(salaryProductChargeId);
 		String salaryChargeCreditAccountId = salaryProductCharge
 				.getString("chargeAccountId");
-		
-		if ((salaryChargeCreditAccountId == null) || (salaryChargeCreditAccountId.equals(""))){
+
+		if ((salaryChargeCreditAccountId == null)
+				|| (salaryChargeCreditAccountId.equals(""))) {
 			return "Please ensure that the Salary Processing charge has a gl account set !! Check Product Charge list in loans if charge account is specified";
 		}
 
@@ -218,45 +239,51 @@ public class SalaryProcessingServices {
 				.getProductCharge(salaryExciseDutyId);
 		String salaryExciseCreditAccountId = salaryExciseDutyProductCharge
 				.getString("chargeAccountId");
-		
-		if ((salaryExciseCreditAccountId == null) || (salaryExciseCreditAccountId.equals(""))){
+
+		if ((salaryExciseCreditAccountId == null)
+				|| (salaryExciseCreditAccountId.equals(""))) {
 			return "Please ensure that the Excise charge has a GL Account set !! Check Product Charge list in loans if charge account is specified";
 		}
-		
-		//Employee Must have a branch
-		String branchId = AccHolderTransactionServices.getEmployeeBranch((String)userLogin.get("partyId"));
+
+		// Employee Must have a branch
+		String branchId = AccHolderTransactionServices
+				.getEmployeeBranch((String) userLogin.get("partyId"));
 		if ((branchId == null) || (branchId.equals("")))
 			return "The employee logged into the system must have a branch, please check with HR!!";
 
-		
-		String savingsAccountGLAccountId = LoanUtilities.getGLAccountIDForAccountProduct(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
-		
-		if ((savingsAccountGLAccountId == null) || (savingsAccountGLAccountId.equals(""))){
+		String savingsAccountGLAccountId = LoanUtilities
+				.getGLAccountIDForAccountProduct(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
+
+		if ((savingsAccountGLAccountId == null)
+				|| (savingsAccountGLAccountId.equals(""))) {
 			return "Please ensure that the Savings Account (Code 999 ) has a ledger account defined in the setup";
 		}
 		String branchName = LoanUtilities.getBranchName(branchId);
-		
-		if (!LoanUtilities.organizationAccountMapped(savingsAccountGLAccountId, branchId)){
-			return "Please make sure that the Savings Account GL account is mapped to the employee's Branch ("+branchName+") ";
-		}
-		
-		
-		//Check that the accounts for Salary Processing Charge and Excise duty are mapped to employee Branch
-		if (!LoanUtilities.organizationAccountMapped(salaryChargeCreditAccountId, branchId))
-		{
-			return "Please make sure that the Salary Charge Account is mapped to the employee branch ("+branchName+") in the chart of accounts, consult FINANCE";
-		}
-		
-		
-		if (!LoanUtilities.organizationAccountMapped(salaryExciseCreditAccountId, branchId))
-		{
-			return "Please make sure that the Excise Duty Account is mapped to the employee branch ("+branchName+")  in the chart of accounts, consult FINANCE";
+
+		if (!LoanUtilities.organizationAccountMapped(savingsAccountGLAccountId,
+				branchId)) {
+			return "Please make sure that the Savings Account GL account is mapped to the employee's Branch ("
+					+ branchName + ") ";
 		}
 
+		// Check that the accounts for Salary Processing Charge and Excise duty
+		// are mapped to employee Branch
+		if (!LoanUtilities.organizationAccountMapped(
+				salaryChargeCreditAccountId, branchId)) {
+			return "Please make sure that the Salary Charge Account is mapped to the employee branch ("
+					+ branchName
+					+ ") in the chart of accounts, consult FINANCE";
+		}
 
-		
-		//Map<String, String> userLogin = (Map<String, String>) request
-		//		.getAttribute("userLogin");
+		if (!LoanUtilities.organizationAccountMapped(
+				salaryExciseCreditAccountId, branchId)) {
+			return "Please make sure that the Excise Duty Account is mapped to the employee branch ("
+					+ branchName
+					+ ")  in the chart of accounts, consult FINANCE";
+		}
+
+		// Map<String, String> userLogin = (Map<String, String>) request
+		// .getAttribute("userLogin");
 		// For each Member
 		// Post Net Salary
 		// Post Salary Processing Charge
@@ -268,19 +295,19 @@ public class SalaryProcessingServices {
 
 		log.info("HHHHHHHHHHHH Salary Processing ... No Deductions !!!");
 
-//		Writer out;
-//		try {
-//			out = response.getWriter();
-//			out.write("");
-//			out.flush();
-//		} catch (IOException e) {
-//			try {
-//				throw new EventHandlerException(
-//						"Unable to get response writer", e);
-//			} catch (EventHandlerException e1) {
-//				e1.printStackTrace();
-//			}
-//		}
+		// Writer out;
+		// try {
+		// out = response.getWriter();
+		// out.write("");
+		// out.flush();
+		// } catch (IOException e) {
+		// try {
+		// throw new EventHandlerException(
+		// "Unable to get response writer", e);
+		// } catch (EventHandlerException e1) {
+		// e1.printStackTrace();
+		// }
+		// }
 		return "success";
 	}
 
@@ -288,7 +315,8 @@ public class SalaryProcessingServices {
 			String month, String year, String employerCode,
 			BigDecimal bdSalaryChargeAmt, BigDecimal bdSalaryExciseAmt,
 			Long salaryProductChargeId, String salaryProductChargeName,
-			Long salaryExciseDutyId, String salaryExciseDutyName, Long salaryMonthYearId) {
+			Long salaryExciseDutyId, String salaryExciseDutyName,
+			Long salaryMonthYearId) {
 		// Get the payroll numbers from MemberSalary given month, year and
 		// employerCode
 		List<GenericValue> listMemberSalary = getMemberSalaryList(month, year,
@@ -300,7 +328,7 @@ public class SalaryProcessingServices {
 		BigDecimal bdNetSalaryAmt = BigDecimal.ZERO;
 		Long memberAccountId = null;
 		String payrollNumber = null;
-		
+
 		// Create One AcctgTrans
 		GenericValue accountTransaction = null;
 		String acctgTransId = AccHolderTransactionServices
@@ -323,7 +351,8 @@ public class SalaryProcessingServices {
 					.getMemberSavingsAccountId(payrollNumber);
 			AccHolderTransactionServices.memberTransactionDeposit(
 					bdNetSalaryAmt, memberAccountId, userLogin,
-					"SALARYPROCESSING", accountTransactionParentId, null, acctgTransId);
+					"SALARYPROCESSING", accountTransactionParentId, null,
+					acctgTransId);
 
 			// Deduct the Salary Charge
 			// Add Salary Charge
@@ -341,7 +370,7 @@ public class SalaryProcessingServices {
 					salaryExciseDutyId.toString(), acctgTransId);
 
 			genericValue.set("processed", "Y");
-			//listSalaryToUpdate.add(genericValue);
+			// listSalaryToUpdate.add(genericValue);
 			try {
 				delegator.createOrStore(genericValue);
 			} catch (GenericEntityException e) {
@@ -352,22 +381,23 @@ public class SalaryProcessingServices {
 
 		// Post Total Net Salary in GL bdTotalSalaryPosted
 
-
 		// SALARYPROCESSING
-		//STATIONACCOUNTPAYMENT
-//		GenericValue accountHolderTransactionSetup = AccHolderTransactionServices
-//				.getAccountHolderTransactionSetup("SALARYPROCESSING");
-		
+		// STATIONACCOUNTPAYMENT
+		// GenericValue accountHolderTransactionSetup =
+		// AccHolderTransactionServices
+		// .getAccountHolderTransactionSetup("SALARYPROCESSING");
+
 		GenericValue accountHolderTransactionSetup = AccHolderTransactionServices
-		.getAccountHolderTransactionSetup("STATIONACCOUNTPAYMENT");
-		
+				.getAccountHolderTransactionSetup("STATIONACCOUNTPAYMENT");
+
 		String debitAccountIdt = accountHolderTransactionSetup
 				.getString("cashAccountId");
 		String stationDepositAccountId = accountHolderTransactionSetup
 				.getString("memberDepositAccId");
-		
-		//LoanUtilities.get
-		String savingsAccountGLAccountId = LoanUtilities.getGLAccountIDForAccountProduct(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
+
+		// LoanUtilities.get
+		String savingsAccountGLAccountId = LoanUtilities
+				.getGLAccountIDForAccountProduct(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
 
 		// salaryProductChargeId = salaryProductChargeId.replaceAll(",", "");
 		GenericValue salaryProductCharge = LoanUtilities
@@ -380,13 +410,15 @@ public class SalaryProcessingServices {
 		String salaryExciseCreditAccountId = salaryExciseDutyProductCharge
 				.getString("chargeAccountId");
 
-		String branchId = AccHolderTransactionServices.getEmployeeBranch((String)userLogin.get("partyId"));
-		
+		String branchId = AccHolderTransactionServices
+				.getEmployeeBranch((String) userLogin.get("partyId"));
+
 		Long entrySequence = 1L;
 		// ------------------------
 		// Debit Leaf Base with the total
 		AccHolderTransactionServices.createAccountPostingEntry(
-				bdTotalSalaryPosted, acctgTransId, "D", stationDepositAccountId, entrySequence.toString(), branchId);
+				bdTotalSalaryPosted, acctgTransId, "D",
+				stationDepositAccountId, entrySequence.toString(), branchId);
 
 		BigDecimal bdTotalCharges = bdTotalSalaryCharge
 				.add(bdTotalSalaryExciseDuty);
@@ -397,27 +429,30 @@ public class SalaryProcessingServices {
 		// duty))
 		entrySequence = entrySequence + 1;
 		AccHolderTransactionServices.createAccountPostingEntry(
-				bdTotalMemberDepositAmt, acctgTransId, "C", savingsAccountGLAccountId, entrySequence.toString(), branchId);
+				bdTotalMemberDepositAmt, acctgTransId, "C",
+				savingsAccountGLAccountId, entrySequence.toString(), branchId);
 		// Credit Salary Charge with total salary charge
 		entrySequence = entrySequence + 1;
-		AccHolderTransactionServices.createAccountPostingEntry(
-				bdTotalSalaryCharge, acctgTransId, "C",
-				salaryChargeCreditAccountId, entrySequence.toString(), branchId);
+		AccHolderTransactionServices
+				.createAccountPostingEntry(bdTotalSalaryCharge, acctgTransId,
+						"C", salaryChargeCreditAccountId,
+						entrySequence.toString(), branchId);
 		// Credit Excise Duty with total excise duty
 		entrySequence = entrySequence + 1;
-		AccHolderTransactionServices.createAccountPostingEntry(
-				bdTotalSalaryExciseDuty, acctgTransId, "C",
-				salaryExciseCreditAccountId, entrySequence.toString(), branchId);
+		AccHolderTransactionServices
+				.createAccountPostingEntry(bdTotalSalaryExciseDuty,
+						acctgTransId, "C", salaryExciseCreditAccountId,
+						entrySequence.toString(), branchId);
 
 		// Update the MemberSalary to processed
 
-//		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-//		try {
-//			delegator.storeAll(listSalaryToUpdate);
-//		} catch (GenericEntityException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		// Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		// try {
+		// delegator.storeAll(listSalaryToUpdate);
+		// } catch (GenericEntityException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 
 		// Prior Transaction when a cheque was paid
 		// Debit Cash at Bank
@@ -430,31 +465,32 @@ public class SalaryProcessingServices {
 		List<GenericValue> memberSalaryELI = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 
-//		EntityConditionList<EntityExpr> memberSalaryConditions = EntityCondition
-//				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-//						"month", EntityOperator.EQUALS, month),
-//
-//				EntityCondition.makeCondition("year", EntityOperator.EQUALS,
-//						year),
-//
-//				EntityCondition.makeCondition("employerCode",
-//						EntityOperator.EQUALS, employerCode),
-//				// processed
-//						EntityCondition.makeCondition("processed",
-//								EntityOperator.EQUALS, null)),
-//						EntityOperator.AND);
-		
+		// EntityConditionList<EntityExpr> memberSalaryConditions =
+		// EntityCondition
+		// .makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+		// "month", EntityOperator.EQUALS, month),
+		//
+		// EntityCondition.makeCondition("year", EntityOperator.EQUALS,
+		// year),
+		//
+		// EntityCondition.makeCondition("employerCode",
+		// EntityOperator.EQUALS, employerCode),
+		// // processed
+		// EntityCondition.makeCondition("processed",
+		// EntityOperator.EQUALS, null)),
+		// EntityOperator.AND);
+
 		EntityConditionList<EntityExpr> memberSalaryConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"salaryMonthYearId", EntityOperator.EQUALS, salaryMonthYearId),
+						"salaryMonthYearId", EntityOperator.EQUALS,
+						salaryMonthYearId),
 
-				
 				// processed
 						EntityCondition.makeCondition("processed",
 								EntityOperator.EQUALS, "N")),
 						EntityOperator.AND);
-		
-//		salaryMonthYearId
+
+		// salaryMonthYearId
 
 		try {
 			memberSalaryELI = delegator.findList("MemberSalary",
@@ -478,16 +514,16 @@ public class SalaryProcessingServices {
 
 		EntityConditionList<EntityExpr> memberSalaryConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"salaryMonthYearId", EntityOperator.EQUALS, salaryMonthYearId)
-						
-//						EntityCondition
-//						.makeCondition("year", EntityOperator.EQUALS, year),
-//
-//				EntityCondition.makeCondition("employerCode",
-//						EntityOperator.EQUALS, employerCode)
-						
-						),
-						EntityOperator.AND);
+						"salaryMonthYearId", EntityOperator.EQUALS,
+						salaryMonthYearId)
+
+				// EntityCondition
+				// .makeCondition("year", EntityOperator.EQUALS, year),
+				//
+				// EntityCondition.makeCondition("employerCode",
+				// EntityOperator.EQUALS, employerCode)
+
+						), EntityOperator.AND);
 
 		try {
 			memberSalaryELI = delegator.findList("MemberSalary",
@@ -533,8 +569,10 @@ public class SalaryProcessingServices {
 	/***
 	 * Full deduction
 	 * **/
-	//processSalaryReceivedDeduct(HttpServletRequest request, HttpServletResponse response)
-	public static synchronized String processSalaryReceivedDeduct(Long salaryMonthYearId, Map<String, String> userLogin) {
+	// processSalaryReceivedDeduct(HttpServletRequest request,
+	// HttpServletResponse response)
+	public static synchronized String processSalaryReceivedDeduct(
+			Long salaryMonthYearId, Map<String, String> userLogin) {
 
 		/***
 		 * Get month year and employerCode from SalaryMonthYear where
@@ -545,7 +583,7 @@ public class SalaryProcessingServices {
 		 * salaryMonthYearId is the given value
 		 * */
 		GenericValue salaryMonthYear = null;
-		//salaryMonthYearId = salaryMonthYearId.replaceAll(",", "");
+		// salaryMonthYearId = salaryMonthYearId.replaceAll(",", "");
 		Long salaryMonthIdLong = salaryMonthYearId;
 		salaryMonthYear = LoanUtilities.getSalaryMonthYear(salaryMonthIdLong);
 
@@ -554,28 +592,37 @@ public class SalaryProcessingServices {
 		String stationId = salaryMonthYear.getString("stationId");
 		stationId = stationId.replaceAll(",", "");
 		String employerCode = LoanUtilities.getStationEmployerCode(stationId);
-		
-		List<GenericValue> listMemberSalaryItems = getMemberSalaryList(month, year,
-				employerCode, salaryMonthYearId);
-		
-		log.info("SSSSSSSSSSSS salaryMonthYearId SSSSSSSS ::: "+salaryMonthYearId);
-		
-		if ((listMemberSalaryItems == null) || (listMemberSalaryItems.size() < 1)){
+
+		List<GenericValue> listMemberSalaryItems = getMemberSalaryList(month,
+				year, employerCode, salaryMonthYearId);
+
+		log.info("SSSSSSSSSSSS salaryMonthYearId SSSSSSSS ::: "
+				+ salaryMonthYearId);
+
+		if ((listMemberSalaryItems == null)
+				|| (listMemberSalaryItems.size() < 1)) {
 			return " No data to process or station already processed !";
 		}
-		
-		//Cheque that the amount available is equal to the total not salary
-		BigDecimal bdTotalNetSalaryAmt = getTotalNetSalaryAmount(salaryMonthYearId);
-		BigDecimal bdTotalChequeAmountAvailable = RemittanceServices.getTotalRemittedChequeAmountAvailable(employerCode, month, year);
 
-		//Everything to 2 decimal places
-		bdTotalNetSalaryAmt = bdTotalNetSalaryAmt.setScale(2, RoundingMode.HALF_DOWN);
-		bdTotalChequeAmountAvailable = bdTotalChequeAmountAvailable.setScale(2, RoundingMode.HALF_DOWN);
-		
-		if (bdTotalNetSalaryAmt.compareTo(bdTotalChequeAmountAvailable) != 0){
-			return "The available cheque amount must be equal to the salaries total, Total Salary Amount is "+bdTotalNetSalaryAmt+" while total cheque amounts is "+bdTotalChequeAmountAvailable;
+		// Cheque that the amount available is equal to the total not salary
+		BigDecimal bdTotalNetSalaryAmt = getTotalNetSalaryAmount(salaryMonthYearId);
+		BigDecimal bdTotalChequeAmountAvailable = RemittanceServices
+				.getTotalRemittedChequeAmountAvailable(employerCode, month,
+						year);
+
+		// Everything to 2 decimal places
+		bdTotalNetSalaryAmt = bdTotalNetSalaryAmt.setScale(2,
+				RoundingMode.HALF_DOWN);
+		bdTotalChequeAmountAvailable = bdTotalChequeAmountAvailable.setScale(2,
+				RoundingMode.HALF_DOWN);
+
+		if (bdTotalNetSalaryAmt.compareTo(bdTotalChequeAmountAvailable) != 0) {
+			return "The available cheque amount must be equal to the salaries total, Total Salary Amount is "
+					+ bdTotalNetSalaryAmt
+					+ " while total cheque amounts is "
+					+ bdTotalChequeAmountAvailable;
 		}
-		
+
 		// Remove Current Logs first
 		removeMissingPayrollNumbersLog(month, year, employerCode);
 		log.info("NOOOOOO DEDUCT LLLLLLLLLLLLLLLL Month " + month + " Year "
@@ -585,8 +632,6 @@ public class SalaryProcessingServices {
 
 		Boolean missingPayrollNumbers = getMissingPayrollNumbers(month, year,
 				employerCode, salaryMonthIdLong);
-		
-		
 
 		if (missingPayrollNumbers) {
 
@@ -606,38 +651,46 @@ public class SalaryProcessingServices {
 					+ employerCode);
 
 		}
-		
-		//Check that all members have Savings account - code 999
+
+		// Check that all members have Savings account - code 999
 		List<GenericValue> listMemberSalary = getMemberSalaryList(month, year,
 				employerCode, salaryMonthYearId);
-		Boolean missingSavingsAccount =  false;
+		Boolean missingSavingsAccount = false;
 		String missingSavingsListing = "";
-		//clearMissingMember
+		// clearMissingMember
 		RemittanceServices.clearMissingMember(month, employerCode);
-		//RemittanceServices.re
+		// RemittanceServices.re
 		for (GenericValue memberSalary : listMemberSalary) {
-			
-			//Check if member has code 999 account
-			//AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE
-			if (!LoanUtilities.hasAccount(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE, memberSalary.getString("payrollNumber"))){
+
+			// Check if member has code 999 account
+			// AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE
+			if (!LoanUtilities.hasAccount(
+					AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE,
+					memberSalary.getString("payrollNumber"))) {
 				missingSavingsAccount = true;
-				
-				if (missingSavingsListing.equals("")){
-					missingSavingsListing = memberSalary.getString("payrollNumber");
-				} else{
-					missingSavingsListing = missingSavingsListing + " , " + memberSalary.getString("payrollNumber");
+
+				if (missingSavingsListing.equals("")) {
+					missingSavingsListing = memberSalary
+							.getString("payrollNumber");
+				} else {
+					missingSavingsListing = missingSavingsListing + " , "
+							+ memberSalary.getString("payrollNumber");
 				}
-				
-				//Add User to missing accounts
-				
-				RemittanceServices.addMissingMemberLog(userLogin, memberSalary.getString("payrollNumber"), month, employerCode, AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE, null, null);
+
+				// Add User to missing accounts
+
+				RemittanceServices.addMissingMemberLog(userLogin,
+						memberSalary.getString("payrollNumber"), month,
+						employerCode,
+						AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE,
+						null, null);
 			}
 		}
-		
-		if (missingSavingsAccount){
-			return "There are member accounts missing, please check the Missing Members Members menu in Account Holders transactions . The list has these payrolls ("+missingSavingsListing+")";
+
+		if (missingSavingsAccount) {
+			return "There are member accounts missing, please check the Missing Members Members menu in Account Holders transactions . The list has these payrolls ("
+					+ missingSavingsListing + ")";
 		}
-		
 
 		// Continue Processing for Salary Without Deductions
 
@@ -646,11 +699,13 @@ public class SalaryProcessingServices {
 
 		// Get all the charges for transactiontype SALARYPROCESSING
 		List<GenericValue> listAccountProductCharge = null;
-		
-		listAccountProductCharge = LoanUtilities
-				.getAccountProductChargeList("SALARYPROCESSING", AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
-		
-		if ((listAccountProductCharge == null) || (listAccountProductCharge.size() < 2)){
+
+		listAccountProductCharge = LoanUtilities.getAccountProductChargeList(
+				"SALARYPROCESSING",
+				AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
+
+		if ((listAccountProductCharge == null)
+				|| (listAccountProductCharge.size() < 2)) {
 			return " Please check that Salary Processing Charge and its excise duty are defined with correct amount / figure for each!";
 		}
 
@@ -698,14 +753,15 @@ public class SalaryProcessingServices {
 			log.info(" CCCCCCCCCCCCCCCSSSS Salary Charge " + bdSalaryChargeAmt);
 			log.info(" CCCCCCCCCCCCCCCSSSS Excise Duty " + bdSalaryExciseAmt);
 		}
-		
-		//Check that Salary Charge and Excise duty have account set
+
+		// Check that Salary Charge and Excise duty have account set
 		GenericValue salaryProductCharge = LoanUtilities
 				.getProductCharge(salaryProductChargeId);
 		String salaryChargeCreditAccountId = salaryProductCharge
 				.getString("chargeAccountId");
-		
-		if ((salaryChargeCreditAccountId == null) || (salaryChargeCreditAccountId.equals(""))){
+
+		if ((salaryChargeCreditAccountId == null)
+				|| (salaryChargeCreditAccountId.equals(""))) {
 			return "Please ensure that the Salary Processing charge has a gl account set !! Check Product Charge list in loans if charge account is specified";
 		}
 
@@ -713,39 +769,47 @@ public class SalaryProcessingServices {
 				.getProductCharge(salaryExciseDutyId);
 		String salaryExciseCreditAccountId = salaryExciseDutyProductCharge
 				.getString("chargeAccountId");
-		
-		if ((salaryExciseCreditAccountId == null) || (salaryExciseCreditAccountId.equals(""))){
+
+		if ((salaryExciseCreditAccountId == null)
+				|| (salaryExciseCreditAccountId.equals(""))) {
 			return "Please ensure that the Excise charge has a GL Account set !! Check Product Charge list in loans if charge account is specified";
 		}
-		
-		//Employee Must have a branch
-		String branchId = AccHolderTransactionServices.getEmployeeBranch((String)userLogin.get("partyId"));
+
+		// Employee Must have a branch
+		String branchId = AccHolderTransactionServices
+				.getEmployeeBranch((String) userLogin.get("partyId"));
 		if ((branchId == null) || (branchId.equals("")))
 			return "The employee logged into the system must have a branch, please check with HR!!";
 
-		
-		String savingsAccountGLAccountId = LoanUtilities.getGLAccountIDForAccountProduct(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
-		
-		if ((savingsAccountGLAccountId == null) || (savingsAccountGLAccountId.equals(""))){
+		String savingsAccountGLAccountId = LoanUtilities
+				.getGLAccountIDForAccountProduct(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
+
+		if ((savingsAccountGLAccountId == null)
+				|| (savingsAccountGLAccountId.equals(""))) {
 			return "Please ensure that the Savings Account (Code 999 ) has a ledger account defined in the setup";
 		}
 		String branchName = LoanUtilities.getBranchName(branchId);
-		
-		if (!LoanUtilities.organizationAccountMapped(savingsAccountGLAccountId, branchId)){
-			return "Please make sure that the Savings Account GL account is mapped to the employee's Branch ("+branchName+") ";
+
+		if (!LoanUtilities.organizationAccountMapped(savingsAccountGLAccountId,
+				branchId)) {
+			return "Please make sure that the Savings Account GL account is mapped to the employee's Branch ("
+					+ branchName + ") ";
 		}
-		
-		
-		//Check that the accounts for Salary Processing Charge and Excise duty are mapped to employee Branch
-		if (!LoanUtilities.organizationAccountMapped(salaryChargeCreditAccountId, branchId))
-		{
-			return "Please make sure that the Salary Charge Account is mapped to the employee branch ("+branchName+") in the chart of accounts, consult FINANCE";
+
+		// Check that the accounts for Salary Processing Charge and Excise duty
+		// are mapped to employee Branch
+		if (!LoanUtilities.organizationAccountMapped(
+				salaryChargeCreditAccountId, branchId)) {
+			return "Please make sure that the Salary Charge Account is mapped to the employee branch ("
+					+ branchName
+					+ ") in the chart of accounts, consult FINANCE";
 		}
-		
-		
-		if (!LoanUtilities.organizationAccountMapped(salaryExciseCreditAccountId, branchId))
-		{
-			return "Please make sure that the Excise Duty Account is mapped to the employee branch ("+branchName+")  in the chart of accounts, consult FINANCE";
+
+		if (!LoanUtilities.organizationAccountMapped(
+				salaryExciseCreditAccountId, branchId)) {
+			return "Please make sure that the Excise Duty Account is mapped to the employee branch ("
+					+ branchName
+					+ ")  in the chart of accounts, consult FINANCE";
 		}
 
 		// For each Member
@@ -757,10 +821,14 @@ public class SalaryProcessingServices {
 				salaryProductChargeName, salaryExciseDutyId,
 				salaryExciseDutyName, salaryMonthYearId);
 
-		
 		return "success";
 	}
 
+	/****
+	 * @author Japheth Odonya @when Jun 17, 2015 11:39:29 PM
+	 * 
+	 *         Full Salary Deductions here
+	 * */
 	private static void doProcessingWithDeductions(
 			Map<String, String> userLogin, String month, String year,
 			String employerCode, BigDecimal bdSalaryChargeAmt,
@@ -776,17 +844,31 @@ public class SalaryProcessingServices {
 		BigDecimal bdTotalSalaryCharge = BigDecimal.ZERO;
 		BigDecimal bdTotalSalaryExciseDuty = BigDecimal.ZERO;
 		BigDecimal bdNetSalaryAmt = BigDecimal.ZERO;
+
+		BigDecimal bdTotalPrincipalPaid = BigDecimal.ZERO;
+		BigDecimal bdTotalInterestPaid = BigDecimal.ZERO;
+		BigDecimal bdTotalInsurancePaid = BigDecimal.ZERO;
+
 		Long memberAccountId = null;
 		String payrollNumber = null;
 
 		String accountTransactionParentId = null;
 
-		List<GenericValue> listSalaryToUpdate = new ArrayList<GenericValue>();
-		List<GenericValue> listLoanRepayments = new ArrayList<GenericValue>();
-		
+		List<GenericValue> listLoanRepayments = null;
+
+		// Create One AcctgTrans
+		GenericValue accountTransaction = null;
+		String acctgTransId = AccHolderTransactionServices
+				.creatAccountTransRecord(accountTransaction, userLogin);
+
+		Set<Long> contributingProductIds = new HashSet<Long>();
+		Map<Long, BigDecimal> productTotals = new HashMap<Long, BigDecimal>();
+
 		for (GenericValue genericValue : listMemberSalary) {
 
-			//###### Add the Net Salary to Member Account
+			listLoanRepayments = new ArrayList<GenericValue>();
+
+			// ###### Add the Net Salary to Member Account
 			bdNetSalaryAmt = genericValue.getBigDecimal("netSalary");
 			bdTotalSalaryPosted = bdTotalSalaryPosted.add(bdNetSalaryAmt);
 
@@ -800,122 +882,184 @@ public class SalaryProcessingServices {
 					.getMemberSavingsAccountId(payrollNumber);
 			AccHolderTransactionServices.memberTransactionDeposit(
 					bdNetSalaryAmt, memberAccountId, userLogin,
-					"SALARYPROCESSING", accountTransactionParentId, null);
-			
-			//###### Deduct the Salary Processing Fee
+					"SALARYPROCESSING", accountTransactionParentId, null,
+					acctgTransId);
+
+			// ###### Deduct the Salary Processing Fee
 			// Deduct the Salary Charge
 			// Add Salary Charge
 			bdTotalSalaryCharge = bdTotalSalaryCharge.add(bdSalaryChargeAmt);
 			AccHolderTransactionServices.memberTransactionDeposit(
 					bdSalaryChargeAmt, memberAccountId, userLogin,
 					salaryProductChargeName, accountTransactionParentId,
-					salaryProductChargeId.toString());
-			
-			//####### Deduct the Excise Duty
+					salaryProductChargeId.toString(), acctgTransId);
+
+			// ####### Deduct the Excise Duty
 			// Deduct the Salary Charge
 			// Add Salary Charge
-			bdTotalSalaryExciseDuty = bdTotalSalaryExciseDuty.add(bdSalaryExciseAmt);
+			bdTotalSalaryExciseDuty = bdTotalSalaryExciseDuty
+					.add(bdSalaryExciseAmt);
 			AccHolderTransactionServices.memberTransactionDeposit(
 					bdSalaryExciseAmt, memberAccountId, userLogin,
 					salaryExciseDutyName, accountTransactionParentId,
-					salaryExciseDutyId.toString());
+					salaryExciseDutyId.toString(), acctgTransId);
 
-			//####### Deduct the total Loan Deductions
-			GenericValue member =	RemittanceServices.getMemberByPayrollNo(payrollNumber);
-			List<Long> listLoanApplicationIds = LoanServices.getDisbursedLoansIds(member.getLong("partyId"));
+			// ####### Deduct the total Loan Deductions
+			GenericValue member = RemittanceServices
+					.getMemberByPayrollNo(payrollNumber);
+			List<Long> listLoanApplicationIds = LoanServices
+					.getDisbursedLoansIds(member.getLong("partyId"));
 			BigDecimal bdMemberTotalLoanExpectedAmt = BigDecimal.ZERO;
 			BigDecimal bdLoanExpectedAmt = BigDecimal.ZERO;
-			//String productName = "";
+			// String productName = "";
 			GenericValue loanRepayment;
 			Long loanRepaymentId = null;
 			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+			BigDecimal bdSalaryBalance = bdNetSalaryAmt.subtract(
+					bdSalaryChargeAmt).subtract(bdSalaryExciseAmt);
 			for (Long loanApplicationId : listLoanApplicationIds) {
-				bdLoanExpectedAmt = LoanRepayments.getTotalPrincipaByLoanDue(loanApplicationId.toString());
-				bdLoanExpectedAmt = bdLoanExpectedAmt.add(LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString()));
-				bdLoanExpectedAmt = bdLoanExpectedAmt.add(LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString()));
-				
-				bdMemberTotalLoanExpectedAmt = bdMemberTotalLoanExpectedAmt.add(bdLoanExpectedAmt);
-				AccHolderTransactionServices.memberTransactionDeposit(bdLoanExpectedAmt, memberAccountId, userLogin, "LOANREPAYMENT", accountTransactionParentId, null);
-				
-				BigDecimal totalLoanDue = LoanRepayments.getTotalLoanByLoanDue(loanApplicationId.toString());
-				BigDecimal totalInterestDue = LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString());
-				BigDecimal totalInsuranceDue = LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString());
-				BigDecimal totalPrincipalDue = LoanRepayments.getTotalPrincipaByLoanDue(loanApplicationId.toString());
-				
+
+				bdLoanExpectedAmt = bdLoanExpectedAmt
+						.add(LoanRepayments
+								.getTotalInterestByLoanDue(loanApplicationId
+										.toString()));
+				// if (bdSalaryBalance.compareTo(bdLoanExpectedAmt) >= 0)
+
+				bdLoanExpectedAmt = bdLoanExpectedAmt
+						.add(LoanRepayments
+								.getTotalInsurancByLoanDue(loanApplicationId
+										.toString()));
+				bdLoanExpectedAmt = LoanRepayments
+						.getTotalPrincipaByLoanDue(loanApplicationId.toString());
+
+				bdMemberTotalLoanExpectedAmt = bdMemberTotalLoanExpectedAmt
+						.add(bdLoanExpectedAmt);
+				AccHolderTransactionServices.memberTransactionDeposit(
+						bdLoanExpectedAmt, memberAccountId, userLogin,
+						"LOANREPAYMENT", accountTransactionParentId, null,
+						acctgTransId);
+
+				BigDecimal totalLoanDue = LoanRepayments
+						.getTotalLoanByLoanDue(loanApplicationId.toString());
+				BigDecimal totalInterestDue = LoanRepayments
+						.getTotalInterestByLoanDue(loanApplicationId.toString());
+				BigDecimal totalInsuranceDue = LoanRepayments
+						.getTotalInsurancByLoanDue(loanApplicationId.toString());
+				BigDecimal totalPrincipalDue = LoanRepayments
+						.getTotalPrincipaByLoanDue(loanApplicationId.toString());
+
 				BigDecimal interestAmount = totalInterestDue;
 				BigDecimal insuranceAmount = totalInsuranceDue;
 				BigDecimal principalAmount = totalPrincipalDue;
-				
+
+				bdTotalPrincipalPaid = bdTotalPrincipalPaid
+						.add(principalAmount);
+				bdTotalInterestPaid = bdTotalInterestPaid.add(interestAmount);
+				bdTotalInsurancePaid = bdTotalInsurancePaid
+						.add(insuranceAmount);
+
 				loanRepaymentId = delegator.getNextSeqIdLong("LoanRepayment");
-				loanRepayment =  delegator.makeValue(
-						"LoanRepayment", UtilMisc.toMap(
-								"loanRepaymentId", loanRepaymentId,
-								"isActive", "Y",
-								"createdBy", "admin",
-								//"transactionType", "LOANREPAYMENT",
+				loanRepayment = delegator.makeValue("LoanRepayment", UtilMisc
+						.toMap("loanRepaymentId", loanRepaymentId, "isActive",
+								"Y",
+								"createdBy",
+								"admin",
+								// "transactionType", "LOANREPAYMENT",
 								"loanApplicationId", loanApplicationId,
 								"partyId", member.getLong("partyId"),
-								
-								"transactionAmount",
-								bdLoanExpectedAmt,
-								
+
+								"transactionAmount", bdLoanExpectedAmt,
+
 								"totalLoanDue", totalLoanDue,
-								
+
 								"totalInterestDue", totalInterestDue,
-								
+
 								"totalInsuranceDue", totalInsuranceDue,
-								
+
 								"totalPrincipalDue", totalPrincipalDue,
-								
-								
-								
-								
+
 								"interestAmount", interestAmount,
 								"insuranceAmount", insuranceAmount,
-								"principalAmount", principalAmount
-								
-								));
-				
-//				try {
-//					delegator.createOrStore(loanRepayment);
-//				} catch (GenericEntityException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-				
-				//LoanRepayments.repayLoanWithoutDebitingCash(loanRepayment, userLogin);
-				listLoanRepayments.add(loanRepayment);
+								"principalAmount", principalAmount,
+
+								"acctgTransId", acctgTransId
+
+						));
+
+				try {
+					delegator.createOrStore(loanRepayment);
+				} catch (GenericEntityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				// LoanRepayments.repayLoanWithoutDebitingCash(loanRepayment,
+				// userLogin);
+				// TODO use this to calcuate whether a loan can be paid
+				// listLoanRepayments.add(loanRepayment);
 			}
-			
+
+			// Process the loans
+
 			// Deduct the total Account Contributions
-			List<GenericValue> listMemberAccounts = LoanUtilities.getMemberContributingAccounts(member.getLong("partyId"));
+			List<GenericValue> listMemberAccounts = LoanUtilities
+					.getMemberContributingAccounts(member.getLong("partyId"));
+			Long memberSavingsAccountId = LoanUtilities
+					.getMemberAccountIdFromMemberAccount(
+							member.getLong("partyId"),
+							LoanUtilities
+									.getAccountProductGivenCodeId(
+											AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE)
+									.getLong("accountProductId"));
 			BigDecimal bdTotalContributingAmount = BigDecimal.ZERO;
 			BigDecimal bdContributingAmt;
 			for (GenericValue memberAccount : listMemberAccounts) {
-				bdContributingAmt = LoanUtilities.getContributionAmount(memberAccount, member.getLong("partyId"));
-				AccHolderTransactionServices.memberTransactionDeposit(bdContributingAmt, memberAccount.getLong("memberAccountId") , userLogin, "DEPOSITFROMSALARY", accountTransactionParentId, null);
-				bdTotalContributingAmount = bdTotalContributingAmount.add(bdContributingAmt);
+
+				contributingProductIds.add(memberAccount
+						.getLong("accountProductId"));
+
+				bdContributingAmt = LoanUtilities.getContributionAmount(
+						memberAccount, member.getLong("partyId"));
+
+				if (!productTotals.containsKey(memberAccount
+						.getLong("accountProductId"))) {
+					productTotals.put(
+							memberAccount.getLong("accountProductId"),
+							bdContributingAmt);
+				} else {
+					productTotals.put(
+							memberAccount.getLong("accountProductId"),
+							productTotals.get(
+									memberAccount.getLong("accountProductId"))
+									.add(bdContributingAmt));
+				}
+
+				// bdContributingAmt = LoanUtilities.getContributionAmount(
+				// memberAccount, member.getLong("partyId"));
+				// remove it from source account - the savings account
+				AccHolderTransactionServices.memberTransactionDeposit(
+						bdContributingAmt, memberSavingsAccountId, userLogin,
+						"TOOTHERACCOUNTS", accountTransactionParentId, null,
+						acctgTransId);
+				// Add to destination account e.g. member deposits
+				AccHolderTransactionServices.memberTransactionDeposit(
+						bdContributingAmt,
+						memberAccount.getLong("memberAccountId"), userLogin,
+						"DEPOSITFROMSALARY", accountTransactionParentId, null,
+						acctgTransId);
+				bdTotalContributingAmount = bdTotalContributingAmount
+						.add(bdContributingAmt);
 			}
 			// Repay Loan with total loan repaid amount above for each loan
 			// Make contribution to each account with the contribution amount
 
 			// GL POsting
 			// -- sum value for net salary - (salary processing fee + excise
-			// duty + total loans + total account contributions) 
-
-
-
-
-			// Deduct the Salary Charge
-			// Add Salary Charge
-			bdTotalSalaryCharge = bdTotalSalaryCharge.add(bdSalaryChargeAmt);
-			AccHolderTransactionServices.memberTransactionDeposit(
-					bdTotalSalaryCharge, memberAccountId, userLogin,
-					salaryProductChargeName, accountTransactionParentId,
-					salaryProductChargeId.toString());
+			// duty + total loans + total account contributions)
 
 			genericValue.set("processed", "Y");
-			//listSalaryToUpdate.add(genericValue);
+			// listSalaryToUpdate.add(genericValue);
 			try {
 				delegator.createOrStore(genericValue);
 			} catch (GenericEntityException e) {
@@ -926,17 +1070,21 @@ public class SalaryProcessingServices {
 
 		// Post Total Net Salary in GL bdTotalSalaryPosted
 
-		// Create One AcctgTrans
-		GenericValue accountTransaction = null;
-		String acctgTransId = AccHolderTransactionServices
-				.creatAccountTransRecord(accountTransaction, userLogin);
 		// SALARYPROCESSING
+		// GenericValue accountHolderTransactionSetup =
+		// AccHolderTransactionServices
+		// .getAccountHolderTransactionSetup("SALARYPROCESSING");
+		// String debitAccountId = accountHolderTransactionSetup
+		// .getString("cashAccountId");
+		// String creditAccountId = accountHolderTransactionSetup
+		// .getString("memberDepositAccId");
 		GenericValue accountHolderTransactionSetup = AccHolderTransactionServices
-				.getAccountHolderTransactionSetup("SALARYPROCESSING");
-		String debitAccountId = accountHolderTransactionSetup
-				.getString("cashAccountId");
-		String creditAccountId = accountHolderTransactionSetup
+				.getAccountHolderTransactionSetup("STATIONACCOUNTPAYMENT");
+
+		String stationDepositAccountId = accountHolderTransactionSetup
 				.getString("memberDepositAccId");
+		String savingsAccountGLAccountId = LoanUtilities
+				.getGLAccountIDForAccountProduct(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
 
 		// salaryProductChargeId = salaryProductChargeId.replaceAll(",", "");
 		GenericValue salaryProductCharge = LoanUtilities
@@ -949,12 +1097,14 @@ public class SalaryProcessingServices {
 		String salaryExciseCreditAccountId = salaryExciseDutyProductCharge
 				.getString("chargeAccountId");
 
-		String branchId = AccHolderTransactionServices.getEmployeeBranch((String)userLogin.get("partyId"));
+		String branchId = AccHolderTransactionServices
+				.getEmployeeBranch((String) userLogin.get("partyId"));
 		Long entrySequence = 1L;
 		// ------------------------
 		// Debit Leaf Base with the total
 		AccHolderTransactionServices.createAccountPostingEntry(
-				bdTotalSalaryPosted, acctgTransId, "D", debitAccountId, entrySequence.toString(), branchId);
+				bdTotalSalaryPosted, acctgTransId, "D",
+				stationDepositAccountId, entrySequence.toString(), branchId);
 
 		BigDecimal bdTotalCharges = bdTotalSalaryCharge
 				.add(bdTotalSalaryExciseDuty);
@@ -965,39 +1115,124 @@ public class SalaryProcessingServices {
 		// duty))
 		entrySequence = entrySequence + 1;
 		AccHolderTransactionServices.createAccountPostingEntry(
-				bdTotalMemberDepositAmt, acctgTransId, "C", creditAccountId, entrySequence.toString(), branchId);
+				bdTotalMemberDepositAmt, acctgTransId, "C",
+				savingsAccountGLAccountId, entrySequence.toString(), branchId);
 		// Credit Salary Charge with total salary charge
 		entrySequence = entrySequence + 1;
-		AccHolderTransactionServices.createAccountPostingEntry(
-				bdTotalSalaryCharge, acctgTransId, "C",
-				salaryChargeCreditAccountId, entrySequence.toString(), branchId);
+		AccHolderTransactionServices
+				.createAccountPostingEntry(bdTotalSalaryCharge, acctgTransId,
+						"C", salaryChargeCreditAccountId,
+						entrySequence.toString(), branchId);
 		// Credit Excise Duty with total excise duty
 		entrySequence = entrySequence + 1;
+		AccHolderTransactionServices
+				.createAccountPostingEntry(bdTotalSalaryExciseDuty,
+						acctgTransId, "C", salaryExciseCreditAccountId,
+						entrySequence.toString(), branchId);
+
+		// Post the Loan Repayments
+		// DR the savings withdrawable savingsAccountGLAccountId
+		BigDecimal bdTotalLoanAmountPaid = bdTotalPrincipalPaid.add(
+				bdTotalInterestPaid).add(bdTotalInsurancePaid);
+		entrySequence = entrySequence + 1;
 		AccHolderTransactionServices.createAccountPostingEntry(
-				bdTotalSalaryExciseDuty, acctgTransId, "C",
-				salaryExciseCreditAccountId, entrySequence.toString(), branchId);
-		
-		//Post the Loan Repayments
-		for (GenericValue genericValue : listLoanRepayments) {
-			//entrySequence = entrySequence + 1;
-			LoanRepayments.repayLoanWithoutDebitingCash(genericValue, userLogin, entrySequence);
-		}
-		
-		//listLoanRepayments.add(loanRepayment);
+				bdTotalLoanAmountPaid, acctgTransId, "D",
+				savingsAccountGLAccountId, entrySequence.toString(), branchId);
+
+		// Principal Payment
+		// CR Loan Receivable bdTotalPrincipalPaid
+		entrySequence = entrySequence + 1;
+
+		accountHolderTransactionSetup = AccHolderTransactionServices
+				.getAccountHolderTransactionSetup("PRINCIPALPAYMENT");
+		String loanReceivableAccountId = accountHolderTransactionSetup
+				.getString("memberDepositAccId");
+
+		AccHolderTransactionServices.createAccountPostingEntry(
+				bdTotalPrincipalPaid, acctgTransId, "C",
+				loanReceivableAccountId, entrySequence.toString(), branchId);
+
+		// Interest Payment
+		// CR Interest Recevable bdTotalInterestPaid
+		entrySequence = entrySequence + 1;
+
+		accountHolderTransactionSetup = AccHolderTransactionServices
+				.getAccountHolderTransactionSetup("INTERESTPAYMENT");
+		String interestReceivableAccountId = accountHolderTransactionSetup
+				.getString("memberDepositAccId");
+
+		AccHolderTransactionServices
+				.createAccountPostingEntry(bdTotalInterestPaid, acctgTransId,
+						"C", interestReceivableAccountId,
+						entrySequence.toString(), branchId);
+
+		// Insurance Payment
+		// CR Charge/Insurance Receivable bdTotalInsurancePaid
+		entrySequence = entrySequence + 1;
+
+		accountHolderTransactionSetup = AccHolderTransactionServices
+				.getAccountHolderTransactionSetup("INSURANCEPAYMENT");
+		String insurancePaymentAccountId = accountHolderTransactionSetup
+				.getString("memberDepositAccId");
+
+		AccHolderTransactionServices.createAccountPostingEntry(
+				bdTotalInsurancePaid, acctgTransId, "C",
+				insurancePaymentAccountId, entrySequence.toString(), branchId);
+
+		// DR
+		// TODO May use it to check loan Repayment
+		// for (GenericValue genericValue : listLoanRepayments) {
+		// //entrySequence = entrySequence + 1;
+		// LoanRepayments.repayLoanWithoutDebitingCash(genericValue, userLogin,
+		// entrySequence, acctgTransId);
+		// }
+
+		// listLoanRepayments.add(loanRepayment);
 
 		// Update the MemberSalary to processed
 
-//		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-//		try {
-//			delegator.storeAll(listSalaryToUpdate);
-//		} catch (GenericEntityException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		// Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		// try {
+		// delegator.storeAll(listSalaryToUpdate);
+		// } catch (GenericEntityException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 
 		// Prior Transaction when a cheque was paid
 		// Debit Cash at Bank
 		// Credit Leaf Base
+
+		// Posting the Account Products
+		// Posting Contributed Accounts Member Deposits, Share Capital etc
+		// Get the toal Account Amounts Contributed
+		BigDecimal bdTotalAmountContributedToAccounts = BigDecimal.ZERO;
+
+		String productglAccountId = "";
+
+		for (Long accountProductId : contributingProductIds) {
+
+			// Credit each account product there after
+
+			entrySequence = entrySequence + 1;
+			productglAccountId = LoanUtilities
+					.getGLAccountIDForAccountProduct(LoanUtilities
+							.getAccountProduct(accountProductId)
+							.getString("code").trim());
+			AccHolderTransactionServices.createAccountPostingEntry(
+					productTotals.get(accountProductId), acctgTransId, "C",
+					productglAccountId, entrySequence.toString(), branchId);
+
+			bdTotalAmountContributedToAccounts = bdTotalAmountContributedToAccounts
+					.add(productTotals.get(accountProductId));
+
+		}
+
+		// Debit savings with total account contributions
+		entrySequence = entrySequence + 1;
+		AccHolderTransactionServices.createAccountPostingEntry(
+				bdTotalAmountContributedToAccounts, acctgTransId, "D",
+				savingsAccountGLAccountId, entrySequence.toString(), branchId);
 
 	}
 
@@ -1120,37 +1355,35 @@ public class SalaryProcessingServices {
 		return Long.valueOf(missingSalaryPayrollNumberELI.size());
 
 	}
-	
-	
+
 	/****
-	 * Take the path to csv and salaryMonthYearId and do the processing of the csv
+	 * Take the path to csv and salaryMonthYearId and do the processing of the
+	 * csv
 	 * */
-	public static void processCSV(String csvPath, String salaryMonthYearIdStr){
-		
+	public static void processCSV(String csvPath, String salaryMonthYearIdStr) {
+
 		log.info(" GGGGGGGGGGGGGGGGGGG ");
-		log.info(" CSV Path (absolute is ) :::  "+csvPath);
-		log.info(" Salary Month Year ID is :::  ) "+salaryMonthYearIdStr);
-		
+		log.info(" CSV Path (absolute is ) :::  " + csvPath);
+		log.info(" Salary Month Year ID is :::  ) " + salaryMonthYearIdStr);
+
 		/***
-		 * Create MemberSalary 
+		 * Create MemberSalary
 		 * 
 		 * 
-		 * 		<field name="memberSalaryId" type="id-vlong-int"></field>
-				<field name="salaryMonthYearId" type="id-vlong-int"></field>
-				<field name="isActive" type="indicator"></field>
-				<field name="createdBy" type="id"></field>
-				<field name="month" type="id"></field>
-				<field name="year" type="id"></field>
-				<field name="employerCode" type="id"></field>
-				<field name="payrollNumber" type="id"></field>
-				<field name="netSalary" type="fixed-point"></field>
-				<field name="processed" type="indicator"></field>
+		 * <field name="memberSalaryId" type="id-vlong-int"></field> <field
+		 * name="salaryMonthYearId" type="id-vlong-int"></field> <field
+		 * name="isActive" type="indicator"></field> <field name="createdBy"
+		 * type="id"></field> <field name="month" type="id"></field> <field
+		 * name="year" type="id"></field> <field name="employerCode"
+		 * type="id"></field> <field name="payrollNumber" type="id"></field>
+		 * <field name="netSalary" type="fixed-point"></field> <field
+		 * name="processed" type="indicator"></field>
 		 * 
 		 * */
-		
-		//String month = "";
-		//String year = "";
-		//String employerCode = "";
+
+		// String month = "";
+		// String year = "";
+		// String employerCode = "";
 		Long salaryMonthYearIdLong = Long.valueOf(salaryMonthYearIdStr);
 		// Need month, year and employerCode
 
@@ -1171,69 +1404,65 @@ public class SalaryProcessingServices {
 		GenericValue station = LoanUtilities.getStation(salaryMonthYear
 				.getString("stationId"));
 		String employerCode = station.getString("employerCode");
-		
-		
+
 		BufferedReader br = null;
 		String line = "";
 		String csvSplitBy = ",";
-		
+
 		Long memberSalaryId;
 		GenericValue memberSalary;
-		
+
 		List<GenericValue> listMemberSalary = new ArrayList<GenericValue>();
-		
-		//Add the records to Member Salaries
+
+		// Add the records to Member Salaries
 		int count = 0;
 		BigDecimal netSalary = BigDecimal.ZERO;
 		try {
 			br = new BufferedReader(new FileReader(csvPath));
-			
-			while ((line = br.readLine()) != null){
+
+			while ((line = br.readLine()) != null) {
 				String[] salary = line.split(csvSplitBy);
 				count++;
-				
-				System.out.println(" Count "+count+" Payroll No "+salary[0]+" Net Pay "+salary[1]);
+
+				System.out.println(" Count " + count + " Payroll No "
+						+ salary[0] + " Net Pay " + salary[1]);
 				netSalary = new BigDecimal(salary[1]);
 				memberSalaryId = delegator.getNextSeqIdLong("MemberSalary");
-				memberSalary =  delegator.makeValue(
-						"MemberSalary", UtilMisc.toMap(
-								"memberSalaryId", memberSalaryId,
+				memberSalary = delegator.makeValue("MemberSalary", UtilMisc
+						.toMap("memberSalaryId", memberSalaryId,
 								"salaryMonthYearId", salaryMonthYearIdLong,
-								"isActive", "Y",
-								"createdBy", "admin",
-								//"transactionType", "LOANREPAYMENT",
-								"month", month.toString(),
-								"year", year.toString(),
-								
-								"employerCode",
-								employerCode,
-								
+								"isActive", "Y", "createdBy", "admin",
+								// "transactionType", "LOANREPAYMENT",
+								"month", month.toString(), "year",
+								year.toString(),
+
+								"employerCode", employerCode,
+
 								"payrollNumber", salary[0].trim(),
-								
+
 								"netSalary", netSalary,
-								
-								"processed", "N"
-								));
-				
+
+								"processed", "N"));
+
 				listMemberSalary.add(memberSalary);
 			}
-			
+
 			try {
 				delegator.storeAll(listMemberSalary);
 			} catch (GenericEntityException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally{
-			
-			if (br != null){
+		} finally {
+
+			if (br != null) {
 				try {
 					br.close();
 				} catch (IOException e) {
@@ -1242,35 +1471,34 @@ public class SalaryProcessingServices {
 				}
 			}
 		}
-	
+
 	}
 
 	private static GenericValue getSalaryMonthYear(Long salaryMonthYearIdLong) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	
+
 	/**
-	 * @author Japheth Odonya  @when May 8, 2015 3:50:07 PM
+	 * @author Japheth Odonya @when May 8, 2015 3:50:07 PM
 	 * 
-	 * processSalaryReceivedLoanDeductionOnly
+	 *         processSalaryReceivedLoanDeductionOnly
 	 * 
 	 * */
-	//(HttpServletRequest request, HttpServletResponse response)
-	public static synchronized String processSalaryReceivedLoanDeductionOnly
-	(Long salaryMonthYearId, Map<String, String> userLogin) {
+	// (HttpServletRequest request, HttpServletResponse response)
+	public static synchronized String processSalaryReceivedLoanDeductionOnly(
+			Long salaryMonthYearId, Map<String, String> userLogin) {
 
 		// salaryMonthYearId
-		//String salaryMonthYearId = (String) request
-		//		.getParameter("salaryMonthYearId");
+		// String salaryMonthYearId = (String) request
+		// .getParameter("salaryMonthYearId");
 
 		/***
 		 * Get month year and employerCode from SalaryMonthYear where
 		 * salaryMonthYearId is the given value
 		 * */
 		GenericValue salaryMonthYear = null;
-		//salaryMonthYearId = salaryMonthYearId.replaceAll(",", "");
+		// salaryMonthYearId = salaryMonthYearId.replaceAll(",", "");
 		Long salaryMonthIdLong = salaryMonthYearId;
 		salaryMonthYear = LoanUtilities.getSalaryMonthYear(salaryMonthIdLong);
 
@@ -1279,28 +1507,37 @@ public class SalaryProcessingServices {
 		String stationId = salaryMonthYear.getString("stationId");
 		stationId = stationId.replaceAll(",", "");
 		String employerCode = LoanUtilities.getStationEmployerCode(stationId);
-		
-		List<GenericValue> listMemberSalaryItems = getMemberSalaryList(month, year,
-				employerCode, salaryMonthYearId);
-		
-		log.info("SSSSSSSSSSSS salaryMonthYearId SSSSSSSS ::: "+salaryMonthYearId);
-		
-		if ((listMemberSalaryItems == null) || (listMemberSalaryItems.size() < 1)){
+
+		List<GenericValue> listMemberSalaryItems = getMemberSalaryList(month,
+				year, employerCode, salaryMonthYearId);
+
+		log.info("SSSSSSSSSSSS salaryMonthYearId SSSSSSSS ::: "
+				+ salaryMonthYearId);
+
+		if ((listMemberSalaryItems == null)
+				|| (listMemberSalaryItems.size() < 1)) {
 			return " No data to process or station already processed !";
 		}
-		
-		//Cheque that the amount available is equal to the total not salary
-		BigDecimal bdTotalNetSalaryAmt = getTotalNetSalaryAmount(salaryMonthYearId);
-		BigDecimal bdTotalChequeAmountAvailable = RemittanceServices.getTotalRemittedChequeAmountAvailable(employerCode, month, year);
 
-		//Everything to 2 decimal places
-		bdTotalNetSalaryAmt = bdTotalNetSalaryAmt.setScale(2, RoundingMode.HALF_DOWN);
-		bdTotalChequeAmountAvailable = bdTotalChequeAmountAvailable.setScale(2, RoundingMode.HALF_DOWN);
-		
-		if (bdTotalNetSalaryAmt.compareTo(bdTotalChequeAmountAvailable) != 0){
-			return "The available cheque amount must be equal to the salaries total, Total Salary Amount is "+bdTotalNetSalaryAmt+" while total cheque amounts is "+bdTotalChequeAmountAvailable;
+		// Cheque that the amount available is equal to the total not salary
+		BigDecimal bdTotalNetSalaryAmt = getTotalNetSalaryAmount(salaryMonthYearId);
+		BigDecimal bdTotalChequeAmountAvailable = RemittanceServices
+				.getTotalRemittedChequeAmountAvailable(employerCode, month,
+						year);
+
+		// Everything to 2 decimal places
+		bdTotalNetSalaryAmt = bdTotalNetSalaryAmt.setScale(2,
+				RoundingMode.HALF_DOWN);
+		bdTotalChequeAmountAvailable = bdTotalChequeAmountAvailable.setScale(2,
+				RoundingMode.HALF_DOWN);
+
+		if (bdTotalNetSalaryAmt.compareTo(bdTotalChequeAmountAvailable) != 0) {
+			return "The available cheque amount must be equal to the salaries total, Total Salary Amount is "
+					+ bdTotalNetSalaryAmt
+					+ " while total cheque amounts is "
+					+ bdTotalChequeAmountAvailable;
 		}
-		
+
 		// Remove Current Logs first
 		removeMissingPayrollNumbersLog(month, year, employerCode);
 		log.info("NOOOOOO DEDUCT LLLLLLLLLLLLLLLL Month " + month + " Year "
@@ -1310,8 +1547,6 @@ public class SalaryProcessingServices {
 
 		Boolean missingPayrollNumbers = getMissingPayrollNumbers(month, year,
 				employerCode, salaryMonthIdLong);
-		
-		
 
 		if (missingPayrollNumbers) {
 
@@ -1331,38 +1566,46 @@ public class SalaryProcessingServices {
 					+ employerCode);
 
 		}
-		
-		//Check that all members have Savings account - code 999
+
+		// Check that all members have Savings account - code 999
 		List<GenericValue> listMemberSalary = getMemberSalaryList(month, year,
 				employerCode, salaryMonthYearId);
-		Boolean missingSavingsAccount =  false;
+		Boolean missingSavingsAccount = false;
 		String missingSavingsListing = "";
-		//clearMissingMember
+		// clearMissingMember
 		RemittanceServices.clearMissingMember(month, employerCode);
-		//RemittanceServices.re
+		// RemittanceServices.re
 		for (GenericValue memberSalary : listMemberSalary) {
-			
-			//Check if member has code 999 account
-			//AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE
-			if (!LoanUtilities.hasAccount(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE, memberSalary.getString("payrollNumber"))){
+
+			// Check if member has code 999 account
+			// AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE
+			if (!LoanUtilities.hasAccount(
+					AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE,
+					memberSalary.getString("payrollNumber"))) {
 				missingSavingsAccount = true;
-				
-				if (missingSavingsListing.equals("")){
-					missingSavingsListing = memberSalary.getString("payrollNumber");
-				} else{
-					missingSavingsListing = missingSavingsListing + " , " + memberSalary.getString("payrollNumber");
+
+				if (missingSavingsListing.equals("")) {
+					missingSavingsListing = memberSalary
+							.getString("payrollNumber");
+				} else {
+					missingSavingsListing = missingSavingsListing + " , "
+							+ memberSalary.getString("payrollNumber");
 				}
-				
-				//Add User to missing accounts
-				
-				RemittanceServices.addMissingMemberLog(userLogin, memberSalary.getString("payrollNumber"), month, employerCode, AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE, null, null);
+
+				// Add User to missing accounts
+
+				RemittanceServices.addMissingMemberLog(userLogin,
+						memberSalary.getString("payrollNumber"), month,
+						employerCode,
+						AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE,
+						null, null);
 			}
 		}
-		
-		if (missingSavingsAccount){
-			return "There are member accounts missing, please check the Missing Members Members menu in Account Holders transactions . The list has these payrolls ("+missingSavingsListing+")";
+
+		if (missingSavingsAccount) {
+			return "There are member accounts missing, please check the Missing Members Members menu in Account Holders transactions . The list has these payrolls ("
+					+ missingSavingsListing + ")";
 		}
-		
 
 		// Continue Processing for Salary Without Deductions
 
@@ -1371,11 +1614,13 @@ public class SalaryProcessingServices {
 
 		// Get all the charges for transactiontype SALARYPROCESSING
 		List<GenericValue> listAccountProductCharge = null;
-		
-		listAccountProductCharge = LoanUtilities
-				.getAccountProductChargeList("SALARYPROCESSING", AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
-		
-		if ((listAccountProductCharge == null) || (listAccountProductCharge.size() < 2)){
+
+		listAccountProductCharge = LoanUtilities.getAccountProductChargeList(
+				"SALARYPROCESSING",
+				AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
+
+		if ((listAccountProductCharge == null)
+				|| (listAccountProductCharge.size() < 2)) {
 			return " Please check that Salary Processing Charge and its excise duty are defined with correct amount / figure for each!";
 		}
 
@@ -1423,14 +1668,15 @@ public class SalaryProcessingServices {
 			log.info(" CCCCCCCCCCCCCCCSSSS Salary Charge " + bdSalaryChargeAmt);
 			log.info(" CCCCCCCCCCCCCCCSSSS Excise Duty " + bdSalaryExciseAmt);
 		}
-		
-		//Check that Salary Charge and Excise duty have account set
+
+		// Check that Salary Charge and Excise duty have account set
 		GenericValue salaryProductCharge = LoanUtilities
 				.getProductCharge(salaryProductChargeId);
 		String salaryChargeCreditAccountId = salaryProductCharge
 				.getString("chargeAccountId");
-		
-		if ((salaryChargeCreditAccountId == null) || (salaryChargeCreditAccountId.equals(""))){
+
+		if ((salaryChargeCreditAccountId == null)
+				|| (salaryChargeCreditAccountId.equals(""))) {
 			return "Please ensure that the Salary Processing charge has a gl account set !! Check Product Charge list in loans if charge account is specified";
 		}
 
@@ -1438,56 +1684,70 @@ public class SalaryProcessingServices {
 				.getProductCharge(salaryExciseDutyId);
 		String salaryExciseCreditAccountId = salaryExciseDutyProductCharge
 				.getString("chargeAccountId");
-		
-		if ((salaryExciseCreditAccountId == null) || (salaryExciseCreditAccountId.equals(""))){
+
+		if ((salaryExciseCreditAccountId == null)
+				|| (salaryExciseCreditAccountId.equals(""))) {
 			return "Please ensure that the Excise charge has a GL Account set !! Check Product Charge list in loans if charge account is specified";
 		}
-		
-		//Employee Must have a branch
-		String branchId = AccHolderTransactionServices.getEmployeeBranch((String)userLogin.get("partyId"));
+
+		// Employee Must have a branch
+		String branchId = AccHolderTransactionServices
+				.getEmployeeBranch((String) userLogin.get("partyId"));
 		if ((branchId == null) || (branchId.equals("")))
 			return "The employee logged into the system must have a branch, please check with HR!!";
 
-		
-		String savingsAccountGLAccountId = LoanUtilities.getGLAccountIDForAccountProduct(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
-		
-		if ((savingsAccountGLAccountId == null) || (savingsAccountGLAccountId.equals(""))){
+		String savingsAccountGLAccountId = LoanUtilities
+				.getGLAccountIDForAccountProduct(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
+
+		if ((savingsAccountGLAccountId == null)
+				|| (savingsAccountGLAccountId.equals(""))) {
 			return "Please ensure that the Savings Account (Code 999 ) has a ledger account defined in the setup";
 		}
 		String branchName = LoanUtilities.getBranchName(branchId);
-		
-		if (!LoanUtilities.organizationAccountMapped(savingsAccountGLAccountId, branchId)){
-			return "Please make sure that the Savings Account GL account is mapped to the employee's Branch ("+branchName+") ";
+
+		if (!LoanUtilities.organizationAccountMapped(savingsAccountGLAccountId,
+				branchId)) {
+			return "Please make sure that the Savings Account GL account is mapped to the employee's Branch ("
+					+ branchName + ") ";
 		}
-		
-		
-		//Check that the accounts for Salary Processing Charge and Excise duty are mapped to employee Branch
-		if (!LoanUtilities.organizationAccountMapped(salaryChargeCreditAccountId, branchId))
-		{
-			return "Please make sure that the Salary Charge Account is mapped to the employee branch ("+branchName+") in the chart of accounts, consult FINANCE";
+
+		// Check that the accounts for Salary Processing Charge and Excise duty
+		// are mapped to employee Branch
+		if (!LoanUtilities.organizationAccountMapped(
+				salaryChargeCreditAccountId, branchId)) {
+			return "Please make sure that the Salary Charge Account is mapped to the employee branch ("
+					+ branchName
+					+ ") in the chart of accounts, consult FINANCE";
 		}
-		
-		
-		if (!LoanUtilities.organizationAccountMapped(salaryExciseCreditAccountId, branchId))
-		{
-			return "Please make sure that the Excise Duty Account is mapped to the employee branch ("+branchName+")  in the chart of accounts, consult FINANCE";
+
+		if (!LoanUtilities.organizationAccountMapped(
+				salaryExciseCreditAccountId, branchId)) {
+			return "Please make sure that the Excise Duty Account is mapped to the employee branch ("
+					+ branchName
+					+ ")  in the chart of accounts, consult FINANCE";
 		}
-		
-		//TODO
-		return "This will be implemented as part of Remittance (C7) processing !";
+
+		doProcessingLoanOnlyDeductions(userLogin, month, year, employerCode,
+				bdSalaryChargeAmt, bdSalaryExciseAmt, salaryProductChargeId,
+				salaryProductChargeName, salaryExciseDutyId,
+				salaryExciseDutyName, salaryMonthYearId);
+		// TODO
+		// This will be implemented as part of Remittance (C7) processing !
+		return "success";
 	}
-	
+
 	/**
-	 * @author Japheth Odonya  @when May 8, 2015 3:52:59 PM
+	 * @author Japheth Odonya @when May 8, 2015 3:52:59 PM
 	 * 
-	 * processSalaryReceivedAccountContributionOnly
+	 *         processSalaryReceivedAccountContributionOnly
 	 * 
 	 * */
-	//HttpServletRequest request, HttpServletResponse response
-	public static synchronized String processSalaryReceivedAccountContributionOnly(Long salaryMonthYearId, Map<String, String> userLogin ) {
+	// HttpServletRequest request, HttpServletResponse response
+	public static synchronized String processSalaryReceivedAccountContributionOnly(
+			Long salaryMonthYearId, Map<String, String> userLogin) {
 
 		GenericValue salaryMonthYear = null;
-		//salaryMonthYearId = salaryMonthYearId.replaceAll(",", "");
+		// salaryMonthYearId = salaryMonthYearId.replaceAll(",", "");
 		Long salaryMonthIdLong = salaryMonthYearId;
 		salaryMonthYear = LoanUtilities.getSalaryMonthYear(salaryMonthIdLong);
 
@@ -1496,28 +1756,37 @@ public class SalaryProcessingServices {
 		String stationId = salaryMonthYear.getString("stationId");
 		stationId = stationId.replaceAll(",", "");
 		String employerCode = LoanUtilities.getStationEmployerCode(stationId);
-		
-		List<GenericValue> listMemberSalaryItems = getMemberSalaryList(month, year,
-				employerCode, salaryMonthYearId);
-		
-		log.info("SSSSSSSSSSSS salaryMonthYearId SSSSSSSS ::: "+salaryMonthYearId);
-		
-		if ((listMemberSalaryItems == null) || (listMemberSalaryItems.size() < 1)){
+
+		List<GenericValue> listMemberSalaryItems = getMemberSalaryList(month,
+				year, employerCode, salaryMonthYearId);
+
+		log.info("SSSSSSSSSSSS salaryMonthYearId SSSSSSSS ::: "
+				+ salaryMonthYearId);
+
+		if ((listMemberSalaryItems == null)
+				|| (listMemberSalaryItems.size() < 1)) {
 			return " No data to process or station already processed !";
 		}
-		
-		//Cheque that the amount available is equal to the total not salary
-		BigDecimal bdTotalNetSalaryAmt = getTotalNetSalaryAmount(salaryMonthYearId);
-		BigDecimal bdTotalChequeAmountAvailable = RemittanceServices.getTotalRemittedChequeAmountAvailable(employerCode, month, year);
 
-		//Everything to 2 decimal places
-		bdTotalNetSalaryAmt = bdTotalNetSalaryAmt.setScale(2, RoundingMode.HALF_DOWN);
-		bdTotalChequeAmountAvailable = bdTotalChequeAmountAvailable.setScale(2, RoundingMode.HALF_DOWN);
-		
-		if (bdTotalNetSalaryAmt.compareTo(bdTotalChequeAmountAvailable) != 0){
-			return "The available cheque amount must be equal to the salaries total, Total Salary Amount is "+bdTotalNetSalaryAmt+" while total cheque amounts is "+bdTotalChequeAmountAvailable;
+		// Cheque that the amount available is equal to the total not salary
+		BigDecimal bdTotalNetSalaryAmt = getTotalNetSalaryAmount(salaryMonthYearId);
+		BigDecimal bdTotalChequeAmountAvailable = RemittanceServices
+				.getTotalRemittedChequeAmountAvailable(employerCode, month,
+						year);
+
+		// Everything to 2 decimal places
+		bdTotalNetSalaryAmt = bdTotalNetSalaryAmt.setScale(2,
+				RoundingMode.HALF_DOWN);
+		bdTotalChequeAmountAvailable = bdTotalChequeAmountAvailable.setScale(2,
+				RoundingMode.HALF_DOWN);
+
+		if (bdTotalNetSalaryAmt.compareTo(bdTotalChequeAmountAvailable) != 0) {
+			return "The available cheque amount must be equal to the salaries total, Total Salary Amount is "
+					+ bdTotalNetSalaryAmt
+					+ " while total cheque amounts is "
+					+ bdTotalChequeAmountAvailable;
 		}
-		
+
 		// Remove Current Logs first
 		removeMissingPayrollNumbersLog(month, year, employerCode);
 		log.info("NOOOOOO DEDUCT LLLLLLLLLLLLLLLL Month " + month + " Year "
@@ -1527,8 +1796,6 @@ public class SalaryProcessingServices {
 
 		Boolean missingPayrollNumbers = getMissingPayrollNumbers(month, year,
 				employerCode, salaryMonthIdLong);
-		
-		
 
 		if (missingPayrollNumbers) {
 
@@ -1548,38 +1815,46 @@ public class SalaryProcessingServices {
 					+ employerCode);
 
 		}
-		
-		//Check that all members have Savings account - code 999
+
+		// Check that all members have Savings account - code 999
 		List<GenericValue> listMemberSalary = getMemberSalaryList(month, year,
 				employerCode, salaryMonthYearId);
-		Boolean missingSavingsAccount =  false;
+		Boolean missingSavingsAccount = false;
 		String missingSavingsListing = "";
-		//clearMissingMember
+		// clearMissingMember
 		RemittanceServices.clearMissingMember(month, employerCode);
-		//RemittanceServices.re
+		// RemittanceServices.re
 		for (GenericValue memberSalary : listMemberSalary) {
-			
-			//Check if member has code 999 account
-			//AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE
-			if (!LoanUtilities.hasAccount(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE, memberSalary.getString("payrollNumber"))){
+
+			// Check if member has code 999 account
+			// AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE
+			if (!LoanUtilities.hasAccount(
+					AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE,
+					memberSalary.getString("payrollNumber"))) {
 				missingSavingsAccount = true;
-				
-				if (missingSavingsListing.equals("")){
-					missingSavingsListing = memberSalary.getString("payrollNumber");
-				} else{
-					missingSavingsListing = missingSavingsListing + " , " + memberSalary.getString("payrollNumber");
+
+				if (missingSavingsListing.equals("")) {
+					missingSavingsListing = memberSalary
+							.getString("payrollNumber");
+				} else {
+					missingSavingsListing = missingSavingsListing + " , "
+							+ memberSalary.getString("payrollNumber");
 				}
-				
-				//Add User to missing accounts
-				
-				RemittanceServices.addMissingMemberLog(userLogin, memberSalary.getString("payrollNumber"), month, employerCode, AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE, null, null);
+
+				// Add User to missing accounts
+
+				RemittanceServices.addMissingMemberLog(userLogin,
+						memberSalary.getString("payrollNumber"), month,
+						employerCode,
+						AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE,
+						null, null);
 			}
 		}
-		
-		if (missingSavingsAccount){
-			return "There are member accounts missing, please check the Missing Members Members menu in Account Holders transactions . The list has these payrolls ("+missingSavingsListing+")";
+
+		if (missingSavingsAccount) {
+			return "There are member accounts missing, please check the Missing Members Members menu in Account Holders transactions . The list has these payrolls ("
+					+ missingSavingsListing + ")";
 		}
-		
 
 		// Continue Processing for Salary Without Deductions
 
@@ -1588,11 +1863,13 @@ public class SalaryProcessingServices {
 
 		// Get all the charges for transactiontype SALARYPROCESSING
 		List<GenericValue> listAccountProductCharge = null;
-		
-		listAccountProductCharge = LoanUtilities
-				.getAccountProductChargeList("SALARYPROCESSING", AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
-		
-		if ((listAccountProductCharge == null) || (listAccountProductCharge.size() < 2)){
+
+		listAccountProductCharge = LoanUtilities.getAccountProductChargeList(
+				"SALARYPROCESSING",
+				AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
+
+		if ((listAccountProductCharge == null)
+				|| (listAccountProductCharge.size() < 2)) {
 			return " Please check that Salary Processing Charge and its excise duty are defined with correct amount / figure for each!";
 		}
 
@@ -1640,14 +1917,15 @@ public class SalaryProcessingServices {
 			log.info(" CCCCCCCCCCCCCCCSSSS Salary Charge " + bdSalaryChargeAmt);
 			log.info(" CCCCCCCCCCCCCCCSSSS Excise Duty " + bdSalaryExciseAmt);
 		}
-		
-		//Check that Salary Charge and Excise duty have account set
+
+		// Check that Salary Charge and Excise duty have account set
 		GenericValue salaryProductCharge = LoanUtilities
 				.getProductCharge(salaryProductChargeId);
 		String salaryChargeCreditAccountId = salaryProductCharge
 				.getString("chargeAccountId");
-		
-		if ((salaryChargeCreditAccountId == null) || (salaryChargeCreditAccountId.equals(""))){
+
+		if ((salaryChargeCreditAccountId == null)
+				|| (salaryChargeCreditAccountId.equals(""))) {
 			return "Please ensure that the Salary Processing charge has a gl account set !! Check Product Charge list in loans if charge account is specified";
 		}
 
@@ -1655,43 +1933,620 @@ public class SalaryProcessingServices {
 				.getProductCharge(salaryExciseDutyId);
 		String salaryExciseCreditAccountId = salaryExciseDutyProductCharge
 				.getString("chargeAccountId");
-		
-		if ((salaryExciseCreditAccountId == null) || (salaryExciseCreditAccountId.equals(""))){
+
+		if ((salaryExciseCreditAccountId == null)
+				|| (salaryExciseCreditAccountId.equals(""))) {
 			return "Please ensure that the Excise charge has a GL Account set !! Check Product Charge list in loans if charge account is specified";
 		}
-		
-		//Employee Must have a branch
-		String branchId = AccHolderTransactionServices.getEmployeeBranch((String)userLogin.get("partyId"));
+
+		// Employee Must have a branch
+		String branchId = AccHolderTransactionServices
+				.getEmployeeBranch((String) userLogin.get("partyId"));
 		if ((branchId == null) || (branchId.equals("")))
 			return "The employee logged into the system must have a branch, please check with HR!!";
 
-		
-		String savingsAccountGLAccountId = LoanUtilities.getGLAccountIDForAccountProduct(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
-		
-		if ((savingsAccountGLAccountId == null) || (savingsAccountGLAccountId.equals(""))){
+		String savingsAccountGLAccountId = LoanUtilities
+				.getGLAccountIDForAccountProduct(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
+
+		if ((savingsAccountGLAccountId == null)
+				|| (savingsAccountGLAccountId.equals(""))) {
 			return "Please ensure that the Savings Account (Code 999 ) has a ledger account defined in the setup";
 		}
 		String branchName = LoanUtilities.getBranchName(branchId);
-		
-		if (!LoanUtilities.organizationAccountMapped(savingsAccountGLAccountId, branchId)){
-			return "Please make sure that the Savings Account GL account is mapped to the employee's Branch ("+branchName+") ";
+
+		if (!LoanUtilities.organizationAccountMapped(savingsAccountGLAccountId,
+				branchId)) {
+			return "Please make sure that the Savings Account GL account is mapped to the employee's Branch ("
+					+ branchName + ") ";
 		}
-		
-		
-		//Check that the accounts for Salary Processing Charge and Excise duty are mapped to employee Branch
-		if (!LoanUtilities.organizationAccountMapped(salaryChargeCreditAccountId, branchId))
-		{
-			return "Please make sure that the Salary Charge Account is mapped to the employee branch ("+branchName+") in the chart of accounts, consult FINANCE";
+
+		// Check that the accounts for Salary Processing Charge and Excise duty
+		// are mapped to employee Branch
+		if (!LoanUtilities.organizationAccountMapped(
+				salaryChargeCreditAccountId, branchId)) {
+			return "Please make sure that the Salary Charge Account is mapped to the employee branch ("
+					+ branchName
+					+ ") in the chart of accounts, consult FINANCE";
 		}
-		
-		
-		if (!LoanUtilities.organizationAccountMapped(salaryExciseCreditAccountId, branchId))
-		{
-			return "Please make sure that the Excise Duty Account is mapped to the employee branch ("+branchName+")  in the chart of accounts, consult FINANCE";
+
+		if (!LoanUtilities.organizationAccountMapped(
+				salaryExciseCreditAccountId, branchId)) {
+			return "Please make sure that the Excise Duty Account is mapped to the employee branch ("
+					+ branchName
+					+ ")  in the chart of accounts, consult FINANCE";
 		}
-		
-		//TODO
-		return "This will be implemented as part of Remittance (C7) processing !";
+
+		// TODO
+		doProcessingAccountsOnlyDeductions(userLogin, month, year,
+				employerCode, bdSalaryChargeAmt, bdSalaryExciseAmt,
+				salaryProductChargeId, salaryProductChargeName,
+				salaryExciseDutyId, salaryExciseDutyName, salaryMonthYearId);
+		// "This will be implemented as part of Remittance (C7) processing !"
+		return "success";
+	}
+
+	/***
+	 * @author Japheth Odonya @when Jun 17, 2015 11:50:18 PM
+	 *         doProcessingLoanOnlyDeductions
+	 * */
+	private static void doProcessingLoanOnlyDeductions(
+			Map<String, String> userLogin, String month, String year,
+			String employerCode, BigDecimal bdSalaryChargeAmt,
+			BigDecimal bdSalaryExciseAmt, Long salaryProductChargeId,
+			String salaryProductChargeName, Long salaryExciseDutyId,
+			String salaryExciseDutyName, Long salaryMonthYearId) {
+		// Get the payroll numbers from MemberSalary given month, year and
+		// employerCode
+		List<GenericValue> listMemberSalary = getMemberSalaryList(month, year,
+				employerCode, salaryMonthYearId);
+
+		BigDecimal bdTotalSalaryPosted = BigDecimal.ZERO;
+		BigDecimal bdTotalSalaryCharge = BigDecimal.ZERO;
+		BigDecimal bdTotalSalaryExciseDuty = BigDecimal.ZERO;
+		BigDecimal bdNetSalaryAmt = BigDecimal.ZERO;
+
+		BigDecimal bdTotalPrincipalPaid = BigDecimal.ZERO;
+		BigDecimal bdTotalInterestPaid = BigDecimal.ZERO;
+		BigDecimal bdTotalInsurancePaid = BigDecimal.ZERO;
+
+		Long memberAccountId = null;
+		String payrollNumber = null;
+
+		String accountTransactionParentId = null;
+
+		List<GenericValue> listLoanRepayments = null;
+
+		// Create One AcctgTrans
+		GenericValue accountTransaction = null;
+		String acctgTransId = AccHolderTransactionServices
+				.creatAccountTransRecord(accountTransaction, userLogin);
+
+		for (GenericValue genericValue : listMemberSalary) {
+
+			listLoanRepayments = new ArrayList<GenericValue>();
+
+			// ###### Add the Net Salary to Member Account
+			bdNetSalaryAmt = genericValue.getBigDecimal("netSalary");
+			bdTotalSalaryPosted = bdTotalSalaryPosted.add(bdNetSalaryAmt);
+
+			accountTransactionParentId = AccHolderTransactionServices
+					.getcreateAccountTransactionParentId(memberAccountId,
+							userLogin);
+			payrollNumber = genericValue.getString("payrollNumber");
+			// memberAccountId = LoanUtilities.getS
+			// Add Net Salary to the Savings Account
+			memberAccountId = AccHolderTransactionServices
+					.getMemberSavingsAccountId(payrollNumber);
+			AccHolderTransactionServices.memberTransactionDeposit(
+					bdNetSalaryAmt, memberAccountId, userLogin,
+					"SALARYPROCESSING", accountTransactionParentId, null,
+					acctgTransId);
+
+			// ###### Deduct the Salary Processing Fee
+			// Deduct the Salary Charge
+			// Add Salary Charge
+			bdTotalSalaryCharge = bdTotalSalaryCharge.add(bdSalaryChargeAmt);
+			AccHolderTransactionServices.memberTransactionDeposit(
+					bdSalaryChargeAmt, memberAccountId, userLogin,
+					salaryProductChargeName, accountTransactionParentId,
+					salaryProductChargeId.toString(), acctgTransId);
+
+			// ####### Deduct the Excise Duty
+			// Deduct the Salary Charge
+			// Add Salary Charge
+			bdTotalSalaryExciseDuty = bdTotalSalaryExciseDuty
+					.add(bdSalaryExciseAmt);
+			AccHolderTransactionServices.memberTransactionDeposit(
+					bdSalaryExciseAmt, memberAccountId, userLogin,
+					salaryExciseDutyName, accountTransactionParentId,
+					salaryExciseDutyId.toString(), acctgTransId);
+
+			// ####### Deduct the total Loan Deductions
+			GenericValue member = RemittanceServices
+					.getMemberByPayrollNo(payrollNumber);
+			List<Long> listLoanApplicationIds = LoanServices
+					.getDisbursedLoansIds(member.getLong("partyId"));
+			BigDecimal bdMemberTotalLoanExpectedAmt = BigDecimal.ZERO;
+			BigDecimal bdLoanExpectedAmt = BigDecimal.ZERO;
+			// String productName = "";
+			GenericValue loanRepayment;
+			Long loanRepaymentId = null;
+			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+			BigDecimal bdSalaryBalance = bdNetSalaryAmt.subtract(
+					bdSalaryChargeAmt).subtract(bdSalaryExciseAmt);
+			for (Long loanApplicationId : listLoanApplicationIds) {
+
+				bdLoanExpectedAmt = bdLoanExpectedAmt
+						.add(LoanRepayments
+								.getTotalInterestByLoanDue(loanApplicationId
+										.toString()));
+				// if (bdSalaryBalance.compareTo(bdLoanExpectedAmt) >= 0)
+
+				bdLoanExpectedAmt = bdLoanExpectedAmt
+						.add(LoanRepayments
+								.getTotalInsurancByLoanDue(loanApplicationId
+										.toString()));
+				bdLoanExpectedAmt = LoanRepayments
+						.getTotalPrincipaByLoanDue(loanApplicationId.toString());
+
+				bdMemberTotalLoanExpectedAmt = bdMemberTotalLoanExpectedAmt
+						.add(bdLoanExpectedAmt);
+				AccHolderTransactionServices.memberTransactionDeposit(
+						bdLoanExpectedAmt, memberAccountId, userLogin,
+						"LOANREPAYMENT", accountTransactionParentId, null,
+						acctgTransId);
+
+				BigDecimal totalLoanDue = LoanRepayments
+						.getTotalLoanByLoanDue(loanApplicationId.toString());
+				BigDecimal totalInterestDue = LoanRepayments
+						.getTotalInterestByLoanDue(loanApplicationId.toString());
+				BigDecimal totalInsuranceDue = LoanRepayments
+						.getTotalInsurancByLoanDue(loanApplicationId.toString());
+				BigDecimal totalPrincipalDue = LoanRepayments
+						.getTotalPrincipaByLoanDue(loanApplicationId.toString());
+
+				BigDecimal interestAmount = totalInterestDue;
+				BigDecimal insuranceAmount = totalInsuranceDue;
+				BigDecimal principalAmount = totalPrincipalDue;
+
+				bdTotalPrincipalPaid = bdTotalPrincipalPaid
+						.add(principalAmount);
+				bdTotalInterestPaid = bdTotalInterestPaid.add(interestAmount);
+				bdTotalInsurancePaid = bdTotalInsurancePaid
+						.add(insuranceAmount);
+
+				loanRepaymentId = delegator.getNextSeqIdLong("LoanRepayment");
+				loanRepayment = delegator.makeValue("LoanRepayment", UtilMisc
+						.toMap("loanRepaymentId", loanRepaymentId, "isActive",
+								"Y",
+								"createdBy",
+								"admin",
+								// "transactionType", "LOANREPAYMENT",
+								"loanApplicationId", loanApplicationId,
+								"partyId", member.getLong("partyId"),
+
+								"transactionAmount", bdLoanExpectedAmt,
+
+								"totalLoanDue", totalLoanDue,
+
+								"totalInterestDue", totalInterestDue,
+
+								"totalInsuranceDue", totalInsuranceDue,
+
+								"totalPrincipalDue", totalPrincipalDue,
+
+								"interestAmount", interestAmount,
+								"insuranceAmount", insuranceAmount,
+								"principalAmount", principalAmount,
+
+								"acctgTransId", acctgTransId
+
+						));
+
+				try {
+					delegator.createOrStore(loanRepayment);
+				} catch (GenericEntityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				// LoanRepayments.repayLoanWithoutDebitingCash(loanRepayment,
+				// userLogin);
+				// TODO use this to calcuate whether a loan can be paid
+				// listLoanRepayments.add(loanRepayment);
+			}
+
+			// Repay Loan with total loan repaid amount above for each loan
+			// Make contribution to each account with the contribution amount
+
+			// GL POsting
+			// -- sum value for net salary - (salary processing fee + excise
+			// duty + total loans + total account contributions)
+
+			genericValue.set("processed", "Y");
+			// listSalaryToUpdate.add(genericValue);
+			try {
+				delegator.createOrStore(genericValue);
+			} catch (GenericEntityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		// Post Total Net Salary in GL bdTotalSalaryPosted
+
+		// SALARYPROCESSING
+		// GenericValue accountHolderTransactionSetup =
+		// AccHolderTransactionServices
+		// .getAccountHolderTransactionSetup("SALARYPROCESSING");
+		// String debitAccountId = accountHolderTransactionSetup
+		// .getString("cashAccountId");
+		// String creditAccountId = accountHolderTransactionSetup
+		// .getString("memberDepositAccId");
+		GenericValue accountHolderTransactionSetup = AccHolderTransactionServices
+				.getAccountHolderTransactionSetup("STATIONACCOUNTPAYMENT");
+
+		String stationDepositAccountId = accountHolderTransactionSetup
+				.getString("memberDepositAccId");
+		String savingsAccountGLAccountId = LoanUtilities
+				.getGLAccountIDForAccountProduct(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
+
+		// salaryProductChargeId = salaryProductChargeId.replaceAll(",", "");
+		GenericValue salaryProductCharge = LoanUtilities
+				.getProductCharge(salaryProductChargeId);
+		String salaryChargeCreditAccountId = salaryProductCharge
+				.getString("chargeAccountId");
+
+		GenericValue salaryExciseDutyProductCharge = LoanUtilities
+				.getProductCharge(salaryExciseDutyId);
+		String salaryExciseCreditAccountId = salaryExciseDutyProductCharge
+				.getString("chargeAccountId");
+
+		String branchId = AccHolderTransactionServices
+				.getEmployeeBranch((String) userLogin.get("partyId"));
+		Long entrySequence = 1L;
+		// ------------------------
+		// Debit Leaf Base with the total
+		AccHolderTransactionServices.createAccountPostingEntry(
+				bdTotalSalaryPosted, acctgTransId, "D",
+				stationDepositAccountId, entrySequence.toString(), branchId);
+
+		BigDecimal bdTotalCharges = bdTotalSalaryCharge
+				.add(bdTotalSalaryExciseDuty);
+		BigDecimal bdTotalMemberDepositAmt = bdTotalSalaryPosted
+				.subtract(bdTotalCharges);
+
+		// Credit Member Deposits with (total net - (total charge + total excise
+		// duty))
+		entrySequence = entrySequence + 1;
+		AccHolderTransactionServices.createAccountPostingEntry(
+				bdTotalMemberDepositAmt, acctgTransId, "C",
+				savingsAccountGLAccountId, entrySequence.toString(), branchId);
+		// Credit Salary Charge with total salary charge
+		entrySequence = entrySequence + 1;
+		AccHolderTransactionServices
+				.createAccountPostingEntry(bdTotalSalaryCharge, acctgTransId,
+						"C", salaryChargeCreditAccountId,
+						entrySequence.toString(), branchId);
+		// Credit Excise Duty with total excise duty
+		entrySequence = entrySequence + 1;
+		AccHolderTransactionServices
+				.createAccountPostingEntry(bdTotalSalaryExciseDuty,
+						acctgTransId, "C", salaryExciseCreditAccountId,
+						entrySequence.toString(), branchId);
+
+		// Post the Loan Repayments
+		// DR the savings withdrawable savingsAccountGLAccountId
+		BigDecimal bdTotalLoanAmountPaid = bdTotalPrincipalPaid.add(
+				bdTotalInterestPaid).add(bdTotalInsurancePaid);
+		entrySequence = entrySequence + 1;
+		AccHolderTransactionServices.createAccountPostingEntry(
+				bdTotalLoanAmountPaid, acctgTransId, "D",
+				savingsAccountGLAccountId, entrySequence.toString(), branchId);
+
+		// Principal Payment
+		// CR Loan Receivable bdTotalPrincipalPaid
+		entrySequence = entrySequence + 1;
+
+		accountHolderTransactionSetup = AccHolderTransactionServices
+				.getAccountHolderTransactionSetup("PRINCIPALPAYMENT");
+		String loanReceivableAccountId = accountHolderTransactionSetup
+				.getString("memberDepositAccId");
+
+		AccHolderTransactionServices.createAccountPostingEntry(
+				bdTotalPrincipalPaid, acctgTransId, "C",
+				loanReceivableAccountId, entrySequence.toString(), branchId);
+
+		// Interest Payment
+		// CR Interest Recevable bdTotalInterestPaid
+		entrySequence = entrySequence + 1;
+
+		accountHolderTransactionSetup = AccHolderTransactionServices
+				.getAccountHolderTransactionSetup("INTERESTPAYMENT");
+		String interestReceivableAccountId = accountHolderTransactionSetup
+				.getString("memberDepositAccId");
+
+		AccHolderTransactionServices
+				.createAccountPostingEntry(bdTotalInterestPaid, acctgTransId,
+						"C", interestReceivableAccountId,
+						entrySequence.toString(), branchId);
+
+		// Insurance Payment
+		// CR Charge/Insurance Receivable bdTotalInsurancePaid
+		entrySequence = entrySequence + 1;
+
+		accountHolderTransactionSetup = AccHolderTransactionServices
+				.getAccountHolderTransactionSetup("INSURANCEPAYMENT");
+		String insurancePaymentAccountId = accountHolderTransactionSetup
+				.getString("memberDepositAccId");
+
+		AccHolderTransactionServices.createAccountPostingEntry(
+				bdTotalInsurancePaid, acctgTransId, "C",
+				insurancePaymentAccountId, entrySequence.toString(), branchId);
+
+		// DR
+		// TODO May use it to check loan Repayment
+		// for (GenericValue genericValue : listLoanRepayments) {
+		// //entrySequence = entrySequence + 1;
+		// LoanRepayments.repayLoanWithoutDebitingCash(genericValue, userLogin,
+		// entrySequence, acctgTransId);
+		// }
+
+		// listLoanRepayments.add(loanRepayment);
+
+		// Update the MemberSalary to processed
+
+		// Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		// try {
+		// delegator.storeAll(listSalaryToUpdate);
+		// } catch (GenericEntityException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+
+		// Prior Transaction when a cheque was paid
+		// Debit Cash at Bank
+		// Credit Leaf Base
+
+	}
+
+	/****
+	 * @author Japheth Odonya @when Jun 18, 2015 1:00:06 AM
+	 * 
+	 *         doProcessingAccountsOnlyDeductions
+	 * */
+	private static void doProcessingAccountsOnlyDeductions(
+			Map<String, String> userLogin, String month, String year,
+			String employerCode, BigDecimal bdSalaryChargeAmt,
+			BigDecimal bdSalaryExciseAmt, Long salaryProductChargeId,
+			String salaryProductChargeName, Long salaryExciseDutyId,
+			String salaryExciseDutyName, Long salaryMonthYearId) {
+		// Get the payroll numbers from MemberSalary given month, year and
+		// employerCode
+		List<GenericValue> listMemberSalary = getMemberSalaryList(month, year,
+				employerCode, salaryMonthYearId);
+
+		BigDecimal bdTotalSalaryPosted = BigDecimal.ZERO;
+		BigDecimal bdTotalSalaryCharge = BigDecimal.ZERO;
+		BigDecimal bdTotalSalaryExciseDuty = BigDecimal.ZERO;
+		BigDecimal bdNetSalaryAmt = BigDecimal.ZERO;
+
+		Long memberAccountId = null;
+		String payrollNumber = null;
+
+		String accountTransactionParentId = null;
+
+		// Create One AcctgTrans
+		GenericValue accountTransaction = null;
+		String acctgTransId = AccHolderTransactionServices
+				.creatAccountTransRecord(accountTransaction, userLogin);
+
+		Set<Long> contributingProductIds = new HashSet<Long>();
+		Map<Long, BigDecimal> productTotals = new HashMap<Long, BigDecimal>();
+		for (GenericValue genericValue : listMemberSalary) {
+
+			// ###### Add the Net Salary to Member Account
+			bdNetSalaryAmt = genericValue.getBigDecimal("netSalary");
+			bdTotalSalaryPosted = bdTotalSalaryPosted.add(bdNetSalaryAmt);
+
+			accountTransactionParentId = AccHolderTransactionServices
+					.getcreateAccountTransactionParentId(memberAccountId,
+							userLogin);
+			payrollNumber = genericValue.getString("payrollNumber");
+			// memberAccountId = LoanUtilities.getS
+			// Add Net Salary to the Savings Account
+			memberAccountId = AccHolderTransactionServices
+					.getMemberSavingsAccountId(payrollNumber);
+			AccHolderTransactionServices.memberTransactionDeposit(
+					bdNetSalaryAmt, memberAccountId, userLogin,
+					"SALARYPROCESSING", accountTransactionParentId, null,
+					acctgTransId);
+
+			// ###### Deduct the Salary Processing Fee
+			// Deduct the Salary Charge
+			// Add Salary Charge
+//			bdTotalSalaryCharge = bdTotalSalaryCharge.add(bdSalaryChargeAmt);
+//			AccHolderTransactionServices.memberTransactionDeposit(
+//					bdSalaryChargeAmt, memberAccountId, userLogin,
+//					salaryProductChargeName, accountTransactionParentId,
+//					salaryProductChargeId.toString(), acctgTransId);
+
+			// ####### Deduct the Excise Duty
+			// Deduct the Salary Charge
+			// Add Salary Charge
+//			bdTotalSalaryExciseDuty = bdTotalSalaryExciseDuty
+//					.add(bdSalaryExciseAmt);
+//			AccHolderTransactionServices.memberTransactionDeposit(
+//					bdSalaryExciseAmt, memberAccountId, userLogin,
+//					salaryExciseDutyName, accountTransactionParentId,
+//					salaryExciseDutyId.toString(), acctgTransId);
+
+			// ####### Deduct the total Loan Deductions
+			GenericValue member = RemittanceServices
+					.getMemberByPayrollNo(payrollNumber);
+
+			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+			BigDecimal bdSalaryBalance = bdNetSalaryAmt.subtract(
+					bdSalaryChargeAmt).subtract(bdSalaryExciseAmt);
+
+			// Deduct the total Account Contributions
+			List<GenericValue> listMemberAccounts = LoanUtilities
+					.getMemberContributingAccounts(member.getLong("partyId"));
+			Long memberSavingsAccountId = LoanUtilities
+					.getMemberAccountIdFromMemberAccount(
+							member.getLong("partyId"),
+							LoanUtilities
+									.getAccountProductGivenCodeId(
+											AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE)
+									.getLong("accountProductId"));
+			BigDecimal bdTotalContributingAmount = BigDecimal.ZERO;
+			BigDecimal bdContributingAmt;
+			for (GenericValue memberAccount : listMemberAccounts) {
+
+				contributingProductIds.add(memberAccount
+						.getLong("accountProductId"));
+
+				bdContributingAmt = LoanUtilities.getContributionAmount(
+						memberAccount, member.getLong("partyId"));
+
+				if (!productTotals.containsKey(memberAccount
+						.getLong("accountProductId"))) {
+					productTotals.put(
+							memberAccount.getLong("accountProductId"),
+							bdContributingAmt);
+				} else {
+					productTotals.put(
+							memberAccount.getLong("accountProductId"),
+							productTotals.get(
+									memberAccount.getLong("accountProductId"))
+									.add(bdContributingAmt));
+				}
+
+				// remove it from source account - the savings account
+				AccHolderTransactionServices.memberTransactionDeposit(
+						bdContributingAmt, memberSavingsAccountId, userLogin,
+						"TOOTHERACCOUNTS", accountTransactionParentId, null,
+						acctgTransId);
+				// Add to destination account e.g. member deposits
+				AccHolderTransactionServices.memberTransactionDeposit(
+						bdContributingAmt,
+						memberAccount.getLong("memberAccountId"), userLogin,
+						"DEPOSITFROMSALARY", accountTransactionParentId, null,
+						acctgTransId);
+				bdTotalContributingAmount = bdTotalContributingAmount
+						.add(bdContributingAmt);
+			}
+			// Repay Loan with total loan repaid amount above for each loan
+			// Make contribution to each account with the contribution amount
+
+			// GL POsting
+			// -- sum value for net salary - (salary processing fee + excise
+			// duty + total loans + total account contributions)
+
+			genericValue.set("processed", "Y");
+			// listSalaryToUpdate.add(genericValue);
+			try {
+				delegator.createOrStore(genericValue);
+			} catch (GenericEntityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		// Post Total Net Salary in GL bdTotalSalaryPosted
+
+		// SALARYPROCESSING
+		// GenericValue accountHolderTransactionSetup =
+		// AccHolderTransactionServices
+		// .getAccountHolderTransactionSetup("SALARYPROCESSING");
+		// String debitAccountId = accountHolderTransactionSetup
+		// .getString("cashAccountId");
+		// String creditAccountId = accountHolderTransactionSetup
+		// .getString("memberDepositAccId");
+		GenericValue accountHolderTransactionSetup = AccHolderTransactionServices
+				.getAccountHolderTransactionSetup("STATIONACCOUNTPAYMENT");
+
+		String stationDepositAccountId = accountHolderTransactionSetup
+				.getString("memberDepositAccId");
+		String savingsAccountGLAccountId = LoanUtilities
+				.getGLAccountIDForAccountProduct(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
+
+		// salaryProductChargeId = salaryProductChargeId.replaceAll(",", "");
+		GenericValue salaryProductCharge = LoanUtilities
+				.getProductCharge(salaryProductChargeId);
+		String salaryChargeCreditAccountId = salaryProductCharge
+				.getString("chargeAccountId");
+
+		GenericValue salaryExciseDutyProductCharge = LoanUtilities
+				.getProductCharge(salaryExciseDutyId);
+		String salaryExciseCreditAccountId = salaryExciseDutyProductCharge
+				.getString("chargeAccountId");
+
+		String branchId = AccHolderTransactionServices
+				.getEmployeeBranch((String) userLogin.get("partyId"));
+		Long entrySequence = 1L;
+		// ------------------------
+		// Debit Leaf Base with the total
+		AccHolderTransactionServices.createAccountPostingEntry(
+				bdTotalSalaryPosted, acctgTransId, "D",
+				stationDepositAccountId, entrySequence.toString(), branchId);
+
+		BigDecimal bdTotalCharges = bdTotalSalaryCharge
+				.add(bdTotalSalaryExciseDuty);
+		BigDecimal bdTotalMemberDepositAmt = bdTotalSalaryPosted;
+				//.subtract(bdTotalCharges);
+
+		// Credit Member Deposits with (total net - (total charge + total excise
+		// duty))
+		entrySequence = entrySequence + 1;
+		AccHolderTransactionServices.createAccountPostingEntry(
+				bdTotalMemberDepositAmt, acctgTransId, "C",
+				savingsAccountGLAccountId, entrySequence.toString(), branchId);
+		// Credit Salary Charge with total salary charge
+//		entrySequence = entrySequence + 1;
+//		AccHolderTransactionServices
+//				.createAccountPostingEntry(bdTotalSalaryCharge, acctgTransId,
+//						"C", salaryChargeCreditAccountId,
+//						entrySequence.toString(), branchId);
+		// Credit Excise Duty with total excise duty
+//		entrySequence = entrySequence + 1;
+//		AccHolderTransactionServices
+//				.createAccountPostingEntry(bdTotalSalaryExciseDuty,
+//						acctgTransId, "C", salaryExciseCreditAccountId,
+//						entrySequence.toString(), branchId);
+
+		// Posting Contributed Accounts Member Deposits, Share Capital etc
+		// Get the toal Account Amounts Contributed
+		BigDecimal bdTotalAmountContributedToAccounts = BigDecimal.ZERO;
+
+		String productglAccountId = "";
+
+		for (Long accountProductId : contributingProductIds) {
+
+			// Credit each account product there after
+
+			entrySequence = entrySequence + 1;
+			productglAccountId = LoanUtilities
+					.getGLAccountIDForAccountProduct(LoanUtilities
+							.getAccountProduct(accountProductId)
+							.getString("code").trim());
+			AccHolderTransactionServices.createAccountPostingEntry(
+					productTotals.get(accountProductId), acctgTransId, "C",
+					productglAccountId, entrySequence.toString(), branchId);
+
+			bdTotalAmountContributedToAccounts = bdTotalAmountContributedToAccounts
+					.add(productTotals.get(accountProductId));
+
+		}
+
+		// Debit savings with total account contributions
+		entrySequence = entrySequence + 1;
+		AccHolderTransactionServices.createAccountPostingEntry(
+				bdTotalAmountContributedToAccounts, acctgTransId, "D",
+				savingsAccountGLAccountId, entrySequence.toString(), branchId);
+
 	}
 
 }

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
-	license agreements. See the NOTICE file distributed with this work for additional 
-	information regarding copyright ownership. The ASF licenses this file to 
-	you under the Apache License, Version 2.0 (the "License"); you may not use 
-	this file except in compliance with the License. You may obtain a copy of 
-	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
-	by applicable law or agreed to in writing, software distributed under the 
-	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
-	OF ANY KIND, either express or implied. See the License for the specific 
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor
+	license agreements. See the NOTICE file distributed with this work for additional
+	information regarding copyright ownership. The ASF licenses this file to
+	you under the Apache License, Version 2.0 (the "License"); you may not use
+	this file except in compliance with the License. You may obtain a copy of
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required
+	by applicable law or agreed to in writing, software distributed under the
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
+	OF ANY KIND, either express or implied. See the License for the specific
 	language governing permissions and limitations under the License. -->
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -27,7 +27,7 @@
 				<property-map map-name="uiLabelMap" resource="HumanResUiLabels"
 					global="true" />
 			<entity-condition entity-name="EmplCarryOverLost" list="listIt"></entity-condition>
-       	
+
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -47,19 +47,19 @@
                             <section>
 								<widgets>
 									<container style="button-bar">
-										<link target="closeFinacialYear" text="${uiLabelMap.HumanResCloseYr}" 
+										<link target="closeFinacialYear" text="${uiLabelMap.HumanResCloseYr}"
 											style="buttontext create" />
 										<!-- <link target="resetUnusedCarryOver" text="${uiLabelMap.HumanResResetUnusedLeave}"
 											style="buttontext create" /> -->
 									</container>
 								</widgets>
 							</section>
-                             <!--  <screenlet title="Search Carry Over And Lost Leave Balances">
+                              <screenlet title="Search Carry Over And Lost Leave Balances">
                                         <include-form name="FindCarryOverLost"	location="component://humanres/widget/forms/EmplLeaveForms.xml" />
                             	</screenlet>
                                 <screenlet title="List Carry Over And Lost Leave Balances">
                                 <include-form name="ListCarryOverLost"	location="component://humanres/widget/forms/EmplLeaveForms.xml" />
-                                </screenlet> -->
+                                </screenlet>
                             </widgets>
                             <fail-widgets>
                                 <label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}"/>
@@ -85,7 +85,7 @@
 				<property-map map-name="uiLabelMap" resource="HumanResUiLabels"
 					global="true" />
 			<entity-condition entity-name="LeavesBalanceView" list="listIt"></entity-condition>
-       	
+
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -106,15 +106,15 @@
                                         <include-form name="FindLeaveBalances"
 											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
                             	</screenlet>
-                            	
-                            	
+
+
                                 <screenlet title="Leave Balances">
                                 <include-form name="ListAllLeaveBalances"
 											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
                                 </screenlet>
-                                
-                                
-                                
+
+
+
                             </widgets>
                             <fail-widgets>
                                 <label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}"/>
@@ -140,16 +140,16 @@
 						from-field="today" />
 					<condition-expr field-name="applicationStatus" operator="equals"
 						value="Approved" />
-				</condition-list> 
+				</condition-list>
 			</entity-condition>
 			<set field="viewSize" value="100000"/>
-							
+
                         </actions>
                         <widgets>
                          <decorator-screen name="FoReportDecorator"
                             location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="body">
-                                <include-form name="ActivelLeavescsv" 
+                                <include-form name="ActivelLeavescsv"
                         location="component://humanres/widget/forms/EmplLeaveForms.xml"/>
                                         </decorator-section>
                                 </decorator-screen>
@@ -167,18 +167,18 @@
 					<condition-expr field-name="fromDate" operator="less-equals"
 						from-field="today" />
 					<condition-expr field-name="thruDate" operator="greater-equals"
-						from-field="today" /> 					
+						from-field="today" />
 					<condition-expr field-name="applicationStatus" operator="equals"
-						value="Approved" /> 
+						value="Approved" />
 
-				</condition-list> 
-			</entity-condition> 
+				</condition-list>
+			</entity-condition>
             </actions>
             <widgets>
-           
+
                 <!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                    <decorator-section name="body" -->
-                     
+
                         <section name="ActiveLeaves">
                                 <widgets>
                                         <screenlet title="List Activel Leaves">
@@ -191,8 +191,8 @@
             </widgets>
         </section>
     </screen>
-  
-	
+
+
 	<screen name="ActiveEmplLeaves">
         <section>
             <actions>
@@ -217,10 +217,10 @@
 						from-field="today" />
 					<condition-expr field-name="applicationStatus" operator="equals"
 						value="Approved" />
-				</condition-list> 
+				</condition-list>
 				<order-by field-name="leaveId"/>
-			</entity-condition> 
-        	
+			</entity-condition>
+
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -245,17 +245,17 @@
                                 <include-form name="ListActivelLeaves"
 											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
                                  </screenlet>
-                    
+
                                  <screenlet>
                                  	<link target="activeleaves.csv" text="Export Excel" style="buttontext">
                                                 <parameter param-name="partyId"/>
-                                                
+
                                                 <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
                                             </link>
                                             <link target="activeleaves.pdf" text="Export Pdf" style="buttontext">
                                                 <parameter param-name="partyId"/>
                                                 <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
-                                            
+
                                             </link>
                                 </screenlet>
                             </widgets>
@@ -268,16 +268,16 @@
             </widgets>
         </section>
     </screen>
-    
-    
-    
+
+
+
     <screen name="callBackEmployee">
         <section>
             <actions>
 				<set field="titleProperty" value="HumanResFindEmplLeave" />
 				<set field="headerItem" value="Leave" />
 				<set field="tabButtonItem" value="ActiveEmplLeaves" />
-				
+
 				<set field="leaveCtx" from-field="parameters"/>
 						<service service-name="humanResManagerPermission"
 					result-map="permResult">
@@ -298,9 +298,9 @@
 						from-field="today" />
 					<condition-expr field-name="applicationStatus" operator="equals"
 						value="Approved" />
-				</condition-list> 
-			</entity-condition> 
-        	
+				</condition-list>
+			</entity-condition>
+
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -332,8 +332,8 @@
             </widgets>
         </section>
     </screen>
-    
-    
+
+
      <screen name="resetEmployeeLeaveDaysLost">
         <section>
             <actions>
@@ -348,7 +348,7 @@
 				<set field="hasAdminPermission" from-field="permResult.hasPermission" />
 				<property-map map-name="uiLabelMap" resource="HumanResUiLabels"
 					global="true" />
-        	
+
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -380,7 +380,7 @@
             </widgets>
         </section>
     </screen>
-    
+
 
 	  <screen name="FindEmplLeaves">
         <section>
@@ -398,7 +398,7 @@
 				<set field="hasAdminPermission" from-field="permResult.hasPermission" />
 				<property-map map-name="uiLabelMap" resource="HumanResUiLabels"
 					global="true" />
-					
+
 				<entity-condition entity-name="EmplLeave" list="EmplLeave">
         			<condition-expr field-name="partyId" operator="equals" from-field="userLogin.partyId"/>
         	</entity-condition>
@@ -432,8 +432,8 @@
                             	</screenlet>
                                 <screenlet title="My Leaves List">
                               <include-form name="ListEmplLeaves"
-											location="component://humanres/widget/forms/EmplLeaveForms.xml" /> 
-											
+											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
+
 											<!--  <include-form name="ListEmplLeavesForUpdateAndDelete"
 											location="component://humanres/widget/forms/EmplLeaveForms.xml" /> -->
                                 </screenlet>
@@ -455,9 +455,9 @@
 				<set field="tabButtonItem" value="Approval" />
 				<set field="headerItem" value="Leave" />
 				<set field="responsibleEmployee" value="${userLogin.partyId}"/>
-				
+
 				<set field="leaveApprovalCtx" from-field="parameters"/>
-				
+
 						<service service-name="humanResManagerPermission"
 					result-map="permResult">
 					<field-map field-name="mainAction" value="ADMIN" />
@@ -510,12 +510,12 @@
             </widgets>
         </section>
     </screen>
-    
-    
-    
-    
+
+
+
+
                             <!--  FOR CHAI HOME -->
-                            
+
       <screen name="LeaveApprovals">
         <section>
             <actions>
@@ -523,9 +523,9 @@
 				<set field="tabButtonItem" value="LeaveApprovals" />
 				<set field="headerItem" value="EmployeeLeave" />
 				<set field="responsibleEmployee" value="${userLogin.partyId}"/>
-				
+
 				<set field="leaveApprovalCtx" from-field="parameters"/>
-				
+
 						<service service-name="humanResManagerPermission"
 					result-map="permResult">
 					<field-map field-name="mainAction" value="ADMIN" />
@@ -572,7 +572,7 @@
             </widgets>
         </section>
     </screen>
-    
+
 
 
 
@@ -606,7 +606,7 @@
 					<decorator-section name="body">
 						<include-menu name="EmplLeaveTabBar"
 							location="component://humanres/widget/HumanresMenus.xml" />
-							
+
 							<section>
 											<widgets>
 												<container style="button-bar">
@@ -615,7 +615,7 @@
 												</container>
 											</widgets>
 										</section>
-										
+
 						<screenlet id="AddEmplLeavePanel" title="${uiLabelMap.HumanResAddEmplLeave}"
 							collapsible="true">
 							<include-form name="EditEmplLeave"
@@ -657,8 +657,8 @@
 							collapsible="true">
 							<include-menu location="component://humanres/widget/HumanresMenus.xml"
 								name="ApproveReject" />
-								
-						
+
+
 							<include-form name="approveEmplLeaveStatus"
 								location="component://humanres/widget/forms/EmplLeaveForms.xml" />
 						</screenlet>
@@ -684,7 +684,7 @@
 					<field-map from-field="parameters.partyId" field-name="partyId" />
 					<field-map from-field="parameters.fromDate" field-name="fromDate" />
 					<field-map from-field="parameters.leaveTypeId" field-name="leaveTypeId" />
-					<field-map from-field="parameters.leaveId" field-name="leaveId" />					
+					<field-map from-field="parameters.leaveId" field-name="leaveId" />
 					<!-- <order-by field-name="leaveId" /> -->
 				</entity-and>
 				<entity-and entity-name="LeaveStatusLog" list="leaveLogs">
@@ -705,8 +705,8 @@
 							location="component://humanres/widget/HumanresMenus.xml" />
 						<section>
 							<widgets>
-								<screenlet>	
-									
+								<screenlet>
+
 						<container style="button-bar">
 						<!-- <link target="forwardApplication" style="buttontext create" text="APPROVE EMPLOYEE LEAVE"  height="500" width="500">
                 		<parameter param-name="partyId"/>
@@ -714,11 +714,11 @@
                 		<parameter param-name="leaveTypeId"/>
                 		<parameter param-name="leaveId" />
             			</link> -->
-						
+
 						 <link target="approveApplication" style="buttontext create" text="APPROVE EMPLOYEE LEAVE"  height="500" width="500">
                 		<parameter param-name="leaveId" />
             			</link>
-								
+
 						<link target="popup" link-type="ajax-window" height="400" width="700" text="REJECT EMPLOYEE LEAVE" style="buttontext create">
 						<parameter param-name="partyId"/>
                         <parameter param-name="fromDate"/>
@@ -726,19 +726,19 @@
                          <parameter param-name="leaveId" />
 						</link>
 						</container>
-						
+
 						<container style="button-bar">
-						
+
 						</container>
 								</screenlet>
 								<screenlet title="${uiLabelMap.StaffLeaveDetails} : ${memberContext.firstName} ${memberContext.lastName}">
 									<include-form name="ListMyLeaves"
 										location="component://humanres/widget/forms/EmplLeaveForms.xml" />
-								</screenlet> 
-								<screenlet>	
-								
 								</screenlet>
-								<!-- <container style="lefthalf"> 
+								<screenlet>
+
+								</screenlet>
+								<!-- <container style="lefthalf">
 									<screenlet title="${uiLabelMap.HumanResStaffHistory} : ${memberContext.firstName} ${memberContext.lastName}"
 										navigation-form-name="ListEmplLeaves">
 										<include-form name="ListEmplLeaves"
@@ -750,7 +750,7 @@
 										<include-form name="ListLeaveLogs"
 											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
 									</screenlet>
-								 </container>  --> 
+								 </container>  -->
 							</widgets>
 						</section>
 					</decorator-section>
@@ -758,9 +758,9 @@
 			</widgets>
 		</section>
 	</screen>
-	
-	
-	
+
+
+
 	<screen name="viewEmplLeaveDetailsForHome">
 		<section>
 			<actions>
@@ -778,7 +778,7 @@
 					<field-map from-field="parameters.partyId" field-name="partyId" />
 					<field-map from-field="parameters.fromDate" field-name="fromDate" />
 					<field-map from-field="parameters.leaveTypeId" field-name="leaveTypeId" />
-					<field-map from-field="parameters.leaveId" field-name="leaveId" />					
+					<field-map from-field="parameters.leaveId" field-name="leaveId" />
 					<!-- <order-by field-name="leaveId" /> -->
 				</entity-and>
 				<entity-and entity-name="LeaveStatusLog" list="leaveLogs">
@@ -799,14 +799,14 @@
 							location="component://humanres/widget/HumanresMenus.xml" />
 						<section>
 							<widgets>
-								<screenlet>	
-									
+								<screenlet>
+
 						<container style="button-bar">
-						
+
 						 <link target="approveApplication" style="buttontext create" text="APPROVE EMPLOYEE LEAVE"  height="500" width="500">
                 		<parameter param-name="leaveId" />
             			</link>
-								
+
 						<link target="popup" link-type="ajax-window" height="400" width="700" text="REJECT EMPLOYEE LEAVE" style="buttontext create">
 						<parameter param-name="partyId"/>
                         <parameter param-name="fromDate"/>
@@ -814,19 +814,19 @@
                          <parameter param-name="leaveId" />
 						</link>
 						</container>
-						
+
 						<container style="button-bar">
-						
+
 						</container>
 								</screenlet>
 								<screenlet title="${uiLabelMap.StaffLeaveDetails} : ${memberContext.firstName} ${memberContext.lastName}">
 									<include-form name="ListMyLeaves"
 										location="component://humanres/widget/forms/EmplLeaveForms.xml" />
-								</screenlet> 
-								<screenlet>	
-								
 								</screenlet>
-								<!-- <container style="lefthalf"> 
+								<screenlet>
+
+								</screenlet>
+								<!-- <container style="lefthalf">
 									<screenlet title="${uiLabelMap.HumanResStaffHistory} : ${memberContext.firstName} ${memberContext.lastName}"
 										navigation-form-name="ListEmplLeaves">
 										<include-form name="ListEmplLeaves"
@@ -838,7 +838,7 @@
 										<include-form name="ListLeaveLogs"
 											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
 									</screenlet>
-								 </container>  --> 
+								 </container>  -->
 							</widgets>
 						</section>
 					</decorator-section>
@@ -846,13 +846,13 @@
 			</widgets>
 		</section>
 	</screen>
-	
-	
-	
-	
-	
-   
-	
+
+
+
+
+
+
+
 	<screen name="StaffOpeningBalance">
 		<section>
 			<actions>
@@ -860,7 +860,7 @@
 				<set field="headerItem" value="openingLeaveBalance" />
 				<set field="tabButtonItem" value="openingLeaveBalance" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<entity-one entity-name="EmplLeaveOpeningBalance" value-field="OpeningLeaveBalanceContext" /> 
+				<entity-one entity-name="EmplLeaveOpeningBalance" value-field="OpeningLeaveBalanceContext" />
 				<set field="partyId" from-field="OpeningLeaveBalanceContext.partyId"
 					default-value="${OpeningLeaveBalanceContext.partyId}" />
 			</actions>
@@ -896,13 +896,13 @@
 			</widgets>
 		</section>
 	</screen>
-	
-	
-	
-    
+
+
+
+
      <screen name="leaveRejectionReason">
         <section>
-        
+
             <actions>
               <!--   <property-map resource="ExampleUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/> -->
@@ -921,10 +921,10 @@
             </widgets>
         </section>
     </screen>
-    
+
      <screen name="leaveSentBackReason">
         <section>
-        
+
             <actions>
               <!--   <property-map resource="ExampleUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/> -->
@@ -943,14 +943,14 @@
             </widgets>
         </section>
     </screen>
-    
+
      <screen name="StaffLeaveCalender">
 		<section>
 			<actions>
 				<set field="titleProperty" value="leave" />
 				<set field="headerItem" value="leaveCalender" />
 				<set field="tabButtonItem" value="leaveCalender" />
-				
+
 				<set field="OpeningLeaveBalanceContext" from-field="parameters"/>
 						<service service-name="humanResManagerPermission"
 					result-map="permResult">
@@ -969,8 +969,8 @@
 							location="component://humanres/widget/HumanresMenus.xml" />
 					</decorator-section>
 					<decorator-section name="body">
-					
-					
+
+
 					 <section>
 							<widgets>
 								<screenlet title="Add Leave To Leave Calender">
@@ -989,7 +989,7 @@
 						</section>
 						<screenlet>
 						</screenlet>
-						
+
 						 <section>
                            <!-- do check for PARTYMGR, _VIEW permission-->
                             <condition>
@@ -1008,58 +1008,58 @@
 			</widgets>
 		</section>
 	</screen>
-	
-	
-	
-							
+
+
+
+
 	<screen name="mailScheduler">
 		<section>
 			<actions>
-				
-				
+
+
 			</actions>
 			<widgets>
-				
+
 				<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
-					<screenlet> 
-                                    
+					<screenlet>
+
                         <container style="button-bar">
                          <link target="scheduleInterestCalculationsLeave" style="buttontext create" text="Annual Leave Days Calculations"  height="500" width="500">
                         </link>
-                                
+
                             <link target="scheduleDisableLogins" style="buttontext create" text="Enable/Disable User Names For Staff On Leave"  height="500" width="500">
                         </link>
                          <link target="scheduleSendEmailNotification" style="buttontext create" text="Staff Mail Notification"  height="500" width="500">
-                        </link> 
+                        </link>
                         </container>
-                        
+
                                 </screenlet>
 
-                                 <screenlet> 
-                                    
+                                 <screenlet>
+
                         <container style="button-bar">
                          <link target="SaveEmail_ToBeSendafterwards" style="buttontext create" text="Staff Mail Notification To Staff Handed Over Duties By Staff On Leave"  height="500" width="500">
                         </link>
-                                
+
                         <link target="scheduleSendEmailNotificationNonStaff" style="buttontext create" text="Mail Notification To Non Staff"  height="500" width="500">
-                        </link> 
-                        
+                        </link>
+
                         <link target="sendMailNow" style="buttontext create" text="Send Mail"  height="500" width="500">
-                        </link> 
+                        </link>
                          <link target="sendMailNow_NonStaff" style="buttontext create" text="Send Mail To Non Staff"  height="500" width="500">
-                        </link> 
+                        </link>
                         </container>
-                        
+
                                 </screenlet>
-					
-						
+
+
 					</decorator-section>
 					</decorator-screen>
 			</widgets>
 		</section>
 	</screen>
-	
-	
+
+
 
 </screens>
