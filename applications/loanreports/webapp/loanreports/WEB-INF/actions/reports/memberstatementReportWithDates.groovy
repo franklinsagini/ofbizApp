@@ -113,10 +113,20 @@ accountTransactionList.eachWithIndex { accountItem, index ->
 
 		if (accountItem.transactionType == 'CASHDEPOSIT')
 		{
-			statementItem.remitanceDescription = 'Deposit';
+			statementItem.remitanceDescription = 'Cash Deposit';
 		} else if (accountItem.transactionType == 'CASHWITHDRAWAL'){
-			statementItem.remitanceDescription = 'Withdrawal';
-		} else{
+			statementItem.remitanceDescription = 'Cash Withdrawal';
+		} 
+		
+		else if (accountItem.transactionType == 'TOOTHERACCOUNTS'){
+			statementItem.remitanceDescription = 'Transfer to other account (SALARY)';
+		}
+		
+		else if (accountItem.transactionType == 'LOANREPAYMENT'){
+			statementItem.remitanceDescription = 'Rapayment of a loan';
+		}
+		
+		else{
 			statementItem.remitanceDescription = accountItem.transactionType;
 		}
 
