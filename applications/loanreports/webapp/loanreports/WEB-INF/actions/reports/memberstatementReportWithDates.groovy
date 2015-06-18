@@ -113,10 +113,20 @@ accountTransactionList.eachWithIndex { accountItem, index ->
 
 		if (accountItem.transactionType == 'CASHDEPOSIT')
 		{
-			statementItem.remitanceDescription = 'Deposit';
+			statementItem.remitanceDescription = 'Cash Deposit';
 		} else if (accountItem.transactionType == 'CASHWITHDRAWAL'){
-			statementItem.remitanceDescription = 'Withdrawal';
-		} else{
+			statementItem.remitanceDescription = 'Cash Withdrawal';
+		} 
+		
+		else if (accountItem.transactionType.equals("TOOTHERACCOUNTS")){
+			statementItem.remitanceDescription = 'Transfer to other account (SALARY)';
+		}
+		
+		else if (accountItem.transactionType.equals("LOANREPAYMENT") ){
+			statementItem.remitanceDescription = 'Repayment of a loan';
+		}
+		
+		else{
 			statementItem.remitanceDescription = accountItem.transactionType;
 		}
 
@@ -428,7 +438,37 @@ allAccountProducts.eachWithIndex { memberAccount, index ->
 	allTransactions.eachWithIndex { theTransaction, anindex ->
 		memberAccountTransaction = new MemberTransaction()
 		memberAccountTransaction.transactionDate = theTransaction.createdStamp
-		memberAccountTransaction.transactionDescription = theTransaction.transactionType
+		//println 'transaction is ####'
+		//println(theTransaction.transactionType) ;
+		if (theTransaction.transactionType.equals("CASHDEPOSIT"))
+		{
+			memberAccountTransaction.transactionDescription = 'Cash Deposit';
+		} else if (theTransaction.transactionType.equals("CASHWITHDRAWAL")){
+			memberAccountTransaction.transactionDescription = 'Cash Withdrawal';
+		}
+		
+		else if (theTransaction.transactionType.equals("TOOTHERACCOUNTS")){
+			memberAccountTransaction.transactionDescription = 'Transfer to other account (SALARY)';
+		}
+		
+		else if (theTransaction.transactionType.equals("LOANREPAYMENT") ){
+			memberAccountTransaction.transactionDescription = 'Repayment of a loan';
+		}
+		
+		else if (theTransaction.transactionType.equals("WITHDRAWALCOMMISSION") ){
+			memberAccountTransaction.transactionDescription = 'Withdrawal Commission';
+		}
+		
+		else if (theTransaction.transactionType.equals("EXCISEDUTY") ){
+			memberAccountTransaction.transactionDescription = 'Excise Duty';
+		}
+		
+		
+		else{
+			memberAccountTransaction.transactionDescription = theTransaction.transactionType;
+		}
+		
+		//memberAccountTransaction.transactionDescription = theTransaction.transactionType
 		memberAccountTransaction.increaseDecrease = theTransaction.increaseDecrease
 		memberAccountTransaction.transactionAmount = theTransaction.transactionAmount
 

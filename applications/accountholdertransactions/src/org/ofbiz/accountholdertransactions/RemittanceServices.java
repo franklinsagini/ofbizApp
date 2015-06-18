@@ -1205,7 +1205,7 @@ public class RemittanceServices {
 		
 		BigDecimal bdTotalRemittanceProcessedAmt = BigDecimal.ZERO;
 		
-		bdTotalRemittanceProcessedAmt = getTotalRemittanceProcessed(employerCode, month);
+		bdTotalRemittanceProcessedAmt = getTotalRemittanceProcessed(employerCode, monthYear);
 		log.info("TTTTTTTTTT totalAmount "+totalAmount);
 		log.info("TTTTTTTTTT bdTotalRemittanceProcessedAmt "+bdTotalRemittanceProcessedAmt);
 		BigDecimal bdTotalSalaryProcessedAmt = BigDecimal.ZERO;

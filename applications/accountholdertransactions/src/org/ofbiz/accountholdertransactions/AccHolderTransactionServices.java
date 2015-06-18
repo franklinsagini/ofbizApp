@@ -1359,7 +1359,7 @@ public class AccHolderTransactionServices {
 	private static void createTransaction(GenericValue loanApplication,
 			String transactionType, Map<String, String> userLogin,
 			String memberAccountId, BigDecimal transactionAmount,
-			String productChargeId, String accountTransactionParentId, String acctgTransId) {
+			String productChargeId, String accountTransactionParentId, String acctgTransId, Long accountProductId, Long loanApplicationId) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);// loanApplication.getDelegator();
 		GenericValue accountTransaction;
 		String accountTransactionId = delegator
@@ -1407,6 +1407,12 @@ public class AccHolderTransactionServices {
 
 					|| ((transactionType != null) && (transactionType
 							.equals("EXCISEDUTY")))
+							
+					|| ((transactionType != null) && (transactionType
+							.equals("LOANREPAYMENT")))
+							
+					|| ((transactionType != null) && (transactionType
+							.equals("TOOTHERACCOUNTS")))
 
 					|| ((transactionType != null) && (transactionType
 							.equals("POSCASHPURCHASE")))) {
@@ -1421,6 +1427,9 @@ public class AccHolderTransactionServices {
 							
 					|| ((transactionType != null) && (transactionType
 							.equals("SALARYPROCESSING")))
+							
+					|| ((transactionType != null) && (transactionType
+							.equals("DEPOSITFROMSALARY")))
 
 					|| ((transactionType != null) && (transactionType
 							.equals("MEMBERACCOUNTJVINC")))) {
@@ -1466,7 +1475,11 @@ public class AccHolderTransactionServices {
 						"transactionType", transactionType, "treasuryId",
 						treasuryId, "accountTransactionParentId",
 						accountTransactionParentId, 
-						"acctgTransId", acctgTransId
+						"acctgTransId", acctgTransId,
+						
+						"accountProductId", accountProductId,
+						
+						"loanApplicationId", loanApplicationId
 						));
 		try {
 			delegator.createOrStore(accountTransaction);
@@ -1983,7 +1996,7 @@ public class AccHolderTransactionServices {
 				branchId.toString()))
 			return "accountsnotmapped";
 
-		String postingType = "D";
+		String postingType = "C";
 		String entrySequenceId = "00001";
 		try {
 			TransactionUtil.begin();
@@ -2000,7 +2013,7 @@ public class AccHolderTransactionServices {
 		}
 		// Credit Station Deposit Account
 
-		postingType = "C";
+		postingType = "D";
 		entrySequenceId = "00002";
 		try {
 			TransactionUtil.begin();
@@ -4373,6 +4386,8 @@ public class AccHolderTransactionServices {
 		return accountTransactionParentId;
 	}
 	
+	
+	
 	//acctgTransId
 	/****
 	 * Overloaded the memberTransactionDeposit to add acctgTransId to the transaction
@@ -4380,7 +4395,7 @@ public class AccHolderTransactionServices {
 	public static String memberTransactionDeposit(BigDecimal transactionAmount,
 			Long memberAccountId, Map<String, String> userLogin,
 			String withdrawalType, String accountTransactionParentId,
-			String productChargeId, String acctgTransId) {
+			String productChargeId, String acctgTransId, Long accountProductId, Long loanApplicationId) {
 
 		log.info(" Transaction Amount ---- " + transactionAmount);
 		log.info(" Transaction MA ---- " + memberAccountId);
@@ -4411,7 +4426,7 @@ public class AccHolderTransactionServices {
 		GenericValue accountTransaction = null;
 		createTransaction(accountTransaction, transactionType, userLogin,
 				memberAccountId.toString(), transactionAmount, productChargeId,
-				accountTransactionParentId, acctgTransId);
+				accountTransactionParentId, acctgTransId, accountProductId, loanApplicationId);
 		// postCashDeposit(memberAccountId, userLogin, transactionAmount);
 		// postCashWithdrawalTransaction(accountTransaction, userLogin);
 
