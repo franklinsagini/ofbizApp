@@ -1996,7 +1996,7 @@ public class AccHolderTransactionServices {
 				branchId.toString()))
 			return "accountsnotmapped";
 
-		String postingType = "D";
+		String postingType = "C";
 		String entrySequenceId = "00001";
 		try {
 			TransactionUtil.begin();
@@ -2013,7 +2013,7 @@ public class AccHolderTransactionServices {
 		}
 		// Credit Station Deposit Account
 
-		postingType = "C";
+		postingType = "D";
 		entrySequenceId = "00002";
 		try {
 			TransactionUtil.begin();
