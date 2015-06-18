@@ -123,7 +123,7 @@ accountTransactionList.eachWithIndex { accountItem, index ->
 		}
 		
 		else if (accountItem.transactionType.equals("LOANREPAYMENT") ){
-			statementItem.remitanceDescription = 'Rapayment of a loan';
+			statementItem.remitanceDescription = 'Repayment of a loan';
 		}
 		
 		else{
@@ -438,7 +438,28 @@ allAccountProducts.eachWithIndex { memberAccount, index ->
 	allTransactions.eachWithIndex { theTransaction, anindex ->
 		memberAccountTransaction = new MemberTransaction()
 		memberAccountTransaction.transactionDate = theTransaction.createdStamp
-		memberAccountTransaction.transactionDescription = theTransaction.transactionType
+		//println 'transaction is ####'
+		//println(theTransaction.transactionType) ;
+		if (theTransaction.transactionType.equals("CASHDEPOSIT"))
+		{
+			memberAccountTransaction.transactionDescription = 'Cash Deposit';
+		} else if (theTransaction.transactionType.equals("CASHWITHDRAWAL")){
+			memberAccountTransaction.transactionDescription = 'Cash Withdrawal';
+		}
+		
+		else if (theTransaction.transactionType.equals("TOOTHERACCOUNTS")){
+			memberAccountTransaction.transactionDescription = 'Transfer to other account (SALARY)';
+		}
+		
+		else if (theTransaction.transactionType.equals("LOANREPAYMENT") ){
+			memberAccountTransaction.transactionDescription = 'Repayment of a loan';
+		}
+		
+		else{
+			memberAccountTransaction.transactionDescription = theTransaction.transactionType;
+		}
+		
+		//memberAccountTransaction.transactionDescription = theTransaction.transactionType
 		memberAccountTransaction.increaseDecrease = theTransaction.increaseDecrease
 		memberAccountTransaction.transactionAmount = theTransaction.transactionAmount
 
