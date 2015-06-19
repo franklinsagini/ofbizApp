@@ -27,6 +27,7 @@
         <actions>
         	<entity-condition entity-name="MemberWithdrawal">
         		<!-- condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/ -->
+        		<order-by field-name="-memberWithdrawalId"/>
         	</entity-condition>
         	
         	
@@ -204,6 +205,9 @@
 				
 		<!-- field name="firstName"> <text></text> </field> <field name="middleName"> 
 			<text></text> </field> <field name="lastName"> <text></text> </field -->
+		<field name="loanApplicationId">
+			<hidden value="${loanApplicationId}"/>
+		</field>
 		<field name="loanProductId" title="Product">
 			<display-entity description="${name} ${code}"
 				entity-name="LoanProduct" also-hidden="false"></display-entity>
@@ -213,7 +217,11 @@
 		<!-- drop-down allow-empty="true"> <entity-options description="${name} 
 				${code}" entity-name="SaccoProduct"> </entity-options> </drop-down -->
 		<field name="loanAmt" title="Amount">
-			<display also-hidden="false" />
+			<display also-hidden="false" default-value="" />
+		</field>
+		<!-- org.ofbiz.withdrawalprocessing.WithdrawalProcessingServices.getLoanBalance -->
+		<field name="loanBalance" title="Balance">
+			<display also-hidden="false" default-value="${bsh:org.ofbiz.withdrawalprocessing.WithdrawalProcessingServices.getLoanBalance(loanApplicationId);}" />
 		</field>
 		
 		<field name="interestRatePM" title="Interest Rate(P.M)">
@@ -316,17 +324,17 @@
 		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="loanGuarantor">
 		<actions>
 		
-			<entity-one entity-name="LoanApplication" value-field="loanApplication">
-                                    <field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/>
-                </entity-one>
-                <set field="partyId" from-field="loanApplication.partyId"/>
+			<entity-one entity-name="MemberWithdrawal" value-field="memberWithdrawal">
+                     <field-map field-name="memberWithdrawalId" from-field="parameters.memberWithdrawalId"/>
+              </entity-one>
+                <set field="partyId" from-field="memberWithdrawal.partyId"/>
                 
-                <set field="memberNumber" from-field="loanApplication.memberNumber"/>
+                <!-- set field="memberNumber" from-field="loanApplication.memberNumber"/ -->
                 
 			<entity-condition entity-name="LoanGuarantor">
-				<!-- condition-expr field-name="memberNo" operator="equals" value="${memberNumber}"/ -->
-				<!-- condition-expr field-name="memberNo" operator="equals" value="${memberNumber}"/ -->
-				<condition-expr field-name="guarantorId" operator="equals" from-field="partyId"/>
+				<condition-list>
+					<condition-expr field-name="guarantorId" operator="equals" from-field="partyId"/>
+				</condition-list>
 				
 			</entity-condition>
 		</actions>
@@ -335,21 +343,54 @@
                 <display-entity entity-name="Member" key-field-name="partyId"  description="${firstName} ${middleName} ${lastName}" also-hidden="false"/>
         </field -->
         
-        <field name="guarantorId" title="Guarantor">
-        	<display-entity entity-name="Member" key-field-name="partyId"  description="${firstName} ${middleName} ${lastName}" also-hidden="false"/>
+        <field name="guarantee" title="Member Guaranteed">
+        	<display default-value="${bsh:org.ofbiz.withdrawalprocessing.WithdrawalProcessingServices.getMemberGuaranteed(loanApplicationId);}" also-hidden="false"/>
         </field>
+        
+        
+         <field name="loanApplicationId" title="Loan No ">
+        	<display-entity entity-name="LoanApplication" key-field-name="loanApplicationId"  description="${loanNo}" also-hidden="false"/>
+        </field>
+        
+        <field name="loanAmt" title="Amount (Disbursed)">
+        	<display default-value="${bsh:org.ofbiz.withdrawalprocessing.WithdrawalProcessingServices.getLoanAmount(loanApplicationId);}"></display>
+        </field>
+        
+
+        <field name="loanBalance" title="Loan Balance">
+        	<display default-value="${bsh:org.ofbiz.withdrawalprocessing.WithdrawalProcessingServices.getLoanBalance(loanApplicationId);}" also-hidden="false"/>
+        </field>
+        
+        <!-- field name="guarantorId" title="Guarantor">
+        	<display-entity entity-name="Member" key-field-name="partyId"  description="${firstName} ${middleName} ${lastName}" also-hidden="false"/>
+        </field -->
 
 		
         
-        <field name="memberNo" title="Member No."><display also-hidden="false"/></field>
-        <field name="payrolNo" title="Payrol No."><display also-hidden="false"/></field>
-        <field name="depositamt" title="Deposit Amount"><display also-hidden="false"/></field>
-        <field name="currentStationId" title="Current Station">
-        	 <display-entity entity-name="Station" key-field-name="stationId"  description="${name}" also-hidden="false"/>
+        <field name="memberNumber" title="Member No.">
+        	<display default-value="${bsh:org.ofbiz.withdrawalprocessing.WithdrawalProcessingServices.getMemberNumber(loanApplicationId);}" also-hidden="false"/>
         </field>
-        <field name="guaranteedPercentage" title="Guaranteed %"><display></display></field>
-		<field name="guaranteedValue" title="Guaranteed Amount"><display></display></field> 
+        
+        <field name="payrolNo" title="Payrol No.">
+        	<display default-value="${bsh:org.ofbiz.withdrawalprocessing.WithdrawalProcessingServices.getPayrollNumber(loanApplicationId);}"  also-hidden="false"/>
+        </field>
+        
+        <field name="mobileNumber" title="Mobile No.">
+        	<display default-value="${bsh:org.ofbiz.withdrawalprocessing.WithdrawalProcessingServices.getMobileNumber(loanApplicationId);}"  also-hidden="false"/>
+        </field>
+        
+        <!-- field name="depositamt" title="Deposit Amount"><display also-hidden="false"/></field -->
+        <field name="memberStation" title="Member Station">
+        	 <display default-value="${bsh:org.ofbiz.withdrawalprocessing.WithdrawalProcessingServices.getMemberStationName(loanApplicationId);}"  also-hidden="false"/>
+        </field>
+        <field name="guaranteedPercentage" title="Guaranteed %">
+        <display default-value="${bsh:org.ofbiz.withdrawalprocessing.WithdrawalProcessingServices.getLoanGuarateedPercByGuarantor(loanApplicationId, guarantorId);}"></display>
+        </field>
+		<field name="guaranteedValue" title="Guaranteed Amount">
+			<display  default-value="${bsh:org.ofbiz.withdrawalprocessing.WithdrawalProcessingServices.getLoanGuarateedAmountByGuarantor(loanApplicationId, guarantorId);}"></display>
+		</field> 
 		<field name="createdStamp" title="When"><display type="date-time"></display></field>
+		<!-- field name="createdBy" title="Created By"><display ></display></field -->
 		<!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteLoanApplicationGuarantor" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="loanGuarantorId"/>

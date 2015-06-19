@@ -160,7 +160,7 @@
     </screen>
     
     <!-- memberObligations -->
-            <screen name="memberObligations">
+    <screen name="memberObligations">
         <section>
             <actions>
                 <set field="titleProperty" value="Reject Withdrawal"/>
@@ -176,7 +176,16 @@
                 <entity-one value-field="memberWithdrawal" entity-name="MemberWithdrawal">
                 	<field-map field-name="memberWithdrawalId" from-field="memberWithdrawalId"/>
                 </entity-one>
-                <set field="partyId" value="${memberWithrawal.partyId}" />
+                <!-- set field="partyId" value="${memberWithrawal.partyId}" type="PlainString" / -->
+                <set field="partyId" value="${bsh:org.ofbiz.withdrawalprocessing.WithdrawalProcessingServices.getPartIdGivenMemberWithdrawalId(memberWithdrawalId);}" type="PlainString" />
+                
+                <!-- set field="collateralsAvailable" value="${bsh:org.ofbiz.loans.LoanServices.loanHasCollateral(loanApplicationId);}" type="String"   / -->
+                <!-- set field="shareCapitalAmount" value="${bsh:org.ofbiz.withdrawalprocessing.WithdrawalProcessingServices.getShareCapitalBalance(partyId);}" / -->
+                <!-- set field="memberDepositsAmount" value="${bsh:org.ofbiz.withdrawalprocessing.WithdrawalProcessingServices.getMemberDepositBalance(partyId);}" / -->
+                
+                 <set field="shareCapitalAmount" value="${bsh:org.ofbiz.withdrawalprocessing.WithdrawalProcessingServices.getShareCapitalBalance(partyId);}" />
+                 <set field="memberDepositsAmount" value="${bsh:org.ofbiz.withdrawalprocessing.WithdrawalProcessingServices.getMemberDepositBalance(partyId);}" />
+                
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -197,11 +206,17 @@
                         		</screenlet>
                         		
                         		<screenlet title="Share Capital Level">
-                        			<include-form name="listWithdrawalLog" location="component://withdrawalprocessing/widget/WithdrawalProcessingForms.xml"/>
+                        			<!-- include-form name="listWithdrawalLog" location="component://withdrawalprocessing/widget/WithdrawalProcessingForms.xml"/  -->
+                        			<container>
+                                    <label style="h3">Total Share Capital :  ${shareCapitalAmount}</label>
+                                </container>
                         		</screenlet>
                         		
                         		<screenlet title="Member Deposits">
-                        			<include-form name="listWithdrawalLog" location="component://withdrawalprocessing/widget/WithdrawalProcessingForms.xml"/>
+                        			<!-- include-form name="listWithdrawalLog" location="component://withdrawalprocessing/widget/WithdrawalProcessingForms.xml"/ -->
+                        			<container>
+                                    <label style="h3">Total Member Deposit : ${memberDepositsAmount}</label>
+                                </container>
                         		</screenlet>
                         	</widgets>
                         </section>
@@ -210,6 +225,4 @@
             </widgets>
         </section>
     </screen>
-    
-
 </screens>
