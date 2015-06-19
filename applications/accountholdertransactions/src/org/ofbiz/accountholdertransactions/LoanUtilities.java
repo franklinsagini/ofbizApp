@@ -55,7 +55,7 @@ public class LoanUtilities {
 
 		return memberId;
 	}
-	
+
 	/***
 	 * Get Member Status given payroll Number
 	 * */
@@ -75,16 +75,16 @@ public class LoanUtilities {
 		for (GenericValue genericValue : memberELI) {
 			memberStatusId = genericValue.getLong("memberStatusId");
 		}
-		
+
 		String status = getMemberStatusName(memberStatusId);
 
 		return status;
 	}
-	
+
 	/***
-	 * @author Japheth Odonya  @when Jun 7, 2015 8:24:46 PM
+	 * @author Japheth Odonya @when Jun 7, 2015 8:24:46 PM
 	 * 
-	 * Get Member Employment Type given payroll number
+	 *         Get Member Employment Type given payroll number
 	 * */
 	public static String getMemberEmploymentTypeGivenPayrollNo(String payrollNo) {
 		Long employmentTypeId = null;
@@ -102,12 +102,12 @@ public class LoanUtilities {
 		for (GenericValue genericValue : memberELI) {
 			employmentTypeId = genericValue.getLong("employmentTypeId");
 		}
-		
+
 		String employmentType = getEmploymentTypeName(employmentTypeId);
 
 		return employmentType;
 	}
-	
+
 	public static String getMemberStatusName(Long memberStatusId) {
 		List<GenericValue> memberStatusELI = null; // =
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -118,18 +118,18 @@ public class LoanUtilities {
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-		
+
 		String status = "";
-		 for (GenericValue genericValue : memberStatusELI) {
-			 status = genericValue.getString("name");
-		 }
+		for (GenericValue genericValue : memberStatusELI) {
+			status = genericValue.getString("name");
+		}
 
 		return status;
 	}
-	
+
 	/****
-	 * @author Japheth Odonya  @when Jun 7, 2015 8:28:13 PM
-	 * Get Employment Type name given employmentTypeId
+	 * @author Japheth Odonya @when Jun 7, 2015 8:28:13 PM Get Employment Type
+	 *         name given employmentTypeId
 	 * 
 	 * */
 	public static String getEmploymentTypeName(Long employmentTypeId) {
@@ -142,11 +142,11 @@ public class LoanUtilities {
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-		
+
 		String type = "";
-		 for (GenericValue genericValue : employmentTypeELI) {
-			 type = genericValue.getString("name");
-		 }
+		for (GenericValue genericValue : employmentTypeELI) {
+			type = genericValue.getString("name");
+		}
 
 		return type;
 	}
@@ -206,11 +206,11 @@ public class LoanUtilities {
 		}
 		return loanApplication;
 	}
-	
+
 	/***
-	 * @author Japheth Odonya  @when Jun 1, 2015 11:06:53 PM
+	 * @author Japheth Odonya @when Jun 1, 2015 11:06:53 PM
 	 * 
-	 * Get the loanApplication entity given the loanNo
+	 *         Get the loanApplication entity given the loanNo
 	 * */
 	public static GenericValue getLoanApplicationEntityGivenLoanNo(String loanNo) {
 		GenericValue loanApplication = null;
@@ -218,8 +218,8 @@ public class LoanUtilities {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
 			loanApplicationELI = delegator.findList("LoanApplication",
-					EntityCondition.makeCondition("loanNo", loanNo), null, null,
-					null, false);
+					EntityCondition.makeCondition("loanNo", loanNo), null,
+					null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
@@ -230,8 +230,7 @@ public class LoanUtilities {
 
 		return loanApplication;
 	}
-	
-	
+
 	/***
 	 * Get Product Name given loanNo
 	 * 
@@ -243,8 +242,8 @@ public class LoanUtilities {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
 			loanApplicationELI = delegator.findList("LoanApplication",
-					EntityCondition.makeCondition("loanNo", loanNo), null, null,
-					null, false);
+					EntityCondition.makeCondition("loanNo", loanNo), null,
+					null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
@@ -252,18 +251,17 @@ public class LoanUtilities {
 		for (GenericValue genericValue : loanApplicationELI) {
 			loanApplication = genericValue;
 		}
-		
+
 		Long loanProductId = loanApplication.getLong("loanProductId");
 
 		GenericValue loanProduct = getLoanProduct(loanProductId);
 		String name = "";
-		
-		if (loanProduct != null){
+
+		if (loanProduct != null) {
 			name = loanProduct.getString("name");
 		}
 		return name;
 	}
-		
 
 	public static GenericValue getLoanProduct(Long loanProductId) {
 		GenericValue loanProduct = null;
@@ -276,7 +274,7 @@ public class LoanUtilities {
 		}
 		return loanProduct;
 	}
-	
+
 	/***
 	 * Get Loan Product given Code
 	 * */
@@ -298,7 +296,7 @@ public class LoanUtilities {
 
 		return loanProduct;
 	}
-	
+
 	/***
 	 * Get AccountProduct
 	 * */
@@ -306,24 +304,27 @@ public class LoanUtilities {
 		GenericValue accountProduct = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
-			accountProduct = delegator.findOne("AccountProduct",
-					UtilMisc.toMap("accountProductId", accountProductId), false);
+			accountProduct = delegator
+					.findOne("AccountProduct", UtilMisc.toMap(
+							"accountProductId", accountProductId), false);
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
 		return accountProduct;
 	}
-	
-	public static GenericValue getAccountProductGivenMemberAccountId(Long memberAccountId) {
-		
+
+	public static GenericValue getAccountProductGivenMemberAccountId(
+			Long memberAccountId) {
+
 		GenericValue memberAccount = getMemberAccount(memberAccountId);
 		Long accountProductId = memberAccount.getLong("accountProductId");
-		
+
 		GenericValue accountProduct = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
-			accountProduct = delegator.findOne("AccountProduct",
-					UtilMisc.toMap("accountProductId", accountProductId), false);
+			accountProduct = delegator
+					.findOne("AccountProduct", UtilMisc.toMap(
+							"accountProductId", accountProductId), false);
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
@@ -1175,8 +1176,7 @@ public class LoanUtilities {
 		return stationId;
 
 	}
-	
-	
+
 	public static String getStationName(String employerCode) {
 		List<GenericValue> stationELI = null; // =
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -1246,15 +1246,15 @@ public class LoanUtilities {
 		}
 		return stationIdList;
 	}
-	
+
 	public static GenericValue getStationGivenOnlineCode(String onlineCode) {
 		List<GenericValue> stationELI = null; // =
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
-			stationELI = delegator
-					.findList("Station", EntityCondition.makeCondition(
-							"Onlinecode", onlineCode.trim()), null, null, null,
-							false);
+			stationELI = delegator.findList(
+					"Station",
+					EntityCondition.makeCondition("Onlinecode",
+							onlineCode.trim()), null, null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
@@ -1264,7 +1264,7 @@ public class LoanUtilities {
 		for (GenericValue genericValue : stationELI) {
 			station = genericValue;
 		}
-		
+
 		return station;
 	}
 
@@ -1311,28 +1311,27 @@ public class LoanUtilities {
 
 		return memberNames;
 	}
-	
-	
-//	public static GenericValue getMemberGivenEmployeeNumber(String employeeNumber) {
-//		GenericValue member = null;
-//
-//		List<GenericValue> memberELI = null; // =
-//		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-//		try {
-//			memberELI = delegator.findList("Member",
-//					EntityCondition.makeCondition("employeeNumber", employeeNumber),
-//					null, null, null, false);
-//		} catch (GenericEntityException e) {
-//			e.printStackTrace();
-//		}
-//
-//		for (GenericValue genericValue : memberELI) {
-//			member = genericValue;
-//		}
-//
-//		return member;
-//	}
 
+	// public static GenericValue getMemberGivenEmployeeNumber(String
+	// employeeNumber) {
+	// GenericValue member = null;
+	//
+	// List<GenericValue> memberELI = null; // =
+	// Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+	// try {
+	// memberELI = delegator.findList("Member",
+	// EntityCondition.makeCondition("employeeNumber", employeeNumber),
+	// null, null, null, false);
+	// } catch (GenericEntityException e) {
+	// e.printStackTrace();
+	// }
+	//
+	// for (GenericValue genericValue : memberELI) {
+	// member = genericValue;
+	// }
+	//
+	// return member;
+	// }
 
 	public static GenericValue getSalaryMonthYear(Long salaryMonthIdLong) {
 		GenericValue salaryMonthYear = null;
@@ -1643,25 +1642,25 @@ public class LoanUtilities {
 
 	public static GenericValue getMemberGiveLoanApplicationId(
 			Long loanApplicationId) {
-		
-		//Get Loan Application
+
+		// Get Loan Application
 		GenericValue loanApplication = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
 			loanApplication = delegator.findOne("LoanApplication",
-					UtilMisc.toMap("loanApplicationId", loanApplicationId), false);
+					UtilMisc.toMap("loanApplicationId", loanApplicationId),
+					false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-		
+
 		Long partyId = loanApplication.getLong("partyId");
-		
-		
+
 		GenericValue member = getMember(partyId);
-		
+
 		return member;
 	}
-	
+
 	public static Long getMemberDepositsAccountId(String code) {
 		List<GenericValue> accountProductELI = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -1700,30 +1699,33 @@ public class LoanUtilities {
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
-		
+
 		if (loanDeductionEvaluationELI == null)
 			return false;
-		
+
 		if (loanDeductionEvaluationELI.size() <= 0)
 			return false;
-		
-		GenericValue loanDeductionEvaluation = loanDeductionEvaluationELI.get(0);
 
-		
-		if (loanDeductionEvaluation.getBigDecimal("grossPayMinusTotalDeduction") == null)
+		GenericValue loanDeductionEvaluation = loanDeductionEvaluationELI
+				.get(0);
+
+		if (loanDeductionEvaluation
+				.getBigDecimal("grossPayMinusTotalDeduction") == null)
 			return false;
-		
-		if (loanDeductionEvaluation.getBigDecimal("grossPayMinusTotalDeduction").compareTo(BigDecimal.ZERO) == 1)
+
+		if (loanDeductionEvaluation
+				.getBigDecimal("grossPayMinusTotalDeduction").compareTo(
+						BigDecimal.ZERO) == 1)
 			return true;
-		
+
 		return false;
-		
+
 	}
 
 	public static GenericValue getMemberGivenPayrollNumber(String payrollNo) {
 		List<GenericValue> memberELI = null; // =
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		
+
 		payrollNo = payrollNo.trim();
 		try {
 			memberELI = delegator.findList("Member",
@@ -1732,139 +1734,139 @@ public class LoanUtilities {
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-		
+
 		GenericValue member = null;
 
 		for (GenericValue genericValue : memberELI) {
 			member = genericValue;
 		}
-		
+
 		return member;
-		
+
 	}
 
-	public static GenericValue getMemberGivenEmployeeNumber(String employeeNumber) {
+	public static GenericValue getMemberGivenEmployeeNumber(
+			String employeeNumber) {
 		// TODO Auto-generated method stub
-		//employeeNumber
-		
+		// employeeNumber
+
 		List<GenericValue> memberELI = null; // =
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		
+
 		employeeNumber = employeeNumber.trim();
 		try {
-			memberELI = delegator.findList("Member",
-					EntityCondition.makeCondition("employeeNumber", employeeNumber),
-					null, null, null, false);
+			memberELI = delegator.findList("Member", EntityCondition
+					.makeCondition("employeeNumber", employeeNumber), null,
+					null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-		
+
 		GenericValue member = null;
 
 		for (GenericValue genericValue : memberELI) {
 			member = genericValue;
 		}
-		
+
 		return member;
 	}
-	
+
 	/***
 	 * Get Member given memberNumber
 	 * 
 	 * */
 	public static GenericValue getMemberGivenMemberNumber(String memberNumber) {
 		// TODO Auto-generated method stub
-		//employeeNumber
-		
+		// employeeNumber
+
 		List<GenericValue> memberELI = null; // =
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		
+
 		memberNumber = memberNumber.trim();
 		try {
-			memberELI = delegator.findList("Member",
-					EntityCondition.makeCondition("memberNumber", memberNumber),
-					null, null, null, false);
+			memberELI = delegator
+					.findList("Member", EntityCondition.makeCondition(
+							"memberNumber", memberNumber), null, null, null,
+							false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-		
+
 		GenericValue member = null;
 
 		for (GenericValue genericValue : memberELI) {
 			member = genericValue;
 		}
-		
+
 		return member;
 	}
-	
-	
-	public static GenericValue getMemberGivenEmployeeNumber(String employeeNumber, String onlineCode) {
+
+	public static GenericValue getMemberGivenEmployeeNumber(
+			String employeeNumber, String onlineCode) {
 		// TODO Auto-generated method stub
-		//employeeNumber
-		//Get all station ids where online code is online code
+		// employeeNumber
+		// Get all station ids where online code is online code
 		List<String> listStationId = getListStationId(onlineCode);
-		
-		//Get Member whose employer number is employerNumber and station Id is one of the IDs on the list
+
+		// Get Member whose employer number is employerNumber and station Id is
+		// one of the IDs on the list
 		GenericValue member = null;
-		
 
 		GenericValue tempMember = null;
 		for (String stationId : listStationId) {
 			stationId = stationId.trim();
 			tempMember = getMember(employeeNumber, stationId);
-			
-			if (tempMember != null){
+
+			if (tempMember != null) {
 				member = tempMember;
 				log.info("PPPPPPP Successful Assignment !!!!");
 			}
-			
-			
+
 		}
-		
+
 		return member;
 	}
 
 	private static GenericValue getMember(String employeeNumber,
 			String stationId) {
 		Long stationIdLong = Long.valueOf(stationId);
-		
+
 		EntityConditionList<EntityExpr> memberConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"stationId", EntityOperator.EQUALS,
-						stationIdLong),
+						"stationId", EntityOperator.EQUALS, stationIdLong),
 
-				EntityCondition.makeCondition("employeeNumber", EntityOperator.EQUALS,
-						employeeNumber.trim())
+				EntityCondition.makeCondition("employeeNumber",
+						EntityOperator.EQUALS, employeeNumber.trim())
 
 				), EntityOperator.AND);
-		
+
 		log.info("WWWWWWWW will compare Station for member");
-		log.info("WWWWWWWWW Station ID "+stationId);
-		log.info("WWWWWWWWW Employee Number "+employeeNumber);
+		log.info("WWWWWWWWW Station ID " + stationId);
+		log.info("WWWWWWWWW Employee Number " + employeeNumber);
 
 		List<GenericValue> listMemberELI = new ArrayList<GenericValue>();
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
-			listMemberELI = delegator.findList("Member",
-					memberConditions, null, null, null, false);
+			listMemberELI = delegator.findList("Member", memberConditions,
+					null, null, null, false);
 
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
 
-		log.info("WWWWWWWWW List Size "+listMemberELI.size());
+		log.info("WWWWWWWWW List Size " + listMemberELI.size());
 		GenericValue member = null;
 		for (GenericValue genericValue : listMemberELI) {
 			member = genericValue;
 		}
-		
+
 		return member;
 	}
 
 	private static List<String> getListStationId(String onlineCode) {
 		List<GenericValue> stationELI = null; // =
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		
+
 		onlineCode = onlineCode.trim();
 		try {
 			stationELI = delegator.findList("Station",
@@ -1873,211 +1875,211 @@ public class LoanUtilities {
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-		
+
 		List<String> listStationId = new ArrayList<String>();
 
 		for (GenericValue genericValue : stationELI) {
 			listStationId.add(genericValue.getString("stationId"));
 		}
-		
-		log.info(" SSSSSSSS station IDs "+listStationId.size());
-		
+
+		log.info(" SSSSSSSS station IDs " + listStationId.size());
+
 		return listStationId;
 	}
-	
-	
+
 	/****
-	 * @author Japheth Odonya  @when Jun 3, 2015 9:56:25 PM
+	 * @author Japheth Odonya @when Jun 3, 2015 9:56:25 PM
 	 * 
-	 * Check if account is mapped to a branch
+	 *         Check if account is mapped to a branch
 	 * 
-	 * returns false if not
-	 * returns true is mapped
+	 *         returns false if not returns true is mapped
 	 * */
-	public static boolean organizationAccountMapped(
-			String treasuryAccountId, String branchId) {
-		
+	public static boolean organizationAccountMapped(String treasuryAccountId,
+			String branchId) {
+
 		List<GenericValue> glAccountOrganizationELI = null;
-		Delegator delegator =  DelegatorFactoryImpl.getDelegator(null);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		EntityConditionList<EntityExpr> glAccountOrganizationConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition
 						.makeCondition("glAccountId", EntityOperator.EQUALS,
-								treasuryAccountId),
-						EntityCondition
-								.makeCondition("organizationPartyId", EntityOperator.EQUALS,
-										branchId)
-								
+								treasuryAccountId), EntityCondition
+						.makeCondition("organizationPartyId",
+								EntityOperator.EQUALS, branchId)
 
 				), EntityOperator.AND);
 
 		try {
-			glAccountOrganizationELI = delegator.findList("GlAccountOrganization", glAccountOrganizationConditions, null,
-					null, null, false);
+			glAccountOrganizationELI = delegator.findList(
+					"GlAccountOrganization", glAccountOrganizationConditions,
+					null, null, null, false);
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
-		
-		if ((glAccountOrganizationELI == null) || (!(glAccountOrganizationELI.size() > 0)))
+
+		if ((glAccountOrganizationELI == null)
+				|| (!(glAccountOrganizationELI.size() > 0)))
 			return false;
-		
+
 		return true;
 	}
 
-	
 	/***
 	 * Get Branch ID given employer code
 	 * */
 	public static String getBranchId(String employerCode) {
 		List<GenericValue> stationELI = null; // =
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		
+
 		employerCode = employerCode.trim();
 		try {
-			stationELI = delegator.findList("Station",
-					EntityCondition.makeCondition("employerCode", employerCode),
-					null, null, null, false);
+			stationELI = delegator
+					.findList("Station", EntityCondition.makeCondition(
+							"employerCode", employerCode), null, null, null,
+							false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-		
+
 		GenericValue station = null;
 		for (GenericValue genericValue : stationELI) {
 			station = genericValue;
 		}
-		
+
 		if (station != null)
 			return station.getString("branchId");
-		
+
 		return null;
 	}
 
 	/***
-	 * @author Japheth Odonya  @when Jun 4, 2015 10:41:12 AM
+	 * @author Japheth Odonya @when Jun 4, 2015 10:41:12 AM
 	 * 
-	 * Check that an account product actually does have an account set in the setup
+	 *         Check that an account product actually does have an account set
+	 *         in the setup
 	 * 
-	 * (Will need to credit this account)
+	 *         (Will need to credit this account)
 	 * 
-	 * Returns true is missing, false if set already
+	 *         Returns true is missing, false if set already
 	 * */
 	public static boolean missingGLAccount(String code) {
 
 		GenericValue accountProduct = null;
 		accountProduct = getAccountProductGivenCodeId(code.trim());
-		
+
 		if (accountProduct == null)
 			return true;
-		
+
 		String glAccountId = accountProduct.getString("glAccountId");
-		
+
 		if (glAccountId == null)
 			return true;
-		
+
 		return false;
 	}
 
-	
 	/***
-	 * @author Japheth Odonya  @when Jun 4, 2015 10:46:14 AM
+	 * @author Japheth Odonya @when Jun 4, 2015 10:46:14 AM
 	 * 
-	 * Get if an account product is already mapped to the branch provided
+	 *         Get if an account product is already mapped to the branch
+	 *         provided
 	 * */
 	public static boolean notAccountsNotMapped(String branchId, String code) {
 		code = code.trim();
-		
+
 		GenericValue accountProduct = null;
 		accountProduct = getAccountProductGivenCodeId(code.trim());
-		
+
 		String glAccountId = accountProduct.getString("glAccountId");
-		
+
 		if (glAccountId == null)
 			return true;
-		
+
 		if (!organizationAccountMapped(glAccountId, branchId))
 			return true;
-			
+
 		return false;
 	}
-	
-	
+
 	/***
-	 * @author Japheth Odonya  @when Jun 4, 2015 12:44:23 PM
+	 * @author Japheth Odonya @when Jun 4, 2015 12:44:23 PM
 	 * 
-	 * Get GL Account ID
+	 *         Get GL Account ID
 	 * */
-	
+
 	public static String getGLAccountIDForAccountProduct(String code) {
 
 		GenericValue accountProduct = null;
 		accountProduct = getAccountProductGivenCodeId(code.trim());
-		
+
 		if (accountProduct == null)
 			return null;
-		
+
 		String glAccountId = null;
-				
+
 		glAccountId = accountProduct.getString("glAccountId");
-		
+
 		return glAccountId;
 	}
-	
+
 	/****
-	 * @author Japheth Odonya  @when Jun 7, 2015 8:36:12 PM
-	 * Get Loan Time Difference in months 
-	 * from last repaid to today
+	 * @author Japheth Odonya @when Jun 7, 2015 8:36:12 PM Get Loan Time
+	 *         Difference in months from last repaid to today
 	 * */
-	public static Long loanDefaultTimeDiff(String loanNo){
-		
+	public static Long loanDefaultTimeDiff(String loanNo) {
+
 		GenericValue loanApplication = getLoanApplicationEntityGivenLoanNo(loanNo);
-		
+
 		Timestamp fromDate = loanApplication.getTimestamp("lastRepaymentDate");
-		Timestamp toDate = new Timestamp(Calendar.getInstance().getTimeInMillis());
-		
+		Timestamp toDate = new Timestamp(Calendar.getInstance()
+				.getTimeInMillis());
+
 		Long timeDiff = getTimeDifferenceInMonths(fromDate, toDate);
 		return timeDiff;
 	}
-	
+
 	/***
-	 * @author Japheth Odonya  @when Jun 7, 2015 8:30:29 PM
+	 * @author Japheth Odonya @when Jun 7, 2015 8:30:29 PM
 	 * 
-	 * Get the time difference in Months given start and end date
+	 *         Get the time difference in Months given start and end date
 	 * */
-	public static Long getTimeDifferenceInMonths(Timestamp fromDate, Timestamp toDate){
+	public static Long getTimeDifferenceInMonths(Timestamp fromDate,
+			Timestamp toDate) {
 		int timeTiff = 0;
-		
-		if (fromDate != null){
-			timeTiff = Months.monthsBetween(new LocalDate(fromDate.getTime()), new LocalDate(toDate.getTime())).getMonths();
+
+		if (fromDate != null) {
+			timeTiff = Months.monthsBetween(new LocalDate(fromDate.getTime()),
+					new LocalDate(toDate.getTime())).getMonths();
 			return new Long(timeTiff);
-		} else{
+		} else {
 			return null;
 		}
-		
-		
+
 	}
-	
+
 	/****
-	 * @author Japheth Odonya  @when Jun 7, 2015 8:44:08 PM
+	 * @author Japheth Odonya @when Jun 7, 2015 8:44:08 PM
 	 * 
-	 * Get Member's Member Deposits Balance
+	 *         Get Member's Member Deposits Balance
 	 * */
-	public static BigDecimal getMemberDepositsBalance(String payrollNo){
+	public static BigDecimal getMemberDepositsBalance(String payrollNo) {
 		BigDecimal bdBalance = BigDecimal.ZERO;
-		
+
 		Long memberAccountId = getMemberDepositMemberAccountId(payrollNo);
-		
-		bdBalance = AccHolderTransactionServices.getBookBalanceNow(memberAccountId.toString());
-		
+
+		bdBalance = AccHolderTransactionServices
+				.getBookBalanceNow(memberAccountId.toString());
+
 		return bdBalance;
 	}
-	
-	
+
 	public static Long getMemberDepositMemberAccountId(String payrollNo) {
 		// TODO Auto-generated method stub
 		GenericValue accountProduct = LoanUtilities
 				.getAccountProductGivenCodeId(MEMBER_DEPOSIT_CODE);
 		Long accountProductId = accountProduct.getLong("accountProductId");
 
-		//GenericValue loanApplication = getLoanApplicationEntity(theLoanApplicationId);
+		// GenericValue loanApplication =
+		// getLoanApplicationEntity(theLoanApplicationId);
 
 		GenericValue member = getMemberGivenPayrollNumber(payrollNo);
 		Long partyId = member.getLong("partyId");
@@ -2115,20 +2117,18 @@ public class LoanUtilities {
 
 		return memberAccountId;
 	}
-	
-	public static Timestamp getLoanLastRepaymentDate(String loanNo){
+
+	public static Timestamp getLoanLastRepaymentDate(String loanNo) {
 		Timestamp lastRepaymentDate = null;
 		GenericValue loanApplication = getLoanApplicationEntityGivenLoanNo(loanNo);
-		
+
 		lastRepaymentDate = loanApplication.getTimestamp("lastRepaymentDate");
-		
+
 		Timestamp lastRepayFromTransaction = getLastRepaymentDateFromTransaction(loanNo);
-		
+
 		if (lastRepayFromTransaction == null)
 			return lastRepaymentDate;
-		
-		
-		
+
 		return lastRepaymentDate;
 	}
 
@@ -2141,79 +2141,80 @@ public class LoanUtilities {
 	}
 
 	/***
-	 * @author Japheth Odonya  @when Jun 11, 2015 10:56:34 AM
+	 * @author Japheth Odonya @when Jun 11, 2015 10:56:34 AM
 	 * 
-	 * Return false if ATM does notexists
-	 * Return true if ATM exist
+	 *         Return false if ATM does notexists Return true if ATM exist
 	 * 
 	 * */
 	public static Boolean checkATMExists(Long partyId) {
-		
-		//find list CardApplication
+
+		// find list CardApplication
 		List<GenericValue> cardApplicationELI = null; // =
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
 			cardApplicationELI = delegator.findList("CardApplication",
-					EntityCondition.makeCondition("partyId", partyId),
-					null, null, null, false);
+					EntityCondition.makeCondition("partyId", partyId), null,
+					null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
 
-		if ((cardApplicationELI != null) && (cardApplicationELI.size() > 0)){
+		if ((cardApplicationELI != null) && (cardApplicationELI.size() > 0)) {
 			return true;
 		}
-		
+
 		return false;
 	}
 
 	/****
-	 * @author Japheth Odonya  @when Jun 11, 2015 10:57:12 AM
+	 * @author Japheth Odonya @when Jun 11, 2015 10:57:12 AM
 	 * 
-	 * Return false if Msacco does not exists
-	 * Return true if Msacco exist
+	 *         Return false if Msacco does not exists Return true if Msacco
+	 *         exist
 	 * */
 	public static Boolean checkMsaccoExists(Long partyId) {
-		//find list MSaccoApplication
+		// find list MSaccoApplication
 		List<GenericValue> msaccoApplicationELI = null; // =
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
 			msaccoApplicationELI = delegator.findList("MSaccoApplication",
-					EntityCondition.makeCondition("partyId", partyId),
-					null, null, null, false);
+					EntityCondition.makeCondition("partyId", partyId), null,
+					null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
 
-		if ((msaccoApplicationELI != null) && (msaccoApplicationELI.size() > 0)){
+		if ((msaccoApplicationELI != null) && (msaccoApplicationELI.size() > 0)) {
 			return true;
 		}
-		
+
 		return false;
 	}
 
-	public static void addNewATMApplication(Long partyId, Map<String, String> userLogin) {
-		
+	public static void addNewATMApplication(Long partyId,
+			Map<String, String> userLogin) {
+
 		GenericValue member = getMember(partyId);
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		
-		Long accountProductId = getAccountProductGivenCodeId(SAVINGS_ACCOUNT_CODE).getLong("accountProductId");
-		
-		Long memberAccountId = getMemberAccountIdFromMemberAccount(partyId, accountProductId);
-		
+
+		Long accountProductId = getAccountProductGivenCodeId(
+				SAVINGS_ACCOUNT_CODE).getLong("accountProductId");
+
+		Long memberAccountId = getMemberAccountIdFromMemberAccount(partyId,
+				accountProductId);
+
 		Long cardStatusId = getCardStatusId("NEW");
-		
+
 		GenericValue cardApplication = null;
-		String userLoginId = (String)userLogin.get("userLoginId");
-		Long cardApplicationId = delegator.getNextSeqIdLong(
-				"CardApplication", 1);
-		cardApplication = delegator.makeValue("CardApplication",
-				UtilMisc.toMap("cardApplicationId",
-						cardApplicationId, "isActive", "Y",
+		String userLoginId = (String) userLogin.get("userLoginId");
+		Long cardApplicationId = delegator.getNextSeqIdLong("CardApplication",
+				1);
+		cardApplication = delegator.makeValue("CardApplication", UtilMisc
+				.toMap("cardApplicationId", cardApplicationId, "isActive", "Y",
 						"createdBy", userLoginId,
-						
-						"partyId",	partyId,
-						
+
+						"partyId", partyId,
+
 						"idNumber", member.getString("idNumber"),
 						"payrollNumber", member.getString("payrollNumber"),
 						"memberAccountId", memberAccountId,
@@ -2231,46 +2232,47 @@ public class LoanUtilities {
 	}
 
 	/****
-	 * @author Japheth Odonya  @when Jun 11, 2015 5:03:31 PM
+	 * @author Japheth Odonya @when Jun 11, 2015 5:03:31 PM
 	 * 
-	 * Create New MSacco Application
+	 *         Create New MSacco Application
 	 * */
-	public static void addNewMSaccoApplication(Long partyId, Map<String, String> userLogin) {
-		
+	public static void addNewMSaccoApplication(Long partyId,
+			Map<String, String> userLogin) {
+
 		GenericValue member = getMember(partyId);
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		
-		Long accountProductId = getAccountProductGivenCodeId(SAVINGS_ACCOUNT_CODE).getLong("accountProductId");
-		
-		Long memberAccountId = getMemberAccountIdFromMemberAccount(partyId, accountProductId);
-		
+
+		Long accountProductId = getAccountProductGivenCodeId(
+				SAVINGS_ACCOUNT_CODE).getLong("accountProductId");
+
+		Long memberAccountId = getMemberAccountIdFromMemberAccount(partyId,
+				accountProductId);
+
 		Long cardStatusId = getCardStatusId("NEW");
-		
+
 		GenericValue msaccoApplication = null;
-		String userLoginId = (String)userLogin.get("userLoginId");
+		String userLoginId = (String) userLogin.get("userLoginId");
 		Long msaccoApplicationId = delegator.getNextSeqIdLong(
 				"MSaccoApplication", 1);
-		msaccoApplication = delegator.makeValue("MSaccoApplication",
-				UtilMisc.toMap("msaccoApplicationId",
-						msaccoApplicationId, "isActive", "Y",
-						"createdBy", userLoginId,
-						"formNumber", msaccoApplicationId,
-						"partyId",	partyId,
+		msaccoApplication = delegator.makeValue("MSaccoApplication", UtilMisc
+				.toMap("msaccoApplicationId", msaccoApplicationId, "isActive",
+						"Y", "createdBy", userLoginId, "formNumber",
+						msaccoApplicationId, "partyId", partyId,
 						"mobilePhoneNumber", member.getString("mobileNumber"),
-						
+
 						"memberAccountId", memberAccountId,
-						
+
 						"cardStatusId", cardStatusId));
 		try {
 			delegator.createOrStore(msaccoApplication);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	/***
-	 * Check if Member has savings account 
+	 * Check if Member has savings account
 	 * 
 	 * return false if does not have
 	 * */
@@ -2278,14 +2280,15 @@ public class LoanUtilities {
 		GenericValue accountProduct = getAccountProductGivenCodeId(SAVINGS_ACCOUNT_CODE);
 		Long accountProductId = accountProduct.getLong("accountProductId");
 		Long memberAccountId = null;
-		memberAccountId = getMemberAccountIdFromMemberAccount(partyId, accountProductId);
-		
+		memberAccountId = getMemberAccountIdFromMemberAccount(partyId,
+				accountProductId);
+
 		if (memberAccountId != null)
 			return true;
-		
+
 		return false;
 	}
-	
+
 	public static boolean hasAccount(String accountCode, String payrollNo) {
 		// TODO Check of a member , given payroll number has an account of the
 		// product given
@@ -2302,34 +2305,32 @@ public class LoanUtilities {
 
 		return false;
 	}
-	
-	
+
 	/***
-	 * @author Japheth Odonya  @when Jun 11, 2015 2:31:10 PM
+	 * @author Japheth Odonya @when Jun 11, 2015 2:31:10 PM
 	 * 
-	 * Get Card Status given Card Name
+	 *         Get Card Status given Card Name
 	 * */
-	public static Long getCardStatusId(String name){
+	public static Long getCardStatusId(String name) {
 		List<GenericValue> cardStatusELI = null; // =
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
 			cardStatusELI = delegator.findList("CardStatus",
-					EntityCondition.makeCondition("name",
-							name), null, null, null, false);
+					EntityCondition.makeCondition("name", name), null, null,
+					null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-		
+
 		Long cardStatusId = 0L;
-		 for (GenericValue genericValue : cardStatusELI) {
-			 cardStatusId = genericValue.getLong("cardStatusId");
-		 }
-		 
+		for (GenericValue genericValue : cardStatusELI) {
+			cardStatusId = genericValue.getLong("cardStatusId");
+		}
+
 		return cardStatusId;
 	}
 
-	
-	public static String getCardName(Long cardStatusId){
+	public static String getCardName(Long cardStatusId) {
 		GenericValue cardStatus = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
@@ -2342,16 +2343,173 @@ public class LoanUtilities {
 	}
 
 	public static BigDecimal getMinimumBalance(Long memberAccountId) {
-		
+
 		GenericValue accountProduct = getAccountProductGivenMemberAccountId(memberAccountId);
-		
+
 		BigDecimal mimimumBalance = BigDecimal.ZERO;
-		
+
 		if (accountProduct.getBigDecimal("minBalanceAmt") != null)
 			mimimumBalance = accountProduct.getBigDecimal("minBalanceAmt");
-		
+
 		return mimimumBalance;
 	}
 
+	/***
+	 * @author Japheth Odonya @when Jun 19, 2015 9:26:04 AM Get Member Status ID
+	 *         given name
+	 * */
+	public static Long getMemberStatusId(String statusName) {
+		List<GenericValue> memberStatusELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			memberStatusELI = delegator.findList("MemberStatus",
+					EntityCondition.makeCondition("name", statusName), null,
+					null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
 
+		Long memberStatusId = null;
+		for (GenericValue genericValue : memberStatusELI) {
+			memberStatusId = genericValue.getLong("memberStatusId");
+		}
+
+		return memberStatusId;
+	}
+
+	/****
+	 * @author Japheth Odonya  @when Jun 19, 2015 12:45:29 PM
+	 * Member Names
+	 * */
+	public static String getMemberNameGivenLoanApplicationId(
+			Long loanApplicationId) {
+
+		String memberNames = "";
+
+		GenericValue loanApplication = getLoanApplicationEntity(loanApplicationId);
+
+		GenericValue member = getMember(loanApplication.getLong("partyId"));
+
+		if (member == null)
+			return "";
+
+		if ((member.getString("firstName") != null)
+				&& (!member.getString("firstName").equals(""))) {
+			memberNames = memberNames + member.getString("firstName") + " ";
+		}
+
+		if ((member.getString("middleName") != null)
+				&& (!member.getString("middleName").equals(""))) {
+			memberNames = memberNames + member.getString("middleName") + " ";
+		}
+
+		if ((member.getString("lastName") != null)
+				&& (!member.getString("lastName").equals(""))) {
+			memberNames = memberNames + member.getString("lastName") + " ";
+		}
+		return memberNames;
+	}
+
+	/****
+	 * @author Japheth Odonya  @when Jun 19, 2015 12:45:10 PM
+	 * 
+	 * Member Number
+	 * **/
+	public static String getMemberNumberGivenLoanApplicationId(
+			Long loanApplicationId) {
+		String memberNumber = "";
+
+		GenericValue loanApplication = getLoanApplicationEntity(loanApplicationId);
+
+		GenericValue member = getMember(loanApplication.getLong("partyId"));
+
+		if (member == null)
+			return "";
+
+		if ((member.getString("memberNumber") != null) && (!member.getString("memberNumber").equals(""))) {
+			memberNumber = member.getString("memberNumber");
+		}
+		
+		return memberNumber;
+	}
+
+	
+	/***
+	 * @author Japheth Odonya  @when Jun 19, 2015 12:44:55 PM
+	 * 
+	 * Payroll Number
+	 * */
+	public static String getPayrollNumberGivenLoanApplicationId(
+			Long loanApplicationId) {
+		String payrollNumber = "";
+
+		GenericValue loanApplication = getLoanApplicationEntity(loanApplicationId);
+
+		GenericValue member = getMember(loanApplication.getLong("partyId"));
+
+		if (member == null)
+			return "";
+
+		if ((member.getString("payrollNumber") != null) && (!member.getString("payrollNumber").equals(""))) {
+			payrollNumber = member.getString("payrollNumber");
+		}
+		
+		return payrollNumber;
+	}
+	
+	/***
+	 * @author Japheth Odonya  @when Jun 19, 2015 12:44:40 PM
+	 * 
+	 * Mobile Number
+	 * */
+	public static String getMobileNumberGivenLoanApplicationId(
+			Long loanApplicationId) {
+		String mobileNumber = "";
+
+		GenericValue loanApplication = getLoanApplicationEntity(loanApplicationId);
+
+		GenericValue member = getMember(loanApplication.getLong("partyId"));
+
+		if (member == null)
+			return "";
+
+		if ((member.getString("mobileNumber") != null) && (!member.getString("mobileNumber").equals(""))) {
+			mobileNumber = member.getString("mobileNumber");
+		}
+		
+		return mobileNumber;
+	}
+
+	public static String getMemberStationName(Long loanApplicationId) {
+		GenericValue loanApplication = getLoanApplicationEntity(loanApplicationId);
+
+		GenericValue member = getMember(loanApplication.getLong("partyId"));
+
+		if (member == null)
+			return "";
+		
+		Long stationId = member.getLong("stationId");
+		
+		return getStationName(getStation(stationId.toString()).getString("employerCode"));
+		
+	}
+
+	public static BigDecimal getLoanAmountGivenLoanApplicationId(
+			Long loanApplicationId) {
+		return getLoanAmount(loanApplicationId);
+	}
+
+	public static BigDecimal getShareCapitalAmount(Long partyId) {
+		Long accountProductId = getAccountProductGivenCodeId(AccHolderTransactionServices.SHARE_CAPITAL_CODE).getLong("accountProductId");
+		BigDecimal bdShareCapital = AccHolderTransactionServices.getAccountTotalBalance(accountProductId, partyId);
+		bdShareCapital = bdShareCapital.setScale(2, RoundingMode.HALF_DOWN);
+		return bdShareCapital;
+	}
+
+	public static BigDecimal getMemberDepositAmount(Long partyId) {
+		Long accountProductId = getAccountProductGivenCodeId(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE).getLong("accountProductId");
+		BigDecimal bdMemberDeposit = AccHolderTransactionServices.getAccountTotalBalance(accountProductId, partyId);
+		bdMemberDeposit = bdMemberDeposit.setScale(2, RoundingMode.HALF_DOWN);
+		return bdMemberDeposit;
+	}
 }

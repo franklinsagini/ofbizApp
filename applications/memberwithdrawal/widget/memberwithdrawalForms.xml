@@ -76,7 +76,7 @@
      <!-- Member Withdrawal -->
     <form name="NewMemberWithdrawal" type="single" target="createMemberWithdrawal"
 	focus-field-name="transactionAmount" header-row-style="header-row"
-	default-table-style="basic-table" default-map-name="cardApplicationContext">
+	default-table-style="basic-table" default-map-name="memberWithdrawalContext">
         
         <actions>
         	<entity-one entity-name="Member" value-field="member">
@@ -303,6 +303,7 @@
         <actions>
         	<entity-condition entity-name="MemberWithdrawal">
         		<!-- condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/ -->
+        		<order-by field-name="-memberWithdrawalId"/>
         	</entity-condition>
         	
         	
@@ -371,7 +372,8 @@
      <!-- ApproveWithdrawal -->
      <form name="ApproveWithdrawalLog" type="single" target="createWithdrawalLog"
 	focus-field-name="withdrawalstatus" header-row-style="header-row"
-	default-table-style="basic-table" default-map-name="withdrawalReasonContext">
+	default-table-style="basic-table" default-map-name="memberWithdrawalContext">
+		
         <field name="withdrawalLogId"><hidden/></field>
         <field name="memberWithdrawalId"><hidden/></field>
  		<field name="withdrawalstatus" title="Status" ><hidden value="APPROVED"/></field>

@@ -512,7 +512,7 @@ public class LoansProcessingServices {
 
 	}
 
-	private static List<GenericValue> getNumberOfGuarantors(
+	public static List<GenericValue> getNumberOfGuarantors(
 			Long loanApplicationId) {
 		List<GenericValue> loanGuarantorELI = null; // =
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);

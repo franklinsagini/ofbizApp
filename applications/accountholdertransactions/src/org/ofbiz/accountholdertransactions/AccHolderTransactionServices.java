@@ -24,7 +24,6 @@ import javax.servlet.http.HttpSession;
 import javolution.util.FastMap;
 
 import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 import org.ofbiz.accountholdertransactions.model.ATMTransaction;
@@ -50,6 +49,7 @@ import com.google.gson.Gson;
 
 public class AccHolderTransactionServices {
 	public static String MEMBER_DEPOSIT_CODE = "901";
+	public static String SHARE_CAPITAL_CODE = "902";
 	public static String SAVINGS_ACCOUNT_CODE = "999";
 
 	public static String WITHDRAWALOK = "OK";
