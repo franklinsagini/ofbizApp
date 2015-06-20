@@ -2012,12 +2012,31 @@
 		<make-value entity-name="PayGrade" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
 		
-				<sequenced-id sequence-name="PayGrade" field="payGradeId" />
-				<set field="newEntity.payGradeId" from-field="payGradeId"/>
+		<sequenced-id sequence-name="PayGrade" field="payGradeId" />
 		
-		<create-value value-field="newEntity" />
-		<property-to-field resource="HumanResUiLabels"
+		<set field="newEntity.payGradeId" from-field="payGradeId"/>
+		
+		<set field="payGradeName" value="${newEntity.payGradeName}" type="String"/>
+		
+		<set field="existstatus" value="${bsh:org.ofbiz.humanres.HumanResourceSetup.payGradeExists(payGradeName);}" type="Boolean"/>
+		
+		<if>
+			<condition>
+				<if-compare operator="equals" value="true" field="existstatus"></if-compare>
+			</condition>
+			<then>
+				<add-error>
+					<fail-message message="Paygrade ${payGradeName} already exists, please try another one "/>
+				</add-error>
+				 <check-errors /> 
+			</then>
+			<else>
+				<create-value value-field="newEntity" />
+				<property-to-field resource="HumanResUiLabels"
 			property="CreateSuccess" field="successMessage" />
+			</else>
+		</if>
+		
 	</simple-method>
 
 	<simple-method method-name="updatePayGrade"
