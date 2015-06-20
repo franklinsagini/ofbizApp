@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+	<description>Farmers Services</description>
+	<vendor></vendor>
+	<version>1.0</version>
+
+	<service name="noSyntaxError" engine="interface">
+		<description>
+            Dummy service to prevent empty files and syntax error - Remove when the 1st real service will be added here 
+        </description>
+	</service>
+
+	<service name="createLocation" engine="simple"
+		default-entity-name="Locations"
+		location="component://farmers/script/org/ofbiz/farmers/FarmersServices.xml"
+		invoke="createLocation" auth="true">
+		<description>Create A Location</description>
+		<auto-attributes mode="IN" include="pk" optional="true" />
+		<auto-attributes mode="IN" include="nonpk" optional="true" />
+	</service>
+
+	<service name="createFarmerDetail" engine="simple"
+		default-entity-name="Farmers"
+		location="component://farmers/script/org/ofbiz/farmers/FarmersServices.xml"
+		invoke="createFarmerDetail" auth="true">
+		<description>Add A new Farmer</description>
+		<auto-attributes mode="IN" include="pk" optional="true" />
+		<auto-attributes mode="IN" include="nonpk" optional="true" />
+	</service>
+
+	<service name="createSecurityForm" engine="simple"
+		default-entity-name="Security"
+		location="component://farmers/script/org/ofbiz/farmers/FarmersServices.xml"
+		invoke="createSecurityForm" auth="true">
+		<description>Adding of A new Security Officer</description>
+		<auto-attributes mode="IN" include="pk" optional="true" />
+		<auto-attributes mode="IN" include="nonpk" optional="true" />
+	</service>
+
+
+</services>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+	<screen name="main">
+		<section>
+			<actions>
+				<set field="headerItem" value="main" /><!-- this highlights the selected 
+					menu-item with name "main" -->
+			</actions>
+			<widgets>
+				<decorator-screen name="FarmersCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="location">
+		<section>
+			<actions>
+				<set field="headerItem" value="location" /><!-- this highlights the 
+					selected menu-item with name "main" -->
+			</actions>
+			<widgets>
+				<decorator-screen name="FarmersCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<screenlet title="Add New Locations">
+							<include-form location="component://farmers/widget/FarmersForms.xml"
+								name="locationForm" />
+						</screenlet>
+						<screenlet title="Locations List">
+							<include-form location="component://farmers/widget/FarmersForms.xml"
+								name="locationListForm" />
+						</screenlet>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="farmers">
+		<section>
+			<actions>
+				<set field="headerItem" value="farmers" /><!-- this highlights the 
+					selected menu-item with name "main" -->
+			</actions>
+			<widgets>
+				<decorator-screen name="FarmersCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<screenlet title="Add New Farmers">
+							<include-form location="component://farmers/widget/FarmersForms.xml"
+								name="farmersDetailForm" />
+						</screenlet>
+						<screenlet title="Farmer's List">
+							<include-form location="component://farmers/widget/FarmersForms.xml"
+								name="farmersDetailFormList" />
+						</screenlet>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+	<screen name="security">
+		<section>
+			<actions>
+				<set field="headerItem" value="security" /><!-- this highlights the 
+					selected menu-item with name "main" -->
+			</actions>
+			<widgets>
+				<decorator-screen name="FarmersCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<screenlet title="Add New Security Officer">
+							<include-form location="component://farmers/widget/FarmersForms.xml"
+								name="securityForm" />
+						</screenlet>
+							<screenlet title="Security Guard's List">
+							<include-form location="component://farmers/widget/FarmersForms.xml"
+							  name="securityFormList" />
+						</screenlet>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+
+</screens>

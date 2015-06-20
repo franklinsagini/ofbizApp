@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+
+	<form name="locationForm" type="single" target="createLocation"
+		header-row-style="header-row" default-table-style="basic-table">
+
+		<field name="locationId">
+			<hidden />
+		</field>
+
+		<field name="locationName" tooltip="${uiLabelMap.CommonRequired}"
+			widget-style="required" required-field="true">
+			<text size="25"></text>
+		</field>
+
+		<field name="submitButton" widget-style="smallSubmit">
+			<submit button-type="button" />
+		</field>
+
+	</form>
+
+
+
+	<form name="locationListForm" type="list" list-name="listIt"
+		use-row-submit="true" separate-columns="true" target="UpdateLocationList"
+		paginate-target="location" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="Locations"></entity-condition>
+		</actions>
+		<field name="locationId">
+			<display />
+		</field>
+		<field name="locationName" title="Name">
+			<display />
+		</field>
+	</form>
+
+
+
+	<form name="farmersDetailForm" type="single" target="createFarmerDetail"
+		header-row-style="header-row" default-table-style="basic-table">
+
+		<field name="farmerId">
+			<hidden />
+		</field>
+
+		<field name="fName" tooltip="${uiLabelMap.CommonRequired}"
+			title="First Name" widget-style="required" required-field="true">
+			<text size="25"></text>
+		</field>
+
+		<field name="lName" tooltip="${uiLabelMap.CommonRequired}"
+			title="last Name" widget-style="required" required-field="true">
+			<text size="25"></text>
+		</field>
+
+		<field name="locationId" tooltip="${uiLabelMap.CommonRequired}"
+			widget-style="required" required-field="true">
+			<drop-down allow-empty="false">
+				<entity-options key-field-name="locationId"
+					entity-name="Locations" description="${locationName}">
+					<entity-order-by field-name="locationName" />
+				</entity-options>
+			</drop-down>
+		</field>
+
+
+		<field name="submitButton" widget-style="smallSubmit">
+			<submit button-type="button" />
+		</field>
+
+	</form>
+
+	<form name="farmersDetailFormList" type="list" list-name="listIt"
+		use-row-submit="true" separate-columns="true" target="UpdateLocationList"
+		paginate-target="farmers" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="Farmers"></entity-condition>
+		</actions>
+		<field name="farmerId">
+			<display />
+		</field>
+		<field name="fName" title="First Name">
+			<display />
+		</field>
+		<field name="lName" title="Last Name">
+			<display />
+		</field>
+		<field name="locationId" title="Location ID">
+			<display-entity entity-name="Locations"
+				key-field-name="locationId" description="${locationName}" />
+		</field>
+	</form>
+
+	<!-- Security Form details -->
+
+	<form name="securityForm" type="single" target="createSecurityForm"
+		header-row-style="header-row" default-table-style="basic-table">
+
+		<field name="securityId">
+			<hidden />
+		</field>
+
+		<field name="fName" tooltip="${uiLabelMap.CommonRequired}"
+			title="First Name" widget-style="required" required-field="true">
+			<text size="25"></text>
+		</field>
+
+		<field name="lName" tooltip="${uiLabelMap.CommonRequired}"
+			title="Last Name" widget-style="required" required-field="true">
+			<text size="25"></text>
+		</field>
+
+		<field name="midName" tooltip="${uiLabelMap.CommonRequired}"
+			title="Middle Name" widget-style="required" required-field="true">
+			<text size="25"></text>
+		</field>
+
+		<field name="institution" tooltip="${uiLabelMap.CommonRequired}"
+			title="Institution" widget-style="required" required-field="true">
+			<text size="25"></text>
+		</field>
+
+		<field name="placeWork" tooltip="${uiLabelMap.CommonRequired}"
+			title="Place Of Work" widget-style="required" required-field="true">
+			<text size="25"></text>
+		</field>
+
+		<field name="homeArea" tooltip="${uiLabelMap.CommonRequired}"
+			title="Home Area" widget-style="required" required-field="true">
+			<text size="25"></text>
+		</field>
+
+		<field name="submitButton" widget-style="smallSubmit">
+			<submit button-type="button" />
+		</field>
+
+	</form>
+
+
+	<form name="securityFormList" type="list" list-name="listIt"
+		use-row-submit="true" separate-columns="true" target="UpdateLocationList"
+		paginate-target="security" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="Security"></entity-condition>
+		</actions>
+		<field name="securityId">
+			<display />
+		</field>
+		<field name="fName" title="First Name">
+			<display />
+		</field>
+		<field name="lName" title="Last Name">
+			<display />
+		</field>
+		<field name="midName" title="Middle Name">
+			<display />
+		</field>
+		<field name="institution" title="Institution">
+			<display />
+		</field>
+		<field name="placeWork" title="Place Of work">
+			<display />
+		</field>
+		<field name="homeArea" title="Home Area">
+			<display />
+		</field>
+		<field name="deleteGuard" title="Delete Person" widget-style="buttontext">
+        <hyperlink target="deleteSecurityOfficer?securityId=${Security.securityId}" description="Delete"/>
+        </field>
+	</form>
+
+
+</forms>
