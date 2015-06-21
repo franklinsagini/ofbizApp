@@ -8,5 +8,37 @@
     <description>None</description>
     <copyright></copyright>
     <version></version>
+    
+    <entity entity-name="NormalRemittanceMonthYear" package-name="org.ofbiz.normalremittanceprocessing"
+		title="Normal Remittance Month Year Entity">
+		<field name="normalRemittanceMonthYearId" type="id-vlong-int"></field>
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="id"></field>
+		<field name="updatedBy" type="name"></field>
+		<field name="month" type="id-int"></field>
+		<field name="year" type="id-int"></field>
+		<field name="stationId" type="id"></field>
+		<field name="remittanceNumber" type="id-vlong-int"></field>
+		<field name="processed" type="indicator"></field>
+		<prim-key field="normalRemittanceMonthYearId"/>
+	</entity>
+	
+	
+	<entity entity-name="MemberRemittance" package-name="org.ofbiz.normalremittanceprocessing"
+		title="MemberRemittance Entity">
+		
+		<field name="memberRemittanceId" type="id-vlong-int"></field>
+		
+		<field name="normalRemittanceMonthYearId" type="id-vlong-int"></field>
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="id"></field>
+		<field name="month" type="id"></field>
+		<field name="year" type="id"></field>
+		<field name="employerCode" type="id"></field>
+		<field name="payrollNumber" type="id"></field>
+		<field name="totalAmount" type="fixed-point"></field>
+		<field name="processed" type="indicator"></field>
+		<prim-key field="memberRemittanceId"/>
+	</entity>
 
 </entitymodel>
