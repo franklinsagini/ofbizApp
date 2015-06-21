@@ -46,5 +46,61 @@ public class HumanResourceSetup {
 
 		return false;
 	}
+	/***
+	 * Checking that blood group already exist
+	 * 
+	 * org.ofbiz.humanres.HumanResourceSetup.bloodGroupExists()
+	 * 
+	 * **/
+	public static Boolean bloodGroupExists(String BGroupName){
+		
+		log.info("BBBBbbb   The Blood Group is " + BGroupName);
+		
+		Delegator delegator= DelegatorFactoryImpl.getDelegator(null);
+		
+		List<GenericValue> listBloogGroupELI=null;
+		
+		try{
+			
+			listBloogGroupELI = delegator.findList("BloodGroup",
+					EntityCondition.makeCondition("bloodGroup", BGroupName), null,
+					null, null, false);
+		}catch(GenericEntityException ex){
+			ex.printStackTrace();
+		}
+		if ((listBloogGroupELI != null) && (listBloogGroupELI.size() > 0)) {
+			return true;
+		}
+		return false;
+	}
+	
+	/***
+	 * Checking that County already exist
+	 * 
+	 * org.ofbiz.humanres.HumanResourceSetup.countyExist()
+	 * 
+	 * **/
+	public static Boolean countyExist(String CountyName){
+		
+		log.info("BBBBbbb   The County is " + CountyName);
+		
+		Delegator delegator= DelegatorFactoryImpl.getDelegator(null);
+		
+		List<GenericValue> listCountyELI=null;
+		
+		try{
+			
+			listCountyELI = delegator.findList("County",
+					EntityCondition.makeCondition("county", CountyName), null,
+					null, null, false);
+		}catch(GenericEntityException ex){
+			ex.printStackTrace();
+		}
+		if ((listCountyELI != null) && (listCountyELI.size() > 0)) {
+			return true;
+		}
+		return false;
+	}
+	
 
 }
