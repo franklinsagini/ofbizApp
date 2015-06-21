@@ -178,28 +178,22 @@ under the License.
 
 <!-- ===========================================INTER BRANCH============================================================================================= -->
 
-    <form name="FundingTypes" type="single" target="createFundingType" focus-field-name="fundingTypeName" header-row-style="header-row" default-table-style="basic-table"
+    <form name="FundingTypes" type="single" target="generateSettlementTrans" focus-field-name="fundingTypeName" header-row-style="header-row" default-table-style="basic-table"
         default-map-name="fundingTypesContext">
-        <alt-target use-when="fundingTypesContext!=null" target="UpdateSasraReport"/>
-
-        <field name="fundingTypeId">
-            <hidden/>
-        </field>
-
-        <field name="fundingTypeId" use-when="fundingTypesContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}">
-            <display />
-        </field>
-
-        <field name="fundingTypeName" title="Name">
-            <text size="25"></text>
+        <field name="branchId" title="Branch">
+            <drop-down allow-empty="false">
+                <entity-options key-field-name="partyId" description="${groupName}" entity-name="PartyGroup">
+                    <entity-constraint name="isBranch" operator="equals" value="Y"/>
+                    <entity-order-by field-name="groupName"/>
+                </entity-options>
+            </drop-down>
         </field>
                 <!-- submitButton -->
-        <field use-when="fundingTypesContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
-        <field use-when="fundingTypesContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field use-when="fundingTypesContext==null" name="submitButton" title="Generate Settlement Transactions" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
 
     <form name="FundingTypesList" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="UpdateSasraReport"
-        paginate-target="createFundingType" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        paginate-target="generateSettlementTrans" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="FundingTypes"></entity-condition>
         </actions>
