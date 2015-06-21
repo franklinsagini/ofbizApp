@@ -2,5 +2,128 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
-
+    <form name="NormalRemittanceMonthYear" type="single" target="createNormalRemittanceMonthYear"
+	focus-field-name="stationId" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="chequeTypeContext">
+        <actions>
+        	<set field="currentYear" value="${bsh:org.ofbiz.accountholdertransactions.LoanUtilities.getCurrentYear();}"/>
+        	<set field="currentMonth" value="${bsh:org.ofbiz.accountholdertransactions.LoanUtilities.getCurrentMonth();}"/>
+        </actions>
+       
+        <field name="normalRemittanceMonthYearId"><hidden/></field>
+		
+		
+        <field name="month" title="Month">
+        	<drop-down current="first-in-list">
+        		<option key="${currentMonth}" description="${currentMonth}"/>
+        		<option key="1" description="1"/>
+        		<option key="2" description="2"/>
+        		<option key="3" description="3"/>
+        		<option key="4" description="4"/>
+        		<option key="5" description="5"/>
+        		<option key="6" description="6"/>
+        		<option key="7" description="7"/>
+        		<option key="8" description="8"/>
+        		<option key="9" description="9"/>
+        		<option key="10" description="10"/>
+        		<option key="11" description="11"/>
+        		<option key="12" description="12"/>
+        	</drop-down>
+        </field>
+         <field name="year" title="Year"><text default-value="${currentYear}"></text></field>
+        
+        <field name="stationId" title="Station / Employer" required-field="true">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${employerName} - ${employerCode}" entity-name="Station">
+        			<entity-order-by field-name="employerName"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+       </form>
+        
+      <form name="listNormalRemittanceMonthYear" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateNormalRemittanceMonthYear" paginate-target="remittanceMonth"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="NormalRemittanceMonthYear">
+            	<!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
+            	<order-by field-name="-normalRemittanceMonthYearId"/>
+            </entity-condition>
+            
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateNormalRemittanceMonthYear"/>
+		
+		
+        <field name="month" title="Month"><display></display></field>
+         <field name="year" title="Year"><display></display></field>
+         
+         <field name="stationId" title="Station / Employer" required-field="true">
+        	<!-- drop-down allow-empty="true">
+        		<entity-options description="${employerName} - ${employerCode}" entity-name="Station">
+        			<entity-order-by field-name="employerName"/>
+        		</entity-options>
+        	</drop-down -->
+        	<display-entity entity-name="Station" description="${employerName} - ${employerCode}"></display-entity>
+        </field>
+        
+        <field name="remittanceNumber">
+        	<display></display>
+        </field>
+       
+        <field name="memberRemittance" title="Member Remittance" widget-style="buttontext">
+            <hyperlink target="memberRemittance" description="Member Remittance" also-hidden="false">
+                <parameter param-name="normalRemittanceMonthYearId"/>
+            </hyperlink>
+        </field>
+        
+        
+        <!-- field name="employer" title="Employer/Station" widget-style="buttontext">
+            <hyperlink target="employerSalary" description="Employer/Station" also-hidden="false">
+                <parameter param-name="salaryMonthYearId"/>
+            </hyperlink>
+        </field -->
+        
+        
+        <field name="remittanceImport" title="Remittance Import" widget-style="buttontext">
+            <hyperlink target="remittanceImport" description="Import Remittance" also-hidden="false">
+                <parameter param-name="normalRemittanceMonthYearId"/>
+            </hyperlink>
+        </field>
+               
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+    </form>
+    
+    <!-- listMemberRemittance -->
+    <form name="listMemberRemittance" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberRemittance" paginate-target="memberRemittance"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="MemberRemittance">
+            	<!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
+            	<!-- condition-list combine="and">
+            		<condition-expr field-name="month" operator="equals" from-field="month"/>
+            		<condition-expr field-name="year" operator="equals" from-field="year"/>
+            		<condition-expr field-name="employerCode" operator="equals" from-field="employerCode"/>
+            		
+            	</condition-list  -->
+            	<condition-expr field-name="normalRemittanceMonthYearId" operator="equals" from-field="normalRemittanceMonthYearId"/>
+            </entity-condition>
+        </actions>
+        <field name="memberRemittanceId"><hidden/></field>
+        <field name="normalRemittanceMonthYearId"><hidden/></field>
+		
+		
+        <field name="employerCode" title="Employer Code"><text></text></field>
+         <field name="payrollNumber" title="Payroll No."><text></text></field>
+         
+         <field name="name" title="Name."><display default-value="${bsh:org.ofbiz.accountholdertransactions.LoanUtilities.getMemberName(payrollNumber);}"></display></field>
+         
+        <field name="totalAmount" title="Total Amount"><text></text></field>
+       
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteChequeType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="memberSalaryId"/>
+            </hyperlink>
+        </field -->
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+    </form>
 </forms>
