@@ -2682,7 +2682,7 @@ public class RemittanceServices {
 		} catch (GenericTransactionException e) {
 			e.printStackTrace();
 		}
-		LoanRepayments.postTransactionEntryVersion2(delegator, bdTotal,
+		postTransactionEntryVersion2(delegator, bdTotal,
 				branchId, debitAccountId, postingType, acctgTransId,
 				acctgTransType, entrySequenceId);
 
@@ -2692,6 +2692,31 @@ public class RemittanceServices {
 			e.printStackTrace();
 		}
 
+	}
+	
+	
+	public static void postTransactionEntryVersion2(Delegator delegator,
+			BigDecimal bdLoanAmount, String branchId,
+			String loanReceivableAccount, String postingType,
+			String acctgTransId, String acctgTransType, String entrySequenceId) {
+		GenericValue acctgTransEntry;
+		acctgTransEntry = delegator.makeValidValue("AcctgTransEntry", UtilMisc
+				.toMap("acctgTransId", acctgTransId, "acctgTransEntrySeqId",
+						entrySequenceId, "partyId", branchId, "glAccountTypeId",
+						acctgTransType, "glAccountId", loanReceivableAccount,
+
+						"organizationPartyId", branchId, "amount",
+						bdLoanAmount, "currencyUomId", "KES", "origAmount",
+						bdLoanAmount, "origCurrencyUomId", "KES",
+						"debitCreditFlag", postingType, "reconcileStatusId",
+						"AES_NOT_RECONCILED"));
+
+		try {
+			delegator.createOrStore(acctgTransEntry);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("Could post an entry");
+		}
 	}
 
 	public static String getPayrollNumber(String partyId) {

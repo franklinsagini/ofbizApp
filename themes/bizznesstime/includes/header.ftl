@@ -243,5 +243,7 @@ under the License.
                <a href="${layoutSettings.middleTopLink3?if_exists}">${layoutSettings.middleTopMessage3?if_exists}</a>
              </span>
            </#if>
+           <span><a href="/chaisacco/control/main">HOME</a></span>
+           
     </div>
   </div>

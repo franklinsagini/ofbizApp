@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entitymodel.xsd">
+	<!-- ========================================================= -->
+	<!-- ======================== Defaults ======================= -->
+	<!-- ========================================================= -->
+	<title>Entity of Farmers Component</title>
+	<description>None</description>
+	<copyright></copyright>
+	<version></version>
+
+
+	<entity entity-name="Locations" package-name="org.ofbiz.farmers"
+		title="Entity to hold Locations">
+		<field name="locationId" type="id-ne"></field>
+		<field name="locationName" type="id-ne"></field>
+		<prim-key field="locationId" />
+	</entity>
+
+
+	<entity entity-name="Farmers" package-name="org.ofbiz.farmers"
+		title="Entity to hold Farmers details">
+		<field name="farmerId" type="id-ne"></field>
+		<field name="fName" type="id-ne"></field>
+		<field name="lName" type="id-ne"></field>
+		<field name="locationId" type="id-ne"></field>
+		<prim-key field="farmerId" />
+		<relation rel-entity-name="Locations" type="one" fk-name="FARM_LOC">
+			<key-map field-name="locationId" />
+		</relation>
+	</entity>
+
+	<entity entity-name="Security" package-name="org.ofbiz.farmers"
+		title="Entity to hold Security Guards details">
+		<field name="securityId" type="id-ne"></field>
+		<field name="fName" type="id-ne"></field>
+		<field name="lName" type="id-ne"></field>
+		<field name="midName" type="id-ne"></field>
+		<field name="institution" type="id-ne"></field>
+		<field name="placeWork" type="id-ne"></field>
+		<field name="homeArea" type="id-ne"></field>
+		<prim-key field="securityId" />
+	</entity>
+
+  <entity entity-name="farmerContact" package-name="org.ofbiz.farmers"
+   title="To hold the contact details of a Farmer">
+  <field name="farmerId" type="id-ne"></field>
+  <field name="phoneNumber" type="id-ne"></field>
+  <field name="emailAddress" type="id-ne"></field>
+  <field name="addressBox" type="id-ne"></field>
+  <field name="cityTown" type="id-ne"></field>
+  <relation rel-entity-name="Farmers" type="one" fk-name="FARMER_CONTACTS">
+  <key-map field-name="farmerId"/>
+  </relation>
+  
+  </entity>
+
+
+</entitymodel>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
+
+
+	<simple-method method-name="createLocation"
+		short-description="create locations to db ">
+		<make-value entity-name="Locations" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="Locations" field="locationId" />
+		<set from-field="locationId" field="newEntity.locationId" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+
+	<simple-method method-name="createFarmerDetail"
+		short-description="Add Farmers to the DB ">
+		<make-value entity-name="Farmers" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="Farmers" field="farmerId" />
+		<set from-field="farmerId" field="newEntity.farmerId" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+	
+
+<simple-method method-name="createSecurityForm"
+		short-description="Add The Security Guards To The Database ">
+		<make-value entity-name="Security" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="Security" field="securityId" />
+		<set from-field="securityId" field="newEntity.securityId" />
+		<create-value value-field="newEntity" />
+	</simple-method>
+
+</simple-methods>

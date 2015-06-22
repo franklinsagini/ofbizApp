@@ -2012,12 +2012,31 @@
 		<make-value entity-name="PayGrade" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
 		
-				<sequenced-id sequence-name="PayGrade" field="payGradeId" />
-				<set field="newEntity.payGradeId" from-field="payGradeId"/>
+		<sequenced-id sequence-name="PayGrade" field="payGradeId" />
 		
-		<create-value value-field="newEntity" />
-		<property-to-field resource="HumanResUiLabels"
+		<set field="newEntity.payGradeId" from-field="payGradeId"/>
+		
+		<set field="payGradeName" value="${newEntity.payGradeName}" type="String"/>
+		
+		<set field="existstatus" value="${bsh:org.ofbiz.humanres.HumanResourceSetup.payGradeExists(payGradeName);}" type="Boolean"/>
+		
+		<if>
+			<condition>
+				<if-compare operator="equals" value="true" field="existstatus"></if-compare>
+			</condition>
+			<then>
+				<add-error>
+					<fail-message message="Paygrade ${payGradeName} already exists, please try another one "/>
+				</add-error>
+				 <check-errors /> 
+			</then>
+			<else>
+				<create-value value-field="newEntity" />
+				<property-to-field resource="HumanResUiLabels"
 			property="CreateSuccess" field="successMessage" />
+			</else>
+		</if>
+		
 	</simple-method>
 
 	<simple-method method-name="updatePayGrade"
@@ -3823,9 +3842,28 @@
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
 			<sequenced-id sequence-name="County" field="newEntity.countyId" />
 			<set from-field="countyId" field="newEntity.countyId"/>
-		<create-value value-field="newEntity" />
-		<property-to-field resource="HumanResUiLabels"
+			
+			<set field="county" value="${newEntity.county}" type="String"/>
+		
+		<set field="existstatus" value="${bsh:org.ofbiz.humanres.HumanResourceSetup.countyExist(county);}" type="Boolean"/>
+		
+		<if>
+			<condition>
+				<if-compare operator="equals" value="true" field="existstatus"></if-compare>
+			</condition>
+			<then>
+				<add-error>
+					<fail-message message="County ${county}  already exists, please try another one "/>
+				</add-error>
+				 <check-errors /> 
+			</then>
+			<else>
+				<create-value value-field="newEntity" />
+				<property-to-field resource="HumanResUiLabels"
 			property="CreateSuccess" field="successMessage" />
+			</else>
+		</if>
+
 	</simple-method>
 
 	<simple-method method-name="updateCounty"
@@ -3852,9 +3890,28 @@
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
 		<sequenced-id sequence-name="BloodGroup" field="newEntity.bloodGroupId" />
 			<set from-field="bloodGroupId" field="newEntity.bloodGroupId" />
-		<create-value value-field="newEntity" />
-		<property-to-field resource="HumanResUiLabels"
+			
+			<set field="bloodGroup" value="${newEntity.bloodGroup}" type="String"/>
+		
+		<set field="existstatus" value="${bsh:org.ofbiz.humanres.HumanResourceSetup.bloodGroupExists(bloodGroup);}" type="Boolean"/>
+		
+		<if>
+			<condition>
+				<if-compare operator="equals" value="true" field="existstatus"></if-compare>
+			</condition>
+			<then>
+				<add-error>
+					<fail-message message="Blood Group ${bloodGroup} already exists, please try another one "/>
+				</add-error>
+				 <check-errors /> 
+			</then>
+			<else>
+				<create-value value-field="newEntity" />
+				<property-to-field resource="HumanResUiLabels"
 			property="CreateSuccess" field="successMessage" />
+			</else>
+		</if>
+		
 	</simple-method>
 
 	<simple-method method-name="updateBloodGroup"

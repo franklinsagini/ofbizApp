@@ -1,34 +1,28 @@
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionBuilder;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.base.util.UtilMisc;
 import javolution.util.FastList;
 
+exprBldr =  new EntityConditionBuilder();
+total = BigDecimal.ZERO;
+count = 0
+ownedBranchId = parameters.get("partyId");
+owingBranchId = parameters.get("organizationPartyId");
 
-branchId = parameters.get("organizationPartyId");
-fundingTypeId = parameters.get("fundingTypeId");
-entriesList = [];
+context.ownedBranchId = ownedBranchId
+context.owingBranchId = owingBranchId
 
-List mainAndExprs = FastList.newInstance();
-mainAndExprs.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, parameters.glAccountId));
+ expr = exprBldr.AND() {
+        EQUALS(organizationPartyId: owingBranchId)
+        NOT_EQUAL(partyId: ownedBranchId)
+      }
+trans = delegator.findList("AcctgTransEntry", expr, null, ["createdTxStamp DESC"], null, false);
 
-if (fundingTypeId == "1") {
-  //USE HQ ATM Settlement Account  gl_account_id = '206'
-
-  //organization_party_id == branchId
-  //party_id == memberId
-
-  mainAndExprs.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, "206"));
-  mainAndExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, branchId));
-
-entriesList = delegator.findList("AcctgTransEntry", EntityCondition.makeCondition(mainAndExprs, EntityOperator.AND), UtilMisc.toSet("transactionDate", "acctgTransId", "accountName","acctgTransTypeId", "debitCreditFlag", "amount"), UtilMisc.toList("acctgTransEntrySeqId"), null, false);
-
+trans.each { tran ->
+  total = total + tran.amount
+  count = count + 1
 }
-if (fundingTypeId == "2") {
-  System.out.println("####################################### fundingTypeId: " + fundingTypeId)
-}
-if (fundingTypeId == "3") {
-  System.out.println("####################################### fundingTypeId: " + fundingTypeId)
-}
-
-System.out.println("####################################### BranchId: " + branchId)
-
+context.total = total
+context.count = count
+context.transactions = trans

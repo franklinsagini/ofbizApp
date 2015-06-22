@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
+    <!-- The controller elements that are common to all OFBiz components
+         can be found in the following xml file. A component can override the
+         elements found in the common-controller.xml file. -->
+    <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
+
+    <description>NormalRemittanceProcessing Component Site Configuration File</description>
+
+    <!-- Events to run on every request before security (chains exempt) -->
+    <!--
+    <preprocessor>
+    </preprocessor>
+    -->
+    <!-- Events to run on every request after all other processing (chains exempt) -->
+    <!--
+    <postprocessor>
+        <event name="test" type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/>
+    </postprocessor>
+    -->
+
+    <!-- Request Mappings -->
+    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
+    <request-map uri="remittanceMonth"><security https="true" auth="true"/><response name="success" type="view" value="remittanceMonth"/></request-map>
+     <request-map uri="remittanceImport">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="remittanceImport" />
+      </request-map>
+		
+	<request-map uri="memberRemittance">
+      <security https="true" auth="true" />
+      <response name="success" type="view" value="memberRemittance">
+         <redirect-parameter name="normalRemittanceMonthYearId" />
+      </response>
+    </request-map>
+    
+    <!-- NormalRemittanceMonthYear -->
+    
+     <request-map uri="createNormalRemittanceMonthYear">
+                <security https="true" auth="true" />
+                <event type="service" invoke="createNormalRemittanceMonthYear" />
+                <response name="success" type="request-redirect"
+                        value="remittanceMonth"></response>
+        </request-map>
+                <request-map uri="updateNormalRemittanceMonthYear">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateNormalRemittanceMonthYear" />
+                <response name="success" type="request-redirect"
+                        value="remittanceMonth"></response>
+                <response name="error" type="view" value="remittanceMonth" />
+        </request-map>
+
+        <request-map uri="deleteNormalRemittanceMonthYear">
+                <security https="true" auth="true" />
+                <event type="service" invoke="deleteNormalRemittanceMonthYear" />
+                <response name="success" type="request-redirect"
+                        value="remittanceMonth"></response>
+        </request-map>
+    
+    <!-- MemberRemittance -->
+            <request-map uri="createMemberRemittance">
+                <security https="true" auth="true" />
+                <event type="service" invoke="createMemberRemittance" />
+                <response name="success" type="request-redirect"
+                        value="memberRemittance"></response>
+        </request-map>
+                <request-map uri="updateMemberRemittance">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateMemberRemittance" />
+                <response name="success" type="request-redirect"
+                        value="memberRemittance"></response>
+                <response name="error" type="view" value="memberRemittance" />
+        </request-map>
+
+        <request-map uri="deleteMemberRemittance">
+                <security https="true" auth="true" />
+                <event type="service" invoke="deleteMemberRemittance" />
+                <response name="success" type="request-redirect"
+                        value="memberRemittance"></response>
+        </request-map>
+        
+        
+
+    <!-- View Mappings -->
+    <view-map name="main" type="screen" page="component://normalremittanceprocessing/widget/NormalRemittanceProcessingScreens.xml#remittanceMonth"/>
+    <view-map name="remittanceMonth" type="screen" page="component://normalremittanceprocessing/widget/NormalRemittanceProcessingScreens.xml#remittanceMonth"/>
+    
+    <view-map name="memberRemittance" type="screen" page="component://normalremittanceprocessing/widget/NormalRemittanceProcessingScreens.xml#memberRemittance"/>
+	<view-map name="remittanceImport" type="screen" page="component://normalremittanceprocessing/widget/NormalRemittanceProcessingScreens.xml#remittanceImport"/>
+    
+</site-conf>

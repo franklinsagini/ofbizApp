@@ -36,10 +36,11 @@
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
 
-    <service name="createFundingType" engine="simple" default-entity-name="FundingTypes"
-             location="component://accounting/script/org/ofbiz/accounting/interbranchsettlement/InterBranchSettlementServices.xml" invoke="createFundingType" auth="true">
-        <description>Create Imprest Account Mapping</description>
+    <service name="generateSettlementTrans" engine="simple" default-entity-name="FundingTypes"
+             location="component://accounting/script/org/ofbiz/accounting/interbranchsettlement/InterBranchSettlementServices.xml" invoke="generateSettlementTrans" auth="true">
+        <description>Generate Settlement Transactions</description>
         <auto-attributes mode="IN" include="pk" optional="true"/>
+        <attribute name="branchId" type="String" mode="IN" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
 
