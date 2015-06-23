@@ -111,7 +111,22 @@
 		<set field="cardApplicationId" from-field="parameters.cardApplicationId"
 			type="Long" />
 		<!-- Card must have been applied -->
-		<set field="receiveStatus"
+		
+		<set field="doneStatus"
+			value="${bsh:org.ofbiz.atmmanagement.ATMManagementServices.actionAlreadyDoneOnCard(cardApplicationId, statusName);}" />
+		
+		<!-- if>
+			<condition>
+				<if-compare operator="equals" value="notdone" field="doneStatus"></if-compare>
+			</condition>
+			<then -->
+			
+		<if>
+			<condition>
+				<if-compare operator="equals" value="notdone" field="doneStatus"></if-compare>
+			</condition>
+			<then>
+						<set field="receiveStatus"
 			value="${bsh:org.ofbiz.atmmanagement.ATMManagementServices.validateCardReceive(cardApplicationId, userLogin);}" />
 		<if>
 			<condition>
@@ -119,8 +134,6 @@
 			</condition>
 			<then>
 				<add-error>
-					<!-- fail-property resource="atmmanagementUiLabels.xml" property="${}" 
-						/ -->
 					<fail-message message="${receiveStatus}" />
 				</add-error>
 				<check-errors />
@@ -142,6 +155,14 @@
 
 			</else>
 		</if>
+			</then>
+			<else>
+				<add-error>
+					<fail-message message="${doneStatus}" />
+				</add-error>
+				<check-errors />
+			</else>
+		</if>
 	</simple-method>
 
 	<!-- submitCardProcess -->
@@ -152,37 +173,58 @@
 
 		<set field="cardApplicationId" from-field="parameters.cardApplicationId"
 			type="Long" />
-		<set field="submitCardStatus"
-			value="${bsh:org.ofbiz.atmmanagement.ATMManagementServices.processCardSubmission(cardApplicationId,userLogin)}"
-			type="PlainString" />
+
+		<set field="actionName" value="APPLIED" />
+		<set field="doneStatus"
+			value="${bsh:org.ofbiz.atmmanagement.ATMManagementServices.actionAlreadyDoneOnCard(cardApplicationId, actionName);}" />
 
 		<if>
 			<condition>
-				<if-compare operator="not-equals" value="success"
-					field="submitCardStatus"></if-compare>
+				<if-compare operator="equals" value="notdone" field="doneStatus"></if-compare>
 			</condition>
 			<then>
-				<add-error>
-					<!-- fail-property resource="atmmanagementUiLabels.xml" property="${}" 
-						/ -->
-					<fail-message message="${submitCardStatus}" />
-				</add-error>
-				<check-errors />
+
+				<set field="submitCardStatus"
+					value="${bsh:org.ofbiz.atmmanagement.ATMManagementServices.processCardSubmission(cardApplicationId,userLogin)}"
+					type="PlainString" />
+
+				<if>
+					<condition>
+						<if-compare operator="not-equals" value="success"
+							field="submitCardStatus"></if-compare>
+					</condition>
+					<then>
+						<add-error>
+							<!-- fail-property resource="atmmanagementUiLabels.xml" property="${}" 
+								/ -->
+							<fail-message message="${submitCardStatus}" />
+						</add-error>
+						<check-errors />
+					</then>
+					<else>
+
+						<call-simple-method method-name="saveCardLog"
+							scope="inline"></call-simple-method>
+						<set field="cardApplicationId" value="${logEntity.cardApplicationId}" />
+						<entity-one entity-name="CardApplication" value-field="application">
+							<field-map field-name="cardApplicationId" value="${logEntity.cardApplicationId}" />
+						</entity-one>
+						<set field="application.cardStatusId" value="${logEntity.cardStatusId}" />
+						<store-value value-field="application" />
+
+						<property-to-field resource="atmmanagementUiLabels.xml"
+							property="Successfully applied for the ATM Card " field="successMessage" />
+
+					</else>
+				</if>
+
+				
 			</then>
 			<else>
-
-				<call-simple-method method-name="saveCardLog"
-					scope="inline"></call-simple-method>
-				<set field="cardApplicationId" value="${logEntity.cardApplicationId}" />
-				<entity-one entity-name="CardApplication" value-field="application">
-					<field-map field-name="cardApplicationId" value="${logEntity.cardApplicationId}" />
-				</entity-one>
-				<set field="application.cardStatusId" value="${logEntity.cardStatusId}" />
-				<store-value value-field="application" />
-
-				<property-to-field resource="atmmanagementUiLabels.xml"
-					property="Successfully applied for the ATM Card " field="successMessage" />
-
+				<add-error>
+					<fail-message message="${doneStatus}" />
+				</add-error>
+				<check-errors />
 			</else>
 		</if>
 
@@ -194,14 +236,35 @@
 	<simple-method method-name="issueCardProcess"
 		short-description="Issue Card Process">
 		<set field="statusName" value="ISSUED"></set>
-		<call-simple-method method-name="saveCardLog"
-			scope="inline"></call-simple-method>
-		<set field="cardApplicationId" value="${logEntity.cardApplicationId}" />
-		<entity-one entity-name="CardApplication" value-field="application">
-			<field-map field-name="cardApplicationId" value="${logEntity.cardApplicationId}" />
-		</entity-one>
-		<set field="application.cardStatusId" value="${logEntity.cardStatusId}" />
-		<store-value value-field="application" />
+		<set field="cardApplicationId" from-field="parameters.cardApplicationId"
+			type="Long" />
+			
+		<set field="doneStatus"
+			value="${bsh:org.ofbiz.atmmanagement.ATMManagementServices.actionAlreadyDoneOnCard(cardApplicationId, statusName);}" />
+		
+		<if>
+			<condition>
+				<if-compare operator="equals" value="notdone" field="doneStatus"></if-compare>
+			</condition>
+			<then>
+				<call-simple-method method-name="saveCardLog"
+					scope="inline"></call-simple-method>
+				<set field="cardApplicationId" value="${logEntity.cardApplicationId}" />
+				<entity-one entity-name="CardApplication" value-field="application">
+					<field-map field-name="cardApplicationId" value="${logEntity.cardApplicationId}" />
+				</entity-one>
+				<set field="application.cardStatusId" value="${logEntity.cardStatusId}" />
+				<store-value value-field="application" />
+			</then>
+			<else>
+				<add-error>
+					<fail-message message="${doneStatus}" />
+				</add-error>
+				<check-errors />
+			</else>
+		</if>
+		
+		
 	</simple-method>
 
 	<!-- activateCardProcess -->
@@ -257,15 +320,39 @@
 	<simple-method method-name="deactivateCardProcess"
 		short-description="Deactivate Card Process">
 		<set field="statusName" value="DEACTIVATED"></set>
-		<call-simple-method method-name="saveCardLog"
-			scope="inline"></call-simple-method>
-		<set field="cardApplicationId" value="${logEntity.cardApplicationId}" />
-		<entity-one entity-name="CardApplication" value-field="application">
-			<field-map field-name="cardApplicationId" value="${logEntity.cardApplicationId}" />
-		</entity-one>
-		<set field="application.cardStatusId" value="${logEntity.cardStatusId}" />
-		<store-value value-field="application" />
+		
+		<set field="cardApplicationId" from-field="parameters.cardApplicationId"
+			type="Long" />
+
+		<set field="doneStatus"
+			value="${bsh:org.ofbiz.atmmanagement.ATMManagementServices.actionAlreadyDoneOnCard(cardApplicationId, actionName);}" />
+		
+		<if>
+			<condition>
+				<if-compare operator="equals" value="notdone" field="doneStatus"></if-compare>
+			</condition>
+			<then>
+				<call-simple-method method-name="saveCardLog"
+					scope="inline"></call-simple-method>
+				<set field="cardApplicationId" value="${logEntity.cardApplicationId}" />
+				<entity-one entity-name="CardApplication" value-field="application">
+					<field-map field-name="cardApplicationId" value="${logEntity.cardApplicationId}" />
+				</entity-one>
+				<set field="application.cardStatusId" value="${logEntity.cardStatusId}" />
+				<store-value value-field="application" />
+			</then>
+			<else>
+				<add-error>
+					<fail-message message="${doneStatus}" />
+				</add-error>
+				<check-errors />
+			</else>
+		</if>
+		
+		
 	</simple-method>
+	
+	
 	<!-- replaceCardProcess -->
 	<simple-method method-name="replaceCardProcess"
 		short-description="Replace Card Process">
