@@ -36,8 +36,23 @@
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
 
-    <service name="generateSettlementTrans" engine="simple" default-entity-name="FundingTypes"
-             location="component://accounting/script/org/ofbiz/accounting/interbranchsettlement/InterBranchSettlementServices.xml" invoke="generateSettlementTrans" auth="true">
+    <service name="createAccts" engine="simple" default-entity-name="SettlementAccounts"
+             location="component://accounting/script/org/ofbiz/accounting/interbranchsettlement/InterBranchSettlementServices.xml" invoke="createAccts" auth="true">
+        <description>Generate Settlement Transactions</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="generateEndDayTrans" engine="simple" default-entity-name="FundingTypes"
+             location="component://accounting/script/org/ofbiz/accounting/interbranchsettlement/InterBranchSettlementServices.xml" invoke="generateEndDayTrans" auth="true">
+        <description>Generate Settlement Transactions</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <attribute name="branchId" type="String" mode="IN" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="generateEndDayTrans" engine="simple" default-entity-name="FundingTypes"
+             location="component://accounting/script/org/ofbiz/accounting/interbranchsettlement/InterBranchSettlementServices.xml" invoke="generateEndDayTrans" auth="true">
         <description>Generate Settlement Transactions</description>
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <attribute name="branchId" type="String" mode="IN" optional="false"/>
