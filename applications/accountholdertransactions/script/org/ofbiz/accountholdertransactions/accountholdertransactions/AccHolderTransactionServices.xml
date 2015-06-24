@@ -380,19 +380,42 @@
 		<make-value entity-name="AccountTransaction" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		<call-simple-method method-name="saveChequeWithdrawal"
-			scope="inline">
-		</call-simple-method>
-		<set field="transactionType" value="CHEQUEWITHDRAWAL" />
-		<set field="newEntity.treasuryId"
-			value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerId(userLogin);}"
+
+		<set field="memberAccountId" from-field="parameters.memberAccountId"
+			type="Long" />
+		<set field="transactionType" value="CHEQUEWITHDRAWAL"
 			type="String" />
-		<set field="postedStatus"
-			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.createChequeTransaction(newEntity, userLogin);}"
-			type="String" />
-		<set field="transactionStatus"
-			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.addChargesToTransaction(newEntity, userLogin, transactionType);}"
-			type="String" />
+
+		<set field="addedStatus"
+			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.checkTransactionTypeAdded(memberAccountId, transactionType);}" />
+
+		<if>
+			<condition>
+				<if-compare operator="equals" value="added" field="addedStatus"></if-compare>
+			</condition>
+			<then>
+				<call-simple-method method-name="saveChequeWithdrawal"
+					scope="inline">
+				</call-simple-method>
+				<set field="transactionType" value="CHEQUEWITHDRAWAL" />
+				<set field="newEntity.treasuryId"
+					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerId(userLogin);}"
+					type="String" />
+				<set field="postedStatus"
+					value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.createChequeTransaction(newEntity, userLogin);}"
+					type="String" />
+				<!-- set field="transactionStatus"
+					value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.addChargesToTransaction(newEntity, userLogin, transactionType);}"
+					type="String" / -->
+			</then>
+			<else>
+				<add-error>
+					<fail-message message="${addedStatus}" />
+				</add-error>
+				<check-errors />
+			</else>
+		</if>
+
 	</simple-method>
 
 
@@ -612,9 +635,11 @@
 		<set field="repayLoan"
 			value="${bsh:org.ofbiz.accountholdertransactions.LoanRepayments.repayLoan(loanRepayment, userLogin);}"
 			type="String" />
-			
-		<set field="acctgTransId" value="${bsh:org.ofbiz.accountholdertransactions.LoanRepayments.getTransactionId(loanRepayment);}" type="String"/>
-			
+
+		<set field="acctgTransId"
+			value="${bsh:org.ofbiz.accountholdertransactions.LoanRepayments.getTransactionId(loanRepayment);}"
+			type="String" />
+
 		<field-to-result field="acctgTransId" result-name="acctgTransId" />
 
 	</simple-method>
@@ -800,29 +825,31 @@
 		<set field="postStatus"
 			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.postStationTransaction(newEntity, userLogin);}"
 			type="String" />
-		
+
 		<if>
 			<condition>
-				<if-compare operator="equals" value="stationdepositaccountnotset" field="postStatus"></if-compare>
+				<if-compare operator="equals" value="stationdepositaccountnotset"
+					field="postStatus"></if-compare>
 			</condition>
 			<then>
-				<add-error> 
-                    <fail-property resource="AccountHolderTransactionsUILabels.xml"  
-                        property="stationDepositAccountError" /> 
-                </add-error> 
-                <check-errors /> 
+				<add-error>
+					<fail-property resource="AccountHolderTransactionsUILabels.xml"
+						property="stationDepositAccountError" />
+				</add-error>
+				<check-errors />
 			</then>
 			<else>
 				<if>
 					<condition>
-						<if-compare operator="equals" value="accountsnotmapped" field="postStatus"></if-compare>
+						<if-compare operator="equals" value="accountsnotmapped"
+							field="postStatus"></if-compare>
 					</condition>
 					<then>
-						<add-error> 
-	                    	<fail-property resource="AccountHolderTransactionsUILabels.xml"  
-	                        	property="stationDepositAccountMappingError" /> 
-		                </add-error> 
-		                <check-errors /> 
+						<add-error>
+							<fail-property resource="AccountHolderTransactionsUILabels.xml"
+								property="stationDepositAccountMappingError" />
+						</add-error>
+						<check-errors />
 					</then>
 					<else>
 						<if>
@@ -830,23 +857,23 @@
 								<if-compare operator="equals" value="POSTED" field="postStatus"></if-compare>
 							</condition>
 							<then>
-								<property-to-field resource="AccountHolderTransactionsUILabels.xml" 
-            					property="stationDepositAccountPostingSuccess" field="successMessage" /> 
+								<property-to-field resource="AccountHolderTransactionsUILabels.xml"
+									property="stationDepositAccountPostingSuccess" field="successMessage" />
 							</then>
 							<else>
-								<add-error> 
-			                    	<fail-property resource="AccountHolderTransactionsUILabels.xml"  
-			                        	property="stationDepositError" /> 
-				                </add-error> 
-				                <check-errors /> 
+								<add-error>
+									<fail-property resource="AccountHolderTransactionsUILabels.xml"
+										property="stationDepositError" />
+								</add-error>
+								<check-errors />
 							</else>
 						</if>
 					</else>
 				</if>
-			
+
 			</else>
-		</if>	
-		
+		</if>
+
 		<entity-one value-field="stationEntity" entity-name="Station">
 			<field-map field-name="stationId" from-field="newEntity.stationId" />
 		</entity-one>
@@ -1065,10 +1092,10 @@
 		<set field="notprocessed" value="notprocessed" />
 
 		<!-- test code -->
-		<!-- set field="processingStatus"
-			value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.processReceivedPaymentBreakdown(userLogin, employerCode, month);}"></set -->
-		
-		
+		<!-- set field="processingStatus" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.processReceivedPaymentBreakdown(userLogin, 
+			employerCode, month);}"></set -->
+
+
 		<if>
 			<condition>
 				<!-- if-compare operator="not-equals" value="11" field="processingStatus"></if-compare -->
@@ -1077,10 +1104,10 @@
 			<then>
 				<add-error>
 					<!-- fail-message message="${processingStatus}"/ -->
-					<fail-property resource="AccountHolderTransactionsUILabels.xml" 
-						property="alreadyProcessedError"  />
-						 
-						<!--  property="alreadyProcessedError" -->
+					<fail-property resource="AccountHolderTransactionsUILabels.xml"
+						property="alreadyProcessedError" />
+
+					<!-- property="alreadyProcessedError" -->
 				</add-error>
 				<check-errors />
 			</then>
@@ -1197,21 +1224,20 @@
 																<!-- Then finally process the remittance when all is fine -->
 																<set field="processingStatus"
 																	value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.processReceivedPaymentBreakdown(userLogin, employerCode, month);}"></set>
-																
-																<set field="processInfo" value="Successufully Processed remittance"/>
+
+																<set field="processInfo" value="Successufully Processed remittance" />
 																<if>
 																	<condition>
-																		<if-compare operator="not-equals" value="Successufully Processed remittance"
-																			field="processingStatus"></if-compare>
+																		<if-compare operator="not-equals"
+																			value="Successufully Processed remittance" field="processingStatus"></if-compare>
 																	</condition>
 																	<then>
 																		<add-error>
-																			<fail-message message="${processingStatus}"/>
-																			<!-- fail-property
-																				resource="AccountHolderTransactionsUILabels.xml"
-																				 / -->
-																				 
-																				 <!-- property="remittanceProcessingError" -->
+																			<fail-message message="${processingStatus}" />
+																			<!-- fail-property resource="AccountHolderTransactionsUILabels.xml" 
+																				/ -->
+
+																			<!-- property="remittanceProcessingError" -->
 																		</add-error>
 																		<check-errors />
 																	</then>

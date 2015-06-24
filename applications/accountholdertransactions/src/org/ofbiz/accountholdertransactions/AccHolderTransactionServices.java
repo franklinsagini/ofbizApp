@@ -51,6 +51,9 @@ public class AccHolderTransactionServices {
 	public static String MEMBER_DEPOSIT_CODE = "901";
 	public static String SHARE_CAPITAL_CODE = "902";
 	public static String SAVINGS_ACCOUNT_CODE = "999";
+	public static Long CHEQUEWITHDRAWALID = 10020L;
+	public static Long BANKERSWITHDRAWALID = 10000L;
+	
 
 	public static String WITHDRAWALOK = "OK";
 
@@ -798,59 +801,158 @@ public class AccHolderTransactionServices {
 	 * @author Japheth Odonya @when Aug 24, 2014 7:57:03 PM Creating a Cheque
 	 *         Deposit Accounting Transaction
 	 * */
-	public static String createChequeTransaction(
-			GenericValue accountTransaction, Map<String, String> userLogin) {
-		String acctgTransType = "MEMBER_DEPOSIT";
+	public static String createChequeTransaction(GenericValue accountTransaction, Map<String, String> userLogin){
+		// Post the Cash Deposit to the Teller for the logged in user
+				/***
+				 * Dr to the Teller Account Cr to the Member Deposits
+				 * 
+				 * */
+				Long memberAccountId = accountTransaction.getLong("memberAccountId");
 
-		// Create the Account Trans Record
-		String acctgTransId = createAccountingTransaction(accountTransaction,
-				acctgTransType, userLogin);
-		// Do the posting
-		Delegator delegator = accountTransaction.getDelegator();
-		BigDecimal transactionAmount = accountTransaction
-				.getBigDecimal("transactionAmount");
-		String partyId = (String) userLogin.get("partyId");
+				BigDecimal transactionAmount = accountTransaction
+						.getBigDecimal("transactionAmount");
 
-		// Debit Member Deposit
+				String glLedgerAccountId = null;
+				//String tellerAccountId = null;
+				String bankglAccountId = null;
+				
+				String commissionAccountId = null;
+				String exciseDutyAccountId = null;
 
-		String memberDepositAccountId = getMemberDepositAccount(
-				accountTransaction, "MEMBERTRANSACTIONACCOUNT");
-		String postingType = "D";
-		String entrySequenceId = "00001";
-		try {
-			TransactionUtil.begin();
-		} catch (GenericTransactionException e) {
-			e.printStackTrace();
-		}
-		postTransactionEntry(delegator, transactionAmount, partyId,
-				memberDepositAccountId, postingType, acctgTransId,
-				acctgTransType, entrySequenceId);
-		try {
-			TransactionUtil.commit();
-		} catch (GenericTransactionException e) {
-			e.printStackTrace();
-		}
-		// Credit Cash Account
-		String cashAccountId = getCashAccount(accountTransaction,
-				"MEMBERTRANSACTIONACCOUNT");
-		postingType = "C";
-		entrySequenceId = "00002";
-		try {
-			TransactionUtil.begin();
-		} catch (GenericTransactionException e) {
-			e.printStackTrace();
-		}
-		postTransactionEntry(delegator, transactionAmount, partyId,
-				cashAccountId, postingType, acctgTransId, acctgTransType,
-				entrySequenceId);
-		try {
-			TransactionUtil.commit();
-		} catch (GenericTransactionException e) {
-			e.printStackTrace();
-		}
+				// Long memberAccountId = accountTransaction.getLong("memberAccountId");
+				GenericValue accountProduct = getAccountProductEntity(memberAccountId);
 
-		return "POSTED";
+				glLedgerAccountId = accountProduct.getString("glAccountId");
+				
+				commissionAccountId = accountProduct.getString("commissionAccountId");
+				exciseDutyAccountId = accountProduct.getString("exciseDutyAccountId");
+				
+				
+				//tellerAccountId = TreasuryUtility.getTellerAccountId(userLogin);
+				bankglAccountId = getCashAccount(null, "CHEQUEDEPOSITACCOUNT");
+
+				// Get tha acctgTransId
+				String acctgTransId = creatAccountTransRecordVer2(accountTransaction,
+						userLogin);
+				String glAccountTypeId = "MEMBER_DEPOSIT";
+				String partyId = LoanUtilities
+						.getMemberPartyIdFromMemberAccountId(memberAccountId);
+				
+				//LoanUtilities.getE
+				String employeeBranchId = getEmployeeBranch(userLogin.get("partyId"));
+				String memberBranchId = LoanUtilities.getMemberBranchId(partyId);
+
+				List<GenericValue> listPostEntity = new ArrayList<GenericValue>();
+				log.info("#########3 Employee Branch ID "+employeeBranchId+" Member Branch ID "+memberBranchId);
+				Long sequence = 0l;
+
+				// Post memberDeposit
+				// This is a withdrawal so we debit the member deposits as 
+				// specified on the product
+				sequence = sequence + 1;
+				listPostEntity.add(createAccountPostingEntryVer2(glLedgerAccountId,
+						glAccountTypeId, employeeBranchId, transactionAmount, memberAccountId,
+						acctgTransId, "D", sequence.toString(), memberBranchId));
+
+				// Post for Teller
+				sequence = sequence + 1;
+				listPostEntity.add(createAccountPostingEntryVer2(bankglAccountId,
+						glAccountTypeId, employeeBranchId, transactionAmount, memberAccountId,
+						acctgTransId, "C", sequence.toString(), memberBranchId));
+				
+
+				Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+				try {
+					delegator.storeAll(listPostEntity);
+				} catch (GenericEntityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				String transactionType = "";
+				
+				Long chequeTypeId = accountTransaction.getLong("chequeTypeId");
+				
+				if (chequeTypeId.equals(BANKERSWITHDRAWALID)){
+					transactionType = "BANKERSWITHDRAWAL";
+				}
+				
+				if (chequeTypeId.equals(CHEQUEWITHDRAWALID)){
+					transactionType = "CHEQUEWITHDRAWAL";
+				}
+				
+				// Update account transactions to reflect the ID in postings
+				accountTransaction.set("acctgTransId", acctgTransId);
+				accountTransaction.set("transactionType", transactionType);
+				try {
+					delegator.createOrStore(accountTransaction);
+				} catch (GenericEntityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+				addChargesToTransaction(accountTransaction, userLogin, transactionType, employeeBranchId, memberBranchId, acctgTransId, glLedgerAccountId, sequence, commissionAccountId, exciseDutyAccountId);
+				
+				//tt
+				//Add all the charges (C)
+
+				return accountTransaction.getString("accountTransactionParentId");
 	}
+//	public static String createChequeTransaction(
+//			GenericValue accountTransaction, Map<String, String> userLogin) {
+//		String acctgTransType = "MEMBER_DEPOSIT";
+//
+//		// Create the Account Trans Record
+//		String acctgTransId = createAccountingTransaction(accountTransaction,
+//				acctgTransType, userLogin);
+//		// Do the posting
+//		Delegator delegator = accountTransaction.getDelegator();
+//		BigDecimal transactionAmount = accountTransaction
+//				.getBigDecimal("transactionAmount");
+//		String partyId = (String) userLogin.get("partyId");
+//
+//		// Debit Member Deposit
+//
+//		
+//		String memberDepositAccountId = getMemberDepositAccount(
+//				accountTransaction, "MEMBERTRANSACTIONACCOUNT");
+//		String postingType = "D";
+//		String entrySequenceId = "1";
+//		try {
+//			TransactionUtil.begin();
+//		} catch (GenericTransactionException e) {
+//			e.printStackTrace();
+//		}
+//		postTransactionEntry(delegator, transactionAmount, partyId,
+//				memberDepositAccountId, postingType, acctgTransId,
+//				acctgTransType, entrySequenceId);
+//		try {
+//			TransactionUtil.commit();
+//		} catch (GenericTransactionException e) {
+//			e.printStackTrace();
+//		}
+//		// Credit Cash Account
+//		String cashAccountId = getCashAccount(accountTransaction,
+//				"MEMBERTRANSACTIONACCOUNT");
+//		postingType = "C";
+//		entrySequenceId = "00002";
+//		try {
+//			TransactionUtil.begin();
+//		} catch (GenericTransactionException e) {
+//			e.printStackTrace();
+//		}
+//		postTransactionEntry(delegator, transactionAmount, partyId,
+//				cashAccountId, postingType, acctgTransId, acctgTransType,
+//				entrySequenceId);
+//		try {
+//			TransactionUtil.commit();
+//		} catch (GenericTransactionException e) {
+//			e.printStackTrace();
+//		}
+
+//		return "POSTED";
+//	}
 
 	public static String getCashAccount(GenericValue accountTransaction,
 			String setUpId) {
@@ -905,7 +1007,7 @@ public class AccHolderTransactionServices {
 	 * AcctgTransEntry
 	 * **/
 	public static void postTransactionEntry(Delegator delegator,
-			BigDecimal bdLoanAmount, String partyId,
+			BigDecimal bdLoanAmount, String branchId, String partyId,
 			String loanReceivableAccount, String postingType,
 			String acctgTransId, String acctgTransType, String entrySequenceId) {
 		GenericValue acctgTransEntry;
@@ -918,7 +1020,7 @@ public class AccHolderTransactionServices {
 						loanReceivableAccount,
 
 						// "organizationPartyId", "Company", "amount",
-						"organizationPartyId", partyId, "amount", bdLoanAmount,
+						"organizationPartyId", branchId, "amount", bdLoanAmount,
 						"currencyUomId", "KES", "origAmount", bdLoanAmount,
 						"origCurrencyUomId", "KES", "debitCreditFlag",
 						postingType, "reconcileStatusId", "AES_NOT_RECONCILED"));
@@ -927,7 +1029,7 @@ public class AccHolderTransactionServices {
 			delegator.createOrStore(acctgTransEntry);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
-			log.error("Could post a Transaction");
+			log.error("Could not post a Transaction");
 		}
 	}
 
@@ -975,8 +1077,7 @@ public class AccHolderTransactionServices {
 	 * 
 	 * **/
 	public static String addChargesToTransaction(
-			GenericValue accountTransaction, Map<String, String> userLogin,
-			String transactionType) {
+			GenericValue accountTransaction, Map<String, String> userLogin, String transactionType, String employeeBranchId, String memberBranchId, String acctgTransId, String glLedgerAccountId, Long sequence, String commissionAccountId, String exciseDutyAccountId) {
 
 		// Get the Product by first accessing the MemberAccount
 		String accountProductId = getAccountProduct(accountTransaction);
@@ -987,21 +1088,57 @@ public class AccHolderTransactionServices {
 				accountProductId, transactionType);
 		log.info("NNNNNNNNNNNNNN The Number of Charges is ::::: "
 				+ accountProductChargeELI.size());
+		String chargeAccountId = commissionAccountId;
 		// Create a transaction in Account Transaction for each of the Charges
+		sequence = sequence + 1;
 		for (GenericValue accountProductCharge : accountProductChargeELI) {
-			addCharge(accountProductCharge, accountTransaction, userLogin);
+			
+			
+			if (accountProductCharge.getLong("parentChargeId") == null){
+				chargeAccountId = commissionAccountId;
+			} else{
+				chargeAccountId = exciseDutyAccountId;
+			}
+			
+			//SEQUENCENO = sequence + 1;
+			sequence = addChargeVer2(accountProductCharge, accountTransaction, userLogin, transactionType, employeeBranchId, memberBranchId, acctgTransId, glLedgerAccountId,  sequence, chargeAccountId);
+			
+			//sequence = sequence + 1;
 		}
 		// Create an Account Transaction for each of the Charges
 
 		return "";
 	}
+	
+	
+//	public static String addChargesToTransaction(
+//			GenericValue accountTransaction, Map<String, String> userLogin,
+//			String transactionType, String acctgTransId, String employeeBranchId, String memberBranchId, Long sequence) {
+//
+//		// Get the Product by first accessing the MemberAccount
+//		String accountProductId = getAccountProduct(accountTransaction);
+//
+//		// Get the Charges for the Product
+//		List<GenericValue> accountProductChargeELI = null;
+//		accountProductChargeELI = getAccountProductCharges(accountTransaction,
+//				accountProductId, transactionType);
+//		log.info("NNNNNNNNNNNNNN The Number of Charges is ::::: "
+//				+ accountProductChargeELI.size());
+//		// Create a transaction in Account Transaction for each of the Charges
+//		for (GenericValue accountProductCharge : accountProductChargeELI) {
+//			addChargeVer2(accountProductCharge, accountTransaction, userLogin, transactionType, employeeBranchId, memberBranchId, acctgTransId, sequence);
+//		}
+//		// Create an Account Transaction for each of the Charges
+//
+//		return "";
+//	}
 
 	/*****
 	 * @author Japheth Odonya @when Aug 25, 2014 10:26:34 PM Add Charge to
 	 *         AccountTransaction Accounting (POST)
 	 * **/
-	private static void addCharge(GenericValue accountProductCharge,
-			GenericValue accountTransaction, Map<String, String> userLogin) {
+	private static Long addChargeVer2(GenericValue accountProductCharge,
+			GenericValue accountTransaction, Map<String, String> userLogin, String transactionType, String employeeBranchId, String memberBranchId, String acctgTransId, String glLedgerAccountId, Long sequence, String chargeAccountId) {
 		// Add Account Transaction
 		BigDecimal bdChargeAmount;
 		bdChargeAmount = getChargeAmount(accountProductCharge,
@@ -1017,34 +1154,45 @@ public class AccHolderTransactionServices {
 				.getString("accountTransactionParentId");
 		createTransaction(accountTransaction, chargeName, userLogin,
 				memberAccountId, bdChargeAmount, productChargeId,
-				accountTransactionParentId);
+				accountTransactionParentId, acctgTransId);
 
 		// POST Charge
 		String acctgTransType = "OTHER_INCOME";
 
 		// Create the Account Trans Record
-		String acctgTransId = createAccountingTransaction(accountTransaction,
-				acctgTransType, userLogin);
+		//String acctgTransId = createAccountingTransaction(accountTransaction,
+		//		acctgTransType, userLogin);
+		
+		log.info("##########66666 Posting for "+chargeName);
+		log.info("##########66666 Posting for "+chargeName);
 
 		// Debit Member Deposits
 		Delegator delegator = accountTransaction.getDelegator();
-		String partyId = accountTransaction.getString("partyId");
-		String memberDepositAccountId = getMemberDepositAccount(
-				accountTransaction, "MEMBERTRANSACTIONCHARGE");
+//		String partyId = accountTransaction.getString("partyId");
+//		String memberDepositAccountId = getMemberDepositAccount(
+//				accountTransaction, "MEMBERTRANSACTIONCHARGE");
 		String postingType = "D";
-		String entrySequenceId = "00001";
-		postTransactionEntry(delegator, bdChargeAmount, partyId,
-				memberDepositAccountId, postingType, acctgTransId,
+		sequence = sequence+1;
+		String entrySequenceId = sequence.toString();
+		postTransactionEntry(delegator, bdChargeAmount, employeeBranchId, memberBranchId,
+				glLedgerAccountId, postingType, acctgTransId,
 				acctgTransType, entrySequenceId);
-
+		
+		
+		
+//tttt
 		// Credit Charge or Services
-		String chargeAccountId = getCashAccount(accountTransaction,
-				"MEMBERTRANSACTIONCHARGE");
+		//String chargeAccountId = getCashAccount(accountTransaction,
+		//		"MEMBERTRANSACTIONCHARGE");
+		//commissionAccountId, exciseDutyAccountId
 		postingType = "C";
-		entrySequenceId = "00002";
-		postTransactionEntry(delegator, bdChargeAmount, partyId,
+		sequence = sequence + 1;
+		entrySequenceId = sequence.toString();
+		postTransactionEntry(delegator, bdChargeAmount, employeeBranchId, memberBranchId,
 				chargeAccountId, postingType, acctgTransId, acctgTransType,
 				entrySequenceId);
+		
+		return sequence;
 	}
 
 	/***
@@ -1093,7 +1241,7 @@ public class AccHolderTransactionServices {
 			// transaction
 			isPercentageOfOtherCharge = accountProductCharge
 					.getString("isPercentageOfOtherCharge");
-			if (isPercentageOfOtherCharge.equals("Y")) {
+			if ((isPercentageOfOtherCharge.equals("Y"))) {
 				// Get the value of the charge
 				GenericValue parentAccountCharge = getAccoutCharge(
 						accountProductCharge.getString("parentChargeId"),
@@ -1180,7 +1328,7 @@ public class AccHolderTransactionServices {
 		if (transactionType.equals("ATMWITHDRAWAL")) {
 			transactionType = "CASHWITHDRAWAL";
 		}
-
+		
 		Delegator delegator = accountTransaction.getDelegator();
 		accountProductId = accountProductId.replaceAll(",", "");
 		EntityConditionList<EntityExpr> accountChargeConditions = EntityCondition
@@ -1236,7 +1384,7 @@ public class AccHolderTransactionServices {
 	private static void createTransaction(GenericValue loanApplication,
 			String transactionType, Map<String, String> userLogin,
 			String memberAccountId, BigDecimal transactionAmount,
-			String productChargeId, String accountTransactionParentId) {
+			String productChargeId, String accountTransactionParentId, String acctgTransId) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);// loanApplication.getDelegator();
 		GenericValue accountTransaction;
 		String accountTransactionId = delegator
@@ -1342,7 +1490,7 @@ public class AccHolderTransactionServices {
 						"transactionAmount", transactionAmount,
 						"transactionType", transactionType, "treasuryId",
 						treasuryId, "accountTransactionParentId",
-						accountTransactionParentId));
+						accountTransactionParentId, "acctgTransId", acctgTransId));
 		try {
 			delegator.createOrStore(accountTransaction);
 		} catch (GenericEntityException e) {
@@ -2003,7 +2151,7 @@ public class AccHolderTransactionServices {
 		} catch (GenericTransactionException e) {
 			e.printStackTrace();
 		}
-		postTransactionEntry(delegator, transactionAmount, branchId.toString(),
+		postTransactionEntry(delegator, transactionAmount, branchId.toString(), branchId.toString(),
 				memberDepositAccountId, postingType, acctgTransId,
 				acctgTransType, entrySequenceId);
 		try {
@@ -2020,7 +2168,7 @@ public class AccHolderTransactionServices {
 		} catch (GenericTransactionException e) {
 			e.printStackTrace();
 		}
-		postTransactionEntry(delegator, transactionAmount, branchId.toString(),
+		postTransactionEntry(delegator, transactionAmount, branchId.toString(),branchId.toString(),
 				cashAccountId, postingType, acctgTransId, acctgTransType,
 				entrySequenceId);
 		try {
@@ -2817,23 +2965,43 @@ public class AccHolderTransactionServices {
 		GenericValue accountTransactionParent = createAccountTransactionParent(
 				accountTransaction, userLogin);
 		String transactionType = withdrawalType;
-		String memberAccountId = accountTransaction
-				.getString("memberAccountId");
+		Long memberAccountId = accountTransaction
+				.getLong("memberAccountId");
 		BigDecimal transactionAmount = accountTransaction
 				.getBigDecimal("transactionAmount");
 		accountTransaction.set("accountTransactionParentId",
 				accountTransactionParent
 						.getString("accountTransactionParentId"));
+		
+		String acctgTransId = postCashWithdrawalTransaction(accountTransaction, userLogin);;
 		// Set the the Treasury ID
 		// String treasuryId = TreasuryUtility.getTellerId(userLogin);
 		// accountTransaction.set("treasuryId", treasuryId);
-		addChargesToTransaction(accountTransaction, userLogin, transactionType);
+		
+		String glLedgerAccountId = null;
+		String commissionAccountId = null;
+		String tellerAccountId = null;
+		String exciseDutyAccountId = null;
+
+		GenericValue accountProduct = getAccountProductEntity(memberAccountId);
+
+		glLedgerAccountId = accountProduct.getString("glAccountId");
+		commissionAccountId = accountProduct.getString("commissionAccountId");
+		exciseDutyAccountId = accountProduct.getString("exciseDutyAccountId");
+		tellerAccountId = TreasuryUtility.getTellerAccountId(userLogin);
+		
+		String employeeBranchId = getEmployeeBranch(userLogin.get("partyId"));
+		String memberBranchId = LoanUtilities.getMemberBranchId(LoanUtilities.getMemberAccount(memberAccountId).getLong("partyId").toString());
+		Long sequence = 0L;
+		sequence =  sequence + 1;
+		log.info("#########1 Employee Branch ID "+employeeBranchId+" Member Branch ID "+memberBranchId);
+		addChargesToTransaction(accountTransaction, userLogin, transactionType, employeeBranchId, memberBranchId, acctgTransId, glLedgerAccountId, sequence, commissionAccountId, exciseDutyAccountId);
 		// increaseDecrease
 		createTransaction(accountTransaction, transactionType, userLogin,
-				memberAccountId, transactionAmount, null,
+				memberAccountId.toString(), transactionAmount, null,
 				accountTransactionParent
-						.getString("accountTransactionParentId"));
-		postCashWithdrawalTransaction(accountTransaction, userLogin);
+						.getString("accountTransactionParentId"),acctgTransId);
+		
 
 		return accountTransactionParent.getString("accountTransactionParentId");
 	}
@@ -2851,6 +3019,8 @@ public class AccHolderTransactionServices {
 		String transactionType = "CASHWITHDRAWAL";
 		String memberAccountId = accountTransaction
 				.getString("memberAccountId");
+		
+		memberAccountId = memberAccountId.replaceAll(",", "");
 
 		BigDecimal transactionAmount = accountTransaction
 				.getBigDecimal("transactionAmount");
@@ -2860,13 +3030,33 @@ public class AccHolderTransactionServices {
 		// Set the the Treasury ID
 		// String treasuryId = TreasuryUtility.getTellerId(userLogin);
 		// accountTransaction.set("treasuryId", treasuryId);
-		addChargesToTransaction(accountTransaction, userLogin, transactionType);
+		String glLedgerAccountId = null;
+		String commissionAccountId = null;
+		String tellerAccountId = null;
+		String exciseDutyAccountId = null;
+
+		GenericValue accountProduct = getAccountProductEntity(Long.valueOf(memberAccountId));
+
+		glLedgerAccountId = accountProduct.getString("glAccountId");
+		commissionAccountId = accountProduct.getString("commissionAccountId");
+		exciseDutyAccountId = accountProduct.getString("exciseDutyAccountId");
+		tellerAccountId = TreasuryUtility.getTellerAccountId(userLogin);
+	
+		String employeeBranchId = getEmployeeBranch(userLogin.get("partyId"));
+		String memberBranchId = LoanUtilities.getMemberBranchId(LoanUtilities.getMemberAccount(Long.valueOf(memberAccountId)).getLong("partyId").toString());
+		
+		log.info("#########2 Employee Branch ID "+employeeBranchId+" Member Branch ID "+memberBranchId);
+		Long sequence = 0L;
+		sequence =  sequence + 1;
+		
+		String acctgTransId = postCashWithdrawalTransaction(accountTransaction, userLogin);
+		addChargesToTransaction(accountTransaction, userLogin, transactionType, employeeBranchId, memberBranchId, acctgTransId, glLedgerAccountId, sequence, commissionAccountId, exciseDutyAccountId);
 		// increaseDecrease
 		createTransaction(accountTransaction, transactionType, userLogin,
 				memberAccountId, transactionAmount, null,
 				accountTransactionParent
-						.getString("accountTransactionParentId"));
-		postCashWithdrawalTransaction(accountTransaction, userLogin);
+						.getString("accountTransactionParentId"), acctgTransId);
+		
 
 		// return "success";
 		return accountTransactionParent.getString("accountTransactionParentId");
@@ -3169,7 +3359,7 @@ public class AccHolderTransactionServices {
 		return bdCommissionAmount;
 	}
 
-	private static void postCashWithdrawalTransaction(
+	private static String postCashWithdrawalTransaction(
 			GenericValue accountTransaction, Map<String, String> userLogin) {
 		// TODO Auto-generated method stub
 		String acctgTransId = creatAccountTransRecord(accountTransaction,
@@ -3179,7 +3369,7 @@ public class AccHolderTransactionServices {
 
 		createMemberDepositEntryAccount(accountTransaction, acctgTransId);
 		createMemberCashEntryTeller(accountTransaction, acctgTransId, userLogin);
-
+		return acctgTransId;
 	}
 
 	private static void createMemberCashEntry(GenericValue accountTransaction,
@@ -3845,13 +4035,13 @@ public class AccHolderTransactionServices {
 		// addChargesToTransaction(accountTransaction, userLogin,
 		// transactionType);
 		// increaseDecrease
-
+		String acctgTransId =	postCashDeposit(memberAccountId, userLogin, transactionAmount);
 		GenericValue accountTransaction = null;
 		createTransaction(accountTransaction, transactionType, userLogin,
 				memberAccountId.toString(), transactionAmount, null,
 				accountTransactionParent
-						.getString("accountTransactionParentId"));
-		postCashDeposit(memberAccountId, userLogin, transactionAmount);
+						.getString("accountTransactionParentId"), acctgTransId);
+		
 		// postCashWithdrawalTransaction(accountTransaction, userLogin);
 
 		return accountTransactionParent.getString("accountTransactionParentId");
@@ -3993,7 +4183,7 @@ public class AccHolderTransactionServices {
 		return accountTransactionParent.getString("accountTransactionParentId");
 	}
 
-	private static void postCashDeposit(Long memberAccountId,
+	private static String postCashDeposit(Long memberAccountId,
 			Map<String, String> userLogin, BigDecimal amount) {
 		// ..
 		GenericValue accountTransaction = null;
@@ -4001,7 +4191,7 @@ public class AccHolderTransactionServices {
 				userLogin);
 		createMemberDepositEntry(amount, acctgTransId, "C");
 		createMemberCashEntry(amount, acctgTransId, "D");
-
+		return acctgTransId;
 	}
 
 	/****
@@ -4345,7 +4535,7 @@ public class AccHolderTransactionServices {
 	 * No Posting to the GL at this stage
 	 * 
 	 * */
-	public static String memberTransactionDeposit(BigDecimal transactionAmount,
+	public static String memberTransactionDeposittt(BigDecimal transactionAmount,
 			Long memberAccountId, Map<String, String> userLogin,
 			String withdrawalType, String accountTransactionParentId,
 			String productChargeId) {
@@ -4377,9 +4567,9 @@ public class AccHolderTransactionServices {
 		// increaseDecrease
 
 		GenericValue accountTransaction = null;
-		createTransaction(accountTransaction, transactionType, userLogin,
-				memberAccountId.toString(), transactionAmount, productChargeId,
-				accountTransactionParentId);
+//		createTransaction(accountTransaction, transactionType, userLogin,
+//				memberAccountId.toString(), transactionAmount, productChargeId,
+//				accountTransactionParentId);
 		// postCashDeposit(memberAccountId, userLogin, transactionAmount);
 		// postCashWithdrawalTransaction(accountTransaction, userLogin);
 
@@ -5112,6 +5302,32 @@ public class AccHolderTransactionServices {
 			e.printStackTrace();
 			log.error("Could not create Transaction");
 		}
+	}
+	
+	/****
+	 * @author Japheth Odonya  @when Jun 24, 2015 12:56:43 AM
+	 * 
+	 * Check Added Status
+	 * 
+	 * */
+	public static String checkTransactionTypeAdded(Long memberAccountId, String transactionType){
+		String addedStatus = "added";
+		
+		GenericValue accountProduct =	LoanUtilities.getAccountProductGivenMemberAccountId(memberAccountId);
+		
+		Long accountProductId = accountProduct.getLong("accountProductId");
+		// CHEQUEWITHDRAWAL BANKERSWITHDRAWAL
+		//Check that there are record for CHEQUEWITHDRAWAL and BANKERSWITHDRAWAL
+		
+		if (!LoanUtilities.existsCharges("CHEQUEWITHDRAWAL", accountProductId)){
+			return "Please set up charges for Cheque Withdrawal first !";
+		}
+		
+		if (!LoanUtilities.existsCharges("BANKERSWITHDRAWAL", accountProductId)){
+			return "Please set up charges for Bankers Cheque Withdrawal first !";
+		}
+		
+		return addedStatus;
 	}
 
 }

@@ -2,6 +2,8 @@ package org.ofbiz.withdrawalprocessing;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.ofbiz.accountholdertransactions.LoanUtilities;
@@ -10,6 +12,10 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.loansprocessing.LoansProcessingServices;
 
 /**
@@ -169,6 +175,70 @@ public class WithdrawalProcessingServices {
 		partyId = memberWithdrawal.getLong("partyId").toString();
 		
 		return partyId;
+	}
+	
+	/***
+	 * Get Total Loan Balance
+	 * */
+	public static BigDecimal getLoanTotalLoanBalance(String partyId){
+		BigDecimal bdTotalLoanBalance = BigDecimal.ZERO;
+		Long partyIdLong = Long.valueOf(partyId);
+		bdTotalLoanBalance = LoansProcessingServices.getTotalDisbursedLoanBalances(partyIdLong);
+				//LoansProcessingServices.getTotalLoanBalances(memberId, loanProductId);
+		return bdTotalLoanBalance;
+	}
+	
+	/****
+	 * @author Japheth Odonya  @when Jun 23, 2015 7:36:39 PM
+	 * 
+	 * Total Guaranteed Amount by Member
+	 * */
+	public static BigDecimal getTotalGuaranteedAmount(String partyId){
+		Long partyIdLong = Long.valueOf(partyId);
+		BigDecimal bdTotalGuaranteedAmount = BigDecimal.ZERO;
+		
+		//Get the list of guarateed loans
+		//LoanGuarantorDisbursedLoan
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> loanGuarantorDisbursedLoanELI = new ArrayList<GenericValue>();
+		
+		EntityConditionList<EntityExpr> loanGuarantorDisbursedLoanConditions = EntityCondition
+				.makeCondition(
+						UtilMisc.toList(EntityCondition.makeCondition(
+								"guarantorId", EntityOperator.EQUALS,
+								partyIdLong),
+								
+								EntityCondition.makeCondition(
+										"loanStatusId", EntityOperator.EQUALS,
+										6L)
+								
+								
+								), EntityOperator.AND);
+		
+		try {
+			loanGuarantorDisbursedLoanELI = delegator.findList("LoanGuarantorDisbursedLoan",
+					loanGuarantorDisbursedLoanConditions, null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		for (GenericValue genericValue : loanGuarantorDisbursedLoanELI) {
+			bdTotalGuaranteedAmount = bdTotalGuaranteedAmount.add(getLoanGuarateedAmountByGuarantor(genericValue.getLong("loanApplicationId") , genericValue.getLong("guarantorId")));
+		}
+		
+		
+		return bdTotalGuaranteedAmount;
+	}
+	
+	/***
+	 * @author Japheth Odonya  @when Jun 23, 2015 7:49:56 PM
+	 * 
+	 * Share Capital Limit
+	 * */
+	public static BigDecimal getShareCapitalMinimum(String partyId){
+		BigDecimal bdShareCapitalLimit = new BigDecimal(20000);
+		return bdShareCapitalLimit;
 	}
 	
 }

@@ -97,6 +97,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FundingTypes"/>
     </request-map>
+    <request-map uri="endDayTrans">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EndDayTrans"/>
+    </request-map>
     <request-map uri="interBranchSetup">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="InterBranchSetup"/>
@@ -111,11 +115,19 @@ under the License.
         <response name="success" type="view" value="FundingTypeRules"/>
     </request-map>
 
-    <request-map uri="generateSettlementTrans">
+    <request-map uri="createAccts">
         <security https="true" auth="true" />
-        <event type="service" invoke="generateSettlementTrans" />
+        <event type="service" invoke="createAccts" />
         <response name="success" type="request-redirect-noparam" value="FundingTypes" />
         <response name="error" type="view" value="FundingTypes" />
+    </request-map>
+
+
+    <request-map uri="generateEndDayTrans">
+        <security https="true" auth="true" />
+        <event type="service" invoke="generateEndDayTrans" />
+        <response name="success" type="request-redirect-noparam" value="endDayTrans" />
+        <response name="error" type="view" value="EndDayTrans" />
     </request-map>
 
     <request-map uri="createFundingRules">
@@ -3143,6 +3155,7 @@ under the License.
 
     <!-- Inter Branch Settlement -->
     <view-map name="FundingTypes" type="screen" page="component://accounting/widget/InterBranchSettlementScreens.xml#FundingTypes"/>
+    <view-map name="EndDayTrans" type="screen" page="component://accounting/widget/InterBranchSettlementScreens.xml#EndDayTrans"/>
     <view-map name="FundingTypeRules" type="screen" page="component://accounting/widget/InterBranchSettlementScreens.xml#FundingTypeRules"/>
     <view-map name="InterBranchSetup" type="screen" page="component://accounting/widget/InterBranchSettlementScreens.xml#InterBranchSetup"/>
     <view-map name="InterBranchReports" type="screen" page="component://accounting/widget/InterBranchSettlementScreens.xml#InterBranchReports"/>
