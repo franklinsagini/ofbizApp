@@ -75,7 +75,20 @@
             <create-value value-field="newEntity"/>
     </simple-method>
 
+    <simple-method method-name="createGeneratedEndDayTrans" short-description="create Accounting Transaction Type">
+            <make-value entity-name="GeneratedEndDayTrans" value-field="newEntity"/>
+            <set-pk-fields map="parameters" value-field="newEntity"/>
+            <set-nonpk-fields map="parameters" value-field="newEntity"/>
+            <set value="N" field="newEntity.hasTable"/>
+            <sequenced-id sequence-name="GeneratedEndDayTrans" field="generatedId"/>
+            <now-timestamp field="newEntity.createdDate"/>
+            <set from-field="generatedId" field="newEntity.generatedId"/>
+            <create-value value-field="newEntity"/>
+    </simple-method>
+
     <simple-method method-name="generateEndDayTrans" short-description="Service to automatically generate end of day trans" >
+        <!-- Get Current Time -->
+        <now-timestamp field="nowTimestamp"/>
         <!-- Get A branch to work with -->
         <set field="organizationPartyId" from-field="parameters.branchId"/>
 
@@ -88,13 +101,24 @@
         <!-- Get all transactions that for this branch -->
         <entity-condition entity-name="AcctgTransEntry" list="acctgTransEntry">
             <condition-list combine="and">
-                <condition-expr field-name="partyId" operator="not-equals" from-field="organizationPartyId"/>
-                <condition-expr field-name="glAccountId" operator="equals" from-field="savingsAccount"/>
-                <condition-expr field-name="organizationPartyId" operator="equals" from-field="organizationPartyId"/>
+                <condition-expr field-name="organizationPartyId" operator="equals" from-field="parameters.branchId"/>
+                <condition-expr field-name="glAccountId" operator="equals" value="42000003"/>
+                <condition-expr field-name="partyId" operator="not-equals" from-field="parameters.branchId"/>
             </condition-list>
         </entity-condition>
-
+<!--         <iterate entry="singleEntry" list="acctgTransEntry">
+            <if-not-empty field="singleEntry.partyId" >
+                 <log message="############################# WORKING WITH acctgTransId ${singleEntry.acctgTransId}" level="info" />
+                 <log message="############################# WORKING WITH partyId ${singleEntry.partyId}" level="info" />
+                 <log message="############################# WORKING WITH organizationPartyId ${singleEntry.organizationPartyId}" level="info" />
+                 <log message="############################# WORKING WITH debitCreditFlag ${singleEntry.debitCreditFlag}" level="info" />
+                 <log message="############################# NEXT RECORD ###############################################" level="info" />
+             <set field="count" value="${count + 1}" type="Long"/>
+            </if-not-empty>
+        </iterate> -->
         <iterate entry="singleEntry" list="acctgTransEntry">
+            <if-not-empty field="singleEntry.partyId" >
+            <log message="#################################################################### WORKING WITH acctgTransId ${singleEntry.acctgTransId}" level="info" />
             <!-- first, create the AcctgTrans -->
             <set-service-fields service-name="createAcctgTrans" to-map="createAcctgTransParams" map="parameters"/>
             <if-empty field="createAcctgTransParams.transactionDate">
@@ -141,12 +165,26 @@
                     <set field="createAcctgTransEntryParams.glAccountId" from-field="settlementAccount"/>
                     <set field="createAcctgTransEntryParams.debitCreditFlag" value="D"/>
                     <set field="createAcctgTransEntryParams.acctgTransEntryTypeId" value="_NA_"/>
-                    <set field="createAcctgTransEntryParams.organizationPartyId" from-field="organizationPartyId" />
-                    <set field="createAcctgTransEntryParams.owedByPartyId" from-field="singleEntry.partyId" />
-                    <set field="createAcctgTransEntryParams.partyId" from-field="organizationPartyId" />
+                    <set field="createAcctgTransEntryParams.organizationPartyId" from-field="parameters.branchId" />
+                    <!-- <set field="createAcctgTransEntryParams.owedByPartyId" from-field="singleEntry.partyId" /> -->
+                    <set field="createAcctgTransEntryParams.partyId" from-field="parameters.branchId" />
                     <set field="createAcctgTransEntryParams.amount" from-field="singleEntry.amount" />
                     <call-service service-name="createAcctgTransEntry" in-map-name="createAcctgTransEntryParams"/>
+                    <clear-field field="createAcctgTransEntryParams"/>
 
+                    <set-service-fields service-name="createGeneratedEndDayTrans" map="parameters" to-map="createGeneratedEndDayTransParams" />
+                    <set field="createGeneratedEndDayTransParams.generationDate" from-field="nowTimestamp" />
+                    <set field="createGeneratedEndDayTransParams.acctgTransId" from-field="acctgTransId" />
+                    <set field="createGeneratedEndDayTransParams.acctgTransEntrySeqId" from-field="_NA_" />
+                    <set field="createGeneratedEndDayTransParams.description" from-field="Auto Generated End of Day for ${nowTimestamp}" />
+                    <set field="createGeneratedEndDayTransParams.partyId" from-field="parameters.branchId" />
+                    <set field="createGeneratedEndDayTransParams.glAccountId" from-field="settlementAccount" />
+                    <set field="createGeneratedEndDayTransParams.organizationPartyId" from-field="parameters.branchId" />
+                    <!-- <set field="createGeneratedEndDayTransParams.owedByPartyId" from-field="singleEntry.partyId" /> -->
+                    <!-- <set field="createGeneratedEndDayTransParams.owesPartyId" from-field="parameters.branchId" /> -->
+                    <set field="createGeneratedEndDayTransParams.amount" from-field="singleEntry.amount" />
+                    <set field="createGeneratedEndDayTransParams.debitCreditFlag" from-field="D" />
+                    <call-service service-name="createGeneratedEndDayTrans" in-map-name="createGeneratedEndDayTransParams" />
 
                     <!-- now the credit AcctgTransEntry settlement acc -->
                     <set-service-fields service-name="createAcctgTransEntry" map="parameters" to-map="createAcctgTransEntryParams"/>
@@ -154,21 +192,20 @@
                     <set field="createAcctgTransEntryParams.glAccountId" from-field="savingsAccount"/>
                     <set field="createAcctgTransEntryParams.debitCreditFlag" value="C"/>
                     <set field="createAcctgTransEntryParams.acctgTransEntryTypeId" value="_NA_"/>
-                    <set field="createAcctgTransEntryParams.organizationPartyId" from-field="organizationPartyId" />
-                    <!-- <set field="createAcctgTransEntryParams.partyId" from-field="organizationPartyId" /> -->
+                    <set field="createAcctgTransEntryParams.organizationPartyId" from-field="parameters.branchId" />
+                    <set field="createAcctgTransEntryParams.partyId" from-field="parameters.branchId" />
                     <set field="createAcctgTransEntryParams.amount" from-field="singleEntry.amount" />
                     <call-service service-name="createAcctgTransEntry" in-map-name="createAcctgTransEntryParams"/>
-
+                    <clear-field field="createAcctgTransEntryParams"/>
 
 
                     <!-- CREATE A PAYABLE HERE FOR partyId debit the savings account and credit the settlement acc -->
                     <!-- ensure to populate owesPartyId with organizationPartyId to show who he owes and organizationPartyId and
                         partyId with partyId so as not to repeat generating this transaction again
                     -->
-                    <log message="DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDEBIT ZONE" level="info"></log>
-                    <log message="=============================================================================================NOW DOING TRANSACTION FOR ${singleEntry.partyId}"
-                        level="info">
-                    </log>
+                    <log message="DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDEBIT ZONE" level="info" />
+                    <log message="zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz=======NOW DOING TRANSACTION FOR ${singleEntry.partyId}" level="info" />
+
                         <!-- now, create the debit AcctgTransEntry settlement acc -->
                     <set-service-fields service-name="createAcctgTransEntry" map="parameters" to-map="createAcctgTransEntryParams"/>
                     <set field="createAcctgTransEntryParams.acctgTransId" from-field="acctgTransId"/>
@@ -179,6 +216,7 @@
                     <set field="createAcctgTransEntryParams.partyId" from-field="singleEntry.partyId" />
                     <set field="createAcctgTransEntryParams.amount" from-field="singleEntry.amount" />
                     <call-service service-name="createAcctgTransEntry" in-map-name="createAcctgTransEntryParams"/>
+                    <clear-field field="createAcctgTransEntryParams"/>
 
                     <!-- now the credit AcctgTransEntry settlement acc -->
                     <set-service-fields service-name="createAcctgTransEntry" map="parameters" to-map="createAcctgTransEntryParams"/>
@@ -187,10 +225,11 @@
                     <set field="createAcctgTransEntryParams.debitCreditFlag" value="C"/>
                     <set field="createAcctgTransEntryParams.acctgTransEntryTypeId" value="_NA_"/>
                     <set field="createAcctgTransEntryParams.organizationPartyId" from-field="singleEntry.partyId" />
-                    <set field="createAcctgTransEntryParams.owesPartyId" from-field="organizationPartyId" />
+                    <set field="createAcctgTransEntryParams.owesPartyId" from-field="parameters.branchId" />
                     <set field="createAcctgTransEntryParams.partyId" from-field="singleEntry.partyId" />
                     <set field="createAcctgTransEntryParams.amount" from-field="singleEntry.amount" />
                     <call-service service-name="createAcctgTransEntry" in-map-name="createAcctgTransEntryParams"/>
+                    <clear-field field="createAcctgTransEntryParams"/>
                     <set field="debitCount" value="${debitCount + 1}" type="Long"/>
                 </then>
             <else-if>
@@ -210,10 +249,11 @@
                     <set field="createAcctgTransEntryParams.glAccountId" from-field="savingsAccount"/>
                     <set field="createAcctgTransEntryParams.debitCreditFlag" value="D"/>
                     <set field="createAcctgTransEntryParams.acctgTransEntryTypeId" value="_NA_"/>
-                    <set field="createAcctgTransEntryParams.organizationPartyId" from-field="organizationPartyId" />
-                    <set field="createAcctgTransEntryParams.partyId" from-field="organizationPartyId" />
+                    <set field="createAcctgTransEntryParams.organizationPartyId" from-field="parameters.branchId" />
+                    <set field="createAcctgTransEntryParams.partyId" from-field="parameters.branchId" />
                     <set field="createAcctgTransEntryParams.amount" from-field="singleEntry.amount" />
                     <call-service service-name="createAcctgTransEntry" in-map-name="createAcctgTransEntryParams"/>
+                    <clear-field field="createAcctgTransEntryParams"/>
 
                     <!-- now the credit AcctgTransEntry settlement acc -->
                     <set-service-fields service-name="createAcctgTransEntry" map="parameters" to-map="createAcctgTransEntryParams"/>
@@ -222,23 +262,25 @@
                     <set field="createAcctgTransEntryParams.debitCreditFlag" value="C"/>
                     <set field="createAcctgTransEntryParams.owesPartyId" from-field="singleEntry.partyId" />
                     <set field="createAcctgTransEntryParams.acctgTransEntryTypeId" value="_NA_"/>
-                    <set field="createAcctgTransEntryParams.organizationPartyId" from-field="organizationPartyId" />
-                    <set field="createAcctgTransEntryParams.partyId" from-field="organizationPartyId" />
+                    <set field="createAcctgTransEntryParams.organizationPartyId" from-field="parameters.branchId" />
+                    <set field="createAcctgTransEntryParams.partyId" from-field="parameters.branchId" />
                     <set field="createAcctgTransEntryParams.amount" from-field="singleEntry.amount" />
                     <call-service service-name="createAcctgTransEntry" in-map-name="createAcctgTransEntryParams"/>
+                    <clear-field field="createAcctgTransEntryParams"/>
                     <log message="=============================================================================================NOW DOING TRANSACTION FOR ${singleEntry.partyId}"
                         level="info">
                     </log>
                     <set-service-fields service-name="createAcctgTransEntry" map="parameters" to-map="createAcctgTransEntryParams"/>
                     <set field="createAcctgTransEntryParams.acctgTransId" from-field="acctgTransId"/>
                     <set field="createAcctgTransEntryParams.glAccountId" from-field="settlementAccount"/>
-                    <set field="createAcctgTransEntryParams.owedByPartyId" from-field="organizationPartyId" />
+                    <!-- <set field="createAcctgTransEntryParams.owedByPartyId" from-field="parameters.branchId" /> -->
                     <set field="createAcctgTransEntryParams.debitCreditFlag" value="D"/>
                     <set field="createAcctgTransEntryParams.acctgTransEntryTypeId" value="_NA_"/>
                     <set field="createAcctgTransEntryParams.organizationPartyId" from-field="singleEntry.partyId" />
                     <set field="createAcctgTransEntryParams.partyId" from-field="singleEntry.partyId" />
                     <set field="createAcctgTransEntryParams.amount" from-field="singleEntry.amount" />
                     <call-service service-name="createAcctgTransEntry" in-map-name="createAcctgTransEntryParams"/>
+                    <clear-field field="createAcctgTransEntryParams"/>
 
                     <!-- now the credit AcctgTransEntry settlement acc -->
                     <set-service-fields service-name="createAcctgTransEntry" map="parameters" to-map="createAcctgTransEntryParams"/>
@@ -250,13 +292,17 @@
                     <set field="createAcctgTransEntryParams.partyId" from-field="singleEntry.partyId" />
                     <set field="createAcctgTransEntryParams.amount" from-field="singleEntry.amount" />
                     <call-service service-name="createAcctgTransEntry" in-map-name="createAcctgTransEntryParams"/>
+                    <clear-field field="createAcctgTransEntryParams"/>
+                    <clear-field field="acctgTransId"/>
                     <!-- <field-to-result field="acctgTransId" result-name="acctgTransId"/> -->
                     <set field="creditCount" value="${creditCount + 1}" type="Long"/>
                 </then>
             </else-if>
             </if>
            <set field="count" value="${count + 1}" type="Long"/>
+           </if-not-empty>
         </iterate>
+        <log message="############################# TOTAL RECORDS ${count} ###############################################" level="info" />
         <property-to-field resource="AccountingUiLabels" property="InterBranchTransDebits" field="debitsMessage"/>
         <property-to-field resource="AccountingUiLabels" property="InterBranchTransCredits" field="creditsMessage"/>
         <property-to-field resource="AccountingUiLabels" property="InterBranchTrans" field="successMessage"/>
