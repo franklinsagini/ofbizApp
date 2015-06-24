@@ -1071,7 +1071,34 @@ under the License.
     	<alias entity-alias="SE" name="repaymentName" group-by="true" />
     	<alias entity-alias="SE" name="total" function="count"/> 
     </view-entity>
+    
+    <!-- Loan Guarantor for disbursed loans -->
 	
-	
+	<view-entity entity-name="LoanGuarantorDisbursedLoan" package-name="org.ofbiz.loans">
+    	<member-entity entity-alias="LG" entity-name="LoanGuarantor"></member-entity>
+    	<member-entity entity-alias="LA" entity-name="LoanApplication"></member-entity>
+    	
+    	<alias entity-alias="LG" name="loanGuarantorId"></alias>
+    	<alias entity-alias="LG" name="loanApplicationId"></alias>
+    	<alias entity-alias="LG" name="guarantorId"></alias>
+    	<alias entity-alias="LG" name="memberNo"></alias>
+    	<alias entity-alias="LG" name="payrolNo"></alias>
+    	<alias entity-alias="LG" name="depositamt"></alias>
+    	<alias entity-alias="LG" name="guaranteedPercentage"></alias>
+    	<alias entity-alias="LG" name="guaranteedValue"></alias>
+    	<alias entity-alias="LG" name="currentStationId"></alias>
+    	
+    	<alias entity-alias="LA" name="loanStatusId"></alias>
+    	
+    	
+    	<!-- alias entity-alias="TR" name="name" group-by="true"/> 
+    	
+    	<alias entity-alias="TT" name="transferDate" group-by="true" />
+    	<alias entity-alias="TT" name="transactionAmount" function="sum"/ --> 
+    	
+    	<view-link entity-alias="LG" rel-entity-alias="LA"> 
+            <key-map field-name="loanApplicationId" rel-field-name="loanApplicationId"/>
+        </view-link> 
+    </view-entity>
 	
 </entitymodel>

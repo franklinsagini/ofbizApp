@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#escape x as x?xml>
-    <#if loansGuaranteedByMemberList?has_content>
+    <#if member?has_content>
         <#-- REPORT TITLE -->
         <#-- fo:block font-size="18pt" font-weight="bold" text-align="center">
             CHAI SACCO
@@ -111,11 +111,19 @@ under the License.
             </fo:list-item>
             
         </fo:list-block -->
+        
+        
         <fo:block><fo:leader/></fo:block>
         <#-- Loan Details -->
-        <fo:block font-size="12pt" font-weight="bold" color="blue" >
+        
+        
+         <#if loansGuaranteedByMemberList?has_content>
+         
+         <fo:block font-size="12pt" font-weight="bold" color="blue" >
             Loans Guaranteed By Above Member
         </fo:block>
+        
+        
         <fo:block space-after.optimum="10pt" font-size="9pt">
             <fo:table table-layout="fixed" width="100%">
                 <fo:table-column column-width="60pt"/>
@@ -382,12 +390,17 @@ under the License.
             </fo:table>
         </fo:block>
         
-        <fo:block font-size="12pt" font-weight="bold" color="blue" >
-            Guarantors of the Above Member
-        </fo:block>
+        </#if>
+        
+       
         
         <#-- Add all the Loans For this Member Here -->
-        
+         <#if membersLoans?has_content>
+         
+          <fo:block font-size="12pt" font-weight="bold" color="blue" >
+            Guarantors of the Above Member
+        </fo:block>
+         
         <fo:block space-after.optimum="10pt" font-size="9pt">
             <fo:table table-layout="fixed" width="100%">
                 <fo:table-column column-width="60pt"/>
@@ -704,7 +717,7 @@ under the License.
             </fo:table>
         </fo:block>
         <#-- End Loans for this Member-->
-        
+        </#if>
 
     <#else>
         <fo:block text-align="center">NO DATA FOUND</fo:block>

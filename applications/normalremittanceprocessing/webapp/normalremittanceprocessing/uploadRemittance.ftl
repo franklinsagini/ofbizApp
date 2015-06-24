@@ -4,8 +4,8 @@
             eval(toExec);
         };
     </script -->
-    <h3>Upload Salary File</h3>
-    <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>salaryImport?salaryMonthYearId=${salaryMonthYearId}&amp;upload_file_type=original&amp;photourl=Y</@ofbizUrl>" name="imageUploadForm">
+    <h3>Upload Remittance File</h3>
+    <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>remittanceImport?normalRemittanceMonthYearId=${normalRemittanceMonthYearId}&amp;upload_file_type=original&amp;photourl=Y</@ofbizUrl>" name="imageUploadForm">
         <table cellspacing="0" class="basic-table">
             <tr>
                 <td width="20%" align="right" valign="top">

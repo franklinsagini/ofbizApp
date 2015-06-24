@@ -2512,4 +2512,62 @@ public class LoanUtilities {
 		bdMemberDeposit = bdMemberDeposit.setScale(2, RoundingMode.HALF_DOWN);
 		return bdMemberDeposit;
 	}
+
+	/****
+	 * @author Japheth Odonya  @when Jun 23, 2015 10:56:41 PM
+	 * 
+	 * Given an ATM Card find the current status ID
+	 * */
+	public static Long getCurrentCardStatusId(Long cardApplicationId) {
+		// TODO Auto-generated method stub
+		
+		GenericValue cardApplication = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			cardApplication = delegator.findOne("CardApplication",
+					UtilMisc.toMap("cardApplicationId", cardApplicationId), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if (cardApplication == null)
+			return null;
+		
+		return cardApplication.getLong("cardStatusId");
+	}
+
+	
+	/****
+	 * @author Japheth Odonya  @when Jun 24, 2015 1:09:27 AM
+	 * 
+	 * Check that transactionType for accountProductId does exist
+	 * */
+	public static boolean existsCharges(String transactionType, Long accountProductId) {
+		
+		EntityConditionList<EntityExpr> accountProductChargeConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"accountProductId", EntityOperator.EQUALS,
+						accountProductId),
+
+				EntityCondition.makeCondition("transactionType", EntityOperator.EQUALS,
+						transactionType)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> accountProductChargeELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			accountProductChargeELI = delegator.findList("AccountProductCharge",
+					accountProductChargeConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if ((accountProductChargeELI != null) && (accountProductChargeELI.size() > 0)){
+			return true;
+		}
+		
+		return false;
+	}
 }
