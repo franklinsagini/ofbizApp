@@ -646,9 +646,9 @@
         focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="tribeContext">
         
         <field name="tribeId"><hidden/></field>
-        <field name="tribe" title="Tribe" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>       
+        <field name="tribe" title="Tribe" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>       
         
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="listTribes" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateTribe" paginate-target="Tribe"
@@ -729,7 +729,7 @@
         <field name="religionId"><hidden/></field>
         <field name="religion" title="Religion" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>       
         
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="listReligion" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateReligion" paginate-target="Religion"
@@ -754,9 +754,9 @@
         focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="religionContext">
         
         <field name="familyRelationsId"><hidden/></field>
-        <field name="relationship" title="Relationship" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>       
+        <field name="relationship" title="Relationship" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>       
         
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
     <form name="listFamilyRelations" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateFamilyRelations" paginate-target="Religion"
@@ -1350,7 +1350,7 @@
                 <option key="EFT" description="EFT"/>
                 <option key="cheque" description="Cheque"/>                
                 <option key="cash" description="Cash"/>
-            </drop-down>
+            </drop-down> 
         </field>
         
         
@@ -1430,16 +1430,19 @@
             <entity-condition entity-name="SeparationType">
             	<order-by field-name="name"/>
             </entity-condition>
-        </actions>
+        </actions>    
         <auto-fields-service default-field-type="hidden" service-name="updateSeparationTypes"/>
-        
         <field name="separationTypeId"><hidden/></field>
-        <field name="name" title="Separation Type"> <display/> </field>
-        <field name="description" title="Description"> <display/> </field>
+        <field name="name" title="Separation Type"> <text></text> </field>
+        <field name="description" title="Description"> <text></text> </field>
+        
+        <field name="updateSeparationTypes" title="Update" widget-style="buttontext">
+			<submit button-type="button" />
+		</field>
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteSeparationTypes" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete this seperation type?">
                 <parameter param-name="separationTypeId"/>
-            </hyperlink>
+            </hyperlink>  
         </field>
         <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
     </form>
