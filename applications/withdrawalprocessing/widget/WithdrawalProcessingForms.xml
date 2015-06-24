@@ -182,7 +182,11 @@
 					
 				</condition-list -->
 				<!-- condition-expr field-name="loanStatusId" operator="equals" value="${disbursedLoansStatusId}"></condition-expr -->			
-				<condition-expr field-name="partyId" operator="equals" value="${memberWithdrawal.partyId}"></condition-expr>
+				<condition-list>
+					<condition-expr field-name="partyId" operator="equals" value="${memberWithdrawal.partyId}"></condition-expr>
+					<condition-expr field-name="loanStatusId" operator="equals"  value="6"/>
+				</condition-list>
+				
 				<order-by field-name="-loanApplicationId"/>
 			</entity-condition>
 				 <!-- set field="loanApplicationId" from-field="loanApplication.loanApplicationId"/ -->
@@ -331,9 +335,10 @@
                 
                 <!-- set field="memberNumber" from-field="loanApplication.memberNumber"/ -->
                 
-			<entity-condition entity-name="LoanGuarantor">
+			<entity-condition entity-name="LoanGuarantorDisbursedLoan">
 				<condition-list>
 					<condition-expr field-name="guarantorId" operator="equals" from-field="partyId"/>
+					<condition-expr field-name="loanStatusId" operator="equals"  value="6"/>
 				</condition-list>
 				
 			</entity-condition>

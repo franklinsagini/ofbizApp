@@ -178,7 +178,39 @@ under the License.
 
 <!-- ===========================================INTER BRANCH============================================================================================= -->
 
-    <form name="FundingTypes" type="single" target="generateSettlementTrans" focus-field-name="fundingTypeName" header-row-style="header-row" default-table-style="basic-table"
+    <form name="GLAccountSetup" type="single" target="createAccts" header-row-style="header-row" default-table-style="basic-table">
+        <field name="savingsGlAccountId" title="Savings Account">
+            <drop-down allow-empty="true">
+                <entity-options key-field-name="glAccountId" entity-name="GlAccount" description="${accountCode} - ${accountName} [${glAccountId}].">
+                    <entity-order-by field-name="accountCode"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="settlementGlAccountId" title="Settlement Account">
+            <drop-down allow-empty="true">
+                <entity-options key-field-name="glAccountId" entity-name="GlAccount" description="${accountCode} - ${accountName} [${glAccountId}].">
+                    <entity-order-by field-name="accountCode"/>
+                </entity-options>
+            </drop-down>
+        </field>
+
+                <!-- submitButton -->
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="buttontext"><submit button-type="text-link"/></field>
+    </form>
+
+    <form name="GLAccountSetupList" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" paginate-target="generateSettlementTrans" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="SettlementAccounts"></entity-condition>
+        </actions>
+        <field name="savingsGlAccountId" title="Savings Account">
+            <display-entity entity-name="GlAccount" description="${accountName}" key-field-name="glAccountId"/>
+        </field>
+        <field name="settlementGlAccountId" title="Settlement Account">
+            <display-entity entity-name="GlAccount" description="${accountName}" key-field-name="glAccountId"/>
+        </field>
+    </form>
+
+    <form name="FundingTypes" type="single" target="generateEndDayTrans" focus-field-name="fundingTypeName" header-row-style="header-row" default-table-style="basic-table"
         default-map-name="fundingTypesContext">
         <field name="branchId" title="Branch">
             <drop-down allow-empty="false">
@@ -192,8 +224,9 @@ under the License.
         <field use-when="fundingTypesContext==null" name="submitButton" title="Generate Settlement Transactions" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
 
+
     <form name="FundingTypesList" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="UpdateSasraReport"
-        paginate-target="generateSettlementTrans" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        paginate-target="generateEndDayTrans" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="FundingTypes"></entity-condition>
         </actions>

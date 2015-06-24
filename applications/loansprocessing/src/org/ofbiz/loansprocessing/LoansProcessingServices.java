@@ -835,5 +835,46 @@ public class LoansProcessingServices {
 
 		return false;
 	}
+	
+	/****
+	 * @author Japheth Odonya  @when Jun 23, 2015 7:12:00 PM
+	 * 
+	 * Total Disbursed Loan Balances given partyId
+	 * 
+	 * */
+	public static BigDecimal getTotalDisbursedLoanBalances(Long partyId){
+		BigDecimal bdTotalBalance = BigDecimal.ZERO;
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> loanApplicationELI = new ArrayList<GenericValue>();
+		
+		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
+				.makeCondition(
+						UtilMisc.toList(EntityCondition.makeCondition(
+								"partyId", EntityOperator.EQUALS,
+								partyId),
+								
+								EntityCondition.makeCondition(
+										"loanStatusId", EntityOperator.EQUALS,
+										6L)
+								
+								
+								), EntityOperator.AND);
+		
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					loanApplicationConditions, null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue genericValue : loanApplicationELI) {
+			bdTotalBalance = bdTotalBalance.add(getTotalLoanBalancesByLoanApplicationId(genericValue.getLong("loanApplicationId")));
+		}
+
+		return bdTotalBalance;
+	}
+	
 
 }

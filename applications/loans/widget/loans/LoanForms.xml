@@ -1714,6 +1714,8 @@ under the License.
         	 	<option key="CASHWITHDRAWAL" description="CASHWITHDRAWAL"/>
                 <option key="CASHDEPOSIT" description="CASHDEPOSIT"/>
                 <option key="CHEQUEWITHDRAWAL" description="CHEQUEWITHDRAWAL"/>
+                <option key="BANKERSWITHDRAWAL" description="BANKERSWITHDRAWAL"/>
+                
                 <option key="CHEQUEDEPOSIT" description="CHEQUEDEPOSIT"/>
                 <option key="MSACCOWITHDRAWAL" description="MSACCOWITHDRAWAL"/>
                 <option key="ATMWITHDRAWAL" description="ATMWITHDRAWAL"/>
@@ -1765,11 +1767,16 @@ under the License.
         </field>
         
         <field name="transactionType" title="Transaction Type" >
-        	 <drop-down allow-empty="true" text-size="15">
+        	 <drop-down allow-empty="true" text-size="20">
         	 	<option key="CASHWITHDRAWAL" description="CASHWITHDRAWAL"/>
                 <option key="CASHDEPOSIT" description="CASHDEPOSIT"/>
                 <option key="CHEQUEWITHDRAWAL" description="CHEQUEWITHDRAWAL"/>
+                <option key="BANKERSWITHDRAWAL" description="BANKERSWITHDRAWAL"/>
+                
                 <option key="CHEQUEDEPOSIT" description="CHEQUEDEPOSIT"/>
+                <option key="MSACCOWITHDRAWAL" description="MSACCOWITHDRAWAL"/>
+                <option key="ATMWITHDRAWAL" description="ATMWITHDRAWAL"/>
+                <option key="SALARYPROCESSING" description="SALARYPROCESSING"/>
             </drop-down>
         </field>
         
@@ -1780,7 +1787,7 @@ under the License.
             </drop-down>
         </field>
         
-        <field name="rateAmount" title="Rate (%)" ><text size="15" maxlength="60"/></field>
+        <field name="rateAmount" title="Rate (%)" ><text size="20" maxlength="60"/></field>
       
       <field name="isPercentageOfOtherCharge" title="% Of Another Charge">
         	 <drop-down allow-empty="true" text-size="15">
@@ -1790,7 +1797,7 @@ under the License.
         </field>
         
         <field name="parentChargeId" title="Parent Charge">
-        	<drop-down allow-empty="true" text-size="15">
+        	<drop-down allow-empty="true">
                 <!-- list-options list-name="productChargeList"   key-name="productChargeId" description="${name}"/ -->
                 <entity-options description="${name}" entity-name="ProductCharge" key-field-name="productChargeId"></entity-options>
             </drop-down>
@@ -1798,8 +1805,8 @@ under the License.
         
         <field name="fixedAmount" title="Amount (Total Charge)" ><text size="15" maxlength="60"/></field>
 		<field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-            <hyperlink target="deleteLoanProductCharge" description="${uiLabelMap.CommonDelete}" also-hidden="false">
-                <parameter param-name="loanProductChargeId"/>
+            <hyperlink target="deleteAccountProductCharge" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="accountProductChargeId"/>
             </hyperlink>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>

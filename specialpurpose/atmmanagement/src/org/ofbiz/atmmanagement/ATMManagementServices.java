@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -619,14 +620,20 @@ public class ATMManagementServices {
 		String statusNameNew = "NEW";
 		String statusNameApplied = "APPLIED";
 		String statusNameReceived = "RECEIVED";
+		String statusActive = "ACTIVE";
 		
 		//GenericValue cardStatus = getCardStatusEntity(statusName);
 		Long cardStatusNewId = getCardStatus(statusNameNew);
 		Long cardStatusAppliedId = getCardStatus(statusNameApplied);
 		Long cardStatusReceivedId = getCardStatus(statusNameReceived);
+		Long cardStatusActiveId = getCardStatus(statusActive);
 
 
 		GenericValue cardApplication = getCardApplication(cardApplicationId);
+		
+		if (cardStatusActiveId == cardApplication.getLong("cardStatusId"))
+			return "The CARD is already activated !";
+
 		
 		if (cardStatusNewId == cardApplication.getLong("cardStatusId"))
 			return "Cannot activate a card in the New state, a cards to be applied, received and issued before being Activated";
@@ -639,6 +646,147 @@ public class ATMManagementServices {
 			return "Cannot activate a card in the RECEIVED state, a cards to be applied, received and issued before being Activated";
 
 		return "success";
+	}
+	
+	/***
+	 * @author Japheth Odonya  @when Jun 23, 2015 10:17:19 PM
+	 * 
+	 * The actionName could be
+	 * NEW
+	 * APPLIED
+	 * RECEIVED
+	 * ISSUED
+	 * ACTIVE
+	 * RENEW
+	 * DEACTIVATED
+	 * REPLACE
+	 * RECEIVEPIN
+	 * ISSUEPIN
+	 * APPROVED
+	 * CLOSED
+	 * */
+	public static String actionAlreadyDoneOnCard(Long cardApplicationId, String actionName){
+		String doneStatus = "notdone";
+		
+		Long cardStatusId = LoanUtilities.getCardStatusId(actionName);
+		
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> cardLogELI = new ArrayList<GenericValue>();
+		
+		EntityConditionList<EntityExpr> cardLogConditions = EntityCondition
+				.makeCondition(
+						UtilMisc.toList(EntityCondition.makeCondition(
+								"cardApplicationId", EntityOperator.EQUALS,
+								cardApplicationId),
+								
+								EntityCondition.makeCondition(
+										"cardStatusId", EntityOperator.EQUALS,
+										cardStatusId)
+								
+								
+								), EntityOperator.AND);
+		
+		try {
+			cardLogELI = delegator.findList("CardLog",
+					cardLogConditions, null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		Boolean done = false;
+		if ((cardLogELI != null) && (cardLogELI.size() > 0)){
+			done = true;
+		}
+		
+		if (done == false)
+			return doneStatus;
+		
+		/*****
+		 * 
+		 * 	 * NEW
+	 * APPLIED
+	 * RECEIVED
+	 * ISSUED
+	 * 
+	 * ACTIVE
+	 * RENEW
+	 * DEACTIVATED
+	 * 
+	 * REPLACE
+	 * 
+	 * RECEIVEPIN
+	 * ISSUEPIN
+	 * APPROVED
+	 * CLOSED
+		 * 
+		 * */
+		if (actionName.equals("APPLIED"))
+		{
+			doneStatus = " Card already applied for, cannot apply again !";
+		}
+		
+		
+		if (actionName.equals("RECEIVED"))
+		{
+			doneStatus = " Card already received, you cannot receive the card again !";
+		}
+		
+		if (actionName.equals("ISSUED"))
+		{
+			doneStatus = " Card already issued, you cannot issue the card again !";
+		}
+		
+		if (actionName.equals("RECEIVEPIN"))
+		{
+			doneStatus = " PIN already received, cannot receive PIN again !";
+		}
+		if (actionName.equals("ISSUEPIN"))
+		{
+			doneStatus = " PIN already issued, cannot issue PIN again !";
+		}
+		
+		if (actionName.equals("APPROVED"))
+		{
+			doneStatus = " Card already approved, cannot approve again !";
+		}
+		
+		if (actionName.equals("ACTIVE")){
+			
+			Long currentCardStatusId = LoanUtilities.getCurrentCardStatusId(cardApplicationId);
+			
+			Long activeCardStatusId = LoanUtilities.getCardStatusId("ACTIVE");
+			
+			if (currentCardStatusId.equals(activeCardStatusId))
+				return "CARD is already ACTIVE cannot activate an active CARD!";
+			
+//			Long deactivatedCardStatusId = LoanUtilities.getCardStatusId("DEACTIVATED");
+//			if (!deactivatedCardStatusId.equals(currentCardStatusId)){
+//				return "Can only acti";
+//			}
+			//Long cardPreviousStatusId = LoanUtilities.getCardPreviousStatusId
+			
+			// CARD NOT ACTIVE
+			//Previous stage must be ISSUED or DEACTIVATED
+			//
+			
+		}
+		
+		if (actionName.equals("DEACTIVATED")){
+			//CARD not DEACTIVATED
+			//Previous status is ACTIVE
+			
+			Long currentCardStatusId = LoanUtilities.getCurrentCardStatusId(cardApplicationId);
+			
+			Long deactivatedCardStatusId = LoanUtilities.getCardStatusId("DEACTIVATED");
+			
+			if (currentCardStatusId.equals(deactivatedCardStatusId))
+				return "Cannot deactivate a deactivated CARD";
+		}
+		
+		
+		return doneStatus;
 	}
 
 }
