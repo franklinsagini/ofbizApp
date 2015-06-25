@@ -89,8 +89,8 @@ if (parameters.thruDate) {
 				creditsAmt = creditsAmt + accountBalance.postedCredits
 				debitsAmt = debitsAmt + accountBalance.postedDebits
 				
-				 oldAccountBalance.postedCredits = creditsAmt;
-				 oldAccountBalance.postedDebits = debitsAmt
+				 //oldAccountBalance.postedCredits = creditsAmt;
+				 //oldAccountBalance.postedDebits = debitsAmt
 				}
 			}
 			
