@@ -73,7 +73,7 @@ if (parameters.thruDate) {
 				oldAccountBalance = accountBalance
 			} else {
 			
-				if (!isEmpty){
+				//if (!isEmpty){
 				creditsAmt = oldAccountBalance.postedCredits
 				debitsAmt = oldAccountBalance.postedDebits
 				
@@ -82,7 +82,7 @@ if (parameters.thruDate) {
 				
 				 oldAccountBalance.postedCredits = creditsAmt;
 				 oldAccountBalance.postedDebits = debitsAmt
-				}
+				//}
 			}
 			
            
