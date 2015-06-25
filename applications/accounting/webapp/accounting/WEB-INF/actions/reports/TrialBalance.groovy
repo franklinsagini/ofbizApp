@@ -61,7 +61,7 @@ if (parameters.thruDate) {
 				accountBalances.add(accountBalance);
 				
 				oldAccountBalance = accountBalance
-			}{
+			} else {
 				creditsAmt = oldAccountBalance.postedCredits
 				debitsAmt = oldAccountBalance.postedDebits
 				
