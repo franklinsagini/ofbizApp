@@ -96,13 +96,22 @@ if (parameters.thruDate) {
 				//if (!isEmpty){
 				//creditsAmt = creditsAmt + oldAccountBalance.postedCredits
 				//debitsAmt = debitsAmt + oldAccountBalance.postedDebits
-				
+					
+			
 				if (accountBalance.endingBalanceCredit != null){
+					
+					if (creditsAmt == null){
+						creditsAmt = 0
+					}
 					creditsAmt = creditsAmt + accountBalance.endingBalanceCredit
 				}
 				//endingBalanceDebit
 				//endingBalanceDebit
 				if (accountBalance.endingBalanceDebit != null){
+					
+					if (debitsAmt == null){
+						debitsAmt = 0
+					}
 					debitsAmt = debitsAmt + accountBalance.endingBalanceDebit
 				} 
 				
