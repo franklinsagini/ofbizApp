@@ -77,13 +77,13 @@ if (parameters.thruDate) {
 			if ((!oldAccountBalance.glAccountId.equals(accountBalance.glAccountId)) ){
 				
 				//if ()
-				oldAccountBalance.postedCredits = 0
+				//accountBalance.postedCredits = 0
 				
-				
+				oldAccountBalance.set('postedCredits', creditsAmt)
 				
 				//oldAccountBalance.putAt(postedCredits, creditsAmt)
 				
-				oldAccountBalance.postedDebits = 0
+				oldAccountBalance.set('postedDebits', debitsAmt)
 				
 				//oldAccountBalance.putAt(postedDebits, debitsAmt)
 				accountBalances.add(oldAccountBalance);
