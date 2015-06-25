@@ -91,7 +91,7 @@ if (parameters.thruDate) {
 				
 				 //oldAccountBalance.postedCredits = creditsAmt;
 				 //oldAccountBalance.postedDebits = debitsAmt
-				}
+				//}
 			}
 			
            
