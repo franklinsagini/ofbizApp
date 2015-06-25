@@ -44,7 +44,7 @@ if (parameters.thruDate) {
 	
 	oldglAccountId = ""
 	oldAccountBalance = [:]
-	oldAccountBalance.postedCredits = null
+	oldAccountBalance.endingBalanceDebit = null
 	lastAccountBalance = [:]
 	accountBalance = [:]
 	def creditsAmt = 0
@@ -62,11 +62,11 @@ if (parameters.thruDate) {
             postedDebitsTotal = postedDebitsTotal + accountBalance.postedDebits
             postedCreditsTotal = postedCreditsTotal + accountBalance.postedCredits
 			
-			if (oldAccountBalance.postedCredits == null){
+			if (oldAccountBalance.endingBalanceDebit == null){
 				oldAccountBalance = accountBalance
 				
-				creditsAmt = accountBalance.postedCredits
-				debitsAmt = accountBalance.postedDebits
+				creditsAmt = accountBalance.endingBalanceCredit
+				debitsAmt = accountBalance.endingBalanceDebit
 			}
 			
 			//if ()
@@ -79,17 +79,17 @@ if (parameters.thruDate) {
 				//if ()
 				//accountBalance.postedCredits = 0
 				
-				oldAccountBalance.put('postedCredits', creditsAmt)
+				oldAccountBalance.put('endingBalanceCredit', creditsAmt)
 				
 				//oldAccountBalance.putAt(postedCredits, creditsAmt)
 				
-				oldAccountBalance.put('postedDebits', debitsAmt)
+				oldAccountBalance.put('endingBalanceDebit', debitsAmt)
 				
 				//oldAccountBalance.putAt(postedDebits, debitsAmt)
 				accountBalances.add(oldAccountBalance);
 				
-				creditsAmt = accountBalance.postedCredits
-				debitsAmt = accountBalance.postedDebits
+				creditsAmt = accountBalance.endingBalanceCredit
+				debitsAmt = accountBalance.endingBalanceDebit
 				oldAccountBalance = accountBalance
 			} else {
 			
@@ -97,8 +97,8 @@ if (parameters.thruDate) {
 				//creditsAmt = creditsAmt + oldAccountBalance.postedCredits
 				//debitsAmt = debitsAmt + oldAccountBalance.postedDebits
 				
-				creditsAmt = creditsAmt + accountBalance.postedCredits
-				debitsAmt = debitsAmt + accountBalance.postedDebits
+				creditsAmt = creditsAmt + accountBalance.endingBalanceCredit
+				debitsAmt = debitsAmt + accountBalance.endingBalanceDebit
 				
 				println ' The credit total '+creditsAmt
 				println ' The Debit total '+debitsAmt
@@ -113,8 +113,8 @@ if (parameters.thruDate) {
 		
     }
 	
-	lastAccountBalance.postedCredits = creditsAmt
-	lastAccountBalance.postedDebits = debitsAmt
+	lastAccountBalance.endingBalanceCredit = creditsAmt
+	lastAccountBalance.endingBalanceDebit = debitsAmt
 	
 	accountBalances.add(lastAccountBalance)
     context.postedDebitsTotal = postedDebitsTotal
