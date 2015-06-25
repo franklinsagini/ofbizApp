@@ -44,7 +44,7 @@ if (parameters.thruDate) {
 	
 	oldglAccountId = ""
 	oldAccountBalance = [:]
-	oldAccountBalance.endingBalanceDebit = null
+	oldAccountBalance = null
 	lastAccountBalance = [:]
 	
 	def creditsAmt = 0
@@ -62,7 +62,7 @@ if (parameters.thruDate) {
             postedDebitsTotal = postedDebitsTotal + accountBalance.postedDebits
             postedCreditsTotal = postedCreditsTotal + accountBalance.postedCredits
 			
-			if (oldAccountBalance.endingBalanceDebit == null){
+			if (oldAccountBalance == null){
 				oldAccountBalance = accountBalance
 				
 				creditsAmt = accountBalance.endingBalanceCredit
