@@ -68,7 +68,7 @@ if (parameters.thruDate) {
 			if ((!oldAccountBalance.glAccountId.equals(accountBalance.glAccountId)) ){
 				
 				//if ()
-				accountBalances.add(oldAccountBalance);
+				//accountBalances.add(oldAccountBalance);
 				
 				oldAccountBalance = accountBalance
 			} else {
@@ -82,6 +82,8 @@ if (parameters.thruDate) {
 				
 				 oldAccountBalance.postedCredits = creditsAmt;
 				 oldAccountBalance.postedDebits = debitsAmt
+				 
+				 accountBalances.add(oldAccountBalance);
 				//}
 			}
 			
