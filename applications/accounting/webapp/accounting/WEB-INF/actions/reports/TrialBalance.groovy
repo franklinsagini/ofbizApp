@@ -46,6 +46,9 @@ if (parameters.thruDate) {
 	oldAccountBalance = [:]
 	lastAccountBalance = [:]
 	
+	def creditsAmt = 0
+	def debitsAmt = 0
+	
     organizationGlAccounts.each { organizationGlAccount ->
         accountBalance = [:]
         //accountBalance = dispatcher.runSync('computeGlAccountBalanceForTimePeriod', [organizationPartyId: organizationGlAccount.organizationPartyId, customTimePeriodId: customTimePeriod.customTimePeriodId, glAccountId: organizationGlAccount.glAccountId, userLogin: userLogin]);
@@ -64,33 +67,40 @@ if (parameters.thruDate) {
 			
 			//if ()
 			lastAccountBalance = accountBalance
+			creditsAmt = creditsAmt + accountBalance.postedCredits
+			debitsAmt = debitsAmt + accountBalance.postedDebits
 			
 			if ((!oldAccountBalance.glAccountId.equals(accountBalance.glAccountId)) ){
 				
 				//if ()
-				//accountBalances.add(oldAccountBalance);
+				oldAccountBalance.postedCredits = creditsAmt
+				oldAccountBalance.postedDebits = debitsAmt
+				accountBalances.add(oldAccountBalance);
 				
+				creditsAmt = 0
+				debitsAmt = 0
 				oldAccountBalance = accountBalance
 			} else {
 			
 				//if (!isEmpty){
-				creditsAmt = oldAccountBalance.postedCredits
-				debitsAmt = oldAccountBalance.postedDebits
+				//creditsAmt = creditsAmt + oldAccountBalance.postedCredits
+				//debitsAmt = debitsAmt + oldAccountBalance.postedDebits
 				
 				creditsAmt = creditsAmt + accountBalance.postedCredits
 				debitsAmt = debitsAmt + accountBalance.postedDebits
 				
 				 oldAccountBalance.postedCredits = creditsAmt;
 				 oldAccountBalance.postedDebits = debitsAmt
-				 
-				 accountBalances.add(oldAccountBalance);
-				//}
+				}
 			}
 			
            
         }
 		
     }
+	
+	lastAccountBalance.postedCredits = creditsAmt
+	lastAccountBalance.postedDebits = debitsAmt
 	
 	accountBalances.add(lastAccountBalance)
     context.postedDebitsTotal = postedDebitsTotal
