@@ -44,6 +44,7 @@ if (parameters.thruDate) {
 	
 	oldglAccountId = ""
 	oldAccountBalance = [:]
+	oldAccountBalance.postedCredits = null
 	lastAccountBalance = [:]
 	
 	def creditsAmt = 0
@@ -60,8 +61,8 @@ if (parameters.thruDate) {
             accountBalance.accountName = organizationGlAccount.accountName
             postedDebitsTotal = postedDebitsTotal + accountBalance.postedDebits
             postedCreditsTotal = postedCreditsTotal + accountBalance.postedCredits
-			isEmpty = oldAccountBalance.empty
-			if (oldAccountBalance.empty ){
+			
+			if (oldAccountBalance.postedCredits == null){
 				oldAccountBalance = accountBalance
 			}
 			
@@ -73,13 +74,15 @@ if (parameters.thruDate) {
 			if ((!oldAccountBalance.glAccountId.equals(accountBalance.glAccountId)) ){
 				
 				//if ()
-				//oldAccountBalance.postedCredits = creditsAmt
+				oldAccountBalance.postedCredits = creditsAmt
 				
-				oldAccountBalance.putAt(postedCredits, creditsAmt)
 				
-				//oldAccountBalance.postedDebits = debitsAmt
 				
-				oldAccountBalance.putAt(postedDebits, debitsAmt)
+				//oldAccountBalance.putAt(postedCredits, creditsAmt)
+				
+				oldAccountBalance.postedDebits = debitsAmt
+				
+				//oldAccountBalance.putAt(postedDebits, debitsAmt)
 				accountBalances.add(oldAccountBalance);
 				
 				creditsAmt = 0
@@ -93,6 +96,9 @@ if (parameters.thruDate) {
 				
 				creditsAmt = creditsAmt + accountBalance.postedCredits
 				debitsAmt = debitsAmt + accountBalance.postedDebits
+				
+				println ' The credit total '+creditsAmt
+				println ' The Debit total '+debitsAmt
 				
 				 //oldAccountBalance.postedCredits = creditsAmt;
 				 //oldAccountBalance.postedDebits = debitsAmt
