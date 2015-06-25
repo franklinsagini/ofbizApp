@@ -46,12 +46,12 @@ if (parameters.thruDate) {
 	oldAccountBalance = [:]
 	oldAccountBalance.endingBalanceDebit = null
 	lastAccountBalance = [:]
-	accountBalance = [:]
+	
 	def creditsAmt = 0
 	def debitsAmt = 0
 	
     organizationGlAccounts.each { organizationGlAccount ->
-        
+		accountBalance = [:]
         //accountBalance = dispatcher.runSync('computeGlAccountBalanceForTimePeriod', [organizationPartyId: organizationGlAccount.organizationPartyId, customTimePeriodId: customTimePeriod.customTimePeriodId, glAccountId: organizationGlAccount.glAccountId, userLogin: userLogin]);
         accountBalance = dispatcher.runSync('computeGlAccountBalanceForTrialBalance', [organizationPartyId: organizationGlAccount.organizationPartyId, thruDate : thruDate, fromDate: fromDate,  glAccountId: organizationGlAccount.glAccountId, userLogin: userLogin]);
         if (accountBalance.postedDebits != 0 || accountBalance.postedCredits != 0) {
