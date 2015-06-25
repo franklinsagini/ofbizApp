@@ -308,6 +308,14 @@
                 <response name="success" type="none">
         </response>
     </request-map>
+    
+    <request-map uri="printDailyReconciliation">
+		<security auth="true" https="true" />
+		<response name="success" type="view" value="printDailyReconciliation">
+			<redirect-parameter name="destinationTreasury"/>
+			<redirect-parameter name="transferDate"/>
+		</response>
+	</request-map>
 	
     
     <!-- View Mappings -->
@@ -329,5 +337,9 @@
 	<view-map name="transferdestinations" type="screen" page="component://treasurymanagement/widget/treasurymanagementScreens.xml#transferdestinations"/>
 	<view-map name="transfersources" type="screen" page="component://treasurymanagement/widget/treasurymanagementScreens.xml#transfersources"/>
 	<view-map name="currencyDenominations" type="screen" page="component://treasurymanagement/widget/treasurymanagementScreens.xml#currencyDenominations"/>
+	
+	
+	<view-map name="printDailyReconciliation" type="screenfop"
+		page="component://treasurymanagement/widget/treasurymanagementScreens.xml#printDailyReconciliation" content-type="application/pdf" encoding="none"  />
 	
 </site-conf>
