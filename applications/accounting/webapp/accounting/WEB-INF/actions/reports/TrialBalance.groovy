@@ -97,8 +97,14 @@ if (parameters.thruDate) {
 				//creditsAmt = creditsAmt + oldAccountBalance.postedCredits
 				//debitsAmt = debitsAmt + oldAccountBalance.postedDebits
 				
-				creditsAmt = creditsAmt + accountBalance.endingBalanceCredit
-				debitsAmt = debitsAmt + accountBalance.endingBalanceDebit
+				if (accountBalance.endingBalanceCredit != null){
+					creditsAmt = creditsAmt + accountBalance.endingBalanceCredit
+				}
+				//endingBalanceDebit
+				//endingBalanceDebit
+				if (accountBalance.endingBalanceDebit != null){
+					debitsAmt = debitsAmt + accountBalance.endingBalanceDebit
+				} 
 				
 				println ' The credit total '+creditsAmt
 				println ' The Debit total '+debitsAmt
