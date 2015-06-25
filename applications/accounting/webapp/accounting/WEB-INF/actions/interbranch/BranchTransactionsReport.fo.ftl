@@ -74,6 +74,17 @@ under the License.
                         </fo:list-item-body>
                     </fo:list-item>
                     <fo:list-item>
+                        <#if settlementAcc?has_content>
+                            <#assign glAccount = delegator.findOne("GlAccount", {"glAccountId" : settlementAcc}, false)/>
+                        </#if>
+                        <fo:list-item-label font-weight="bold">
+                            <fo:block>Settlement Account:</fo:block>
+                        </fo:list-item-label>
+                        <fo:list-item-body start-indent="body-start()" text-decoration="underline">
+                            <fo:block>${glAccount.accountName}</fo:block>
+                        </fo:list-item-body>
+                    </fo:list-item>
+                    <fo:list-item>
                         <fo:list-item-label font-weight="bold">
                             <fo:block>Total Amount (KES):</fo:block>
                         </fo:list-item-label>
@@ -107,13 +118,13 @@ under the License.
                             <fo:block>Trans Date</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                            <fo:block>Trans Type</fo:block>
+                            <fo:block>Debit</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                            <fo:block>GL Account</fo:block>
+                            <fo:block>Credit</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                            <fo:block>Amount</fo:block>
+                            <fo:block>Balance</fo:block>
                         </fo:table-cell>
                     </fo:table-row>
                 </fo:table-header>
@@ -128,22 +139,40 @@ under the License.
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <#if trans.debitCreditFlag?if_exists == "D">
-                                    <fo:block>Debit</fo:block>
-                                <#else>
-                                    <fo:block>Credit</fo:block>
+                                     <fo:block>${trans.amount}</fo:block>
                                 </#if>
                             </fo:table-cell>
-                                <#if trans.glAccountId?has_content>
-                                    <#assign glAccount = delegator.findOne("GlAccount", {"glAccountId" : trans.glAccountId}, false)/>
-                                </#if>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>${glAccount.accountName}</fo:block>
+                                <#if trans.debitCreditFlag?if_exists == "C">
+                                    <fo:block>${trans.amount}</fo:block>
+                                </#if>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>${trans.amount}</fo:block>
+                                <fo:block>${trans.localTotal}</fo:block>
                             </fo:table-cell>
                         </fo:table-row>
                     </#list>
+                    <fo:table-row background-color="#D4D0C8">
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>TOTALS</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+
+                                 <fo:block>${totalDebits}</fo:block>
+
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+
+                                <fo:block>${totalCredits}</fo:block>
+
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${grandTotal}</fo:block>
+                        </fo:table-cell>
+                    </fo:table-row>
                 </fo:table-body>
             </fo:table>
         </fo:block>
