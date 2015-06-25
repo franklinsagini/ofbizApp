@@ -1802,13 +1802,42 @@
 			<now-timestamp field="nowTimeStamp" />
 			<set field="newEntity.fromDate" from-field="nowTimeStamp" />
 		</if-empty>
+		<!--  -->
+		
+		<set field="partyIdTo" value="${newEntity.partyIdTo}" type="String"/>
+		
+		<set field="existstatus" value="${bsh:org.ofbiz.humanres.HumanResourceSetup.employeePostingExist(partyIdTo);}" type="Boolean"/>
+		
+		<if>
+			<condition>
+				<if-compare operator="equals" value="true" field="existstatus"></if-compare>
+			</condition>
+			<then>
+				<add-error>
+					<fail-message message="The Employee is posted ONLY once. The Employee You Selected has already been posted. Search To See his Postings "/>
+				</add-error>
+				 <check-errors /> 
+			</then>
+			<else>
+		
 		<create-value value-field="newEntity" />
 		
 		<set-service-fields service-name="createPayHistory"
 			map="newEntity" to-map="createPayHistoryMap" />
 		<call-service service-name="createPayHistory"
 			in-map-name="createPayHistoryMap" />
+			</else>
+		</if>
 		
+		<!--  
+		
+		<create-value value-field="newEntity" />
+		
+		<set-service-fields service-name="createPayHistory"
+			map="newEntity" to-map="createPayHistoryMap" />
+		<call-service service-name="createPayHistory"
+			in-map-name="createPayHistoryMap" />
+		-->
 	</simple-method>
 
 	<simple-method method-name="updateEmployment"
@@ -1838,7 +1867,7 @@
 		<log message=">>>>>>>>>>>>>>>>********************************>>>>>>>PARAMETERS1 ${parameters.partyIdTo}" level="info"/>
 		<log message=">>>>>>>>>>>>>>>>********************************>>>>>>>PARAMETERS2 ${parameters.branchId}" level="info"/>
 		<log message=">>>>>>>>>>>>>>>>********************************>>>>>>>PARAMETERS3 ${parameters.departmentId}" level="info"/>
-		 
+
 		 
 		 <entity-one entity-name="Person" value-field="pers">
 		 	<field-map field-name="partyId" from-field="parameters.partyIdTo"/>
@@ -1847,8 +1876,8 @@
 		 <!-- Get status -->
 		 <set field="pers.branchId" from-field="parameters.branchId" />
 		 <set field="pers.departmentId" from-field="parameters.departmentId" />
-		<store-value value-field="pers" />
-		<property-to-field resource="HumanResUiLabels"
+           		<store-value value-field="pers" />
+		        <property-to-field resource="HumanResUiLabels"
 			property="UpdateSuccess" field="successMessage" />
 	</simple-method>
 	<!-- ============================================================================================================== -->
@@ -2048,7 +2077,7 @@
 			property="UpdateSuccess" field="successMessage" />
 	</simple-method>
 
-<!-- 	<simple-method method-name="deletePayGrade"
+    <!--<simple-method method-name="deletePayGrade"
 		short-description="Delete Pay Grade">
 		<entity-one entity-name="PayGrade" value-field="lookedUpValue" />
 		<remove-value value-field="lookedUpValue" />
@@ -2479,6 +2508,7 @@
 		<property-to-field resource="HumanResUiLabels"
 			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
+
     <simple-method method-name="createPartyRole" short-description="Create Party Role">
         <entity-one entity-name="PartyRole" value-field="partyRole"/>
         <if-empty field="partyRole">
@@ -3735,9 +3765,29 @@
             <set-nonpk-fields map="parameters" value-field="newEntity"/>
             <sequenced-id sequence-name="PublicHolidays" field="holidayId"/>
             <set from-field="holidayId" field="newEntity.holidayId"/>
-            <create-value value-field="newEntity"/>
-            <property-to-field resource="HumanResUiLabels"
+            
+            <set field="holidayName" value="${newEntity.holidayName}" type="String"/>
+		
+		<set field="existstatus" value="${bsh:org.ofbiz.humanres.HumanResourceSetup.theholidayDate(holidayDate);}" type="Boolean"/>
+		
+		<if>
+			<condition>
+				<if-compare operator="equals" value="true" field="existstatus"></if-compare>
+			</condition>
+			<then>
+				<add-error>
+					<fail-message message="The Holiday Name  ${holidayName} is already assigned to another Holiday "/>
+				</add-error>
+				 <check-errors /> 
+			</then>
+			<else>
+				<create-value value-field="newEntity" />
+				<property-to-field resource="HumanResUiLabels"
 			property="CreateSuccess" field="successMessage" />
+			</else>
+		</if>
+		
+
     </simple-method>
     
     <simple-method method-name="deleteHoliday" short-description="Remove user estate">
@@ -3765,9 +3815,28 @@
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
 			<sequenced-id sequence-name="EmplLeaveReasonType" field="emplLeaveReasonTypeId" />
 			<set field="newEntity.emplLeaveReasonTypeId" from-field="emplLeaveReasonTypeId"/>
-		<create-value value-field="newEntity" />
-		<property-to-field resource="HumanResUiLabels"
+			
+			<set field="newEntity.reason" value=" ${newEntity.reason}" type="String"/>
+			
+			<set field="existstatus" value="${bsh:org.ofbiz.humanres.HumanResourceSetup.reasonTypeExist(reason);}" type="Boolean"/>
+		
+		<if>
+			<condition>
+				<if-compare operator="equals" value="true" field="existstatus"></if-compare>
+			</condition>
+			<then>
+				<add-error>
+					<fail-message message="Reason Type  ${reason} already exists, please try with a different Reason "/>
+				</add-error>
+				 <check-errors /> 
+			</then>
+			<else>
+				<create-value value-field="newEntity" />
+				<property-to-field resource="HumanResUiLabels"
 			property="CreateSuccess" field="successMessage" />
+			</else>
+		</if>
+
 	</simple-method>
 
 	<simple-method method-name="updateEmplLeaveReasonType"
@@ -3801,11 +3870,31 @@
 		<make-value entity-name="Tribe" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		
-		
 		<sequenced-id sequence-name="Tribe" field="tribeId" />
-
 		<set from-field="tribeId" field="newEntity.tribeId" />
+		
+		
+		<set field="tribe" value="${newEntity.tribe}" type="String"/>
+		
+		<set field="existstatus" value="${bsh:org.ofbiz.humanres.HumanResourceSetup.TribeExist(tribe);}" type="Boolean"/>
+		
+		<if>
+			<condition>
+				<if-compare operator="equals" value="true" field="existstatus"></if-compare>
+			</condition>
+			<then>
+				<add-error>
+					<fail-message message="Tribe ${tribe} already exists, please try another one "/>
+				</add-error>
+				 <check-errors /> 
+			</then>
+			<else>
+				<create-value value-field="newEntity" />
+				<property-to-field resource="HumanResUiLabels"
+			property="CreateSuccess" field="successMessage" />
+			</else>
+		</if>
+		
 		
 		
 		<!-- <if-empty field="newEntity.tribeId">
@@ -3813,9 +3902,6 @@
 		</if-empty>
 		<field-to-result field="newEntity.tribeId"
 			result-name="tribeId" /> -->
-		<create-value value-field="newEntity" />
-		<property-to-field resource="HumanResUiLabels"
-			property="CreateSuccess" field="successMessage" />
 	</simple-method>
 
 	<simple-method method-name="updateTribe"
@@ -3853,7 +3939,7 @@
 			</condition>
 			<then>
 				<add-error>
-					<fail-message message="County ${county}  already exists, please try another one "/>
+					<fail-message message="County ${county}  already exists, please try with another County "/>
 				</add-error>
 				 <check-errors /> 
 			</then>
@@ -3973,13 +4059,29 @@
 		<make-value entity-name="FamilyRelations" value-field="newEntity" />
 		<set-pk-fields map="parameters" value-field="newEntity" />
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
-		
 			<sequenced-id sequence-name="FamilyRelations" field="familyRelationsId" />
-		
 			<set field="newEntity.familyRelationsId" from-field="familyRelationsId"/>
-		<create-value value-field="newEntity" />
-		<property-to-field resource="HumanResUiLabels"
+						
+			<set field="relationship" value="${newEntity.relationship}" type="String"/>
+		
+		<set field="existstatus" value="${bsh:org.ofbiz.humanres.HumanResourceSetup.familyRelationship(relationship);}" type="Boolean"/>
+		
+		<if>
+			<condition>
+				<if-compare operator="equals" value="true" field="existstatus"></if-compare>
+			</condition>
+			<then>
+				<add-error>
+					<fail-message message="The Relationship ${relationship} already exists, please try another one "/>
+				</add-error>
+				 <check-errors /> 
+			</then>
+			<else>
+				<create-value value-field="newEntity" />
+				<property-to-field resource="HumanResUiLabels"
 			property="CreateSuccess" field="successMessage" />
+			</else>
+		</if>
 	</simple-method>
 
 	<simple-method method-name="updateFamilyRelations"
@@ -4297,9 +4399,9 @@
 			property="CreateSuccess" field="successMessage" />
     </simple-method>
     <simple-method method-name="updateSeparationTypes" short-description="Update Separation Types">
-        <entity-one entity-name="SeparationType" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <store-value value-field="lookedUpValue"/>
+        <entity-one entity-name="SeparationType" value-field="separationTypeId"/>
+        <set-nonpk-fields value-field="separationTypeId" map="parameters"/>
+        <store-value value-field="separationTypeId"/>
         <property-to-field resource="HumanResUiLabels"
 			property="UpdateSuccess" field="successMessage" />
     </simple-method>

@@ -15,13 +15,17 @@ context.ownedBranchId = ownedBranchId
 context.owingBranchId = owingBranchId
 
  expr = exprBldr.AND() {
-        EQUALS(organizationPartyId: ownedBranchId)
-        NOT_EQUAL(owedByPartyId: owingBranchId)
+        EQUALS(organizationPartyId: owingBranchId)
+        EQUALS(owesPartyId: ownedBranchId)
       }
 trans = delegator.findList("AcctgTransEntry", expr, null, ["createdTxStamp DESC"], null, false);
 
 trans.each { tran ->
+  System.out.println("#################################### Initial Amount: " + total)
+  System.out.println("#################################### Amount: " + tran.amount)
+  System.out.println("#################################### ADDING: " + total + " + " + tran.amount  )
   total = total + tran.amount
+  System.out.println("#################################### FINAL Amount: " + total)
   count = count + 1
 }
 context.total = total
