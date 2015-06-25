@@ -74,7 +74,7 @@ under the License.
                         <fo:block>Unreceipted Direct Deposits</fo:block>
                     </fo:table-cell>
                     <fo:table-cell border="1pt solid" text-align="right" padding="1%">
-                        <fo:block>${cashBook?if_exists}</fo:block>
+                        <fo:block>${unreceiptedDirectDeposits?if_exists}</fo:block>
                     </fo:table-cell>
                 </fo:table-row>
                 <fo:table-row>
@@ -85,7 +85,7 @@ under the License.
                         <fo:block>Unpresented Cheques</fo:block>
                     </fo:table-cell>
                     <fo:table-cell border="1pt solid" text-align="right" padding="1%">
-                        <fo:block>${unreceiptedDirectDeposits?if_exists}</fo:block>
+                        <fo:block>${unpresentedCheques?if_exists}</fo:block>
                     </fo:table-cell>
                 </fo:table-row>
                 <fo:table-row>
@@ -96,7 +96,7 @@ under the License.
                         <fo:block>Uncredited Cheques</fo:block>
                     </fo:table-cell>
                     <fo:table-cell border="1pt solid" text-align="right" padding="1%">
-                        <fo:block>${unpresentedCheques?if_exists}</fo:block>
+                        <fo:block>${uncreditedCheques?if_exists}</fo:block>
                     </fo:table-cell>
                 </fo:table-row>
                 <fo:table-row>
