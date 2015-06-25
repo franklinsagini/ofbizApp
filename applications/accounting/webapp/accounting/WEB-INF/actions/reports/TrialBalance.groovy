@@ -79,11 +79,11 @@ if (parameters.thruDate) {
 				//if ()
 				//accountBalance.postedCredits = 0
 				
-				oldAccountBalance.put('postedCredits', creditsAmt)
+				oldAccountBalance.put('postedCredits', 0)
 				
 				//oldAccountBalance.putAt(postedCredits, creditsAmt)
 				
-				oldAccountBalance.put('postedDebits', debitsAmt)
+				oldAccountBalance.put('postedDebits', 0)
 				
 				//oldAccountBalance.putAt(postedDebits, debitsAmt)
 				accountBalances.add(oldAccountBalance);
