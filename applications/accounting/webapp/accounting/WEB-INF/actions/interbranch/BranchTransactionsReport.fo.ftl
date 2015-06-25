@@ -140,7 +140,7 @@ under the License.
                                 <fo:block>${glAccount.accountName}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>12356.00</fo:block>
+                                <fo:block>${trans.amount}</fo:block>
                             </fo:table-cell>
                         </fo:table-row>
                     </#list>

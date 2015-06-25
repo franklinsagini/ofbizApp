@@ -89,13 +89,15 @@ under the License.
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>
     </form>
+   
     <form name="AddSkillType" type="single" target="createSkillType" default-map-name="skillType"
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-service service-name="createSkillType" default-field-type="hidden"/>
         <field name="skillTypeId"><hidden/></field>
-        <field name="description" title="Skill Type" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="buttontext"><submit button-type="text-link"/></field>
+        <field name="description" title="Skill Type" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="buttontext"><submit button-type="button"/></field>
     </form>
+  
     <form name="ListResponsibilityTypes" type="multi" list-name="responsibilityTypes" target="updateResponsibilityType"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -550,11 +552,11 @@ under the License.
             </hyperlink>
         </field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>dfdfdd
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>
     </form>
     <form name="AddPublicHoliday" type="single" target="createHoliday" default-map-name="workEffort">
         <alt-target use-when="workEffort!=null" target="updateHoliday"/>
- <!--        <field name="workEffortId" use-when="workEffort!=null"><hidden/></field>
+ <!--   <field name="workEffortId" use-when="workEffort!=null"><hidden/></field>
         <field name="partyId"><hidden value="${parameters.userLogin.partyId}"/></field>
         <field name="roleTypeId" use-when="workEffort==null"><hidden value="CAL_OWNER"/></field>
         <field name="statusId" use-when="workEffort==null"><hidden value="PRTYASGN_ASSIGNED"/></field>
@@ -570,6 +572,7 @@ under the License.
          <field name="holidayId" use-when="workEffort!=null"><display/></field>
         <field name="addButton" title="${uiLabelMap.CommonSubmit}" use-when="workEffort==null"><submit/></field>
         <field name="updateButton" title="${uiLabelMap.CommonUpdate}" use-when="workEffort!=null"><submit/></field>
+        
     </form>
     <form name="ListPublicHoliday" type="list" target="updateHoliday" list-name="listIt" separate-columns="true"
         odd-row-style="alternate-row" default-table-style="hover-bar basic-table">
@@ -609,7 +612,7 @@ under the License.
         <field name="ageId"><hidden/></field>
         <field name="retirementAge" tooltip="Only Numbers are allowed" widget-style="required" required-field="true"><text size="30" maxlength="60"/></field>
         
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
         </form>
         
         <form name="listRetirementAge" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateBankDetails" paginate-target="NewRetirementAge"
@@ -704,7 +707,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" target="">
         <actions>
             <entity-condition entity-name="department">
-                <entity-order-by field-name="branchId"/>
+                <order-by field-name="branchId"/>
             </entity-condition>
         </actions>
         

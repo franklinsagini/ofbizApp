@@ -81,15 +81,10 @@ public class HumanResourceSetup {
 	 * 
 	 * **/
 	public static Boolean countyExist(String CountyName){
-		
 		log.info("BBBBbbb   The County is " + CountyName);
-		
 		Delegator delegator= DelegatorFactoryImpl.getDelegator(null);
-		
 		List<GenericValue> listCountyELI=null;
-		
 		try{
-			
 			listCountyELI = delegator.findList("County",
 					EntityCondition.makeCondition("county", CountyName), null,
 					null, null, false);
@@ -102,5 +97,121 @@ public class HumanResourceSetup {
 		return false;
 	}
 	
+	/***
+	 * Checking that Reason Type already exist
+	 * 
+	 * org.ofbiz.humanres.HumanResourceSetup.reasonTypeExist()
+	 * 
+	 * **/
+	public static Boolean reasonTypeExist(String name){
+		log.info("BBBBbbb   The Leave Reason Type is " + name);
+		Delegator delegator= DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> listReasonTypeELI=null;
+		try{
+			listReasonTypeELI = delegator.findList("EmplLeaveReasonType",
+					EntityCondition.makeCondition("reason", name), null,
+					null, null, false);
+		}catch(GenericEntityException ex){
+			ex.printStackTrace();
+		}
+		if ((listReasonTypeELI != null) && (listReasonTypeELI.size() > 0)) {
+			return true;
+		}
+		return false;
+	}
 
+	/***
+	 * Checking thatThat Family relationship  already exist
+	 * 
+	 * org.ofbiz.humanres.HumanResourceSetup.familyRelationship()
+	 * 
+	 * **/
+	public static Boolean familyRelationship(String name){
+		log.info("BBBBbbb   The Leave Reason Type is " + name);
+		Delegator delegator= DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> listFamilyRelatiionELI=null;
+		try{
+			listFamilyRelatiionELI = delegator.findList("FamilyRelations",
+					EntityCondition.makeCondition("relationship", name), null,
+					null, null, false);
+		}catch(GenericEntityException ex){
+			ex.printStackTrace();
+		}
+		if ((listFamilyRelatiionELI != null) && (listFamilyRelatiionELI.size() > 0)) {
+			return true;
+		}
+		return false;
+	}
+	
+	/***
+	 * Checking thatThat Tribe  already exist
+	 * 
+	 * org.ofbiz.humanres.HumanResourceSetup.TribeExist(tribe)
+	 * 
+	 * **/
+	public static Boolean TribeExist(String name){
+		log.info("BBBBbbb   The Tribe is " + name);
+		Delegator delegator= DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> listTribeELI=null;
+		try{
+			listTribeELI = delegator.findList("Tribe",
+		       EntityCondition.makeCondition("tribe", name), null,
+			   null, null, false);
+		}catch(GenericEntityException ex){
+			ex.printStackTrace();
+		}
+		if ((listTribeELI != null) && (listTribeELI.size() > 0)) {
+			return true;
+		}
+		return false;
+	}
+	
+	/***
+	 * Checking whether Holiday Date is assigned to another
+	 * 
+	 * org.ofbiz.humanres.HumanResourceSetup.holidayDate()
+	 * 
+	 * **/
+	public static Boolean holidayName(String name){
+		log.info("BBBBbbb   The Holiday is " + name);
+		Delegator delegator= DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> listHolidayDateELI=null;
+		try{
+			listHolidayDateELI = delegator.findList("PublicHolidays",
+		       EntityCondition.makeCondition("holidayName", name), null,
+			   null, null, false);
+		}catch(GenericEntityException ex){
+			ex.printStackTrace();
+		}
+		if ((listHolidayDateELI != null) && (listHolidayDateELI.size() > 0)) {
+			return true;
+		}
+		return false;
+	}
+	
+	
+	/***
+	 * Checking thatThat Employee is Already Posted  already exist
+	 * 
+	 * org.ofbiz.humanres.HumanResourceSetup.employeePostingExist()
+	 * 
+	 * **/
+	public static Boolean employeePostingExist(String name){
+		log.info("BBBBbbb   The Employee posting  is " + name);
+		Delegator delegator= DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> employeePostindELI=null;
+		try{
+			employeePostindELI = delegator.findList("Employment",
+					EntityCondition.makeCondition("partyIdTo", name), null,
+					null, null, false);
+		}catch(GenericEntityException ex){
+			ex.printStackTrace();
+		}
+		if ((employeePostindELI != null) && (employeePostindELI.size() > 0)) {
+			return true;
+		}
+		return false;
+	}
+	
+	
 }
