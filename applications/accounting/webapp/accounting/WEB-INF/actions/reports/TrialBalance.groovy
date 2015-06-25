@@ -44,6 +44,7 @@ if (parameters.thruDate) {
 	
 	oldglAccountId = ""
 	oldAccountBalance = [:]
+	lastAccountBalance = [:]
 	
     organizationGlAccounts.each { organizationGlAccount ->
         accountBalance = [:]
@@ -56,12 +57,23 @@ if (parameters.thruDate) {
             accountBalance.accountName = organizationGlAccount.accountName
             postedDebitsTotal = postedDebitsTotal + accountBalance.postedDebits
             postedCreditsTotal = postedCreditsTotal + accountBalance.postedCredits
+			isEmpty = oldAccountBalance.empty
+			if (oldAccountBalance.empty ){
+				oldAccountBalance = accountBalance
+			}
 			
-			if (oldAccountBalance.empty || (!oldAccountBalance.glAccountId.equals(accountBalance.glAccountId)) ){
-				accountBalances.add(accountBalance);
+			//if ()
+			lastAccountBalance = accountBalance
+			
+			if ((!oldAccountBalance.glAccountId.equals(accountBalance.glAccountId)) ){
+				
+				//if ()
+				accountBalances.add(oldAccountBalance);
 				
 				oldAccountBalance = accountBalance
 			} else {
+			
+				if (!isEmpty){
 				creditsAmt = oldAccountBalance.postedCredits
 				debitsAmt = oldAccountBalance.postedDebits
 				
@@ -70,12 +82,15 @@ if (parameters.thruDate) {
 				
 				 oldAccountBalance.postedCredits = creditsAmt;
 				 oldAccountBalance.postedDebits = debitsAmt
+				}
 			}
 			
            
         }
 		
     }
+	
+	accountBalances.add(lastAccountBalance)
     context.postedDebitsTotal = postedDebitsTotal
     context.postedCreditsTotal = postedCreditsTotal
     context.accountBalances = accountBalances
