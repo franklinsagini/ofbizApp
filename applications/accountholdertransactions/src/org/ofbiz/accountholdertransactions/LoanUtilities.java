@@ -342,6 +342,46 @@ public class LoanUtilities {
 		}
 		return memberAccount;
 	}
+	
+	/***
+	 * @author Japheth Odonya  @when Jun 25, 2015 5:00:34 PM
+	 * Get Member Account No given memberAccountId
+	 * */
+	public static String getMemberAccountNumber(Long memberAccountId) {
+		GenericValue memberAccount = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			memberAccount = delegator.findOne("MemberAccount",
+					UtilMisc.toMap("memberAccountId", memberAccountId), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		String accountNo = "";
+		accountNo = memberAccount.getString("accountNo");
+		return accountNo;
+	}
+
+	/***
+	 * @author Japheth Odonya  @when Jun 25, 2015 5:00:23 PM
+	 * 
+	 * Member Account Name
+	 * */
+	public static String getMemberAccountName(Long memberAccountId) {
+		GenericValue memberAccount = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			memberAccount = delegator.findOne("MemberAccount",
+					UtilMisc.toMap("memberAccountId", memberAccountId), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		String accountName = "";
+		accountName = memberAccount.getString("accountName");
+		return accountName;
+	}
+
 
 	/***
 	 * Get Loan Status

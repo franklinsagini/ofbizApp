@@ -34,7 +34,7 @@ summaryList.each { summary ->
 }
 
 context.cashBook = cashBookBalance
-context.unreceiptedDirectDeposits = unpresentedCheques
+context.unreceiptedDirectDeposits = unreceiptedBankings
 context.unpresentedCheques = unpresentedCheques
 context.uncreditedCheques = uncreditedBankings
 context.withdrawalNotInCashBook = unidentifiedDebits
