@@ -135,10 +135,12 @@ public class LoanAccounting {
 				bdTotalCharge = bdTotalCharge.add(org.ofbiz.loans.LoanServices.getLoanClearingCharge(clearedLoanApplicationId, bdTotal));
 			}
 			
-			AccHolderTransactionServices.memberTransactionDeposit(bdTotalLoanCost, memberAccountId, userLogin, "LOANCLEARANCE", accountTransactionParentId, null);
+			//AccHolderTransactionServices.memberTransactionDeposit(bdTotalLoanCost, memberAccountId, userLogin, "LOANCLEARANCE", accountTransactionParentId, null);
+			AccHolderTransactionServices.memberTransactionDeposit(bdTotalLoanCost, memberAccountId, userLogin, "LOANCLEARANCE", accountTransactionParentId, null, acctgTransId, null, loanApplicationId);
 			
 			//Debit Member Account with the rate charged for clearances
-			AccHolderTransactionServices.memberTransactionDeposit(bdTotalCharge, memberAccountId, userLogin, "LOANCLEARANCECHARGES", accountTransactionParentId, null);
+			//AccHolderTransactionServices.memberTransactionDeposit(bdTotalCharge, memberAccountId, userLogin, "LOANCLEARANCECHARGES", accountTransactionParentId, null);
+			AccHolderTransactionServices.memberTransactionDeposit(bdTotalCharge, memberAccountId, userLogin, "LOANCLEARANCE", accountTransactionParentId, null, acctgTransId, null, loanApplicationId);
 			
 			//Post the clearance charges
 			

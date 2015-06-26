@@ -2408,7 +2408,7 @@ public class LoanServices {
 		GenericValue userLogin = (GenericValue) session
 				.getAttribute("userLogin");
 		String userLoginId = userLogin.getString("userLoginId");
-
+		String branchId = AccHolderTransactionServices.getEmployeeBranch((String)userLogin.get("partyId"));
 		GenericValue loanClear = null;
 
 		loanClearId = loanClearId.replaceAll(",", "");
@@ -2482,18 +2482,20 @@ public class LoanServices {
 				.getCashAccount(null, "LOANCLEARANCE");
 		String postingType = "D";
 		String entrySequenceId = "00001";
-		AccHolderTransactionServices.postTransactionEntry(delegator,
-				bdClearAmount, partyId, loanClearanceAccountId, postingType,
-				acctgTransId, acctgTransType, entrySequenceId);
+		//AccHolderTransactionServices.postTransactionEntry(delegator,
+		//		bdClearAmount, partyId, loanClearanceAccountId, postingType,
+	//			acctgTransId, acctgTransType, entrySequenceId);
+		AccHolderTransactionServices.postTransactionEntry(delegator, bdClearAmount, branchId, branchId, loanClearanceAccountId, postingType, acctgTransId, acctgTransType, entrySequenceId);
 
 		// Credit Loan Receivables
 		String loanReceivablesAccountId = AccHolderTransactionServices
 				.getMemberDepositAccount(null, "LOANCLEARANCE");
 		postingType = "C";
 		entrySequenceId = "00002";
-		AccHolderTransactionServices.postTransactionEntry(delegator,
-				bdClearAmount, partyId, loanReceivablesAccountId, postingType,
-				acctgTransId, acctgTransType, entrySequenceId);
+//		AccHolderTransactionServices.postTransactionEntry(delegator,
+//				bdClearAmount, partyId, loanReceivablesAccountId, postingType,
+//				acctgTransId, acctgTransType, entrySequenceId);
+		AccHolderTransactionServices.postTransactionEntry(delegator, bdClearAmount, branchId, branchId, loanReceivablesAccountId, postingType, acctgTransId, acctgTransType, entrySequenceId);
 
 		// Update loan applied, set its amount eligible
 		// loanApplicationId
@@ -2630,6 +2632,8 @@ public class LoanServices {
 		GenericValue userLogin = (GenericValue) session
 				.getAttribute("userLogin");
 		String userLoginId = userLogin.getString("userLoginId");
+		
+		String branchId = AccHolderTransactionServices.getEmployeeBranch((String)userLogin.get("partyId"));
 
 		GenericValue loanClear = null;
 
@@ -2706,18 +2710,21 @@ public class LoanServices {
 				.getCashAccount(null, "LOANCLEARANCE");
 		String postingType = "C";
 		String entrySequenceId = "00001";
-		AccHolderTransactionServices.postTransactionEntry(delegator,
-				bdClearAmount, partyId, loanClearanceAccountId, postingType,
-				acctgTransId, acctgTransType, entrySequenceId);
+		//AccHolderTransactionServices.postTransactionEntry(delegator,
+		//		bdClearAmount, partyId, loanClearanceAccountId, postingType,
+		//		acctgTransId, acctgTransType, entrySequenceId);
+		AccHolderTransactionServices.postTransactionEntry(delegator, bdClearAmount, branchId, branchId, loanClearanceAccountId, postingType, acctgTransId, acctgTransType, entrySequenceId);
 
 		// Credit Loan Receivables
 		String loanReceivablesAccountId = AccHolderTransactionServices
 				.getMemberDepositAccount(null, "LOANCLEARANCE");
 		postingType = "D";
 		entrySequenceId = "00002";
-		AccHolderTransactionServices.postTransactionEntry(delegator,
-				bdClearAmount, partyId, loanReceivablesAccountId, postingType,
-				acctgTransId, acctgTransType, entrySequenceId);
+//		AccHolderTransactionServices.postTransactionEntry(delegator,
+//				bdClearAmount, partyId, loanReceivablesAccountId, postingType,
+//				acctgTransId, acctgTransType, entrySequenceId);
+		
+		AccHolderTransactionServices.postTransactionEntry(delegator, bdClearAmount, branchId, branchId, loanReceivablesAccountId, postingType, acctgTransId, acctgTransType, entrySequenceId);
 
 		// Update loan applied, set its amount eligible
 		// loanApplicationId

@@ -1088,10 +1088,12 @@
 		<set value="STAFF" field="newEntity.stage"/>
 		<set from-field="singleindicate.percentage" field="newEntity.scoreOne"/>
 		<set from-field="singlestaff.hod" field="newEntity.hod"/>
-		<set value="${bsh:org.ofbiz.humanres.HumanResServices.returnBigDecimal();}" field="newEntity.scoreTwo"/>
-		<set value="${bsh:org.ofbiz.humanres.HumanResServices.returnBigDecimal();}" field="newEntity.scoreThree"/>
-		<set value="${bsh:org.ofbiz.humanres.HumanResServices.returnBigDecimal();}" field="newEntity.scoreFour"/>
 		
+		<!-- Commented out these so that the default score can be null by Japheth Odonya -->
+		<!-- set value="${bsh:org.ofbiz.humanres.HumanResServices.returnBigDecimal();}" field="newEntity.scoreTwo"/>
+		<set value="${bsh:org.ofbiz.humanres.HumanResServices.returnBigDecimal();}" field="newEntity.scoreThree"/>
+		<set value="${bsh:org.ofbiz.humanres.HumanResServices.returnBigDecimal();}" field="newEntity.scoreFour"/ -->
+				
 		<create-value value-field="newEntity" />
 		<property-to-field resource="HumanResUiLabels"
 		property="CreateSuccess" field="successMessage" />
@@ -1179,10 +1181,41 @@
     </simple-method>
 			
 			<!--======================= REVIEW MYSELF =================================== -->
-			  <simple-method method-name="reviewMyself" short-description="Update PerfGoals">
+	<simple-method method-name="reviewMyself" short-description="Update PerfGoals" >
         <entity-one entity-name="PerfPartyReview" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <store-value value-field="lookedUpValue"/>
+        <set field="trueValue" value="true" type="Boolean"/>
+        <set field="scoreValue" from-field="lookedUpValue.scoreTwo" type="BigDecimal"/>
+        
+        
+        <entity-one value-field="perfGoalsVal" entity-name="PerfGoals">
+        	<field-map field-name="perfGoalsId" from-field="lookedUpValue.perfGoalsId"/>
+        </entity-one>
+        
+        <entity-one value-field="perfReviewsGroupObjectiveDefinitionVal" entity-name="PerfReviewsGroupObjectiveDefinition">
+        	<field-map field-name="PerfReviewsGroupObjectiveDefinitionId" from-field="lookedUpValue.PerfReviewsGroupObjectiveDefinitionId"/>
+        </entity-one>
+        
+        	<!-- add-error>
+					<fail-message message="Got a score :: ${lookedUpValue.scoreTwo}"/>
+				</add-error>
+				<check-errors />
+			<if>
+				<condition>
+					<if-compare operator="equals" value="" field="scoreValue"></if-compare>
+				</condition>
+				<then>
+				<add-error>
+					<fail-message message="Please provide review score for ${perfReviewsGroupObjectiveDefinitionVal.objectiveDescription}"/>
+				</add-error>
+				<check-errors />
+				</then>
+				<else>
+					<store-value value-field="lookedUpValue"/>
+				</else>
+			</if -->
+			<store-value value-field="lookedUpValue"/>	
+        
     </simple-method>
     
     <!--======================= SUBMIT PERSONAL REVIEW SCORES =================================== -->
@@ -4679,7 +4712,7 @@
 		<entity-one entity-name="StaffInPerfReviewGroup" value-field="lookedUpValue2">
         <field-map field-name="StaffInPerfReviewGroupId" from-field="singleStaff.StaffInPerfReviewGroupId"/>
         </entity-one>
-        <set field="lookedUpValue2.trainingStage" value="DONE"/>
+        <!-- set field="lookedUpValue2.trainingStage" value="DONE"/ -->
         <store-value value-field="lookedUpValue2"/>
 		</iterate>
 		
