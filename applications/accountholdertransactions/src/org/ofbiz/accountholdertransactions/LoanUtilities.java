@@ -2632,4 +2632,54 @@ public class LoanUtilities {
 		
 		return finAccount.getString("postToGlAccountId");
 	}
+
+	/***
+	 * @author Japheth Odonya  @when Jun 28, 2015 7:08:59 PM
+	 * 
+	 * Returns the Member Class ID given the class name
+	 * 
+	 * */
+	public static Long getMemberClassId(String name) {
+		List<GenericValue> memberClassELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			memberClassELI = delegator.findList("MemberClass",
+					EntityCondition.makeCondition("name", name), null,
+					null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		Long memberClassId = null;
+		for (GenericValue genericValue : memberClassELI) {
+			memberClassId = genericValue.getLong("memberClassId");
+		}
+
+		return memberClassId;
+	}
+
+	/**
+	 * @author Japheth Odonya  @when Jun 28, 2015 7:08:34 PM
+	 * 
+	 * Returns the Share Minimum Entity
+	 * 
+	 * **/
+	public static GenericValue getShareMinimumEntity(Long memberClassId) {
+		List<GenericValue> shareMinimumELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			shareMinimumELI = delegator.findList("ShareMinimum",
+					EntityCondition.makeCondition("memberClassId", memberClassId), null,
+					null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		GenericValue shareMinimum = null;
+		for (GenericValue genericValue : shareMinimumELI) {
+			shareMinimum = genericValue;
+		}
+		
+		return shareMinimum;
+	}
 }

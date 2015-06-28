@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpSession;
 
 import javolution.util.FastMap;
 
+import org.apache.commons.validator.routines.IntegerValidator;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -33,7 +35,6 @@ import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.loans.AmortizationServices;
-import org.ofbiz.loans.LoanAccounting;
 import org.ofbiz.loans.LoanServices;
 import org.ofbiz.webapp.event.EventHandlerException;
 
@@ -49,6 +50,9 @@ public class LoansProcessingServices {
 
 	public static Logger log = Logger.getLogger(LoansProcessingServices.class);
 	public static String DEFAULTER_LOAN_CODE = "D330";
+	public static BigDecimal MAXCONTRIBUTIONAMOUNT = new BigDecimal(12500);
+	public static BigDecimal LOANPERCENTAGE = new BigDecimal(0.25);
+	public static Long ONEHUNDRED = 100L;
 
 	public static BigDecimal getMonthlyLoanRepayment(String loanApplicationId) {
 		BigDecimal monthlyRepayment = BigDecimal.ZERO;
@@ -233,7 +237,43 @@ public class LoansProcessingServices {
 		return bdTotalLoansWithAccountAmount;
 	}
 
-	public static BigDecimal getGruaduatedScaleContribution(BigDecimal bdAmount) {
+	public static BigDecimal getGruaduatedScaleContribution(BigDecimal bdAmount, Long memberId) {
+		BigDecimal bdContributedAmount = BigDecimal.ZERO;
+		
+		GenericValue member = LoanUtilities.getMember(memberId);
+		
+		Long memberClassId = member.getLong("memberClassId");
+		
+		if (memberClassId == null){
+			memberClassId = LoanUtilities.getMemberClassId("Class A");
+		}
+		
+		BigDecimal bdClassMinimumContribution = getMinimumClassContributionAmount(memberClassId);
+		
+		bdContributedAmount = bdAmount.multiply(LOANPERCENTAGE).divide(new BigDecimal(ONEHUNDRED), 4, RoundingMode.HALF_EVEN);
+		
+		bdContributedAmount = bdClassMinimumContribution.add(bdContributedAmount);
+		
+		if (bdContributedAmount.compareTo(MAXCONTRIBUTIONAMOUNT) == 1)
+		{
+			return MAXCONTRIBUTIONAMOUNT;
+		}
+		
+		
+		return bdContributedAmount;
+	}
+	
+	private static BigDecimal getMinimumClassContributionAmount(
+			Long memberClassId) {
+		GenericValue shareMinimum = LoanUtilities.getShareMinimumEntity(memberClassId);
+		
+		if (shareMinimum == null)
+			return null;
+		
+		return shareMinimum.getBigDecimal("minMemberDepositContributionAmount");
+	}
+
+	public static BigDecimal getGruaduatedScaleContributionOld(BigDecimal bdAmount) {
 		List<GenericValue> graduatedScaleELI = null; // =
 		List<String> listOrder = new ArrayList<String>();
 		listOrder.add("lowerValue");
@@ -280,7 +320,7 @@ public class LoansProcessingServices {
 				.getTotalDisbursedLoans(memberId);
 		// getTotalLoanBalances(memberId,
 		// loanProductId);
-		BigDecimal bdContributionAmount = getGruaduatedScaleContribution(bdTotalDisbursed);
+		BigDecimal bdContributionAmount = getGruaduatedScaleContribution(bdTotalDisbursed, memberId);
 		return bdContributionAmount;
 	}
 
@@ -288,7 +328,7 @@ public class LoansProcessingServices {
 		BigDecimal bdTotalDisbursedLoans = LoanServices
 				.getTotalDisbursedLoans(memberId);
 		// getTotalLoansRunning(memberId);
-		BigDecimal bdContributionAmount = getGruaduatedScaleContribution(bdTotalDisbursedLoans);
+		BigDecimal bdContributionAmount = getGruaduatedScaleContribution(bdTotalDisbursedLoans, memberId);
 		return bdContributionAmount;
 	}
 
@@ -301,7 +341,7 @@ public class LoansProcessingServices {
 
 		BigDecimal newLoansTotal = bdTotalDisbursedLoans.add(loanAmt);
 
-		BigDecimal bdContributionAmount = getGruaduatedScaleContribution(newLoansTotal);
+		BigDecimal bdContributionAmount = getGruaduatedScaleContribution(newLoansTotal, memberId);
 
 		// Get Contribution Amount of Loan Product Affect Member Deposits e.g.
 		// Super Loan

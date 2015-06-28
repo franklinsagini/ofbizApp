@@ -163,13 +163,25 @@
 			<hidden />
 		</field>
 		
-		<field name="memberClass" title="Member Class"  widget-style="required" required-field="true">
+		<!-- field name="memberClass" title="Member Class"  widget-style="required" required-field="true">
             <drop-down allow-empty="false">
                 <option key="Class A" description="Class A"/>
                 <option key="Class B" description="Class B"/>
             </drop-down>
+        </field -->
+        <field name="memberClassId" title="MemberClass" widget-style="required" required-field="true">
+            <drop-down allow-empty="true" >
+                <entity-options entity-name="MemberClass" description="${name}" key-field-name="memberClassId">
+                    <entity-order-by field-name="name" />
+                </entity-options>
+            </drop-down>
         </field>
-		<field name="minAmount" title="Minimum Amount" widget-style="required"
+		<field name="minMemberDepositContributionAmount" title="Minimum Member Deposit Contribution Amount" widget-style="required"
+			required-field="true">
+			<text size="30" maxlength="60" />
+		</field>
+		
+		<field name="minShareCapital" title="Minimum Share Capital Amount" widget-style="required"
 			required-field="true">
 			<text size="30" maxlength="60" />
 		</field>
@@ -183,7 +195,7 @@
 	</form>
 	
 	<form name="shareMinimumList" type="list" list-name="listIt"
-		paginate-target="shareMinimum" default-entity-name="IncomeScale"
+		paginate-target="shareMinimum" default-entity-name="ShareMinimum"
 		separate-columns="true" odd-row-style="alternate-row"
 		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="shareMinimum">
 		<actions>
@@ -199,16 +211,21 @@
 			<hidden />
 		</field>
 		
-		<field name="memberClass" title="Member Class"  widget-style="required" required-field="true">
-            <drop-down allow-empty="false">
-                <option key="Class A" description="Class A"/>
-                <option key="Class B" description="Class B"/>
+		<field name="memberClassId" title="MemberClass">
+            <drop-down>
+            	<entity-options description="${name}" entity-name="MemberClass"></entity-options>
             </drop-down>
         </field>
-		<field name="minAmount" title="Minimum Amount" widget-style="required"
+		<field name="minMemberDepositContributionAmount" title="Minimum Member Deposit Contribution Amount" widget-style="required"
 			required-field="true">
 			<text size="30" maxlength="60" />
 		</field>
+		
+		<field name="minShareCapital" title="Minimum Share Capital Amount" widget-style="required"
+			required-field="true">
+			<text size="30" maxlength="60" />
+		</field>
+
 		
 		<field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit 
 			button-type="button"/></field>
