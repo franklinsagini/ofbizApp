@@ -2610,4 +2610,26 @@ public class LoanUtilities {
 		
 		return false;
 	}
+	
+	
+	/***
+	 * @author Japheth Odonya  @when Jun 28, 2015 1:05:25 PM
+	 * 
+	 * Get the Bank GL account ID given the finAccountId
+	 * */
+	public static String getBankglAccountId(String finAccountId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		GenericValue finAccount = null;
+		try {
+			finAccount = delegator.findOne("FinAccount",
+					UtilMisc.toMap("finAccountId", finAccountId), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if (finAccount == null)
+			return null;
+		
+		return finAccount.getString("postToGlAccountId");
+	}
 }

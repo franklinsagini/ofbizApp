@@ -281,6 +281,100 @@
 		<!-- entity-one entity-name="CashWithdrawal" value-field="lookedUpValue"/> 
 			<remove-value value-field="lookedUpValue"/ -->
 	</simple-method>
+	
+	<!-- createDirectDebit -->
+	<simple-method method-name="createDirectDebit"
+		short-description="Create DirectDebit">
+		<make-value entity-name="AccountTransaction" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+
+		<!-- map-to-map map="parameters" to-map="transactionParameters" / -->
+		<log message=" FIIIIIIIIIIIIIIIIIIIIN IIIIIIIIIIIIID ${newEntity.finAccountId}" level="info"/>
+		<set field="ledgerAccountSetup"
+			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.legerAccountSetUp(newEntity);}"
+			type="Boolean" />
+			
+		<set field="bankAccountMapped" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.checkBankGLAccount(newEntity, userLogin);}" type="Boolean"/>
+		<set field="falseField" value="false" type="Boolean" />
+
+		<if>
+			<!-- ledgerAccountSetup -->
+			<condition>
+				<if-compare-field to-field="ledgerAccountSetup"
+					operator="equals" field="falseField"></if-compare-field>
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="AccountHolderTransactionsUILabels.xml"
+						property="ledgerAccountSetupError" />
+				</add-error>
+				<check-errors />
+			</then>
+			<else>
+			
+
+			<if>
+				<condition>
+					<if-compare operator="equals" value="falseField" field="bankAccountMapped"></if-compare>
+				</condition>
+				<then>
+					<add-error>
+						<fail-message message="Please make sure that the specifed bank account has its GL set and mapped to the branch in accounting (Check with Finance)"/>
+					</add-error>
+					<check-errors />
+				</then>
+				<else>
+					<call-simple-method method-name="saveDirectDebit"
+					scope="inline"></call-simple-method>
+
+					<set field="accountTransactionParentId"
+					value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.directDebitPosting(newEntity, userLogin);}"
+					type="String" />
+
+					<property-to-field resource="AccountHolderTransactionsUILabels.xml"
+					property="Successfully posted Direct Debit (The bank slip)" field="successMessage" />
+				</else>
+			</if>
+
+			</else>
+		</if>
+
+	</simple-method>
+	
+	<simple-method method-name="saveDirectDebit"
+		use-transaction="true">
+
+		<!-- set field="entityName" value="AccountTransaction"></set> <set field="newEntity.accountTransactionId" 
+			value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set -->
+		<sequenced-id sequence-name="AccountTransaction" field="accountTransactionId" />
+		<set from-field="accountTransactionId" field="newEntity.accountTransactionId" />
+		<call-simple-method method-name="createAccountTransactionParent"
+			scope="inline"></call-simple-method>
+		<set field="newEntity.accountTransactionParentId" value="${transactionParent.accountTransactionParentId}" />
+		<set field="newEntity.treasuryId"
+			value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerId(userLogin);}"
+			type="String" />
+		<set field="newEntity.isActive" value="Y" />
+		<set field="newEntity.createdBy" from-field="userLogin.userLoginId" />
+		<set field="loggedInPartyId" from-field="userLogin.partyId" />
+		<!-- set field="memberAccountId" from-field="newEntity.memberAccountId"/ -->
+		<!-- set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" 
+			type="String"/ -->
+		<!-- set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}"/ -->
+		<!-- set field="newEntity.branchId" from-field="userLogin.partyId"/ -->
+		<set field="newEntity.transactionType" value="DIRECTDEBIT" />
+		<set field="transactionType" value="DIRECTDEBIT" />
+		<set field="newEntity.increaseDecrease" value="I" />
+		<create-value value-field="newEntity" />
+		<field-to-result field="newEntity.accountTransactionParentId"
+			result-name="accountTransactionParentId" />
+
+		<!-- Set Posting Type -->
+		<set field="memberDepostPosting" value="C" />
+		<set field="cashPosting" value="D" />
+	</simple-method>
+	
 	<!-- CashDeposit -->
 	<simple-method method-name="createCashDeposit"
 		short-description="Create CashDeposit">
