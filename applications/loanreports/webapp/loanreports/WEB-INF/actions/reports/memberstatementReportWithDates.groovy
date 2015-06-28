@@ -70,6 +70,7 @@ class MemberTransaction{
 	def transactionAmount
 	def isLoan
 	def isLoanTransaction
+	def repaymentMode
 }
 
 
@@ -308,6 +309,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 			loanTransaction.transactionAmount = loanRepaymentItem.insuranceAmount
 			//loanTransaction.isLoan = true
 			loanTransaction.isLoanTransaction = true
+			loanTransaction.repaymentMode  = loanRepaymentItem.repaymentMode
 			memberStatement.listOfTransactions.add(loanTransaction);
 		}
 
@@ -325,6 +327,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 			loanTransaction.transactionAmount = loanRepaymentItem.interestAmount
 			//loanTransaction.isLoan = true
 			loanTransaction.isLoanTransaction = true
+			loanTransaction.repaymentMode  = loanRepaymentItem.repaymentMode
 			memberStatement.listOfTransactions.add(loanTransaction);
 		}
 
@@ -342,6 +345,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 			loanTransaction.transactionAmount = loanRepaymentItem.principalAmount
 			//loanTransaction.isLoan = true
 			loanTransaction.isLoanTransaction = true
+			loanTransaction.repaymentMode  = loanRepaymentItem.repaymentMode
 			memberStatement.listOfTransactions.add(loanTransaction);
 		}
 
