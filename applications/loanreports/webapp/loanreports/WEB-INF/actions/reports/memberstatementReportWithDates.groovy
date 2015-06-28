@@ -60,6 +60,7 @@ class MemberStatement{
 	def code
 	def loanNo
 	def itemTotal
+	def availableBalace
 	def listOfTransactions = []
 }
 
@@ -395,6 +396,8 @@ allAccountProducts.eachWithIndex { memberAccount, index ->
 	memberStatement.name = accountProduct.name;
 	memberStatement.code = accountProduct.code;
 	memberStatement.itemTotal = BigDecimal.ZERO;
+	String memberAccountIdStr = memberAccount.memberAccountId;
+	memberStatement.availableBalace = org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getAvailableBalanceVer3(memberAccountIdStr);
 
 	//Add Opening Balance
 	memberAccountTransaction = new MemberTransaction()
