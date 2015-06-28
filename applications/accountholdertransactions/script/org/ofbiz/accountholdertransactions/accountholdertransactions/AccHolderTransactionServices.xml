@@ -1300,4 +1300,34 @@
 			</else>
 		</if>
 	</simple-method>
+	
+	
+	<!-- manuallyClearCheque -->
+		<simple-method method-name="manuallyClearCheque"
+		short-description="Manually Clear Cheque">
+		<set field="accountTransactionId" from-field="parameters.accountTransactionId"/>
+
+		<log message="NNNNNNNNNNNNNNN Clearing Cheque"
+			level="info" />
+		<log message="${accountTransactionId}" level="info" />
+		<set field="clearChequeStatus"
+			value="${bsh:org.ofbiz.accountholdertransactions.ChequeProcessing.manuallyClearCheque(userLogin, accountTransactionId);}"></set>
+
+		<if>
+			<condition>
+				<if-compare operator="not-equals" value="success" field="clearChequeStatus"></if-compare>
+			</condition>
+			<then>
+				<add-error>
+					<fail-message message="${clearChequeStatus}"/>
+				</add-error>
+				<check-errors />
+			</then>
+			<else>
+				<property-to-field resource="AccountHolderTransactionsUILabels.xml"
+					property="Successfully cleared cheque" default="Successfully cleared " field="successMessage" />
+			</else>
+		</if>
+	</simple-method>
+	
 </simple-methods>

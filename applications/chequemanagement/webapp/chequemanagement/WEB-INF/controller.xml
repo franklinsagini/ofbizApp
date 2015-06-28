@@ -21,8 +21,48 @@
     -->
 
     <!-- Request Mappings -->
-    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
+    <!-- request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map -->
+    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="chequedepositposting"/></request-map>
+    
+    <request-map uri="chequedepositposting">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="chequedepositposting"
+			save-current-view="true" />
+	</request-map>
+	
+	
+	<request-map uri="postUnpostedCheques">
+		<security auth="true" https="true" />
+		<event type="java"
+			path="org.ofbiz.accountholdertransactions.ChequeProcessing" invoke="postUnpostedCheques" />
+		<response name="success" type="view" value="chequedepositposting">
+		</response>
+		<response name="error" type="view" value="chequedepositposting" />
+	</request-map>
+	
+	
+	<request-map uri="manuallyClearCheque">
+		<security https="true" auth="true" />
+		<event type="service" invoke="manuallyClearCheque" />
+		<response name="success" type="request-redirect" value="main">
+		</response>
+		<response name="error" type="view" value="main" />
+	</request-map>
+	
+	
+	
+	<request-map uri="manuallyedClearedChequesList">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="manuallyedClearedChequesList"
+			save-current-view="true" />
+	</request-map>
     
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://chequemanagement/widget/ChequeManagementScreens.xml#main"/>
+    
+    <view-map name="chequedepositposting" type="screen"
+		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#chequedepositposting" />
+       <!-- manuallyedClearedChequesList -->
+    <view-map name="manuallyedClearedChequesList" type="screen" page="component://chequemanagement/widget/ChequeManagementScreens.xml#manuallyedClearedChequesList"/>
+       
 </site-conf>
