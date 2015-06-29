@@ -501,6 +501,9 @@
 				<!-- set field="transactionStatus"
 					value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.addChargesToTransaction(newEntity, userLogin, transactionType);}"
 					type="String" / -->
+					
+					<field-to-result field="newEntity.accountTransactionParentId"
+													result-name="accountTransactionParentId" />
 			</then>
 			<else>
 				<add-error>
@@ -597,7 +600,9 @@
 		<!-- call-service service-name="calculateChequeClearDate" in-map-name="transactionMap" 
 			include-user-login="false" require-new-transaction="true" > <result-to-field 
 			result-name="clearDate"/> <result-to-result result-name="clearDate"/> </call-service -->
-
+		<field-to-result field="newEntity.accountTransactionParentId"
+													result-name="accountTransactionParentId" />
+			
 
 	</simple-method>
 
