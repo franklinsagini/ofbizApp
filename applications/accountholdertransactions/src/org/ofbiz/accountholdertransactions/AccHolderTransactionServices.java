@@ -3278,6 +3278,82 @@ public class AccHolderTransactionServices {
 
 		return accountTransaction.getString("accountTransactionParentId");
 	}
+	
+	/****
+	 * @author Japheth Odonya  @when Jun 28, 2015 12:54:58 PM
+	 * 
+	 * Direct Debit posting
+	 * 
+	 * */
+	public static String directDebitPosting(GenericValue accountTransaction,
+			Map<String, String> userLogin) {
+
+		// Post the Direct Debit to the Bank Selected
+		/***
+		 * Dr to the Bank Account and Cr to the Member Deposits
+		 * 
+		 * */
+		Long memberAccountId = accountTransaction.getLong("memberAccountId");
+
+		BigDecimal transactionAmount = accountTransaction
+				.getBigDecimal("transactionAmount");
+
+		String glLedgerAccountId = null;
+		//String tellerAccountId = null;
+
+		// Long memberAccountId = accountTransaction.getLong("memberAccountId");
+		GenericValue accountProduct = getAccountProductEntity(memberAccountId);
+
+		glLedgerAccountId = accountProduct.getString("glAccountId");
+		//tellerAccountId = TreasuryUtility.getTellerAccountId(userLogin);
+		String finAccountId = accountTransaction.getString("finAccountId");
+		String bankglAccountId = LoanUtilities.getBankglAccountId(finAccountId);
+		
+		log.info(" ############## Posting to Bank GL Account "+bankglAccountId);
+
+		// Get tha acctgTransId
+		String acctgTransId = creatAccountTransRecordVer2(accountTransaction,
+				userLogin);
+		String glAccountTypeId = "MEMBER_DEPOSIT";
+		String partyId = LoanUtilities
+				.getMemberPartyIdFromMemberAccountId(memberAccountId);
+		String branchId = LoanUtilities.getMemberBranchId(partyId);
+
+		List<GenericValue> listPostEntity = new ArrayList<GenericValue>();
+
+		Long sequence = 0l;
+
+		// Post memberDeposit
+		sequence = sequence + 1;
+		listPostEntity.add(createAccountPostingEntryVer2(glLedgerAccountId,
+				glAccountTypeId, branchId, transactionAmount, memberAccountId,
+				acctgTransId, "C", sequence.toString(), partyId));
+
+		// Post for Bank - the Debited Bank Account
+		sequence = sequence + 1;
+		listPostEntity.add(createAccountPostingEntryVer2(bankglAccountId,
+				glAccountTypeId, branchId, transactionAmount, memberAccountId,
+				acctgTransId, "D", sequence.toString(), partyId));
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			delegator.storeAll(listPostEntity);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// Update account transactions to reflect the ID in postings
+		accountTransaction.set("acctgTransId", acctgTransId);
+		try {
+			delegator.createOrStore(accountTransaction);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return accountTransaction.getString("accountTransactionParentId");
+	}
 
 	/***
 	 * 
@@ -4747,6 +4823,29 @@ public class AccHolderTransactionServices {
 			return true;
 
 		return false;
+	}
+	
+	/****
+	 * @author Japheth Odonya  @when Jun 28, 2015 1:10:58 PM
+	 * 
+	 * Bank Account is setup
+	 * **/
+	public static Boolean checkBankGLAccount(GenericValue accountTransaction, Map<String, String> userLogin) {
+
+		// Get the finAccountId
+		String finAccountId = accountTransaction.getString("finAccountId");
+		log.info("BBBBBBBBBBBBBBBB The Finacial ID  is BBBBBBBB "+finAccountId);
+		String bankglAccountId = LoanUtilities.getBankglAccountId(finAccountId);
+		log.info("BBBBBBBBBBBBBBBB The Bank GL Account ID  is BBBBBBBB "+bankglAccountId);
+		if (bankglAccountId == null)
+			return false;
+		
+		String branchId = getBranch(userLogin.get("partyId"));
+		
+		log.info("BBBBBBBBBBBBBBBB The Branch is BBBBBBBB "+branchId);
+		
+		return LoanUtilities.organizationAccountMapped(bankglAccountId, branchId);
+		
 	}
 
 	/***

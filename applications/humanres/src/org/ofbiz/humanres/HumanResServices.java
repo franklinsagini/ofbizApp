@@ -5609,9 +5609,6 @@ public class HumanResServices {
 		return st;
 	}
 	
-	
-	
-	
 
 	public static void ScheduleSocietyMails(ArrayList<String> email, String subject, String mailBody) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -5908,6 +5905,17 @@ public class HumanResServices {
 					EntityCondition.makeCondition(whichScore, EntityOperator.EQUALS, blank)),
 					EntityOperator.AND);
 
+			try {
+				StaffScoresELI2 = delegator.findList("PerfPartyReview",
+						anyblankConditions, null, null, null, false);
+
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+			if (StaffScoresELI2.size() > 0) {
+				state = "INVALID";
+				return state;
+			} 
 			
 			try {
 				StaffScoresELI = delegator.findList("PerfPartyReview",
@@ -5917,19 +5925,12 @@ public class HumanResServices {
 				e.printStackTrace();
 			}
 			
-			try {
-				StaffScoresELI2 = delegator.findList("PerfPartyReview",
-						anyblankConditions, null, null, null, false);
-
-			} catch (GenericEntityException e) {
-				e.printStackTrace();
-			}
+			
 
 			if (StaffScoresELI.size() > 0) {
 				state = "INVALID";
-			}if (StaffScoresELI2.size() > 0) {
-				state = "INVALID";
-			}  else {
+				return state;
+			} else {
 				state = "VALID";
 			}
 

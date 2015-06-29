@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -84,7 +86,7 @@ public class ChequeProcessing {
 		} else{
 			log.info(" ######### The Size  #########"+accountTransactionELI.size());
 		}
-		
+		String acctgTransId = "";
 		String acctgTransType = "MEMBER_DEPOSIT";
 		int count = 0;
 		for (GenericValue accountTransaction : accountTransactionELI) {
@@ -94,10 +96,10 @@ public class ChequeProcessing {
 			} catch (GenericTransactionException e) {
 				e.printStackTrace();
 			}
-			postChequeDeposit(accountTransaction, delegator, acctgTransType);
+			acctgTransId = postChequeDeposit(accountTransaction, delegator, acctgTransType);
 			log.info("#####PPPPPPPPPPPPPP Posted ####  "+accountTransaction.getBigDecimal("transactionAmount"));
 			// Update Account Transaction to read Posted and when it was Posted
-			updateAccountTransaction(accountTransaction, delegator);
+			updateAccountTransaction(accountTransaction, delegator, acctgTransId);
 			try {
 				TransactionUtil.commit();
 			} catch (GenericTransactionException e) {
@@ -120,12 +122,98 @@ public class ChequeProcessing {
 		}
 		return "";
 	}
+	
+	
+	/****
+	 * @author Japheth Odonya  @when Jun 28, 2015 11:09:05 AM
+	 * 
+	 * Manually Clear a cheque
+	 * */
+	public static String manuallyClearCheque(Map<String, String> userLogin, String accountTransactionId){
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> accountTransactionELI = null;
+
+		String chequeDepostTransaction = "CHEQUEDEPOSIT";
+	
+		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
+				.makeCondition(
+						UtilMisc.toList(EntityCondition.makeCondition(
+								"transactionType", EntityOperator.EQUALS,
+								chequeDepostTransaction),  EntityCondition
+								.makeCondition("isPosted",
+										EntityOperator.NOT_EQUAL, "Y")	,
+										
+										EntityCondition
+										.makeCondition("accountTransactionId",
+												EntityOperator.EQUALS, accountTransactionId)		
+								),
+						EntityOperator.AND);
+
+		try {
+			accountTransactionELI = delegator.findList("AccountTransaction",
+					transactionConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if ((accountTransactionELI == null) || (accountTransactionELI.size() < 1))
+			return "Cheque already cleared, no cheque to clear ";
+		
+		log.info(" ######### Will try to POST Cheques #########");
+		
+		String acctgTransId = "";
+		String acctgTransType = "MEMBER_DEPOSIT";
+		int count = 0;
+		for (GenericValue accountTransaction : accountTransactionELI) {
+			log.info("CCCCCC  Counting "+count);
+			try {
+				TransactionUtil.begin();
+			} catch (GenericTransactionException e) {
+				e.printStackTrace();
+			}
+			acctgTransId = postChequeDeposit(accountTransaction, delegator, acctgTransType);
+			log.info("#####PPPPPPPPPPPPPP Posted ####  "+accountTransaction.getBigDecimal("transactionAmount"));
+			// Update Account Transaction to read Posted and when it was Posted
+			updateAccountTransactionManualClear(accountTransaction, delegator, userLogin, acctgTransId);
+			try {
+				TransactionUtil.commit();
+			} catch (GenericTransactionException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return "success";
+	}
 
 	private static void updateAccountTransaction(
-			GenericValue accountTransaction, Delegator delegator) {
+			GenericValue accountTransaction, Delegator delegator, String acctgTransId) {
 		accountTransaction.set("isPosted", "Y");
 		accountTransaction.set("datePosted", new Timestamp(Calendar
 				.getInstance().getTimeInMillis()));
+		accountTransaction.setString("acctgTransId", acctgTransId);
+
+		try {
+			delegator.createOrStore(accountTransaction);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void updateAccountTransactionManualClear(
+			GenericValue accountTransaction, Delegator delegator, Map<String, String> userLogin, String acctgTransId) {
+		
+		accountTransaction.set("isPosted", "Y");
+		accountTransaction.set("datePosted", new Timestamp(Calendar
+				.getInstance().getTimeInMillis()));
+		
+		accountTransaction.set("manuallyCleared", "Y");
+		accountTransaction.set("originalClearDuration", accountTransaction.getLong("clearDuration"));
+		accountTransaction.set("clearedBy", (String)userLogin.get("userLoginId"));
+		accountTransaction.set("originalClearDate", accountTransaction.getTimestamp("clearDate"));
+		accountTransaction.set("clearDate",  new Timestamp(Calendar
+				.getInstance().getTimeInMillis()));
+		accountTransaction.setString("acctgTransId", acctgTransId);
 
 		try {
 			delegator.createOrStore(accountTransaction);
@@ -134,7 +222,7 @@ public class ChequeProcessing {
 		}
 	}
 
-	private static void postChequeDeposit(GenericValue accountTransaction,
+	private static String postChequeDeposit(GenericValue accountTransaction,
 			Delegator delegator, String acctgTransType) {
 		// Create a Transaction (acctgTrans)
 		String acctgTransId = createAccountingTransaction(accountTransaction,
@@ -157,6 +245,8 @@ public class ChequeProcessing {
 		entrySequenceId = "00002";
 		postTransactionEntry(delegator, bdAmount, partyId, cashBankAccountId,
 				postingType, acctgTransId, acctgTransType, entrySequenceId);
+		
+		return acctgTransId;
 	}
 
 	private static String getCashBankAccount(GenericValue accountTransaction) {

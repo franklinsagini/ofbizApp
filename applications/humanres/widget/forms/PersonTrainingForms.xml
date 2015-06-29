@@ -831,8 +831,11 @@ under the License.
 		<field name="partyId" title="Staff" >
 			<display-entity entity-name="Person" description="${firstName}  ${lastName}"></display-entity>
 		</field>
-		<field name="skillRequired" title="Key Skill" widget-style="required"
-			required-field="true">
+		
+		<field name="skillName" title="Skill Name (If skill not in list)">
+			<text></text>
+		</field>
+		<field name="skillRequired" title="Key Skill" >
 			<drop-down allow-empty="true">
 			<entity-options description="${description}" entity-name="SkillType" key-field-name="skillTypeId"></entity-options>
 			</drop-down>
@@ -848,5 +851,48 @@ under the License.
 	
 	
 	
+	
+		<!-- form name="ListStaffWithTrainingNeedsForm" type="list"  target="hodAddStaffWithTrainingNeeds"
+		focus-field-name="name" header-row-style="header-row"
+		default-table-style="basic-table" default-map-name="PatyTrainingNeedContext" -->
+		<form name="ListStaffWithTrainingNeedsForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="hodAddStaffWithTrainingNeeds" paginate-target="addStaffToTrainingList"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        
+        <actions>
+        	<entity-condition entity-name="StaffWhoNeedTraining">
+        		<condition-expr field-name="partyId" from-field="partyId"/>
+        	</entity-condition>
+         <!-- entity-condition entity-name="SkillType" list="skillsList">
+				<order-by field-name="skillTypeId"/>
+			</entity-condition -->
+        </actions>
+        
+		<field name="needId">
+			<hidden />
+		</field>
+		<field name="partyId" title="Staff" >
+			<display-entity entity-name="Person" description="${firstName}  ${lastName}"></display-entity>
+		</field>
+		
+		<field name="skillName" title="Skill Name (If skill not in list)">
+			<display></display>
+		</field>
+		<field name="skillRequired" title="Key Skill" >
+			<!-- drop-down allow-empty="true">
+			<entity-options description="${description}" entity-name="SkillType" key-field-name="skillTypeId"></entity-options>
+			</drop-down -->
+			<display-entity entity-name="SkillType" description="${description}" key-field-name="skillTypeId"></display-entity>
+		</field>
+		
+		<!-- tooltip="(If more than one, Describe others here)" -->
+		<field name="skillGap" title="Skills Gap" >
+			<display></display>
+		</field>
+		
+		<!-- field name="submitButton" title="${uiLabelMap.CommonSave}"
+			widget-style="smallSubmit">
+			<submit button-type="button" />
+		</field -->
+	</form>
 	
 </forms>

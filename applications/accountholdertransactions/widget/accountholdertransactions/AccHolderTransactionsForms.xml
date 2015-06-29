@@ -663,10 +663,7 @@ under the License.
         </actions>
         <field name="loanRepaymentId"><hidden/></field>
         <field name="partyId"><hidden/></field>
-
-		<field name="slipNumber" title="Slip Number">
-			<text default-value="${slipNumber}"></text>
-		</field>        
+     
         <field name="loanApplicationId" title="Loan"  >
         	<drop-down allow-empty="true">
         		<list-options key-name="loanApplicationId" list-name="loanApplicationList" description="Loan No : ${loanNo} - Amount : ${loanAmt}"/>
@@ -1478,6 +1475,12 @@ under the License.
       	</field>      	
         <field name="drawer" title="Drawer" ><display also-hidden="false"/></field>
         <field name="chequeNo" title="Cheque No" ><display also-hidden="false"/></field>
+        
+        <field name="manuallyClearCheque" title="Manually Clear Cheque" >
+        	<hyperlink target="manuallyClearCheque" description="Manually Clear Cheque" also-hidden="false"  request-confirmation="true" confirmation-message="Are you sure you want to clear this Cheque Manually?" image-location="${iconsLocation}/add.png">
+                <parameter param-name="accountTransactionId"/>
+            </hyperlink>
+        </field>
         
     </form>
     <!-- Posted Cheques List -->
@@ -2401,5 +2404,67 @@ under the License.
          <field name="employeeNumber" title="Employee No"><display></display></field>
         <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
     </form>
+    
+    <!-- NewDirectDebit -->
+   <form name="NewDirectDebit" type="single" target="createDirectDebit"
+	focus-field-name="transactionAmount" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="cashDepositContext" extends="TransactionForm">    
+       
+       	<actions>
+       		<!-- entity-condition entity-name="MemberAccount" list="memberAccountList">
+            	<condition-list combine="and">
+            		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+            	</condition-list>
+            </entity-condition -->
+            <entity-condition entity-name="BankDetails" list="bankDetailsList"></entity-condition>
+        	<entity-condition entity-name="BankBranch" list="bankBranchList"></entity-condition>
+        	<entity-condition entity-name="FinAccount" list="accountList">
+        		<order-by field-name="finAccountName"/>
+        	</entity-condition>
+        	
+            <entity-condition entity-name="MemberAccountWithProduct" list="memberAccountList">
+            	<condition-list combine="and">
+            		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
+            		<!-- condition-expr field-name="withdrawable" operator="equals" value="Yes"/ -->
+            	</condition-list>
+            </entity-condition>
+            <set field="slipNumber" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getNextSlipNumber();}"/>	
+       	</actions>
+       	
+       	<field name="bankDetailsId" title="Bank"  widget-style="required" required-field="true">
+      		<drop-down allow-empty="false">
+      			<list-options key-name="bankDetailsId" list-name="bankDetailsList" description="${bankName}"/>
+      		</drop-down>
+      		
+      	</field>
+      	
+      	<field name="bankBranchId" title="Branch"  widget-style="required" required-field="true">
+      		<drop-down allow-empty="false">
+      			<list-options key-name="bankBranchId" list-name="bankBranchList" description="${branchName}"/>
+      		</drop-down>
+      		
+      	</field>      	
+        <field name="bankSlipNumber" title="Bank/Deposit Slip Number"  widget-style="required" required-field="true"><text></text></field>
+       	
+       	<field name="finAccountId" title="Bank A/C No"   widget-style="required" required-field="true">
+       		<drop-down allow-empty="true">
+      			<list-options key-name="finAccountId" list-name="accountList"  description="${finAccountName} - ${finAccountCode}"/>
+      		</drop-down>
+       	</field>
+
+        <field name="bankAccountNumber" title="Bank Account No"  widget-style="required" required-field="true"><text></text></field>
+       	
+        <field name="transactionAmount" title="Amount"  widget-style="required" required-field="true"><text></text></field>
+        
+        
+        <field name="availableAmount" title="Available Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
+		<field name="bookBalanceAmount" title="Book Balance"  widget-style="required" required-field="true"><text disabled="true"></text></field>
+       
+       <!-- use-when="(tellerBalance!=null) &amp;&amp; (tellerBalance.compareTo(BigDecimal.ZERO) &gt; 1)" -->
+        <field name="submitButton" title="${uiLabelMap.CommonSave}"  widget-style="smallSubmit" event="onclick" action="javascript: return checkTellerLimit();" ><submit button-type="button" /></field>
+      	<!-- field name="tellerAllocated" title="Teller Not ALlocated" use-when="(tellerBalance!=null) &amp;&amp; (tellerBalance.compareTo(BigDecimal.ZERO) &lt; 1)"><display default-value="Teller Must be allocated before any transaction can happen"></display></field -->
+      	
+       </form>
+    
     
 </forms>
