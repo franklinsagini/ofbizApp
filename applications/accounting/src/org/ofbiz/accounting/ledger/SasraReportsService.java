@@ -230,15 +230,11 @@ public class SasraReportsService {
 
 		BigDecimal bdBalanceAmount = BigDecimal.ZERO;
 
-		BigDecimal totalDebitsToOpeningDates = getDebitCreditTotalBalanceByDate(
-				fromDate, "D", accountId);
-		BigDecimal totalDebitsToEndingDates = getDebitCreditTotalBalanceByDate(
-				thruDate, "D", accountId);
+		BigDecimal totalDebitsToOpeningDates = getDebitCreditTotalBalanceByDate(fromDate, "D", accountId);
+		BigDecimal totalDebitsToEndingDates = getDebitCreditTotalBalanceByDate(thruDate, "D", accountId);
 
-		BigDecimal totalCreditsToOpeningDates = getDebitCreditTotalBalanceByDate(
-				fromDate, "C", accountId);
-		BigDecimal totalCreditsToEndingDates = getDebitCreditTotalBalanceByDate(
-				thruDate, "C", accountId);
+		BigDecimal totalCreditsToOpeningDates = getDebitCreditTotalBalanceByDate(fromDate, "C", accountId);
+		BigDecimal totalCreditsToEndingDates = getDebitCreditTotalBalanceByDate(thruDate, "C", accountId);
 
 		GenericValue glAccount = getGLAccount(accountId);
 
