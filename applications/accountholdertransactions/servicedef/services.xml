@@ -70,6 +70,19 @@ under the License.
         <override name="transactionAmount" optional="false"></override -->
     </service>
     
+    <!-- createDirectDebit -->
+    <service name="createDirectDebit" engine="simple" default-entity-name="AccountTransaction"
+             location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="createDirectDebit" auth="true">
+        <description>Create Direct Debit</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="accountTransactionParentId" mode="OUT" type="String"></attribute>
+        <!-- override name="partyId" optional="false"></override>
+        <override name="slipNumber" optional="false"></override>
+        <override name="transactionAmount" optional="false"></override -->
+    </service>
+    
     <service name="updateCashDeposit" engine="simple" default-entity-name="AccountTransaction"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="updateCashDeposit" auth="true">
         <description>Update CashDeposit</description>

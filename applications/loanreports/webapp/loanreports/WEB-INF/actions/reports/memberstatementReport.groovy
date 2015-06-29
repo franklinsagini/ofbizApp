@@ -25,6 +25,7 @@ class MemberTransaction{
 	def increaseDecrease
 	def transactionAmount
 	def isLoanTransaction
+	def repaymentMode
 }
 
 expectedPaymentReceivedList = delegator.findByAnd("ExpectedPaymentReceived",  [payrollNo : payrollNo], null, false);
@@ -211,7 +212,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 			loanTransaction.increaseDecrease = 'I'
 			loanTransaction.isLoanTransaction = true
 			loanTransaction.transactionAmount = loanRepaymentItem.insuranceAmount
-			
+			loanTransaction.repaymentMode  = loanRepaymentItem.repaymentMode
 			memberStatement.listOfTransactions.add(loanTransaction);
 		}
 		
@@ -228,6 +229,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 			loanTransaction.increaseDecrease = 'I'
 			loanTransaction.transactionAmount = loanRepaymentItem.interestAmount
 			loanTransaction.isLoanTransaction = true
+			loanTransaction.repaymentMode  = loanRepaymentItem.repaymentMode
 			memberStatement.listOfTransactions.add(loanTransaction);
 		}
 
@@ -244,6 +246,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 			loanTransaction.increaseDecrease = 'I'
 			loanTransaction.isLoanTransaction = true
 			loanTransaction.transactionAmount = loanRepaymentItem.principalAmount
+			loanTransaction.repaymentMode  = loanRepaymentItem.repaymentMode
 			
 			memberStatement.listOfTransactions.add(loanTransaction);
 		}

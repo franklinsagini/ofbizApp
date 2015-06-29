@@ -60,6 +60,7 @@ class MemberStatement{
 	def code
 	def loanNo
 	def itemTotal
+	def availableBalace
 	def listOfTransactions = []
 }
 
@@ -70,6 +71,7 @@ class MemberTransaction{
 	def transactionAmount
 	def isLoan
 	def isLoanTransaction
+	def repaymentMode
 }
 
 
@@ -308,6 +310,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 			loanTransaction.transactionAmount = loanRepaymentItem.insuranceAmount
 			//loanTransaction.isLoan = true
 			loanTransaction.isLoanTransaction = true
+			loanTransaction.repaymentMode  = loanRepaymentItem.repaymentMode
 			memberStatement.listOfTransactions.add(loanTransaction);
 		}
 
@@ -325,6 +328,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 			loanTransaction.transactionAmount = loanRepaymentItem.interestAmount
 			//loanTransaction.isLoan = true
 			loanTransaction.isLoanTransaction = true
+			loanTransaction.repaymentMode  = loanRepaymentItem.repaymentMode
 			memberStatement.listOfTransactions.add(loanTransaction);
 		}
 
@@ -342,6 +346,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 			loanTransaction.transactionAmount = loanRepaymentItem.principalAmount
 			//loanTransaction.isLoan = true
 			loanTransaction.isLoanTransaction = true
+			loanTransaction.repaymentMode  = loanRepaymentItem.repaymentMode
 			memberStatement.listOfTransactions.add(loanTransaction);
 		}
 
@@ -391,6 +396,8 @@ allAccountProducts.eachWithIndex { memberAccount, index ->
 	memberStatement.name = accountProduct.name;
 	memberStatement.code = accountProduct.code;
 	memberStatement.itemTotal = BigDecimal.ZERO;
+	String memberAccountIdStr = memberAccount.memberAccountId;
+	memberStatement.availableBalace = org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getAvailableBalanceVer3(memberAccountIdStr);
 
 	//Add Opening Balance
 	memberAccountTransaction = new MemberTransaction()

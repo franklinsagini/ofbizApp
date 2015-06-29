@@ -195,9 +195,6 @@ under the License.
                                  <#if transaction.isLoanTransaction == true>
                                 	 <#assign totalAmount = totalAmount + transaction.transactionAmount >
                                 </#if>
-                                
-                                
-                           
                                 		
 						</#if>
                         <fo:table-row>
@@ -210,7 +207,18 @@ under the License.
                                 </fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>${transaction.transactionDescription?if_exists}</fo:block>
+                                <fo:block>
+                                
+                                <#if transaction.repaymentMode?? >
+                                	
+                                	${transaction.transactionDescription} (${transaction.repaymentMode})
+                                
+                                <#else>
+                                	${transaction.transactionDescription}
+                                </#if>
+                                
+                                
+                                </fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right">
                                 <fo:block >
@@ -265,6 +273,36 @@ under the License.
                             </fo:table-cell -->
                         </fo:table-row>
                     </#list>
+                    
+                    <#if statement.availableBalace??>
+                                            <fo:table-row>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>
+                                
+                                </fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>
+                                
+                                
+                                </fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right">
+                                <fo:block >
+                                 </fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right">
+                                <fo:block font-size="12pt" font-weight="italics" font-style="italic" color="green">
+                                	Available Balance
+                                </fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right">
+                                <fo:block  font-size="12pt" font-weight="italics" font-style="italic" color="green">
+                                	${statement.availableBalace?string(",##0.00")} 
+                               </fo:block>
+                            </fo:table-cell>
+                        </fo:table-row>
+                    </#if>
                 </fo:table-body>
             </fo:table>
         </fo:block>

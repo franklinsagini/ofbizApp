@@ -580,7 +580,7 @@ public class FileServices {
 
 	}
 	
-	if (fromReg.equalsIgnoreCase("Y")) {
+	if ((fromReg == null) || (fromReg.equalsIgnoreCase("Y"))) {
 		timeToReturn = "Not Applicable (Action by Registry)";
 	} else if(fromReg.equalsIgnoreCase("N")) {
 

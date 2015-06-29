@@ -2006,7 +2006,7 @@ public class RemittanceServices {
 
 					// Save the Repayment to loan_repayment (LoanRepayment)
 
-					saveLoanRepayment(expectedPaymentReceived, acctgTransId);
+					saveLoanRepaymentRemittance(expectedPaymentReceived, acctgTransId, "REMITTANCE");
 
 				} else if (expectedPaymentReceived.getString("remitanceCode")
 						.equals(remittanceCodeInterest)) {
@@ -2550,6 +2550,89 @@ public class RemittanceServices {
 				loanInterest, "insuranceAmount", loanInsurance,
 				"principalAmount", loanPrincipal, "transactionAmount",
 				transactionAmount, "acctgTransId", acctgTransId));
+		try {
+			delegator.createOrStore(loanRepayment);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		// delegator.removeAll(dummyPKs)
+
+	}
+	
+	//saveLoanRepaymentRemittance
+	private static void saveLoanRepaymentRemittance(GenericValue expectedPaymentReceived,
+			String acctgTransId, String repaymentMode) {
+		BigDecimal loanPrincipal = BigDecimal.ZERO;
+		BigDecimal loanInterest = BigDecimal.ZERO;
+		BigDecimal loanInsurance = BigDecimal.ZERO;
+
+		// Loan Principal
+		loanPrincipal = expectedPaymentReceived.getBigDecimal("amount");
+		// Get This Loan's Interest
+
+		String loanProductCode = LoanUtilities
+				.getLoanProductCodeGivenLoanNo(expectedPaymentReceived
+						.getString("loanNo"));
+
+		String remittanceCodePrincipal = loanProductCode + "A";
+		String remittanceCodeInterest = loanProductCode + "B";
+		String remittanceCodeInsurance = loanProductCode + "C";
+
+		loanInterest = getLoanInterestOrInsurance(
+				expectedPaymentReceived.getString("loanNo"),
+				expectedPaymentReceived.getString("month"),
+				remittanceCodeInterest);
+		// Get This Loan's Insurance
+		loanInsurance = getLoanInterestOrInsurance(
+				expectedPaymentReceived.getString("loanNo"),
+				expectedPaymentReceived.getString("month"),
+				remittanceCodeInsurance);
+		// Sum Principal, Interest and Insurance
+
+		BigDecimal transactionAmount = loanPrincipal.add(loanInterest).add(
+				loanInsurance);
+
+		BigDecimal bdLoanAmt = getLoanAmount(expectedPaymentReceived
+				.getString("loanNo"));
+
+		BigDecimal totalInterestDue = getLoanInterestOrInsuranceDue(
+				expectedPaymentReceived.getString("loanNo"),
+				expectedPaymentReceived.getString("month"),
+				remittanceCodeInterest);
+		BigDecimal totalInsuranceDue = getLoanInterestOrInsuranceDue(
+				expectedPaymentReceived.getString("loanNo"),
+				expectedPaymentReceived.getString("month"),
+				remittanceCodeInsurance);
+		BigDecimal totalPrincipalDue = getLoanInterestOrInsuranceDue(
+				expectedPaymentReceived.getString("loanNo"),
+				expectedPaymentReceived.getString("month"),
+				remittanceCodePrincipal);
+		BigDecimal totalLoanDue = totalInterestDue.add(totalInsuranceDue).add(
+				totalPrincipalDue);
+
+		Long loanApplicationId = getLoanApplicationId(expectedPaymentReceived
+				.getString("loanNo"));
+		Long partyId = getLoanPartyId(expectedPaymentReceived
+				.getString("loanNo"));
+		GenericValue loanRepayment = null;
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		Long loanRepaymentId = delegator.getNextSeqIdLong("LoanRepayment", 1);
+		loanRepayment = delegator.makeValue("LoanRepayment", UtilMisc.toMap(
+				"loanRepaymentId", loanRepaymentId, "isActive", "Y",
+				"createdBy", "admin", "partyId", partyId, "loanApplicationId",
+				loanApplicationId,
+
+				"loanNo", expectedPaymentReceived.getString("loanNo"),
+				"loanAmt", bdLoanAmt,
+
+				"totalLoanDue", totalLoanDue, "totalInterestDue",
+				totalInterestDue, "totalInsuranceDue", totalInsuranceDue,
+				"totalPrincipalDue", totalPrincipalDue, "interestAmount",
+				loanInterest, "insuranceAmount", loanInsurance,
+				"principalAmount", loanPrincipal, "transactionAmount",
+				transactionAmount, "acctgTransId", acctgTransId, "repaymentMode", repaymentMode));
 		try {
 			delegator.createOrStore(loanRepayment);
 		} catch (GenericEntityException e) {

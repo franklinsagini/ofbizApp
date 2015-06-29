@@ -55,6 +55,13 @@
 		<response name="success" type="view" value="cashDeposit"
 			save-current-view="true" />
 	</request-map>
+	
+	<!-- directDebit -->
+	<request-map uri="directDebit">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="directDebit"
+			save-current-view="true" />
+	</request-map>
 
 	<request-map uri="chequeWithdrawal">
 		<security https="true" auth="true" />
@@ -207,6 +214,17 @@
 		<response name="error" type="view" value="cashWithdrawal" />
 	</request-map>
 
+	<!-- createDirectDebit -->
+	<request-map uri="createDirectDebit">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createDirectDebit">
+			
+		</event>
+		<response name="success" type="request-redirect" value="transactionPrintOutDirectDebit">
+			<redirect-parameter name="accountTransactionParentId" />
+		</response>
+		<response name="error" type="view" value="directDebit" />
+	</request-map>
 
 	<!-- cashDeposit -->
 	<request-map uri="createCashDeposit">
@@ -220,7 +238,7 @@
 		</response>
 		<response name="error" type="view" value="cashDeposit" />
 	</request-map>
-
+	
 	<request-map uri="updateCashDeposit">
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateCashDeposit" />
@@ -819,6 +837,16 @@
 		
 	</request-map>
 	
+	
+	<request-map uri="transactionPrintOutDirectDebit">
+		<security auth="true" https="true" />
+		
+		<response name="success" type="view" value="transactionPrintOutDirectDebit">
+			<redirect-parameter name="accountTransactionParentId"/>
+		</response>
+		
+	</request-map>
+	
 	<request-map uri="printMiniStatement">
 		<security auth="true" https="true" />
 		<response name="success" type="view" value="printMiniStatement">
@@ -886,6 +914,11 @@
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewCashWithdrawal" />
 	<view-map name="cashDeposit" type="screen"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewCashDeposit" />
+	
+	
+	<view-map name="directDebit" type="screen"
+		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewDirectDebit" />
+	
 	<view-map name="chequeWithdrawal" type="screen"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewChequeWithdrawal" />
 	<view-map name="chequeDeposit" type="screen"
@@ -967,6 +1000,9 @@
 		<view-map name="transactionPrintOut" type="screenfop"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#transactionPrintOut" content-type="application/pdf" encoding="none"  />
 
+	<!-- transactionPrintOutDirectDebit -->
+		<view-map name="transactionPrintOutDirectDebit" type="screenfop"
+		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#transactionPrintOutDirectDebit" content-type="application/pdf" encoding="none"  />
 
 	<!-- loanRepaymentPrintOut -->
 		<view-map name="loanRepaymentPrintOut" type="screenfop"
