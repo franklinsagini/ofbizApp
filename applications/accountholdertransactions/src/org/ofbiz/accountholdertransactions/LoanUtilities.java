@@ -2682,4 +2682,64 @@ public class LoanUtilities {
 		
 		return shareMinimum;
 	}
+
+	/***
+	 * @author Japheth Odonya  @when Jun 30, 2015 12:16:18 AM
+	 * 
+	 * Get Loan Guarantor Entity
+	 * */
+	public static GenericValue getLoanGuarantorEntity(Long loanGuarantorId) {
+		GenericValue loanGuarantor = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanGuarantor = delegator.findOne("LoanGuarantor",
+					UtilMisc.toMap("loanGuarantorId", loanGuarantorId),
+					false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		return loanGuarantor;
+	}
+
+	/**
+	 * @author Japheth Odonya  @when Jun 30, 2015 12:28:37 AM
+	 * 
+	 * 
+	 * Get total deposits this loan guarantors less this guarantor attempting to be deleted
+	 * */
+	public static BigDecimal getTotalGuarantorDepositsWithoutThisGuarantor(
+			Long loanGuarantorId, Long loanApplicationId) {
+		
+		EntityConditionList<EntityExpr> loanGuarantorConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanApplicationId", EntityOperator.EQUALS,
+						loanApplicationId),
+
+				EntityCondition.makeCondition("loanGuarantorId", EntityOperator.NOT_EQUAL,
+						loanGuarantorId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> loanGuarantorELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanGuarantorELI = delegator.findList("LoanGuarantor",
+					loanGuarantorConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		BigDecimal bdTotalDepositAmount = BigDecimal.ZERO;
+		Long accountProductId = LoanUtilities.getAccountProductGivenCodeId(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE).getLong("accountProductId");
+		
+		for (GenericValue genericValue : loanGuarantorELI) {
+			Long memberAccountId = LoanUtilities.getMemberAccountIdFromMemberAccount(genericValue.getLong("guarantorId"), accountProductId);
+			
+			bdTotalDepositAmount = bdTotalDepositAmount.add(AccHolderTransactionServices.getAvailableBalanceVer3(memberAccountId.toString()));
+		}
+
+		
+		return bdTotalDepositAmount;
+	}
 }

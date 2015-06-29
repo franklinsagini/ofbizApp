@@ -25,11 +25,35 @@
     <request-map uri="forwardedLoanApplications"><security https="true" auth="true"/><response name="success" type="view" value="forwardedLoanApplications"/></request-map>
     <request-map uri="changeGuarantors"><security https="true" auth="true"/><response name="success" type="view" value="changeGuarantors"/></request-map>
     
+    <request-map uri="createLoanApplicationGuarantor">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createLoanApplicationGuarantor" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect" value="changeGuarantors">
+			<redirect-parameter name="loanApplicationId" />
+		</response>
+		<response name="error" type="view" value="changeGuarantors" />
+	</request-map>
+	
+	 <request-map uri="removeGuarantor">
+		<security https="true" auth="true" />
+		<event type="service" invoke="removeGuarantor" />
+		<response name="success" type="request-redirect" value="changeGuarantors">
+			<redirect-parameter name="loanApplicationId" />
+		</response>
+		<response name="error" type="view" value="changeGuarantors" />
+	</request-map>
+	
+	<request-map uri="LookupActiveMember">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="LookupActiveMember" />
+	</request-map>
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://guarantormanagement/widget/GuarantorManagementScreens.xml#main"/>
     <view-map name="forwardedLoanApplications" type="screen"
 		page="component://guarantormanagement/widget/GuarantorManagementScreens.xml#forwardedLoanApplications" />
    <view-map name="changeGuarantors" type="screen"
 		page="component://guarantormanagement/widget/GuarantorManagementScreens.xml#changeGuarantors" />
-    
+    <view-map name="LookupActiveMember" type="screen"
+		page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember" />
 </site-conf>
