@@ -80,10 +80,18 @@
                 	<field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
                 </entity-one>
                 
+                <set field="loanApplicationIdLong" from-field="loanApplicationId" type="Long"/>
+                
+                <entity-one value-field="member" entity-name="Member">
+                	<field-map field-name="partyId" from-field="applicationContext.partyId"/>
+                </entity-one>
+                
                 <entity-and entity-name="LoanGuarantor" list="loanGuarantorsList">
                     <field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/>
                     <!--  order-by field-name="-changeDate"/ -->
                 </entity-and>
+                
+                <set field="loanBalance" default-value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationIdLong);}"/>
                 
                 
             <!-- entity-condition entity-name="Member" list="membersList">
@@ -102,7 +110,32 @@
 
                         <section name="search-results">
                         	<widgets>
+                        		<screenlet>
+									<container>
+										<label style="h3">Member : ${member.firstName} ${member.middleName} ${member.lastName}</label>
+									</container>
+									
+									<container>
+										<label style="h3"> Loan No : ${applicationContext.loanNo}  </label>
+
+									</container>
+									
+									<container>
+										<label style="h3">Principal Amount : ${applicationContext.loanAmt}  </label>
+
+									</container>
+									
+									<container>
+										<label style="h3"> Loan Balance : ${loanBalance}  </label>
+
+									</container>
+
+
+								</screenlet>
                         		
+                        		<screenlet title="Add Guarantor">
+                        			<include-form name="NewGuarantor" location="component://guarantormanagement/widget/GuarantorManagementForms.xml"/>
+                        		</screenlet>
                         		<screenlet title="Guarantors">
                         			<include-form name="changeGuarantors" location="component://guarantormanagement/widget/GuarantorManagementForms.xml"/>
                         		</screenlet>

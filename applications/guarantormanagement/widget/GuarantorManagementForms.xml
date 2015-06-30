@@ -132,6 +132,10 @@
 			<display also-hidden="false" />
 		</field>
 		
+		<field name="loanBalance" title="Loan Balance">
+			<display default-value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);}" also-hidden="false" />
+		</field>
+		
 		<field name="interestRatePM" title="Interest Rate(P.M)">
 			<display also-hidden="false" />
 		</field>
@@ -203,12 +207,18 @@
         
     
         <field name="depositamt" title="Deposit Amount"><display also-hidden="false"/></field>
-        <field name="currentStationId" title="Current Station">
+        <!-- field name="currentStationId" title="Current Station">
         	 <display-entity entity-name="Station" key-field-name="stationId"  description="${name}" also-hidden="false"/>
         </field>
-        <field name="guaranteedPercentage" title="Guaranteed %"> <display></display> </field>
+        <field name="guaranteedPercentage" title="Guaranteed %"> <display></display> </field -->
+        <field name="memberStation" title="Member Station">
+        	 <display default-value="${bsh:org.ofbiz.withdrawalprocessing.WithdrawalProcessingServices.getMemberStationName(loanApplicationId);}"  also-hidden="false"/>
+        </field>
+        <field name="guaranteedPercentage" title="Guaranteed %">
+        <display default-value="${bsh:org.ofbiz.withdrawalprocessing.WithdrawalProcessingServices.getLoanGuarateedPercByGuarantor(loanApplicationId, guarantorId);}"></display>
+        </field>
 		<field name="guaranteedValue" title="Guaranteed Amount"> <display></display> </field> 
-		<field name="myLoans" title="My Loans" widget-style="buttontext">
+		<!-- field name="myLoans" title="My Loans" widget-style="buttontext">
             <hyperlink target="myLoans" description="My Loans" also-hidden="false">
                 <parameter param-name="guarantorId"/>
             </hyperlink>
@@ -218,12 +228,64 @@
             <hyperlink target="myGuaranteedLoans" description="My Guaranteed Loans" also-hidden="false">
                 <parameter param-name="guarantorId"/>
             </hyperlink>
-        </field>
+        </field -->
 		
 		<!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteLoanApplicationGuarantor" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="loanGuarantorId"/>
             </hyperlink>
         </field -->
+        
+        <field name="removeGuarantor" title="Remove Guarantor" widget-style="buttontext" >
+            <hyperlink target="removeGuarantor" description="Remove Guarantor" also-hidden="false" request-confirmation="true" confirmation-message="Are you want to remove the guarantor">
+                <parameter param-name="loanGuarantorId"/>
+                <parameter param-name="loanApplicationId"/>
+            </hyperlink>
+        </field>
+        
+    </form>
+    
+      <form name="NewGuarantor" type="single" target="createLoanApplicationGuarantor"
+        focus-field-name="guarantorId" header-row-style="header-row" default-table-style="basic-table" default-map-name="loanApplicationGuarantorContext">
+        
+        <actions>
+        	<entity-one entity-name="LoanApplication" value-field="loanApplication">
+        		<field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/>
+        	</entity-one>
+        	<!-- entity-condition entity-name="Member" list="memberList">
+        		<condition-list combine="and">
+        			<condition-expr field-name="partyId" operator="not-equals" value="${loanApplication.partyId}"/>
+        			
+        		</condition-list>
+        		
+            </entity-condition -->
+            <!-- condition-expr field-name="memberStatus" operator="equals" value="ACTIVE"/ -->
+            
+            <!-- entity-condition entity-name="MemberStation" list="memberStationsList"></entity-condition -->
+            <entity-condition entity-name="Station" list="stationList"></entity-condition>
+        </actions>
+        
+        <field name="loanGuarantorId"><hidden/></field>
+        <field name="loanApplicationId" parameter-name="loanApplicationId"><hidden/></field>
+        <!-- field name="guarantorId" title="Guarantor" widget-style="required" required-field="true">
+        	<drop-down allow-empty="true">
+                <list-options list-name="memberList"   key-name="partyId" description="${firstName} ${middleName} ${lastName}"/>
+            </drop-down>
+        </field -->
+        
+        <field name="guarantorId" title="Guarantor" widget-style="required" required-field="true" ><lookup target-form-name="LookupActiveMember" show-description="true"/></field>
+        
+        <!-- field name="memberNo" title="Member No." widget-style="required" required-field="true"><text size="20" maxlength="60"/></field>
+        <field name="payrolNo" title="Payrol No." widget-style="required" required-field="true"><text size="20" maxlength="60"/></field>
+        <field name="depositamt" title="Deposit Amount" widget-style="required" required-field="true"><text size="20" maxlength="60"/></field>
+        
+        <field name="currentStationId" title="Current Station" widget-style="required" required-field="true">
+        	<drop-down allow-empty="true">
+                <list-options list-name="stationList"   key-name="stationId" description="${name}"/>
+            </drop-down>
+        </field>
+        <field name="guaranteedPercentage" title="Guaranteed %"><text size="20" maxlength="60"/></field>
+		<field name="guaranteedValue" title="Guaranteed Amount"><text size="20" maxlength="60"/></field -->        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit" event="onclick" action="javascript: return guarantorValidation(${loanApplicationId});"><submit button-type="button"/></field>
     </form>
 </forms>
