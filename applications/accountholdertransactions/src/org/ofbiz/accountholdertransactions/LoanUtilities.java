@@ -564,6 +564,32 @@ public class LoanUtilities {
 
 		return accountProduct;
 	}
+	
+	//getAccountProductGivenCodeId
+	public static Long getAccountProductIdGivenCodeId(String code) {
+
+		List<GenericValue> accountProductELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		EntityConditionList<EntityExpr> accountProductConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"code", EntityOperator.EQUALS, code)),
+						EntityOperator.AND);
+		try {
+			accountProductELI = delegator.findList("AccountProduct",
+					accountProductConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		GenericValue accountProduct = null;
+		for (GenericValue genericValue : accountProductELI) {
+			accountProduct = genericValue;
+		}
+		
+		if (accountProduct == null)
+			return null;
+
+		return accountProduct.getLong("accountProductId");
+	}
 
 	// org.ofbiz.accountholdertransactions.LoanUtilities.getRecommendedAmount(BigDecimal
 	// bdMaxLoanAmt, BigDecimal bdAppliedAmt)
@@ -2741,5 +2767,63 @@ public class LoanUtilities {
 
 		
 		return bdTotalDepositAmount;
+	}
+
+	public static BigDecimal getShareCapitalAccountBalance(Long partyId) {
+		
+		BigDecimal bdShareCapitalBalance = BigDecimal.ZERO;
+		Long accountProductId = getAccountProductIdGivenCodeId(AccHolderTransactionServices.SHARE_CAPITAL_CODE);
+		
+		Long memberAccountId = getMemberAccountIdFromMemberAccount(partyId, accountProductId);
+		
+		bdShareCapitalBalance = AccHolderTransactionServices.getBookBalanceNow(memberAccountId.toString());
+		return bdShareCapitalBalance;
+	}
+
+	public static BigDecimal getShareCapitalLimit(Long partyId) {
+		GenericValue member = LoanUtilities.getMember(partyId);
+		
+		Long memberClassId = member.getLong("memberClassId");
+		
+		if (memberClassId == null){
+			memberClassId = LoanUtilities.getMemberClassId("Class A");
+		}
+		
+		GenericValue shareMinimum = getShareMinimumEntity(memberClassId);
+		
+		if (shareMinimum == null)
+			return null;
+		
+		
+		return shareMinimum.getBigDecimal("minShareCapital");
+	}
+
+	public static String getMemberAccountIdGivenMemberAndAccountCode(
+			Long partyId, String code) {
+		Long accountProductId = getAccountProductIdGivenCodeId(code);
+		
+		Long memberAccountId = getMemberAccountIdFromMemberAccount(partyId, accountProductId);
+
+		return memberAccountId.toString();
+	}
+
+	public static GenericValue getProductChargeEntity(String name) {
+		GenericValue productCharge = null;
+
+		List<GenericValue> productChargeELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			productChargeELI = delegator.findList("ProductCharge",
+					EntityCondition.makeCondition("name", name),
+					null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue genericValue : productChargeELI) {
+			productCharge = genericValue;
+		}
+
+		return productCharge;
 	}
 }
