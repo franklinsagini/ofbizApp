@@ -2431,6 +2431,7 @@ public class OrderServices {
 				return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
 						"OrderErrorCouldNotChangeOrderStatusOrderCannotBeFound", locale));
 			}
+
 			// first save off the old status
 			successResult.put("oldStatusId", orderHeader.get("statusId"));
 			successResult.put("orderTypeId", orderHeader.get("orderTypeId"));
@@ -2445,47 +2446,26 @@ public class OrderServices {
 						"OrderTriedToSetOrderStatusWithTheSameStatusIdforOrderWithId", UtilMisc.toMap("statusId", statusId, "orderId", orderId), locale), module);
 				return successResult;
 			}
+
 			try {
 				Map<String, String> statusFields = UtilMisc.<String, String> toMap("statusId", orderHeader.getString("statusId"), "statusIdTo", statusId);
 				GenericValue statusChange = delegator.findOne("StatusValidChange", statusFields, true);
+
 				if (statusChange == null) {
 					return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
 							"OrderErrorCouldNotChangeOrderStatusStatusIsNotAValidChange", locale) + ": [" + statusFields.get("statusId") + "] -> [" + statusFields.get("statusIdTo") + "]");
 				}
+
 			} catch (GenericEntityException e) {
 				return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
 						"OrderErrorCouldNotChangeOrderStatus", locale) + e.getMessage() + ").");
 			}
 
-			// This is where to check if the budget for the order products is
-			// done
-			// Get Order Items
-			List<GenericValue> orderItems = null;
-			if (orderHeader != null) {
-				try {
-					orderItems = orderHeader.getRelated("OrderItem", null, null, false);
-				} catch (GenericEntityException e) {
-					Debug.logError(e, "ERROR: Unable to get OrderItem list for orderId: " + orderId, module);
-					return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
-							"OrderErrorUnableToGetOrderItemListForOrderId",
-							UtilMisc.toMap("orderId", orderId), locale)
-							);
-				}
-			}
-
-			String productId = null;
-			if (UtilValidate.isNotEmpty(orderItems)) {
-				for (GenericValue item : orderItems) {
-					// get productId
-					productId = item.getString("productId");
-				}
-			}
-
-			// First of all get the GL Account
-			if (productId != null) {
-				String productGlAccount = getProductGlAccount(delegator, productId);
-				// get the balance of this account
-				BigDecimal glAccountBalance = getGlAccountBalance(delegator, productGlAccount);
+			// Check Budget From Here.
+			if (!isBudgetEnough(orderHeader, delegator, locale)) {
+				
+				return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+						"BudgetDeficiencyMessage", locale));
 			}
 
 			// update the current status
@@ -2553,6 +2533,114 @@ public class OrderServices {
 		return successResult;
 	}
 
+	private static boolean isBudgetEnough(GenericValue orderHeader, Delegator delegator, Locale locale) {
+		BigDecimal glAccountBalance = BigDecimal.ZERO;
+		BigDecimal budgetAmount = BigDecimal.ZERO;
+		BigDecimal lpoAmount = BigDecimal.ZERO;
+		lpoAmount = orderHeader.getBigDecimal("grandTotal");
+		String productGlAccount = "";
+
+		List<GenericValue> orderItems = null;
+		if (orderHeader != null) {
+			try {
+				orderItems = orderHeader.getRelated("OrderItem", null, null, false);
+			} catch (GenericEntityException e) {
+				Debug.logError(e, "ERROR: Unable to get OrderItem list for orderId: ", module);
+				e.printStackTrace();
+			}
+		}
+		String productId = null;
+		if (UtilValidate.isNotEmpty(orderItems)) {
+			for (GenericValue item : orderItems) {
+				// get productId
+				productId = item.getString("productId");
+			}
+		}
+
+		// First of all get the GL Account
+		if (productId != null) {
+			productGlAccount = getProductGlAccount(delegator, productId);
+			// get the balance of this account
+			glAccountBalance = getBudgetControlGlAccountBalance(delegator, productGlAccount);
+			budgetAmount = getBudgetAmount(delegator, productGlAccount);
+
+		}
+		System.out.println("####################################################################### BUDGET AMOUNT: "+budgetAmount );
+		System.out.println("####################################################################### BUDGET CONTROL: "+glAccountBalance );
+		System.out.println("####################################################################### LPO AMOUNT: "+lpoAmount );
+		glAccountBalance = glAccountBalance.add(lpoAmount);
+		int res;
+		res = budgetAmount.compareTo(glAccountBalance);
+		System.out.println("####################################################################### TOTAL LPO AMOUNT AND CONTROL: "+glAccountBalance );
+		System.out.println("####################################################################### IS BUDGET AMOUNT MORE?: "+res );
+
+		if (res == 1) {
+			createBudgetControlRecord(delegator, productGlAccount, lpoAmount);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private static void createBudgetControlRecord(Delegator delegator, String productGlAccount, BigDecimal lpoAmount) {
+		GenericValue budgetControl = delegator.makeValue("BudgetControl");
+		budgetControl.put("budgetControlId", delegator.getNextSeqId("BudgetControl"));
+		budgetControl.put("amount", lpoAmount);
+		budgetControl.put("glAccountId", productGlAccount);
+
+		try {
+			budgetControl.create();
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	private static BigDecimal getBudgetAmount(Delegator delegator, String productGlAccount) {
+		BigDecimal budgetAmount = BigDecimal.ZERO;
+		List<GenericValue> items = null;
+		EntityConditionList<EntityExpr> cond = EntityCondition.makeCondition(UtilMisc.toList(
+				EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, productGlAccount)
+				));
+
+		try {
+			items = delegator.findList("BudgetItem", cond, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		if (!(items == null)) {
+			for (GenericValue item : items) {
+				budgetAmount = budgetAmount.add(item.getBigDecimal("amount"));
+			}
+		}
+
+		return budgetAmount;
+	}
+
+	private static BigDecimal getBudgetControlGlAccountBalance(Delegator delegator, String productGlAccount) {
+
+		List<GenericValue> transactions = null;
+		BigDecimal accountBalance = BigDecimal.ZERO;
+
+		try {
+			EntityConditionList<EntityExpr> cond = EntityCondition.makeCondition(UtilMisc.toList(
+					EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, productGlAccount)
+					));
+			transactions = delegator.findList("BudgetControl", cond, null, null, null, false);
+		} catch (GeneralException e) {
+			e.printStackTrace();
+		}
+
+		if (UtilValidate.isNotEmpty(transactions)) {
+			for (GenericValue tran : transactions) {
+				accountBalance = accountBalance.add(tran.getBigDecimal("amount"));
+			}
+		}
+
+		return accountBalance;
+	}
+
 	private static BigDecimal getGlAccountBalance(Delegator delegator, String productGlAccount) {
 		BigDecimal totalDebits = getAccountTotalDebits(delegator, productGlAccount);
 		BigDecimal totalCredits = getAccountTotalCredits(delegator, productGlAccount);
@@ -2561,12 +2649,14 @@ public class OrderServices {
 	}
 
 	private static BigDecimal getAccountTotalDebits(Delegator delegator, String productGlAccount) {
-		List<GenericValue>transactions = null;
-//		try {
-//			List<EntityExpr>cond = EntityCondition.makeCondition(UtilMisc.toList(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, productGlAccount)));
-//		} catch (GenericEntityException e) {
-//			e.printStackTrace();
-//		}
+		List<GenericValue> transactions = null;
+		// try {
+		// List<EntityExpr>cond =
+		// EntityCondition.makeCondition(UtilMisc.toList(EntityCondition.makeCondition("glAccountId",
+		// EntityOperator.EQUALS, productGlAccount)));
+		// } catch (GenericEntityException e) {
+		// e.printStackTrace();
+		// }
 		return null;
 	}
 
@@ -2576,9 +2666,6 @@ public class OrderServices {
 	}
 
 	private static String getProductGlAccount(Delegator delegator, String productId) {
-		System.out.println("##################### WE ARE HERE WORKING HARD TO GET THE PRODUCT GL FOR PRODUCT: " + productId);
-		// Now that we have the product id get the GL Account from
-		// ProductGlAccount
 		List<GenericValue> glAccount = null;
 		GenericValue product = null;
 		String glAccountId = "";
@@ -2592,7 +2679,6 @@ public class OrderServices {
 			try {
 				glAccount = product.getRelated("ProductGlAccount", null, null, false);
 			} catch (GenericEntityException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -2600,7 +2686,6 @@ public class OrderServices {
 			for (GenericValue acc : glAccount) {
 				glAccountId = acc.getString("glAccountId");
 			}
-			System.out.println("##################### YAAAAAY WE GOT THE GlAccount: " + glAccountId + " For Product: " + productId);
 		}
 		return glAccountId;
 	}

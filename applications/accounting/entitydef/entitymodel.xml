@@ -411,6 +411,19 @@ under the License.
     </relation>
     </entity>
 
+    <entity entity-name="BudgetControl"
+            package-name="org.ofbiz.accounting.budget"
+            title="Budget Control Entity">
+      <field name="budgetControlId" type="id-ne"></field>
+      <field name="amount" type="currency-amount"></field>
+      <field name="glAccountId" type="id"></field>
+      <prim-key field="budgetControlId"/>
+      <relation type="one" fk-name="BUDG_CONT_GLAC" rel-entity-name="GlAccount">
+            <key-map field-name="glAccountId"/>
+    </relation>
+    </entity>
+
+
     <entity entity-name="BudgetItemAttribute"
             package-name="org.ofbiz.accounting.budget"
             title="Budget Item Attribute Entity">

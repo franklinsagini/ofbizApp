@@ -204,7 +204,7 @@ public class PaymentWorker {
 
 	/**
 	 * Returns the total from a list of Payment entities
-	 * 
+	 *
 	 * @param payments
 	 *            List of Payment GenericValue items
 	 * @return total payments as BigDecimal
@@ -225,7 +225,7 @@ public class PaymentWorker {
 	/**
 	 * Method to return the total amount of an payment which is applied to a
 	 * payment
-	 * 
+	 *
 	 * @param delegator
 	 *            the delegator
 	 * @param paymentId
@@ -257,7 +257,7 @@ public class PaymentWorker {
 
 	/**
 	 * Method to return the amount applied converted to the currency of payment
-	 * 
+	 *
 	 * @param paymentApplicationId
 	 *            the payment application id
 	 * @return appliedAmount the applied amount as BigDecimal
@@ -289,7 +289,7 @@ public class PaymentWorker {
 	/**
 	 * Method to return the total amount of an payment which is applied to a
 	 * payment
-	 * 
+	 *
 	 * @param payment
 	 *            GenericValue object of the Payment
 	 * @return the applied total as BigDecimal in the currency of the payment
@@ -301,7 +301,7 @@ public class PaymentWorker {
 	/**
 	 * Method to return the total amount of a payment which is applied to a
 	 * payment
-	 * 
+	 *
 	 * @param payment
 	 *            GenericValue object of the Payment
 	 * @param actual
@@ -313,12 +313,10 @@ public class PaymentWorker {
 		BigDecimal paymentApplied = BigDecimal.ZERO;
 		List<GenericValue> paymentApplications = null;
 		try {
-			List<EntityExpr> cond = UtilMisc
-					.toList(EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS,
-							payment.getString("paymentId")),
-							EntityCondition.makeCondition("toPaymentId", EntityOperator.EQUALS,
-									payment.getString("paymentId")));
-			EntityCondition partyCond = EntityCondition.makeCondition(cond, EntityOperator.OR);
+			List<EntityExpr> cond = UtilMisc.toList(EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS, payment.getString("paymentId")),
+																							EntityCondition.makeCondition("toPaymentId", EntityOperator.EQUALS, payment.getString("paymentId"))
+																							);
+																							EntityCondition partyCond = EntityCondition.makeCondition(cond, EntityOperator.OR);
 			paymentApplications = payment.getDelegator().findList("PaymentApplication", partyCond, null,
 					UtilMisc.toList("invoiceId", "billingAccountId"), null, false);
 			if (UtilValidate.isNotEmpty(paymentApplications)) {
