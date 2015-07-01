@@ -51,6 +51,14 @@
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
 
+    <service name="generateEndDayTransactions" engine="java" default-entity-name="FundingTypes"
+             location="component://accounting/script/org/ofbiz/accounting/interbranchsettlement/InterBranchSettlementServices.xml" invoke="generateEndDayTransactions" auth="true">
+        <description>Generate Settlement Transactions</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <attribute name="branchId" type="String" mode="IN" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
         <service name="createGeneratedEndDayTrans" engine="simple" default-entity-name="GeneratedEndDayTrans"
              location="component://accounting/script/org/ofbiz/accounting/interbranchsettlement/InterBranchSettlementServices.xml" invoke="createGeneratedEndDayTrans" auth="true">
         <description>Generate Settlement Transactions</description>
