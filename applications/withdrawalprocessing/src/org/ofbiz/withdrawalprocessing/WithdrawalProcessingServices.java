@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
+import org.ofbiz.accountholdertransactions.LoanRepayments;
 import org.ofbiz.accountholdertransactions.LoanUtilities;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
@@ -358,14 +359,63 @@ public class WithdrawalProcessingServices {
 		
 		BigDecimal bdTotalOffset = bdLoanBalancesTotal.add(bdTotalCharge);
 		
+		BigDecimal bdTotalInterestDue = LoanRepayments.getTotalInterestDue(partyId.toString());
+		BigDecimal bdTotalInsuranceDue = LoanRepayments.getTotalInsuranceDue(partyId.toString());
+		
+		bdTotalOffset = bdTotalOffset.add(bdTotalInterestDue).add(bdTotalInsuranceDue);
 		if (bdTotalOffset.compareTo(bdMemberDepositBalance) == -1){
-			return " Member Deposits not enough to offset the loans balances and pay the charges Member Deposit Amount is "+bdMemberDepositAmount+" Loan Balance Amount plus commission is "+bdTotalOffset;
+			return " Member Deposits not enough to offset the loans balances (Principal Balance + Interest + Insurance) and pay the charges Member Deposit Amount is "+bdMemberDepositAmount+" Loan Balance Amount plus commission is "+bdTotalOffset;
 		}
 		
 		//Offset the loans
+		//LoanRepayments.repayLoan(loanRepayment, userLogin);
+		//LoanRepayments.repayLoanWithoutDebitingCash(loanRepayment, userLogin, entrySequence);
+		List<String> loanApplicationIdsList = LoansProcessingServices.getLoanApplicationList(partyId);
+		
+		for (String loanApplicationId : loanApplicationIdsList) {
+			localLoanRepay(loanApplicationId, userLogin);
+		}
 		
 		//Pay commission
 		
+		//Pay Excise Duty
+		
 		return "success";
+	}
+
+
+	private static void localLoanRepay(String loanApplicationId, Map<String, String> userLogin) {
+		// TODO Auto-generated method stub
+		GenericValue loanApplication = LoanUtilities.getLoanApplicationEntity(Long.valueOf(loanApplicationId));
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		Long loanRepaymentId = delegator.getNextSeqIdLong("LoanRepayment", 1);
+		GenericValue loanRepayment = null;
+		
+		BigDecimal totalLoanDue = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(Long.valueOf(loanApplicationId));
+		BigDecimal totalInterestDue = LoanRepayments.getTotalInterestByLoanDue(loanApplicationId);
+		BigDecimal totalInsuranceDue = LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId);
+		Long partyId = loanApplication.getLong("partyId");
+		
+		BigDecimal transactionAmount = totalLoanDue.add(totalInterestDue).add(totalInsuranceDue);
+		
+		loanRepayment = delegator.makeValue("LoanRepayment", UtilMisc.toMap(
+				"loanRepaymentId", loanRepaymentId, "isActive", "Y",
+				"createdBy", userLogin.get("userLoginId"), "partyId", partyId, "loanApplicationId",
+				loanApplicationId,
+
+				"loanNo", loanApplication.getString("loanNo"),
+				"loanAmt", loanApplication.getBigDecimal("loanAmt"),
+
+				"totalLoanDue", totalLoanDue, "totalInterestDue",
+				totalInterestDue, "totalInsuranceDue", totalInsuranceDue,
+				"totalPrincipalDue", totalLoanDue, "interestAmount",
+				totalInterestDue, "insuranceAmount", totalInsuranceDue,
+				"principalAmount", totalLoanDue, "transactionAmount",
+				transactionAmount));
+		try {
+			delegator.createOrStore(loanRepayment);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
 	}
 }
