@@ -3132,9 +3132,12 @@ public class AccHolderTransactionServices {
 		String acctgTransId = creatAccountTransRecordVer2(accountTransaction,
 				userLogin);
 		String glAccountTypeId = "MEMBER_DEPOSIT";
-		String partyId = LoanUtilities
+		String partyIdForMember = LoanUtilities
 				.getMemberPartyIdFromMemberAccountId(memberAccountId);
-		String branchId = LoanUtilities.getMemberBranchId(partyId);
+		
+		String employeeBranchId = getEmployeeBranch(userLogin.get("partyId"));
+		String memberBranchId = LoanUtilities.getMemberBranchId(partyIdForMember);		
+				//LoanUtilities.getMemberBranchId(partyId);
 		BigDecimal bdTotalAmount = BigDecimal.ZERO;
 		bdTotalAmount = transactionAmount.add(bdCommissionAmount).add(
 				bdExciseDutyAmount);
@@ -3146,24 +3149,24 @@ public class AccHolderTransactionServices {
 		// Post memberDeposit
 		sequence = sequence + 1;
 		listPostEntity.add(createAccountPostingEntryVer2(glLedgerAccountId,
-				glAccountTypeId, branchId, bdTotalAmount, memberAccountId,
-				acctgTransId, "D", sequence.toString(), partyId));
+				glAccountTypeId, employeeBranchId, bdTotalAmount, memberAccountId,
+				acctgTransId, "D", sequence.toString(), memberBranchId));
 
 		// Post for Teller
 		sequence = sequence + 1;
 		listPostEntity.add(createAccountPostingEntryVer2(tellerAccountId,
-				glAccountTypeId, branchId, transactionAmount, memberAccountId,
-				acctgTransId, "C", sequence.toString(), partyId));
+				glAccountTypeId, employeeBranchId, transactionAmount, memberAccountId,
+				acctgTransId, "C", sequence.toString(), memberBranchId));
 		// Post for Commission
 		sequence = sequence + 1;
 		listPostEntity.add(createAccountPostingEntryVer2(commissionAccountId,
-				glAccountTypeId, branchId, bdCommissionAmount, memberAccountId,
-				acctgTransId, "C", sequence.toString(), partyId));
+				glAccountTypeId, employeeBranchId, bdCommissionAmount, memberAccountId,
+				acctgTransId, "C", sequence.toString(), memberBranchId));
 		// Post for Excise Duty
 		sequence = sequence + 1;
 		listPostEntity.add(createAccountPostingEntryVer2(exciseDutyAccountId,
-				glAccountTypeId, branchId, bdExciseDutyAmount, memberAccountId,
-				acctgTransId, "C", sequence.toString(), partyId));
+				glAccountTypeId, employeeBranchId, bdExciseDutyAmount, memberAccountId,
+				acctgTransId, "C", sequence.toString(), memberBranchId));
 
 		// Return acctgTransId
 		// tt
@@ -3251,9 +3254,13 @@ public class AccHolderTransactionServices {
 		String acctgTransId = creatAccountTransRecordVer2(accountTransaction,
 				userLogin);
 		String glAccountTypeId = "MEMBER_DEPOSIT";
-		String partyId = LoanUtilities
+		String memberPartyId = LoanUtilities
 				.getMemberPartyIdFromMemberAccountId(memberAccountId);
-		String branchId = LoanUtilities.getMemberBranchId(partyId);
+		
+		String employeeBranchId = getEmployeeBranch(userLogin.get("partyId"));
+		String memberBranchId = LoanUtilities.getMemberBranchId(memberPartyId);
+				
+				//LoanUtilities.getMemberBranchId(partyId);
 
 		List<GenericValue> listPostEntity = new ArrayList<GenericValue>();
 
@@ -3262,14 +3269,14 @@ public class AccHolderTransactionServices {
 		// Post memberDeposit
 		sequence = sequence + 1;
 		listPostEntity.add(createAccountPostingEntryVer2(glLedgerAccountId,
-				glAccountTypeId, branchId, transactionAmount, memberAccountId,
-				acctgTransId, "C", sequence.toString(), partyId));
+				glAccountTypeId, employeeBranchId, transactionAmount, memberAccountId,
+				acctgTransId, "C", sequence.toString(), memberBranchId));
 
 		// Post for Teller
 		sequence = sequence + 1;
 		listPostEntity.add(createAccountPostingEntryVer2(tellerAccountId,
-				glAccountTypeId, branchId, transactionAmount, memberAccountId,
-				acctgTransId, "D", sequence.toString(), partyId));
+				glAccountTypeId, employeeBranchId, transactionAmount, memberAccountId,
+				acctgTransId, "D", sequence.toString(), memberBranchId));
 
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
@@ -3518,9 +3525,9 @@ public class AccHolderTransactionServices {
 	}
 
 	public static GenericValue createAccountPostingEntryVer2(
-			String glAccountId, String glAccountTypeId, String branchId,
+			String glAccountId, String glAccountTypeId, String employeeBranchId,
 			BigDecimal amount, Long memberAccountId, String acctgTransId,
-			String postingType, String sequence, String partyId) {
+			String postingType, String sequence, String memberBranchId) {
 
 		// Long memberAccountId = accountTransaction.getLong("memberAccountId");
 		// GenericValue memberAccount =
@@ -3531,8 +3538,8 @@ public class AccHolderTransactionServices {
 		if (glAccountTypeId == null)
 			glAccountTypeId = "MEMBER_DEPOSIT";
 
-		if (branchId == null)
-			branchId = "Company";
+		if (employeeBranchId == null)
+			employeeBranchId = "Company";
 
 		GenericValue acctgTransEntry = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -3540,9 +3547,9 @@ public class AccHolderTransactionServices {
 				.makeValidValue("AcctgTransEntry", UtilMisc.toMap(
 						"acctgTransId", acctgTransId,
 
-						"acctgTransEntrySeqId", sequence, "partyId", partyId,
+						"acctgTransEntrySeqId", sequence, "partyId", memberBranchId,
 						"glAccountTypeId", glAccountTypeId, "glAccountId",
-						glAccountId, "organizationPartyId", branchId, "amount",
+						glAccountId, "organizationPartyId", employeeBranchId, "amount",
 						amount, "currencyUomId", "KES", "origAmount", amount,
 						"origCurrencyUomId", "KES", "debitCreditFlag",
 						postingType, "reconcileStatusId", "AES_NOT_RECONCILED"));
