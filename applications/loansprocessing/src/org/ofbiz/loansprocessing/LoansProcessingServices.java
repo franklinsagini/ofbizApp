@@ -947,5 +947,40 @@ public class LoansProcessingServices {
 		return listApplicationIds;
 	}
 	
+	
+	public static List<String> getDefaultedLoanApplicationList(Long partyId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> loanApplicationELI = new ArrayList<GenericValue>();
+		Long defaultedLoanStatusId = LoanUtilities.getLoanStatusId("DEFAULTED");
+		
+		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
+				.makeCondition(
+						UtilMisc.toList(EntityCondition.makeCondition(
+								"partyId", EntityOperator.EQUALS,
+								partyId),
+								
+								EntityCondition.makeCondition(
+										"loanStatusId", EntityOperator.EQUALS,
+										defaultedLoanStatusId)
+								
+								
+								), EntityOperator.AND);
+		
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					loanApplicationConditions, null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		List<String> listApplicationIds = new ArrayList<String>();
+		for (GenericValue genericValue : loanApplicationELI) {
+			listApplicationIds.add(genericValue.getLong("loanApplicationId").toString());
+		}
+
+		return listApplicationIds;
+	}
+	
 
 }

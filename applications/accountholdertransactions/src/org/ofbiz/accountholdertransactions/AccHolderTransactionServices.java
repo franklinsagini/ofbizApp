@@ -1007,20 +1007,20 @@ public class AccHolderTransactionServices {
 	 * AcctgTransEntry
 	 * **/
 	public static void postTransactionEntry(Delegator delegator,
-			BigDecimal bdLoanAmount, String branchId, String partyId,
+			BigDecimal bdLoanAmount, String employeeBranchId, String memberBranchId,
 			String loanReceivableAccount, String postingType,
 			String acctgTransId, String acctgTransType, String entrySequenceId) {
 		GenericValue acctgTransEntry;
 		acctgTransEntry = delegator
 				.makeValidValue("AcctgTransEntry", UtilMisc.toMap(
 						"acctgTransId", acctgTransId, "acctgTransEntrySeqId",
-						entrySequenceId, "partyId", partyId, "glAccountTypeId",
+						entrySequenceId, "partyId", memberBranchId, "glAccountTypeId",
 						acctgTransType,
 						"glAccountId",
 						loanReceivableAccount,
 
 						// "organizationPartyId", "Company", "amount",
-						"organizationPartyId", branchId, "amount", bdLoanAmount,
+						"organizationPartyId", employeeBranchId, "amount", bdLoanAmount,
 						"currencyUomId", "KES", "origAmount", bdLoanAmount,
 						"origCurrencyUomId", "KES", "debitCreditFlag",
 						postingType, "reconcileStatusId", "AES_NOT_RECONCILED"));
@@ -1701,6 +1701,9 @@ public class AccHolderTransactionServices {
 					|| ((transactionType != null) && (transactionType
 							.equals("EXCISEDUTY")))
 							
+					|| ((transactionType != null) && (transactionType
+							.equals("MEMBERWITHDRAWAL")))
+							
 				    || ((transactionType != null) && (transactionType
 							.equals("TRANSFERFROM")))
 
@@ -1717,6 +1720,9 @@ public class AccHolderTransactionServices {
 							
 					|| ((transactionType != null) && (transactionType
 							.equals("TRANSFERTO")))
+							
+					|| ((transactionType != null) && (transactionType
+							.equals("FROMMEMBERWITHDRAWAL")))
 
 					|| ((transactionType != null) && (transactionType
 							.equals("MEMBERACCOUNTJVINC")))) {
@@ -3636,7 +3642,7 @@ public class AccHolderTransactionServices {
 	}
 
 	private static void createMemberDepositEntry(BigDecimal amount,
-			String acctgTransId, String postingType) {
+			String acctgTransId, String postingType, String employeeBranchId) {
 		GenericValue accountHolderTransactionSetup = getAccountHolderTransactionSetup("MEMBERTRANSACTIONACCOUNT");
 
 		GenericValue acctgTransEntry = null;
@@ -3645,11 +3651,11 @@ public class AccHolderTransactionServices {
 				.makeValidValue("AcctgTransEntry", UtilMisc.toMap(
 						"acctgTransId", acctgTransId,
 
-						"acctgTransEntrySeqId", "1", "partyId", "Company",
+						"acctgTransEntrySeqId", "1", "partyId", employeeBranchId,
 						"glAccountTypeId", "MEMBER_DEPOSIT", "glAccountId",
 						accountHolderTransactionSetup
 								.getString("memberDepositAccId"),
-						"organizationPartyId", "Company", "amount", amount,
+						"organizationPartyId", employeeBranchId, "amount", amount,
 						"currencyUomId", "KES", "origAmount", amount,
 						"origCurrencyUomId", "KES", "debitCreditFlag",
 						postingType, "reconcileStatusId", "AES_NOT_RECONCILED"));
@@ -3687,7 +3693,7 @@ public class AccHolderTransactionServices {
 	}
 
 	private static void createMemberCashEntry(BigDecimal amount,
-			String acctgTransId, String postingType) {
+			String acctgTransId, String postingType, String employeeBranchId) {
 
 		GenericValue accountHolderTransactionSetup = getAccountHolderTransactionSetup("MEMBERTRANSACTIONACCOUNT");
 
@@ -3697,11 +3703,11 @@ public class AccHolderTransactionServices {
 				.makeValidValue("AcctgTransEntry", UtilMisc.toMap(
 						"acctgTransId", acctgTransId,
 
-						"acctgTransEntrySeqId", "2", "partyId", "Company",
+						"acctgTransEntrySeqId", "2", "partyId", employeeBranchId,
 						"glAccountTypeId", "MEMBER_DEPOSIT", "glAccountId",
 						accountHolderTransactionSetup
 								.getString("cashAccountId"),
-						"organizationPartyId", "Company", "amount", amount,
+						"organizationPartyId", employeeBranchId, "amount", amount,
 						"currencyUomId", "KES", "origAmount", amount,
 						"origCurrencyUomId", "KES", "debitCreditFlag",
 						postingType, "reconcileStatusId", "AES_NOT_RECONCILED"));
@@ -3730,7 +3736,7 @@ public class AccHolderTransactionServices {
 
 	// Create a record in AcctgTrans
 	public static String creatAccountTransRecord(
-			GenericValue accountTransaction, Map<String, String> userLogin) {
+			GenericValue accountTransactiont, Map<String, String> userLogin) {
 
 		GenericValue acctgTrans = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -3772,11 +3778,18 @@ public class AccHolderTransactionServices {
 		GenericValue acctgTrans = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		String acctgTransId = delegator.getNextSeqId("AcctgTrans", 1);
+		
+		String memberBranchId = "";
+		
+		if (userLogin != null) {
+			memberBranchId = LoanUtilities.getMemberBranchId(userLogin.get("partyId"));
+		}
 
 		if (userLogin == null) {
 			userLogin = new HashMap<String, String>();
 			userLogin.put("userLoginId", "admin");
 			userLogin.put("partyId", "Company");
+			memberBranchId = "Company";
 		}
 		String createdBy = (String) userLogin.get("userLoginId");
 		String updatedBy = (String) userLogin.get("userLoginId");
@@ -3790,7 +3803,7 @@ public class AccHolderTransactionServices {
 						.getInstance().getTimeInMillis()),
 
 				"glFiscalTypeId", "ACTUAL", "partyId",
-				userLogin.get("partyId"), "createdDate", new Timestamp(Calendar
+				memberBranchId, "createdDate", new Timestamp(Calendar
 						.getInstance().getTimeInMillis()),
 				"createdByUserLogin", createdBy, "lastModifiedDate",
 				new Timestamp(Calendar.getInstance().getTimeInMillis()),
@@ -4284,8 +4297,10 @@ public class AccHolderTransactionServices {
 		GenericValue accountTransaction = null;
 		String acctgTransId = creatAccountTransRecord(accountTransaction,
 				userLogin);
-		createMemberDepositEntry(amount, acctgTransId, "C");
-		createMemberCashEntry(amount, acctgTransId, "D");
+		
+		String employeeBranchId = getEmployeeBranch(userLogin.get("partyUd"));
+		createMemberDepositEntry(amount, acctgTransId, "C", employeeBranchId);
+		createMemberCashEntry(amount, acctgTransId, "D", employeeBranchId);
 		return acctgTransId;
 	}
 
@@ -4413,8 +4428,11 @@ public class AccHolderTransactionServices {
 		GenericValue accountTransaction = null;
 		String acctgTransId = creatAccountTransRecord(accountTransaction,
 				userLogin);
-		createMemberDepositEntry(amount, acctgTransId, "C");
-		createMemberCashEntry(amount, acctgTransId, "D");
+		
+		String employeeBranchId = getEmployeeBranch(userLogin.get("partyId"));
+		
+		createMemberDepositEntry(amount, acctgTransId, "C", employeeBranchId);
+		createMemberCashEntry(amount, acctgTransId, "D", employeeBranchId);
 
 		return acctgTransId;
 	}
@@ -4768,9 +4786,9 @@ public class AccHolderTransactionServices {
 		GenericValue accountTransaction = null;
 		String acctgTransId = creatAccountTransRecord(accountTransaction,
 				userLogin);
-
-		createMemberDepositEntry(amount, acctgTransId, "C");
-		createMemberCashEntry(amount, acctgTransId, "D");
+		String employeeBranchId = getEmployeeBranch(userLogin.get("partyId"));
+		createMemberDepositEntry(amount, acctgTransId, "C", employeeBranchId);
+		createMemberCashEntry(amount, acctgTransId, "D", employeeBranchId);
 
 	}
 

@@ -2826,4 +2826,38 @@ public class LoanUtilities {
 
 		return productCharge;
 	}
+
+	public static String getMemberDepositsGLAccountId() {
+		String glAccountId = getAccountProductGivenCodeId(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE).getString("glAccountId");
+		return glAccountId;
+	}
+
+	public static String getLoanReceivableAccountId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public static String getTransactionGLAccountGivenTransactionName(
+			String transactionName) {
+		GenericValue accountHolderTransactionSetup = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			accountHolderTransactionSetup = delegator.findOne(
+					"AccountHolderTransactionSetup", UtilMisc.toMap(
+							"accountHolderTransactionSetupId",
+							transactionName), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if (accountHolderTransactionSetup == null)
+			return null;
+		return accountHolderTransactionSetup.getString("memberDepositAccId");
+	}
+
+	public static String getSavingsAccountglAccountId() {
+		String glAccountId = getAccountProductGivenCodeId(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE).getString("glAccountId");
+		return glAccountId;
+	}
+
 }
