@@ -152,7 +152,7 @@ under the License.
                             </fo:table-cell>
                         </fo:table-row>
                     </#list>
-                    <fo:table-row background-color="#D4D0C8">
+<#--                     <fo:table-row background-color="#D4D0C8">
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block></fo:block>
                         </fo:table-cell>
@@ -172,7 +172,7 @@ under the License.
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${grandTotal}</fo:block>
                         </fo:table-cell>
-                    </fo:table-row>
+                    </fo:table-row> -->
                 </fo:table-body>
             </fo:table>
         </fo:block>
