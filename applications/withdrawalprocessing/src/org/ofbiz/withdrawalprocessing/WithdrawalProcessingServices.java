@@ -4,8 +4,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
 import org.ofbiz.accountholdertransactions.LoanUtilities;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
@@ -237,8 +239,133 @@ public class WithdrawalProcessingServices {
 	 * Share Capital Limit
 	 * */
 	public static BigDecimal getShareCapitalMinimum(String partyId){
-		BigDecimal bdShareCapitalLimit = new BigDecimal(20000);
+		//Get Member 
+		
+		GenericValue member = LoanUtilities.getMember(partyId);
+		
+		
+		Long memberClassId = member.getLong("memberClassId");
+		
+		if (memberClassId == null){
+			memberClassId = LoanUtilities.getMemberClassId("Class A");
+		}
+		
+		BigDecimal bdShareCapitalLimit = getMinimumShareCapital(memberClassId);
+
+		
+		//BigDecimal bdShareCapitalLimit = new BigDecimal(20000);
 		return bdShareCapitalLimit;
 	}
+
+
+	private static BigDecimal getMinimumShareCapital(Long memberClassId) {
+		GenericValue shareMinimum = LoanUtilities.getShareMinimumEntity(memberClassId);
+		
+		if (shareMinimum == null)
+			return null;
+		
+		return shareMinimum.getBigDecimal("minShareCapital");
+	}
 	
+	
+	/***
+	 * @author Japheth Odonya  @when Jun 30, 2015 1:20:26 PM
+	 * 
+	 * Update Share Capital for a member
+	 * 
+	 * */
+	public static String updateMemberShareCapitalWithMemberDeposits(Long partyId, Map<String, String> userLogin){
+		
+		BigDecimal bdShareCapitalBalance = BigDecimal.ZERO;
+		bdShareCapitalBalance = LoanUtilities.getShareCapitalAccountBalance(partyId);
+		bdShareCapitalBalance = bdShareCapitalBalance.setScale(2, RoundingMode.HALF_EVEN);
+		
+		BigDecimal bdShareCapitalLimit = LoanUtilities.getShareCapitalLimit(partyId);
+		bdShareCapitalLimit = bdShareCapitalLimit.setScale(2, RoundingMode.HALF_EVEN);
+		
+		BigDecimal bdMemberDepositAmount = LoanUtilities.getMemberDepositAmount(partyId);
+		bdMemberDepositAmount = bdMemberDepositAmount.setScale(2, RoundingMode.HALF_EVEN);
+		
+		if (bdShareCapitalBalance.compareTo(bdShareCapitalLimit) == 0)
+			return "The minimum share limit already met, no need for offsetting !!";
+		
+		BigDecimal bdShareCapitalDeficit = bdShareCapitalLimit.subtract(bdShareCapitalBalance);
+		
+		if (bdMemberDepositAmount.compareTo(bdShareCapitalDeficit) == -1)
+			return "The Member deposit amount is not enough to pay for the share capital deficit! Please pay over the counter";
+		
+		//(String sourceMemberAccountId, String destinationMemberAccountId, BigDecimal bdAmount, Map<String, String> userLogin)
+		//Do an account transfer - from member deposit to share capital be the deficit amount
+		String sourceMemberAccountId = LoanUtilities.getMemberAccountIdGivenMemberAndAccountCode(partyId, AccHolderTransactionServices.MEMBER_DEPOSIT_CODE);
+		String destinationMemberAccountId = LoanUtilities.getMemberAccountIdGivenMemberAndAccountCode(partyId, AccHolderTransactionServices.SHARE_CAPITAL_CODE);
+		AccHolderTransactionServices.accountTransferTransaction(sourceMemberAccountId, destinationMemberAccountId, bdShareCapitalDeficit, userLogin);
+		//AccHolderTransactionServices.postTransactionEntry(delegator, bdLoanAmount, branchId, partyId, loanReceivableAccount, postingType, acctgTransId, acctgTransType, entrySequenceId);
+		
+		return "success";
+	}
+	
+	/******
+	 * @author Japheth Odonya  @when Jun 30, 2015 1:23:04 PM
+	 * 
+	 * Offset Disbursed Loans With Member Deposits
+	 * **/
+	public static String offsetDisbursedLoansWithMemberDeposits(Long partyId, Map<String, String> userLogin){
+		
+		BigDecimal bdShareCapitalBalance = BigDecimal.ZERO;
+		bdShareCapitalBalance = LoanUtilities.getShareCapitalAccountBalance(partyId);
+		bdShareCapitalBalance = bdShareCapitalBalance.setScale(2, RoundingMode.HALF_EVEN);
+		
+		BigDecimal bdShareCapitalLimit = LoanUtilities.getShareCapitalLimit(partyId);
+		bdShareCapitalLimit = bdShareCapitalLimit.setScale(2, RoundingMode.HALF_EVEN);
+		
+		BigDecimal bdMemberDepositAmount = LoanUtilities.getMemberDepositAmount(partyId);
+		bdMemberDepositAmount = bdMemberDepositAmount.setScale(2, RoundingMode.HALF_EVEN);
+		
+		if (bdShareCapitalBalance.compareTo(bdShareCapitalLimit) == -1)
+			return "Please update share capital to share limit amount first before trying to offset loans. Share Limit amount is "+bdShareCapitalLimit+" while your share balance is "+bdShareCapitalBalance;
+
+		//Get Member Withdrawal Commission
+		GenericValue memberWithdrawalCommission = LoanUtilities.getProductChargeEntity("Member Withdrawal Commission");
+		if (memberWithdrawalCommission == null)
+			return "Please make sure that you have defined member withdrawal commission in the Product Charge using the name 'Member Withdrawal Commission'";
+		
+		if (memberWithdrawalCommission.getString("chargeAccountId") == null)
+			return "Withdrawal commission charge must have a gl account specified for correct posting of the GL";
+
+		if (memberWithdrawalCommission.getBigDecimal("fixedAmount") == null)
+			return "Please specify the Member Withdrawal Commission Charge Amount in the Product Charges";
+
+
+		GenericValue memberWithdrawalExciseDuty = LoanUtilities.getProductChargeEntity("Member Withdrawal Excise Duty");
+		if (memberWithdrawalExciseDuty == null)
+			return "Please make sure that you have defined member withdrawal Excise Duty in the Product Charge using the name 'Member Withdrawal Excise Duty'";
+		
+		if (memberWithdrawalExciseDuty.getString("chargeAccountId") == null)
+			return "Withdrawal Excise Duty must have a gl account specified for correct posting of the GL";
+
+		if (memberWithdrawalExciseDuty.getBigDecimal("rateAmount") == null)
+			return "Please specify the Member Withdrawal Excise Charge Amount in the Product Charges";
+
+		BigDecimal bdMemberWithdrawalCommissionAmount = memberWithdrawalCommission.getBigDecimal("fixedAmount");
+		
+		BigDecimal bdMemberWithdrawalExciseDuty = memberWithdrawalExciseDuty.getBigDecimal("rateAmount").multiply(bdMemberWithdrawalCommissionAmount).divide(new BigDecimal(100), 4, RoundingMode.HALF_EVEN);
+		BigDecimal bdTotalCharge = bdMemberWithdrawalCommissionAmount.add(bdMemberWithdrawalExciseDuty);
+		
+		//Check if member deposits is enough to offset loans (more than loans and withdrawal commission)
+		BigDecimal bdLoanBalancesTotal = LoansProcessingServices.getTotalDisbursedLoanBalances(partyId);
+		
+		BigDecimal bdMemberDepositBalance = getMemberDepositBalance(partyId.toString());
+		
+		BigDecimal bdTotalOffset = bdLoanBalancesTotal.add(bdTotalCharge);
+		
+		if (bdTotalOffset.compareTo(bdMemberDepositBalance) == -1){
+			return " Member Deposits not enough to offset the loans balances and pay the charges Member Deposit Amount is "+bdMemberDepositAmount+" Loan Balance Amount plus commission is "+bdTotalOffset;
+		}
+		
+		//Offset the loans
+		
+		//Pay commission
+		
+		return "success";
+	}
 }

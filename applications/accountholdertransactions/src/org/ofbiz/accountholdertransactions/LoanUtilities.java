@@ -564,6 +564,32 @@ public class LoanUtilities {
 
 		return accountProduct;
 	}
+	
+	//getAccountProductGivenCodeId
+	public static Long getAccountProductIdGivenCodeId(String code) {
+
+		List<GenericValue> accountProductELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		EntityConditionList<EntityExpr> accountProductConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"code", EntityOperator.EQUALS, code)),
+						EntityOperator.AND);
+		try {
+			accountProductELI = delegator.findList("AccountProduct",
+					accountProductConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		GenericValue accountProduct = null;
+		for (GenericValue genericValue : accountProductELI) {
+			accountProduct = genericValue;
+		}
+		
+		if (accountProduct == null)
+			return null;
+
+		return accountProduct.getLong("accountProductId");
+	}
 
 	// org.ofbiz.accountholdertransactions.LoanUtilities.getRecommendedAmount(BigDecimal
 	// bdMaxLoanAmt, BigDecimal bdAppliedAmt)
@@ -2681,5 +2707,123 @@ public class LoanUtilities {
 		}
 		
 		return shareMinimum;
+	}
+
+	/***
+	 * @author Japheth Odonya  @when Jun 30, 2015 12:16:18 AM
+	 * 
+	 * Get Loan Guarantor Entity
+	 * */
+	public static GenericValue getLoanGuarantorEntity(Long loanGuarantorId) {
+		GenericValue loanGuarantor = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanGuarantor = delegator.findOne("LoanGuarantor",
+					UtilMisc.toMap("loanGuarantorId", loanGuarantorId),
+					false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		return loanGuarantor;
+	}
+
+	/**
+	 * @author Japheth Odonya  @when Jun 30, 2015 12:28:37 AM
+	 * 
+	 * 
+	 * Get total deposits this loan guarantors less this guarantor attempting to be deleted
+	 * */
+	public static BigDecimal getTotalGuarantorDepositsWithoutThisGuarantor(
+			Long loanGuarantorId, Long loanApplicationId) {
+		
+		EntityConditionList<EntityExpr> loanGuarantorConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanApplicationId", EntityOperator.EQUALS,
+						loanApplicationId),
+
+				EntityCondition.makeCondition("loanGuarantorId", EntityOperator.NOT_EQUAL,
+						loanGuarantorId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> loanGuarantorELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanGuarantorELI = delegator.findList("LoanGuarantor",
+					loanGuarantorConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		BigDecimal bdTotalDepositAmount = BigDecimal.ZERO;
+		Long accountProductId = LoanUtilities.getAccountProductGivenCodeId(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE).getLong("accountProductId");
+		
+		for (GenericValue genericValue : loanGuarantorELI) {
+			Long memberAccountId = LoanUtilities.getMemberAccountIdFromMemberAccount(genericValue.getLong("guarantorId"), accountProductId);
+			
+			bdTotalDepositAmount = bdTotalDepositAmount.add(AccHolderTransactionServices.getAvailableBalanceVer3(memberAccountId.toString()));
+		}
+
+		
+		return bdTotalDepositAmount;
+	}
+
+	public static BigDecimal getShareCapitalAccountBalance(Long partyId) {
+		
+		BigDecimal bdShareCapitalBalance = BigDecimal.ZERO;
+		Long accountProductId = getAccountProductIdGivenCodeId(AccHolderTransactionServices.SHARE_CAPITAL_CODE);
+		
+		Long memberAccountId = getMemberAccountIdFromMemberAccount(partyId, accountProductId);
+		
+		bdShareCapitalBalance = AccHolderTransactionServices.getBookBalanceNow(memberAccountId.toString());
+		return bdShareCapitalBalance;
+	}
+
+	public static BigDecimal getShareCapitalLimit(Long partyId) {
+		GenericValue member = LoanUtilities.getMember(partyId);
+		
+		Long memberClassId = member.getLong("memberClassId");
+		
+		if (memberClassId == null){
+			memberClassId = LoanUtilities.getMemberClassId("Class A");
+		}
+		
+		GenericValue shareMinimum = getShareMinimumEntity(memberClassId);
+		
+		if (shareMinimum == null)
+			return null;
+		
+		
+		return shareMinimum.getBigDecimal("minShareCapital");
+	}
+
+	public static String getMemberAccountIdGivenMemberAndAccountCode(
+			Long partyId, String code) {
+		Long accountProductId = getAccountProductIdGivenCodeId(code);
+		
+		Long memberAccountId = getMemberAccountIdFromMemberAccount(partyId, accountProductId);
+
+		return memberAccountId.toString();
+	}
+
+	public static GenericValue getProductChargeEntity(String name) {
+		GenericValue productCharge = null;
+
+		List<GenericValue> productChargeELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			productChargeELI = delegator.findList("ProductCharge",
+					EntityCondition.makeCondition("name", name),
+					null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue genericValue : productChargeELI) {
+			productCharge = genericValue;
+		}
+
+		return productCharge;
 	}
 }

@@ -22,10 +22,10 @@
 
     <!-- Request Mappings -->
     <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="withdrawalApprovals"/></request-map>
-     <request-map uri="withdrawalApprovals">
-                <security https="true" auth="true" />
-                <response name="success" type="view" value="withdrawalApprovals" />
-        </request-map>
+    <request-map uri="withdrawalApprovals">
+       <security https="true" auth="true" />
+       <response name="success" type="view" value="withdrawalApprovals" />
+    </request-map>
         
         
         
@@ -33,9 +33,9 @@
 
 
      <request-map uri="memberObligations">
-                <security https="true" auth="true" />
-                <response name="success" type="view" value="memberObligations" />
-        </request-map>
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="memberObligations" />
+     </request-map>
         
              <request-map uri="approveWithdrawal">
                 <security https="true" auth="true" />
@@ -53,7 +53,7 @@
                 <response name="success" type="request-redirect"
                         value="withdrawalApprovals"></response>
         </request-map>
-                <request-map uri="updateWithdrawalLog">
+        <request-map uri="updateWithdrawalLog">
                 <security https="true" auth="true" />
                 <event type="service" invoke="updateWithdrawalLog" />
                 <response name="success" type="request-redirect"
@@ -66,6 +66,30 @@
                 <event type="service" invoke="deleteWithdrawalLog" />
                 <response name="success" type="request-redirect"
                         value="withdrawalApprovals"></response>
+        </request-map>
+        
+        <!-- offsetDisbursedLoansWithMemberDeposits -->
+        <request-map uri="offsetDisbursedLoansWithMemberDeposits">
+                <security https="true" auth="true" />
+                <event type="service" invoke="offsetDisbursedLoansWithMemberDeposits" />
+                <response name="success" type="request-redirect"
+                        value="memberObligations">
+                        	<redirect-parameter name="partyId"/>
+                        	<redirect-parameter name="memberWithdrawalId"/>
+                        </response>
+                <response name="error" type="view" value="memberObligations" />
+        </request-map>
+        
+        <!-- updateShareCapitalToLimit -->
+        <request-map uri="updateShareCapitalToLimit">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateShareCapitalToLimit" />
+                <response name="success" type="request-redirect"
+                        value="memberObligations">
+                        	<redirect-parameter name="partyId"/>
+                        	<redirect-parameter name="memberWithdrawalId"/>
+                        </response>
+                <response name="error" type="view" value="memberObligations" />
         </request-map>
         
         

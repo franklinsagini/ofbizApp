@@ -1029,6 +1029,23 @@ under the License.
       	</relation>
 	</entity>
 	
+	<!-- LoanGuarantor Removed -->
+	<entity entity-name="LoanGuarantorRemoved" package-name="org.ofbiz.loans"
+		title="LoanGuarantorRemoved Entity">
+		<field name="loanGuarantorRemovedId" type="id-vlong-int"   enable-audit-log="true"></field>
+		<field name="loanApplicationId" type="id-vlong-int"   enable-audit-log="true"></field>
+		<field name="isActive" type="indicator"   enable-audit-log="true"></field>
+		<field name="createdBy" type="name"   enable-audit-log="true"></field>
+		<field name="updatedBy" type="name"   enable-audit-log="true"></field>
+		
+		<field name="removedGuarantorId" type="id-vlong-int"   enable-audit-log="true"></field>
+				
+		<prim-key field="loanGuarantorRemovedId"/>
+		<relation type="one" fk-name="LoanGuarantor_LoanApplication" rel-entity-name="LoanApplication">
+        	<key-map field-name="loanApplicationId"/>
+      	</relation>
+	</entity>
+	
 	
 	<view-entity entity-name="DisbursedLoansView"
             package-name="org.ofbiz.loans"

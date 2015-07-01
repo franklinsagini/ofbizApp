@@ -1170,9 +1170,20 @@ public class LoanServices {
 	 * */
 	public static String generateGuarantorPercentages(GenericValue loanGuarantor) {
 		String loanApplicationId = loanGuarantor.getString("loanApplicationId");
+		Long loanApplicationIdLong = loanGuarantor.getLong("loanApplicationId");
 		Delegator delegator = loanGuarantor.getDelegator();
 		// Get Loan Amount
-		BigDecimal bdLoanAmt = getLoanAmount(delegator, loanApplicationId);
+		
+		BigDecimal bdLoanAmt = BigDecimal.ZERO;
+		
+		Long loanStatusIdDisbursed = LoanUtilities.getLoanStatusId("DISBURSED");
+		GenericValue loanApplication = LoanUtilities.getLoanApplicationEntity(loanApplicationIdLong);
+		if (loanApplication.getLong("loanStatusId") == loanStatusIdDisbursed){
+			//Amount is balance
+			bdLoanAmt = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationIdLong);
+		} else{
+			bdLoanAmt = getLoanAmount(delegator, loanApplicationId.toString());
+		}
 		// Get Number of Guarantors
 		Integer guarantersCount = getNumberOfGuarantors(delegator,
 				loanApplicationId);
@@ -1199,14 +1210,22 @@ public class LoanServices {
 	public static String generateGuarantorPercentages(Long loanApplicationId) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		// Get Loan Amount
-		BigDecimal bdLoanAmt = getLoanAmount(delegator, loanApplicationId.toString());
+		
+		
+		BigDecimal bdLoanAmt = BigDecimal.ZERO;
+		
+		Long loanStatusIdDisbursed = LoanUtilities.getLoanStatusId("DISBURSED");
+		GenericValue loanApplication = LoanUtilities.getLoanApplicationEntity(loanApplicationId);
+		if (loanApplication.getLong("loanStatusId") == loanStatusIdDisbursed){
+			//Amount is balance
+			bdLoanAmt = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
+		} else{
+			bdLoanAmt = getLoanAmount(delegator, loanApplicationId.toString());
+		}
+		
 		// Get Number of Guarantors
 		Integer guarantersCount = getNumberOfGuarantors(delegator,
 				loanApplicationId.toString());
-		
-		//if (!(guarantersCount.compareTo(new Integer(0)) > 1))
-		
-		
 		
 		if (guarantersCount.intValue() <= 0)
 			return "";

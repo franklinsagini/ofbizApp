@@ -1557,6 +1557,9 @@ public class AccHolderTransactionServices {
 							.equals("EXCISEDUTY")))
 							
 					|| ((transactionType != null) && (transactionType
+							.equals("TRANSFERFROM")))
+							
+					|| ((transactionType != null) && (transactionType
 							.equals("LOANREPAYMENT")))
 							
 					|| ((transactionType != null) && (transactionType
@@ -1575,6 +1578,9 @@ public class AccHolderTransactionServices {
 							
 					|| ((transactionType != null) && (transactionType
 							.equals("SALARYPROCESSING")))
+							
+					|| ((transactionType != null) && (transactionType
+							.equals("TRANSFERTO")))
 							
 					|| ((transactionType != null) && (transactionType
 							.equals("DEPOSITFROMSALARY")))
@@ -1694,6 +1700,9 @@ public class AccHolderTransactionServices {
 
 					|| ((transactionType != null) && (transactionType
 							.equals("EXCISEDUTY")))
+							
+				    || ((transactionType != null) && (transactionType
+							.equals("TRANSFERFROM")))
 
 					|| ((transactionType != null) && (transactionType
 							.equals("POSCASHPURCHASE")))) {
@@ -1705,6 +1714,9 @@ public class AccHolderTransactionServices {
 
 					|| ((transactionType != null) && (transactionType
 							.equals("MSACCODEPOSIT")))
+							
+					|| ((transactionType != null) && (transactionType
+							.equals("TRANSFERTO")))
 
 					|| ((transactionType != null) && (transactionType
 							.equals("MEMBERACCOUNTJVINC")))) {
@@ -5427,6 +5439,54 @@ public class AccHolderTransactionServices {
 		}
 		
 		return addedStatus;
+	}
+
+	/***
+	 * @author Japheth Odonya  @when Jun 30, 2015 3:58:41 PM
+	 * Create a transfer from Source Member Account to Destination Member Account
+	 * **/
+	public static void accountTransferTransaction(String sourceMemberAccountId,
+			String destinationMemberAccountId,
+			BigDecimal bdShareCapitalDeficit, Map<String, String> userLogin) {
+		
+		
+		String sourceglLedgerAccountId = null;
+		String destglLedgerAccountId = null;
+		// Long memberAccountId = accountTransaction.getLong("memberAccountId");
+		GenericValue sourceAccountProduct = getAccountProductEntity(Long.valueOf(sourceMemberAccountId));
+		sourceglLedgerAccountId = sourceAccountProduct.getString("glAccountId");
+		
+		GenericValue destAccountProduct = getAccountProductEntity(Long.valueOf(destinationMemberAccountId));
+		destglLedgerAccountId = destAccountProduct.getString("glAccountId");		
+		
+
+		// Get tha acctgTransId
+		String acctgTransId = creatAccountTransRecordVer2(null,
+				userLogin);
+		String glAccountTypeId = "MEMBER_DEPOSIT";
+		String partyId = LoanUtilities
+				.getMemberPartyIdFromMemberAccountId(Long.valueOf(sourceMemberAccountId));
+		
+		//LoanUtilities.getE
+		String employeeBranchId = getEmployeeBranch(userLogin.get("partyId"));
+		String memberBranchId = LoanUtilities.getMemberBranchId(partyId);
+		String entrySequenceId = "1";
+		//Post Entries - DR source and CR destination
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		postTransactionEntry(delegator, bdShareCapitalDeficit, employeeBranchId, memberBranchId, sourceglLedgerAccountId, "D", acctgTransId, glAccountTypeId, entrySequenceId);
+		
+		entrySequenceId = "2";
+		postTransactionEntry(delegator, bdShareCapitalDeficit, employeeBranchId, memberBranchId, destglLedgerAccountId, "C", acctgTransId, glAccountTypeId, entrySequenceId);
+
+		
+		//Create Transactions for the same (Member Statement)
+		
+		//Source
+		//cashDepositVersion4(bdShareCapitalDeficit, Long.valueOf(sourceMemberAccountId), userLogin, "TRANSFERFROM", acctgTransId);
+		memberTransactionDeposit(bdShareCapitalDeficit, Long.valueOf(sourceMemberAccountId), userLogin, "TRANSFERFROM", null, null, acctgTransId, destAccountProduct.getLong("accountProductId"), null);
+		//Destination
+		memberTransactionDeposit(bdShareCapitalDeficit, Long.valueOf(destinationMemberAccountId), userLogin, "TRANSFERTO", null, null, acctgTransId, sourceAccountProduct.getLong("accountProductId"), null);
+		
 	}
 
 }
