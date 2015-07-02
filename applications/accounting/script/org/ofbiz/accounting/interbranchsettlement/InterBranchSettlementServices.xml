@@ -98,12 +98,26 @@
         <set field="count" type="Long" value="0"/>
         <set field="debitCount" type="Long" value="0"/>
         <set field="creditCount" type="Long" value="0"/>
+
+        <call-class-method class-name="org.ofbiz.base.util.UtilDateTime" method-name="getDayStart" ret-field="dayStart">
+            <field field="nowTimestamp" type="java.sql.Timestamp"/>
+        </call-class-method>
+
+        <call-class-method class-name="org.ofbiz.base.util.UtilDateTime" method-name="getDayEnd" ret-field="dayEnd">
+            <field field="nowTimestamp" type="java.sql.Timestamp"/>
+        </call-class-method>
+
+        <log message="DAY STARTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT ${dayStart}" level="info" />
+        <log message="DAY ENDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD ${dayEnd}" level="info" />
+
         <!-- Get all transactions that for this branch -->
         <entity-condition entity-name="AcctgTransEntry" list="acctgTransEntry">
             <condition-list combine="and">
                 <condition-expr field-name="organizationPartyId" operator="equals" from-field="parameters.branchId"/>
                 <condition-expr field-name="glAccountId" operator="equals" value="42000003"/>
                 <condition-expr field-name="partyId" operator="not-equals" from-field="parameters.branchId"/>
+                <condition-expr field-name="createdTxStamp" operator="greater-equals" from-field="dayStart"/>
+                <condition-expr field-name="createdTxStamp" operator="less-equals" from-field="dayEnd"/>
             </condition-list>
         </entity-condition>
 <!--         <iterate entry="singleEntry" list="acctgTransEntry">
@@ -183,7 +197,7 @@
                     <!-- <set field="createGeneratedEndDayTransParams.owedByPartyId" from-field="singleEntry.partyId" /> -->
                     <!-- <set field="createGeneratedEndDayTransParams.owesPartyId" from-field="parameters.branchId" /> -->
                     <set field="createGeneratedEndDayTransParams.amount" from-field="singleEntry.amount" />
-                    <set field="createGeneratedEndDayTransParams.debitCreditFlag" from-field="D" />
+                    <set field="createGeneratedEndDayTransParams.debitCreditFlag" value="D" />
                     <call-service service-name="createGeneratedEndDayTrans" in-map-name="createGeneratedEndDayTransParams" />
 
                     <!-- now the credit AcctgTransEntry settlement acc -->
