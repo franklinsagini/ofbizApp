@@ -903,7 +903,7 @@ public class LoanUtilities {
 						"loanStatusId", EntityOperator.EQUALS,
 						defaultedLoanStatusId),
 
-				EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,
+				EntityCondition.makeCondition("guarantorId", EntityOperator.EQUALS,
 						partyId)
 
 				), EntityOperator.AND);
@@ -911,7 +911,7 @@ public class LoanUtilities {
 		List<GenericValue> loanApplicationELI = new ArrayList<GenericValue>();
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
-			loanApplicationELI = delegator.findList("LoanApplication",
+			loanApplicationELI = delegator.findList("LoanGuarantorDisbursedLoan",
 					loanApplicationConditions, null, null, null, false);
 
 		} catch (GenericEntityException e2) {
@@ -925,11 +925,18 @@ public class LoanUtilities {
 	}
 
 	public static boolean shareCapitalBelowMinimum(Long partyId) {
-		return true;
+		BigDecimal bdShareCapitalAmount = LoanUtilities.getShareCapitalAccountBalance(partyId);
+		
+		BigDecimal bdShareCapitalMinimum = LoanUtilities.getShareCapitalLimit(partyId);
+		
+		if (bdShareCapitalAmount.compareTo(bdShareCapitalMinimum) == -1)
+			return true;
+		
+		return false;
 	}
 
 	public static boolean memberDepositsLessThanLoans(Long partyId) {
-		return true;
+		return false;
 	}
 
 	/***

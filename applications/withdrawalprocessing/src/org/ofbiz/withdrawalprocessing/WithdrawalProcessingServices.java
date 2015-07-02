@@ -393,7 +393,12 @@ public class WithdrawalProcessingServices {
 					+ bdShareCapitalLimit
 					+ " while your share balance is "
 					+ bdShareCapitalBalance;
-
+		
+		//Replace guarantors for members disbursed loans
+		List<String> loansGuaranteedList = LoansProcessingServices.getLoansGuaranteedList(partyId);
+		if ((loansGuaranteedList != null) && (loansGuaranteedList.size() > 0))
+			return " Must replace all guarantors before withdrawing a member !";
+		
 		// Get Member Withdrawal Commission
 		GenericValue memberWithdrawalCommission = LoanUtilities
 				.getProductChargeEntity("Member Withdrawal Commission");
@@ -445,7 +450,7 @@ public class WithdrawalProcessingServices {
 
 		bdTotalOffset = bdTotalOffset.add(bdTotalInterestDue).add(
 				bdTotalInsuranceDue);
-		if (bdTotalOffset.compareTo(bdMemberDepositBalance) == -1) {
+		if (bdMemberDepositBalance.compareTo(bdTotalOffset) == -1) {
 			return " Member Deposits not enough to offset the loans balances (Principal Balance + Interest + Insurance) and pay the charges Member Deposit Amount is "
 					+ bdMemberDepositAmount
 					+ " Loan Balance Amount plus commission is "
@@ -622,7 +627,7 @@ public class WithdrawalProcessingServices {
 		loanRepayment = delegator.makeValue("LoanRepayment", UtilMisc.toMap(
 				"loanRepaymentId", loanRepaymentId, "isActive", "Y",
 				"createdBy", userLogin.get("userLoginId"), "partyId", partyId,
-				"loanApplicationId", loanApplicationId,
+				"loanApplicationId", Long.valueOf(loanApplicationId),
 
 				"loanNo", loanApplication.getString("loanNo"), "loanAmt",
 				loanApplication.getBigDecimal("loanAmt"),
