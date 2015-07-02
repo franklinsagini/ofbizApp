@@ -903,7 +903,7 @@ public class LoanUtilities {
 						"loanStatusId", EntityOperator.EQUALS,
 						defaultedLoanStatusId),
 
-				EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,
+				EntityCondition.makeCondition("guarantorId", EntityOperator.EQUALS,
 						partyId)
 
 				), EntityOperator.AND);
@@ -911,7 +911,7 @@ public class LoanUtilities {
 		List<GenericValue> loanApplicationELI = new ArrayList<GenericValue>();
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
-			loanApplicationELI = delegator.findList("LoanApplication",
+			loanApplicationELI = delegator.findList("LoanGuarantorDisbursedLoan",
 					loanApplicationConditions, null, null, null, false);
 
 		} catch (GenericEntityException e2) {
@@ -925,11 +925,18 @@ public class LoanUtilities {
 	}
 
 	public static boolean shareCapitalBelowMinimum(Long partyId) {
-		return true;
+		BigDecimal bdShareCapitalAmount = LoanUtilities.getShareCapitalAccountBalance(partyId);
+		
+		BigDecimal bdShareCapitalMinimum = LoanUtilities.getShareCapitalLimit(partyId);
+		
+		if (bdShareCapitalAmount.compareTo(bdShareCapitalMinimum) == -1)
+			return true;
+		
+		return false;
 	}
 
 	public static boolean memberDepositsLessThanLoans(Long partyId) {
-		return true;
+		return false;
 	}
 
 	/***
@@ -2826,4 +2833,38 @@ public class LoanUtilities {
 
 		return productCharge;
 	}
+
+	public static String getMemberDepositsGLAccountId() {
+		String glAccountId = getAccountProductGivenCodeId(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE).getString("glAccountId");
+		return glAccountId;
+	}
+
+	public static String getLoanReceivableAccountId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public static String getTransactionGLAccountGivenTransactionName(
+			String transactionName) {
+		GenericValue accountHolderTransactionSetup = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			accountHolderTransactionSetup = delegator.findOne(
+					"AccountHolderTransactionSetup", UtilMisc.toMap(
+							"accountHolderTransactionSetupId",
+							transactionName), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if (accountHolderTransactionSetup == null)
+			return null;
+		return accountHolderTransactionSetup.getString("memberDepositAccId");
+	}
+
+	public static String getSavingsAccountglAccountId() {
+		String glAccountId = getAccountProductGivenCodeId(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE).getString("glAccountId");
+		return glAccountId;
+	}
+
 }
