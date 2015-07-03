@@ -18,7 +18,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="lookupFixedAsset" target="LookupFixedAsset" title="" type="single"
@@ -51,6 +51,45 @@ under the License.
         </field>
         <field name="fixedAssetName" title="${uiLabelMap.CommonName}"><display/></field>
         <field name="fixedAssetTypeId" title="${uiLabelMap.AccountingFixedAssetTypeId}"><display-entity entity-name="FixedAssetType"/></field>
+    </form>
+    <form name="lookupBudgetActivity" target="LookupBudgetActivity" title="" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+        <auto-fields-entity entity-name="BudgetActivity" default-field-type="hidden"/>
+        <field name="budgetActivityId"><text-find/></field>
+        <field name="activityName"><text-find/></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="lookupBudgetJustification" target="LookupBudgetJustification" title="" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+        <auto-fields-entity entity-name="BudgetJustification" default-field-type="hidden"/>
+        <field name="budgetJustificationId"><text-find/></field>
+        <field name="justificationName"><text-find/></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="lookupBudgetPlanHeader" target="LookupBudgetPlanHeader" title="" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+        <auto-fields-entity entity-name="BudgetPlan" default-field-type="hidden"/>
+        <field name="budgetPlanId"></field>
+        <field name="branchId" title="Branch">
+            <drop-down allow-empty="true">
+                <entity-options key-field-name="partyId" description="${groupName}" entity-name="PartyGroup">
+                    <entity-constraint name="isBranch" operator="equals" value="Y"/>
+                    <entity-order-by field-name="groupName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+<!--         <field name="customTimePeriodId" title="Fiscal Year">
+            <drop-down allow-empty="true">
+                <entity-options key-field-name="customTimePeriodId" description="${periodName}" entity-name="CustomTimePeriod">
+                    <entity-order-by field-name="periodName"/>
+                </entity-options>
+            </drop-down>
+        </field> -->
+        <field name="comments" type="comment"><text-find/></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="lookupBudget" target="LookupBudget" title="" type="single"
         header-row-style="header-row" default-table-style="basic-table">
@@ -310,7 +349,7 @@ under the License.
             <hyperlink also-hidden="false" target-type="plain" description="${paymentGroupId}" target="javascript:set_value('${paymentGroupId}')"/>
         </field>
         <field name="paymentId"><display/></field>
-        <field name="sequenceNum"><display/></field>        
+        <field name="sequenceNum"><display/></field>
     </form>
 
     <form name="LookupGlReconciliation" target="LookupGlReconciliation" type="single"
@@ -322,7 +361,7 @@ under the License.
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    
+
     <form name="ListLookupReconciliation" list-name="listIt" type="list" target="LookupGlReconciliation"
             odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>
@@ -340,7 +379,7 @@ under the License.
         <field name="organizationPartyId"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${firstName} ${lastName}[${partyId}]"/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
     </form>
-    
+
     <form name="lookupCustomTimePeriod" target="LookupCustomTimePeriod" title="" type="single"
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-entity entity-name="CustomTimePeriod" default-field-type="hidden"/>

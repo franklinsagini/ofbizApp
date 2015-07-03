@@ -350,6 +350,73 @@ under the License.
     <!-- ========================================================= -->
     <!-- org.ofbiz.accounting.budget -->
     <!-- ========================================================= -->
+    <entity entity-name="BudgetActivity"
+            package-name="org.ofbiz.accounting.budget"
+            title="Budget Activity Entity">
+      <field name="budgetActivityId" type="id-ne"></field>
+      <field name="activityName" type="id-long-ne"></field>
+      <prim-key field="budgetActivityId"/>
+      <index name="BUD_ACT_UNQ" unique="true">
+        <index-field name="activityName"/>
+      </index>
+    </entity>
+
+    <entity entity-name="BudgetJustification"
+            package-name="org.ofbiz.accounting.budget"
+            title="Budget Operation Entity">
+      <field name="budgetJustificationId" type="id-ne"></field>
+      <field name="justificationName" type="description"></field>
+      <prim-key field="budgetJustificationId"/>
+      <index name="BUD_JUST_UNQ" unique="true">
+        <index-field name="justificationName"/>
+      </index>
+    </entity>
+
+    <entity entity-name="BudgetPlan"
+            package-name="org.ofbiz.accounting.budget"
+            title="Budget Plan Entity">
+      <field name="budgetPlanId" type="id-ne"></field>
+      <field name="branchId" type="id"></field>
+      <field name="customTimePeriodId" type="id"></field>
+      <field name="comments" type="comment"></field>
+      <prim-key field="budgetPlanId"/>
+      <relation type="one" fk-name="BDGT_PLN_CTP" rel-entity-name="CustomTimePeriod">
+        <key-map field-name="customTimePeriodId"/>
+      </relation>
+      <relation type="one" fk-name="BGT_PLN_BRNCH" rel-entity-name="PartyGroup">
+         <key-map field-name="branchId" rel-field-name="partyId"/>
+      </relation>
+    </entity>
+
+    <entity entity-name="BudgetPlanItem"
+            package-name="org.ofbiz.accounting.budget"
+            title="Budget Plan Entity">
+      <field name="budgetPlanItemId" type="id-ne"></field>
+      <field name="budgetPlanId" type="id-ne"></field>
+      <field name="budgetActivityId" type="id-ne"></field>
+      <field name="glAccountClassId" type="id-ne" enable-audit-log="true"></field>
+      <field name="glAccountId" type="id"></field>
+      <field name="budgetJustificationId" type="id-ne"></field>
+      <field name="amount" type="currency-amount"></field>
+      <prim-key field="budgetPlanId"/>
+      <prim-key field="budgetPlanItemId"/>
+      <relation type="one" fk-name="BDGTPLNITM_TO_BDGTPLN" rel-entity-name="BudgetPlan">
+        <key-map field-name="budgetPlanId"/>
+      </relation>
+      <relation type="one" fk-name="BGT_PLN_ITM" rel-entity-name="BudgetActivity">
+        <key-map field-name="budgetActivityId"/>
+      </relation>
+      <relation type="one" fk-name="BGT_PLN_JST" rel-entity-name="BudgetJustification">
+        <key-map field-name="budgetJustificationId"/>
+      </relation>
+      <relation type="one" fk-name="BUDG_ITM_GLAC" rel-entity-name="GlAccountClass">
+          <key-map field-name="glAccountClassId"/>
+      </relation>
+      <relation type="one" fk-name="BUDG_ITM_GLAC" rel-entity-name="GlAccount">
+            <key-map field-name="glAccountId"/>
+      </relation>
+    </entity>
+
 
     <entity entity-name="Budget"
             package-name="org.ofbiz.accounting.budget"

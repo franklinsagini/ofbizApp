@@ -24,6 +24,37 @@ under the License.
     <vendor>OFBiz</vendor>
     <version>1.0</version>
 
+
+    <!-- Budget Activity  -->
+    <service name="createBudgetActivity" default-entity-name="BudgetActivity" engine="simple"
+        location="component://accounting/script/org/ofbiz/accounting/budget/BudgetServices.xml" invoke="createBudgetActivity" auth="true">
+        <description>Create a Budget</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateBudgetActivity" default-entity-name="BudgetActivity" engine="simple"
+                location="component://accounting/script/org/ofbiz/accounting/budget/BudgetServices.xml" invoke="updateBudgetActivity" auth="true">
+        <description>Update a Budget</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <attribute name="budgetId" mode="OUT" type="String" optional="false"></attribute>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <!-- Budget Justification  -->
+    <service name="createBudgetJustification" default-entity-name="BudgetJustification" engine="simple"
+        location="component://accounting/script/org/ofbiz/accounting/budget/BudgetServices.xml" invoke="createBudgetJustification" auth="true">
+        <description>Create a Budget</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateBudgetJustification" default-entity-name="BudgetJustification" engine="simple"
+                location="component://accounting/script/org/ofbiz/accounting/budget/BudgetServices.xml" invoke="updateBudgetJustification" auth="true">
+        <description>Update a Budget</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <attribute name="budgetId" mode="OUT" type="String" optional="false"></attribute>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
     <!-- Budget  -->
     <service name="createBudget" default-entity-name="Budget" engine="simple"
         location="component://accounting/script/org/ofbiz/accounting/budget/BudgetServices.xml" invoke="createBudget" auth="true">

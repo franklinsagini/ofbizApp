@@ -57,6 +57,157 @@ under the License.
          </section>
     </screen>
 
+    <screen name="BudgetActivity">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Budget Activity"/>
+                <set field="headerItem" value="ListBudgets"/>
+                <set field="tabButtonBudgetItemTop" value="BudgetSetup"/>
+                <set field="tabButtonItem" value="ListBudgets"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-menu name="BudgetMainTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <include-menu name="BudgetSetupTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <section>
+                                    <condition>
+                                        <if-service-permission service-name="fixedAssetPermissionCheck" main-action="CREATE"/>
+                                    </condition>
+                                    <widgets>
+                                        <container style="button-bar">
+                                            <link target="EditBudgetActivity" text="New Budget Activity" style="buttontext create"/>
+                                        </container>
+                                    </widgets>
+                                </section>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindBudgetActivities" location="component://accounting/widget/BudgetForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-screen name="BudgetActivitySearchResults"/>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+
+    <screen name="BudgetJustification">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Budget Justification"/>
+                <set field="headerItem" value="ListBudgets"/>
+                 <set field="tabButtonBudgetItemTop" value="BudgetSetup"/>
+                <set field="tabButtonItem" value="BudgetJustifications"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                         <include-menu name="BudgetMainTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <include-menu name="BudgetSetupTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <section>
+                                    <condition>
+                                        <if-service-permission service-name="fixedAssetPermissionCheck" main-action="CREATE"/>
+                                    </condition>
+                                    <widgets>
+                                        <container style="button-bar">
+                                            <link target="EditBudgetJustification" text="New Budget Justification" style="buttontext create"/>
+                                        </container>
+                                    </widgets>
+                                </section>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindBudgetJustification" location="component://accounting/widget/BudgetForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-screen name="BudgetJustificationSearchResults"/>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+
+
+
+    <screen name="BudgetJustificationSearchResults">
+        <section>
+            <condition>
+                <if-service-permission service-name="fixedAssetPermissionCheck" main-action="VIEW"/>
+            </condition>
+            <actions>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
+            <widgets>
+                <include-form name="ListBudgetJustification" location="component://accounting/widget/BudgetForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="BudgetPlanHeader">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Budget Plan"/>
+                <set field="headerItem" value="ListBudgets"/>
+                 <set field="tabButtonBudgetItemTop" value="BudgetPlan"/>
+                <set field="tabButtonItem" value="BudgetPlan"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                         <include-menu name="BudgetMainTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <include-menu name="BudgetSetupTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <section>
+                                    <condition>
+                                        <if-service-permission service-name="fixedAssetPermissionCheck" main-action="CREATE"/>
+                                    </condition>
+                                    <widgets>
+                                        <container style="button-bar">
+                                            <link target="EditBudgetPlanHeader" text="New Budget Plan" style="buttontext create"/>
+                                        </container>
+                                    </widgets>
+                                </section>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindBudgetPlanHeader" location="component://accounting/widget/BudgetForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-screen name="BudgetPlanHeaderSearchResults"/>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+
+    <screen name="BudgetPlanHeaderSearchResults">
+        <section>
+            <condition>
+                <if-service-permission service-name="fixedAssetPermissionCheck" main-action="VIEW"/>
+            </condition>
+            <actions>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
+            <widgets>
+                <include-form name="ListBudgetPlanHeader" location="component://accounting/widget/BudgetForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+
+
     <screen name="BudgetSearchResults">
         <section>
             <condition>
@@ -118,6 +269,76 @@ under the License.
         </section>
     </screen>
 
+    <!-- create and/or update a budget Activity-->
+    <screen name="EditBudgetActivity">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditBudget"/>
+                <set field="tabButtonItem" value="EditBudget"/>
+                <set field="budgetActivityId" from-field="parameters.budgetActivityId"/>
+                <entity-one entity-name="BudgetActivity" value-field="budgetActivity"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonBudgetDecorator" location="${parameters.budgetDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <not>
+                                    <if-empty field="budgetActivity"/>
+                                </not>
+                            </condition>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.AccountingEditBudget}">
+                                    <include-form name="EditBudgetActivity" location="component://accounting/widget/BudgetForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <screenlet title="${uiLabelMap.AccountingNewBudget}">
+                                    <include-form name="EditBudgetActivity" location="component://accounting/widget/BudgetForms.xml"/>
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- create and/or update a budget justification-->
+    <screen name="EditBudgetJustification">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditBudget"/>
+                <set field="tabButtonItem" value="EditBudget"/>
+                <set field="budgetJustificationId" from-field="parameters.budgetJustificationId"/>
+                <entity-one entity-name="BudgetJustification" value-field="budgetJustification"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonBudgetDecorator" location="${parameters.budgetDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <not>
+                                    <if-empty field="budgetJustification"/>
+                                </not>
+                            </condition>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.AccountingEditBudget}">
+                                    <include-form name="EditBudgetJustification" location="component://accounting/widget/BudgetForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <screenlet title="${uiLabelMap.AccountingNewBudget}">
+                                    <include-form name="EditBudgetJustification" location="component://accounting/widget/BudgetForms.xml"/>
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
     <!-- create and/or update a budget -->
     <screen name="EditBudget">
         <section>
@@ -152,6 +373,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+
 
      <screen name="BudgetOverview">
         <section>
