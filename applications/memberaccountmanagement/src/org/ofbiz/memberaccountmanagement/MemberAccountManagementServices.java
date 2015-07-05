@@ -620,5 +620,32 @@ public class MemberAccountManagementServices {
 
 		
 	}
+	
+	/***
+	 * 
+	 * @author Japheth Odonya  @when Jul 5, 2015 8:03:22 PM
+	 * 
+	 * Adding Lines
+	 * **/
+	//addLines
+	public static String addLines(Long generalglHeaderId, Map<String, String> userLogin){
+		
+		GenericValue header = LoanUtilities.getEntityValue("GeneralglHeader", "generalglHeaderId", generalglHeaderId);
+		
+		if (header == null)
+			return "No header found !";
+		
+		if (header.getLong("sourcempaLinesCount") == null)
+			return "Make sure source mpa lines have a value , ZERO if none";
+
+		if (header.getLong("destinationmpaLinesCount") == null)
+			return "Make sure destination mpa lines have a value , ZERO if none";
+
+		if (header.getLong("generalglLinesCount") == null)
+			return "Make sure gl lines have a value , ZERO if none";
+
+		createGeneralglLines(header, userLogin);
+		return "success";
+	}
 
 }

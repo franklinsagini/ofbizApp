@@ -268,7 +268,7 @@ under the License.
         <entity-one entity-name="SourcempaLine" value-field="sourcempaLine"/>
         <set field="sourcempaLine.isActive" value="N"/>
         <set field="sourcempaLine.updatedBy" from-field="userLogin.userLoginId"/>
-        <store-value value-field="sourcempaLine"/>
+        <remove-value value-field="sourcempaLine"/>
     </simple-method>
     
     <!-- DestinationmpaLine -->
@@ -305,7 +305,7 @@ under the License.
         <entity-one entity-name="DestinationmpaLine" value-field="destinationmpaLine"/>
         <set field="destinationmpaLine.isActive" value="N"/>
         <set field="destinationmpaLine.updatedBy" from-field="userLogin.userLoginId"/>
-        <store-value value-field="destinationmpaLine"/>
+        <remove-value value-field="destinationmpaLine"/>
     </simple-method>
     
     <!-- GeneralglLine -->
@@ -342,7 +342,30 @@ under the License.
         <entity-one entity-name="GeneralglLine" value-field="generalglLine"/>
         <set field="generalglLine.isActive" value="N"/>
         <set field="generalglLine.updatedBy" from-field="userLogin.userLoginId"/>
-        <store-value value-field="generalglLine"/>
+        <remove-value value-field="generalglLine"/>
+        <!-- store-value value-field="generalglLine"/ -->
     </simple-method>
+    
+    <!-- addLines -->
+    <simple-method method-name="addLines" short-description="Add Lines">
+        <set field="generalglHeaderId" from-field="parameters.generalglHeaderId" type="Long"/>
+        <set field="status" value="${bsh:org.ofbiz.memberaccountmanagement.MemberAccountManagementServices.addLines(generalglHeaderId, userLogin);}"/>
+   
+   		<if>
+   			<condition>
+   				<if-compare operator="equals" value="success" field="status"></if-compare>
+   			</condition>
+   			<then>
+   				<property-to-field resource="MemberAccountManagementUiLabels.xml" 
+            	property="Successfully Added lines to the Header" field="successMessage" />
+   			</then>
+   			<else>
+   				<add-error>
+   					<fail-message message="${status}"/>
+   				</add-error>
+   				<check-errors/>
+   			</else>
+   		</if>
+   </simple-method>
 
 </simple-methods>
