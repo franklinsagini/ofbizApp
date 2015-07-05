@@ -159,5 +159,89 @@
             <key-map field-name="destMemberAccountId" rel-field-name="glAccountId"/>
         </relation>
      </entity>
+     
+     <!-- GeneralglHeader -->
+     <entity entity-name="GeneralglHeader" package-name="org.ofbiz.memberaccountmanagement" title="General Ledger Header">
+     		<field name="generalglHeaderId" type="id-vlong-int"></field>
+     		<field name="createdBy" type="id"></field>
+     		<field name="updatedBy" type="id"></field>
+     		<field name="isActive" type="indicator"></field>
+     		
+     		<field name="controlAmount" type="fixed-point" enable-audit-log="true"></field>
+			<field name="comment" type="name" enable-audit-log="true"></field>
+     		
+     		<field name="sourcempaLinesCount" type="numeric" enable-audit-log="true"></field>
+     		<field name="destinationmpaLinesCount" type="numeric" enable-audit-log="true"></field>
+     		<field name="generalglLinesCount" type="numeric" enable-audit-log="true"></field>
+     		
+     		<field name="addLines" type="id"></field>
+     		
+     		<field name="processStatus" type="id"></field>
+     		
+     		<field name="process" type="id"></field>
+     		
+			
+			<prim-key field="generalglHeaderId"/>
+
+      </entity>
+     
+     <!-- SourcempaLines -->
+     <entity entity-name="SourcempaLine" package-name="org.ofbiz.memberaccountmanagement" title="Source MPA Line Entity">
+     		<field name="sourcempaLineId" type="id-vlong-int"></field>
+     		<field name="generalglHeaderId" type="id-vlong-int"></field>
+     		<field name="createdBy" type="id"></field>
+     		<field name="updatedBy" type="id"></field>
+     		<field name="isActive" type="indicator"></field>
+     		
+     		<field name="sourceType" type="id"></field>
+     		<field name="sourcePartyId" type="id-vlong-int"  enable-audit-log="true"></field>
+     		<field name="sourceMemberAccountId" type="id-vlong-int"  enable-audit-log="true"></field>
+     		<field name="sourceLoanApplicationId" type="id-vlong-int"  enable-audit-log="true"></field>
+     		
+     		<field name="amount" type="fixed-point" enable-audit-log="true"></field>
+			<field name="comment" type="name" enable-audit-log="true"></field>
+     		
+			
+			<prim-key field="sourcempaLineId"/>
+
+      </entity>
+
+     <!-- destinationmpaLines -->
+          <entity entity-name="DestinationmpaLine" package-name="org.ofbiz.memberaccountmanagement" title="Destination MPA Line Entity">
+     		<field name="destinationmpaLineId" type="id-vlong-int"></field>
+     		<field name="generalglHeaderId" type="id-vlong-int"></field>
+     		<field name="createdBy" type="id"></field>
+     		<field name="updatedBy" type="id"></field>
+     		<field name="isActive" type="indicator"></field>
+     		
+     		<field name="destinationType" type="id"></field>
+     		<field name="destPartyId" type="id-vlong-int"  enable-audit-log="true"></field>
+     		<field name="destMemberAccountId" type="id-vlong-int"  enable-audit-log="true"></field>
+     		<field name="destLoanApplicationId" type="id-vlong-int"  enable-audit-log="true"></field>
+     		
+     		<field name="amount" type="fixed-point" enable-audit-log="true"></field>
+			<field name="comment" type="name" enable-audit-log="true"></field>
+     		
+			
+			<prim-key field="destinationmpaLineId"/>
+
+      </entity>
+     
+     <!-- generalglLines -->
+          <entity entity-name="GeneralglLine" package-name="org.ofbiz.memberaccountmanagement" title="General GL Line Entity">
+     		<field name="generalglLineId" type="id-vlong-int"></field>
+     		<field name="generalglHeaderId" type="id-vlong-int"></field>
+     		<field name="createdBy" type="id"></field>
+     		<field name="updatedBy" type="id"></field>
+     		<field name="isActive" type="indicator"></field>
+			<field name="debitCredit" type="id"   enable-audit-log="true"></field>
+			<!-- GL Account -->
+			<field name="glAccountId" type="id"  enable-audit-log="true"></field>
+     		
+     		<field name="amount" type="fixed-point" enable-audit-log="true"></field>
+			<field name="comment" type="name" enable-audit-log="true"></field>
+			<prim-key field="generalglLineId"/>
+
+      </entity>
 
 </entitymodel>

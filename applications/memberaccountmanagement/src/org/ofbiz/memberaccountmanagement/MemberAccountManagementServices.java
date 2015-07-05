@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -484,6 +485,166 @@ public class MemberAccountManagementServices {
 		log.info("//////////////////////// Posted the voucher");
 		
 		
+		return "success";
+	}
+	
+	
+	/***
+	 * @author Japheth Odonya  @when Jul 5, 2015 2:09:59 PM
+	 * Add the lines
+	 * **/
+	public static String createGeneralglLines(GenericValue header, Map<String, String> userLogin){
+		//Add Source MPA
+		
+		addSourceMPA(header, userLogin);
+		
+		//Add Destination MPA
+		addDestinationMPA(header, userLogin);
+		
+		//Add gl Line
+		addglLine(header, userLogin);
+		
+		return "success";
+		
+	}
+
+	private static void addglLine(GenericValue header,
+			Map<String, String> userLogin) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		Long generalglLineId = null;
+		
+		Long generalglLinesCount = header.getLong("generalglLinesCount");
+		Long generalglHeaderId = header.getLong("generalglHeaderId");
+		
+		Long count = 0L;
+		
+		List<GenericValue> listGeneralglLines = new ArrayList<GenericValue>();
+		GenericValue generalglLine = null;
+		while (count < generalglLinesCount) {
+			
+			//Add a new line
+			generalglLineId =	delegator.getNextSeqIdLong("GeneralglLine", 1);
+			
+			generalglLine = delegator.makeValue("GeneralglLine", UtilMisc.toMap(
+					"generalglLineId", generalglLineId,
+					"generalglHeaderId", generalglHeaderId,
+					"isActive", "Y",
+					"createdBy", userLogin.get("userLoginId")));
+			
+			listGeneralglLines.add(generalglLine);
+			
+			count++;
+			
+		}
+				
+		try {
+			delegator.storeAll(listGeneralglLines);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	private static void addDestinationMPA(GenericValue header,
+			Map<String, String> userLogin) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		Long destinationmpaLineId = null;
+		
+		Long destinationmpaLinesCount = header.getLong("destinationmpaLinesCount");
+		Long generalglHeaderId = header.getLong("generalglHeaderId");
+		
+		Long count = 0L;
+		
+		List<GenericValue> listDestinationLines = new ArrayList<GenericValue>();
+		GenericValue destinationmpaLine = null;
+		while (count < destinationmpaLinesCount) {
+			
+			//Add a new line
+			destinationmpaLineId =	delegator.getNextSeqIdLong("DestinationmpaLine", 1);
+			
+			destinationmpaLine = delegator.makeValue("DestinationmpaLine", UtilMisc.toMap(
+					"destinationmpaLineId", destinationmpaLineId,
+					"generalglHeaderId", generalglHeaderId,
+					"isActive", "Y",
+					"createdBy", userLogin.get("userLoginId")));
+			
+			listDestinationLines.add(destinationmpaLine);
+			
+			count++;
+			
+		}
+				
+		try {
+			delegator.storeAll(listDestinationLines);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	private static void addSourceMPA(GenericValue header,
+			Map<String, String> userLogin) {
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		Long sourcempaLineId = null;
+		
+		Long sourcempaLinesCount = header.getLong("sourcempaLinesCount");
+		Long generalglHeaderId = header.getLong("generalglHeaderId");
+		
+		Long count = 0L;
+		
+		List<GenericValue> listSourceLines = new ArrayList<GenericValue>();
+		
+		while (count < sourcempaLinesCount) {
+			
+			//Add a new line
+			sourcempaLineId =	delegator.getNextSeqIdLong("SourcempaLine", 1);
+			GenericValue sourcempaLine = null;
+			sourcempaLine = delegator.makeValue("SourcempaLine", UtilMisc.toMap(
+					"sourcempaLineId", sourcempaLineId,
+					"generalglHeaderId", generalglHeaderId,
+					"isActive", "Y",
+					"createdBy", userLogin.get("userLoginId")));
+			
+			listSourceLines.add(sourcempaLine);
+			
+			count++;
+			
+		}
+				
+		try {
+			delegator.storeAll(listSourceLines);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		
+	}
+	
+	/***
+	 * 
+	 * @author Japheth Odonya  @when Jul 5, 2015 8:03:22 PM
+	 * 
+	 * Adding Lines
+	 * **/
+	//addLines
+	public static String addLines(Long generalglHeaderId, Map<String, String> userLogin){
+		
+		GenericValue header = LoanUtilities.getEntityValue("GeneralglHeader", "generalglHeaderId", generalglHeaderId);
+		
+		if (header == null)
+			return "No header found !";
+		
+		if (header.getLong("sourcempaLinesCount") == null)
+			return "Make sure source mpa lines have a value , ZERO if none";
+
+		if (header.getLong("destinationmpaLinesCount") == null)
+			return "Make sure destination mpa lines have a value , ZERO if none";
+
+		if (header.getLong("generalglLinesCount") == null)
+			return "Make sure gl lines have a value , ZERO if none";
+
+		createGeneralglLines(header, userLogin);
 		return "success";
 	}
 

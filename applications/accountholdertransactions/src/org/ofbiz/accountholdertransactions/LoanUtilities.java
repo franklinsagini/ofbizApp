@@ -2866,5 +2866,17 @@ public class LoanUtilities {
 		String glAccountId = getAccountProductGivenCodeId(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE).getString("glAccountId");
 		return glAccountId;
 	}
+	
+	public static GenericValue getEntityValue(String entityName, String primaryKeyName, Long primaryKeyValue){
+		GenericValue entity = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			entity = delegator.findOne(entityName,
+					UtilMisc.toMap(primaryKeyName, primaryKeyValue), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		return entity;
+	}
 
 }
