@@ -191,6 +191,153 @@ under the License.
         <store-value value-field="generalMemberVoucher"/>
     </simple-method>
     
+    <!-- GeneralglHeader -->
+        <simple-method method-name="createGeneralglHeader" short-description="Create GeneralglHeader">
+      	<if-empty field="parameters.generalglHeaderId">
+	      		<make-value entity-name="GeneralglHeader" value-field="newEntity"/>
+		        <set-pk-fields map="parameters" value-field="newEntity"/>
+		        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+		        <set field="entityName" value="GeneralglHeader"></set>
+        		<set field="newEntity.generalglHeaderId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+		        <set field="newEntity.isActive" value="Y"/>
+		        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+		        <set field="newEntity.branchId" from-field="userLogin.partyId"/>
+		        <create-value value-field="newEntity"/>
+      		<else>
+      			<call-simple-method method-name="updateGeneralglHeader"></call-simple-method>
+      		</else>
+      	</if-empty>
+      	
+      	<set field="generalglHeaderId" from-field="newEntity.generalglHeaderId" type="Long"/>
+
+		<property-to-field resource="MemberAccountManagementUiLabels.xml" 
+            	property="Successfully created GL Header" field="successMessage" />
+    </simple-method>
     
+    <simple-method method-name="updateGeneralglHeader" short-description="Update GeneralglHeader">
+        <entity-one entity-name="GeneralglHeader" value-field="generalglHeader"/>
+        <set-nonpk-fields value-field="generalglHeader" map="parameters"/>
+        <set field="generalglHeader.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="generalglHeader"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteGeneralglHeader" short-description="Delete GeneralglHeader">
+        <entity-one entity-name="GeneralglHeader" value-field="generalglHeader"/>
+        <set field="generalglHeader.isActive" value="N"/>
+        <set field="generalglHeader.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="generalglHeader"/>
+    </simple-method>
+    
+    
+    <!-- SourcempaLine -->
+    <simple-method method-name="createSourcempaLine" short-description="Create SourcempaLine">
+      	<if-empty field="parameters.sourcempaLineId">
+	      		<make-value entity-name="SourcempaLine" value-field="newEntity"/>
+		        <set-pk-fields map="parameters" value-field="newEntity"/>
+		        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+		        <set field="entityName" value="SourcempaLine"></set>
+        		<set field="newEntity.sourcempaLineId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+		        <set field="newEntity.isActive" value="Y"/>
+		        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+		        <set field="newEntity.branchId" from-field="userLogin.partyId"/>
+		        <create-value value-field="newEntity"/>
+      		<else>
+      			<call-simple-method method-name="updateSourcempaLine"></call-simple-method>
+      		</else>
+      	</if-empty>
+      	
+      	<set field="sourcempaLineId" from-field="newEntity.sourcempaLineId" type="Long"/>
+
+		<property-to-field resource="MemberAccountManagementUiLabels.xml" 
+            	property="Successfully created GL Header" field="successMessage" />
+    </simple-method>
+    
+    <simple-method method-name="updateSourcempaLine" short-description="Update SourcempaLine">
+        <entity-one entity-name="SourcempaLine" value-field="sourcempaLine"/>
+        <set-nonpk-fields value-field="sourcempaLine" map="parameters"/>
+        <set field="sourcempaLine.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="sourcempaLine"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteSourcempaLine" short-description="Delete SourcempaLine">
+        <entity-one entity-name="SourcempaLine" value-field="sourcempaLine"/>
+        <set field="sourcempaLine.isActive" value="N"/>
+        <set field="sourcempaLine.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="sourcempaLine"/>
+    </simple-method>
+    
+    <!-- DestinationmpaLine -->
+       <simple-method method-name="createDestinationmpaLine" short-description="Create DestinationmpaLine">
+      	<if-empty field="parameters.destinationmpaLineId">
+	      		<make-value entity-name="DestinationmpaLine" value-field="newEntity"/>
+		        <set-pk-fields map="parameters" value-field="newEntity"/>
+		        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+		        <set field="entityName" value="DestinationmpaLine"></set>
+        		<set field="newEntity.destinationmpaLineId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+		        <set field="newEntity.isActive" value="Y"/>
+		        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+		        <set field="newEntity.branchId" from-field="userLogin.partyId"/>
+		        <create-value value-field="newEntity"/>
+      		<else>
+      			<call-simple-method method-name="updateDestinationmpaLine"></call-simple-method>
+      		</else>
+      	</if-empty>
+      	
+      	<set field="destinationmpaLineId" from-field="newEntity.destinationmpaLineId" type="Long"/>
+
+		<property-to-field resource="MemberAccountManagementUiLabels.xml" 
+            	property="Successfully created GL Header" field="successMessage" />
+    </simple-method>
+    
+    <simple-method method-name="updateDestinationmpaLine" short-description="Update DestinationmpaLine">
+        <entity-one entity-name="DestinationmpaLine" value-field="destinationmpaLine"/>
+        <set-nonpk-fields value-field="destinationmpaLine" map="parameters"/>
+        <set field="destinationmpaLine.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="destinationmpaLine"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteDestinationmpaLine" short-description="Delete DestinationmpaLine">
+        <entity-one entity-name="DestinationmpaLine" value-field="destinationmpaLine"/>
+        <set field="destinationmpaLine.isActive" value="N"/>
+        <set field="destinationmpaLine.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="destinationmpaLine"/>
+    </simple-method>
+    
+    <!-- GeneralglLine -->
+    <simple-method method-name="createGeneralglLine" short-description="Create GeneralglLine">
+      	<if-empty field="parameters.generalglLineId">
+	      		<make-value entity-name="GeneralglLine" value-field="newEntity"/>
+		        <set-pk-fields map="parameters" value-field="newEntity"/>
+		        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+		        <set field="entityName" value="GeneralglLine"></set>
+        		<set field="newEntity.generalglLineId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+		        <set field="newEntity.isActive" value="Y"/>
+		        <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+		        <set field="newEntity.branchId" from-field="userLogin.partyId"/>
+		        <create-value value-field="newEntity"/>
+      		<else>
+      			<call-simple-method method-name="updateGeneralglLine"></call-simple-method>
+      		</else>
+      	</if-empty>
+      	
+      	<set field="generalglLineId" from-field="newEntity.generalglLineId" type="Long"/>
+
+		<property-to-field resource="MemberAccountManagementUiLabels.xml" 
+            	property="Successfully created GL Header" field="successMessage" />
+    </simple-method>
+    
+    <simple-method method-name="updateGeneralglLine" short-description="Update GeneralglLine">
+        <entity-one entity-name="GeneralglLine" value-field="generalglLine"/>
+        <set-nonpk-fields value-field="generalglLine" map="parameters"/>
+        <set field="generalglLine.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="generalglLine"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteGeneralglLine" short-description="Delete GeneralglLine">
+        <entity-one entity-name="GeneralglLine" value-field="generalglLine"/>
+        <set field="generalglLine.isActive" value="N"/>
+        <set field="generalglLine.updatedBy" from-field="userLogin.userLoginId"/>
+        <store-value value-field="generalglLine"/>
+    </simple-method>
 
 </simple-methods>

@@ -367,5 +367,69 @@
  
         <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
     </form>
+    
+    <!-- GeneralglHeader -->
+        <form name="generalglHeader" type="single" target="createGeneralglHeader"
+        focus-field-name="controAmount" header-row-style="header-row" default-table-style="basic-table" default-map-name="GeneralglHeaderContext">
+		
+		<field name="controlAmount" title="Control/Total Amount"   widget-style="required" required-field="true">
+			<text></text>
+		</field>
+		
+		<field name="comment" title="Comment">
+        	<textarea/>
+        </field>
+
+		<field name="sourcempaLinesCount" title="MPA Source Lines"   widget-style="required" required-field="true">
+			<text default-value="1"></text>
+		</field>
+
+		<field name="destinationmpaLinesCount" title="MPA Destination Lines"   widget-style="required" required-field="true">
+			<text default-value="1"></text>
+		</field>
+
+		<field name="generalglLinesCount" title="GL Lines"   widget-style="required" required-field="true">
+			<text default-value="2"></text>
+		</field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="listGeneralglHeader" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateGeneralglHeader" paginate-target="generalglHeader"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="GeneralglHeader">
+            </entity-condition>
+        </actions>
+     
+        <field name="generalglHeaderId"><hidden/></field>
+
+		<field name="controlAmount" title="Control/Total Amount"   widget-style="required" required-field="true">
+			<text></text>
+		</field>
+		
+		<field name="comment" title="Comment">
+        	<textarea/>
+        </field>
+
+		<field name="sourcempaLinesCount" title="MPA Source Lines"   widget-style="required" required-field="true">
+			<text default-value="1"></text>
+		</field>
+
+		<field name="destinationmpaLinesCount" title="MPA Destination Lines"   widget-style="required" required-field="true">
+			<text default-value="1"></text>
+		</field>
+
+		<field name="generalglLinesCount" title="GL Lines"   widget-style="required" required-field="true">
+			<text default-value="2"></text>
+		</field>
+        
+        <field name="addLines" title="Add Lines">
+        	<hyperlink description="Add Lines" target="addLines">
+        		<parameter param-name="generalglHeaderId"/>
+        	</hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
 
 </forms>
