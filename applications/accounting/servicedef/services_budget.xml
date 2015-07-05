@@ -51,8 +51,56 @@ under the License.
                 location="component://accounting/script/org/ofbiz/accounting/budget/BudgetServices.xml" invoke="updateBudgetJustification" auth="true">
         <description>Update a Budget</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
-        <attribute name="budgetId" mode="OUT" type="String" optional="false"></attribute>
+        <attribute name="budgetJustificationId" mode="OUT" type="String" optional="false"></attribute>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <!-- Budget Plan Header  -->
+    <service name="createBudgetPlanHeader" default-entity-name="BudgetPlan" engine="simple"
+        location="component://accounting/script/org/ofbiz/accounting/budget/BudgetServices.xml" invoke="createBudgetPlanHeader" auth="true">
+        <description>Create a Budget Plan Header</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateBudgetPlanHeader" default-entity-name="BudgetPlan" engine="simple"
+                location="component://accounting/script/org/ofbiz/accounting/budget/BudgetServices.xml" invoke="updateBudgetPlanHeader" auth="true">
+        <description>Update a Budget Plan header</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <attribute name="budgetPlanId" mode="OUT" type="String" optional="false"></attribute>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <!-- Budget Plan Justification  -->
+    <service name="createBudgetPlanJustification" default-entity-name="BudgetPlanItem" engine="simple"
+        location="component://accounting/script/org/ofbiz/accounting/budget/BudgetServices.xml" invoke="createBudgetPlanJustification" auth="true">
+        <description>Create a Budget Plan Justification</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateBudgetPlanJustification" default-entity-name="BudgetPlanItem" engine="simple"
+         location="component://accounting/script/org/ofbiz/accounting/budget/BudgetServices.xml" invoke="updateBudgetPlanJustification" auth="true">
+        <description>Update a Budget Plan Justification</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <service name="submitHOF" default-entity-name="BudgetPlanItem" engine="simple"
+         location="component://accounting/script/org/ofbiz/accounting/budget/BudgetServices.xml" invoke="submitHOF" auth="true">
+        <description>Update a Budget Plan Justification</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="returnToBranch" default-entity-name="BudgetPlanItem" engine="simple"
+         location="component://accounting/script/org/ofbiz/accounting/budget/BudgetServices.xml" invoke="returnToBranch" auth="true">
+        <description>Update a Budget Plan Justification</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <service name="deleteBudgetPlanJustification" default-entity-name="BudgetPlanItem" engine="simple"
+                location="component://accounting/script/org/ofbiz/accounting/budget/BudgetServices.xml" invoke="deleteBudgetPlanJustification" auth="true">
+        <description>Delete Budget Plan Justification</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
     <!-- Budget  -->

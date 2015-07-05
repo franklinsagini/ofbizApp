@@ -339,6 +339,72 @@ under the License.
         </section>
     </screen>
 
+    <!-- create and/or update a budget plan header-->
+    <screen name="EditBudgetPlanHeader">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditBudget"/>
+                <set field="tabButtonItem" value="EditBudget"/>
+                <set field="budgetPlanId" from-field="parameters.budgetPlanId"/>
+                <entity-one entity-name="BudgetPlan" value-field="budgetPlan"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonBudgetDecorator" location="${parameters.budgetDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <not>
+                                    <if-empty field="budgetPlan"/>
+                                </not>
+                            </condition>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.AccountingEditBudget}">
+                                    <include-form name="EditBudgetPlanHeader" location="component://accounting/widget/BudgetForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <screenlet title="${uiLabelMap.AccountingNewBudget}">
+                                    <include-form name="EditBudgetPlanHeader" location="component://accounting/widget/BudgetForms.xml"/>
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- create and/or update a budget plan header-->
+    <screen name="EditBudgetPlanJustification">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Budget Plan Justification"/>
+                <set field="tabButtonItem" value="EditBudget"/>
+                <set field="budgetPlanId" from-field="parameters.budgetPlanId"/>
+                <set field="budgetPlanItemId" from-field="parameters.budgetPlanItemId"/>
+                <entity-one entity-name="BudgetPlanItem" value-field="budgetPlanItem"/>
+                <entity-one entity-name="BudgetPlan" value-field="budgetPlan"/>
+                <set from-field="budgetPlan.BudgetPlanStatusId" field="BudgetPlanStatusId" />
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonBudgetDecorator" location="${parameters.budgetDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="Budget Plan Justification">
+                                    <include-form name="ListBudgetPlanJustification" location="component://accounting/widget/BudgetForms.xml"/>
+                                </screenlet>
+                                <screenlet title="Add Justification">
+                                    <include-form name="EditBudgetPlanJustification" location="component://accounting/widget/BudgetForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
     <!-- create and/or update a budget -->
     <screen name="EditBudget">
         <section>
