@@ -486,5 +486,16 @@ public class MemberAccountManagementServices {
 		
 		return "success";
 	}
+	
+	
+	/***
+	 * @author Japheth Odonya  @when Jul 5, 2015 2:09:59 PM
+	 * Add the lines
+	 * **/
+	public static void createGeneralglLines(GenericValue header, Map<String, String> userLogin){
+		//Add Source MPA
+		//Add Destination MPA
+		//Add gl Line
+	}
 
 }

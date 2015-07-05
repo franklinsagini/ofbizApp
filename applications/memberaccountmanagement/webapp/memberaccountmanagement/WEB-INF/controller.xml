@@ -180,10 +180,18 @@
 		</response>
 	</request-map>
 	
-	<!-- generalgl -->
+	<!-- generalglHeaderDetails -->
 	<request-map uri="generalglHeader">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="generalglHeader"/>
+    </request-map>
+    
+    <!-- generalglHeaderDetails -->
+    <request-map uri="generalglHeaderDetails">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="generalglHeaderDetails">
+    		<redirect-parameter name="generalglHeaderId"/>
+    	</response>
     </request-map>
     
     <!-- Create/Update/Delete generalglheader -->
@@ -300,6 +308,8 @@
    
    	
     <view-map name="generalglHeader" type="screen" page="component://memberaccountmanagement/widget/MemberAccountManagementScreens.xml#generalglHeader"/>
+    <view-map name="generalglHeaderDetails" type="screen" page="component://memberaccountmanagement/widget/MemberAccountManagementScreens.xml#generalglHeaderDetails"/>
+    
     
    	<view-map name="memberLoansVoucher" type="screen" page="component://memberaccountmanagement/widget/MemberAccountManagementScreens.xml#memberLoansVoucher"/>
    	<!-- GeneralMemberVoucher -->
