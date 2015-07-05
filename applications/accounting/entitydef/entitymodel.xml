@@ -372,6 +372,17 @@ under the License.
       </index>
     </entity>
 
+    <entity entity-name="BudgetPlanStatus"
+            package-name="org.ofbiz.accounting.budget"
+            title="Budget Operation Entity">
+      <field name="BudgetPlanStatusId" type="id-ne"></field>
+      <field name="statusName" type="description"></field>
+      <prim-key field="BudgetPlanStatusId"/>
+      <index name="BUD_STTS_UNQ" unique="true">
+        <index-field name="statusName"/>
+      </index>
+    </entity>
+
     <entity entity-name="BudgetPlan"
             package-name="org.ofbiz.accounting.budget"
             title="Budget Plan Entity">
@@ -379,12 +390,17 @@ under the License.
       <field name="branchId" type="id"></field>
       <field name="customTimePeriodId" type="id"></field>
       <field name="comments" type="comment"></field>
+      <field name="BudgetPlanStatusId" type="id-ne"></field>
+      <field name="grandTotal" type="currency-amount"></field>
       <prim-key field="budgetPlanId"/>
       <relation type="one" fk-name="BDGT_PLN_CTP" rel-entity-name="CustomTimePeriod">
         <key-map field-name="customTimePeriodId"/>
       </relation>
       <relation type="one" fk-name="BGT_PLN_BRNCH" rel-entity-name="PartyGroup">
          <key-map field-name="branchId" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="BGT_PLN_STATUS" rel-entity-name="BudgetPlanStatus">
+         <key-map field-name="BudgetPlanStatusId" rel-field-name="BudgetPlanStatusId"/>
       </relation>
     </entity>
 
