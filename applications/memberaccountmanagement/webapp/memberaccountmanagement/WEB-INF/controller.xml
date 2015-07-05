@@ -333,6 +333,17 @@
 		<response name="error" type="view" value="generalglHeaderDetails" />
 	</request-map>
 	
+	<!-- processmpajournal -->
+	<request-map uri="processmpajournal">
+		<security https="true" auth="true" />
+		<event type="service" invoke="addLines" />
+		<response name="success" type="request-redirect"
+			value="generalglHeaderDetails">
+				<redirect-parameter name="generalglHeaderId"/>
+			</response>
+		<response name="error" type="view" value="generalglHeaderDetails" />
+	</request-map>
+	
 	    
     <!-- View Mappings -->
     <!-- view-map name="main" type="screen" page="component://memberaccountmanagement/widget/MemberAccountManagementScreens.xml#main"/ -->

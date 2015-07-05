@@ -226,6 +226,7 @@ public class MemberAccountManagementServices {
 		//AccHolderTransactionServices.cashDeposit(amount, memberAccountId, userLogin, transactionType);
 		
 		AccHolderTransactionServices.memberAccountJournalVoucher(amount, memberAccountId, userLogin, transactionType, memberAccountVoucherId);
+		
 		memberAccountId = memberAccountVoucher.getLong("destMemberAccountId");
 		transactionType = "MEMBERACCOUNTJVINC";
 
@@ -646,6 +647,549 @@ public class MemberAccountManagementServices {
 
 		createGeneralglLines(header, userLogin);
 		return "success";
+	}
+	
+	
+	/***
+	 * @author Japheth Odonya  @when Jul 5, 2015 10:58:28 PM
+	 * 
+	 * Processing MPA Journal
+	 * */
+	public static String processMPAJournal(Long generalglHeaderId, Map<String, String> userLogin){
+		
+		GenericValue header = LoanUtilities.getEntityValue("GeneralglHeader", "generalglHeaderId", generalglHeaderId);
+		
+		if (header == null)
+			return "No header found !";
+		
+		if (alreadyProcessed(generalglHeaderId))
+			return "Already processed !";
+		
+		//Source lines must have amounts
+		if (sourceLinesMissAmounts(generalglHeaderId))
+			return "All source lines must have amounts or be deleted";
+		
+		//Destination lines must have amounts
+		if (destinationLinesMissAmounts(generalglHeaderId))
+			return "All Destination lines must have amounts or be deleted";
+		
+		//gllines must have amounts
+		if (glLinesMissAmounts(generalglHeaderId))
+			return "All GL lines must have amounts or be deleted";
+
+		BigDecimal bdControlAmount = header.getBigDecimal("controAmount");
+		
+		BigDecimal bdSourceTotal = BigDecimal.ZERO;
+		BigDecimal bdDestinationTotal = BigDecimal.ZERO;
+		BigDecimal bdTotalDebit = BigDecimal.ZERO;
+		BigDecimal bdTotalCredit = BigDecimal.ZERO;
+		
+		bdSourceTotal = getSourceLinesTotal(generalglHeaderId);
+		bdDestinationTotal = getDestinationTotal(generalglHeaderId);
+		
+		bdTotalDebit = getTotalDebit(generalglHeaderId);
+		bdTotalCredit = getTotalCredit(generalglHeaderId);
+		
+		//Check that controlAmount equals to total source if total source is not zero
+		if ((bdSourceTotal.compareTo(BigDecimal.ZERO) != 0) && (bdSourceTotal.compareTo(bdControlAmount) != 0))
+			return "If source mpa line is provided it must be equal to the Control / Header amount";
+		
+		//Check that controlAmount equals to total destination if total destination is not zero
+		if ((bdDestinationTotal.compareTo(BigDecimal.ZERO) != 0) && (bdDestinationTotal.compareTo(bdControlAmount) != 0))
+			return "If destination mpa line is provided it must be equal to the Control / Header amount";
+
+		
+		//Check that controlAmount equals total credit
+		if (bdControlAmount.compareTo(bdTotalCredit) != 0)
+			return "Total Credit must be equal to total Control Amount";
+		
+		//Check that controlAmount equals total debit
+		if (bdControlAmount.compareTo(bdTotalDebit) != 0)
+			return "Total Debit must be equal to total Control Amount";
+		
+		//Check that credit not zero
+		if (bdTotalCredit.compareTo(BigDecimal.ZERO) == 0)
+			return "Total Credit must be more than ZERO";
+		
+		//check that debit not zero
+		if (bdTotalDebit.compareTo(BigDecimal.ZERO) == 0)
+			return "Total Debit must be more than ZERO";
+		
+		//Check that total credit equals total debit
+		if (bdTotalCredit.compareTo(bdTotalCredit) != 0)
+			return "Total Debit must be equal to total Credit !";
+		
+		//post the gl lines and return the acctgTransId
+		String acctgTransId = postJournalglLines(header, userLogin);
+		
+		//post the source lines 
+		postSourceglLines(header, userLogin, acctgTransId);
+		//post the destination lines
+		postDestinationglLines(header, userLogin, acctgTransId);
+		
+		return "success";
+	}
+
+	/***
+	 * @author Japheth Odonya  @when Jul 6, 2015 12:08:05 AM
+	 * Post Destination GL Lines
+	 * */
+	private static void postDestinationglLines(GenericValue header,
+			Map<String, String> userLogin, String acctgTransId) {
+		/****
+		 * Destination options could be
+		 * 
+		 * <option key="ACCOUNT" description="Member ACCOUNT"/>
+				<option key="PRINCIPAL" description="Loan PRINCIPAL"/>
+				<option key="INTERESTCHARGE" description="Loan Interest Charged"/>
+				<option key="INTERESTPAID" description="Loan Interest Paid"/>
+				<option key="INSURANCECHARGE" description="Loan Insurance Charge"/>
+				<option key="INSURANCEPAYMENT" description="Loan Insurance Payment"/>
+		 * */
+		//Get list destination gl lines and post
+		Long generalglHeaderId = header.getLong("generalglHeaderId");
+		
+		//Get list of source mpa lines and post
+		EntityConditionList<EntityExpr> linesConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"generalglHeaderId", EntityOperator.EQUALS,
+						generalglHeaderId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> linesELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			linesELI = delegator.findList("DestinationmpaLine",
+					linesConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		//BigDecimal total = BigDecimal.ZERO;
+		for (GenericValue genericValue : linesELI) {
+			//total = total.add(genericValue.getBigDecimal("amount"));
+			addDestinationMPALine(genericValue, userLogin, acctgTransId);
+		}
+	}
+
+	private static void addDestinationMPALine(GenericValue genericValue,
+			Map<String, String> userLogin, String acctgTransId) {
+		/****
+		 * 
+		 * /****
+		 * 
+		 * <option key="ACCOUNT" description="Member ACCOUNT"/>
+				<option key="PRINCIPAL" description="Loan PRINCIPAL"/>
+				<option key="INTERESTCHARGE" description="Loan Interest Charged"/>
+				<option key="INTERESTPAID" description="Loan Interest Paid"/>
+				<option key="INSURANCECHARGE" description="Loan Insurance Charge"/>
+				<option key="INSURANCEPAYMENT" description="Loan Insurance Payment"/>
+		 * */
+		String destinationType = genericValue.getString("destinationType");
+		if (destinationType.equals("ACCOUNT")){
+			//Get memberAccountId and remove the amount from the account
+			//Get memberAccountId and remove the amount from the account
+			//Decrease the source
+			log.info("//////////////////////// Posting the voucher");
+			BigDecimal amount = genericValue.getBigDecimal("amount");
+			Long memberAccountId = genericValue.getLong("destMemberAccountId");
+			String transactionType = "MEMBERACCOUNTJVINC";
+			//AccHolderTransactionServices.memberAccountJournalVoucher(amount, memberAccountId, userLogin, transactionType, genericValue.getLong("generalglHeaderId"));
+			AccHolderTransactionServices.memberAccountJournalVoucher(amount, memberAccountId, userLogin, transactionType, genericValue.getLong("generalglHeaderId"), acctgTransId);
+
+		} else if (destinationType.equals("PRINCIPAL")){
+			//Get Loan ID and post the principal
+		}
+		else if (destinationType.equals("INTERESTCHARGE")){
+			//Get Loan ID and add interest charge		
+		}
+		else if (destinationType.equals("INTERESTPAID")){
+			//Get Loan ID and add interest paid
+		}
+		else if (destinationType.equals("INSURANCECHARGE")){
+			//Get Loan ID and add insurance charge
+		}
+		else if (destinationType.equals("INSURANCEPAYMENT")){
+			//Get Loan ID and add insurance payment
+		}
+	}
+
+	/***
+	 * @author Japheth Odonya  @when Jul 6, 2015 12:08:27 AM
+	 * POst Source GL Lines
+	 * */
+	private static void postSourceglLines(GenericValue header,
+			Map<String, String> userLogin, String acctgTransId) {
+		/***
+		 * Source Type could be
+		 * 
+		 * <option key="ACCOUNT" description="Member ACCOUNT"/>
+				<option key="PRINCIPAL" description="Loan PRINCIPAL"/>
+				<option key="INTERESTCHARGE" description="Loan Interest Charged"/>
+				<option key="INTERESTPAID" description="Loan Interest Paid"/>
+				<option key="INSURANCECHARGE" description="Loan Insurance Charge"/>
+				<option key="INSURANCEPAYMENT" description="Loan Insurance Payment"/>
+		 * */
+		Long generalglHeaderId = header.getLong("generalglHeaderId");
+		
+		//Get list of source mpa lines and post
+		EntityConditionList<EntityExpr> linesConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"generalglHeaderId", EntityOperator.EQUALS,
+						generalglHeaderId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> linesELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			linesELI = delegator.findList("SourcempaLine",
+					linesConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		//BigDecimal total = BigDecimal.ZERO;
+		for (GenericValue genericValue : linesELI) {
+			//total = total.add(genericValue.getBigDecimal("amount"));
+			addSourceMPALine(genericValue, userLogin, acctgTransId);
+		}
+		
+	}
+
+	private static void addSourceMPALine(GenericValue genericValue,
+			Map<String, String> userLogin, String acctgTransId) {
+		/****
+		 * 
+		 * <option key="ACCOUNT" description="Member ACCOUNT"/>
+				<option key="PRINCIPAL" description="Loan PRINCIPAL"/>
+				<option key="INTERESTCHARGE" description="Loan Interest Charged"/>
+				<option key="INTERESTPAID" description="Loan Interest Paid"/>
+				<option key="INSURANCECHARGE" description="Loan Insurance Charge"/>
+				<option key="INSURANCEPAYMENT" description="Loan Insurance Payment"/>
+		 * */
+		String sourceType = genericValue.getString("sourceType");
+		if (sourceType.equals("ACCOUNT")){
+			//Get memberAccountId and remove the amount from the account
+			//Decrease the source
+			log.info("//////////////////////// Posting the voucher");
+			BigDecimal amount = genericValue.getBigDecimal("amount");
+			Long memberAccountId = genericValue.getLong("sourceMemberAccountId");
+			String transactionType = "MEMBERACCOUNTJVDEC";
+			//AccHolderTransactionServices.memberAccountJournalVoucher(amount, memberAccountId, userLogin, transactionType, genericValue.getLong("generalglHeaderId"));
+			AccHolderTransactionServices.memberAccountJournalVoucher(amount, memberAccountId, userLogin, transactionType, genericValue.getLong("generalglHeaderId"), acctgTransId);
+		} else if (sourceType.equals("PRINCIPAL")){
+			//Get Loan ID and post the principal
+		}
+		else if (sourceType.equals("INTERESTCHARGE")){
+			//Get Loan ID and add interest charge		
+		}
+		else if (sourceType.equals("INTERESTPAID")){
+			//Get Loan ID and add interest paid
+		}
+		else if (sourceType.equals("INSURANCECHARGE")){
+			//Get Loan ID and add insurance charge
+		}
+		else if (sourceType.equals("INSURANCEPAYMENT")){
+			//Get Loan ID and add insurance payment
+		}
+		
+	}
+
+	/***
+	 * @author Japheth Odonya  @when Jul 6, 2015 12:09:00 AM
+	 * Post Journal GL Lines
+	 * **/
+	private static String postJournalglLines(GenericValue header,
+			Map<String, String> userLogin) {
+		String acctgTransId = null;
+		//Get the lines
+		//post each line
+		Long generalglHeaderId = header.getLong("generalglHeaderId");
+		EntityConditionList<EntityExpr> linesConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"generalglHeaderId", EntityOperator.EQUALS,
+						generalglHeaderId),
+
+				EntityCondition.makeCondition("amount", EntityOperator.NOT_EQUAL,
+						null)
+
+				), EntityOperator.AND);
+		
+		//EntityCondition.makeCondition(
+		//"debitCredit", EntityOperator.EQUALS,
+		//"DEBIT"),
+
+		List<GenericValue> linesELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			linesELI = delegator.findList("GeneralglLine",
+					linesConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		String acctgTransType = "MEMBER_DEPOSIT";
+		acctgTransId = AccHolderTransactionServices.createAccountingTransaction(null, acctgTransType, userLogin);
+		String postingType = "";
+		String employeeBranchId = AccHolderTransactionServices.getEmployeeBranch(userLogin.get("partyId"));
+		String memberBranchId = AccHolderTransactionServices.getEmployeeBranch(userLogin.get("partyId"));
+		String glAccountId = null;
+		//BigDecimal total = BigDecimal.ZERO;
+		Long entrySequenceId = 0L;
+		for (GenericValue genericValue : linesELI) {
+			//total = total.add(genericValue.getBigDecimal("amount"));
+			//POST the gl line
+			if (genericValue.getString("debitCredit").equals("DEBIT"))
+			{
+				postingType = "D";
+			} else if (genericValue.getString("debitCredit").equals("CREDIT")){
+				postingType = "C";
+			}
+			BigDecimal bdAmount = genericValue.getBigDecimal("amount");
+			glAccountId = genericValue.getString("glAccountId");
+			entrySequenceId = entrySequenceId + 1;
+			AccHolderTransactionServices.postTransactionEntry(delegator, bdAmount, employeeBranchId, memberBranchId, glAccountId, postingType, acctgTransId, acctgTransType, entrySequenceId.toString());
+		}
+		
+		return acctgTransId;
+	}
+
+	/***
+	 * @author Japheth Odonya  @when Jul 5, 2015 11:45:29 PM
+	 * Total Credit
+	 * */
+	private static BigDecimal getTotalCredit(Long generalglHeaderId) {
+		EntityConditionList<EntityExpr> linesConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"generalglHeaderId", EntityOperator.EQUALS,
+						generalglHeaderId),
+						
+						EntityCondition.makeCondition(
+								"debitCredit", EntityOperator.EQUALS,
+								"CREDIT"),
+						
+
+				EntityCondition.makeCondition("amount", EntityOperator.NOT_EQUAL,
+						null)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> linesELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			linesELI = delegator.findList("GeneralglLine",
+					linesConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		BigDecimal total = BigDecimal.ZERO;
+		for (GenericValue genericValue : linesELI) {
+			total = total.add(genericValue.getBigDecimal("amount"));
+		}
+		return total;
+	}
+
+	/***
+	 * @author Japheth Odonya  @when Jul 5, 2015 11:45:46 PM
+	 * Total Debit
+	 * */
+	private static BigDecimal getTotalDebit(Long generalglHeaderId) {
+		EntityConditionList<EntityExpr> linesConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"generalglHeaderId", EntityOperator.EQUALS,
+						generalglHeaderId),
+						
+						EntityCondition.makeCondition(
+								"debitCredit", EntityOperator.EQUALS,
+								"DEBIT"),
+						
+
+				EntityCondition.makeCondition("amount", EntityOperator.NOT_EQUAL,
+						null)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> linesELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			linesELI = delegator.findList("GeneralglLine",
+					linesConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		BigDecimal total = BigDecimal.ZERO;
+		for (GenericValue genericValue : linesELI) {
+			total = total.add(genericValue.getBigDecimal("amount"));
+		}
+		return total;
+	}
+
+	/***
+	 * @author Japheth Odonya  @when Jul 5, 2015 11:46:06 PM
+	 * Destination total
+	 * */
+	private static BigDecimal getDestinationTotal(Long generalglHeaderId) {
+		EntityConditionList<EntityExpr> linesConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"generalglHeaderId", EntityOperator.EQUALS,
+						generalglHeaderId),
+
+				EntityCondition.makeCondition("amount", EntityOperator.NOT_EQUAL,
+						null)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> linesELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			linesELI = delegator.findList("DestinationmpaLine",
+					linesConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		BigDecimal total = BigDecimal.ZERO;
+		for (GenericValue genericValue : linesELI) {
+			total = total.add(genericValue.getBigDecimal("amount"));
+		}
+		return total;
+	}
+
+	/***
+	 * @author Japheth Odonya  @when Jul 5, 2015 11:46:31 PM
+	 * 
+	 * Source Total
+	 * */
+	private static BigDecimal getSourceLinesTotal(Long generalglHeaderId) {
+		EntityConditionList<EntityExpr> linesConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"generalglHeaderId", EntityOperator.EQUALS,
+						generalglHeaderId),
+
+				EntityCondition.makeCondition("amount", EntityOperator.NOT_EQUAL,
+						null)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> linesELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			linesELI = delegator.findList("SourcempaLine",
+					linesConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		BigDecimal total = BigDecimal.ZERO;
+		for (GenericValue genericValue : linesELI) {
+			total = total.add(genericValue.getBigDecimal("amount"));
+		}
+		return total;
+	}
+
+	private static boolean glLinesMissAmounts(Long generalglHeaderId) {
+		//Check if there is a glLine with amount not set
+		EntityConditionList<EntityExpr> linesConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"generalglHeaderId", EntityOperator.EQUALS,
+						generalglHeaderId),
+
+				EntityCondition.makeCondition("amount", EntityOperator.EQUALS,
+						null)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> linesELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			linesELI = delegator.findList("GeneralglLine",
+					linesConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if ((linesELI != null) && (linesELI.size() > 0))
+			return true;
+		return false;
+	}
+
+	private static boolean destinationLinesMissAmounts(Long generalglHeaderId) {
+		//Check if there is a destinationLIne with amount not set
+		EntityConditionList<EntityExpr> linesConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"generalglHeaderId", EntityOperator.EQUALS,
+						generalglHeaderId),
+
+				EntityCondition.makeCondition("amount", EntityOperator.EQUALS,
+						null)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> linesELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			linesELI = delegator.findList("DestinationmpaLine",
+					linesConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if ((linesELI != null) && (linesELI.size() > 0))
+			return true;
+		
+		return false;
+	}
+
+	private static boolean sourceLinesMissAmounts(Long generalglHeaderId) {
+		//Check if there is a sourceLine with amount not set
+		EntityConditionList<EntityExpr> linesConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"generalglHeaderId", EntityOperator.EQUALS,
+						generalglHeaderId),
+
+				EntityCondition.makeCondition("amount", EntityOperator.EQUALS,
+						null)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> linesELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			linesELI = delegator.findList("SourcempaLine",
+					linesConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if ((linesELI != null) && (linesELI.size() > 0))
+			return true;
+		
+		return false;
+	}
+
+	private static boolean alreadyProcessed(Long generalglHeaderId) {
+		// TODO Auto-generated method stub
+		//processed
+		GenericValue header = LoanUtilities.getEntityValue("GeneralglHeader", "generalglHeaderId", generalglHeaderId);
+		
+		if ((header.getString("header") != null) && (header.getString("header").equals("Y")))
+			return true;
+		
+		return false;
 	}
 
 }
