@@ -405,11 +405,11 @@
         <field name="generalglHeaderId"><hidden/></field>
 
 		<field name="controlAmount" title="Control/Total Amount"   widget-style="required" required-field="true">
-			<text></text>
+			<text size="10"></text>
 		</field>
 		
 		<field name="comment" title="Comment">
-        	<textarea/>
+        	<textarea cols="20" rows="2"/>
         </field>
 
 		<field name="sourcempaLinesCount" title="MPA Source Lines"   widget-style="required" required-field="true">
@@ -417,17 +417,153 @@
 		</field>
 
 		<field name="destinationmpaLinesCount" title="MPA Destination Lines"   widget-style="required" required-field="true">
-			<text default-value="1"></text>
+			<text size="10" default-value="1"></text>
 		</field>
 
 		<field name="generalglLinesCount" title="GL Lines"   widget-style="required" required-field="true">
-			<text default-value="2"></text>
+			<text size="10" default-value="2"></text>
 		</field>
         
         <field name="addLines" title="Add Lines">
         	<hyperlink description="Add Lines" target="addLines">
         		<parameter param-name="generalglHeaderId"/>
         	</hyperlink>
+        </field>
+        
+        <field name="headerDetails" title="Header Details">
+        	<hyperlink description="Header Details" target="generalglHeaderDetails">
+        		<parameter param-name="generalglHeaderId"/>
+        	</hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- listSourcempaLine -->
+        <form name="listSourcempaLine" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateSourcempaLine" paginate-target="generalglHeader"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="SourcempaLine">
+            	<condition-expr field-name="generalglHeaderId" from-field="generalglHeaderId"/>
+            </entity-condition>
+        </actions>
+     
+        <field name="generalglHeaderId"><hidden/></field>
+        <field name="sourcempaLineId"><hidden/></field>
+
+			<field name="sourceType" title="Source Type"   widget-style="required" required-field="true">
+			<drop-down allow-empty="true">
+				<option key="ACCOUNT" description="Member ACCOUNT"/>
+				<option key="PRINCIPAL" description="Loan PRINCIPAL"/>
+				<option key="INTERESTCHARGE" description="Loan Interest Charged"/>
+				<option key="INTERESTPAID" description="Loan Interest Paid"/>
+				<option key="INSURANCECHARGE" description="Loan Insurance Charge"/>
+				<option key="INSURANCEPAYMENT" description="Loan Insurance Payment"/>
+			</drop-down>
+		</field>
+		
+		<field name="sourcePartyId" title="From (Member)"   widget-style="required" required-field="true"><lookup target-form-name="LookupSourceMember" show-description="true" /></field>
+		
+		<field name="sourceMemberAccountId" title="From (Account)"   widget-style="required" required-field="true">
+			<drop-down>
+			</drop-down>
+		</field>
+		
+		<field name="sourceLoanApplicationId" title="From (Loan)"   widget-style="required" required-field="true">
+			<drop-down>
+			</drop-down>
+		</field>
+
+		<field name="amount" title="Amount"   widget-style="required" required-field="true">
+			<text size="10"></text>
+		</field>
+		
+		<field name="comment" title="Comment">
+        	<textarea cols="20" rows="2"/>
+        </field>
+
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+    <!-- listDestinationmpaLine -->
+      <form name="listDestinationmpaLine" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateDestinationmpaLine" paginate-target="generalglHeader"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="DestinationmpaLine">
+            	<condition-expr field-name="generalglHeaderId" from-field="generalglHeaderId"/>
+            </entity-condition>
+        </actions>
+     
+        <field name="generalglHeaderId"><hidden/></field>
+         <field name="destinationmpaLineId"><hidden/></field>
+
+		<field name="destinationType" title="Destination Type"   widget-style="required" required-field="true">
+			<drop-down allow-empty="true">
+				<option key="ACCOUNT" description="Member ACCOUNT"/>
+				<option key="PRINCIPAL" description="Loan PRINCIPAL"/>
+				<option key="INTERESTCHARGE" description="Loan Interest Charged"/>
+				<option key="INTERESTPAID" description="Loan Interest Paid"/>
+				<option key="INSURANCECHARGE" description="Loan Insurance Charge"/>
+				<option key="INSURANCEPAYMENT" description="Loan Insurance Payment"/>
+			</drop-down>
+		</field>
+		
+
+		<field name="destPartyId" title="To (Member)"   widget-style="required" required-field="true"><lookup target-form-name="LookupDestinationMember" show-description="true" /></field>
+		
+		<field name="destMemberAccountId" title="To (Account)"   widget-style="required" required-field="true">
+			<drop-down>
+			</drop-down>
+		</field>
+		
+				<field name="destLoanApplicationId" title="To (Loan)"   widget-style="required" required-field="true">
+			<drop-down>
+			</drop-down>
+		</field>
+		
+		<field name="amount" title="Amount"   widget-style="required" required-field="true">
+			<text size="10"></text>
+		</field>
+		
+		<field name="comment" title="Comment">
+        	<textarea cols="20" rows="2"/>
+        </field>
+		
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+    <!-- listGeneralglLine -->
+        <form name="listGeneralglLine" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateGeneralglLine" paginate-target="generalglHeader"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="GeneralglLine">
+            	<condition-expr field-name="generalglHeaderId" from-field="generalglHeaderId"/>
+            </entity-condition>
+        </actions>
+     
+        <field name="generalglHeaderId"><hidden/></field>
+        <field name="generalglLineId"><hidden/></field>
+
+         <field name="glAccountId" title="GL A/C" widget-style="required" required-field="true" id-name="sourceglAccountId">
+       		<drop-down allow-empty="true">
+       			<entity-options description="${accountName} - ${accountCode}" entity-name="GlAccount" key-field-name="glAccountId">
+       				<entity-order-by field-name="accountName"/>
+       			</entity-options>
+       			<!-- list-options key-name="glAccountId" list-name="glAccountsList" description="${accountName} - ${accountCode}"/ -->
+       		</drop-down>
+        </field>
+        
+        <field name="debitCredit" title="Debit/Credit"   widget-style="required" required-field="true">
+			<drop-down allow-empty="true">
+				<option key="DEBIT" description="DEBIT"/>
+				<option key="CREDIT" description="CREDIT"/>
+			</drop-down>
+		</field>
+        
+        
+		<field name="amount" title="Amount"   widget-style="required" required-field="true">
+			<text size="10"></text>
+		</field>
+		
+		<field name="comment" title="Comment">
+        	<textarea cols="20" rows="2"/>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
