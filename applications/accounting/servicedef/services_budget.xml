@@ -90,6 +90,11 @@ under the License.
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
+    <service name="generateHarmonizedBudget" engine="java"
+         location="org.ofbiz.accounting.budget.BudgetWorker" invoke="generateHarmonizedBudget" auth="true">
+        <description>Update a Budget Plan Justification</description>
+        <attribute name="customTimePeriodId" type="String" mode="IN" optional="false"/>
+    </service>
     <service name="submitBoard" default-entity-name="BudgetPlanItem" engine="simple"
          location="component://accounting/script/org/ofbiz/accounting/budget/BudgetServices.xml" invoke="submitBoard" auth="true">
         <description>Update a Budget Plan Justification</description>

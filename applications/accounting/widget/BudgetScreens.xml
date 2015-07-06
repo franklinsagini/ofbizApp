@@ -57,6 +57,44 @@ under the License.
          </section>
     </screen>
 
+    <screen name="GenerateHarmonized">
+        <section>
+            <actions>
+                <set field="titleProperty" value="AccountingFindBudgets"/>
+                <set field="headerItem" value="ListBudgets"/>
+                <set field="tabButtonItem" value="ListBudgets"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <section>
+                                    <condition>
+                                        <if-service-permission service-name="fixedAssetPermissionCheck" main-action="CREATE"/>
+                                    </condition>
+                                    <widgets>
+                                        <container style="button-bar">
+                                            <link target="NewHarmonized" text="Generate Harmonized Budget" style="buttontext create"/>
+                                        </container>
+                                    </widgets>
+                                </section>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindBudgetOptions" location="component://accounting/widget/BudgetForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-screen name="BudgetSearchResults"/>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+
+
+
     <screen name="BudgetActivity">
         <section>
             <actions>
@@ -446,6 +484,40 @@ under the License.
                             <fail-widgets>
                                 <screenlet title="${uiLabelMap.AccountingNewBudget}">
                                     <include-form name="EditBudget" location="component://accounting/widget/BudgetForms.xml"/>
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- create and/or update a budget -->
+    <screen name="NewHarmonizedBudget">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditBudget"/>
+                <set field="tabButtonItem" value="EditBudget"/>
+                <set field="budgetId" from-field="parameters.budgetId"/>
+                <entity-one entity-name="Budget" value-field="budget"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonBudgetDecorator" location="${parameters.budgetDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <not>
+                                    <if-empty field="budget"/>
+                                </not>
+                            </condition>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.AccountingEditBudget}">
+                                    <include-form name="NewHarmonizedBudget" location="component://accounting/widget/BudgetForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <screenlet title="${uiLabelMap.AccountingNewBudget}">
+                                    <include-form name="NewHarmonizedBudget" location="component://accounting/widget/BudgetForms.xml"/>
                                 </screenlet>
                             </fail-widgets>
                         </section>

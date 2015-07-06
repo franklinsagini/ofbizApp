@@ -1549,6 +1549,14 @@ under the License.
         </response>
         <response name="error" type="view" value="BudgetPlanHeader"/>
     </request-map>
+    <request-map uri="harmonizeBudget">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="harmonizeBudget"/>
+        <response name="success" type="request-redirect" value="EditBudgetPlanJustification">
+            <redirect-parameter name="budgetPlanId"/>
+        </response>
+        <response name="error" type="view" value="BudgetPlanHeader"/>
+    </request-map>
     <request-map uri="submitBoard">
         <security https="true" auth="true"/>
         <event type="service-multi" invoke="submitBoard"/>
@@ -1557,13 +1565,16 @@ under the License.
         </response>
         <response name="error" type="view" value="BudgetPlanHeader"/>
     </request-map>
-    <request-map uri="approveBudgetPlan">
+    <request-map uri="NewHarmonized">
         <security https="true" auth="true"/>
-        <event type="service-multi" invoke="approveBudgetPlan"/>
-        <response name="success" type="request-redirect" value="EditBudgetPlanJustification">
-            <redirect-parameter name="budgetPlanId"/>
-        </response>
-        <response name="error" type="view" value="BudgetPlanHeader"/>
+        <response name="success" type="view" value="NewHarmonizedBudget" />
+        <response name="error" type="view" value="NewHarmonizedBudget"/>
+    </request-map>
+    <request-map uri="generateHarmonizedBudget">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="generateHarmonizedBudget"/>
+        <response name="success" type="view" value="EditBudget" />
+        <response name="error" type="view" value="EditBudget"/>
     </request-map>
     <request-map uri="returnToBranch">
         <security https="true" auth="true"/>
@@ -3444,15 +3455,17 @@ under the License.
     <view-map name="BudgetJustification" type="screen" page="component://accounting/widget/BudgetScreens.xml#BudgetJustification"/>
     <view-map name="BudgetPlanHeader" type="screen" page="component://accounting/widget/BudgetScreens.xml#BudgetPlanHeader"/>
     <view-map name="BudgetPlanHeaderSearchResults" type="screen" page="component://accounting/widget/BudgetScreens.xml#BudgetPlanHeaderSearchResults"/>
-    <view-map name="ListBudgets" type="screen" page="component://accounting/widget/BudgetScreens.xml#ListBudgets"/>
+    <view-map name="ListBudgets" type="screen" page="component://accounting/widget/BudgetScreens.xml#GenerateHarmonized"/>
     <view-map name="BudgetSearchResults" type="screen" page="component://accounting/widget/BudgetScreens.xml#BudgetSearchResults"/>
     <view-map name="EditBudgetActivity" type="screen" page="component://accounting/widget/BudgetScreens.xml#EditBudgetActivity"/>
     <view-map name="EditBudgetJustification" type="screen" page="component://accounting/widget/BudgetScreens.xml#EditBudgetJustification"/>
     <view-map name="EditBudgetPlanHeader" type="screen" page="component://accounting/widget/BudgetScreens.xml#EditBudgetPlanHeader"/>
     <view-map name="EditBudgetPlanJustification" type="screen" page="component://accounting/widget/BudgetScreens.xml#EditBudgetPlanJustification"/>
-    <view-map name="EditBudget" type="screen" page="component://accounting/widget/BudgetScreens.xml#EditBudget"/>
+    <view-map name="NewHarmonizedBudget" type="screen" page="component://accounting/widget/BudgetScreens.xml#NewHarmonizedBudget"/>
+    <view-map name="NewHarmonized" type="screen" page="component://accounting/widget/BudgetScreens.xml#NewHarmonized"/>
     <view-map name="BudgetOverview" type="screen" page="component://accounting/widget/BudgetScreens.xml#BudgetOverview"/>
     <view-map name="EditBudgetItems" type="screen" page="component://accounting/widget/BudgetScreens.xml#EditBudgetItems"/>
+    <view-map name="EditBudget" type="screen" page="component://accounting/widget/BudgetScreens.xml#EditBudget"/>
     <view-map name="BudgetRoles" type="screen" page="component://accounting/widget/BudgetScreens.xml#BudgetRoles"/>
     <view-map name="BudgetReviews" type="screen" page="component://accounting/widget/BudgetScreens.xml#BudgetReviews"/>
 

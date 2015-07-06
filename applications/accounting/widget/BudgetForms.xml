@@ -265,7 +265,10 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <field name="budgetId"><hidden/></field>
         <field position="1" name="budgetTypeId"><display-entity entity-name="BudgetType"/></field>
-        <field name="customTimePeriodId" position="2"><display/></field>
+        <!-- <field name="customTimePeriodId" position="2"><display/></field> -->
+        <field name="customTimePeriodId" title="Fiscal Year" >
+            <display-entity entity-name="CustomTimePeriod" description="${periodName}"/>
+        </field>
         <field position="1" name="comments"><display/></field>
     </form>
 
@@ -320,6 +323,25 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" use-when="budget != null"><submit /></field>
     </form>
 
+    <!-- create and update a fixed asset -->
+    <form name="NewHarmonizedBudget" type="single" target="generateHarmonizedBudget" title="" default-map-name="budget"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field use-when="budget != null" name="budgetId"><display/></field>
+<!--         <field name="budgetTypeId">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="BudgetType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field> -->
+        <field name="customTimePeriodId"><lookup target-form-name="LookupCustomTimePeriod"/></field>
+        <!-- <field name="comments" ><text/></field> -->
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" use-when="budget == null"><submit /></field>
+        <!-- <field name="submitButton" title="${uiLabelMap.CommonUpdate}" use-when="budget != null"><submit /></field> -->
+    </form>
+
+
+
     <form name="BudgetStatus" list-name="budgetStatuses" target="" title="" type="list" separate-columns="true" paginate-target="budgetOverview"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="budgetId"><hidden/></field>
@@ -346,12 +368,14 @@ under the License.
 
     <form name="BudgetItems" list-name="budgetItems" target="" title="" type="list" separate-columns="true" paginate-target="BudgetOverview"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <auto-fields-entity entity-name="BudgetItem" default-field-type="display"/>
+        <!-- <auto-fields-entity entity-name="BudgetItem" default-field-type="display"/> -->
         <field name="budgetId"><hidden/></field>
         <field name="budgetItemSeqId"><display/></field>
         <field name="budgetItemTypeId"><display-entity entity-name="BudgetItemType"/></field>
+        <field name="glAccountId" title="Item / Gl Account">
+            <display-entity description="${accountName}" entity-name="GlAccount" />
+        </field>
         <field name="amount" ><display/></field>
-        <field name="purpose" ><display/></field>
         <field name="justification" ><display/></field>
     </form>
 
