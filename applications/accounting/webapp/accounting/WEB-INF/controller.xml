@@ -1549,6 +1549,22 @@ under the License.
         </response>
         <response name="error" type="view" value="BudgetPlanHeader"/>
     </request-map>
+    <request-map uri="submitBoard">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="submitBoard"/>
+        <response name="success" type="request-redirect" value="EditBudgetPlanJustification">
+            <redirect-parameter name="budgetPlanId"/>
+        </response>
+        <response name="error" type="view" value="BudgetPlanHeader"/>
+    </request-map>
+    <request-map uri="approveBudgetPlan">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="approveBudgetPlan"/>
+        <response name="success" type="request-redirect" value="EditBudgetPlanJustification">
+            <redirect-parameter name="budgetPlanId"/>
+        </response>
+        <response name="error" type="view" value="BudgetPlanHeader"/>
+    </request-map>
     <request-map uri="returnToBranch">
         <security https="true" auth="true"/>
         <event type="service-multi" invoke="returnToBranch"/>

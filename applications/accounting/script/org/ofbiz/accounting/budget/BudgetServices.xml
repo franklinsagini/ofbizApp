@@ -125,6 +125,22 @@ under the License.
         <call-service service-name="updateBudgetPlanHeader" in-map-name="setStatus"/>
     </simple-method>
     <!-- update an existing Budget Plan header Record -->
+    <simple-method method-name="submitBoard" short-description="Update an existing Budget Plan Justification">
+        <entity-one entity-name="BudgetPlanItem" value-field="lookedUpValue"/>
+        <!-- <set-nonpk-fields map="parameters" value-field="lookedUpValue"/> -->
+        <set field="setStatus.budgetPlanId" from-field="lookedUpValue.budgetPlanId"/>
+        <set field="setStatus.BudgetPlanStatusId" value="SUB_BRD"/>
+        <call-service service-name="updateBudgetPlanHeader" in-map-name="setStatus"/>
+    </simple-method>
+    <!-- update an existing Budget Plan header Record -->
+    <simple-method method-name="approveBudgetPlan" short-description="Update an existing Budget Plan Justification">
+        <entity-one entity-name="BudgetPlanItem" value-field="lookedUpValue"/>
+        <!-- <set-nonpk-fields map="parameters" value-field="lookedUpValue"/> -->
+        <set field="setStatus.budgetPlanId" from-field="lookedUpValue.budgetPlanId"/>
+        <set field="setStatus.BudgetPlanStatusId" value="APR"/>
+        <call-service service-name="updateBudgetPlanHeader" in-map-name="setStatus"/>
+    </simple-method>
+    <!-- update an existing Budget Plan header Record -->
     <simple-method method-name="returnToBranch" short-description="Update an existing Budget Plan Justification">
         <entity-one entity-name="BudgetPlanItem" value-field="lookedUpValue"/>
         <!-- <set-nonpk-fields map="parameters" value-field="lookedUpValue"/> -->
