@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javolution.util.FastMap;
 
 import org.apache.log4j.Logger;
+import org.joda.time.LocalDate;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
 import org.ofbiz.accountholdertransactions.LoanRepayments;
 import org.ofbiz.accountholdertransactions.LoanUtilities;
@@ -677,7 +681,7 @@ public class MemberAccountManagementServices {
 		if (glLinesMissAmounts(generalglHeaderId))
 			return "All GL lines must have amounts or be deleted";
 
-		BigDecimal bdControlAmount = header.getBigDecimal("controAmount");
+		BigDecimal bdControlAmount = header.getBigDecimal("controlAmount");
 		
 		BigDecimal bdSourceTotal = BigDecimal.ZERO;
 		BigDecimal bdDestinationTotal = BigDecimal.ZERO;
@@ -726,6 +730,19 @@ public class MemberAccountManagementServices {
 		postSourceglLines(header, userLogin, acctgTransId);
 		//post the destination lines
 		postDestinationglLines(header, userLogin, acctgTransId);
+		
+		//Set header as processed processed
+		
+		header.set("processed", "Y");
+		header.set("updatedBy", userLogin.get("userLoginId"));
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			delegator.createOrStore(header);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		return "success";
 	}
@@ -788,12 +805,17 @@ public class MemberAccountManagementServices {
 				<option key="INSURANCEPAYMENT" description="Loan Insurance Payment"/>
 		 * */
 		String destinationType = genericValue.getString("destinationType");
+		Long loanApplicationId = null;
+		BigDecimal principalAmount = null;
+		BigDecimal interestAmount = null; 
+		BigDecimal insuranceAmount = null;
+		BigDecimal amount = genericValue.getBigDecimal("amount");
+		Long partyId = genericValue.getLong("destPartyId");
 		if (destinationType.equals("ACCOUNT")){
 			//Get memberAccountId and remove the amount from the account
 			//Get memberAccountId and remove the amount from the account
 			//Decrease the source
 			log.info("//////////////////////// Posting the voucher");
-			BigDecimal amount = genericValue.getBigDecimal("amount");
 			Long memberAccountId = genericValue.getLong("destMemberAccountId");
 			String transactionType = "MEMBERACCOUNTJVINC";
 			//AccHolderTransactionServices.memberAccountJournalVoucher(amount, memberAccountId, userLogin, transactionType, genericValue.getLong("generalglHeaderId"));
@@ -801,18 +823,144 @@ public class MemberAccountManagementServices {
 
 		} else if (destinationType.equals("PRINCIPAL")){
 			//Get Loan ID and post the principal
+			loanApplicationId = genericValue.getLong("destLoanApplicationId");
+			principalAmount = amount;
+			addLoanRepaymentInDestination(loanApplicationId, principalAmount, interestAmount, insuranceAmount, amount, userLogin);
 		}
 		else if (destinationType.equals("INTERESTCHARGE")){
-			//Get Loan ID and add interest charge		
+			//Get Loan ID and add interest charge
+			loanApplicationId = genericValue.getLong("destLoanApplicationId");
+			addInterestCharged(partyId, loanApplicationId, amount, "DESTINATION", acctgTransId);
 		}
 		else if (destinationType.equals("INTERESTPAID")){
 			//Get Loan ID and add interest paid
+			loanApplicationId = genericValue.getLong("destLoanApplicationId");
+			interestAmount = amount;
+			addLoanRepaymentInDestination(loanApplicationId, principalAmount, interestAmount, insuranceAmount, amount, userLogin);
 		}
 		else if (destinationType.equals("INSURANCECHARGE")){
 			//Get Loan ID and add insurance charge
+			loanApplicationId = genericValue.getLong("destLoanApplicationId");
+			addInsuranceCharged(partyId, loanApplicationId, amount, "DESTINATION", acctgTransId);
 		}
 		else if (destinationType.equals("INSURANCEPAYMENT")){
 			//Get Loan ID and add insurance payment
+			loanApplicationId = genericValue.getLong("destLoanApplicationId");
+			insuranceAmount = amount;
+			addLoanRepaymentInDestination(loanApplicationId, principalAmount, interestAmount, insuranceAmount, amount, userLogin);
+		}
+	}
+
+	/***
+	 * @author Japheth Odonya  @when Jul 6, 2015 10:02:57 AM
+	 * 
+	 * Add Insurance Charged
+	 * */
+	private static void addInsuranceCharged(Long partyId, Long loanApplicationId, BigDecimal bdInsuranceAccrued, String sourceorDestination, String acctgTransId) {
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		Long loanExpectationId = delegator.getNextSeqIdLong("LoanExpectation",
+				1L);
+		bdInsuranceAccrued = bdInsuranceAccrued.setScale(4, RoundingMode.HALF_UP);
+		
+		//, String chargeorPay
+		if (sourceorDestination.equals("SOURCE"))
+			bdInsuranceAccrued = bdInsuranceAccrued.multiply(new BigDecimal(-1));
+		
+		GenericValue loanExpectation = null;
+		
+		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
+		GenericValue member = LoanUtilities.getEntityValue("Member", "partyId", partyId);
+		String employeeNo = member.getString("memberNumber");
+				
+		String employeeNames = member.getString("firstName") + " "
+						+ member.getString("middleName") + " "
+						+ member.getString("lastName");
+		BigDecimal bdLoanAmt = loanApplication.getBigDecimal("loanAmt");
+		
+		LocalDate localDate = new LocalDate();
+		int year = localDate.getYear();
+		int month = localDate.getMonthOfYear();
+		
+		String monthPadded = String.valueOf(month);//paddString(2, String.valueOf(month));
+		String monthYear = monthPadded+String.valueOf(year);
+		// TODO Auto-generated method stub
+		loanExpectationId = delegator.getNextSeqIdLong("LoanExpectation",
+				1L);
+		bdInsuranceAccrued = bdInsuranceAccrued.setScale(4, RoundingMode.HALF_UP);
+		loanExpectation = delegator.makeValue("LoanExpectation", UtilMisc
+				.toMap("loanExpectationId", loanExpectationId, "loanNo",
+						loanApplication.getString("loanNo"), "loanApplicationId", loanApplicationId,
+						"employeeNo", employeeNo, "repaymentName",
+						"INSURANCE", "employeeNames", employeeNames,
+						"dateAccrued", new Timestamp(Calendar.getInstance()
+								.getTimeInMillis()), "isPaid", "N",
+						"isPosted", "N", "amountDue", bdInsuranceAccrued,
+						"amountAccrued", bdInsuranceAccrued,
+						
+						"month", monthYear,
+						"acctgTransId", acctgTransId,
+						"partyId",
+						partyId, "loanAmt", bdLoanAmt));
+		
+		try {
+			delegator.createOrStore(loanExpectation);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/***
+	 * @author Japheth Odonya  @when Jul 6, 2015 10:02:14 AM
+	 * Add Interest Charged
+	 * */
+	private static void addInterestCharged(Long partyId, Long loanApplicationId, BigDecimal bdInterestAccrued, String sourceorDestination, String acctgTransId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		Long loanExpectationId = delegator.getNextSeqIdLong("LoanExpectation",
+				1L);
+		bdInterestAccrued = bdInterestAccrued.setScale(4, RoundingMode.HALF_UP);
+		
+		if (sourceorDestination.equals("SOURCE"))
+			bdInterestAccrued = bdInterestAccrued.multiply(new BigDecimal(-1));
+		
+		GenericValue loanExpectation = null;
+		
+		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
+		GenericValue member = LoanUtilities.getEntityValue("Member", "partyId", partyId);
+		String employeeNo = member.getString("memberNumber");
+				
+		String employeeNames = member.getString("firstName") + " "
+						+ member.getString("middleName") + " "
+						+ member.getString("lastName");
+		BigDecimal bdLoanAmt = loanApplication.getBigDecimal("loanAmt");
+		
+		LocalDate localDate = new LocalDate();
+		int year = localDate.getYear();
+		int month = localDate.getMonthOfYear();
+		
+		String monthPadded = String.valueOf(month);//paddString(2, String.valueOf(month));
+		String monthYear = monthPadded+String.valueOf(year);
+		
+		loanExpectation = delegator.makeValue("LoanExpectation", UtilMisc
+				.toMap("loanExpectationId", loanExpectationId, "loanNo",
+						loanApplication.getString("loanNo"), "loanApplicationId", loanApplicationId,
+						"employeeNo", employeeNo, "repaymentName",
+						"INTEREST", "employeeNames", employeeNames,
+						"dateAccrued", new Timestamp(Calendar.getInstance()
+								.getTimeInMillis()), "isPaid", "N",
+						"isPosted", "N", "amountDue", bdInterestAccrued,
+						"amountAccrued", bdInterestAccrued,
+						"month", monthYear,
+						"acctgTransId", acctgTransId,
+						"partyId",
+						partyId, "loanAmt", bdLoanAmt));
+		
+		try {
+			delegator.createOrStore(loanExpectation);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -872,29 +1020,48 @@ public class MemberAccountManagementServices {
 				<option key="INSURANCEPAYMENT" description="Loan Insurance Payment"/>
 		 * */
 		String sourceType = genericValue.getString("sourceType");
+		Long loanApplicationId = null;
+		BigDecimal principalAmount = null;
+		BigDecimal interestAmount = null; 
+		BigDecimal insuranceAmount = null;
+		BigDecimal amount = genericValue.getBigDecimal("amount");
+		Long partyId = genericValue.getLong("sourcePartyId");
 		if (sourceType.equals("ACCOUNT")){
 			//Get memberAccountId and remove the amount from the account
 			//Decrease the source
 			log.info("//////////////////////// Posting the voucher");
-			BigDecimal amount = genericValue.getBigDecimal("amount");
 			Long memberAccountId = genericValue.getLong("sourceMemberAccountId");
 			String transactionType = "MEMBERACCOUNTJVDEC";
 			//AccHolderTransactionServices.memberAccountJournalVoucher(amount, memberAccountId, userLogin, transactionType, genericValue.getLong("generalglHeaderId"));
 			AccHolderTransactionServices.memberAccountJournalVoucher(amount, memberAccountId, userLogin, transactionType, genericValue.getLong("generalglHeaderId"), acctgTransId);
 		} else if (sourceType.equals("PRINCIPAL")){
 			//Get Loan ID and post the principal
+			loanApplicationId = genericValue.getLong("sourceLoanApplicationId");
+			principalAmount = genericValue.getBigDecimal("amount");
+			reduceLoanRepaymentInSource(loanApplicationId, principalAmount, interestAmount, insuranceAmount, amount, userLogin);
+			
 		}
 		else if (sourceType.equals("INTERESTCHARGE")){
 			//Get Loan ID and add interest charge		
+			loanApplicationId = genericValue.getLong("sourceLoanApplicationId");
+			addInterestCharged(partyId, loanApplicationId, amount, "SOURCE", acctgTransId);
 		}
 		else if (sourceType.equals("INTERESTPAID")){
 			//Get Loan ID and add interest paid
+			loanApplicationId = genericValue.getLong("sourceLoanApplicationId");
+			interestAmount = genericValue.getBigDecimal("amount");
+			reduceLoanRepaymentInSource(loanApplicationId, principalAmount, interestAmount, insuranceAmount, amount, userLogin);
 		}
 		else if (sourceType.equals("INSURANCECHARGE")){
 			//Get Loan ID and add insurance charge
+			loanApplicationId = genericValue.getLong("sourceLoanApplicationId");
+			addInsuranceCharged(partyId, loanApplicationId, amount, "SOURCE", acctgTransId);
 		}
 		else if (sourceType.equals("INSURANCEPAYMENT")){
 			//Get Loan ID and add insurance payment
+			loanApplicationId = genericValue.getLong("sourceLoanApplicationId");
+			insuranceAmount = genericValue.getBigDecimal("amount");
+			reduceLoanRepaymentInSource(loanApplicationId, principalAmount, interestAmount, insuranceAmount, amount, userLogin);
 		}
 		
 	}
@@ -912,10 +1079,9 @@ public class MemberAccountManagementServices {
 		EntityConditionList<EntityExpr> linesConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"generalglHeaderId", EntityOperator.EQUALS,
-						generalglHeaderId),
+						generalglHeaderId)
 
-				EntityCondition.makeCondition("amount", EntityOperator.NOT_EQUAL,
-						null)
+				
 
 				), EntityOperator.AND);
 		
@@ -950,7 +1116,11 @@ public class MemberAccountManagementServices {
 			} else if (genericValue.getString("debitCredit").equals("CREDIT")){
 				postingType = "C";
 			}
-			BigDecimal bdAmount = genericValue.getBigDecimal("amount");
+			BigDecimal bdAmount = BigDecimal.ZERO;
+			
+			if (genericValue.getBigDecimal("amount") != null)
+				bdAmount = genericValue.getBigDecimal("amount");
+			
 			glAccountId = genericValue.getString("glAccountId");
 			entrySequenceId = entrySequenceId + 1;
 			AccHolderTransactionServices.postTransactionEntry(delegator, bdAmount, employeeBranchId, memberBranchId, glAccountId, postingType, acctgTransId, acctgTransType, entrySequenceId.toString());
@@ -971,11 +1141,7 @@ public class MemberAccountManagementServices {
 						
 						EntityCondition.makeCondition(
 								"debitCredit", EntityOperator.EQUALS,
-								"CREDIT"),
-						
-
-				EntityCondition.makeCondition("amount", EntityOperator.NOT_EQUAL,
-						null)
+								"CREDIT")
 
 				), EntityOperator.AND);
 
@@ -991,7 +1157,9 @@ public class MemberAccountManagementServices {
 		
 		BigDecimal total = BigDecimal.ZERO;
 		for (GenericValue genericValue : linesELI) {
-			total = total.add(genericValue.getBigDecimal("amount"));
+			
+			if (genericValue.getBigDecimal("amount") != null)
+				total = total.add(genericValue.getBigDecimal("amount"));
 		}
 		return total;
 	}
@@ -1008,11 +1176,8 @@ public class MemberAccountManagementServices {
 						
 						EntityCondition.makeCondition(
 								"debitCredit", EntityOperator.EQUALS,
-								"DEBIT"),
+								"DEBIT")
 						
-
-				EntityCondition.makeCondition("amount", EntityOperator.NOT_EQUAL,
-						null)
 
 				), EntityOperator.AND);
 
@@ -1028,7 +1193,8 @@ public class MemberAccountManagementServices {
 		
 		BigDecimal total = BigDecimal.ZERO;
 		for (GenericValue genericValue : linesELI) {
-			total = total.add(genericValue.getBigDecimal("amount"));
+			if (genericValue.getBigDecimal("amount") != null)
+				total = total.add(genericValue.getBigDecimal("amount"));
 		}
 		return total;
 	}
@@ -1041,10 +1207,8 @@ public class MemberAccountManagementServices {
 		EntityConditionList<EntityExpr> linesConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"generalglHeaderId", EntityOperator.EQUALS,
-						generalglHeaderId),
+						generalglHeaderId)
 
-				EntityCondition.makeCondition("amount", EntityOperator.NOT_EQUAL,
-						null)
 
 				), EntityOperator.AND);
 
@@ -1060,6 +1224,7 @@ public class MemberAccountManagementServices {
 		
 		BigDecimal total = BigDecimal.ZERO;
 		for (GenericValue genericValue : linesELI) {
+			if (genericValue.getBigDecimal("amount") != null)
 			total = total.add(genericValue.getBigDecimal("amount"));
 		}
 		return total;
@@ -1074,10 +1239,7 @@ public class MemberAccountManagementServices {
 		EntityConditionList<EntityExpr> linesConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"generalglHeaderId", EntityOperator.EQUALS,
-						generalglHeaderId),
-
-				EntityCondition.makeCondition("amount", EntityOperator.NOT_EQUAL,
-						null)
+						generalglHeaderId)
 
 				), EntityOperator.AND);
 
@@ -1093,7 +1255,8 @@ public class MemberAccountManagementServices {
 		
 		BigDecimal total = BigDecimal.ZERO;
 		for (GenericValue genericValue : linesELI) {
-			total = total.add(genericValue.getBigDecimal("amount"));
+			if (genericValue.getBigDecimal("amount") != null)
+				total = total.add(genericValue.getBigDecimal("amount"));
 		}
 		return total;
 	}
@@ -1186,10 +1349,19 @@ public class MemberAccountManagementServices {
 		//processed
 		GenericValue header = LoanUtilities.getEntityValue("GeneralglHeader", "generalglHeaderId", generalglHeaderId);
 		
-		if ((header.getString("header") != null) && (header.getString("header").equals("Y")))
+		if ((header.getString("processed") != null) && (header.getString("processed").equals("Y")))
 			return true;
 		
 		return false;
+	}
+	
+	public static String checkNotProcessed(Long generalglHeaderId, Map<String, String> userLogin){
+		GenericValue header = LoanUtilities.getEntityValue("GeneralglHeader", "generalglHeaderId", generalglHeaderId);
+		
+		if ((header.getString("processed") != null) && (header.getString("processed").equals("Y")))
+			return "The Journal has already been processed, cannot therefore delete lines!";
+		
+		return "success";
 	}
 
 }
