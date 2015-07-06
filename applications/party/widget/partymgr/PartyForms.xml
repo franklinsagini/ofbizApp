@@ -2718,7 +2718,7 @@ Gender
 
      </form>
      <!-- Branches -->
-     <form name="branches" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStation" paginate-target="branches"
+     <form name="branches" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateBranchesPartyGroup" paginate-target="branches"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 
         <actions>
@@ -2749,7 +2749,13 @@ Gender
         	<field name="code" title="Code"><display also-hidden="false"/></field>
          <field name="groupName" title="Branch"><display also-hidden="false"/></field>
         <field name="createdStamp" title="Created"><display also-hidden="false" type="date-time"/></field>
-
+		<field name="glAccountId" title="Settlement Account">
+			<drop-down allow-empty="true">
+				<entity-options description="${accountName} - ${accountCode}" entity-name="GlAccount">
+					<entity-order-by field-name="accountName"/>
+				</entity-options>
+			</drop-down>
+		</field>
 
         <!-- field name="idNumber" title="${uiLabelMap.MemberIDNumber}"><display also-hidden="false"></display></field>
 
@@ -2791,6 +2797,7 @@ Gender
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field> -->
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
      </form>
 
      <!-- Change Member Status -->
