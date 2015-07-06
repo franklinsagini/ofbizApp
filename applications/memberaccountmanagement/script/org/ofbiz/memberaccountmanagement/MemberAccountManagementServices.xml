@@ -367,5 +367,27 @@ under the License.
    			</else>
    		</if>
    </simple-method>
+   
+   <!-- processmpajournal -->
+   <simple-method method-name="processmpajournal" short-description="Process MPA Journal">
+        <set field="generalglHeaderId" from-field="parameters.generalglHeaderId" type="Long"/>
+        <set field="status" value="${bsh:org.ofbiz.memberaccountmanagement.MemberAccountManagementServices.processMPAJournal(generalglHeaderId, userLogin);}"/>
+   
+   		<if>
+   			<condition>
+   				<if-compare operator="equals" value="success" field="status"></if-compare>
+   			</condition>
+   			<then>
+   				<property-to-field resource="MemberAccountManagementUiLabels.xml" 
+            	property="Successfully Processed the MPA" field="successMessage" />
+   			</then>
+   			<else>
+   				<add-error>
+   					<fail-message message="${status}"/>
+   				</add-error>
+   				<check-errors/>
+   			</else>
+   		</if>
+   </simple-method>
 
 </simple-methods>

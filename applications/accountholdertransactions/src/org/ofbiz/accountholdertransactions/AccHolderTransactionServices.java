@@ -4290,6 +4290,53 @@ public class AccHolderTransactionServices {
 
 		return accountTransactionParent.getString("accountTransactionParentId");
 	}
+	
+	public static String memberAccountJournalVoucher(
+			BigDecimal transactionAmount, Long memberAccountId,
+			Map<String, String> userLogin, String transactionType,
+			Long memberAccountVoucherId, String acctgTransId) {
+
+		log.info(" Transaction Amount ---- " + transactionAmount);
+		log.info(" Transaction MA ---- " + memberAccountId);
+
+		// log.info(" UserLogin ---- " + userLogin.get("userLoginId"));
+		log.info(" Transaction Amount ---- " + transactionAmount);
+		if (userLogin == null) {
+			userLogin = new HashMap<String, String>();
+			userLogin.put("userLoginId", "admin");
+		}
+
+		// Save Parent
+		GenericValue accountTransactionParent = createAccountTransactionParent(
+				memberAccountId, userLogin);
+
+		// Set the the Treasury ID
+		// String treasuryId = TreasuryUtility.getTellerId(userLogin);
+		// accountTransaction.set("treasuryId", treasuryId);
+		// addChargesToTransaction(accountTransaction, userLogin,
+		// transactionType);
+		// increaseDecrease
+
+		GenericValue accountTransaction = null;
+		// String acctgTransId = postCashDeposit(memberAccountId, userLogin,
+		// transactionAmount);
+
+		// GenericValue, String, Map<String,String>, String, BigDecimal, String,
+		// String, String
+		// GenericValue, String, Map<String,String>, String, BigDecimal, null,
+		// String
+
+		createTransaction(null, transactionType, userLogin, memberAccountId.toString(), transactionAmount, null, accountTransactionParent.getString("accountTransactionParentId"), acctgTransId, null, null);
+//		createTransactionVersion2(accountTransaction, transactionType,
+//				userLogin, memberAccountId.toString(), transactionAmount, null,
+//				accountTransactionParent
+//						.getString("accountTransactionParentId"),
+//				memberAccountVoucherId);
+
+		// postCashWithdrawalTransaction(accountTransaction, userLogin);
+
+		return accountTransactionParent.getString("accountTransactionParentId");
+	}
 
 	private static String postCashDeposit(Long memberAccountId,
 			Map<String, String> userLogin, BigDecimal amount) {
