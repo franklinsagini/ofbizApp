@@ -135,10 +135,23 @@ under the License.
     <!-- update an existing Budget Plan header Record -->
     <simple-method method-name="approveBudgetPlan" short-description="Update an existing Budget Plan Justification">
         <entity-one entity-name="BudgetPlanItem" value-field="lookedUpValue"/>
+        <entity-one entity-name="BudgetPlan" value-field="budgetPlan"/>
         <!-- <set-nonpk-fields map="parameters" value-field="lookedUpValue"/> -->
         <set field="setStatus.budgetPlanId" from-field="lookedUpValue.budgetPlanId"/>
         <set field="setStatus.BudgetPlanStatusId" value="APR"/>
         <call-service service-name="updateBudgetPlanHeader" in-map-name="setStatus"/>
+
+        <!--
+/applications/accounting/src/org/ofbiz/accounting/budget/BudgetWorker.java
+            Call Java Method here to populate the old Budget
+            pass budgetplanId
+-->
+        <call-class-method class-name="org.ofbiz.accounting.budget.BudgetWorker" method-name="pushBudgetPlanToBudget" ret-field="sucess">
+            <field field="budgetPlan" type="GenericValue"/>
+        </call-class-method>
+
+
+
     </simple-method>
     <!-- update an existing Budget Plan header Record -->
     <simple-method method-name="returnToBranch" short-description="Update an existing Budget Plan Justification">
