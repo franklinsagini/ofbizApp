@@ -2878,5 +2878,18 @@ public class LoanUtilities {
 		}
 		return entity;
 	}
+	
+	public static GenericValue getEntityValue(String entityName, String primaryKeyName, String primaryKeyValue){
+		GenericValue entity = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			entity = delegator.findOne(entityName,
+					UtilMisc.toMap(primaryKeyName, primaryKeyValue), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		return entity;
+	}
+
 
 }
