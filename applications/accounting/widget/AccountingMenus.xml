@@ -807,6 +807,25 @@ http://www.apache.org/licenses/LICENSE-2.0
     </menu>
 
 
+    <menu name="BudgetPlanSubTabBar" menu-container-style="button-bar button-style-2" default-selected-style="selected">
+        <menu-item name="returnToBranch" title="Return To Branch" widget-style="buttontext create">
+            <condition>
+                <and>
+                    <not>
+                        <if-empty field="budgetPlanId"/>
+                    </not>
+                    <or>
+                        <if-compare field="BudgetPlanStatusId" operator="equals" value="SUB_HOF"/>
+                    </or>
+                </and>
+            </condition>
+            <link target="returnToBranch">
+                <parameter param-name="budgetPlanId"/>
+                <parameter param-name="budgetPlanItem"/>
+            </link>
+        </menu-item>
+    </menu>
+
     <menu name="BudgetTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="EditBudget">
         <menu-item name="ListBudgets" title="${uiLabelMap.AccountingBudgetFind}">
