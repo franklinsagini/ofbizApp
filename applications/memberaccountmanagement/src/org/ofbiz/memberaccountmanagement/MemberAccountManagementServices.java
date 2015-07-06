@@ -637,6 +637,9 @@ public class MemberAccountManagementServices {
 		
 		GenericValue header = LoanUtilities.getEntityValue("GeneralglHeader", "generalglHeaderId", generalglHeaderId);
 		
+		if (alreadyProcessed(generalglHeaderId))
+			return "Already processed !";
+		
 		if (header == null)
 			return "No header found !";
 		
