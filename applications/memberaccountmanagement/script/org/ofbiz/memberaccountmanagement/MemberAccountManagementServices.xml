@@ -268,7 +268,29 @@ under the License.
         <entity-one entity-name="SourcempaLine" value-field="sourcempaLine"/>
         <set field="sourcempaLine.isActive" value="N"/>
         <set field="sourcempaLine.updatedBy" from-field="userLogin.userLoginId"/>
-        <remove-value value-field="sourcempaLine"/>
+        <set field="generalglHeaderId" from-field="sourcempaLine.generalglHeaderId" type="Long"/>
+        <set field="status" value="${bsh:org.ofbiz.memberaccountmanagement.MemberAccountManagementServices.checkNotProcessed(generalglHeaderId, userLogin);}" type="String"/>
+        
+        <if>
+        	<condition>
+        		<if-compare operator="not-equals" value="success" field="status"></if-compare>
+        	</condition>
+        	<then> 
+                <add-error> 
+                    <!-- fail-property resource="MemberAccountManagementUiLabels.xml"  
+                        property="voucherLoanError" / --> 
+                        <fail-message message="$status"/>
+                </add-error> 
+                <check-errors /> 
+            </then> 
+             
+            <else>
+            	<remove-value value-field="sourcempaLine"/>
+               <property-to-field resource="MemberAccountManagementUiLabels.xml" 
+            	property="Successfully deleted the line!" field="successMessage" /> 
+            </else> 
+        </if>
+        
     </simple-method>
     
     <!-- DestinationmpaLine -->
@@ -305,7 +327,28 @@ under the License.
         <entity-one entity-name="DestinationmpaLine" value-field="destinationmpaLine"/>
         <set field="destinationmpaLine.isActive" value="N"/>
         <set field="destinationmpaLine.updatedBy" from-field="userLogin.userLoginId"/>
-        <remove-value value-field="destinationmpaLine"/>
+        <set field="generalglHeaderId" from-field="destinationmpaLine.generalglHeaderId" type="Long"/>
+        <set field="status" value="${bsh:org.ofbiz.memberaccountmanagement.MemberAccountManagementServices.checkNotProcessed(generalglHeaderId, userLogin);}" type="String"/>
+        
+        <if>
+        	<condition>
+        		<if-compare operator="not-equals" value="success" field="status"></if-compare>
+        	</condition>
+        	<then> 
+                <add-error> 
+                    <!-- fail-property resource="MemberAccountManagementUiLabels.xml"  
+                        property="voucherLoanError" / --> 
+                        <fail-message message="$status"/>
+                </add-error> 
+                <check-errors /> 
+            </then> 
+             
+            <else>
+            	<remove-value value-field="destinationmpaLine"/>
+               <property-to-field resource="MemberAccountManagementUiLabels.xml" 
+            	property="Successfully deleted the line!" field="successMessage" /> 
+            </else> 
+        </if>
     </simple-method>
     
     <!-- GeneralglLine -->
@@ -342,8 +385,28 @@ under the License.
         <entity-one entity-name="GeneralglLine" value-field="generalglLine"/>
         <set field="generalglLine.isActive" value="N"/>
         <set field="generalglLine.updatedBy" from-field="userLogin.userLoginId"/>
-        <remove-value value-field="generalglLine"/>
-        <!-- store-value value-field="generalglLine"/ -->
+        <set field="generalglHeaderId" from-field="generalglLine.generalglHeaderId" type="Long"/>
+        <set field="status" value="${bsh:org.ofbiz.memberaccountmanagement.MemberAccountManagementServices.checkNotProcessed(generalglHeaderId, userLogin);}" type="String"/>
+        
+        <if>
+        	<condition>
+        		<if-compare operator="not-equals" value="success" field="status"></if-compare>
+        	</condition>
+        	<then> 
+                <add-error> 
+                    <!-- fail-property resource="MemberAccountManagementUiLabels.xml"  
+                        property="voucherLoanError" / --> 
+                        <fail-message message="$status"/>
+                </add-error> 
+                <check-errors /> 
+            </then> 
+             
+            <else>
+            	<remove-value value-field="generalglLine"/>
+               <property-to-field resource="MemberAccountManagementUiLabels.xml" 
+            	property="Successfully deleted the line!" field="successMessage" /> 
+            </else> 
+        </if>
     </simple-method>
     
     <!-- addLines -->
