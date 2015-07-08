@@ -21,6 +21,51 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
+    <screen name="CommonBudgetReportDecorator">
+        <section>
+            <actions>
+                <set field="headerItem" value="ListBudgets"/>
+                <set field="budgetId" from-field="budget.budgetId" default-value="${parameters.budgetId}"/>
+                <entity-one entity-name="Budget" value-field="budget"/>
+                <entity-and list="budgetStatus" entity-name="BudgetStatus">
+                    <field-map field-name="budgetId" from-field="budgetId"/>
+                    <order-by field-name="-statusDate"/>
+                </entity-and>
+                <set field="statusId" from-field="budgetStatus[0].statusId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="pre-body">
+                        <section>
+                            <condition>
+                                <not><if-empty field="budgetId"/></not>
+                            </condition>
+                            <widgets>
+                                <include-menu name="BudgetTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <not><if-empty field="budgetId"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <label style="h1" text="Budget : ${budget.comments}[${budgetId}]"/>
+                                    </widgets>
+                                </section>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+
     <screen name="ListBudgets">
         <section>
             <actions>
@@ -310,7 +355,7 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <include-menu name="BudgetSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                                        <label style="h1" text="Budget : [${budgetId}]"/>
+                                        <label style="h1" text="Budget : ${budget.comments}[${budgetId}]"/>
                                     </widgets>
                                 </section>
                                 <decorator-section-include name="body"/>
@@ -664,6 +709,79 @@ under the License.
                             <include-form name="EditBudgetReview" location="component://accounting/widget/BudgetForms.xml"/>
                         </screenlet>
                         <include-form name="ListBudgetReviews" location="component://accounting/widget/BudgetForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="BudgetReports">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleListBudgetReviews"/>
+                <set field="tabButtonItem" value="BudgetReports"/>
+                <set field="budgetId" from-field="parameters.budgetId"/>
+                <entity-one entity-name="Budget" value-field="budget"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonBudgetReportDecorator" location="component://accounting/widget/BudgetScreens.xml">
+                    <decorator-section name="body">
+                        <container style="lefthalf">
+                            <screenlet id="BudgetVarianceReport" title="Budget Variance Report" collapsible="true">
+                                <include-form name="BudgetVarianceReport" location="component://accounting/widget/BudgetForms.xml"/>
+                            </screenlet>
+                            <screenlet id="AccountSummaryReport" title="Budget Account Summary Report" collapsible="true">
+                                <include-form name="AccountSummaryReport" location="component://accounting/widget/BudgetForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="righthalf">
+                            <screenlet id="AccountDetailsReport" title="Budget Account Details Report" collapsible="true">
+                                <include-form name="AccountDetailsReport" location="component://accounting/widget/BudgetForms.xml"/>
+                            </screenlet>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="AccountSummaryReportPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <set field="budgetId" from-field="parameters.budgetId"/>
+                <entity-one entity-name="Budget" value-field="budget"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/budgets/AccountSummaryReport.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://accounting/webapp/accounting/WEB-INF/actions/budgets/AccountSummaryReport.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="AccountDetailsReportPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <set field="budgetId" from-field="parameters.budgetId"/>
+                <entity-one entity-name="Budget" value-field="budget"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/budgets/AccountDetailsReport.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://accounting/webapp/accounting/WEB-INF/actions/budgets/AccountDetailsReport.fo.ftl"/></xsl-fo>
+                        </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

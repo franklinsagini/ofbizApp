@@ -6,14 +6,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import javax.print.attribute.standard.Fidelity;
-
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -147,6 +150,37 @@ public class BudgetWorker {
 		}
 
 		return budgetPlanItems;
+	}
+	
+	public static List<GenericValue> getBudgetItems(GenericValue budget) {
+		List<GenericValue> budgetItems = null;
+
+		if (budget == null) {
+			throw new IllegalArgumentException("Null Budget Plan Passed. NOTHING FOUND");
+		}
+
+		try {
+			budgetItems = budget.getRelated("BudgetItem", null, null, false);
+		} catch (GenericEntityException e) {
+			throw new IllegalArgumentException("Budget Passed does not match any existing Budget Plans. NOTHING FOUND");
+		}
+
+		return budgetItems;
+	}
+	public static List<GenericValue>getJustificationsForAccount(Delegator delegator, String budgetId, String glAccountId){
+		List<GenericValue>justifications = null;
+		
+		try {
+			EntityConditionList<EntityExpr> cond = EntityCondition.makeCondition(UtilMisc.toList(
+					EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, glAccountId),
+					EntityCondition.makeCondition("budgetId", EntityOperator.EQUALS, budgetId)
+					));
+			justifications = delegator.findList("BudgetItem", cond, null, null, null, false);
+		} catch (GeneralException e) {
+			e.printStackTrace();
+		}
+		
+		return justifications;
 	}
 
 	private static void getBudgetPlanItemsForCustomPeriod(GenericValue customTimePeriod) {

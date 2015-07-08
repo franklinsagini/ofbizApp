@@ -894,6 +894,17 @@ http://www.apache.org/licenses/LICENSE-2.0
                 <parameter param-name="budgetId"/>
             </link>
         </menu-item>
+        <menu-item name="BudgetReports" title="Budget Reports">
+            <condition>
+                <and>
+                    <not><if-empty field="budgetId"/></not>
+                    <if-compare field="statusId" operator="not-equals" value="BG_REJECTED"/>
+                </and>
+            </condition>
+            <link target="BudgetReports">
+                <parameter param-name="budgetId"/>
+            </link>
+        </menu-item>
     </menu>
 
     <menu name="BudgetSubTabBar" menu-container-style="button-bar button-style-2" default-selected-style="selected">
