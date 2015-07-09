@@ -1346,8 +1346,13 @@ public class LoanRepayments {
 	 * */
 	public static String repayLoan(GenericValue loanRepayment,
 			Map<String, String> userLogin) {
-		log.info("FFFFFFFFF start loan repayment FFFFFFFFFF");
 
+		log.info("FFFFFFFFF start loan repayment FFFFFFFFFF");
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String acctgTransType = "LOAN_RECEIVABLE";
+		String acctgTransId = createAccountingTransaction(loanRepayment,
+				acctgTransType, userLogin, delegator);
+		
 		BigDecimal transactionAmount = loanRepayment
 				.getBigDecimal("transactionAmount");
 		BigDecimal totalInterestDue = loanRepayment
@@ -1375,6 +1380,7 @@ public class LoanRepayments {
 				.getLong("loanApplicationId"));
 		// BigDecimal bdLoanAmt = loanRepayment.getBigDecimal("loanAmt");
 
+		
 		if (amountRemaining.compareTo(BigDecimal.ZERO) == 1) {
 			// Remove Insurance
 			if (totalInsuranceDue.compareTo(BigDecimal.ZERO) == 1) {
@@ -1419,6 +1425,19 @@ public class LoanRepayments {
 				if (amountRemaining.compareTo(bdLoanBalance) >= 0) {
 					principalAmount = bdLoanBalance;
 					amountRemaining = amountRemaining.subtract(bdLoanBalance);
+					
+					//Set loan as cleared
+					
+					Long loanStatusId = LoanUtilities.getLoanStatusId("CLEARED");
+					GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanRepayment.getLong("loanApplicationId"));
+					loanApplication.set("loanStatusId", loanStatusId);
+					try {
+						delegator.createOrStore(loanApplication);
+					} catch (GenericEntityException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
 				} else {
 					principalAmount = amountRemaining;
 					amountRemaining = BigDecimal.ZERO;
@@ -1430,19 +1449,15 @@ public class LoanRepayments {
 				excessAmount = amountRemaining;
 
 				// Deposit Excess to Savings Account
+				GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanRepayment.getLong("loanApplicationId"));
+				String memberAccountId = LoanUtilities.getMemberAccountIdGivenMemberAndAccountCode(loanApplication.getLong("partyId"), AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
+				AccHolderTransactionServices.cashDepositFromStationProcessing(excessAmount, Long.valueOf(memberAccountId), userLogin, "DEPOSITFROMEXCESS", acctgTransId);
 
 				// TODO
 			}
 
 		}
 		
-		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-
-		
-		String acctgTransType = "LOAN_RECEIVABLE";
-		String acctgTransId = createAccountingTransaction(loanRepayment,
-				acctgTransType, userLogin, delegator);
-
 		principalAmount = principalAmount.add(excessAmount);
 
 		loanRepayment.set("interestAmount", interestAmount);
