@@ -6,7 +6,20 @@ import org.ofbiz.accounting.budget.BudgetWorker;
 
 budget = delegator.findOne('Budget', [budgetId:parameters.budgetId], true)
 context.budget = budget
-//List budgetItems = BudgetWorker.getBudgetItems(budget)
-List budgetItems = delegator.findList('GlAccountAndBudgetItemSums', null, null, ['accountCode'], null, false)
-
+budgetItems = []
+singleBudgetItems = []
+allBudgetItems = []
+currentBudgetItems = []
+currentBudgetItems = BudgetWorker.getBudgetItems(budget)
+allBudgetItems = delegator.findList('GlAccountAndBudgetItemSums', null, null, ['accountCode'], null, false)
+currentAC = ''
+allBudgetItems.each { allItem ->
+  currentBudgetItems.each { currentItem ->
+    if (currentItem.glAccountId == allItem.glAccountId && currentAC != allItem.glAccountId) {
+      currentAC = currentItem.glAccountId
+      singleBudgetItems = [accountCode:allItem.accountCode, accountName:allItem.accountName, amount:allItem.amount]
+      budgetItems.add(singleBudgetItems);
+    }
+  }
+}
 context.budgetItems = budgetItems
