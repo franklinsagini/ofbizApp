@@ -2587,7 +2587,7 @@ public class OrderServices {
 		budgetControl.put("budgetControlId", delegator.getNextSeqId("BudgetControl"));
 		budgetControl.put("amount", lpoAmount);
 		budgetControl.put("glAccountId", productGlAccount);
-
+		budgetControl.put("statusName", "COMMITED");
 		try {
 			budgetControl.create();
 		} catch (GenericEntityException e) {

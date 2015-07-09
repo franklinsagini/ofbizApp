@@ -787,4 +787,26 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <screen name="BudgetVarianceReportPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <set field="budgetId" from-field="parameters.budgetId"/>
+                <entity-one entity-name="Budget" value-field="budget"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/budgets/BudgetVarianceReport.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://accounting/webapp/accounting/WEB-INF/actions/budgets/BudgetVarianceReport.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>
