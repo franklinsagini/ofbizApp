@@ -3378,13 +3378,13 @@ public class AccHolderTransactionServices {
 			sequence = sequence + 1;
 			listPostEntity.add(createAccountPostingEntryVer2(employeeBranchSettlementAccountId,
 					glAccountTypeId, hqBranchId, bdTotalAmount, memberAccountId,
-					acctgTransId, "D", sequence.toString(), memberBranchId));
+					acctgTransId, "C", sequence.toString(), memberBranchId));
 			
 			//Cr Settlement Member Branch
-			sequence = sequence + 1;
+			
 			listPostEntity.add(createAccountPostingEntryVer2(memberBranchSettlementAccountId,
 					glAccountTypeId, hqBranchId, bdTotalAmount, memberAccountId,
-					acctgTransId, "C", sequence.toString(), memberBranchId));
+					acctgTransId, "D", sequence.toString(), memberBranchId));
 
 			
 		}
