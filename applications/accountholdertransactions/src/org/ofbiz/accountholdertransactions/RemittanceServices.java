@@ -2784,8 +2784,11 @@ public class RemittanceServices {
 				totalInterestDue, "totalInsuranceDue", totalInsuranceDue,
 				"totalPrincipalDue", totalPrincipalDue, "interestAmount",
 				interestAmount, "insuranceAmount", insuranceAmount,
-				"principalAmount", principalAmount, "transactionAmount",
-				transactionAmount, "acctgTransId", acctgTransId,
+				
+				"principalAmount", principalAmount,
+				"excessAmount", excessAmount,
+				"transactionAmount", transactionAmount,
+				"acctgTransId", acctgTransId,
 				"repaymentMode", repaymentMode));
 		try {
 			delegator.createOrStore(loanRepayment);
