@@ -371,7 +371,7 @@ public class AmortizationServices {
 	/***
 	 * @author Japheth Odonya @when Aug 8, 2014 6:33:38 PM Add one month
 	 **/
-	private static Timestamp calculateNextPaymentDate(Timestamp repaymentDate) {
+	public static Timestamp calculateNextPaymentDate(Timestamp repaymentDate) {
 		LocalDateTime localRepaymentDate = new LocalDateTime(
 				repaymentDate.getTime());
 		localRepaymentDate = localRepaymentDate.plusMonths(1);

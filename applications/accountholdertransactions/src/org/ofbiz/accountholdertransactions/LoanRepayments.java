@@ -1458,13 +1458,13 @@ public class LoanRepayments {
 
 		}
 		
-		principalAmount = principalAmount.add(excessAmount);
+		//principalAmount = principalAmount.add(excessAmount);
 
 		loanRepayment.set("interestAmount", interestAmount);
 		loanRepayment.set("insuranceAmount", insuranceAmount);
 		loanRepayment.set("principalAmount", principalAmount);
 		loanRepayment.set("acctgTransId", acctgTransId);
-		// loanRepayment.set("excessAmount", excessAmount);
+		loanRepayment.set("excessAmount", excessAmount);
 
 		try {
 			TransactionUtil.begin();
@@ -2282,6 +2282,55 @@ public class LoanRepayments {
 
 		return totalPrincipalPaid;
 	}
+	
+	
+	/****
+	 * @author Japheth Odonya  @when Jul 10, 2015 12:17:34 AM
+	 * Total Principal Paid
+	 * 
+	 * */
+	public static BigDecimal getTotalPrincipalPaid(Long loanApplicationId) {
+		BigDecimal totalPrincipalPaid = BigDecimal.ZERO;
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> loanRepaymentELI = new ArrayList<GenericValue>();
+
+		// EntityCondition.makeCondition( "isPaid", EntityOperator.EQUALS, "N"),
+		EntityConditionList<EntityExpr> loanRepaymentConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(
+
+						EntityCondition.makeCondition("loanApplicationId",
+								EntityOperator.EQUALS,
+								loanApplicationId)
+
+				), EntityOperator.AND);
+
+		try {
+			loanRepaymentELI = delegator.findList("LoanRepayment",
+					loanRepaymentConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		for (GenericValue loanRepayment : loanRepaymentELI) {
+
+			if (loanRepayment.getBigDecimal("principalAmount") != null) {
+
+				totalPrincipalPaid = totalPrincipalPaid.add(loanRepayment
+						.getBigDecimal("principalAmount"));
+			}
+		}
+		
+		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
+		BigDecimal outstandingBalance = loanApplication.getBigDecimal("outstandingBalance");
+		
+		if (outstandingBalance != null){
+			BigDecimal repaidAmount = loanApplication.getBigDecimal("loanAmt").subtract(outstandingBalance);
+			totalPrincipalPaid = totalPrincipalPaid.add(repaidAmount);
+		}
+		return totalPrincipalPaid;
+	}
 
 	
 	
@@ -2418,6 +2467,361 @@ public class LoanRepayments {
 		}
 
 		return loanRepayment;
+	}
+
+	public static BigDecimal getTotalPrincipalDue(Long loanApplicationId) {
+		
+		//Get total principal that should have been paid from disbursement date to now
+		BigDecimal bdTotalExpectedPrincipalAmountByToday = getTotalExpectedPrincipalAmountByLoanApplicationId(loanApplicationId);
+		
+		//Get total principal amount paid from disbursement date to now
+		BigDecimal bdTotalRepaidPrincipalAmountByToday = getTotalPrincipalPaid(loanApplicationId);
+		
+		//Return the difference as the principal due
+		BigDecimal principalDue = bdTotalExpectedPrincipalAmountByToday.subtract(bdTotalRepaidPrincipalAmountByToday);
+		return null;
+	}
+
+	/****
+	 * @author Japheth Odonya  @when Jul 9, 2015 10:56:40 PM
+	 * 
+	 * Total Expected Principal Amount 
+	 * */
+	private static BigDecimal getTotalExpectedPrincipalAmountByLoanApplicationId(
+			Long loanApplicationId) {
+		Long loanApplicationIdLog = loanApplicationId;
+		
+		BigDecimal bdTotalExpectedPrincipalAmount = BigDecimal.ZERO;
+		
+		BigDecimal bdTotalRepaidLoan = LoanServices.getLoansRepaidByLoanApplicationId(loanApplicationIdLog);
+		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
+		BigDecimal dbLoanAmt = loanApplication.getBigDecimal("loanAmt");
+				//.subtract(bdTotalRepaidLoan);
+		BigDecimal bdInterestRatePM = loanApplication.getBigDecimal(
+				"interestRatePM").divide(new BigDecimal(ONEHUNDRED));
+		//openingRepaymentPeriod
+		int iRepaymentPeriod;
+		//if (loanApplication.getLong("openingRepaymentPeriod") != null){
+		//	iRepaymentPeriod = loanApplication.getLong("openingRepaymentPeriod").intValue();
+		//} else{
+		iRepaymentPeriod = loanApplication.getLong("repaymentPeriod").intValue();
+		//}
+			
+		 
+		BigDecimal dbRepaymentPrincipalAmt, bdRepaymentInterestAmt;
+		BigDecimal paymentAmount;
+
+		/***
+		 * Get Loan Product or Loan Type
+		 * */
+		GenericValue loanProduct = null;
+		String loanProductId = loanApplication.getString("loanProductId");
+		loanProductId = loanProductId.replaceAll(",", "");
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		try {
+			loanProduct = delegator.findOne("LoanProduct",
+					UtilMisc.toMap("loanProductId", Long.valueOf(loanProductId)), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		// Determine the Deduction Type
+		String deductionType = null;
+		deductionType = loanProduct.getString("deductionType");
+
+		if (deductionType.equals(AmortizationServices.REDUCING_BALANCE)) {
+			paymentAmount = AmortizationServices.calculateReducingBalancePaymentAmount(dbLoanAmt,
+					bdInterestRatePM, iRepaymentPeriod);
+		} else {
+			paymentAmount = AmortizationServices.calculateFlatRatePaymentAmount(dbLoanAmt,
+					bdInterestRatePM, iRepaymentPeriod);
+		}
+		// This value will be changing as we go along
+		BigDecimal bdPreviousBalance = dbLoanAmt;
+
+		int iAmortizationCount = 0;
+
+		Timestamp repaymentDate = null;
+		repaymentDate = loanApplication.getTimestamp("repaymentStartDate");
+		Timestamp currentDate = new Timestamp(Calendar.getInstance().getTimeInMillis());
+		
+		//Get Insurance Rate
+		BigDecimal bdInsuranceRate = AmortizationServices.getInsuranceRate(loanApplication);
+		BigDecimal bdInsuranceAmount;
+
+		while ((repaymentDate.compareTo(currentDate) <= 0) && (iAmortizationCount < iRepaymentPeriod)) {
+			iAmortizationCount++;
+
+			if (deductionType.equals(AmortizationServices.REDUCING_BALANCE)){
+			bdRepaymentInterestAmt = bdPreviousBalance
+					.multiply(bdInterestRatePM);
+			} else{
+				bdRepaymentInterestAmt = dbLoanAmt
+						.multiply(bdInterestRatePM);
+			}
+			
+			dbRepaymentPrincipalAmt = paymentAmount
+					.subtract(bdRepaymentInterestAmt);
+			
+			bdTotalExpectedPrincipalAmount = bdTotalExpectedPrincipalAmount.add(dbRepaymentPrincipalAmt);
+			
+			
+				bdPreviousBalance = bdPreviousBalance
+					.subtract(dbRepaymentPrincipalAmt);
+			
+			//Insurance Amount = insuranceRate times balance divide by 100
+			bdInsuranceAmount = bdInsuranceRate.multiply(bdPreviousBalance.setScale(6, RoundingMode.HALF_UP)).divide(new BigDecimal(100), 6, RoundingMode.HALF_UP);
+			//loanApplicationId = loanApplicationId.replaceAll(",", "");
+
+
+			repaymentDate = AmortizationServices.calculateNextPaymentDate(repaymentDate);
+		}
+		return bdTotalExpectedPrincipalAmount;
+	}
+	
+	/****
+	 * @author Japheth Odonya  @when Jul 9, 2015 10:58:09 PM
+	 * Total Interested Expected
+	 * */
+	private static BigDecimal getTotalExpectedInterestAmountByLoanApplicationId(
+			Long loanApplicationId) {
+		Long loanApplicationIdLog = loanApplicationId;
+		
+		BigDecimal bdTotalExpectedInterestAmount = BigDecimal.ZERO;
+		
+		BigDecimal bdTotalRepaidLoan = LoanServices.getLoansRepaidByLoanApplicationId(loanApplicationIdLog);
+		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
+		BigDecimal dbLoanAmt = loanApplication.getBigDecimal("loanAmt");
+				//.subtract(bdTotalRepaidLoan);
+		BigDecimal bdInterestRatePM = loanApplication.getBigDecimal(
+				"interestRatePM").divide(new BigDecimal(ONEHUNDRED));
+		//openingRepaymentPeriod
+		int iRepaymentPeriod;
+		//if (loanApplication.getLong("openingRepaymentPeriod") != null){
+		//	iRepaymentPeriod = loanApplication.getLong("openingRepaymentPeriod").intValue();
+		//} else{
+		iRepaymentPeriod = loanApplication.getLong("repaymentPeriod").intValue();
+		//}
+			
+		 
+		BigDecimal dbRepaymentPrincipalAmt, bdRepaymentInterestAmt;
+		BigDecimal paymentAmount;
+
+		/***
+		 * Get Loan Product or Loan Type
+		 * */
+		GenericValue loanProduct = null;
+		String loanProductId = loanApplication.getString("loanProductId");
+		loanProductId = loanProductId.replaceAll(",", "");
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		try {
+			loanProduct = delegator.findOne("LoanProduct",
+					UtilMisc.toMap("loanProductId", Long.valueOf(loanProductId)), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		// Determine the Deduction Type
+		String deductionType = null;
+		deductionType = loanProduct.getString("deductionType");
+
+		if (deductionType.equals(AmortizationServices.REDUCING_BALANCE)) {
+			paymentAmount = AmortizationServices.calculateReducingBalancePaymentAmount(dbLoanAmt,
+					bdInterestRatePM, iRepaymentPeriod);
+		} else {
+			paymentAmount = AmortizationServices.calculateFlatRatePaymentAmount(dbLoanAmt,
+					bdInterestRatePM, iRepaymentPeriod);
+		}
+		// This value will be changing as we go along
+		BigDecimal bdPreviousBalance = dbLoanAmt;
+
+		int iAmortizationCount = 0;
+
+		Timestamp repaymentDate = null;
+		repaymentDate = loanApplication.getTimestamp("repaymentStartDate");
+		
+		log.info("OOOOOOOO Old repayment start date ::::: "+repaymentDate);
+		
+		if (loanApplication.getBigDecimal("interestDue") != null)
+		{
+			//Update repayment date to when import occurred
+			Timestamp importDate = loanApplication.getTimestamp("createdStamp");
+			Calendar importCal = Calendar.getInstance();
+			importCal.setTimeInMillis(importDate.getTime());
+			
+			Calendar calRepayment = Calendar.getInstance();
+			calRepayment.setTimeInMillis(repaymentDate.getTime());
+			calRepayment.set(Calendar.YEAR, importCal.get(Calendar.YEAR));
+			calRepayment.set(Calendar.MONTH, importCal.get(Calendar.MONTH));
+			//Date repaymentDateDate = calR
+			
+			repaymentDate = new Timestamp(calRepayment.getTimeInMillis());
+			log.info("NNNNNNNNNN New repayment start date ::::: "+repaymentDate);
+		}
+		
+		Timestamp currentDate = new Timestamp(Calendar.getInstance().getTimeInMillis());
+		
+		//Get Insurance Rate
+		BigDecimal bdInsuranceRate = AmortizationServices.getInsuranceRate(loanApplication);
+		BigDecimal bdInsuranceAmount;
+
+		while ((repaymentDate.compareTo(currentDate) <= 0) && (iAmortizationCount < iRepaymentPeriod)) {
+			iAmortizationCount++;
+
+			if (deductionType.equals(AmortizationServices.REDUCING_BALANCE)){
+			bdRepaymentInterestAmt = bdPreviousBalance
+					.multiply(bdInterestRatePM);
+			} else{
+				bdRepaymentInterestAmt = dbLoanAmt
+						.multiply(bdInterestRatePM);
+			}
+			
+			dbRepaymentPrincipalAmt = paymentAmount
+					.subtract(bdRepaymentInterestAmt);
+			
+			bdTotalExpectedInterestAmount = bdTotalExpectedInterestAmount.add(bdRepaymentInterestAmt);
+			
+			
+				bdPreviousBalance = bdPreviousBalance
+					.subtract(dbRepaymentPrincipalAmt);
+			
+			//Insurance Amount = insuranceRate times balance divide by 100
+			bdInsuranceAmount = bdInsuranceRate.multiply(bdPreviousBalance.setScale(6, RoundingMode.HALF_UP)).divide(new BigDecimal(100), 6, RoundingMode.HALF_UP);
+			//loanApplicationId = loanApplicationId.replaceAll(",", "");
+
+
+			repaymentDate = AmortizationServices.calculateNextPaymentDate(repaymentDate);
+		}
+		
+		if (loanApplication.getBigDecimal("interestDue") != null)
+		{
+			bdTotalExpectedInterestAmount = bdTotalExpectedInterestAmount.add(loanApplication.getBigDecimal("interestDue"));
+		}
+		return bdTotalExpectedInterestAmount;
+	}
+	
+	/****
+	 * @author Japheth Odonya  @when Jul 9, 2015 10:58:26 PM
+	 * Total Insurance Expected
+	 * 
+	 * */
+	private static BigDecimal getTotalExpectedInsuranceAmountByLoanApplicationId(
+			Long loanApplicationId) {
+		BigDecimal bdTotalExpectedInsuranceAmount = BigDecimal.ZERO;
+		
+		BigDecimal bdTotalRepaidLoan = LoanServices.getLoansRepaidByLoanApplicationId(loanApplicationId);
+		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
+		BigDecimal dbLoanAmt = loanApplication.getBigDecimal("loanAmt");
+				//.subtract(bdTotalRepaidLoan);
+		BigDecimal bdInterestRatePM = loanApplication.getBigDecimal(
+				"interestRatePM").divide(new BigDecimal(ONEHUNDRED));
+		//openingRepaymentPeriod
+		int iRepaymentPeriod;
+		//if (loanApplication.getLong("openingRepaymentPeriod") != null){
+		//	iRepaymentPeriod = loanApplication.getLong("openingRepaymentPeriod").intValue();
+		//} else{
+		iRepaymentPeriod = loanApplication.getLong("repaymentPeriod").intValue();
+		//}
+			
+		 
+		BigDecimal dbRepaymentPrincipalAmt, bdRepaymentInterestAmt;
+		BigDecimal paymentAmount;
+
+		/***
+		 * Get Loan Product or Loan Type
+		 * */
+		GenericValue loanProduct = null;
+		String loanProductId = loanApplication.getString("loanProductId");
+		loanProductId = loanProductId.replaceAll(",", "");
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		try {
+			loanProduct = delegator.findOne("LoanProduct",
+					UtilMisc.toMap("loanProductId", Long.valueOf(loanProductId)), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		// Determine the Deduction Type
+		String deductionType = null;
+		deductionType = loanProduct.getString("deductionType");
+
+		if (deductionType.equals(AmortizationServices.REDUCING_BALANCE)) {
+			paymentAmount = AmortizationServices.calculateReducingBalancePaymentAmount(dbLoanAmt,
+					bdInterestRatePM, iRepaymentPeriod);
+		} else {
+			paymentAmount = AmortizationServices.calculateFlatRatePaymentAmount(dbLoanAmt,
+					bdInterestRatePM, iRepaymentPeriod);
+		}
+		// This value will be changing as we go along
+		BigDecimal bdPreviousBalance = dbLoanAmt;
+
+		int iAmortizationCount = 0;
+
+		Timestamp repaymentDate = null;
+		repaymentDate = loanApplication.getTimestamp("repaymentStartDate");
+		Timestamp currentDate = new Timestamp(Calendar.getInstance().getTimeInMillis());
+		
+		log.info("OOOOOOOO Old repayment start date ::::: "+repaymentDate);
+		
+		if (loanApplication.getBigDecimal("insuranceDue") != null)
+		{
+			//Update repayment date to when import occurred
+			Timestamp importDate = loanApplication.getTimestamp("createdStamp");
+			Calendar importCal = Calendar.getInstance();
+			importCal.setTimeInMillis(importDate.getTime());
+			
+			Calendar calRepayment = Calendar.getInstance();
+			calRepayment.setTimeInMillis(repaymentDate.getTime());
+			calRepayment.set(Calendar.YEAR, importCal.get(Calendar.YEAR));
+			calRepayment.set(Calendar.MONTH, importCal.get(Calendar.MONTH));
+			//Date repaymentDateDate = calR
+			
+			repaymentDate = new Timestamp(calRepayment.getTimeInMillis());
+			log.info("NNNNNNNNNN New repayment start date ::::: "+repaymentDate);
+		}
+		//repaymentDate.se
+		
+		//Get Insurance Rate
+		BigDecimal bdInsuranceRate = AmortizationServices.getInsuranceRate(loanApplication);
+		BigDecimal bdInsuranceAmount;
+
+		while ((repaymentDate.compareTo(currentDate) <= 0) && (iAmortizationCount < iRepaymentPeriod)) {
+			iAmortizationCount++;
+
+			if (deductionType.equals(AmortizationServices.REDUCING_BALANCE)){
+			bdRepaymentInterestAmt = bdPreviousBalance
+					.multiply(bdInterestRatePM);
+			} else{
+				bdRepaymentInterestAmt = dbLoanAmt
+						.multiply(bdInterestRatePM);
+			}
+			
+			dbRepaymentPrincipalAmt = paymentAmount
+					.subtract(bdRepaymentInterestAmt);
+			
+			
+				bdPreviousBalance = bdPreviousBalance
+					.subtract(dbRepaymentPrincipalAmt);
+			
+			//Insurance Amount = insuranceRate times balance divide by 100
+			bdInsuranceAmount = bdInsuranceRate.multiply(bdPreviousBalance.setScale(6, RoundingMode.HALF_UP)).divide(new BigDecimal(100), 6, RoundingMode.HALF_UP);
+			//loanApplicationId = loanApplicationId.replaceAll(",", "");
+			bdTotalExpectedInsuranceAmount = bdTotalExpectedInsuranceAmount.add(bdInsuranceAmount);
+
+			repaymentDate = AmortizationServices.calculateNextPaymentDate(repaymentDate);
+		}
+		
+		if (loanApplication.getBigDecimal("insuranceDue") != null)
+		{
+			bdTotalExpectedInsuranceAmount = bdTotalExpectedInsuranceAmount.add(bdTotalExpectedInsuranceAmount);
+		}
+		return bdTotalExpectedInsuranceAmount;
 	}
 
 }
