@@ -125,6 +125,22 @@ under the License.
         <call-service service-name="updateBudgetPlanHeader" in-map-name="setStatus"/>
     </simple-method>
     <!-- update an existing Budget Plan header Record -->
+    <simple-method method-name="harmonizeBudget" short-description="Update an existing Budget Plan Justification">
+        <entity-one entity-name="BudgetPlanItem" value-field="lookedUpValue"/>
+        <entity-one entity-name="BudgetPlan" value-field="budgetPlan"/>
+        <log message="LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL ${lookedUpValue}" level="info" />
+        <log message="BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB ${budgetPlan}" level="info" />
+        <entity-one entity-name="CustomTimePeriod" value-field="customTimePeriod" auto-field-map="true">
+            <field-map field-name="customTimePeriodId" from-field="budgetPlan.customTimePeriodId"/>
+        </entity-one>
+        <log message="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC ${customTimePeriod}" level="info" />
+        <set field="setStatus.budgetPlanId" from-field="lookedUpValue.budgetPlanId"/>
+        <set field="setStatus.BudgetPlanStatusId" value="SUB_BRD"/>
+        <call-service service-name="updateBudgetPlanHeader" in-map-name="setStatus"/>
+        <call-class-method class-name="org.ofbiz.accounting.budget.BudgetWorker" method-name="getBudgetPlanItemsForCustomPeriod" >
+            <field field="customTimePeriod" type="GenericValue"/>
+        </call-class-method>
+    </simple-method>
     <simple-method method-name="submitBoard" short-description="Update an existing Budget Plan Justification">
         <entity-one entity-name="BudgetPlanItem" value-field="lookedUpValue"/>
         <!-- <set-nonpk-fields map="parameters" value-field="lookedUpValue"/> -->
@@ -141,16 +157,13 @@ under the License.
         <set field="setStatus.BudgetPlanStatusId" value="APR"/>
         <call-service service-name="updateBudgetPlanHeader" in-map-name="setStatus"/>
 
-        <!--
-/applications/accounting/src/org/ofbiz/accounting/budget/BudgetWorker.java
-            Call Java Method here to populate the old Budget
-            pass budgetplanId
--->
         <call-class-method class-name="org.ofbiz.accounting.budget.BudgetWorker" method-name="pushBudgetPlanToBudget" ret-field="sucess">
             <field field="budgetPlan" type="GenericValue"/>
         </call-class-method>
 
-
+<!--         <call-class-method class-name="org.ofbiz.accounting.budget.BudgetWorker" method-name="pushBudgetPlanToBudget" ret-field="sucess">
+            <field field="budgetPlan" type="GenericValue"/>
+        </call-class-method> -->
 
     </simple-method>
     <!-- update an existing Budget Plan header Record -->
@@ -175,10 +188,16 @@ under the License.
     <simple-method method-name="createBudget" short-description="Create an Budget">
           <!-- create new entity and create all the fields -->
         <make-value value-field="newEntity" entity-name="Budget"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
 
+        <if-empty field="newEntity.budgetId">
+            <sequenced-id sequence-name="Budget" field="budgetId"/>
+            <to-string field="budgetId"/>
+            <set from-field="budgetId" field="newEntity.budgetId"/>
+        </if-empty>
         <!-- create a non existing ID if not supplied -->
-        <sequenced-id sequence-name="Budget" field="newEntity.budgetId"/>
+        <!-- <sequenced-id sequence-name="Budget" field="newEntity.budgetId"/> -->
 
         <!-- finally create the record (should not exist already)-->
         <create-value value-field="newEntity"/>
