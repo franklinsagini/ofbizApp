@@ -9,6 +9,6 @@ context.budget = budget
 List allBudgetItems = allBudgetItems = BudgetWorker.getBudgetItems(budget)
 List budgetItems = delegator.findList('GlAccountAndBudgetItemSums', null, null, ['accountCode'], null, false)
 
-context.budgetItems = budgetItems
-context.allBudgetItems = allBudgetItems
+context.budgetItems = allBudgetItems
+
 
