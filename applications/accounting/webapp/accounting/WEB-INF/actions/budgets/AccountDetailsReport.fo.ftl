@@ -27,7 +27,7 @@ under the License.
         </fo:block>
         <fo:block><fo:leader/></fo:block>
         <fo:block text-decoration="underline" font-size="11pt" text-align="center"  font-weight="bold" >
-            ACCOUNT SUMMARY REPORT
+            BUDGET JUSTIFICATIONS REPORT
         </fo:block>
 
         <fo:block><fo:leader/></fo:block>
@@ -38,7 +38,7 @@ under the License.
                 <#assign account = delegator.findOne("GlAccount", {"glAccountId" : item.glAccountId}, false)/>
             </#if>
             <fo:block text-decoration="underline" font-size="11pt"  font-weight="bold" >
-                ${account.accountCode?if_exists} ${account.accountName?upper_case}
+                ${account.accountCode?if_exists} - ${account.accountName?upper_case}
             </fo:block>
             <fo:block space-after.optimum="10pt" font-size="11pt"  margin-right="0.4in">
                 <fo:table table-layout="fixed" width="100%" font-size="9pt" margin-left="0.2in" >
