@@ -316,7 +316,7 @@ under the License.
                                 </fo:block>
                             </fo:table-cell>
                     </fo:table-row>
-                    </#list>
+                    
                     
                      <fo:table-row>
                     <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
@@ -369,7 +369,7 @@ under the License.
                 </fo:table-body>
             </fo:table>
         </fo:block>
-        
+        </#list>
     <#else>
         <fo:block text-align="center">NO DATA FOUND</fo:block>
     </#if>
