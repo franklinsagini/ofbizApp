@@ -1,7 +1,9 @@
 package org.ofbiz.humanres;
 
 import java.util.List;
+import java.util.Map;
 
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
@@ -24,6 +26,7 @@ public class HumanResourceSetup {
 	 * 
 	 * org.ofbiz.humanres.HumanResourceSetup.payGradeExists()
 	 * */
+	@SuppressWarnings("deprecation")
 	public static Boolean payGradeExists(String name) {
 
 		log.info("GGGGGGGGGGGGGGGGG The Grade Type is " + name);
@@ -32,10 +35,10 @@ public class HumanResourceSetup {
 
 		List<GenericValue> listPayGradesELI = null;
 
+		Map existGrade=UtilMisc.toMap("payGradeName", name);
+		
 		try {
-			listPayGradesELI = delegator.findList("PayGrade",
-					EntityCondition.makeCondition("payGradeName", name), null,
-					null, null, false);
+			listPayGradesELI = delegator.findByAnd("PayGrade",existGrade);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
