@@ -2633,16 +2633,20 @@ public class RemittanceServices {
 				.getString("loanNo"));
 		Long partyId = LoanUtilities.getEntityValue("LoanApplication",
 				"loanApplicationId", loanApplicationId).getLong("partyId");
-		BigDecimal totalInterestDue = LoanRepayments.getTotalInsuranceDue(
-				partyId.toString(), loanApplicationId.toString());
+		BigDecimal totalInterestDue = LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString());
+				
+				//getTotalInsuranceDue(
+				//partyId.toString(), loanApplicationId.toString());
 
 		// getLoanInterestOrInsuranceDue(
 		// expectedPaymentReceived.getString("loanNo"),
 		// expectedPaymentReceived.getString("month"),
 		// remittanceCodeInterest);
 
-		BigDecimal totalInsuranceDue = LoanRepayments.getTotalInsuranceDue(
-				partyId.toString(), loanApplicationId.toString());
+		BigDecimal totalInsuranceDue = LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString());
+				
+				//.getTotalInsuranceDue(
+				//partyId.toString(), loanApplicationId.toString());
 
 		// getLoanInterestOrInsuranceDue(
 		// expectedPaymentReceived.getString("loanNo"),

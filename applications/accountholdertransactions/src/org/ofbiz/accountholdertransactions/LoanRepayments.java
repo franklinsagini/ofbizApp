@@ -1228,33 +1228,41 @@ public class LoanRepayments {
 		//EntityCondition.makeCondition(
 		//"isPaid", EntityOperator.EQUALS, "N"), 
 		
-		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		List<GenericValue> loanExpectationELI = new ArrayList<GenericValue>();
-		loanApplicationId = loanApplicationId.replaceAll(",", "");
-		EntityConditionList<EntityExpr> loanExpectationConditions = EntityCondition
-				.makeCondition(UtilMisc.toList(EntityCondition
-						.makeCondition("repaymentName", EntityOperator.EQUALS,
-								"INTEREST"), EntityCondition.makeCondition(
-						"loanApplicationId", EntityOperator.EQUALS,
-						Long.valueOf(loanApplicationId))
-
-				), EntityOperator.AND);
-
-		try {
-			loanExpectationELI = delegator.findList("LoanExpectation",
-					loanExpectationConditions, null, null, null, false);
-
-		} catch (GenericEntityException e2) {
-			e2.printStackTrace();
-		}
-
-		for (GenericValue loanExpectation : loanExpectationELI) {
-			totalInterestDue = totalInterestDue.add(loanExpectation
-					.getBigDecimal("amountAccrued"));
-		}
-		
-		totalInterestDue = totalInterestDue.subtract(getTotalInterestPaid(loanApplicationId));
-
+	Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+//		List<GenericValue> loanExpectationELI = new ArrayList<GenericValue>();
+//		loanApplicationId = loanApplicationId.replaceAll(",", "");
+//		EntityConditionList<EntityExpr> loanExpectationConditions = EntityCondition
+//				.makeCondition(UtilMisc.toList(EntityCondition
+//						.makeCondition("repaymentName", EntityOperator.EQUALS,
+//								"INTEREST"), EntityCondition.makeCondition(
+//						"loanApplicationId", EntityOperator.EQUALS,
+//						Long.valueOf(loanApplicationId))
+//
+//				), EntityOperator.AND);
+//
+//		try {
+//			loanExpectationELI = delegator.findList("LoanExpectation",
+//					loanExpectationConditions, null, null, null, false);
+//
+//		} catch (GenericEntityException e2) {
+//			e2.printStackTrace();
+//		}
+//
+//		for (GenericValue loanExpectation : loanExpectationELI) {
+//			totalInterestDue = totalInterestDue.add(loanExpectation
+//					.getBigDecimal("amountAccrued"));
+//		}
+//		
+//		totalInterestDue = totalInterestDue.subtract(getTotalInterestPaid(loanApplicationId));
+	
+		//Get total interest expected to have been paid by now
+		BigDecimal bdTotalInterestExpectedToDate = getTotalExpectedInterestAmountByLoanApplicationId(Long.valueOf(loanApplicationId));
+	
+		//Get total interest paid to date
+		BigDecimal bdTotalInterestPaidToDate = getTotalInterestPaid(loanApplicationId);
+	
+		//Get the difference
+		totalInterestDue = bdTotalInterestExpectedToDate.subtract(bdTotalInterestPaidToDate);
 		return totalInterestDue;
 	}
 
@@ -1265,32 +1273,40 @@ public class LoanRepayments {
 	public static BigDecimal getTotalInsurancByLoanDue(String loanApplicationId) {
 		BigDecimal totalInsuranceDue = BigDecimal.ZERO;
 
-		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		List<GenericValue> loanExpectationELI = new ArrayList<GenericValue>();
-		loanApplicationId = loanApplicationId.replaceAll(",", "");
-		EntityConditionList<EntityExpr> loanExpectationConditions = EntityCondition
-				.makeCondition(UtilMisc.toList(EntityCondition
-						.makeCondition("repaymentName", EntityOperator.EQUALS,
-								"INSURANCE"), EntityCondition.makeCondition(
-						"loanApplicationId", EntityOperator.EQUALS,
-						Long.valueOf(loanApplicationId))
+//		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+//		List<GenericValue> loanExpectationELI = new ArrayList<GenericValue>();
+//		loanApplicationId = loanApplicationId.replaceAll(",", "");
+//		EntityConditionList<EntityExpr> loanExpectationConditions = EntityCondition
+//				.makeCondition(UtilMisc.toList(EntityCondition
+//						.makeCondition("repaymentName", EntityOperator.EQUALS,
+//								"INSURANCE"), EntityCondition.makeCondition(
+//						"loanApplicationId", EntityOperator.EQUALS,
+//						Long.valueOf(loanApplicationId))
+//
+//				), EntityOperator.AND);
+//
+//		try {
+//			loanExpectationELI = delegator.findList("LoanExpectation",
+//					loanExpectationConditions, null, null, null, false);
+//
+//		} catch (GenericEntityException e2) {
+//			e2.printStackTrace();
+//		}
+//
+//		for (GenericValue loanExpectation : loanExpectationELI) {
+//			totalInsuranceDue = totalInsuranceDue.add(loanExpectation
+//					.getBigDecimal("amountAccrued"));
+//		}
+		
+		//Total Insurance Expected to date
+		BigDecimal bdTotalInsuranceExpectedToDate = getTotalExpectedInsuranceAmountByLoanApplicationId(Long.valueOf(loanApplicationId));
+		//Total Insurance Paid to Date
+		BigDecimal bdTotalInsurancePaidToDate = getTotalInsurancePaid(loanApplicationId);
+		//Get the difference
 
-				), EntityOperator.AND);
-
-		try {
-			loanExpectationELI = delegator.findList("LoanExpectation",
-					loanExpectationConditions, null, null, null, false);
-
-		} catch (GenericEntityException e2) {
-			e2.printStackTrace();
-		}
-
-		for (GenericValue loanExpectation : loanExpectationELI) {
-			totalInsuranceDue = totalInsuranceDue.add(loanExpectation
-					.getBigDecimal("amountAccrued"));
-		}
-
-		totalInsuranceDue = totalInsuranceDue.subtract(getTotalInsurancePaid(loanApplicationId));
+		//totalInsuranceDue = totalInsuranceDue.subtract(getTotalInsurancePaid(loanApplicationId));
+		totalInsuranceDue = bdTotalInsuranceExpectedToDate.subtract(bdTotalInsurancePaidToDate);
+		
 		return totalInsuranceDue;
 	}
 
