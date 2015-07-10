@@ -30,6 +30,8 @@ state = OrderListState.getInstance(request);
 state.update(request);
 context.state = state;
 
+System.out.println("FILLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLTER DATE: "+filterDate);
+
 // check permission for each order type
 hasPermission = false;
 if (security.hasEntityPermission("ORDERMGR", "_VIEW", session)) {

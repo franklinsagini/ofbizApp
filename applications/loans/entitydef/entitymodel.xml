@@ -396,8 +396,11 @@ under the License.
 		<field name="loanDuration" type="numeric" enable-audit-log="true"></field>
 		<field name="loanStartDate" type="date-time" enable-audit-log="true"></field>
 		<field name="outstandingBalance" type="fixed-point" enable-audit-log="true"></field>
+		
 		<field name="principalDue" type="fixed-point" enable-audit-log="true"></field>
 		<field name="interestDue" type="fixed-point" enable-audit-log="true"></field>
+		<field name="insuranceDue" type="fixed-point" enable-audit-log="true"></field>
+		
 		<field name="panaltyInterestDue" type="fixed-point" enable-audit-log="true"></field>
 		<field name="monthlyRepayment" type="fixed-point" enable-audit-log="true"></field>
 		<field name="nextInstallmentDate" type="date-time" enable-audit-log="true"></field>
@@ -842,6 +845,8 @@ under the License.
 		
 		<field name="loanAmortizationId" type="id-vlong-int"   enable-audit-log="true"></field>
 		
+		<field name="acctgTransId" type="id"   enable-audit-log="true"></field>
+		
 		<prim-key field="loanExpectationId"/>
 		<relation type="one" fk-name="LOANEXPECTATION_LOANAPPLICATIONFK" rel-entity-name="LoanApplication">
         	<key-map field-name="loanApplicationId"/>
@@ -1024,6 +1029,23 @@ under the License.
 		<field name="changedBy" type="name"   enable-audit-log="true"></field>
 		
 		<prim-key field="loanGuarantorChangeId"/>
+		<relation type="one" fk-name="LoanGuarantor_LoanApplication" rel-entity-name="LoanApplication">
+        	<key-map field-name="loanApplicationId"/>
+      	</relation>
+	</entity>
+	
+	<!-- LoanGuarantor Removed -->
+	<entity entity-name="LoanGuarantorRemoved" package-name="org.ofbiz.loans"
+		title="LoanGuarantorRemoved Entity">
+		<field name="loanGuarantorRemovedId" type="id-vlong-int"   enable-audit-log="true"></field>
+		<field name="loanApplicationId" type="id-vlong-int"   enable-audit-log="true"></field>
+		<field name="isActive" type="indicator"   enable-audit-log="true"></field>
+		<field name="createdBy" type="name"   enable-audit-log="true"></field>
+		<field name="updatedBy" type="name"   enable-audit-log="true"></field>
+		
+		<field name="removedGuarantorId" type="id-vlong-int"   enable-audit-log="true"></field>
+				
+		<prim-key field="loanGuarantorRemovedId"/>
 		<relation type="one" fk-name="LoanGuarantor_LoanApplication" rel-entity-name="LoanApplication">
         	<key-map field-name="loanApplicationId"/>
       	</relation>

@@ -259,11 +259,14 @@
 	<request-map uri="createChequeWithdrawal">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createChequeWithdrawal" />
-		<response name="success" type="request-redirect" value="chequeWithdrawal">
-			<redirect-parameter name="partyId" />
+		<response name="success" type="request-redirect" value="transactionPrintOutChequeWithdrawal">
+			<redirect-parameter name="accountTransactionParentId" />
 		</response>
 		<response name="error" type="view" value="chequeWithdrawal" />
 	</request-map>
+	
+	
+		
 
 	<request-map uri="updateChequeWithdrawal">
 		<security https="true" auth="true" />
@@ -285,8 +288,8 @@
 	<request-map uri="createChequeDeposit">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createChequeDeposit" />
-		<response name="success" type="request-redirect" value="chequeDeposit">
-			<redirect-parameter name="partyId" />
+		<response name="success" type="request-redirect" value="transactionPrintOut" save-last-view="true">
+			<redirect-parameter name="accountTransactionParentId" />
 		</response>
 		<response name="error" type="view" value="chequeDeposit" />
 	</request-map>
@@ -842,6 +845,16 @@
 		<security auth="true" https="true" />
 		
 		<response name="success" type="view" value="transactionPrintOutDirectDebit">
+			<redirect-parameter name="accountTransactionParentId"/>
+		</response>
+		
+	</request-map>
+	
+	<!-- transactionPrintOutChequeWithdrawal -->
+	<request-map uri="transactionPrintOutChequeWithdrawal">
+		<security auth="true" https="true" />
+		
+		<response name="success" type="view" value="transactionPrintOut">
 			<redirect-parameter name="accountTransactionParentId"/>
 		</response>
 		

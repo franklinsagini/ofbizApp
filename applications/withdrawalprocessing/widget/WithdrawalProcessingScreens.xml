@@ -179,6 +179,10 @@
                 <!-- set field="partyId" value="${memberWithrawal.partyId}" type="PlainString" / -->
                 <set field="partyId" value="${bsh:org.ofbiz.withdrawalprocessing.WithdrawalProcessingServices.getPartIdGivenMemberWithdrawalId(memberWithdrawalId);}" type="PlainString" />
                 
+                <set field="memberId" from-field="partyId" type="Long"/>
+                <entity-one value-field="member" entity-name="Member">
+                	<field-map field-name="partyId" from-field="memberId"/>
+                </entity-one>
                 <!-- set field="collateralsAvailable" value="${bsh:org.ofbiz.loans.LoanServices.loanHasCollateral(loanApplicationId);}" type="String"   / -->
                 <!-- set field="shareCapitalAmount" value="${bsh:org.ofbiz.withdrawalprocessing.WithdrawalProcessingServices.getShareCapitalBalance(partyId);}" / -->
                 <!-- set field="memberDepositsAmount" value="${bsh:org.ofbiz.withdrawalprocessing.WithdrawalProcessingServices.getMemberDepositBalance(partyId);}" / -->
@@ -190,7 +194,10 @@
 				<set field="totalGuaranteedAmount" value="${bsh:org.ofbiz.withdrawalprocessing.WithdrawalProcessingServices.getTotalGuaranteedAmount(partyId);}"/>
 				<set field="totalLoansAmount" value="${bsh:org.ofbiz.withdrawalprocessing.WithdrawalProcessingServices.getLoanTotalLoanBalance(partyId);}"/>
 				<set field="shareCapitalLimit" value="${bsh:org.ofbiz.withdrawalprocessing.WithdrawalProcessingServices.getShareCapitalMinimum(partyId);}"/>
-	
+				
+				<set field="totalAccruedInterest" value="${bsh:org.ofbiz.withdrawalprocessing.WithdrawalProcessingServices.getTotalAccruedInterest(partyId);}"/>
+				<set field="totalAccruedInsurance" value="${bsh:org.ofbiz.withdrawalprocessing.WithdrawalProcessingServices.getTotalAccruedInsurance(partyId);}"/>
+				<set field="grandTotal" value="${bsh:org.ofbiz.withdrawalprocessing.WithdrawalProcessingServices.getGrandTotal(partyId);}" type="BigDecimal"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -200,6 +207,13 @@
                         <section name="obligations">
                         	<widgets>
                         		<screenlet title="Member Obligations">
+                        			<container>
+                                    	<label style="h3">Member Names :  ${member.firstName} ${member.middleName} ${member.lastName}</label>
+                                    	<label style="h3">Payroll Number :  ${member.payrollNumber}</label>
+                                    	<label style="h3">Member Number :  ${member.memberNumber}</label>
+                                    	
+                                    	<label style="h3">Total Member Deposits (Non Withdrawable) : KShs. ${memberDepositsAmount}</label>
+                               	 	</container>
                         		</screenlet>
                         	
                         		<screenlet title="Loans">
@@ -208,7 +222,20 @@
                         		<screenlet title="Total Loan Balance">
                         			<container>
                                     <label style="h3">Total Loan Balance :  ${totalLoansAmount}</label>
+                                    <label style="h3">Total Accrued Interest :  ${totalAccruedInterest}</label>
+                                    <label style="h3">Total Accrued Insurance :  ${totalAccruedInsurance}</label>
+                                    
+                                    <label style="h3">Grand Total (Principal + Interest + Insurance) :  ${grandTotal}</label>
                                 </container>
+                                
+                                 <container style="button-bar">
+												<link target="offsetDisbursedLoansWithMemberDeposits"
+													text="Offset Disbursed Loans with Member Deposit (Clears Loan if enough)" style="buttontext">
+													<parameter param-name="partyId" from-field="memberId" />
+													<parameter param-name="memberWithdrawalId" from-field="memberWithdrawalId"/>
+													<image url-mode="raw" src="${iconsLocation}/add.png" />
+												</link>
+											</container>
                         		</screenlet>
     
                         		
@@ -236,6 +263,15 @@
                         			<container>
                                     <label style="h3">Total Share Capital :  ${shareCapitalAmount}</label>
                                 </container>
+                                
+                                <container style="button-bar">
+												<link target="updateShareCapitalToLimit"
+													text="Update Share Capital to Limit" style="buttontext">
+													<parameter param-name="partyId" from-field="memberId" />
+													<parameter param-name="memberWithdrawalId" from-field="memberWithdrawalId"/>
+													<image url-mode="raw" src="${iconsLocation}/add.png" />
+												</link>
+											</container>
                         		</screenlet>
                         		
                         		<screenlet title="Member Deposits">

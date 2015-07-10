@@ -43,7 +43,7 @@ http://www.apache.org/licenses/LICENSE-2.0
         <menu-item name="InterBranchSettlement" title="${uiLabelMap.InterBranchSettlement}">
             <link target="FundingTypes"/>
         </menu-item>
-        <menu-item name="ListBudgets" title="${uiLabelMap.AccountingBudgets}"><link target="ListBudgets"/></menu-item>
+        <menu-item name="ListBudgets" title="${uiLabelMap.AccountingBudgets}"><link target="BudgetActivity"/></menu-item>
 
         <menu-item name="companies" title="${uiLabelMap.AccountingOrgGlSettings}"><link target="ListCompanies"/></menu-item>
         <menu-item name="GlobalGLSettings" title="${uiLabelMap.AccountingGlobalGLSettings}"><link target="globalGLSettings"/></menu-item>
@@ -63,12 +63,12 @@ http://www.apache.org/licenses/LICENSE-2.0
         <menu-item name="fundingType" title="Accounts Setup">
             <link target="FundingTypes"/>
         </menu-item>
-        <menu-item name="endDayTrans" title="Transactions">
+        <menu-item name="endDayTrans" title="Generate Transactions">
             <link target="endDayTrans"/>
         </menu-item>
-        <menu-item name="interBranchReports" title="Reports">
+        <!-- <menu-item name="interBranchReports" title="Reports">
             <link target="interBranchReports"/>
-        </menu-item>
+        </menu-item> -->
     </menu>
 
     <menu name="ImprestTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
@@ -779,6 +779,56 @@ http://www.apache.org/licenses/LICENSE-2.0
         </menu-item> -->
     </menu>
 
+    <menu name="BudgetMainTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="EditBudget" selected-menuitem-context-field-name="tabButtonBudgetItemTop">
+        <menu-item name="BudgetSetup" title="Budget Setup">
+            <link target="BudgetActivity"/>
+        </menu-item>
+        <menu-item name="BudgetPlan" title="Budget Plan">
+            <link target="BudgetPlanHeader"/>
+        </menu-item>
+        <menu-item name="HarmonizedBudget" title="Harmonized Budget">
+            <link target="ListBudgets"/>
+        </menu-item>
+    </menu>
+
+    <menu name="BudgetSetupTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="EditBudget">
+        <menu-item name="ListBudgets" title="Find Budget Activity">
+            <link target="BudgetActivity"/>
+        </menu-item>
+        <menu-item name="BudgetJustifications" title="Find Budget Justification">
+            <link target="BudgetJustification"/>
+        </menu-item>
+    </menu>
+
+    <menu name="BudgetPlanTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="EditBudget">
+        <menu-item name="BudgetPlanHeader" title="Find Budget Activity">
+            <link target="BudgetPlanHeader"/>
+        </menu-item>
+    </menu>
+
+
+    <menu name="BudgetPlanSubTabBar" menu-container-style="button-bar button-style-2" default-selected-style="selected">
+        <menu-item name="returnToBranch" title="Return To Branch" widget-style="buttontext create">
+            <condition>
+                <and>
+                    <not>
+                        <if-empty field="budgetPlanId"/>
+                    </not>
+                    <or>
+                        <if-compare field="BudgetPlanStatusId" operator="equals" value="SUB_HOF"/>
+                    </or>
+                </and>
+            </condition>
+            <link target="returnToBranch">
+                <parameter param-name="budgetPlanId"/>
+                <parameter param-name="budgetPlanItem"/>
+            </link>
+        </menu-item>
+    </menu>
+
     <menu name="BudgetTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="EditBudget">
         <menu-item name="ListBudgets" title="${uiLabelMap.AccountingBudgetFind}">
@@ -820,7 +870,9 @@ http://www.apache.org/licenses/LICENSE-2.0
         <menu-item name="BudgetRoles" title="${uiLabelMap.AccountingBudgetRoles}">
             <condition>
                 <and>
-                    <not><if-empty field="budgetId"/></not>
+                    <not>
+                        <if-empty field="budgetId"/>
+                    </not>
                     <or>
                         <if-compare field="statusId" operator="equals" value="BG_CREATED"/>
                         <if-compare field="statusId" operator="equals" value="BG_REVIEWED"/>
@@ -839,6 +891,17 @@ http://www.apache.org/licenses/LICENSE-2.0
                 </and>
             </condition>
             <link target="BudgetReviews">
+                <parameter param-name="budgetId"/>
+            </link>
+        </menu-item>
+        <menu-item name="BudgetReports" title="Budget Reports">
+            <condition>
+                <and>
+                    <not><if-empty field="budgetId"/></not>
+                    <if-compare field="statusId" operator="not-equals" value="BG_REJECTED"/>
+                </and>
+            </condition>
+            <link target="BudgetReports">
                 <parameter param-name="budgetId"/>
             </link>
         </menu-item>

@@ -1451,13 +1451,196 @@ under the License.
     </request-map>
 
     <!-- =============== Budget mapping =================-->
-    <request-map uri="ListBudgets"><security https="true" auth="true"/><response name="success" type="view" value="ListBudgets"/></request-map>
-    <request-map uri="BudgetSearchResults"><security https="true" auth="false"/><response name="success" type="view" value="BudgetSearchResults"/></request-map>
-    <request-map uri="EditBudget"><security https="true" auth="true"/><response name="success" type="view" value="EditBudget"/></request-map>
-    <request-map uri="BudgetOverview"><security https="true" auth="true"/><response name="success" type="view" value="BudgetOverview"/></request-map>
-    <request-map uri="EditBudgetItems"><security https="true" auth="true"/><response name="success" type="view" value="EditBudgetItems"/></request-map>
-    <request-map uri="BudgetRoles"><security https="true" auth="true"/><response name="success" type="view" value="BudgetRoles"/></request-map>
-    <request-map uri="BudgetReviews"><security https="true" auth="true"/><response name="success" type="view" value="BudgetReviews"/></request-map>
+    <request-map uri="BudgetActivity">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BudgetActivity"/>
+    </request-map>
+    <request-map uri="BudgetActivitySearchResults">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="BudgetActivitySearchResults"/>
+    </request-map>
+    <request-map uri="EditBudgetActivity">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditBudgetActivity"/>
+    </request-map>
+    <request-map uri="createBudgetActivity">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createBudgetActivity"/>
+        <response name="success" type="view" value="BudgetActivity"/>
+        <response name="error" type="view" value="BudgetActivity"/>
+    </request-map>
+    <request-map uri="updateBudgetActivity">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateBudgetActivity"/>
+        <response name="success" type="view" value="BudgetActivity"/>
+        <response name="error" type="view" value="BudgetActivity"/>
+    </request-map>
+    <request-map uri="BudgetJustificationSearchResults">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="BudgetJustificationSearchResults"/>
+    </request-map>
+    <request-map uri="BudgetJustification">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BudgetJustification"/>
+    </request-map>
+    <request-map uri="EditBudgetJustification">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditBudgetJustification"/>
+    </request-map>
+    <request-map uri="createBudgetJustification">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createBudgetJustification"/>
+        <response name="success" type="view" value="BudgetJustification"/>
+        <response name="error" type="view" value="BudgetJustification"/>
+    </request-map>
+    <request-map uri="updateBudgetJustification">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateBudgetJustification"/>
+        <response name="success" type="view" value="BudgetJustification"/>
+        <response name="error" type="view" value="BudgetJustification"/>
+    </request-map>
+    <request-map uri="BudgetPlanHeader">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BudgetPlanHeader"/>
+    </request-map>
+    <request-map uri="BudgetPlanHeaderSearchResults">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="BudgetPlanHeaderSearchResults"/>
+    </request-map>
+    <request-map uri="EditBudgetPlanHeader">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditBudgetPlanHeader"/>
+    </request-map>
+    <request-map uri="createBudgetPlanHeader">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createBudgetPlanHeader"/>
+        <response name="success" type="view" value="BudgetPlanHeader"/>
+        <response name="error" type="view" value="BudgetPlanHeader"/>
+    </request-map>
+    <request-map uri="updateBudgetPlanHeader">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateBudgetPlanHeader"/>
+        <response name="success" type="view" value="BudgetPlanHeader"/>
+        <response name="error" type="view" value="BudgetPlanHeader"/>
+    </request-map>
+    <request-map uri="createBudgetPlanJustification">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createBudgetPlanJustification"/>
+        <response name="success" type="request-redirect" value="EditBudgetPlanJustification">
+            <redirect-parameter name="budgetPlanId"/>
+        </response>
+        <response name="error" type="request-redirect" value="EditBudgetPlanJustification">
+            <redirect-parameter name="budgetPlanId"/>
+        </response>
+    </request-map>
+    <request-map uri="updateBudgetPlanJustification">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="updateBudgetPlanJustification"/>
+        <response name="success" type="request-redirect" value="EditBudgetPlanJustification">
+            <redirect-parameter name="budgetPlanId"/>
+        </response>
+        <response name="error" type="view" value="EditBudgetPlanJustification" />
+    </request-map>
+    <request-map uri="submitHOF">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="submitHOF"/>
+        <response name="success" type="request-redirect" value="EditBudgetPlanJustification">
+            <redirect-parameter name="budgetPlanId"/>
+        </response>
+        <response name="error" type="view" value="BudgetPlanHeader"/>
+    </request-map>
+    <request-map uri="harmonizeBudget">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="harmonizeBudget"/>
+        <response name="success" type="request-redirect" value="EditBudgetPlanJustification">
+            <redirect-parameter name="budgetPlanId"/>
+        </response>
+        <response name="error" type="view" value="BudgetPlanHeader"/>
+    </request-map>
+    <request-map uri="submitBoard">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="submitBoard"/>
+        <response name="success" type="request-redirect" value="EditBudgetPlanJustification">
+            <redirect-parameter name="budgetPlanId"/>
+        </response>
+        <response name="error" type="view" value="BudgetPlanHeader"/>
+    </request-map>
+    <request-map uri="NewHarmonized">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewHarmonizedBudget" />
+        <response name="error" type="view" value="NewHarmonizedBudget"/>
+    </request-map>
+    <request-map uri="generateHarmonizedBudget">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="generateHarmonizedBudget"/>
+        <response name="success" type="view" value="EditBudget" />
+        <response name="error" type="view" value="EditBudget"/>
+    </request-map>
+    <request-map uri="returnToBranch">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="returnToBranch"/>
+        <response name="success" type="request-redirect" value="EditBudgetPlanJustification">
+            <redirect-parameter name="budgetPlanId"/>
+        </response>
+        <response name="error" type="view" value="BudgetPlanHeader"/>
+    </request-map>
+    <request-map uri="deleteBudgetPlanJustification">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteBudgetPlanJustification"/>
+        <response name="success" type="request-redirect" value="EditBudgetPlanJustification">
+            <redirect-parameter name="budgetPlanId"/>
+        </response>
+        <response name="error" type="view" value="EditBudgetPlanJustification" />
+    </request-map>
+
+    <request-map uri="EditBudgetPlanJustification">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditBudgetPlanJustification"/>
+    </request-map>
+    <request-map uri="ListBudgets">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListBudgets"/>
+    </request-map>
+    <request-map uri="BudgetSearchResults">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="BudgetSearchResults"/>
+    </request-map>
+    <request-map uri="EditBudget">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditBudget"/>
+    </request-map>
+    <request-map uri="BudgetOverview">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BudgetOverview"/>
+    </request-map>
+    <request-map uri="EditBudgetItems">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditBudgetItems"/>
+    </request-map>
+    <request-map uri="BudgetRoles">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BudgetRoles"/>
+    </request-map>
+    <request-map uri="BudgetReviews">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BudgetReviews"/>
+    </request-map>
+    <request-map uri="BudgetReports">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BudgetReports"/>
+    </request-map>
+    <request-map uri="AccountSummaryReportPDF">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AccountSummaryReportPDF"/>
+    </request-map>
+    <request-map uri="AccountDetailsReportPDF">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AccountDetailsReportPDF"/>
+    </request-map>
+    <request-map uri="BudgetVarianceReportPDF">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BudgetVarianceReportPDF"/>
+    </request-map>
     <request-map uri="createBudget">
         <security https="true" auth="true"/>
         <event type="service" invoke="createBudget"/>
@@ -3282,13 +3465,29 @@ under the License.
     <view-map name="ListFixedAssetProducts" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssetProducts"/>
 
     <!-- Budget -->
-    <view-map name="ListBudgets" type="screen" page="component://accounting/widget/BudgetScreens.xml#ListBudgets"/>
+    <view-map name="BudgetActivity" type="screen" page="component://accounting/widget/BudgetScreens.xml#BudgetActivity"/>
+    <view-map name="BudgetActivitySearchResults" type="screen" page="component://accounting/widget/BudgetScreens.xml#BudgetActivitySearchResults"/>
+    <view-map name="BudgetJustificationSearchResults" type="screen" page="component://accounting/widget/BudgetScreens.xml#BudgetJustificationSearchResults"/>
+    <view-map name="BudgetJustification" type="screen" page="component://accounting/widget/BudgetScreens.xml#BudgetJustification"/>
+    <view-map name="BudgetPlanHeader" type="screen" page="component://accounting/widget/BudgetScreens.xml#BudgetPlanHeader"/>
+    <view-map name="BudgetPlanHeaderSearchResults" type="screen" page="component://accounting/widget/BudgetScreens.xml#BudgetPlanHeaderSearchResults"/>
+    <view-map name="ListBudgets" type="screen" page="component://accounting/widget/BudgetScreens.xml#GenerateHarmonized"/>
     <view-map name="BudgetSearchResults" type="screen" page="component://accounting/widget/BudgetScreens.xml#BudgetSearchResults"/>
-    <view-map name="EditBudget" type="screen" page="component://accounting/widget/BudgetScreens.xml#EditBudget"/>
+    <view-map name="EditBudgetActivity" type="screen" page="component://accounting/widget/BudgetScreens.xml#EditBudgetActivity"/>
+    <view-map name="EditBudgetJustification" type="screen" page="component://accounting/widget/BudgetScreens.xml#EditBudgetJustification"/>
+    <view-map name="EditBudgetPlanHeader" type="screen" page="component://accounting/widget/BudgetScreens.xml#EditBudgetPlanHeader"/>
+    <view-map name="EditBudgetPlanJustification" type="screen" page="component://accounting/widget/BudgetScreens.xml#EditBudgetPlanJustification"/>
+    <view-map name="NewHarmonizedBudget" type="screen" page="component://accounting/widget/BudgetScreens.xml#NewHarmonizedBudget"/>
+    <view-map name="NewHarmonized" type="screen" page="component://accounting/widget/BudgetScreens.xml#NewHarmonized"/>
     <view-map name="BudgetOverview" type="screen" page="component://accounting/widget/BudgetScreens.xml#BudgetOverview"/>
     <view-map name="EditBudgetItems" type="screen" page="component://accounting/widget/BudgetScreens.xml#EditBudgetItems"/>
+    <view-map name="EditBudget" type="screen" page="component://accounting/widget/BudgetScreens.xml#EditBudget"/>
     <view-map name="BudgetRoles" type="screen" page="component://accounting/widget/BudgetScreens.xml#BudgetRoles"/>
     <view-map name="BudgetReviews" type="screen" page="component://accounting/widget/BudgetScreens.xml#BudgetReviews"/>
+    <view-map name="BudgetReports" type="screen" page="component://accounting/widget/BudgetScreens.xml#BudgetReports"/>
+    <view-map name="AccountSummaryReportPDF" type="screenfop" content-type="application/pdf" encoding="none" page="component://accounting/widget/BudgetScreens.xml#AccountSummaryReportPDF"/>
+    <view-map name="AccountDetailsReportPDF" type="screenfop" content-type="application/pdf" encoding="none" page="component://accounting/widget/BudgetScreens.xml#AccountDetailsReportPDF"/>
+    <view-map name="BudgetVarianceReportPDF" type="screenfop" content-type="application/pdf" encoding="none" page="component://accounting/widget/BudgetScreens.xml#BudgetVarianceReportPDF"/>
 
     <!-- TO BE REMOVED
     <view-map name="addFixedAssetProduct" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#addFixedAssetProduct"/>

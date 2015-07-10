@@ -564,6 +564,32 @@ public class LoanUtilities {
 
 		return accountProduct;
 	}
+	
+	//getAccountProductGivenCodeId
+	public static Long getAccountProductIdGivenCodeId(String code) {
+
+		List<GenericValue> accountProductELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		EntityConditionList<EntityExpr> accountProductConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"code", EntityOperator.EQUALS, code)),
+						EntityOperator.AND);
+		try {
+			accountProductELI = delegator.findList("AccountProduct",
+					accountProductConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		GenericValue accountProduct = null;
+		for (GenericValue genericValue : accountProductELI) {
+			accountProduct = genericValue;
+		}
+		
+		if (accountProduct == null)
+			return null;
+
+		return accountProduct.getLong("accountProductId");
+	}
 
 	// org.ofbiz.accountholdertransactions.LoanUtilities.getRecommendedAmount(BigDecimal
 	// bdMaxLoanAmt, BigDecimal bdAppliedAmt)
@@ -877,7 +903,7 @@ public class LoanUtilities {
 						"loanStatusId", EntityOperator.EQUALS,
 						defaultedLoanStatusId),
 
-				EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,
+				EntityCondition.makeCondition("guarantorId", EntityOperator.EQUALS,
 						partyId)
 
 				), EntityOperator.AND);
@@ -885,7 +911,7 @@ public class LoanUtilities {
 		List<GenericValue> loanApplicationELI = new ArrayList<GenericValue>();
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
-			loanApplicationELI = delegator.findList("LoanApplication",
+			loanApplicationELI = delegator.findList("LoanGuarantorDisbursedLoan",
 					loanApplicationConditions, null, null, null, false);
 
 		} catch (GenericEntityException e2) {
@@ -899,11 +925,18 @@ public class LoanUtilities {
 	}
 
 	public static boolean shareCapitalBelowMinimum(Long partyId) {
-		return true;
+		BigDecimal bdShareCapitalAmount = LoanUtilities.getShareCapitalAccountBalance(partyId);
+		
+		BigDecimal bdShareCapitalMinimum = LoanUtilities.getShareCapitalLimit(partyId);
+		
+		if (bdShareCapitalAmount.compareTo(bdShareCapitalMinimum) == -1)
+			return true;
+		
+		return false;
 	}
 
 	public static boolean memberDepositsLessThanLoans(Long partyId) {
-		return true;
+		return false;
 	}
 
 	/***
@@ -2682,4 +2715,211 @@ public class LoanUtilities {
 		
 		return shareMinimum;
 	}
+
+	/***
+	 * @author Japheth Odonya  @when Jun 30, 2015 12:16:18 AM
+	 * 
+	 * Get Loan Guarantor Entity
+	 * */
+	public static GenericValue getLoanGuarantorEntity(Long loanGuarantorId) {
+		GenericValue loanGuarantor = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanGuarantor = delegator.findOne("LoanGuarantor",
+					UtilMisc.toMap("loanGuarantorId", loanGuarantorId),
+					false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		return loanGuarantor;
+	}
+
+	/**
+	 * @author Japheth Odonya  @when Jun 30, 2015 12:28:37 AM
+	 * 
+	 * 
+	 * Get total deposits this loan guarantors less this guarantor attempting to be deleted
+	 * */
+	public static BigDecimal getTotalGuarantorDepositsWithoutThisGuarantor(
+			Long loanGuarantorId, Long loanApplicationId) {
+		
+		EntityConditionList<EntityExpr> loanGuarantorConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanApplicationId", EntityOperator.EQUALS,
+						loanApplicationId),
+
+				EntityCondition.makeCondition("loanGuarantorId", EntityOperator.NOT_EQUAL,
+						loanGuarantorId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> loanGuarantorELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanGuarantorELI = delegator.findList("LoanGuarantor",
+					loanGuarantorConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		BigDecimal bdTotalDepositAmount = BigDecimal.ZERO;
+		Long accountProductId = LoanUtilities.getAccountProductGivenCodeId(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE).getLong("accountProductId");
+		
+		for (GenericValue genericValue : loanGuarantorELI) {
+			Long memberAccountId = LoanUtilities.getMemberAccountIdFromMemberAccount(genericValue.getLong("guarantorId"), accountProductId);
+			
+			bdTotalDepositAmount = bdTotalDepositAmount.add(AccHolderTransactionServices.getAvailableBalanceVer3(memberAccountId.toString()));
+		}
+
+		
+		return bdTotalDepositAmount;
+	}
+
+	public static BigDecimal getShareCapitalAccountBalance(Long partyId) {
+		
+		BigDecimal bdShareCapitalBalance = BigDecimal.ZERO;
+		Long accountProductId = getAccountProductIdGivenCodeId(AccHolderTransactionServices.SHARE_CAPITAL_CODE);
+		
+		Long memberAccountId = getMemberAccountIdFromMemberAccount(partyId, accountProductId);
+		
+		bdShareCapitalBalance = AccHolderTransactionServices.getBookBalanceNow(memberAccountId.toString());
+		return bdShareCapitalBalance;
+	}
+
+	public static BigDecimal getShareCapitalLimit(Long partyId) {
+		GenericValue member = LoanUtilities.getMember(partyId);
+		
+		Long memberClassId = member.getLong("memberClassId");
+		
+		if (memberClassId == null){
+			memberClassId = LoanUtilities.getMemberClassId("Class A");
+		}
+		
+		GenericValue shareMinimum = getShareMinimumEntity(memberClassId);
+		
+		if (shareMinimum == null)
+			return null;
+		
+		
+		return shareMinimum.getBigDecimal("minShareCapital");
+	}
+
+	public static String getMemberAccountIdGivenMemberAndAccountCode(
+			Long partyId, String code) {
+		Long accountProductId = getAccountProductIdGivenCodeId(code);
+		
+		Long memberAccountId = getMemberAccountIdFromMemberAccount(partyId, accountProductId);
+
+		return memberAccountId.toString();
+	}
+
+	public static GenericValue getProductChargeEntity(String name) {
+		GenericValue productCharge = null;
+
+		List<GenericValue> productChargeELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			productChargeELI = delegator.findList("ProductCharge",
+					EntityCondition.makeCondition("name", name),
+					null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue genericValue : productChargeELI) {
+			productCharge = genericValue;
+		}
+
+		return productCharge;
+	}
+
+	public static String getMemberDepositsGLAccountId() {
+		String glAccountId = getAccountProductGivenCodeId(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE).getString("glAccountId");
+		return glAccountId;
+	}
+
+	public static String getLoanReceivableAccountId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public static String getTransactionGLAccountGivenTransactionName(
+			String transactionName) {
+		GenericValue accountHolderTransactionSetup = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			accountHolderTransactionSetup = delegator.findOne(
+					"AccountHolderTransactionSetup", UtilMisc.toMap(
+							"accountHolderTransactionSetupId",
+							transactionName), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if (accountHolderTransactionSetup == null)
+			return null;
+		return accountHolderTransactionSetup.getString("memberDepositAccId");
+	}
+
+	public static String getSavingsAccountglAccountId() {
+		String glAccountId = getAccountProductGivenCodeId(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE).getString("glAccountId");
+		return glAccountId;
+	}
+	
+	public static GenericValue getEntityValue(String entityName, String primaryKeyName, Long primaryKeyValue){
+		GenericValue entity = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			entity = delegator.findOne(entityName,
+					UtilMisc.toMap(primaryKeyName, primaryKeyValue), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		return entity;
+	}
+	
+	public static GenericValue getEntityValue(String entityName, String primaryKeyName, String primaryKeyValue){
+		GenericValue entity = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			entity = delegator.findOne(entityName,
+					UtilMisc.toMap(primaryKeyName, primaryKeyValue), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		return entity;
+	}
+	
+	
+	/****
+	 * @author Japheth Odonya  @when Jul 10, 2015 2:59:35 PM
+	 * Get loan balance remittance code
+	 * */
+	public static String getLoanBalanceRemittanceCode(String loanNo)
+	{
+		String remitanceCode = "";
+		if (loanNo == null)
+			return "";
+		
+		if (loanNo.equals(""))
+			return "";
+				
+		if (loanNo.equals("0"))
+			return "";
+		GenericValue loanApplication = getLoanApplicationEntityGivenLoanNo(loanNo);
+		
+		Long loanProductId = loanApplication.getLong("loanProductId");
+		
+		GenericValue loanProduct = getLoanProduct(loanProductId);
+		
+		remitanceCode = loanProduct.getString("code");
+		remitanceCode = remitanceCode+"D";
+		
+		log.info("RRRRRRRRRRRRRRREEEEEEEEEEEEEMMMMMMMMMMMM LOAN NO is "+loanNo);
+		log.info("RRRRRRRRRRRRRRREEEEEEEEEEEEEMMMMMMMMMMMM code is "+remitanceCode);
+		return remitanceCode;
+	}
+
+
 }

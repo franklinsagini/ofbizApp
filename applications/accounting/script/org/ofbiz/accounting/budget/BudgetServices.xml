@@ -21,34 +21,203 @@ under the License.
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
+    <!-- create a new Budget Activity record -->
+    <simple-method method-name="createBudgetActivity" short-description="Create an Budget Activity">
+          <!-- create new entity and create all the fields -->
+        <make-value value-field="newEntity" entity-name="BudgetActivity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+
+        <!-- create a non existing ID if not supplied -->
+        <sequenced-id sequence-name="BudgetActivity" field="newEntity.budgetActivityId"/>
+
+        <!-- finally create the record (should not exist already)-->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <!-- update an existing Budget Activity Record -->
+    <simple-method method-name="updateBudgetActivity" short-description="Update an existing Budget Activity">
+        <entity-one entity-name="BudgetActivity" value-field="lookedUpValue"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+        <set-pk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+
+        <field-to-result field="parameters.budgetActivityId" result-name="budgetActivityId"/>
+    </simple-method>
+
+    <!-- create a new Budget Justification record -->
+    <simple-method method-name="createBudgetJustification" short-description="Create an Budget Justification">
+          <!-- create new entity and create all the fields -->
+        <make-value value-field="newEntity" entity-name="BudgetJustification"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+
+        <!-- create a non existing ID if not supplied -->
+        <sequenced-id sequence-name="BudgetJustification" field="newEntity.budgetJustificationId"/>
+
+        <!-- finally create the record (should not exist already)-->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <!-- update an existing Budget Justification Record -->
+    <simple-method method-name="updateBudgetJustification" short-description="Update an existing Budget Justification">
+        <entity-one entity-name="BudgetJustification" value-field="lookedUpValue"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+        <set-pk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+
+        <field-to-result field="parameters.budgetJustificationId" result-name="budgetJustificationId"/>
+    </simple-method>
+
+
+    <!-- create a new Budget Plan header record -->
+    <simple-method method-name="createBudgetPlanHeader" short-description="Create an Budget Plan Header">
+          <!-- create new entity and create all the fields -->
+        <make-value value-field="newEntity" entity-name="BudgetPlan"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+
+        <!-- create a non existing ID if not supplied -->
+        <sequenced-id sequence-name="BudgetPlan" field="newEntity.budgetPlanId"/>
+
+        <!-- Set status to DRF -->
+        <set field="newEntity.BudgetPlanStatusId" value="DRF" />
+        <!-- finally create the record (should not exist already)-->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <!-- update an existing Budget Plan header Record -->
+    <simple-method method-name="updateBudgetPlanHeader" short-description="Update an existing Budget Plan Header">
+        <entity-one entity-name="BudgetPlan" value-field="lookedUpValue"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+        <set-pk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+
+        <field-to-result field="parameters.budgetPlanId" result-name="budgetPlanId"/>
+    </simple-method>
+
+
+
+    <!-- create a new Budget Plan header record -->
+    <simple-method method-name="createBudgetPlanJustification" short-description="Create an Budget Plan Justification">
+          <!-- create new entity and create all the fields -->
+        <make-value value-field="newEntity" entity-name="BudgetPlanItem"/>
+        <set-pk-fields value-field="newEntity" map="parameters"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+
+        <!-- create a non existing ID if not supplied -->
+        <sequenced-id sequence-name="BudgetPlanItem" field="newEntity.budgetPlanItemId"/>
+
+        <!-- finally create the record (should not exist already)-->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <!-- update an existing Budget Plan header Record -->
+    <simple-method method-name="updateBudgetPlanJustification" short-description="Update an existing Budget Plan Justification">
+        <entity-one entity-name="BudgetPlanItem" value-field="lookedUpValue"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+    <!-- update an existing Budget Plan header Record -->
+    <simple-method method-name="submitHOF" short-description="Update an existing Budget Plan Justification">
+        <entity-one entity-name="BudgetPlanItem" value-field="lookedUpValue"/>
+        <!-- <set-nonpk-fields map="parameters" value-field="lookedUpValue"/> -->
+        <set field="setStatus.budgetPlanId" from-field="lookedUpValue.budgetPlanId"/>
+        <set field="setStatus.BudgetPlanStatusId" value="SUB_HOF"/>
+        <call-service service-name="updateBudgetPlanHeader" in-map-name="setStatus"/>
+    </simple-method>
+    <!-- update an existing Budget Plan header Record -->
+    <simple-method method-name="harmonizeBudget" short-description="Update an existing Budget Plan Justification">
+        <entity-one entity-name="BudgetPlanItem" value-field="lookedUpValue"/>
+        <entity-one entity-name="BudgetPlan" value-field="budgetPlan"/>
+        <log message="LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL ${lookedUpValue}" level="info" />
+        <log message="BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB ${budgetPlan}" level="info" />
+        <entity-one entity-name="CustomTimePeriod" value-field="customTimePeriod" auto-field-map="true">
+            <field-map field-name="customTimePeriodId" from-field="budgetPlan.customTimePeriodId"/>
+        </entity-one>
+        <log message="CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC ${customTimePeriod}" level="info" />
+        <set field="setStatus.budgetPlanId" from-field="lookedUpValue.budgetPlanId"/>
+        <set field="setStatus.BudgetPlanStatusId" value="SUB_BRD"/>
+        <call-service service-name="updateBudgetPlanHeader" in-map-name="setStatus"/>
+        <call-class-method class-name="org.ofbiz.accounting.budget.BudgetWorker" method-name="getBudgetPlanItemsForCustomPeriod" >
+            <field field="customTimePeriod" type="GenericValue"/>
+        </call-class-method>
+    </simple-method>
+    <simple-method method-name="submitBoard" short-description="Update an existing Budget Plan Justification">
+        <entity-one entity-name="BudgetPlanItem" value-field="lookedUpValue"/>
+        <!-- <set-nonpk-fields map="parameters" value-field="lookedUpValue"/> -->
+        <set field="setStatus.budgetPlanId" from-field="lookedUpValue.budgetPlanId"/>
+        <set field="setStatus.BudgetPlanStatusId" value="SUB_BRD"/>
+        <call-service service-name="updateBudgetPlanHeader" in-map-name="setStatus"/>
+    </simple-method>
+    <!-- update an existing Budget Plan header Record -->
+    <simple-method method-name="approveBudgetPlan" short-description="Update an existing Budget Plan Justification">
+        <entity-one entity-name="BudgetPlanItem" value-field="lookedUpValue"/>
+        <entity-one entity-name="BudgetPlan" value-field="budgetPlan"/>
+        <!-- <set-nonpk-fields map="parameters" value-field="lookedUpValue"/> -->
+        <set field="setStatus.budgetPlanId" from-field="lookedUpValue.budgetPlanId"/>
+        <set field="setStatus.BudgetPlanStatusId" value="APR"/>
+        <call-service service-name="updateBudgetPlanHeader" in-map-name="setStatus"/>
+
+        <call-class-method class-name="org.ofbiz.accounting.budget.BudgetWorker" method-name="pushBudgetPlanToBudget" ret-field="sucess">
+            <field field="budgetPlan" type="GenericValue"/>
+        </call-class-method>
+
+<!--         <call-class-method class-name="org.ofbiz.accounting.budget.BudgetWorker" method-name="pushBudgetPlanToBudget" ret-field="sucess">
+            <field field="budgetPlan" type="GenericValue"/>
+        </call-class-method> -->
+
+    </simple-method>
+    <!-- update an existing Budget Plan header Record -->
+    <simple-method method-name="returnToBranch" short-description="Update an existing Budget Plan Justification">
+        <entity-one entity-name="BudgetPlanItem" value-field="lookedUpValue"/>
+        <!-- <set-nonpk-fields map="parameters" value-field="lookedUpValue"/> -->
+        <set field="setStatus.budgetPlanId" from-field="lookedUpValue.budgetPlanId"/>
+        <set field="setStatus.BudgetPlanStatusId" value="DRF"/>
+        <call-service service-name="updateBudgetPlanHeader" in-map-name="setStatus"/>
+    </simple-method>
+
+
+    <simple-method method-name="deleteBudgetPlanJustification" short-description="Delete an ProductPrice">
+
+        <make-value entity-name="BudgetPlanItem" value-field="lookupPKMap"/>
+        <set-pk-fields map="parameters" value-field="lookupPKMap"/>
+        <find-by-primary-key entity-name="BudgetPlanItem" map="lookupPKMap" value-field="lookedUpValue"/>
+
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
     <!-- create a new Budget header record -->
     <simple-method method-name="createBudget" short-description="Create an Budget">
           <!-- create new entity and create all the fields -->
         <make-value value-field="newEntity" entity-name="Budget"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
 
+        <if-empty field="newEntity.budgetId">
+            <sequenced-id sequence-name="Budget" field="budgetId"/>
+            <to-string field="budgetId"/>
+            <set from-field="budgetId" field="newEntity.budgetId"/>
+        </if-empty>
         <!-- create a non existing ID if not supplied -->
-        <sequenced-id sequence-name="Budget" field="newEntity.budgetId"/>
+        <!-- <sequenced-id sequence-name="Budget" field="newEntity.budgetId"/> -->
 
         <!-- finally create the record (should not exist already)-->
         <create-value value-field="newEntity"/>
-        
+
         <set field="setStatus.budgetId" from-field="newEntity.budgetId"/>
         <set field="setStatus.statusId" value="BG_CREATED"/>
         <call-service service-name="updateBudgetStatus" in-map-name="setStatus"/>
         <field-to-result field="newEntity.budgetId" result-name="budgetId"/>
     </simple-method>
-    
+
     <!-- update an existing Budget header Record -->
     <simple-method method-name="updateBudget" short-description="Update an existing Budget">
         <entity-one entity-name="Budget" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <set-pk-fields value-field="lookedUpValue" map="parameters"/>
         <store-value value-field="lookedUpValue"/>
-        
+
         <field-to-result field="parameters.budgetId" result-name="budgetId"/>
     </simple-method>
-    
+
     <!-- update Budget Status -->
     <simple-method method-name="updateBudgetStatus" short-description="Update Budget Status">
         <now-timestamp field="nowDate"/>
@@ -78,7 +247,7 @@ under the License.
             </else>
         </if-not-empty>
     </simple-method>
-    
+
     <simple-method method-name="createBudgetItem" short-description="Create a new Budget Item">
         <set field="budgetId" from-field="parameters.budgetId"/>
         <make-value value-field="newEntity" entity-name="BudgetItem"/>
@@ -90,7 +259,7 @@ under the License.
         <create-value value-field="newEntity"/>
         <field-to-result field="budgetId"/>
     </simple-method>
-    
+
     <simple-method method-name="updateBudgetItem"
         short-description="Update an existing Budget Item">
         <make-value value-field="lookedUpValue" entity-name="BudgetItem"/>
@@ -101,12 +270,12 @@ under the License.
         <field-to-result field="lookedUpValue.budgetItemSeqId" result-name="budgetItemSeqId"/>
         <field-to-result field="lookedUpValue.budgetId" result-name="budgetId"/>
     </simple-method>
-    
+
     <simple-method method-name="removeBudgetItem" short-description="Remove an existing Budget Item">
         <entity-one entity-name="BudgetItem" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
-    
+
     <simple-method method-name="createBudgetRole" short-description="Create a Budget Role">
         <entity-one value-field="partyRole" entity-name="PartyRole">
             <field-map field-name="partyId" from-field="parameters.partyId"/>
@@ -118,7 +287,7 @@ under the License.
             <call-service service-name="createPartyRole" in-map-name="createPartyRole"/>
             <check-errors/>
         </if-empty>
-        
+
         <make-value value-field="newEntity" entity-name="BudgetRole"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
@@ -131,7 +300,7 @@ under the License.
         <remove-value value-field="lookedUpValue"/>
         <field-to-result field="parameters.budgetId" result-name="budgetId"/>
     </simple-method>
-    
+
     <simple-method method-name="createBudgetReview" short-description="Create a Budget Review">
         <make-value value-field="newEntity" entity-name="BudgetReview"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
@@ -142,7 +311,7 @@ under the License.
         <create-value value-field="newEntity"/>
         <field-to-result field="parameters.budgetId" result-name="budgetId"/>
     </simple-method>
-    
+
     <simple-method method-name="removeBudgetReview" short-description="Remove existing Budget Review">
         <entity-one entity-name="BudgetReview" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>

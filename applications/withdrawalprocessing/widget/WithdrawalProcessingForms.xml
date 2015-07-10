@@ -184,7 +184,7 @@
 				<!-- condition-expr field-name="loanStatusId" operator="equals" value="${disbursedLoansStatusId}"></condition-expr -->			
 				<condition-list>
 					<condition-expr field-name="partyId" operator="equals" value="${memberWithdrawal.partyId}"></condition-expr>
-					<condition-expr field-name="loanStatusId" operator="equals"  value="6"/>
+					<!-- condition-expr field-name="loanStatusId" operator="equals"  value="6"/ -->
 				</condition-list>
 				
 				<order-by field-name="-loanApplicationId"/>
@@ -338,7 +338,7 @@
 			<entity-condition entity-name="LoanGuarantorDisbursedLoan">
 				<condition-list>
 					<condition-expr field-name="guarantorId" operator="equals" from-field="partyId"/>
-					<condition-expr field-name="loanStatusId" operator="equals"  value="6"/>
+					<!-- condition-expr field-name="loanStatusId" operator="equals"  value="6"/ -->
 				</condition-list>
 				
 			</entity-condition>
@@ -401,5 +401,11 @@
                 <parameter param-name="loanGuarantorId"/>
             </hyperlink>
         </field -->
+        <field name="removeFromLoan" title="Remove From Loan /Change Guarantor">
+        	<hyperlink target-type="inter-app" target="../../guarantormanagement/control/changeGuarantors" description="Remove From Loan /Change Guarantor">
+        		<parameter param-name="loanApplicationId"/>
+        		
+        	</hyperlink>
+        </field>
     </form>
 </forms>

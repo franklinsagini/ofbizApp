@@ -20,7 +20,259 @@ under the License.
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
-    <!-- list all assets in a tabular format -->
+
+<!-- LIST ALL BUDGET ACTIVITIES IN A TABULAR MANNER -->
+    <form name="ListBudgetActivities" type="list" list-name="listIt" paginate-target="BudgetActivity"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="BudgetActivity"></entity-condition>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="BudgetActivity"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="budgetActivityId" widget-style="linktext" sort-field="true">
+            <hyperlink also-hidden="false" description="Edit Budget Activity - ${budgetActivityId}" target="EditBudgetActivity">
+                <parameter param-name="budgetActivityId"/>
+            </hyperlink>
+        </field>
+        <field name="activityName" sort-field="true">
+            <display/>
+        </field>
+        <on-event-update-area event-type="paginate" area-id="search-results" area-target="BudgetActivitySearchResults"/>
+    </form>
+
+    <form name="ListBudgetJustification" type="list" list-name="listIt" paginate-target="BudgetJustification"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="BudgetJustification"></entity-condition>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="BudgetJustification"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="budgetJustificationId" widget-style="linktext" sort-field="true">
+            <hyperlink also-hidden="false" description="Edit Budget Justification - ${budgetJustificationId}" target="EditBudgetJustification">
+                <parameter param-name="budgetJustificationId"/>
+            </hyperlink>
+        </field>
+        <field name="justificationName" sort-field="true">
+            <display/>
+        </field>
+        <on-event-update-area event-type="paginate" area-id="search-results" area-target="BudgetJustificationSearchResults"/>
+    </form>
+    <form name="ListBudgetPlanHeader" type="list" list-name="listIt" paginate-target="BudgetPlanHeader"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="BudgetPlan"></entity-condition>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="BudgetPlan"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <row-actions>
+            <set field="grandTotal" value="${bsh:org.ofbiz.accounting.budget.BudgetWorker.getBudgetPlanTotal(delegator,budgetPlanId)}" />
+        </row-actions>
+        <field name="budgetPlanId" widget-style="linktext" sort-field="true">
+            <hyperlink also-hidden="false" description="Edit Budget Plan Header - ${budgetPlanId}" target="EditBudgetPlanHeader">
+                <parameter param-name="budgetPlanId"/>
+            </hyperlink>
+        </field>
+        <field name="branchId" title="Branch">
+            <display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}"/>
+        </field>
+        <field name="customTimePeriodId" title="Fiscal Year">
+            <display-entity entity-name="CustomTimePeriod" description="${periodName}"/>
+        </field>
+        <field name="BudgetPlanStatusId" title="Status">
+            <display-entity entity-name="BudgetPlanStatus" description="${statusName}"/>
+        </field>
+        <field name="grandTotal" title="Grand Total" sort-field="true">
+            <display />
+        </field>
+        <field name="comments" sort-field="true">
+            <display/>
+        </field>
+        <field name="justifications" title="Justifications" widget-style="linktext" sort-field="true">
+            <hyperlink also-hidden="false" description="Justifications" target="EditBudgetPlanJustification">
+                <parameter param-name="budgetPlanId"/>
+            </hyperlink>
+        </field>
+        <on-event-update-area event-type="paginate" area-id="search-results" area-target="BudgetPlanHeaderSearchResults"/>
+    </form>
+
+    <form name="FindBudgetActivities" extends="lookupBudgetActivity" extends-resource="component://accounting/widget/FieldLookupForms.xml"
+        target="BudgetActivity">
+        <field name="searchOptions_collapsed"><hidden value="true"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="FindBudgetJustification" extends="lookupBudgetJustification" extends-resource="component://accounting/widget/FieldLookupForms.xml"
+        target="BudgetJustification">
+        <field name="searchOptions_collapsed"><hidden value="true"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="FindBudgetPlanHeader" extends="lookupBudgetPlanHeader" extends-resource="component://accounting/widget/FieldLookupForms.xml"
+        target="BudgetPlanHeader">
+        <field name="searchOptions_collapsed"><hidden value="true"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+
+    <!-- create and update a Budget Activity -->
+    <form name="EditBudgetActivity" type="single" target="updateBudgetActivity" title="" default-map-name="budgetActivity"
+        header-row-style="header-row" default-table-style="basic-table">
+        <alt-target use-when="budgetActivity == null" target="createBudgetActivity"/>
+        <field use-when="budgetActivity != null" name="budgetActivityId"><display/></field>
+        <field name="activityName" ><text/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" use-when="budgetActivity == null"><submit /></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" use-when="budgetActivity != null"><submit /></field>
+    </form>
+
+    <!-- create and update a Budget Activity -->
+    <form name="EditBudgetJustification" type="single" target="updateBudgetJustification" title="" default-map-name="budgetJustification"
+        header-row-style="header-row" default-table-style="basic-table">
+        <alt-target use-when="budgetJustification == null" target="createBudgetJustification"/>
+        <field use-when="budgetJustification != null" name="budgetJustificationId"><display/></field>
+        <field name="justificationName" ><text/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" use-when="budgetJustification == null"><submit /></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" use-when="budgetJustification != null"><submit /></field>
+    </form>
+
+    <!-- create and update a Budget Activity -->
+    <form name="EditBudgetPlanHeader" type="single" target="updateBudgetPlanHeader" title="" default-map-name="budgetPlan"
+        header-row-style="header-row" default-table-style="basic-table">
+        <alt-target use-when="budgetPlan == null" target="createBudgetPlanHeader"/>
+        <field use-when="budgetPlan != null" name="budgetPlanId"><display/></field>
+        <field name="branchId" title="Branch">
+            <drop-down allow-empty="true">
+                <entity-options key-field-name="partyId" description="${groupName}" entity-name="PartyGroup">
+                    <entity-constraint name="isBranch" operator="equals" value="Y"/>
+                    <entity-order-by field-name="groupName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="customTimePeriodId"><lookup target-form-name="LookupCustomTimePeriod"/></field>
+        <field name="comments" ><text/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" use-when="budgetPlan == null"><submit /></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" use-when="budgetPlan != null"><submit /></field>
+    </form>
+
+    <!-- create and update a Budget Activity -->
+    <form name="EditBudgetPlanJustification" type="single" target="createBudgetPlanJustification" title="" default-map-name="budgetPlanItem"
+        header-row-style="header-row" default-table-style="basic-table">
+
+        <field name="budgetPlanItemId"><hidden/></field>
+        <field name="budgetPlanId"><hidden/></field>
+        <field name="budgetActivityId" title="Budget Activity">
+            <drop-down allow-empty="false">
+                <entity-options key-field-name="budgetActivityId" description="${activityName}" entity-name="BudgetActivity">
+                    <entity-order-by field-name="activityName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="glAccountClassId" title="GlAccount Class">
+            <drop-down allow-empty="false">
+                <entity-options key-field-name="glAccountClassId" description="${description}" entity-name="GlAccountClass">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="glAccountId" title="Item / Gl Account">
+            <drop-down allow-empty="false">
+                <entity-options key-field-name="glAccountId" description="${accountName}" entity-name="GlAccount">
+                    <entity-order-by field-name="accountCode"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="budgetJustificationId" title="Justification">
+            <drop-down allow-empty="false">
+                <entity-options key-field-name="budgetJustificationId" description="${justificationName}" entity-name="BudgetJustification">
+                    <entity-order-by field-name="justificationName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="amount" ><text/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" ><submit /></field>
+    </form>
+
+    <form name="ListBudgetPlanJustification" type="multi" use-row-submit="true"
+        title="Selected Monument" separate-columns="true" paginate-target="EditBudgetPlanJustification"
+        target="updateBudgetPlanJustification" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="BudgetPlanItem">
+                <condition-expr field-name="budgetPlanId" from-field="budgetPlanId"/>
+                <order-by field-name="amount"/>
+            </entity-condition>
+        </actions>
+        <alt-target use-when="budgetPlan!=null&amp;&amp;budgetPlan.getString(&quot;BudgetPlanStatusId&quot;).equals(&quot;DRF&quot;)" target="submitHOF"/>
+        <alt-target use-when="budgetPlan!=null&amp;&amp;budgetPlan.getString(&quot;BudgetPlanStatusId&quot;).equals(&quot;SUB_HOF&quot;)" target="submitBoard"/>
+        <alt-target use-when="budgetPlan!=null&amp;&amp;budgetPlan.getString(&quot;BudgetPlanStatusId&quot;).equals(&quot;SUB_BRD&quot;)" target="approveBudgetPlan"/>
+        <field name="budgetPlanItemId">
+            <hidden />
+        </field>
+        <field name="budgetPlanId"><hidden/></field>
+        <field name="budgetActivityId" title="Budget Activity">
+            <display-entity description="${activityName}" entity-name="BudgetActivity" />
+        </field>
+        <field name="glAccountClassId" title="GlAccount Class">
+            <display-entity description="${description}" entity-name="GlAccountClass" />
+        </field>
+        <field name="glAccountId" title="Item / Gl Account">
+            <display-entity description="${accountName}" entity-name="GlAccount" />
+        </field>
+        <field name="budgetJustificationId" title="Justification">
+            <display-entity description="${justificationName}" entity-name="BudgetJustification" />
+        </field>
+        <field name="amount" ><text/></field>
+        <field name="deleteLink" title=" " widget-style="buttontext">
+            <hyperlink target="deleteBudgetPlanJustification" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="budgetPlanItemId"/>
+                <parameter param-name="budgetPlanId"/>
+            </hyperlink>
+        </field>
+
+        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}">
+            <hidden value="Y" />
+        </field>
+        <field name="submitButton" use-when="budgetPlan!=null&amp;&amp;budgetPlan.getString(&quot;BudgetPlanStatusId&quot;).equals(&quot;DRF&quot;)" title="Update Justification" widget-style="smallSubmit">
+            <submit />
+        </field>
+        <field name="submitButton" use-when="budgetPlan!=null&amp;&amp;budgetPlan.getString(&quot;BudgetPlanStatusId&quot;).equals(&quot;DRF&quot;)" title="Submit To HOF" widget-style="smallSubmit">
+            <submit />
+        </field>
+
+        <field name="submitButton" use-when="budgetPlan!=null&amp;&amp;budgetPlan.getString(&quot;BudgetPlanStatusId&quot;).equals(&quot;SUB_HOF&quot;)" title="Submit To Board" widget-style="smallSubmit">
+            <submit />
+        </field>
+        <field name="submitButton" use-when="budgetPlan!=null&amp;&amp;budgetPlan.getString(&quot;BudgetPlanStatusId&quot;).equals(&quot;SUB_BRD&quot;)" title="Approve Budget Plan" widget-style="smallSubmit">
+            <submit />
+        </field>
+    </form>
+
+
+    <form name="BudgetHeader" type="single" title="Budget header information" default-map-name="budget"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="budgetId"><hidden/></field>
+        <field position="1" name="budgetTypeId"><display-entity entity-name="BudgetType"/></field>
+        <!-- <field name="customTimePeriodId" position="2"><display/></field> -->
+        <field name="customTimePeriodId" title="Fiscal Year" >
+            <display-entity entity-name="CustomTimePeriod" description="${periodName}"/>
+        </field>
+        <field position="1" name="comments"><display/></field>
+    </form>
+
+
     <form name="ListBudgets" type="list" list-name="listIt" paginate-target="ListBudgets"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -71,13 +323,24 @@ under the License.
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" use-when="budget != null"><submit /></field>
     </form>
 
-    <form name="BudgetHeader" type="single" title="Budget header information" default-map-name="budget"
+    <!-- create and update a fixed asset -->
+    <form name="NewHarmonizedBudget" type="single" target="generateHarmonizedBudget" title="" default-map-name="budget"
         header-row-style="header-row" default-table-style="basic-table">
-        <field name="budgetId"><hidden/></field>
-        <field position="1" name="budgetTypeId"><display-entity entity-name="BudgetType"/></field>
-        <field name="customTimePeriodId" position="2"><display/></field>
-        <field position="1" name="comments"><display/></field>
+        <field use-when="budget != null" name="budgetId"><display/></field>
+<!--         <field name="budgetTypeId">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="BudgetType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field> -->
+        <field name="customTimePeriodId"><lookup target-form-name="LookupCustomTimePeriod"/></field>
+        <!-- <field name="comments" ><text/></field> -->
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" use-when="budget == null"><submit /></field>
+        <!-- <field name="submitButton" title="${uiLabelMap.CommonUpdate}" use-when="budget != null"><submit /></field> -->
     </form>
+
+
 
     <form name="BudgetStatus" list-name="budgetStatuses" target="" title="" type="list" separate-columns="true" paginate-target="budgetOverview"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
@@ -105,12 +368,14 @@ under the License.
 
     <form name="BudgetItems" list-name="budgetItems" target="" title="" type="list" separate-columns="true" paginate-target="BudgetOverview"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <auto-fields-entity entity-name="BudgetItem" default-field-type="display"/>
+        <!-- <auto-fields-entity entity-name="BudgetItem" default-field-type="display"/> -->
         <field name="budgetId"><hidden/></field>
         <field name="budgetItemSeqId"><display/></field>
         <field name="budgetItemTypeId"><display-entity entity-name="BudgetItemType"/></field>
+        <field name="glAccountId" title="Item / Gl Account">
+            <display-entity description="${accountName}" entity-name="GlAccount" />
+        </field>
         <field name="amount" ><display/></field>
-        <field name="purpose" ><display/></field>
         <field name="justification" ><display/></field>
     </form>
 
@@ -287,4 +552,38 @@ under the License.
             </hyperlink>
         </field>
     </form>
+
+<!-- REPORT FORMS -->
+     <form name="BudgetVarianceReport" type="single" target="BudgetVarianceReportPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <actions>
+            <set field="budgetId" from-field="parameters.budgetId"/>
+        </actions>
+         <field name="budgetId"><hidden/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+     <form name="AccountSummaryReport" type="single" target="AccountSummaryReportPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <actions>
+            <set field="budgetId" from-field="parameters.budgetId"/>
+        </actions>
+        <field name="budgetId"><hidden/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+     <form name="AccountDetailsReport" type="single" target="AccountDetailsReportPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <actions>
+            <set field="budgetId" from-field="parameters.budgetId"/>
+        </actions>
+        <field name="budgetId"><hidden/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+
 </forms>

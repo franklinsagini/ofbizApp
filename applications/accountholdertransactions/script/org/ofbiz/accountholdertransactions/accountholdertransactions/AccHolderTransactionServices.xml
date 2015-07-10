@@ -127,9 +127,16 @@
 												<!-- set field="accountTransactionParentId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.cashWithdrawal(newEntity, 
 													userLogin);}" type="String"/ -->
 												<!-- set field="cashWithdrawalVer2"/ -->
-												<set field="accountTransactionParentId"
+												<!-- Without Interbranch -->
+												<!-- set field="accountTransactionParentId"
 													value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.cashWithdrawalVer2(newEntity, userLogin);}"
-													type="String" />
+													type="String" / -->
+													
+												<!-- With Interbranch -->
+												<set field="accountTransactionParentId"
+													value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.cashWithdrawalInterbranch(newEntity, userLogin);}"
+													type="String" />	
+													
 												<field-to-result field="accountTransactionParentId"
 													result-name="accountTransactionParentId" />
 												<!-- call-simple-method method-name="cashWithdrawalSave" scope="inline"></call-simple-method -->
@@ -501,6 +508,9 @@
 				<!-- set field="transactionStatus"
 					value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.addChargesToTransaction(newEntity, userLogin, transactionType);}"
 					type="String" / -->
+					
+					<field-to-result field="newEntity.accountTransactionParentId"
+													result-name="accountTransactionParentId" />
 			</then>
 			<else>
 				<add-error>
@@ -597,7 +607,9 @@
 		<!-- call-service service-name="calculateChequeClearDate" in-map-name="transactionMap" 
 			include-user-login="false" require-new-transaction="true" > <result-to-field 
 			result-name="clearDate"/> <result-to-result result-name="clearDate"/> </call-service -->
-
+		<field-to-result field="newEntity.accountTransactionParentId"
+													result-name="accountTransactionParentId" />
+			
 
 	</simple-method>
 

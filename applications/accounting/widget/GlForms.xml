@@ -346,6 +346,26 @@ under the License.
 
     <form name="ListFindAcctgTransEntriesByDate" type="list" list-name="entriesList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+                    <entity-condition entity-name="AcctgTransAndEntries" list="acctgTransEntryList">
+                <condition-list>
+                    <condition-expr field-name="organizationPartyId" operator="equals" from-field="organizationPartyId"/>
+                    <condition-expr field-name="glAccountId" operator="equals" from-field="parameters.glAccountId" ignore-if-empty="true"/>
+                    <condition-expr field-name="acctgTransTypeId" operator="equals" from-field="parameters.acctgTransTypeId" ignore-if-empty="true"/>
+                    <condition-expr field-name="glFiscalTypeId" operator="equals" from-field="parameters.glFiscalTypeId" ignore-if-empty="true"/>
+                    <condition-expr field-name="glJournalId" operator="equals" from-field="parameters.glJournalId" ignore-if-empty="true"/>
+                    <condition-expr field-name="isPosted" operator="equals" from-field="parameters.isPosted" ignore-if-empty="true"/>
+                    <condition-expr field-name="partyId" operator="equals" from-field="parameters.partyId" ignore-if-empty="true"/>
+                    <condition-expr field-name="invoiceId" operator="equals" from-field="parameters.invoiceId" ignore-if-empty="true"/>
+                    <condition-expr field-name="paymentId" operator="equals" from-field="parameters.paymentId" ignore-if-empty="true"/>
+                    <condition-expr field-name="productId" operator="equals" from-field="parameters.productId" ignore-if-empty="true"/>
+                    <condition-expr field-name="workEffortId" operator="equals" from-field="parameters.workEffortId" ignore-if-empty="true"/>
+                    <condition-expr field-name="shipmentId" operator="equals" from-field="parameters.shipmentId" ignore-if-empty="true"/>
+                    <condition-expr field-name="acctgTransId" operator="equals" from-field="parameters.acctgTransId" ignore-if-empty="true"/>
+                    <condition-expr field-name="transactionDate" operator="greater-equals" from-field="parameters.fromDate" ignore-if-empty="true"/>
+                    <condition-expr field-name="transactionDate" operator="less" from-field="parameters.thruDate" ignore-if-empty="true"/>
+                </condition-list>
+                <order-by field-name="transactionDate"/>
+            </entity-condition>
         <field name="transactionDate"><display/></field>
         <field name="acctgTransId" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${acctgTransId}" target="EditAcctgTrans">
@@ -453,26 +473,30 @@ under the License.
         <actions>
             <set field="debitGlAccountClassId" from-field="parameters.debitGlAccountClassId"/>
             <set field="creditGlAccountClassId" from-field="parameters.creditGlAccountClassId"/>
+            <set field="glFiscalTypeId" value="ACTUAL" />
+            <set field="acctgTransTypeId" value="_NA_" />
         </actions>
         <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
-        <field name="acctgTransTypeId" title="${uiLabelMap.FormFieldTitle_acctgTransType}" >
+        <field name="glFiscalTypeId"><hidden value="ACTUAL"/></field>
+        <field name="acctgTransTypeId"><hidden value="_NA_"/></field>
+<!--         <field name="acctgTransTypeId" title="${uiLabelMap.FormFieldTitle_acctgTransType}" >
             <drop-down>
                 <entity-options entity-name="AcctgTransType" description="${description}">
                     <entity-order-by field-name="acctgTransTypeId"/>
                 </entity-options>
             </drop-down>
-        </field>
-        <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}" >
+        </field> -->
+<!--         <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}" >
             <hidden value="${organizationPartyId}"/>
             <drop-down>
                 <entity-options entity-name="GlFiscalType" description="${description}">
                     <entity-order-by field-name="glFiscalTypeId"/>
                 </entity-options>
             </drop-down>
-        </field>
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}" >
+        </field> -->
+<!--         <field name="partyId" title="${uiLabelMap.PartyPartyId}" >
             <lookup target-form-name="LookupPartyName" size="20" maxlength="20"/>
-        </field>
+        </field> -->
 <!--         <field name="roleTypeId" parameter-name="roleTypeId" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="RoleType" key-field-name="roleTypeId" description="${description}">
