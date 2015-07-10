@@ -1943,11 +1943,17 @@ public class AccHolderTransactionServices {
 				increaseDecrease = "D";
 			}
 
-			if ((transactionType != null)
-					&& (transactionType.equals("CASHDEPOSIT"))
-
-					|| (transactionType != null)
-					&& (transactionType.equals("MSACCODEPOSIT"))) {
+			if (((transactionType != null)
+					&& (transactionType.equals("CASHDEPOSIT")))
+					//DEPOSITFROMEXCESS
+					
+					|| ((transactionType != null)
+					&& (transactionType.equals("MSACCODEPOSIT")))
+					
+					|| ((transactionType != null)
+					&& (transactionType.equals("DEPOSITFROMEXCESS")))
+					
+					) {
 				increaseDecrease = "I";
 			}
 		}

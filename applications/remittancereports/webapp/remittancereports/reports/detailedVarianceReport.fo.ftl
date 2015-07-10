@@ -56,7 +56,13 @@ under the License.
             
         </fo:list-block -->
         <fo:block><fo:leader/></fo:block>
+        
+         <#assign totalGlobalExpected=0>
+        <#assign totalGlobalReceived=0>
+        <#assign totalGlobalVariance=0>
+        
         <#list memberExpectationList as memberExpecationItem>
+
         
         
         
@@ -184,10 +190,26 @@ under the License.
 								${expectReceiveItem.received?string(",##0.00")}
                                </fo:block>
                             </fo:table-cell>
+                            <#assign loanNo = expectReceiveItem.loanNo>
                             
-                                   <#assign totalExpected = totalExpected+expectReceiveItem.expected>
-                            <#assign totalReceived = totalReceived+expectReceiveItem.received>
-                            <#assign totalVariance = totalVariance+expectReceiveItem.variance>
+                            <#assign balanceRemitanceCode =  Static["org.ofbiz.accountholdertransactions.LoanUtilities"].getLoanBalanceRemittanceCode(loanNo)>
+                           <#assign remitanceCode = expectReceiveItem.remitanceCode >
+                            
+                            <#if (balanceRemitanceCode != remitanceCode) >
+                            	 <#assign totalExpected = totalExpected+expectReceiveItem.expected>
+                            	 <#assign totalReceived = totalReceived+expectReceiveItem.received>
+                            	 <#assign totalVariance = totalVariance+expectReceiveItem.variance>
+                            	 
+                            	 
+                        	        <#assign totalGlobalExpected= totalGlobalExpected+expectReceiveItem.expected>
+							        <#assign totalGlobalReceived= totalGlobalReceived+expectReceiveItem.received>
+							        <#assign totalGlobalVariance= totalGlobalVariance+expectReceiveItem.variance>
+                            	 
+                            </#if>
+                            
+                            
+                            
+                            
                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block text-align="right">
 								${expectReceiveItem.variance?string(",##0.00")}
@@ -282,8 +304,6 @@ under the License.
                             </fo:table-cell>
                    			 <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block text-align="right">
-                               
-                                
                                 </fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
@@ -296,10 +316,131 @@ under the License.
                                 </fo:block>
                             </fo:table-cell>
                     </fo:table-row>
+                    
+                    
+                     
                 </fo:table-body>
             </fo:table>
+            
         </fo:block>
-		</#list>
+        </#list>
+               <fo:block space-after.optimum="10pt" font-size="9pt">
+            <fo:table table-layout="fixed" width="100%">
+            	<fo:table-column column-width="20pt"/>
+                <fo:table-column column-width="60pt"/>
+                <fo:table-column column-width="30pt"/>
+                <fo:table-column column-width="70pt"/>
+                <fo:table-column column-width="120pt"/>
+                <fo:table-column column-width="50pt"/>
+                <fo:table-column column-width="50pt"/>
+                <fo:table-column column-width="60pt"/>
+                <fo:table-column column-width="60pt"/>
+                <fo:table-column column-width="60pt"/>
+                <#--fo:table-column column-width="60pt"/>
+                <fo:table-column column-width="60pt"/ -->
+                               <fo:table-header>
+                    <fo:table-row font-weight="bold">
+                    	<fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+
+                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+
+
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt"  border="1pt solid" border-width=".1mm">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt"  border="1pt solid" border-width=".1mm">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                         <fo:table-cell padding="2pt"  border="1pt solid" border-width=".1mm">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
+                        <#-- fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Insurance Due</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Insurance Paid</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Principal Due</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Principal Paid</fo:block>
+                        </fo:table-cell -->
+                    </fo:table-row>
+                </fo:table-header>
+                
+                <fo:table-body>
+                <fo:table-row>
+                    <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>
+                                </fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>
+                                </fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>
+                                </fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>
+                                </fo:block>
+                            </fo:table-cell>
+                           
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>
+                                </fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>
+                                </fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>
+                                 STATION TOTALS
+                                </fo:block>
+                            </fo:table-cell>
+                   			 <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block text-align="right">
+                                ${totalGlobalExpected?string(",##0.00")}
+                                </fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block text-align="right">
+							       	${totalGlobalReceived?string(",##0.00")}
+                                </fo:block>
+                            </fo:table-cell>
+                                
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block text-align="right">
+                                	${totalGlobalVariance?string(",##0.00")}
+                                </fo:block>
+                            </fo:table-cell>
+                    </fo:table-row>
+                    </fo:table-body>
+                </fo:table>
+              </fo:block>
     <#else>
         <fo:block text-align="center">NO DATA FOUND</fo:block>
     </#if>

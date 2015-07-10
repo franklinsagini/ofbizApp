@@ -30,6 +30,8 @@ class ExpectReceive{
 	def status
 	def termsOfService
 	def description
+	def remitanceCode
+	def loanNo
 	def balance
 	
 	def expected
@@ -96,6 +98,8 @@ expectationList.eachWithIndex { expectItem, index ->
 		
 		expectedReceived.expected = sentItem.amount
 		expectedReceived.description = sentItem.remitanceDescription;
+		expectedReceived.remitanceCode = sentItem.remitanceCode;
+		expectedReceived.loanNo = sentItem.loanNo;
 		
 		//receivedTotal = receivedTotal + receivedItem.amount;
 		
