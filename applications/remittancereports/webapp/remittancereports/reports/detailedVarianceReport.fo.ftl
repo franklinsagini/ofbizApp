@@ -186,9 +186,11 @@ under the License.
                             </fo:table-cell>
                             <#assign loanNo = expectReceiveItem.loanNo>
                             <#assign balanceRemitanceCode =  org.ofbiz.accountholdertransactions.getLoanBalanceRemittanceCode(loanNo)>
-                            <#if balanceRemitanceCode != expectReceiveItem.remitanceCode>
-                            	<#assign totalExpected = totalExpected+expectReceiveItem.expected>
-                            <#/if>
+                           <#assign remitanceCode = expectReceiveItem.remitanceCode >
+                            <#if balanceRemitanceCode != remitanceCode >
+                            	<#assign totalExpected = totalExpected+expectReceiveItem.expected> 
+                            </#if>
+                            
                             
                             
                             <#assign totalReceived = totalReceived+expectReceiveItem.received>
