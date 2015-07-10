@@ -2915,6 +2915,9 @@ public class LoanUtilities {
 		
 		remitanceCode = loanProduct.getString("code");
 		remitanceCode = remitanceCode+"D";
+		
+		log.info("RRRRRRRRRRRRRRREEEEEEEEEEEEEMMMMMMMMMMMM LOAN NO is "+loanNo);
+		log.info("RRRRRRRRRRRRRRREEEEEEEEEEEEEMMMMMMMMMMMM code is "+remitanceCode);
 		return remitanceCode;
 	}
 
