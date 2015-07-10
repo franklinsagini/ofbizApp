@@ -184,8 +184,13 @@ under the License.
 								${expectReceiveItem.received?string(",##0.00")}
                                </fo:block>
                             </fo:table-cell>
+                            <#assign loanNo = expectReceiveItem.loanNo>
+                            <#assign balanceRemitanceCode =  org.ofbiz.accountholdertransactions.getLoanBalanceRemittanceCode(loanNo)>
+                            <#if balanceRemitanceCode != expectReceiveItem.remitanceCode>
+                            	<#assign totalExpected = totalExpected+expectReceiveItem.expected>
+                            <#/if>
                             
-                                   <#assign totalExpected = totalExpected+expectReceiveItem.expected>
+                            
                             <#assign totalReceived = totalReceived+expectReceiveItem.received>
                             <#assign totalVariance = totalVariance+expectReceiveItem.variance>
                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">

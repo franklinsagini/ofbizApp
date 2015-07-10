@@ -2890,6 +2890,33 @@ public class LoanUtilities {
 		}
 		return entity;
 	}
+	
+	
+	/****
+	 * @author Japheth Odonya  @when Jul 10, 2015 2:59:35 PM
+	 * Get loan balance remittance code
+	 * */
+	public static String getLoanBalanceRemittanceCode(String loanNo)
+	{
+		String remitanceCode = "";
+		if (loanNo == null)
+			return "";
+		
+		if (loanNo.equals(""))
+			return "";
+				
+		if (loanNo.equals("0"))
+			return "";
+		GenericValue loanApplication = getLoanApplicationEntityGivenLoanNo(loanNo);
+		
+		Long loanProductId = loanApplication.getLong("loanProductId");
+		
+		GenericValue loanProduct = getLoanProduct(loanProductId);
+		
+		remitanceCode = loanProduct.getString("code");
+		remitanceCode = remitanceCode+"D";
+		return remitanceCode;
+	}
 
 
 }
