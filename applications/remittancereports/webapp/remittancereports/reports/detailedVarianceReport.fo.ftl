@@ -185,12 +185,12 @@ under the License.
                                </fo:block>
                             </fo:table-cell>
                             <#assign loanNo = expectReceiveItem.loanNo>
-                            <#assign balanceRemitanceCode =  org.ofbiz.accountholdertransactions.getLoanBalanceRemittanceCode(loanNo)>
+                            <#assign balanceRemitanceCode =  org.ofbiz.accountholdertransactions.LoanUtilities.getLoanBalanceRemittanceCode(loanNo)>
                            <#assign remitanceCode = expectReceiveItem.remitanceCode >
-                            <#assign totalExpected = totalExpected+expectReceiveItem.expected>
-                            <#-- #if (balanceRemitanceCode == remitanceCode) >
-                            	 
-                            </#if -->
+                            
+                            <#if !(balanceRemitanceCode == remitanceCode) >
+                            	 <#assign totalExpected = totalExpected+expectReceiveItem.expected>
+                            </#if>
                             
                             
                             
