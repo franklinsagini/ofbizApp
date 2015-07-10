@@ -187,7 +187,7 @@ under the License.
                             <#assign loanNo = expectReceiveItem.loanNo>
                             <#assign balanceRemitanceCode =  org.ofbiz.accountholdertransactions.getLoanBalanceRemittanceCode(loanNo)>
                            <#assign remitanceCode = expectReceiveItem.remitanceCode >
-                            <#if (!balanceRemitanceCode.equals(remitanceCode)) >
+                            <#if (balanceRemitanceCode == remitanceCode) >
                             	<#assign totalExpected = totalExpected+expectReceiveItem.expected> 
                             </#if>
                             
