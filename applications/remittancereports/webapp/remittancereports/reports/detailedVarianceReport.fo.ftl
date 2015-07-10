@@ -185,7 +185,8 @@ under the License.
                                </fo:block>
                             </fo:table-cell>
                             <#assign loanNo = expectReceiveItem.loanNo>
-                            <#assign balanceRemitanceCode =  org.ofbiz.accountholdertransactions.LoanUtilities.getLoanBalanceRemittanceCode(loanNo)>
+                            
+                            <#assign balanceRemitanceCode =  Static["org.ofbiz.accountholdertransactions.LoanUtilities"].getLoanBalanceRemittanceCode(loanNo)>
                            <#assign remitanceCode = expectReceiveItem.remitanceCode >
                             
                             <#if (balanceRemitanceCode != remitanceCode) >
