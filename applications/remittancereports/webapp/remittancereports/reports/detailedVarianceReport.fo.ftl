@@ -191,12 +191,13 @@ under the License.
                             
                             <#if (balanceRemitanceCode != remitanceCode) >
                             	 <#assign totalExpected = totalExpected+expectReceiveItem.expected>
+                            	 <#assign totalReceived = totalReceived+expectReceiveItem.received>
+                            	 <#assign totalVariance = totalVariance+expectReceiveItem.variance>
                             </#if>
                             
                             
                             
-                            <#assign totalReceived = totalReceived+expectReceiveItem.received>
-                            <#assign totalVariance = totalVariance+expectReceiveItem.variance>
+                            
                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block text-align="right">
 								${expectReceiveItem.variance?string(",##0.00")}
