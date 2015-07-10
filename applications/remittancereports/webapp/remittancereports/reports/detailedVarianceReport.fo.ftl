@@ -56,10 +56,13 @@ under the License.
             
         </fo:list-block -->
         <fo:block><fo:leader/></fo:block>
-        <#list memberExpectationList as memberExpecationItem>
-        <#assign totalGlobalExpected=0>
+        
+         <#assign totalGlobalExpected=0>
         <#assign totalGlobalReceived=0>
         <#assign totalGlobalVariance=0>
+        
+        <#list memberExpectationList as memberExpecationItem>
+
         
         
         
@@ -295,6 +298,53 @@ under the License.
                                 </fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block color="white">
+                                 TOTALS
+                                </fo:block>
+                            </fo:table-cell>
+                   			 <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block text-align="right">
+                                </fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block text-align="right">
+                                </fo:block>
+                            </fo:table-cell>
+                                
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block text-align="right">
+                                </fo:block>
+                            </fo:table-cell>
+                    </fo:table-row>
+                    </#list>
+                    
+                     <fo:table-row>
+                    <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>
+                                </fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>
+                                </fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>
+                                </fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>
+                                </fo:block>
+                            </fo:table-cell>
+                           
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>
+                                </fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>
+                                </fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>
                                  TOTALS
                                 </fo:block>
@@ -319,7 +369,7 @@ under the License.
                 </fo:table-body>
             </fo:table>
         </fo:block>
-		</#list>
+        
     <#else>
         <fo:block text-align="center">NO DATA FOUND</fo:block>
     </#if>
