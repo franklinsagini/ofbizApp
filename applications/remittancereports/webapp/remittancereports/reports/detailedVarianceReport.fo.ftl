@@ -318,7 +318,31 @@ under the License.
                     </fo:table-row>
                     
                     
-                     <fo:table-row>
+                     
+                </fo:table-body>
+            </fo:table>
+            
+        </fo:block>
+        </#list>
+               <fo:block space-after.optimum="10pt" font-size="9pt">
+            <fo:table table-layout="fixed" width="100%">
+            	<fo:table-column column-width="20pt"/>
+                <fo:table-column column-width="60pt"/>
+                <fo:table-column column-width="30pt"/>
+                <fo:table-column column-width="70pt"/>
+                <fo:table-column column-width="120pt"/>
+                <fo:table-column column-width="50pt"/>
+                <fo:table-column column-width="50pt"/>
+                <fo:table-column column-width="60pt"/>
+                <fo:table-column column-width="60pt"/>
+                <fo:table-column column-width="60pt"/>
+                <#--fo:table-column column-width="60pt"/>
+                <fo:table-column column-width="60pt"/ -->
+                <fo:table-header>
+                </fo:table-header>
+                
+                <fo:table-body>
+                <fo:table-row>
                     <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>
                                 </fo:block>
@@ -366,10 +390,9 @@ under the License.
                                 </fo:block>
                             </fo:table-cell>
                     </fo:table-row>
-                </fo:table-body>
-            </fo:table>
-        </fo:block>
-        </#list>
+                    </fo:table-body>
+                </fo:table>
+              </fo:block>
     <#else>
         <fo:block text-align="center">NO DATA FOUND</fo:block>
     </#if>
