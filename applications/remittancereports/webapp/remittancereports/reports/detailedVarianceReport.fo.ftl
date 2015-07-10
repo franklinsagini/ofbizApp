@@ -57,6 +57,9 @@ under the License.
         </fo:list-block -->
         <fo:block><fo:leader/></fo:block>
         <#list memberExpectationList as memberExpecationItem>
+        <#assign totalGlobalExpected=0>
+        <#assign totalGlobalReceived=0>
+        <#assign totalGlobalVariance=0>
         
         
         
@@ -193,6 +196,12 @@ under the License.
                             	 <#assign totalExpected = totalExpected+expectReceiveItem.expected>
                             	 <#assign totalReceived = totalReceived+expectReceiveItem.received>
                             	 <#assign totalVariance = totalVariance+expectReceiveItem.variance>
+                            	 
+                            	 
+                        	        <#assign totalGlobalExpected= totalGlobalExpected+expectReceiveItem.expected>
+							        <#assign totalGlobalReceived= totalGlobalReceived+expectReceiveItem.received>
+							        <#assign totalGlobalVariance= totalGlobalVariance+expectReceiveItem.variance>
+                            	 
                             </#if>
                             
                             
@@ -286,23 +295,24 @@ under the License.
                                 </fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block color="white">
+                                <fo:block>
                                  TOTALS
                                 </fo:block>
                             </fo:table-cell>
                    			 <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block text-align="right">
-                               
-                                
+                                ${totalGlobalExpected?string(",##0.00")}
                                 </fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block text-align="right">
+							       	${totalGlobalReceived?string(",##0.00")}
                                 </fo:block>
                             </fo:table-cell>
                                 
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block text-align="right">
+                                	${totalGlobalVariance?string(",##0.00")}
                                 </fo:block>
                             </fo:table-cell>
                     </fo:table-row>

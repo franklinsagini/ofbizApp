@@ -2037,7 +2037,7 @@ public class RemittanceServices {
 
 				PrincipalInterestInsurance principalInterestInsurance = saveLoanRepaymentRemittance(
 						principalExpectedRecived, acctgTransId, "REMITTANCE",
-						bdTotalAmountRemitted, userLogin);
+						bdTotalAmountRemitted, userLogin, month);
 
 				bdPrincipal = bdPrincipal.add(principalInterestInsurance
 						.getPrincipalAmt());
@@ -2591,7 +2591,7 @@ public class RemittanceServices {
 	// saveLoanRepaymentRemittance
 	private static PrincipalInterestInsurance saveLoanRepaymentRemittance(
 			GenericValue expectedPaymentReceived, String acctgTransId,
-			String repaymentMode, BigDecimal bdTotalAmountRemitted, Map<String, String> userLogin) {
+			String repaymentMode, BigDecimal bdTotalAmountRemitted, Map<String, String> userLogin, String month) {
 		BigDecimal principalAmount = BigDecimal.ZERO;
 		BigDecimal interestAmount = BigDecimal.ZERO;
 		BigDecimal insuranceAmount = BigDecimal.ZERO;
@@ -2793,6 +2793,7 @@ public class RemittanceServices {
 				"excessAmount", excessAmount,
 				"transactionAmount", transactionAmount,
 				"acctgTransId", acctgTransId,
+				"month", month,
 				"repaymentMode", repaymentMode));
 		try {
 			delegator.createOrStore(loanRepayment);
