@@ -2586,6 +2586,8 @@ Gender
         <field name="lastName" title="Last Name"><text-find/></field>
 
         <field name="memberNumber" title="Member No." position="2"><text-find/></field>
+        
+         <field name="employeeNumber" title="Employee No."><text-find/></field>
 
         <field name="memberStatusId" title="Status" >
         	<drop-down allow-empty="true" current-description="">
@@ -2625,8 +2627,10 @@ Gender
         
         <field name="branchId" title="Branch" position="2">
             <drop-down allow-empty="true" current-description="">
-                <!-- entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup"/ -->
-                <list-options key-name="partyId" list-name="banchesList" description="${groupName}"/>
+                <entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup">
+                	<entity-constraint name="isBranch" operator="equals" value="Y"/>
+                </entity-options>
+                <!-- list-options key-name="partyId" list-name="banchesList" description="${groupName}"/ -->
             </drop-down>
         </field>
         <field name="joinDate">
