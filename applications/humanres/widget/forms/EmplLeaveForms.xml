@@ -550,9 +550,9 @@
 		</field> 
 	</form>
 
+
 	
-	
-	 <form name="FindLeaveApprovals" default-map-name="LeaveApp" target="FindLeaveApprovals" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
+	 <form name="FindLeaveApprovals" default-map-name="LeaveApp" target="LeaveApprovals" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
         <actions>
         	<!-- <set field="status" value="AVAILABLE"/> -->
         	
@@ -582,6 +582,9 @@
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+    
+
+    
     
      <form name="ListLeaveApprovals" target="" title="" list-name="listIt" type="list" paginate-target="FindLeaveApprovals"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -638,19 +641,6 @@
     </form>
 	
 	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
 	<form name="approveEmplLeaveStatus" type="single" target="forwardApplication"
 		default-map-name="leaveApp">
 		<actions>
@@ -1051,10 +1041,6 @@
     <form name="EditEmplLeaveCalender" type="single" target="createLeaveCalender"
 		default-map-name="EmplLeaveCalenderContext" header-row-style="header-row"
 		default-table-style="basic-table">
-		
-		
-		
-		
 		 <actions>
             <entity-condition entity-name="EmplLeaveCalender" list="emplLeaveCalenderList">
                 <order-by field-name="leaveCalenderId"/>
@@ -1101,8 +1087,17 @@
 		<field name="leaveCalenderId"><hidden /></field>
 		<field name="partyId" title="Staff"><hidden/></field>
 		<field name="leaveTypeId" title="Leave Type"><display-entity entity-name="EmplLeaveType" key-field-name="leaveTypeId" description="${description}"></display-entity></field>
-		<field name="fromDate"><display/></field>
-		<field name="leaveDuration"><display /></field>
+		<field name="fromDate">
+		<date-time type="date" />
+		</field>
+		<field name="leaveDuration"><text></text></field>
+		<field name="updateLeaveCalender" title="Update"><submit/></field>
+		<field name="deleteLeaveCalender" title="Delete" widget-style="buttontext">
+		<hyperlink target="deleteLeaveCalender" description="Delete" also-hidden="false" request-confirmation="true" 
+		 confirmation-message="Do you want to delete from Leave Calendar?">
+		<parameter param-name="leaveCalenderId"/>
+		</hyperlink>
+		</field>
 		
 	</form>
 	

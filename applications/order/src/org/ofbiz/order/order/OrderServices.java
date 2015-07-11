@@ -2462,10 +2462,12 @@ public class OrderServices {
 			}
 
 			// Check Budget From Here.
-			if (!isBudgetEnough(orderHeader, delegator, locale)) {
-				
-				return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
-						"BudgetDeficiencyMessage", locale));
+			if ("ORDER_APPROVED".equals(statusId)) {
+				if (!isBudgetEnough(orderHeader, delegator, locale)) {
+
+					return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+							"BudgetDeficiencyMessage", locale));
+				}
 			}
 
 			// update the current status
@@ -2565,14 +2567,14 @@ public class OrderServices {
 			budgetAmount = getBudgetAmount(delegator, productGlAccount);
 
 		}
-		System.out.println("####################################################################### BUDGET AMOUNT: "+budgetAmount );
-		System.out.println("####################################################################### BUDGET CONTROL: "+glAccountBalance );
-		System.out.println("####################################################################### LPO AMOUNT: "+lpoAmount );
+		System.out.println("####################################################################### BUDGET AMOUNT: " + budgetAmount);
+		System.out.println("####################################################################### BUDGET CONTROL: " + glAccountBalance);
+		System.out.println("####################################################################### LPO AMOUNT: " + lpoAmount);
 		glAccountBalance = glAccountBalance.add(lpoAmount);
 		int res;
 		res = budgetAmount.compareTo(glAccountBalance);
-		System.out.println("####################################################################### TOTAL LPO AMOUNT AND CONTROL: "+glAccountBalance );
-		System.out.println("####################################################################### IS BUDGET AMOUNT MORE?: "+res );
+		System.out.println("####################################################################### TOTAL LPO AMOUNT AND CONTROL: " + glAccountBalance);
+		System.out.println("####################################################################### IS BUDGET AMOUNT MORE?: " + res);
 
 		if (res == 1) {
 			createBudgetControlRecord(delegator, productGlAccount, lpoAmount);
@@ -2580,6 +2582,26 @@ public class OrderServices {
 		} else {
 			return false;
 		}
+	}
+
+	public static List<GenericValue> getOrderItemsForOrderId(Delegator delegator, String orderId) {
+		List<GenericValue> orderItems = null;
+		GenericValue orderHeader = null;
+		try {
+			orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (orderHeader!=null) {
+			try {
+				orderItems = orderHeader.getRelated("OrderItem", null, null, false);
+			} catch (GenericEntityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return orderItems;
 	}
 
 	private static void createBudgetControlRecord(Delegator delegator, String productGlAccount, BigDecimal lpoAmount) {
@@ -2593,7 +2615,7 @@ public class OrderServices {
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	private static BigDecimal getBudgetAmount(Delegator delegator, String productGlAccount) {

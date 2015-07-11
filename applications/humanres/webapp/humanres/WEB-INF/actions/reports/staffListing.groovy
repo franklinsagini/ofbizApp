@@ -4,8 +4,8 @@ countrr=0
 countrrr2=0
 
 if (staffType) {
-    staff = delegator.findByAnd("EmployeeRoleView", [isManagement : staffType], null, false);
-    
+    staff = delegator.findByAnd("EmployeeRoleView", [isManagement : staffType, isSeparated : "N" ], null, false);
+     
     staff.eachWithIndex { staffItem, index ->
     countrr=countrr + 1
      }
@@ -15,8 +15,7 @@ if (staffType) {
    return
 }
 
-
-employeeList = delegator.findList("EmployeeRoleView", null, null, null, null, false);
+employeeList = delegator.findByAnd("EmployeeRoleView", [isSeparated : "N" ],  null, false);
 
 
 employeeList.eachWithIndex { staffItem, index ->

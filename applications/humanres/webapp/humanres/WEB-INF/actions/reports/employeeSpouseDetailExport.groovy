@@ -18,9 +18,6 @@ spouse = delegator.findByAnd("StaffSpouse", [partyId : partyId], null, false);
  dob = spouseItem.getString("dob");
  
  
- 
- 
- 
  employeeSpouselist.add([name :name, relationship :relationship, idNo : idNo, gender :gender, dob : dob]);
  }
  
