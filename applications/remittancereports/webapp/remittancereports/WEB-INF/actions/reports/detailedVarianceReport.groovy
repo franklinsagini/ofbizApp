@@ -1,6 +1,6 @@
 import org.ofbiz.base.util.UtilMisc;
-
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericValue;
 
 month = parameters.month
 stationId = parameters.stationId
@@ -127,12 +127,43 @@ expectationList.eachWithIndex { expectItem, index ->
 		//varianceList << expectedReceived
 	}
 	
-	//Adding items in received but missing in expected sent
-	//delegator
-	//delegator.findB
+//	//Adding items in received but missing in expected sent
+//	//delegator
+//	//delegator.findB
+//	notsentDetailedList = delegator.findByAnd("ExpectationReceivedNotSent",  [sentpayrollNo : null], null, false);
+//	count = 0;
+//	notsentDetailedList.eachWithIndex { notsentItem, notsentItemIndex ->
+//		println '********* '+count++;
+//		println '**************'+notsentItem.receivedremitanceCode;
+//	}
 	memberExpectationList << memberExpecationItem;
 	
 	
 }
 
+
+	//Adding items in received but missing in expected sent
+	//delegator
+	//delegator.findB
+	nullValue = null;
+	notsentDetailedList = delegator.findByAnd("ExpectationReceivedNotSent",  [sentremitanceCode : null, receivedemployerCode : employerCode, receivedmonth: month] , null, false);
+	count = 0;
+	totalAmount = BigDecimal.ZERO;
+	
+	//notsentDetailedList.
+	notsentDetailedList.eachWithIndex { notsentItem, notsentItemIndex ->
+		
+		//if (notsentItem.sentremitanceCode == null){
+		
+		println '********* '+count++;
+		println '******sent code ********'+notsentItem.sentremitanceCode;
+		println '******received code ********'+notsentItem.receivedremitanceCode;
+		println '******Amount ********'+notsentItem.receivedamount;
+		totalAmount = totalAmount + notsentItem.receivedamount;
+		//if (count > 100)
+		//	throw new Exception("return from closure")  
+		
+	}
+	
+	println '******Total Not in sent is  ********'+totalAmount;
 context.memberExpectationList = memberExpectationList;

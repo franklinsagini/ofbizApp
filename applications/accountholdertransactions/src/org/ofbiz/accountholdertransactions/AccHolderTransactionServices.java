@@ -1300,6 +1300,8 @@ public class AccHolderTransactionServices {
 								EntityOperator.EQUALS,
 								Long.valueOf(parentChargeId))),
 						EntityOperator.AND);
+		
+	
 		try {
 			accountProductChargeELI = delegator.findList(
 					"AccountProductCharge", accountChargeConditions, null,
