@@ -103,11 +103,21 @@ expectationList.eachWithIndex { expectItem, index ->
 		
 		//receivedTotal = receivedTotal + receivedItem.amount;
 		
+		
 		receivedTotal = new BigDecimal(0.0);
-		receivedDetailedList = delegator.findByAnd("ExpectedPaymentReceived",  [employerCode : employerCode, month: month, payrollNo: sentItem.payrollNo, remitanceCode: sentItem.remitanceCode], null, false);
-		receivedDetailedList.eachWithIndex { receivedDetailedItem, receivedDetailedItemIndex ->
-			receivedTotal = receivedTotal + receivedDetailedItem.amount;
+		//receivedDetailedList = delegator.findByAnd("ExpectedPaymentReceived",  [employerCode : employerCode, month: month, payrollNo: sentItem.payrollNo, remitanceCode: sentItem.remitanceCode], null, false);
+		//receivedDetailedList.eachWithIndex { receivedDetailedItem, receivedDetailedItemIndex ->
+		//	receivedTotal = receivedTotal + receivedDetailedItem.amount;
+		//}
+		
+		if (sentItem.loanNo.equalsIgnoreCase("0")){
+			//code is productcode
+			receivedTotal = org.ofbiz.accountholdertransactions.LoanRepayments.getRepaidAmount(sentItem.remitanceCode, sentItem.month, "ACCOUNT", sentItem.payrollNo,  sentItem.loanNo);
+		} else{
+			//code is loanNo
+			receivedTotal = org.ofbiz.accountholdertransactions.LoanRepayments.getRepaidAmount(sentItem.remitanceCode, sentItem.month, "LOAN", sentItem.payrollNo, sentItem.loanNo);;
 		}
+		
 		
 		expectedReceived.received = receivedTotal
 		
@@ -116,7 +126,10 @@ expectationList.eachWithIndex { expectItem, index ->
 		memberExpecationItem.listOfExpectReceive.add(expectedReceived);
 		//varianceList << expectedReceived
 	}
-	 
+	
+	//Adding items in received but missing in expected sent
+	//delegator
+	//delegator.findB
 	memberExpectationList << memberExpecationItem;
 	
 	

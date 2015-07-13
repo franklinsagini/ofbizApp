@@ -1228,7 +1228,6 @@ public class LoanRepayments {
 		//EntityCondition.makeCondition(
 		//"isPaid", EntityOperator.EQUALS, "N"), 
 		
-	Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 //		List<GenericValue> loanExpectationELI = new ArrayList<GenericValue>();
 //		loanApplicationId = loanApplicationId.replaceAll(",", "");
 //		EntityConditionList<EntityExpr> loanExpectationConditions = EntityCondition
@@ -2299,6 +2298,155 @@ public class LoanRepayments {
 		return totalPrincipalPaid;
 	}
 	
+	/****
+	 * @author Japheth Odonya  @when Jul 11, 2015 1:03:03 PM
+	 * 
+	 * Get total principal paid between @startDate and @endDate
+	 * 
+	 * This is important for getting remittance payments
+	 * */
+	public static BigDecimal getTotalPrincipalPaid(String loanApplicationId, Timestamp startDate, Timestamp endDate) {
+		BigDecimal totalPrincipalPaid = BigDecimal.ZERO;
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> loanRepaymentELI = new ArrayList<GenericValue>();
+
+		// EntityCondition.makeCondition( "isPaid", EntityOperator.EQUALS, "N"),
+		loanApplicationId = loanApplicationId.replaceAll(",", "");
+		EntityConditionList<EntityExpr> loanRepaymentConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(
+						EntityCondition.makeCondition("loanApplicationId",
+								EntityOperator.EQUALS, 
+								Long.valueOf(loanApplicationId)),
+
+						EntityCondition.makeCondition("createdStamp",
+								EntityOperator.GREATER_THAN_EQUAL_TO,
+								startDate),
+								
+						EntityCondition.makeCondition("createdStamp",
+						     	EntityOperator.LESS_THAN_EQUAL_TO,
+								endDate)
+
+				), EntityOperator.AND);
+
+		try {
+			loanRepaymentELI = delegator.findList("LoanRepayment",
+					loanRepaymentConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		for (GenericValue loanRepayment : loanRepaymentELI) {
+
+			if (loanRepayment.getBigDecimal("principalAmount") != null) {
+
+				totalPrincipalPaid = totalPrincipalPaid.add(loanRepayment
+						.getBigDecimal("principalAmount"));
+			}
+		}
+
+		return totalPrincipalPaid;
+	}
+	
+	/****
+	 * @author Japheth Odonya  @when Jul 11, 2015 1:03:45 PM
+	 * 
+	 * Get total Interest Paid between startDate and endDate
+	 * 
+	 * For Remittance Repayment values
+	 * */
+	public static BigDecimal getTotalInterestPaid(String loanApplicationId, Timestamp startDate, Timestamp endDate) {
+		BigDecimal interestAmount = BigDecimal.ZERO;
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> loanRepaymentELI = new ArrayList<GenericValue>();
+
+		// EntityCondition.makeCondition( "isPaid", EntityOperator.EQUALS, "N"),
+		loanApplicationId = loanApplicationId.replaceAll(",", "");
+		EntityConditionList<EntityExpr> loanRepaymentConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(
+						EntityCondition.makeCondition("loanApplicationId",
+								EntityOperator.EQUALS, 
+								Long.valueOf(loanApplicationId)),
+
+						EntityCondition.makeCondition("createdStamp",
+								EntityOperator.GREATER_THAN_EQUAL_TO,
+								startDate),
+								
+						EntityCondition.makeCondition("createdStamp",
+						     	EntityOperator.LESS_THAN_EQUAL_TO,
+								endDate)
+
+				), EntityOperator.AND);
+
+		try {
+			loanRepaymentELI = delegator.findList("LoanRepayment",
+					loanRepaymentConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		for (GenericValue loanRepayment : loanRepaymentELI) {
+
+			if (loanRepayment.getBigDecimal("interestAmount") != null) {
+
+				interestAmount = interestAmount.add(loanRepayment
+						.getBigDecimal("interestAmount"));
+			}
+		}
+
+		return interestAmount;
+	}
+	
+	/***
+	 * @author Japheth Odonya  @when Jul 11, 2015 1:04:13 PM
+	 * Get total Insurance Paid between @startDate and @endDate
+	 * 
+	 * For Remittance Processing
+	 * */
+	public static BigDecimal getTotalInsurancePaid(String loanApplicationId, Timestamp startDate, Timestamp endDate) {
+		BigDecimal insuranceAmount = BigDecimal.ZERO;
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> loanRepaymentELI = new ArrayList<GenericValue>();
+		// EntityCondition.makeCondition( "isPaid", EntityOperator.EQUALS, "N"),
+		loanApplicationId = loanApplicationId.replaceAll(",", "");
+		EntityConditionList<EntityExpr> loanRepaymentConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(
+						EntityCondition.makeCondition("loanApplicationId",
+								EntityOperator.EQUALS, 
+								Long.valueOf(loanApplicationId)),
+
+						EntityCondition.makeCondition("createdStamp",
+								EntityOperator.GREATER_THAN_EQUAL_TO,
+								startDate),
+								
+						EntityCondition.makeCondition("createdStamp",
+						     	EntityOperator.LESS_THAN_EQUAL_TO,
+								endDate)
+
+				), EntityOperator.AND);
+
+		try {
+			loanRepaymentELI = delegator.findList("LoanRepayment",
+					loanRepaymentConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		for (GenericValue loanRepayment : loanRepaymentELI) {
+
+			if (loanRepayment.getBigDecimal("insuranceAmount") != null) {
+
+				insuranceAmount = insuranceAmount.add(loanRepayment
+						.getBigDecimal("insuranceAmount"));
+			}
+		}
+		return insuranceAmount;
+	}
 	
 	/****
 	 * @author Japheth Odonya  @when Jul 10, 2015 12:17:34 AM
@@ -2561,6 +2709,12 @@ public class LoanRepayments {
 
 		Timestamp repaymentDate = null;
 		repaymentDate = loanApplication.getTimestamp("repaymentStartDate");
+		
+		if (repaymentDate == null)
+		{
+			repaymentDate = LoanServices.calculateLoanRepaymentStartDate(loanApplication);
+		}
+		
 		Timestamp currentDate = new Timestamp(Calendar.getInstance().getTimeInMillis());
 		
 		//Get Insurance Rate
@@ -2603,11 +2757,11 @@ public class LoanRepayments {
 	 * */
 	private static BigDecimal getTotalExpectedInterestAmountByLoanApplicationId(
 			Long loanApplicationId) {
-		Long loanApplicationIdLog = loanApplicationId;
+		//Long loanApplicationIdLog = loanApplicationId;
 		
 		BigDecimal bdTotalExpectedInterestAmount = BigDecimal.ZERO;
 		
-		BigDecimal bdTotalRepaidLoan = LoanServices.getLoansRepaidByLoanApplicationId(loanApplicationIdLog);
+		//BigDecimal bdTotalRepaidLoan = LoanServices.getLoansRepaidByLoanApplicationId(loanApplicationIdLog);
 		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
 		BigDecimal dbLoanAmt = loanApplication.getBigDecimal("loanAmt");
 				//.subtract(bdTotalRepaidLoan);
@@ -2659,6 +2813,11 @@ public class LoanRepayments {
 
 		Timestamp repaymentDate = null;
 		repaymentDate = loanApplication.getTimestamp("repaymentStartDate");
+		
+		if (repaymentDate == null)
+		{
+			repaymentDate = LoanServices.calculateLoanRepaymentStartDate(loanApplication);
+		}
 		
 		log.info("OOOOOOOO Old repayment start date ::::: "+repaymentDate);
 		
@@ -2781,6 +2940,12 @@ public class LoanRepayments {
 
 		Timestamp repaymentDate = null;
 		repaymentDate = loanApplication.getTimestamp("repaymentStartDate");
+		
+		if (repaymentDate == null)
+		{
+			repaymentDate = LoanServices.calculateLoanRepaymentStartDate(loanApplication);
+		}
+		
 		Timestamp currentDate = new Timestamp(Calendar.getInstance().getTimeInMillis());
 		
 		log.info("OOOOOOOO Old repayment start date ::::: "+repaymentDate);
@@ -2838,6 +3003,168 @@ public class LoanRepayments {
 			bdTotalExpectedInsuranceAmount = bdTotalExpectedInsuranceAmount.add(bdTotalExpectedInsuranceAmount);
 		}
 		return bdTotalExpectedInsuranceAmount;
+	}
+	
+	public static BigDecimal getRepaidAmount(String code, String month, String remittanceType, String payrollNumber, String loanNo){
+		//Remittance type can be
+		//ACCOUNT
+		//INSURANCE
+		//INTEREST
+		//PRINCIPAL
+		
+		Timestamp startDate = getStartDateGivenMonth(month, payrollNumber); //the day remittance was generated or expected
+		Timestamp endDate = getEndDateGivenMonth(month, payrollNumber); //the day of the next expectation or today of the next expectation is missing
+		Long memberId = LoanUtilities.getMemberId(payrollNumber);
+		if (remittanceType.equals("ACCOUNT")){
+			//Get amount deposited given 
+			//start date
+			//end date
+			// and account code
+			return AccHolderTransactionServices.getTotalDeposits(code, memberId, startDate, endDate);
+		} else if (remittanceType.equals("LOAN")){
+			
+			//Split the code to determine if we doing PRINCIPAL (A), INTEREST (B), INSURANCE (C) or BALANCE(D)
+			String itemCode = code.substring(code.length()-1, code.length());
+			//System.out.println(" And the code is : "+itemCode);
+			//System.out.println(" The loan in question is LLLLLLLLLLLLLLL :::  "+loanNo);
+			String loanApplicationId = LoanUtilities.getLoanApplicationEntityGivenLoanNo(loanNo).getLong("loanApplicationId").toString();
+			
+			if (itemCode.equals("A")){
+				//Doing Principal
+				return AccHolderTransactionServices.getTotalPrincipalPaid(loanApplicationId, memberId, startDate, endDate);
+			} else if (itemCode.equals("B")){
+				//Doing Interest
+				return AccHolderTransactionServices.getTotalInterestPaid(loanApplicationId, memberId, startDate, endDate);
+			} else if (itemCode.equals("C")){
+				//Doing Insurance
+				return  AccHolderTransactionServices.getTotalInsurancePaid(loanApplicationId, memberId, startDate, endDate);
+			} else if (itemCode.equals("D")){
+				//Doing Balance
+				return BigDecimal.ZERO;
+			} else{
+				return BigDecimal.ZERO;
+			}
+			
+			//Get principal paid given 
+			//start date
+			//end date
+			// and loan no. The code here is loanNo
+			
+
+		}
+		
+		return BigDecimal.ZERO;
+	}
+
+	/****
+	 * @author Japheth Odonya  @when Jul 10, 2015 6:10:02 PM
+	 * Get end date - should be the next expecation date or today if there is no next expectation date
+	 * */
+	private static Timestamp getEndDateGivenMonth(String month,
+			String payrollNumber) {
+		//Build next month by stripping last 4 digits from month then incrementing the first part and 
+		//combining again
+		String monthValue = month.substring(0, month.length() - 4);
+		String yearValue = month.substring(month.length() - 4, month.length());
+		
+		System.out.println(" Month --- "+monthValue);
+		System.out.println(" Year --- "+yearValue);
+		
+		Long longMonthValue = Long.valueOf(monthValue);
+		Long longYearValue = Long.valueOf(yearValue);
+		
+		
+		Long nextMonthValue = 0L;
+		
+		if (longMonthValue.equals(new Long(12))){
+			nextMonthValue = 1L;
+			longYearValue = longYearValue + 1;
+		} else{
+			nextMonthValue = longMonthValue + 1;
+		}
+		
+		month = nextMonthValue.toString()+longYearValue.toString();	
+		
+		EntityConditionList<EntityExpr> expectedSentConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"month", EntityOperator.EQUALS,
+						month),
+						
+						EntityCondition.makeCondition(
+								"payrollNo", EntityOperator.EQUALS,
+								payrollNumber)
+
+				), EntityOperator.AND);
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> expectedPaymentReceivedELI = new ArrayList<GenericValue>();
+		try {
+			expectedPaymentReceivedELI = delegator.findList("ExpectedPaymentSent",
+					expectedSentConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if ((expectedPaymentReceivedELI == null) || (expectedPaymentReceivedELI.size() < 1))
+		{
+			return new Timestamp(Calendar.getInstance().getTimeInMillis());
+		}
+		
+		GenericValue expectedPaymentReceived = null;
+		
+		for (GenericValue genericValue : expectedPaymentReceivedELI) {
+			expectedPaymentReceived = genericValue;
+		}
+		return expectedPaymentReceived.getTimestamp("createdStamp");
+	}
+
+	/***
+	 * @author Japheth Odonya  @when Jul 10, 2015 6:09:27 PM
+	 * Get start date for computing payments
+	 * 
+	 * */
+	private static Timestamp getStartDateGivenMonth(String month,
+			String payrollNumber) {
+		
+		// startDate = new Timestamp(time)
+		//Get the
+		EntityConditionList<EntityExpr> expectedSentConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"month", EntityOperator.EQUALS,
+						month),
+						
+						EntityCondition.makeCondition(
+								"payrollNo", EntityOperator.EQUALS,
+								payrollNumber)
+
+				), EntityOperator.AND);
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> expectedPaymentReceivedELI = new ArrayList<GenericValue>();
+		try {
+			expectedPaymentReceivedELI = delegator.findList("ExpectedPaymentSent",
+					expectedSentConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if ((expectedPaymentReceivedELI == null) || (expectedPaymentReceivedELI.size() < 1))
+		{
+			//Return beginning of the month
+			//ExpectedPaymentSent
+			//DateMidnight first = new DateMidnight().withDayOfMonth(1);
+			org.joda.time.DateTime startOfThisMonth = new org.joda.time.DateTime().dayOfMonth().withMinimumValue().withTimeAtStartOfDay();
+			return new Timestamp(startOfThisMonth.getMillis());
+		}
+		
+		GenericValue expectedPaymentReceived = null;
+		
+		for (GenericValue genericValue : expectedPaymentReceivedELI) {
+			expectedPaymentReceived = genericValue;
+		}
+		return expectedPaymentReceived.getTimestamp("createdStamp");
 	}
 
 }

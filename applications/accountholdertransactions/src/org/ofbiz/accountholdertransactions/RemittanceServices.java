@@ -2035,16 +2035,22 @@ public class RemittanceServices {
 									.getBigDecimal("amount"));
 				}
 
-				PrincipalInterestInsurance principalInterestInsurance = saveLoanRepaymentRemittance(
-						principalExpectedRecived, acctgTransId, "REMITTANCE",
-						bdTotalAmountRemitted, userLogin, month);
-
-				bdPrincipal = bdPrincipal.add(principalInterestInsurance
-						.getPrincipalAmt());
-				bdInterest = bdInterest.add(principalInterestInsurance
-						.getInterestAmt());
-				bdInsurance = bdInsurance.add(principalInterestInsurance
-						.getInsuranceAmt());
+				PrincipalInterestInsurance principalInterestInsurance = null;
+						
+				if (principalExpectedRecived != null){
+					principalInterestInsurance = saveLoanRepaymentRemittance(
+							expectedPaymentReceived, acctgTransId, "REMITTANCE",
+							bdTotalAmountRemitted, userLogin, month);
+	
+					bdPrincipal = bdPrincipal.add(principalInterestInsurance
+							.getPrincipalAmt());
+					bdInterest = bdInterest.add(principalInterestInsurance
+							.getInterestAmt());
+					bdInsurance = bdInsurance.add(principalInterestInsurance
+							.getInsuranceAmt());
+				
+					principalInterestInsurance = null;
+				}
 			}
 
 			bdTotal = bdTotal.add(expectedPaymentReceived
@@ -2604,13 +2610,13 @@ public class RemittanceServices {
 		// loanPrincipal = expectedPaymentReceived.getBigDecimal("amount");
 		// Get This Loan's Interest
 
-		String loanProductCode = LoanUtilities
-				.getLoanProductCodeGivenLoanNo(expectedPaymentReceived
-						.getString("loanNo"));
+		//String loanProductCode = LoanUtilities
+		//		.getLoanProductCodeGivenLoanNo(expectedPaymentReceived
+		//				.getString("loanNo"));
 
-		String remittanceCodePrincipal = loanProductCode + "A";
-		String remittanceCodeInterest = loanProductCode + "B";
-		String remittanceCodeInsurance = loanProductCode + "C";
+		//String remittanceCodePrincipal = loanProductCode + "A";
+		//String remittanceCodeInterest = loanProductCode + "B";
+		//String remittanceCodeInsurance = loanProductCode + "C";
 
 		// loanInterest = getLoanInterestOrInsurance(
 		// expectedPaymentReceived.getString("loanNo"),
@@ -2660,8 +2666,17 @@ public class RemittanceServices {
 		// expectedPaymentReceived.getString("month"),
 		// remittanceCodePrincipal);
 
-		BigDecimal totalLoanDue = totalInterestDue.add(totalInsuranceDue).add(
-				totalPrincipalDue);
+		
+		BigDecimal totalLoanDue = BigDecimal.ZERO;
+
+		if (totalInterestDue != null)
+		totalLoanDue = totalLoanDue.add(totalInterestDue);
+		
+		if (totalInsuranceDue != null)
+			totalLoanDue = totalLoanDue.add(totalInsuranceDue);
+		
+		if (totalPrincipalDue != null)
+			totalLoanDue = totalLoanDue.add(totalPrincipalDue);
 
 		// Long loanApplicationId = getLoanApplicationId(expectedPaymentReceived
 		// .getString("loanNo"));
@@ -2673,8 +2688,9 @@ public class RemittanceServices {
 		BigDecimal amountRemaining = bdTotalAmountRemitted;
 		// BigDecimal bdTotalLoanRepaid = BigDecimal.ZERO;
 		BigDecimal bdLoanBalance = BigDecimal.ZERO;
-		bdLoanBalance = LoanServices.getLoanRemainingBalance(loanRepayment
-				.getLong("loanApplicationId"));
+		
+		//Long loanApplicationId = LoanUtilities.getLoanApplicationEntityGivenLoanNo(expectedPaymentReceived.getString("loanNo")).getLong("loanApplicationId");
+		bdLoanBalance = LoanServices.getLoanRemainingBalance(loanApplicationId);
 		// BigDecimal bdLoanAmt = loanRepayment.getBigDecimal("loanAmt");
 		
 		principalInterestInsurance.setInsuranceAmt(BigDecimal.ZERO);
@@ -2737,7 +2753,7 @@ public class RemittanceServices {
 					GenericValue loanApplication = LoanUtilities
 							.getEntityValue("LoanApplication",
 									"loanApplicationId",
-									loanRepayment.getLong("loanApplicationId"));
+									loanApplicationId);
 					loanApplication.set("loanStatusId", loanStatusId);
 					try {
 						delegator.createOrStore(loanApplication);
@@ -2755,13 +2771,13 @@ public class RemittanceServices {
 				principalInterestInsurance.setPrincipalAmt(principalAmount);
 			}
 
-			if (amountRemaining.compareTo(BigDecimal.ZERO) >= 0) {
+			if (amountRemaining.compareTo(BigDecimal.ZERO) > 0) {
 				excessAmount = amountRemaining;
 
 				// Deposit Excess to Savings Account
 				GenericValue loanApplication = LoanUtilities.getEntityValue(
 						"LoanApplication", "loanApplicationId",
-						loanRepayment.getLong("loanApplicationId"));
+						loanApplicationId);
 				String memberAccountId = LoanUtilities
 						.getMemberAccountIdGivenMemberAndAccountCode(
 								loanApplication.getLong("partyId"),

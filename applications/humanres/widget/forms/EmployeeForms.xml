@@ -1412,16 +1412,16 @@
          </field>
     </form>
     
-    <!-- ========================Employee Separation Forms================================ -->
+    <!-- ========================Employee Separation Forms================================== -->
     
      <form name="NewSeparationTypes" type="single" target="createSeparationTypes"
         focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="separationTypesContext">
         
         <field name="separationTypeId"><hidden/></field>
-        <field name="name" title="Separation Type" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
+        <field name="name" title="Separation Type" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text/></field>
         <field name="description" title="Description"><textarea/></field>
         
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
         </form>
         
         <form name="listSeparationTypes" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateSeparationTypes" paginate-target="separationTypes"
@@ -1435,7 +1435,6 @@
         <field name="separationTypeId"><hidden/></field>
         <field name="name" title="Separation Type"> <text></text> </field>
         <field name="description" title="Description"> <text></text> </field>
-        
         <field name="updateSeparationTypes" title="Update" widget-style="buttontext">
 			<submit button-type="button" />
 		</field>
@@ -1451,7 +1450,7 @@
        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="separationApplicationContext">
        
       <field name="separationApplicationId"><hidden/></field>
-        <field name="partyId" title="Employee" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+        <field name="partyId" title="Employee" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
         	<lookup target-form-name="LookupEmployee"/>
         </field>
         <field name="separationTypeId" title="Separation Type" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
@@ -1459,12 +1458,12 @@
         		<entity-options description="${name}" entity-name="SeparationType" key-field-name="separationTypeId"></entity-options>
         	</drop-down>
         </field>
-        <field name="reason" title="Reason For Separation"><textarea/></field>
+        <field name="reason" title="Reason For Separation" widget-style="Type The Reason" ><textarea/></field>
         <field name="effectiveDate" title="Effective Date"><date-time type="date"/></field>
         <field name="separated"><hidden value="N"/></field>
         <field name="status"><hidden value="Not Separated"/></field>
        
-       <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+       <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
        </form>
        
        <form name="listSeparationAppliacation" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateSeparationApplication" paginate-target="separationApplication"
