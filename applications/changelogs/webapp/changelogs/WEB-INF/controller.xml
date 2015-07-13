@@ -23,12 +23,101 @@
     <!-- Request Mappings -->
     <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
     
+   	<request-map uri="visits">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="findVisits" />
+	</request-map>
+	
+	
+	 <request-map uri="findVisits">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="findVisits" />
+	</request-map>
+	
+	<request-map uri="visitdetail">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="visitdetail" />
+	</request-map>
+	<request-map uri="loggedinusers">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="listLoggedInUsers" />
+	</request-map>
+	
+	
+    <request-map uri="listLoggedInUsers">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="listLoggedInUsers" />
+	</request-map>
+    
     <request-map uri="allLogs">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="main">
 		</response>
 	</request-map>
+	
+	
+	<request-map uri="viewprofile">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="viewprofile"
+			save-home-view="true" />
+	</request-map>
+	
+	<!-- changeLogsForm -->
+	   <request-map uri="changeLogsForm">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="changeLogsForm">
+		</response>
+	</request-map>
+	
+	<!-- changeLogsReportPDF -->
+	<request-map uri="changeLogsReportPDF">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="changeLogsReportPDF">
+		</response>
+	</request-map>
+	
+	
+	
+	<!-- visitsForm -->
+	   <request-map uri="visitsForm">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="visitsForm">
+		</response>
+	</request-map>
+	
+	<!-- visitsReportPDF -->
+	<request-map uri="visitsReportPDF">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="visitsReportPDF">
+		</response>
+	</request-map>
+	
     <!-- View Mappings -->
     <!-- view-map name="main" type="screen" page="component://changelogs/widget/ChangeLogsScreens.xml#main"/ -->
     <view-map name="main" type="screen" page="component://changelogs/widget/ChangeLogsScreens.xml#allLogs"/>
+    
+    
+    	<!-- changeLogsForm -->
+    <view-map name="changeLogsForm" type="screen" page="component://changelogs/widget/ChangeLogsScreens.xml#changeLogsForm"/>
+    <view-map name="changeLogsReportPDF" type="screenfop" page="component://changelogs/widget/ChangeLogsScreens.xml#changeLogsReportPDF" content-type="application/pdf" encoding="none"/>
+    
+    <!-- visitsForm -->
+    <!-- visitsReportPDF -->
+    <view-map name="visitsForm" type="screen" page="component://changelogs/widget/ChangeLogsScreens.xml#visitsForm"/>
+    <view-map name="visitsReportPDF" type="screenfop" page="component://changelogs/widget/ChangeLogsScreens.xml#visitsReportPDF" content-type="application/pdf" encoding="none"/>
+    
+    
+    <view-map name="findVisits" type="screen"
+		page="component://party/widget/partymgr/VisitScreens.xml#FindVisits" />
+	<view-map name="visitdetail" type="screen"
+		page="component://party/widget/partymgr/VisitScreens.xml#visitdetail" />
+	<view-map name="listLoggedInUsers" type="screen"
+		page="component://party/widget/partymgr/VisitScreens.xml#ListLoggedInUsers" />
+		
+		
+		
+	<view-map name="viewprofile" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#viewprofileLogs" />
+		
+		
 </site-conf>
