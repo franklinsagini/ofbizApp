@@ -34,7 +34,7 @@ under the License.
         <input type="hidden" name="partyId" value="${partyId}" id="contentPartyId"/>
         <input type="file" name="uploadedFile" class="required error" size="25"/>
         <div>
-        <select name="partyContentTypeId" hidden="true" class="required error">
+        <select name="partyContentTypeId" class="required error">
           <#-- <option value="">${uiLabelMap.PartySelectPurpose}</option> -->
           <#list partyContentTypes as partyContentType>
             <option value="${partyContentType.partyContentTypeId}">${partyContentType.get("description", locale)?default(partyContentType.partyContentTypeId)}</option>
