@@ -32,38 +32,43 @@ under the License.
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
-            <fo:table-column column-width="70pt"/>
+        	<fo:table-column column-width="30pt"/>
+            <fo:table-column column-width="100pt"/>
+            <fo:table-column column-width="50pt"/>
             <fo:table-column column-width="100pt"/>
             <fo:table-column column-width="100pt"/>
+            <fo:table-column column-width="120pt"/>
             <fo:table-column column-width="100pt"/>
-            <fo:table-column column-width="70pt"/>
-            <fo:table-column column-width="70pt"/>
             <fo:table-header>
                <fo:table-row font-weight="bold">
+               		 <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block></fo:block>
+                    </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block>Member</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="center">Member Id Number</fo:block>
+                        <fo:block text-align="left">Id Number</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Account Number</fo:block>
+                        <fo:block text-align="left">Account Number</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Form Number</fo:block>
+                        <fo:block text-align="left">Form Number</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Card Number</fo:block>
+                        <fo:block text-align="left">Card Number</fo:block>
                     </fo:table-cell>
                      <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="right">Card Status</fo:block>
+                        <fo:block text-align="left">Card Status</fo:block>
                     </fo:table-cell>
                     
                 </fo:table-row>
             </fo:table-header>
             <fo:table-body>
-
+					<#assign count = 0>
                    <#list card as dep>
+                   	<#assign count = count + 1>
                     <#if dep.memberAccountId?has_content>
                     <#assign memberPartyId = dep.memberAccountId?number /> 
                         <#assign accNo = delegator.findOne("MemberAccount", {"memberAccountId" : memberPartyId?long}, false)/>
@@ -73,22 +78,25 @@ under the License.
                     </#if>
                      <fo:table-row>
                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${dep.firstName?if_exists} ${dep.lastName?if_exists}</fo:block>
+                            <fo:block  text-align="left">${count}</fo:block>
+                        </fo:table-cell>
+                       <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block  text-align="left">${dep.firstName?if_exists} ${dep.lastName?if_exists}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${dep.idNumber?if_exists}</fo:block>
+                            <fo:block  text-align="left">${dep.idNumber?if_exists}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${accNo.accountNo?if_exists}</fo:block>
+                            <fo:block  text-align="left">${accNo.accountNo?if_exists}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${dep.formNumber?if_exists}</fo:block>
+                            <fo:block  text-align="left">${dep.formNumber?if_exists}</fo:block>
                         </fo:table-cell>
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${dep.cardNumber?if_exists}</fo:block>
+                            <fo:block  text-align="left">${dep.cardNumber?if_exists}</fo:block>
                         </fo:table-cell>
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${cardStatus.name?if_exists}</fo:block>
+                            <fo:block  text-align="left">${cardStatus.name?if_exists}</fo:block>
                         </fo:table-cell>
                      </fo:table-row>
                   </#list>
