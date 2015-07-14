@@ -10,13 +10,15 @@ import org.ofbiz.accounting.util.UtilAccounting
 import javolution.util.FastList;
 glAccountId = parameters.glAccountId
 fromDate = thruDate - 366
+organizationPartyId = parameters.organizationPartyId
 //balanceTotal = 0
 entriesList = [];
 List mainAndExprs = FastList.newInstance();
 finalentriesList = [];
 if (parameters.glAccountId) {
   mainAndExprs.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, parameters.glAccountId));
-  accountBalance = dispatcher.runSync('computeGlAccountBalanceForTrialBalance', [organizationPartyId: "Company", thruDate : thruDate, fromDate: fromDate,  glAccountId: parameters.glAccountId, userLogin: userLogin]);
+  mainAndExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, parameters.organizationPartyId));
+  accountBalance = dispatcher.runSync('computeGlAccountBalanceForTrialBalance', [organizationPartyId: organizationPartyId, thruDate : thruDate, fromDate: fromDate,  glAccountId: parameters.glAccountId, userLogin: userLogin]);
 System.out.println("ACCOUNT BALANCE MAPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP " + accountBalance)
 entriesList = delegator.findList("AcctgTransAndEntries", EntityCondition.makeCondition(mainAndExprs, EntityOperator.AND), UtilMisc.toSet("transactionDate", "acctgTransId", "accountName","acctgTransTypeId", "debitCreditFlag", "amount"), UtilMisc.toList("acctgTransEntrySeqId"), null, false);
 entriesList.sort {it.transactionDate}
