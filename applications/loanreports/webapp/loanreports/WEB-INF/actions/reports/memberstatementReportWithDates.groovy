@@ -59,6 +59,8 @@ class MemberStatement{
 	def name
 	def code
 	def loanNo
+	def accountCode
+	def accountName
 	def itemTotal
 	def availableBalace
 	def listOfTransactions = []
