@@ -65,8 +65,8 @@ if (parameters.thruDate) {
 			if (oldAccountBalance == null){
 				oldAccountBalance = accountBalance
 				
-				//creditsAmt = accountBalance.endingBalanceCredit
-				//debitsAmt = accountBalance.endingBalanceDebit
+				creditsAmt = accountBalance.endingBalanceCredit
+				debitsAmt = accountBalance.endingBalanceDebit
 			}
 			
 			//if ()

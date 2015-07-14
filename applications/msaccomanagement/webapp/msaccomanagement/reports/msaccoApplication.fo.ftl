@@ -32,17 +32,12 @@ under the License.
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
-        	<fo:table-column column-width="60pt"/>
-            <fo:table-column column-width="120pt"/>
-            <fo:table-column column-width="60pt"/>
             <fo:table-column column-width="120pt"/>
             <fo:table-column column-width="120pt"/>
-            <fo:table-column column-width="60pt"/>
+            <fo:table-column column-width="120pt"/>
+            <fo:table-column column-width="120pt"/>
             <fo:table-header>
                <fo:table-row font-weight="bold">
-               		<fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block></fo:block>
-                    </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block>Member</fo:block>
                     </fo:table-cell>
@@ -55,15 +50,12 @@ under the License.
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block>Account Number</fo:block>
                     </fo:table-cell>
-                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block>Status</fo:block>
-                    </fo:table-cell>
+                    
                 </fo:table-row>
             </fo:table-header>
             <fo:table-body>
-					<#assign count = 0>
+
                    <#list msacco as dep>
-                   	<#assign count = count + 1>
                     <#if dep.memberAccountId?has_content>
                     <#assign memberPartyId = dep.memberAccountId?number /> 
                         <#assign accNo = delegator.findOne("MemberAccount", {"memberAccountId" : memberPartyId?long}, false)/>
@@ -72,14 +64,7 @@ under the License.
                     <#assign memberPartyId = dep.partyId?number /> 
                         <#assign member = delegator.findOne("Member", {"partyId" : memberPartyId?long}, false)/>
                     </#if>
-                    
-                    <#if dep.cardStatusId?has_content>
-                        <#assign cardStatus = delegator.findOne("CardStatus", {"cardStatusId" : dep.cardStatusId}, false)/>
-                    </#if>
                      <fo:table-row>
-                       <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${count}</fo:block>
-                        </fo:table-cell>
                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${member.firstName?if_exists} ${member.lastName?if_exists}</fo:block>
                         </fo:table-cell>
@@ -91,10 +76,6 @@ under the License.
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${accNo.accountNo?if_exists}</fo:block>
-                        </fo:table-cell>
-                        
-                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block  text-align="left">${cardStatus.name?if_exists}</fo:block>
                         </fo:table-cell>
                         
                      </fo:table-row>

@@ -653,35 +653,4 @@
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
       
-    <!-- msaccoReportByStatus -->
-    <form name="msaccoReportByStatus" type="single" target="msaccoReportByStatusPDF" default-entity-name="CardApplication">
-        <actions>
-        	<!-- set field="statusName" value="ACTIVE"/>
-	   		<set field="memberStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/ --> 
-	        	<entity-condition entity-name="PartyGroup" list="partyGroups">
-        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
-        	</entity-condition>
-        	
-        </actions>
-        
-        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-
-        <!-- field name="cardStatus" title="Card Status">
-        	<drop-down allow-empty="false">
-                <option key="Applied" description="Applied"/>
-                <option key="Active" description="Active"/>
-                <option key="Renewing" description="Renewing"/>
-                <option key="Deactivated" description="Deactivated"/>
-            </drop-down>
-      	</field -->
-      	<field name="cardStatusId" title="Card Status">
-      		<drop-down allow-empty="true">
-      			<entity-options description="${name}" entity-name="CardStatus" key-field-name="cardStatusId"></entity-options>
-      		</drop-down>
-      	</field>
-      	<!-- field name="cardNumber" title="Card Number"><text-find></text-find></field>
-      	<field name="cardApplicationId" title="Form Number"><text-find></text-find></field -->
-
-        <field name="searchButton" title="Run" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
-    </form>
 </forms>

@@ -24,7 +24,7 @@ under the License.
       <br class="clear" />
     </div>
     <div class="screenlet-body">
-          ${screens.render("component://party/widget/partymgr/ProfileScreens.xml#ContentListHR")}
+          ${screens.render("component://party/widget/partymgr/ProfileScreens.xml#ContentList")}
       <hr />
       <div class="label">Attach Employee Personal Image</div>
       <form id="uploadPartyContent" method="post" enctype="multipart/form-data" action="<@ofbizUrl>uploadPartyContent</@ofbizUrl>">
@@ -33,14 +33,14 @@ under the License.
         <input type="hidden" name="statusId" value="CTNT_PUBLISHED"/>
         <input type="hidden" name="partyId" value="${partyId}" id="contentPartyId"/>
         <input type="file" name="uploadedFile" class="required error" size="25"/>
-        
-        <#-- hidden="false"  -->
-        <select name="partyContentTypeId" class="required error">
-          <option value="">${uiLabelMap.PartySelectPurpose}</option>
+        <div>
+        <select name="partyContentTypeId" hidden="true" class="required error">
+          <#-- <option value="">${uiLabelMap.PartySelectPurpose}</option> -->
           <#list partyContentTypes as partyContentType>
             <option value="${partyContentType.partyContentTypeId}">${partyContentType.get("description", locale)?default(partyContentType.partyContentTypeId)}</option>
           </#list>
         </select>
+        </div>
         <#-- <div class="label">${uiLabelMap.PartyIsPublic}</div> -->
         <select name="isPublic" hidden="true">
             <#-- <option value="N">${uiLabelMap.CommonNo}</option> -->
