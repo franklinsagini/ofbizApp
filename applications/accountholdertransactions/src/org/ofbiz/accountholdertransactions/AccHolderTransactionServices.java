@@ -1300,6 +1300,8 @@ public class AccHolderTransactionServices {
 								EntityOperator.EQUALS,
 								Long.valueOf(parentChargeId))),
 						EntityOperator.AND);
+		
+	
 		try {
 			accountProductChargeELI = delegator.findList(
 					"AccountProductCharge", accountChargeConditions, null,
@@ -2749,6 +2751,54 @@ public class AccHolderTransactionServices {
 								EntityCondition.makeCondition("createdStamp",
 										EntityOperator.LESS_THAN_EQUAL_TO,
 										balanceDate)), EntityOperator.AND);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			cashDepositELI = delegator.findList("AccountTransaction",
+					transactionConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		BigDecimal bdBalance = BigDecimal.ZERO;
+		BigDecimal bdTransactionAmount = null;
+		log.info("Got  ----------- " + cashDepositELI.size() + " Records !!!");
+		for (GenericValue genericValue : cashDepositELI) {
+			bdTransactionAmount = genericValue
+					.getBigDecimal("transactionAmount");
+			if (bdTransactionAmount != null) {
+				bdBalance = bdBalance.add(bdTransactionAmount);
+			}
+		}
+		return bdBalance;
+	}
+	
+	/***
+	 * @author Japheth Odonya  @when Jul 11, 2015 12:56:54 PM
+	 * Calculating Increase amounts in account between dates
+	 * */
+	private static BigDecimal calculateTotalIncrease(
+			String memberAccountId, Timestamp startdDate, Timestamp endDate,
+			String increaseDecrease) {
+		List<GenericValue> cashDepositELI = null;
+
+		memberAccountId = memberAccountId.replaceAll(",", "");
+		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
+				.makeCondition(
+						UtilMisc.toList(EntityCondition.makeCondition(
+								"memberAccountId", EntityOperator.EQUALS,
+								Long.valueOf(memberAccountId)),
+								EntityCondition
+										.makeCondition("increaseDecrease",
+												EntityOperator.EQUALS,
+												increaseDecrease),
+							EntityCondition.makeCondition("createdStamp",
+														EntityOperator.GREATER_THAN_EQUAL_TO,
+														startdDate),
+												
+								EntityCondition.makeCondition("createdStamp",
+										EntityOperator.LESS_THAN_EQUAL_TO,
+										endDate)), EntityOperator.AND);
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
 			cashDepositELI = delegator.findList("AccountTransaction",
@@ -5768,6 +5818,36 @@ public class AccHolderTransactionServices {
 		//Destination
 		memberTransactionDeposit(bdShareCapitalDeficit, Long.valueOf(destinationMemberAccountId), userLogin, "TRANSFERTO", null, null, acctgTransId, sourceAccountProduct.getLong("accountProductId"), null);
 		
+	}
+
+	public static BigDecimal getTotalDeposits(String code, Long memberId, Timestamp startDate,
+			Timestamp endDate) {
+		//AccHolderTransactionServices.getTotalBalance(memberAccountId, balanceDate)
+		Long accountProductId = LoanUtilities.getAccountProductIdGivenCodeId(code);
+		Long memberAccountId = LoanUtilities.getMemberAccountIdFromMemberAccount(memberId, accountProductId);
+		return AccHolderTransactionServices.calculateTotalIncrease(memberAccountId.toString(), startDate, endDate, "I");
+	}
+
+	public static BigDecimal getTotalPrincipalPaid(String loanApplicationId, Long memberId, Timestamp startDate,
+			Timestamp endDate) {
+		
+		return LoanRepayments.getTotalPrincipalPaid(loanApplicationId, startDate, endDate);
+		//return LoanRepayments.getTotalPrincipalPaid(loanApplicationId, memberId, startDate, endDate);
+		
+	}
+
+	public static BigDecimal getTotalInterestPaid(String loanApplicationId, Long memberId, Timestamp startDate,
+			Timestamp endDate) {
+		// TODO Auto-generated method stub
+		return LoanRepayments.getTotalInterestPaid(loanApplicationId, startDate, endDate);
+				//getTotalInterestPaid(loanApplicationId, memberId, startDate, endDate);
+	}
+
+	public static BigDecimal getTotalInsurancePaid(String loanApplicationId, Long memberId,
+			Timestamp startDate, Timestamp endDate) {
+		// TODO Auto-generated method stub
+		return LoanRepayments.getTotalInsurancePaid(loanApplicationId, startDate, endDate);
+				//AccHolderTransactionServices.getTotalInsurancePaid(loanApplicationId, memberId, startDate, endDate);
 	}
 
 }

@@ -44,4 +44,35 @@
     	<alias entity-alias="ES" name="amount" function="sum"/> 
     </view-entity>
 
+  <view-entity entity-name="ExpectationReceivedNotSent" package-name="org.ofbiz.remittancereports">
+  		
+    	<member-entity entity-alias="ER" entity-name="ExpectedPaymentReceived"></member-entity>
+    	<member-entity entity-alias="ES" entity-name="ExpectedPaymentSent"></member-entity>
+    	
+    	
+    	<alias entity-alias="ES" name="sentpayrollNo" field="payrollNo" ></alias>
+    	<alias entity-alias="ES" name="sentremitanceCode" field="remitanceCode"></alias>
+    	<alias entity-alias="ES" name="sentmonth" field="month"></alias>
+    	<alias entity-alias="ER" name="sentemployerCode" field="employerCode"></alias>
+    	
+    	<alias entity-alias="ER" name="receivedpayrollNo" field="payrollNo"></alias>
+    	<alias entity-alias="ER" name="receivedremitanceCode" field="remitanceCode"></alias>
+    	<alias entity-alias="ER" name="receivedmonth" field="month"></alias>
+    	
+    	<alias entity-alias="ES" name="sentamount" field="amount"></alias>
+    	<alias entity-alias="ER" name="receivedamount" field="amount"></alias>
+    	
+    	<alias entity-alias="ER" name="receivedemployerCode" field="employerCode"></alias>
+    	
+    	<view-link  entity-alias="ER" rel-entity-alias="ES" rel-optional="true">
+    		<key-map field-name="payrollNo" rel-field-name="payrollNo"/>
+    		<key-map field-name="remitanceCode" rel-field-name="remitanceCode"/>
+    		<key-map field-name="month" rel-field-name="month"/>
+    		<key-map field-name="employerCode" rel-field-name="employerCode"/>
+    	</view-link>
+    	
+    	<!-- view-link rel-entity-alias="" entity-alias="">
+    		<key-map field-name="remitanceCode" rel-field-name="remitanceCode"/>
+    	</view-link -->
+    </view-entity>
 </entitymodel>
