@@ -23,7 +23,7 @@ under the License.
             CHAI SACCO
         </fo:block -->
         <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
-            ${member.firstName} ${member.middleName} ${member.lastName}
+            ${member.firstName?if_exists} ${member.middleName?if_exists} ${member.lastName?if_exists}
         </fo:block>
         
         <fo:list-block provisional-distance-between-starts="2in" font-size="10pt" margin-left="0.2in">
