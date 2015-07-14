@@ -39,6 +39,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transaction;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
@@ -67,6 +68,8 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.jdbc.ConnectionFactory;
 import org.ofbiz.entity.model.DynamicViewEntity;
 import org.ofbiz.entity.model.ModelKeyMap;
+import org.ofbiz.entity.transaction.GenericTransactionException;
+import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityTypeUtil;
@@ -394,6 +397,36 @@ public class PartyServices {
 			for (GenericValue genericValue : epELI) {
 				emplPositionId = genericValue.getString("emplPositionId");
 			}
+		}
+		
+		if (emplPositionId == null)
+		{
+			//Create an emplPosition with 
+			String newEmplPositionId = delegator.getNextSeqId("EmplPosition");
+			GenericValue emplPosition = delegator.makeValue("EmplPosition",
+					UtilMisc.toMap("emplPositionId", newEmplPositionId, "emplPositionTypeId",
+							emplPositionTypeId));
+			try {
+				TransactionUtil.begin();
+			} catch (GenericTransactionException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			try {
+				delegator.createOrStore(emplPosition);
+			} catch (GenericEntityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			try {
+				TransactionUtil.commit();
+			} catch (GenericTransactionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			emplPositionId = newEmplPositionId;
 		}
 
 		return emplPositionId;
