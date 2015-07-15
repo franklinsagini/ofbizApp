@@ -678,6 +678,10 @@
             <actions>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <entity-condition entity-name="PartyContentType" list="partyContentTypes">
+                	<condition-list combine="or">
+                		<condition-expr field-name="partyContentTypeId" operator="equals" from-field="INTERNAL"/>
+                		<condition-expr field-name="partyContentTypeId" operator="equals" from-field="LGOIMGURL"/>
+                	</condition-list>
                     <order-by field-name="description"/>
                 </entity-condition>
                 <entity-condition entity-name="MimeType" list="mimeTypes">
