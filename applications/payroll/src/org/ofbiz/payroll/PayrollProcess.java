@@ -388,7 +388,8 @@ public class PayrollProcess {
 		if(bdTaxablePay.compareTo(BigDecimal.ZERO)>0)
 		{
 			bdGrossTax = computeGrossTax(bdTaxablePay, delegator);
-			bdNHIFAmount = computeNHIF(employee, delegator, bdBasicPay);
+			bdNHIFAmount = computeNHIF(employee, delegator, bdGrossPay);
+			//bdNHIFAmount = computeNHIF(employee, delegator, bdBasicPay);
 			bdNHIF = bdNHIFAmount;
 			bdTotRelief = getTotalRelief(employee, staffPayrollId, delegator);
 
