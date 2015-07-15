@@ -33,14 +33,26 @@ under the License.
         </fo:block>
         <fo:block><fo:leader/></fo:block>
         <#-- Payroll Codes Details -->
+        
+        <#function zebra index>
+		  <#if (index % 2) == 0>
+		    <#return "white" />
+		  <#else>
+		    <#return "#C0D9AF" />
+		  </#if>
+		</#function>
 
         <fo:block space-after.optimum="10pt" font-size="10pt">
             <fo:table table-layout="fixed" width="100%">
+            	<fo:table-column column-width="30pt"/>
                 <fo:table-column column-width="150pt"/>
                 <fo:table-column column-width="200pt"/>
                 <fo:table-column column-width="200pt"/>
                 <fo:table-header>
                     <fo:table-row font-weight="bold">
+                    	<fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block></fo:block>
+                        </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                             <fo:block>Payroll Number</fo:block>
                         </fo:table-cell>
@@ -54,20 +66,28 @@ under the License.
                     </fo:table-row>
                 </fo:table-header>
                 <fo:table-body>
+                	<#assign count = 0>
                     <#list codes as codes>
+                    	<#assign count = count + 1>
                         <fo:table-row>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                        	<fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" background-color="${zebra(codes_index)}">
+                                <fo:block>${count}</fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" background-color="${zebra(codes_index)}">
                                 <fo:block>${codes.employeeNumber?if_exists}</fo:block>
                             </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" background-color="${zebra(codes_index)}">
                                 <fo:block>${codes.firstName?if_exists} ${codes.lastName?if_exists}</fo:block>
                             </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right" background-color="${zebra(codes_index)}">
                                 <fo:block>${codes.amount?string(",##0.00")}</fo:block>
                             </fo:table-cell>
                         </fo:table-row>
                     </#list>
                     <fo:table-row>
+                    		<fo:table-cell padding="2pt">
+                                <fo:block></fo:block>
+                            </fo:table-cell>
                             <fo:table-cell padding="2pt">
                                 <fo:block></fo:block>
                             </fo:table-cell>

@@ -720,6 +720,17 @@ under the License.
 		<response name="error" type="view" value="staffpayroll" />
      </request-map>
      
+     
+     <request-map uri="runpayrollVer2">
+		<security https="true" auth="true" />
+		<event type="service" invoke="runpayrollVer2" />
+		<response name="success" type="request-redirect-noparam"
+			value="staffpayroll">
+				<redirect-parameter name="payrollPeriodId"/>
+			</response>
+		<response name="error" type="view" value="staffpayroll" />
+	</request-map>
+     
     <request-map uri="payrollOverview">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="payrollOverview" save-home-view="true">
