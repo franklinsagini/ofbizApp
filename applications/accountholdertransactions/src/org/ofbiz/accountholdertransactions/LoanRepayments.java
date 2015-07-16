@@ -2759,10 +2759,22 @@ public class LoanRepayments {
 			Long loanApplicationId) {
 		//Long loanApplicationIdLog = loanApplicationId;
 		
+		
 		BigDecimal bdTotalExpectedInterestAmount = BigDecimal.ZERO;
 		
 		//BigDecimal bdTotalRepaidLoan = LoanServices.getLoansRepaidByLoanApplicationId(loanApplicationIdLog);
 		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
+	
+		//if loan is cleared return zero
+		Long loanClearedStatusId = LoanUtilities.getLoanStatusId("CLEARED");
+		
+		if (loanClearedStatusId == loanApplication.getLong("loanStatusId"))
+		{
+			return BigDecimal.ZERO;
+		}
+	
+		
+		
 		BigDecimal dbLoanAmt = loanApplication.getBigDecimal("loanAmt");
 				//.subtract(bdTotalRepaidLoan);
 		BigDecimal bdInterestRatePM = loanApplication.getBigDecimal(
@@ -2890,6 +2902,16 @@ public class LoanRepayments {
 		
 		BigDecimal bdTotalRepaidLoan = LoanServices.getLoansRepaidByLoanApplicationId(loanApplicationId);
 		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
+	
+		//if loan is cleared return zero
+		Long loanClearedStatusId = LoanUtilities.getLoanStatusId("CLEARED");
+		
+		if (loanClearedStatusId == loanApplication.getLong("loanStatusId"))
+		{
+			return BigDecimal.ZERO;
+		}
+
+		
 		BigDecimal dbLoanAmt = loanApplication.getBigDecimal("loanAmt");
 				//.subtract(bdTotalRepaidLoan);
 		BigDecimal bdInterestRatePM = loanApplication.getBigDecimal(
