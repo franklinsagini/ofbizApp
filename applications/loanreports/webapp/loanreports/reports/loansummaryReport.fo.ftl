@@ -69,19 +69,19 @@ under the License.
 		  </#if>
 		</#function>
 		
-        <fo:block space-after.optimum="10pt" font-size="9pt">
+        <fo:block space-after.optimum="10pt" font-size="8pt">
             <fo:table table-layout="fixed" width="100%">
-            	<fo:table-column column-width="30pt"/>
-                <fo:table-column column-width="40pt"/>
-                <fo:table-column column-width="100pt"/>
+            	<fo:table-column column-width="20pt"/>
+                <fo:table-column column-width="30pt"/>
+                <fo:table-column column-width="90pt"/>
                 <fo:table-column column-width="60pt"/>
-                <fo:table-column column-width="50pt"/>
-                <fo:table-column column-width="50pt"/>
-                <fo:table-column column-width="50pt"/>
+                <fo:table-column column-width="70pt"/>
+                <fo:table-column column-width="40pt"/>
+                <fo:table-column column-width="40pt"/>
                 <fo:table-column column-width="50pt"/>
                 <fo:table-column column-width="70pt"/>
                 <fo:table-column column-width="50pt"/>
-                <fo:table-column column-width="70pt"/>
+                <fo:table-column column-width="90pt"/>
                 <#-- fo:table-column column-width="60pt"/>
                 <fo:table-column column-width="60pt"/>
                 <fo:table-column column-width="60pt"/>
@@ -147,14 +147,14 @@ under the License.
                     <#list myLoansList as loan>
                         <fo:table-row>
                         	<#assign count = count + 1>
-                        	<fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  text-align="left" background-color="${zebra(codes_index)}">
+                        	<fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  text-align="left" background-color="${zebra(loan_index)}"  margin-top="0.2in">
                                 <fo:block>${count}</fo:block>
                             </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  text-align="left" background-color="${zebra(codes_index)}">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  text-align="left" background-color="${zebra(loan_index)}"   margin-top="0.2in">
                                 <fo:block>${loan.loanNo?if_exists}</fo:block>
                             </fo:table-cell>
                             
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  text-align="left" background-color="${zebra(codes_index)}">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  text-align="left" background-color="${zebra(loan_index)}"   margin-top="0.2in">
                                 <fo:block>
                               <#assign loanPartyId = loan.partyId />  
                               <#assign member = delegator.findOne("Member", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId", loanPartyId), true)/>
@@ -162,10 +162,10 @@ under the License.
                                 </fo:block>
                             </fo:table-cell>
                             
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  text-align="left" background-color="${zebra(codes_index)}">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  text-align="left" background-color="${zebra(loan_index)}">
                                 <fo:block>${loan.disbursementDate?date}</fo:block>
                             </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  text-align="right" background-color="${zebra(codes_index)}">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  text-align="right" background-color="${zebra(loan_index)}">
                                 <fo:block> 
                                 <#assign loanBalance = loan.loanAmt - Static["org.ofbiz.loans.LoanServices"].getLoansRepaidByLoanApplicationId(loan.loanApplicationId)>
                                 <#assign totalLoans = totalLoans+loanBalance>
@@ -173,25 +173,25 @@ under the License.
                                 </fo:block>
                             </fo:table-cell>
                             
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  text-align="right" background-color="${zebra(codes_index)}">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  text-align="right" background-color="${zebra(loan_index)}">
                                 <fo:block>
                                  <#assign loanApplicationId = loan.loanApplicationId /> 
                                 <#assign interestAccrued = Static["org.ofbiz.accountholdertransactions.LoanRepayments"].getTotalInterestByLoanDue(loanApplicationId.toString())>
                                 <#assign totalInterestAccrued = totalInterestAccrued + interestAccrued>
-                                ${interestAccrued?string(",##0.0000")}
+                                ${interestAccrued?string(",##0.00")}
                                 </fo:block>
                             </fo:table-cell>
                             
-                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  text-align="right" background-color="${zebra(codes_index)}">
+                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  text-align="right" background-color="${zebra(loan_index)}">
                                 <fo:block>
                                 <#assign loanApplicationId = loan.loanApplicationId /> 
                                 <#assign insuranceAccrued = Static["org.ofbiz.accountholdertransactions.LoanRepayments"].getTotalInsurancByLoanDue(loanApplicationId.toString())>
                                 <#assign totalInsuranceAccrued = totalInsuranceAccrued + insuranceAccrued>
-                                ${insuranceAccrued?string(",##0.0000")}
+                                ${insuranceAccrued?string(",##0.00")}
                                 </fo:block>
                             </fo:table-cell>
                             
-                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  text-align="right" background-color="${zebra(codes_index)}">
+                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  text-align="right" background-color="${zebra(loan_index)}">
                                 <fo:block>
                                 <#assign loanStatusId = loan.loanStatusId /> 
                                 <#assign loanStatus = delegator.findOne("LoanStatus", Static["org.ofbiz.base.util.UtilMisc"].toMap("loanStatusId", loanStatusId), true)/>
@@ -199,14 +199,14 @@ under the License.
                                 </fo:block>
                             </fo:table-cell>
                             
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  text-align="left" background-color="${zebra(codes_index)}">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  text-align="left" background-color="${zebra(loan_index)}">
                                 <fo:block>
                                 	<#assign loanProductId = loan.loanProductId />
                                 	<#assign loanProduct = delegator.findOne("LoanProduct", Static["org.ofbiz.base.util.UtilMisc"].toMap("loanProductId", loanProductId), true)/>
 								    ${loanProduct.name?if_exists}
                                 </fo:block>
                             </fo:table-cell>
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  text-align="right" background-color="${zebra(codes_index)}">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  text-align="right" background-color="${zebra(loan_index)}">
                                 <fo:block>
                               
                                 <#-- if (expectation.isReceived = 'N') && (expectation.amount??)>
@@ -214,12 +214,12 @@ under the License.
 								    ${loan.loanAmt}
 								</#if -->
 								
-								${loan.loanAmt?string(",##0.0000")}
+								${loan.loanAmt?string(",##0.00")}
 								<#assign totalDisbursed = totalDisbursed + loan.loanAmt>
                                </fo:block>
                             </fo:table-cell>
                             
-                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  text-align="left" background-color="${zebra(codes_index)}">
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  text-align="left" background-color="${zebra(loan_index)}">
                                 <fo:block>
                               <#assign stationId = member.stationId />
                               <#assign stationIdString = stationId.toString() />
@@ -271,12 +271,12 @@ under the License.
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right" >
                                 <fo:block>
-                                ${totalInterestAccrued?string(",##0.0000")}
+                                ${totalInterestAccrued?string(",##0.00")}
                                 </fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right" >
                                 <fo:block>
-                                ${totalInsuranceAccrued?string(",##0.0000")}
+                                ${totalInsuranceAccrued?string(",##0.00")}
                                 </fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
@@ -285,12 +285,11 @@ under the License.
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>
-                                 TOTAL DISBURSED
                                 </fo:block>
                             </fo:table-cell>
                     <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right" >
                                 <fo:block>
-                                ${totalDisbursed?string(",##0.0000")}	
+                                ${totalDisbursed?string(",##0.00")}	
                                 </fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
