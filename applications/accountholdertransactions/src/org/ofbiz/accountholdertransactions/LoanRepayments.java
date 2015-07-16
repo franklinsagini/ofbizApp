@@ -2768,12 +2768,17 @@ public class LoanRepayments {
 		//if loan is cleared return zero
 		Long loanClearedStatusId = LoanUtilities.getLoanStatusId("CLEARED");
 		
+		Long loanDefaultedStatusId = LoanUtilities.getLoanStatusId("DEFAULTED");
+		
 		if (loanClearedStatusId == loanApplication.getLong("loanStatusId"))
 		{
 			return BigDecimal.ZERO;
 		}
 	
-		
+		if (loanDefaultedStatusId == loanApplication.getLong("loanStatusId"))
+		{
+			return BigDecimal.ZERO;
+		}
 		
 		BigDecimal dbLoanAmt = loanApplication.getBigDecimal("loanAmt");
 				//.subtract(bdTotalRepaidLoan);
@@ -2905,8 +2910,14 @@ public class LoanRepayments {
 	
 		//if loan is cleared return zero
 		Long loanClearedStatusId = LoanUtilities.getLoanStatusId("CLEARED");
+		Long loanDefaultedStatusId = LoanUtilities.getLoanStatusId("DEFAULTED");
 		
 		if (loanClearedStatusId == loanApplication.getLong("loanStatusId"))
+		{
+			return BigDecimal.ZERO;
+		}
+		
+		if (loanDefaultedStatusId == loanApplication.getLong("loanStatusId"))
 		{
 			return BigDecimal.ZERO;
 		}
