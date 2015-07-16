@@ -74,10 +74,10 @@ under the License.
             	<fo:table-column column-width="20pt"/>
                 <fo:table-column column-width="30pt"/>
                 <fo:table-column column-width="90pt"/>
-                <fo:table-column column-width="60pt"/>
+                <fo:table-column column-width="40pt"/>
                 <fo:table-column column-width="70pt"/>
-                <fo:table-column column-width="40pt"/>
-                <fo:table-column column-width="40pt"/>
+                <fo:table-column column-width="500pt"/>
+                <fo:table-column column-width="50pt"/>
                 <fo:table-column column-width="50pt"/>
                 <fo:table-column column-width="70pt"/>
                 <fo:table-column column-width="50pt"/>
@@ -175,7 +175,7 @@ under the License.
                             
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  text-align="right" background-color="${zebra(loan_index)}">
                                 <fo:block>
-                                 <#assign loanApplicationId = loan.loanApplicationId /> 
+                                 <#assign loanApplicationId = loan.loanApplicationId />
                                 <#assign interestAccrued = Static["org.ofbiz.accountholdertransactions.LoanRepayments"].getTotalInterestByLoanDue(loanApplicationId.toString())>
                                 <#assign totalInterestAccrued = totalInterestAccrued + interestAccrued>
                                 ${interestAccrued?string(",##0.00")}
@@ -185,7 +185,12 @@ under the License.
                              <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm"  text-align="right" background-color="${zebra(loan_index)}">
                                 <fo:block>
                                 <#assign loanApplicationId = loan.loanApplicationId /> 
-                                <#assign insuranceAccrued = Static["org.ofbiz.accountholdertransactions.LoanRepayments"].getTotalInsurancByLoanDue(loanApplicationId.toString())>
+                                
+                                  <#if loan.loanStatusId==7 >
+                                 	<#assign insuranceAccrued = 0>
+                                 <#else>
+                                 	<#assign insuranceAccrued = Static["org.ofbiz.accountholdertransactions.LoanRepayments"].getTotalInsurancByLoanDue(loanApplicationId.toString())>
+                                 </#if>
                                 <#assign totalInsuranceAccrued = totalInsuranceAccrued + insuranceAccrued>
                                 ${insuranceAccrued?string(",##0.00")}
                                 </fo:block>
