@@ -57,6 +57,15 @@ under the License.
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
     
+    
+      <service name="runpayrollVer2" engine="simple" default-entity-name="PayrollPeriod"
+             location="component://payroll/script/org/ofbiz/payroll/payroll/PayrollServices.xml" invoke="runpayrollVer2" auth="true">
+        <description>Run Payroll</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
     <service name="updateBankDetails" engine="simple" default-entity-name="BankDetails"
              location="component://payroll/script/org/ofbiz/payroll/payroll/PayrollServices.xml" invoke="updateBankDetails" auth="true">
         <description>Update Bank Details</description>

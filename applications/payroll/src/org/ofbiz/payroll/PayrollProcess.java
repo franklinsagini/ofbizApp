@@ -17,6 +17,7 @@ import javolution.util.FastMap;
 import org.apache.log4j.Logger;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -167,6 +168,97 @@ public class PayrollProcess {
 		}
 		return "";
 	}
+	
+	
+	
+	/***
+	 * @author Japheth Odonya  @when Jul 15, 2015 10:54:18 PM
+	 * 
+	 * Run Payroll Method updated taking payroll id and userlogin
+	 * */
+	public static String runpayrollVer2(String payrollPeriodId, Map<String, String> userLogin){
+		Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		//String payrollPeriodId = (String) request
+		//		.getParameter("payrollPeriodId");
+		// Get employees
+		List<GenericValue> employeesELI = null;
+		// String partyId = party.getString("partyId");
+		log.info("######### payrollPeriodId is :::: " + payrollPeriodId);
+
+		// Delegator delegator = DelegatorFactoryImpl.getDelegator(null); //=
+		// party.getDelegator();
+
+		// EntityConditionList<EntityExpr> employeeConditions = EntityCondition
+		// .makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+		// "partyId", EntityOperator.EQUALS,
+		// partyId), EntityCondition.makeCondition(
+		// "payrollPeriodId", EntityOperator.EQUALS,
+		// periodId)), EntityOperator.AND);
+
+		// try {
+		// chequeDepositELI = delegator.findList("AccountTransaction",
+		// transactionConditions, null, null, null, false);
+		//
+		// } catch (GenericEntityException e2) {
+		// e2.printStackTrace();
+		// }
+
+		try {
+			employeesELI = delegator.findList("StaffPayroll", EntityCondition
+					.makeCondition("payrollPeriodId", payrollPeriodId), null,
+					null, null, false);
+		
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		//removeCalculatedValues(payrollPeriodId, delegator);
+
+		log.info("######### Loop through Staff");
+
+	for (GenericValue genericValue : employeesELI) {
+			deleteStaffSystemElements(genericValue
+					.getString("staffPayrollId"), delegator); 
+			
+			processPayroll(genericValue, genericValue
+					.getString("staffPayrollId"), delegator);
+			log.info("######### Staff ID "
+					+ genericValue.getString("staffPayrollId"));
+			manageBalances(genericValue, genericValue.getString("staffPayrollId"), delegator);
+		}
+
+	List<GenericValue> listPayrollPeriodSummary = new ArrayList<GenericValue>();
+	
+	log.info("######### bdNSSFSUMMARY ######### " + bdNSSFSUMMARY);
+	log.info("######### bdNHIFSUMMARY ######### " + bdNHIFSUMMARY);
+	log.info("######### bdPENSIONSUMMARY ######### " + bdPENSIONSUMMARY);
+	log.info("######### bdPAYESUMMARY ######### " + bdPAYESUMMARY);
+	log.info("######### bdNETPAYSUMMARY ######### " + bdNETPAYSUMMARY);
+	
+	deletePayrollPeriodSummary(delegator, payrollPeriodId);
+	
+	bdNSSFSUMMARY = bdNSSFSUMMARY.setScale(4, RoundingMode.HALF_UP);
+	listPayrollPeriodSummary.add(createSummaryToSave(delegator, payrollPeriodId, "NSSF", bdNSSFSUMMARY));	
+	bdNHIFSUMMARY = bdNHIFSUMMARY.setScale(4, RoundingMode.HALF_UP);	
+	listPayrollPeriodSummary.add(createSummaryToSave(delegator, payrollPeriodId, "NHIF", bdNHIFSUMMARY));	
+	bdPENSIONSUMMARY = bdPENSIONSUMMARY.setScale(4, RoundingMode.HALF_UP);	
+	listPayrollPeriodSummary.add(createSummaryToSave(delegator, payrollPeriodId, "PENSION", bdPENSIONSUMMARY));	
+	bdPAYESUMMARY = bdPAYESUMMARY.setScale(4, RoundingMode.HALF_UP);
+	listPayrollPeriodSummary.add(createSummaryToSave(delegator, payrollPeriodId, "PAYE", bdPAYESUMMARY));	
+	bdNETPAYSUMMARY = bdNETPAYSUMMARY.setScale(4, RoundingMode.HALF_UP);
+	listPayrollPeriodSummary.add(createSummaryToSave(delegator, payrollPeriodId, "NETPAY", bdNETPAYSUMMARY));
+	
+	try {
+		delegator.storeAll(listPayrollPeriodSummary);
+	} catch (GenericEntityException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+		return "success";
+	}
+	
 	private static GenericValue createSummaryToSave(Delegator delegator, String payrollPeriodId, String Name, BigDecimal Amount ){
 		String payrollPeriodSummarySequenceId = delegator
 		.getNextSeqId("PayrollPeriodSummary");
@@ -530,8 +622,8 @@ public class PayrollProcess {
 						payrollElementId, "amount", elementAmount, "staffPayrollId",
 						staffPayrollId, "valueChanged", "N", "balance", BigDecimal.valueOf(0.0)));
 		try {
-			staffPayrollElement = delegator
-					.createSetNextSeqId(staffPayrollElement);
+			staffPayrollElement = delegator.createOrStore(staffPayrollElement);
+					//.createSetNextSeqId(staffPayrollElement);
 		} catch (GenericEntityException e1) {
 			e1.printStackTrace();
 		}
@@ -1133,9 +1225,13 @@ public class PayrollProcess {
 
 		for (GenericValue payrollElem : payrollElementELI) {
 			// Get the amount
-			double x = payrollElem.getDouble(("calcRate"));
-			
-			bdPensionEmployerRate = new BigDecimal(payrollElem.getDouble("calcRate")).divide(new BigDecimal(100));
+			Double x = payrollElem.getDouble(("calcRate"));
+			if (x != null){
+				bdPensionEmployerRate = new BigDecimal(payrollElem.getDouble("calcRate")).divide(new BigDecimal(100));
+			}
+			else{
+				bdPensionEmployerRate = BigDecimal.ZERO;
+			}
 			log.info("######### Pension Employer % " + bdPensionEmployerRate);
 		}
 
