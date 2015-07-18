@@ -2486,6 +2486,92 @@ under the License.
       	<!-- field name="tellerAllocated" title="Teller Not ALlocated" use-when="(tellerBalance!=null) &amp;&amp; (tellerBalance.compareTo(BigDecimal.ZERO) &lt; 1)"><display default-value="Teller Must be allocated before any transaction can happen"></display></field -->
       	
        </form>
+       
+       
+       <!-- FindReceiveStation -->
+       	<form name="FindReceivedStation" type="single" target="receivedPaymentStations" default-entity-name="ExpectedPaymentReceivedAll">
+        <actions>
+        
+        	<entity-condition entity-name="MonthStationCount" list="monthStationList"></entity-condition>
+        </actions>
+        
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+
+        <field name="month" title="Month">
+        	<drop-down allow-empty="true">
+        		<!-- entity-options description="${month}"  entity-name="MonthStationCount">
+        			<entity-order-by field-name="-month"/>
+        		</entity-options -->
+        		<option key="12015" description="12015"/>
+        		<option key="22015" description="22015"/>
+        		<option key="32015" description="32015"/>
+        		<option key="42015" description="42015"/>
+        		<option key="52015" description="52015"/>
+        		<option key="62015" description="62015"/>
+        		<option key="72015" description="72015"/>
+        		<option key="82015" description="82015"/>
+        		<option key="92015" description="92015"/>
+        		<option key="102015" description="102015"/>
+        		<option key="112015" description="112015"/>
+        		<option key="122015" description="122015"/>
+        	</drop-down>
+        </field>
+
+        
+        <field name="employerCode" title="Employer Code" position="1"><text-find/></field>
+ 		<field name="employerName" title="Employer Name" position="2"><text-find/></field>
+
+		<field name="Onlinecode" title="Online Code" position="1"><text-find/></field>
+        
+
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
+    </form>
     
+    <!-- listReceivedStation -->
+        <form name="listReceivedStation" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStationAccountTransaction" paginate-target="expectedPaymentStations"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <!-- entity-condition entity-name="StationExpectation">
+            	<order-by field-name="-month"></order-by>
+            	<order-by field-name="employerName"></order-by>
+            </entity-condition -->
+            
+            
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="stationExpectationCtx"/>
+                <field-map field-name="entityName" value="ExpectedPaymentReceivedAll"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+                
+            </service>
+            
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateStationExpectation"/ -->
+ 		
+ 		
+ 		<field name="employerCode" title="Employer Code"><text></text></field>
+ 		<field name="employerName" title="Employer Name"><text></text></field>
+ 		
+ 		<!-- field name="stationNumber" title="Station No/Code"><text></text></field>
+ 		<field name="stationName" title="Station Name"><text></text></field -->
+        <field name="month" title="Month of the Year (MonthYear)" ><text></text></field>
+        
+        <field name="Onlinecode" title="Online Code"><text></text></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+        <field name="expectedRemittance" title="Expected Remittance" widget-style="buttontext">
+            <hyperlink target="expectedPaymentBreakdown" description="Expected Remittance" also-hidden="false">
+                <parameter param-name="employerCode"/>
+                 <parameter param-name="month"/>
+            </hyperlink>
+        </field>
+        
+         <field name="receivedRemittance" title="Received Remittance" widget-style="buttontext">
+            <hyperlink target="receivedPaymentBreakdown" description="Received Remittance" also-hidden="false">
+                <parameter param-name="employerCode"/>
+                 <parameter param-name="month"/>
+            </hyperlink>
+        </field>
+    </form>
     
 </forms>
