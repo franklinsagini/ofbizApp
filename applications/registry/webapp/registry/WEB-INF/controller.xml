@@ -616,8 +616,26 @@
     <response name="success" type="view"  value="inactiveFiles"></response>
     <response name="error" type="view" value="inactiveFiles" />
     </request-map> -->
+    
+    <!-- ======================== REQUEST PLUS SEND MAILS  ============================ -->
 
+<request-map uri="requestingRegistryFiles"> 
+		<security auth="true" https="true" />
+		<event type="java" path="org.ofbiz.registry.FileServices"
+			invoke="requestFileAndSendNotification" />
+		<response name="success" type="view" value="regFileRequest"/>
+		<response name="error" type="view" value="regFileRequest" />
+	</request-map>  
+	
+	 <!-- ======================== ISSUE PLUS SEND MAILS  ============================ -->
 
+<request-map uri="issuingRegistryFiles">
+		<security auth="true" https="true" />
+		<event type="java" path="org.ofbiz.registry.FileServices"
+			invoke="issueFileAndSendNotification" />
+		<response name="success" type="view" value="regFileIssue"/>
+		<response name="error" type="view" value="regFileIssue" />
+	</request-map>  
 
 
 	<!-- documents -->

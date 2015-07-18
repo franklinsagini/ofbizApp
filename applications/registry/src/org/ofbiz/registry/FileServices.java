@@ -1,5 +1,7 @@
 package org.ofbiz.registry;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.security.Security;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -59,11 +61,13 @@ import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.humanres.HumanResServices;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.GenericDispatcherFactory;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.mail.MimeMessageWrapper;
+import org.ofbiz.webapp.event.EventHandlerException;
 
 import com.sun.mail.smtp.SMTPAddressFailedException;
 
@@ -1357,6 +1361,133 @@ public class FileServices {
 					
 				return newRequester; 
 				}
+				
+				
+				// ================= SEND MAIL ASYNCRONOUSLY ==============================
+				
+				public static String SendScheduledMailAfterRegActivity(HttpServletRequest request, HttpServletResponse response) {
+					Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+					LocalDispatcher dispatcher = (new GenericDispatcherFactory()).createLocalDispatcher("interestcalculations", delegator);
+
+					Map<String, String> context = UtilMisc.toMap("message",	"Email Sending !!");
+					try {
+						dispatcher.runAsync("sendScheduledEmailNotificationToStaff", context);
+					} catch (GenericServiceException e) {
+						e.printStackTrace();
+					}
+
+					Writer out;
+					try {
+						out = response.getWriter();
+						out.write("");
+						out.flush();
+					} catch (IOException e) {
+						try {
+							throw new EventHandlerException(
+									"Unable to get response writer", e);
+						} catch (EventHandlerException e1) {
+							e1.printStackTrace();
+						}
+					}
+					return "";
+
+				}
+				
+				// ================= REQUEST FILE ==============================
+				
+				public static String RequestFileService(HttpServletRequest request, HttpServletResponse response) {
+					Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+					LocalDispatcher dispatcher = (new GenericDispatcherFactory()).createLocalDispatcher("interestcalculations", delegator);
+
+					Map<String, String> context = UtilMisc.toMap("message",	"Requesting Files!!");
+					try {
+						dispatcher.runSync("requestfiles", context);
+					} catch (GenericServiceException e) {
+						e.printStackTrace();
+					}
+
+					Writer out;
+					try {
+						out = response.getWriter();
+						out.write("");
+						out.flush();
+					} catch (IOException e) {
+						try {
+							throw new EventHandlerException(
+									"Unable to get response writer", e);
+						} catch (EventHandlerException e1) {
+							e1.printStackTrace();
+						}
+					}
+					return "";
+
+				}
+				
+               // ================= ISSUE FILE ==============================
+				
+				public static String IssueFileService(HttpServletRequest request, HttpServletResponse response) {
+					Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+					LocalDispatcher dispatcher = (new GenericDispatcherFactory()).createLocalDispatcher("interestcalculations", delegator);
+
+					Map<String, String> context = UtilMisc.toMap("message",	"Requesting Files!!");
+					try {
+						dispatcher.runSync("issuefiles", context);
+					} catch (GenericServiceException e) {
+						e.printStackTrace();
+					}
+
+					Writer out;
+					try {
+						out = response.getWriter();
+						out.write("");
+						out.flush();
+					} catch (IOException e) {
+						try {
+							throw new EventHandlerException(
+									"Unable to get response writer", e);
+						} catch (EventHandlerException e1) {
+							e1.printStackTrace();
+						}
+					}
+					return "";
+
+				}
+				
+				
+                // ======================== REQUEST PLUS SEND MAILS ==================================
+				public static String requestFileAndSendNotification(HttpServletRequest request, HttpServletResponse response) {
+					
+						
+						
+						try {
+							RequestFileService(request, response);
+							SendScheduledMailAfterRegActivity(request, response);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						
+						
+						
+					return null;
+				}
+				
+				 // ======================== ISSUE PLUS SEND MAILS ==================================
+				public static String issueFileAndSendNotification(HttpServletRequest request, HttpServletResponse response) {
+					
+						
+						
+						try {
+							RequestFileService(request, response);
+							SendScheduledMailAfterRegActivity(request, response);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						
+						
+						
+					return null;
+				}
+				
 				
 				
 }
