@@ -1133,6 +1133,10 @@ public class FileServices {
 					}
 					else {
 						state = "VALID";
+						//send mail herejjjjj
+						HttpServletResponse response = null;
+						HttpServletRequest request = null;
+						SendScheduledMailAfterRegActivity(request, response);
 					}
 				
 					return state;
@@ -1479,110 +1483,8 @@ public class FileServices {
 				
 
 				
-			/*	public static String requestFile(HttpServletRequest request, HttpServletResponse response) {
-					Delegator delegator = (Delegator) request.getAttribute("delegator");
-				       GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
-						String user = userLogin.getString("partyId");
-						String fileMember = (String) request.getParameter("partyId");
-						List<GenericValue> toBeStored = FastList.newInstance();
-						GenericValue leavesELI = null; 
-						GenericValue partyELI = null; 
-						GenericValue leaveLogs = null; 
-						GenericValue ForwaedTo = null; 
-						GenericValue LeaveTypeELI = null; 
-						GenericValue emailRecord_firstApprover = null;
-						String firstApprover = 	getFirstWorkflowApprover(leaveid);	
-						
-						try {
-							
-							leavesELI = delegator.findOne("RegistryFiles",
-											UtilMisc.toMap("partyId", fileMember), false);
-									
-						} catch (GenericEntityException e) {
-							e.printStackTrace();
-						}
-						
-						if (leavesELI != null) {
-							leavesELI.set("responsibleEmployee", firstApprover);
-							
-							String party = leavesELI.getString("partyId");
-							
-							try {
-								
-								partyELI = delegator.findOne("Person",	UtilMisc.toMap("partyId", party), false);
-										
-							} catch (GenericEntityException e) {
-								e.printStackTrace();
-							}
-							
-							String fname = null;
-							String sname = null;
-							String payrolll = null;
-							
-								fname = partyELI.getString("firstName");
-								sname = partyELI.getString("lastName");
-								payrolll = partyELI.getString("employeeNumber");
-								String fullName = " "+fname+" "+sname;
-								
-								
-								try {
-									
-									ForwaedTo = delegator.findOne("Person",	UtilMisc.toMap("partyId", firstApprover), false);
-											
-								} catch (GenericEntityException e) {
-									e.printStackTrace();
-								}
-								
-			                       try {
-									
-									LeaveTypeELI = delegator.findOne("EmplLeaveType",	UtilMisc.toMap("leaveTypeId", leavesELI.getString("leaveTypeId")), false);
-											
-								} catch (GenericEntityException e) {
-									e.printStackTrace();
-								}
-								
-								String fname2 = null;
-								String sname2 = null;
-								
-									fname2 = ForwaedTo.getString("firstName");
-									sname2 = ForwaedTo.getString("lastName");
-									String fullName2 = " "+fname2+" "+sname2;
-							
-							emailRecord_firstApprover = delegator.makeValue("StaffScheduledMail", "msgId", delegator.getNextSeqId("StaffScheduledMail"), 
-									"partyId", firstApprover,
-						            "subject", "LEAVE APPROVAL", 
-						            "body", "Leave Application has been Send to you for approval by :"+fullName+" Payroll :"+payrolll,
-						            "sendStatus", "NOTSEND");
-							
-							leaveLogs = delegator.makeValue("staffLeaveLogs", "logId", delegator.getNextSeqId("staffLeaveLogs"), 
-									"partyId", party,
-						            "leaveType", LeaveTypeELI.getString("description"), 
-						            "action", "Forward to "+fullName2,
-						            "actionBy", user);
-							
-							
-							
-							toBeStored.add(leavesELI);
-							toBeStored.add(leaveLogs);
-							toBeStored.add(emailRecord_firstApprover);
-						} else {
-
-						}
-						
-						
-						try {
-							delegator.storeAll(toBeStored);
-							SendScheduledMail(request, response);
-						} catch (GenericEntityException e) {
-							e.printStackTrace();
-						}
-						
-						
-						
-					return leaveid;
-				}
+			
 				
 				
-				*/
 				
 }
