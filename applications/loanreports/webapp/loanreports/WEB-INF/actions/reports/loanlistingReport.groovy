@@ -80,7 +80,7 @@ myLoansList.eachWithIndex { loan, index ->
 	loanItem.loanBalance = loanBalance;
 	
 	loanItem.interestAccrued = org.ofbiz.accountholdertransactions.LoanRepayments.getTotalInterestByLoanDue(loan.loanApplicationId.toString());
-	loanItem.insuranceAccrued = org.ofbiz.accountholdertransactions.LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString());
+	loanItem.insuranceAccrued = org.ofbiz.accountholdertransactions.LoanRepayments.getTotalInsurancByLoanDue(loan.loanApplicationId.toString());
 	loanStatus = delegator.findOne("LoanStatus", [loanStatusId : loan.loanStatusId], false);
 	loanItem.loanStatus = loanStatus.name;
 	loanProduct = delegator.findOne("LoanProduct", [loanProductId : loan.loanProductId], false);
