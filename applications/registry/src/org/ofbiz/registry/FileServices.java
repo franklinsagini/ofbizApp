@@ -1456,22 +1456,22 @@ public class FileServices {
 				
                 // ======================== REQUEST PLUS SEND MAILS ==================================
 				public static String requestFileAndSendNotification(HttpServletRequest request, HttpServletResponse response) {
-					String partyId = (String) request.getParameter("partyId");
+					
 						
 							RequestFileService(request, response);
 							SendScheduledMailAfterRegActivity(request, response);
 						
 						
-					return partyId;
+					return null;
 				}
 				
 				 // ======================== ISSUE PLUS SEND MAILS ==================================
 				public static String issueFileAndSendNotification(HttpServletRequest request, HttpServletResponse response) {
-					String partyId = (String) request.getParameter("partyId");
+					
 							IssueFileService(request, response);
 							SendScheduledMailAfterRegActivity(request, response);
 						
-					return partyId;
+					return null;
 				}
 				
 				
