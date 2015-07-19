@@ -555,7 +555,7 @@
          <set field="requestedbyHasFile" from-field="req.currentPossesser"/>
          <set field="text" value="${userLogin.partyId}"/>
         <set field="userInput" value="${bsh:org.ofbiz.registry.FileServices.findnoOfOfFileperUser(text) ;}" type="String" /> 
-        <set field="newRequester" value="${bsh:org.ofbiz.registry.FileServices.ifnewRequesterPartyHasBeenQued(partyId,text);}"/>
+        <!-- <set field="newRequester" value="${bsh:org.ofbiz.registry.FileServices.ifnewRequesterPartyHasBeenQued(partyId,text);}"/> -->
         
         <log message=">>>>>>>>>>>>>>>>********************************>>>>>>>ISVALID === ${newRequester}" level="info"/>
         
@@ -573,7 +573,7 @@
 			</then>
 			</if>
         
-            <if>
+           <!--  <if>
 			<condition>
 					<if-compare-field field="newRequester"
 						to-field="valid" operator="equals" />
@@ -586,7 +586,7 @@
 				</add-error>
 				<check-errors />
 			</then>
-			</if>
+			</if> -->
 			   
         <if>
 			<condition>
