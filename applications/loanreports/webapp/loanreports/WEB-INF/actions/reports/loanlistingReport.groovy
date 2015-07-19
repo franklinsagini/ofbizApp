@@ -25,13 +25,18 @@ if ((stationId != null) && (stationId != "")){
 disburseLoanStatusId = 6.toLong();
 overpayedLoanStatusId = 7.toLong();
 defaultedLoanStatusId = 10030.toLong();
+claimedLoanStatusId = 10013.toLong();
+
+//6,10030,10013,7
+
 if ((partyId != null) && (partyId != "")){
 	myLoansList = delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: disburseLoanStatusId], null, false);
 	overpayedList = delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: overpayedLoanStatusId], null, false);
 	defaultedList = delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: defaultedLoanStatusId], null, false);
-	
+	claimedLoansList =  delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: claimedLoanStatusId], null, false);
 	myLoansList =  overpayedList + myLoansList;
 	myLoansList =  myLoansList + defaultedList;
+	myLoansList =  myLoansList + claimedLoansList;
 	
 }
 if ((loanProductId != null) && (loanProductId != "")){
@@ -40,17 +45,24 @@ if ((loanProductId != null) && (loanProductId != "")){
 
 	defaultedList = delegator.findByAnd("LoanApplication",  [loanProductId : lloanProductId, loanStatusId: defaultedLoanStatusId], null, false);
 	
+	claimedLoanList = delegator.findByAnd("LoanApplication",  [loanProductId : lloanProductId, loanStatusId: claimedLoanStatusId], null, false);
+	// = 10013.toLong();
 	myLoansList =  overpayedList + myLoansList;
 	myLoansList =  myLoansList + defaultedList;
+	myLoansList =  myLoansList + claimedLoanList;
+	
 }
 
 if ((stationId != null) && (stationId != "")){
 	myLoansList = delegator.findByAnd("LoansByStation",  [stationId : lstationId, loanStatusId: disburseLoanStatusId], null, false);
 	overpayedList = delegator.findByAnd("LoansByStation",  [stationId : lstationId, loanStatusId: overpayedLoanStatusId], null, false);
 	defaultedList = delegator.findByAnd("LoansByStation",  [stationId : lstationId, loanStatusId: defaultedLoanStatusId], null, false);
+	claimedLoanList = delegator.findByAnd("LoansByStation",  [stationId : lstationId, loanStatusId: claimedLoanStatusId], null, false);
 	
 	myLoansList =  overpayedList + myLoansList;
 	myLoansList =  myLoansList + defaultedList;
+	myLoansList =  myLoansList + claimedLoanList;
+	
 }
 
 
@@ -58,8 +70,13 @@ if ((partyId == "") && (loanProductId == "") && (stationId == "")){
 	myLoansList = delegator.findByAnd("LoanApplication",  [loanStatusId: disburseLoanStatusId], null, false);
 	overpayedList = delegator.findByAnd("LoanApplication",  [loanStatusId: overpayedLoanStatusId], null, false);
 	defaultedList = delegator.findByAnd("LoanApplication",  [loanStatusId: defaultedLoanStatusId], null, false);
+	claimedLoanList = delegator.findByAnd("LoanApplication",  [loanStatusId: claimedLoanStatusId], null, false);
+	
+	
 	myLoansList =  overpayedList + myLoansList;
 	myLoansList =  myLoansList + defaultedList;
+	myLoansList =  myLoansList + claimedLoanList;
+	
 }
 
 def loanBalance = BigDecimal.ZERO;
