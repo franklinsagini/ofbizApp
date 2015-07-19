@@ -56,6 +56,8 @@ public class TreasuryUtility {
 		BigDecimal bdTotalAllocated = getTotalAllocated(userLogin);
 		BigDecimal bdTotalCashDeposits = getTotalCashDepositToday(userLogin);
 		BigDecimal bdTotalCashWithdrawals = getTotalCashWithdrawalToday(userLogin);
+		
+		BigDecimal bdTotalLoanCashDeposit = getTotalLoanCashDepositToday(userLogin);
 
 		String partyId = userLogin.get("partyId");
 		String treasuryId = getTeller(partyId).getString("treasuryId");
@@ -72,8 +74,12 @@ public class TreasuryUtility {
 		BigDecimal bdOpeningBalance = getOpeningBalance(treasuryId, date);
 		BigDecimal bdDeallocatedAmount = getTotalDeAllocatedToday(userLogin,
 				new Timestamp(date.getTime()));
+		
 		bdTellerBalance = bdTotalAllocated.add(bdOpeningBalance)
 				.add(bdTotalCashDeposits).subtract(bdTotalCashWithdrawals);
+		
+		bdTellerBalance = bdTellerBalance.add(bdTotalLoanCashDeposit);
+		
 		bdTellerBalance = bdTellerBalance.subtract(bdDeallocatedAmount);
 		log.info("DDDDDDDD DDDDDDDDDDD ########## ");
 		log.info("DDDDDDDD AMount Deallocated is ########## "
@@ -266,7 +272,69 @@ public class TreasuryUtility {
 		userLogin.put("partyId", partyId);
 
 		bdTotalsIn = getTotalCashDeposit(userLogin, transactionDate, true);
+		
+		bdTotalsIn = bdTotalsIn.add(getTotalLoanCashDeposit(userLogin, transactionDate, true));
 		return bdTotalsIn;
+	}
+	
+	
+	private static BigDecimal getTotalLoanCashDeposit(
+			Map<String, String> userLogin, Timestamp transactionDate,
+			boolean strict) {
+		String createdBy = userLogin.get("userLoginId");
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(transactionDate.getTime());
+		calendar.set(Calendar.MILLISECOND, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+
+		Calendar calEndDay = Calendar.getInstance();
+		calEndDay.setTimeInMillis(transactionDate.getTime());
+		calEndDay.add(Calendar.DATE, 1);
+		calEndDay.set(Calendar.MILLISECOND, 0);
+		calEndDay.set(Calendar.SECOND, 0);
+		calEndDay.set(Calendar.MINUTE, 0);
+		calEndDay.set(Calendar.HOUR_OF_DAY, 0);
+
+		Timestamp tstampDateCreated = new Timestamp(calendar.getTimeInMillis());
+
+		Timestamp tstEndDay = new Timestamp(calEndDay.getTimeInMillis());
+
+		List<GenericValue> cashDepositELI = null;
+
+		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"createdBy", EntityOperator.EQUALS, createdBy),
+						EntityCondition.makeCondition("transactionType",
+								EntityOperator.EQUALS, "LOANCASHPAY"),
+
+						EntityCondition.makeCondition("createdStamp",
+								EntityOperator.GREATER_THAN_EQUAL_TO,
+								tstampDateCreated),
+
+						EntityCondition.makeCondition("createdStamp",
+								EntityOperator.LESS_THAN, tstEndDay)
+
+				), EntityOperator.AND);
+
+		log.info(" ############ Cash Deposit createdBy : " + createdBy);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			cashDepositELI = delegator.findList("AccountTransaction",
+					transactionConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		BigDecimal bdBalance = BigDecimal.ZERO;
+		for (GenericValue genericValue : cashDepositELI) {
+			bdBalance = bdBalance.add(genericValue
+					.getBigDecimal("transactionAmount"));
+		}
+		return bdBalance;
 	}
 
 	private static BigDecimal getTotalCashDeposit(
@@ -992,6 +1060,49 @@ public class TreasuryUtility {
 						"createdBy", EntityOperator.EQUALS, createdBy),
 						EntityCondition.makeCondition("transactionType",
 								EntityOperator.EQUALS, "CASHDEPOSIT")
+
+						, EntityCondition.makeCondition("createdStamp",
+								EntityOperator.GREATER_THAN_EQUAL_TO,
+								tstampDateCreated)), EntityOperator.AND);
+
+		log.info(" ############ Cash Deposit createdBy : " + createdBy);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			cashDepositELI = delegator.findList("AccountTransaction",
+					transactionConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		BigDecimal bdBalance = BigDecimal.ZERO;
+		for (GenericValue genericValue : cashDepositELI) {
+			bdBalance = bdBalance.add(genericValue
+					.getBigDecimal("transactionAmount"));
+		}
+		return bdBalance;
+	}
+	
+	public static BigDecimal getTotalLoanCashDepositToday(
+			Map<String, String> userLogin) {
+		// TODO Auto-generated method stub
+		String createdBy = userLogin.get("userLoginId");
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.MILLISECOND, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+
+		Timestamp tstampDateCreated = new Timestamp(calendar.getTimeInMillis());
+
+		List<GenericValue> cashDepositELI = null;
+
+		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"createdBy", EntityOperator.EQUALS, createdBy),
+						EntityCondition.makeCondition("transactionType",
+								EntityOperator.EQUALS, "LOANCASHPAY")
 
 						, EntityCondition.makeCondition("createdStamp",
 								EntityOperator.GREATER_THAN_EQUAL_TO,

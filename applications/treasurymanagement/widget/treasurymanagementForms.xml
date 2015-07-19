@@ -618,6 +618,14 @@
             			<condition-expr field-name="createdStamp" operator="less" value="${endOfDay}"/>
             			<condition-expr field-name="transactionType" operator="equals" value="CASHDEPOSIT"/>
             		</condition-list>
+            		
+            		<condition-list combine="and">
+            			<condition-expr field-name="isActive" value="Y"/>
+            			<condition-expr field-name="treasuryId" operator="equals" value="${treasuryId}"/>
+            			<condition-expr field-name="createdStamp" operator="greater-equals" value="${transferDate}"/>
+            			<condition-expr field-name="createdStamp" operator="less" value="${endOfDay}"/>
+            			<condition-expr field-name="transactionType" operator="equals" value="LOANCASHPAY"/>
+            		</condition-list>
  
              		<condition-list combine="and">
             			<condition-expr field-name="isActive" value="Y"/>
