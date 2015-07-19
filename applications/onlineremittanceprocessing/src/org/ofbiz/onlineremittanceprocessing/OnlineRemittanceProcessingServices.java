@@ -825,7 +825,9 @@ public class OnlineRemittanceProcessingServices {
 						member.getString("employeeNumber"), "memberNumber",
 						member.getString("memberNumber"),
 
-						"loanNo", loanNo, "employerNo", employerName, "amount",
+						"loanNo", loanNo, "employerNo", employerCode,
+						"employerName", employerName,
+						"amount",
 						amount, "remitanceDescription", remitanceDescription,
 						"employeeName", employeeNames, "expectationType", "",
 						"month", month.trim()));
