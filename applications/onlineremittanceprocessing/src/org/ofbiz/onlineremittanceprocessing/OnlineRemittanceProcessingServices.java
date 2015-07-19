@@ -821,14 +821,14 @@ public class OnlineRemittanceProcessingServices {
 						stationNumber, "stationName", stationName,
 
 						"payrollNo", member.getString("payrollNumber"),
-						"employerCode", employerCode, "employeeNumber",
+						"employerCode", employerCode.trim(), "employeeNumber",
 						member.getString("employeeNumber"), "memberNumber",
 						member.getString("memberNumber"),
 
 						"loanNo", loanNo, "employerNo", employerName, "amount",
 						amount, "remitanceDescription", remitanceDescription,
 						"employeeName", employeeNames, "expectationType", "",
-						"month", month));
+						"month", month.trim()));
 
 		// accountProduct.getString("code")
 		try {
