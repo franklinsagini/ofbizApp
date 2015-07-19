@@ -5873,8 +5873,8 @@ public class AccHolderTransactionServices {
 		String transactionType = withdrawalType;
 
 		// Set the the Treasury ID
-		// String treasuryId = TreasuryUtility.getTellerId(userLogin);
-		// accountTransaction.set("treasuryId", treasuryId);
+		String treasuryId = TreasuryUtility.getTellerId(userLogin);
+		//accountTransaction.set("treasuryId", treasuryId);
 		// addChargesToTransaction(accountTransaction, userLogin,
 		// transactionType);
 		// increaseDecrease
@@ -5883,7 +5883,7 @@ public class AccHolderTransactionServices {
 		createTransactionLoan(accountTransaction, transactionType, userLogin,
 				loanApplicationId.toString(), transactionAmount, null,
 				accountTransactionParent
-						.getString("accountTransactionParentId"), acctgTransId);
+						.getString("accountTransactionParentId"), acctgTransId, treasuryId);
 		
 		// postCashWithdrawalTransaction(accountTransaction, userLogin);
 
@@ -5929,7 +5929,7 @@ public class AccHolderTransactionServices {
 	private static void createTransactionLoan(GenericValue loanApplication,
 			String transactionType, Map<String, String> userLogin,
 			String loanApplicationId, BigDecimal transactionAmount,
-			String productChargeId, String accountTransactionParentId, String acctgTransId) {
+			String productChargeId, String accountTransactionParentId, String acctgTransId, String treasuryId) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);// loanApplication.getDelegator();
 		GenericValue accountTransaction;
 		String accountTransactionId = delegator
@@ -6026,7 +6026,7 @@ public class AccHolderTransactionServices {
 
 		// "partyId", Long.valueOf(partyId),
 
-		String treasuryId = null;
+		//String treasuryId = null;
 
 		//if (loanApplication != null)
 		//	treasuryId = loanApplication.getString("treasuryId");
