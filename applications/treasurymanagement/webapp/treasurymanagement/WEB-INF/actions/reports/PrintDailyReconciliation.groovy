@@ -126,6 +126,38 @@ transfersOutTotalList.eachWithIndex { transferOutItem, outIndex ->
 		
 	}
 
+	
+//Adding Loan Repay
+	
+	expr = exprBldr.AND() { //Timestamp
+		GREATER_THAN_EQUAL_TO(createdStamp: transferDateTimestamp)
+		LESS_THAN_EQUAL_TO(createdStamp: endOfDay)
+		EQUALS(treasuryId: destinationTreasury)
+		EQUALS(transactionType: 'LOANCASHPAY')
+	}
+	
+	//allTransactions = delegator.findByAnd("AccountTransaction",  expr, null, false);
+	
+	//membersList = delegator.findList("Member", expr, null, ["joinDate ASC"], findOptions, false)
+	findOptions = new EntityFindOptions();
+	accountTransactionLoanCashRepayList = delegator.findList("AccountTransaction", expr, null, null, findOptions, false)
+	
+	
+	accountTransactionLoanCashRepayList.eachWithIndex { depositsItem, depIndex ->
+		//totalOut = totalOut.add(transferOutItem.transactionAmount);
+		
+		treasuryTransaction =  new TreasuryTransaction();
+		
+		treasuryTransaction.memberAccountNo = ""
+		treasuryTransaction.description = " (Loan Cash Pay)"
+		treasuryTransaction.transactionAmount = depositsItem.transactionAmount
+		treasuryTransaction.increaseDecrease = "I"
+		treasuryTransaction.transactionDateTime = depositsItem.createdStamp
+		
+		mergedTransactionsList.add(treasuryTransaction)
+		
+	}
+	
 //accountTransactionCashDepositList = delegator.findByAnd("AccountTransaction",  [treasuryId : destinationTreasury, ], null, false);
 
 //Get the Cash Withdrawals transactions and add

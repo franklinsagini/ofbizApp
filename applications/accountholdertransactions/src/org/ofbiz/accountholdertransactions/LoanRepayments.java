@@ -1460,7 +1460,7 @@ public class LoanRepayments {
 				}
 			}
 
-			if (amountRemaining.compareTo(BigDecimal.ZERO) >= 0) {
+			if (amountRemaining.compareTo(BigDecimal.ZERO) > 0) {
 				excessAmount = amountRemaining;
 
 				// Deposit Excess to Savings Account
@@ -1580,7 +1580,18 @@ public class LoanRepayments {
 		// Mark the loan expectation as paid
 		updateExpactationAsPaid(loanRepayment.getString("partyId"));
 		log.info("EEEEEEEEE end loan repayment EEEEEEEEE");
-
+		
+		//Add to AccHolderTransactions repayLoan
+		//AccHolderTransactionServices.cashDepositLoan(transactionAmount, loanRepayment.getLong("loanApplicationId"), userLogin, "LOANCASHDEPOSIT", acctgTransId);
+		//AccHolderTransactionServices.cashDeposit(transactionAmount, memberAccountId, userLogin, "LOANCASHDEPOSIT");
+		
+		if (loanRepayment.getString("repaymentMode").equals("CASH")){
+			AccHolderTransactionServices.cashDepositLoan(transactionAmount, loanRepayment.getLong("loanApplicationId"), userLogin, "LOANCASHPAY", acctgTransId);
+		} else{
+			AccHolderTransactionServices.cashDepositLoan(transactionAmount, loanRepayment.getLong("loanApplicationId"), userLogin, "LOANCHEQUEPAY", acctgTransId);
+			
+		}
+		//getTotalCashWithdrawalToday
 		return "";
 	}
 	
