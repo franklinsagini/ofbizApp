@@ -41,6 +41,7 @@ import org.ofbiz.entity.jdbc.ConnectionFactory;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.loans.LoanServices;
+import org.ofbiz.loansprocessing.LoansProcessingServices;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.treasurymanagement.TreasuryUtility;
 import org.ofbiz.webapp.event.EventHandlerException;
@@ -2048,6 +2049,7 @@ public class AccHolderTransactionServices {
 			return "Cannot Get Loan Application Details";
 		}
 
+		BigDecimal loanBalanceAmt = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(Long.valueOf(loanApplicationId));
 		if (loanApplication != null) {
 			// loanNo
 			// loanType
@@ -2056,6 +2058,7 @@ public class AccHolderTransactionServices {
 			result.put("loanNo", loanApplication.get("loanNo"));
 			result.put("loanTypeId", loanApplication.get("loanProductId"));
 			result.put("loanAmt", loanApplication.getBigDecimal("loanAmt"));
+			result.put("loanBalanceAmt", loanBalanceAmt);
 
 			/***
 			 * loanNo loanTypeId totalLoanDue totalInterestDue totalInsuranceDue
