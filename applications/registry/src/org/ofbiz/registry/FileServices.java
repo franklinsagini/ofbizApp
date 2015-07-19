@@ -1480,10 +1480,8 @@ public class FileServices {
 					Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 					LocalDispatcher dispatcher = (new GenericDispatcherFactory()).createLocalDispatcher("interestcalculations", delegator);
 					 Map<String, Object> vlFulFill = FastMap.newInstance();
-					 //GenericValue userLogin = (GenericValue) context.get("userLogin");
 					 GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
 						String user = userLogin.getString("partyId");
-					//Map<String, String> context = UtilMisc.toMap("message",	"Requesting files!!");
 					 vlFulFill.put("userLogin", userLogin);
 					try {
 						dispatcher.runSync("requestfiles", vlFulFill);
