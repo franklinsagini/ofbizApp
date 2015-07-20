@@ -1255,13 +1255,53 @@ public class LoanRepayments {
 //		totalInterestDue = totalInterestDue.subtract(getTotalInterestPaid(loanApplicationId));
 	
 		//Get total interest expected to have been paid by now
-		BigDecimal bdTotalInterestExpectedToDate = getTotalExpectedInterestAmountByLoanApplicationId(Long.valueOf(loanApplicationId));
-	
+		BigDecimal bdTotalInterestExpectedToDate = getTotalExpectedInterestAmount(loanApplicationId);
+		//getTotalExpectedInterestAmountByLoanApplicationId(Long.valueOf(loanApplicationId));
 		//Get total interest paid to date
 		BigDecimal bdTotalInterestPaidToDate = getTotalInterestPaid(loanApplicationId);
-	
 		//Get the difference
 		totalInterestDue = bdTotalInterestExpectedToDate.subtract(bdTotalInterestPaidToDate);
+		return totalInterestDue;
+	}
+
+	private static BigDecimal getTotalExpectedInterestAmount(
+			String loanApplicationId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> loanExpectationELI = new ArrayList<GenericValue>();
+		loanApplicationId = loanApplicationId.replaceAll(",", "");
+		EntityConditionList<EntityExpr> loanExpectationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition
+						.makeCondition("repaymentName", EntityOperator.EQUALS,
+								"INTEREST"), EntityCondition.makeCondition(
+						"loanApplicationId", EntityOperator.EQUALS,
+						Long.valueOf(loanApplicationId))
+
+				), EntityOperator.AND);
+
+		try {
+			loanExpectationELI = delegator.findList("LoanExpectation",
+					loanExpectationConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		BigDecimal totalInterestDue = BigDecimal.ZERO;
+		for (GenericValue loanExpectation : loanExpectationELI) {
+			totalInterestDue = totalInterestDue.add(loanExpectation
+					.getBigDecimal("amountAccrued"));
+		}
+		
+		//Add opening
+		BigDecimal bdOpeningBalance = BigDecimal.ZERO;
+		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", Long.valueOf(loanApplicationId));
+		
+		bdOpeningBalance = loanApplication.getBigDecimal("interestDue");
+		
+		if (bdOpeningBalance != null)
+		{
+			totalInterestDue = totalInterestDue.add(bdOpeningBalance);
+		}
+		//totalInterestDue = totalInterestDue.subtract(getTotalInterestPaid(loanApplicationId));
 		return totalInterestDue;
 	}
 
@@ -1298,7 +1338,8 @@ public class LoanRepayments {
 //		}
 		
 		//Total Insurance Expected to date
-		BigDecimal bdTotalInsuranceExpectedToDate = getTotalExpectedInsuranceAmountByLoanApplicationId(Long.valueOf(loanApplicationId));
+		BigDecimal bdTotalInsuranceExpectedToDate = getTotalInsuranceByLoanExpected(loanApplicationId);
+		//getTotalExpectedInsuranceAmountByLoanApplicationId(Long.valueOf(loanApplicationId));
 		//Total Insurance Paid to Date
 		BigDecimal bdTotalInsurancePaidToDate = getTotalInsurancePaid(loanApplicationId);
 		//Get the difference
@@ -1307,6 +1348,47 @@ public class LoanRepayments {
 		totalInsuranceDue = bdTotalInsuranceExpectedToDate.subtract(bdTotalInsurancePaidToDate);
 		
 		return totalInsuranceDue;
+	}
+
+	private static BigDecimal getTotalInsuranceByLoanExpected(
+			String loanApplicationId) {
+		
+		BigDecimal bdTotalInsuranceExpected = BigDecimal.ZERO;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> loanExpectationELI = new ArrayList<GenericValue>();
+		loanApplicationId = loanApplicationId.replaceAll(",", "");
+		EntityConditionList<EntityExpr> loanExpectationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition
+						.makeCondition("repaymentName", EntityOperator.EQUALS,
+								"INSURANCE"), EntityCondition.makeCondition(
+						"loanApplicationId", EntityOperator.EQUALS,
+						Long.valueOf(loanApplicationId))
+
+				), EntityOperator.AND);
+
+		try {
+			loanExpectationELI = delegator.findList("LoanExpectation",
+					loanExpectationConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		for (GenericValue loanExpectation : loanExpectationELI) {
+			bdTotalInsuranceExpected = bdTotalInsuranceExpected.add(loanExpectation
+					.getBigDecimal("amountAccrued"));
+		}
+		
+		//Get Insurance opening balance
+		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", Long.valueOf(loanApplicationId));
+		
+		BigDecimal bdInsuranceOpening = loanApplication.getBigDecimal("insuranceDue");
+		
+		if (bdInsuranceOpening != null)
+		{
+			bdTotalInsuranceExpected = bdTotalInsuranceExpected.add(bdInsuranceOpening);
+		}
+		return bdTotalInsuranceExpected;
 	}
 
 	/**
