@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="main">
+        <section>
+            <actions>
+                <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
+            </actions>
+            <widgets>
+                <decorator-screen name="ManageMemberPhotosCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    	<screen name="memberphotos">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Member Photos" />
+				<set field="headerItem" value="memebrphotos" />
+				
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="processMemberPhotos" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+
+			</actions>
+
+			<widgets>
+				<decorator-screen name="ManageMemberPhotosCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+
+					<decorator-section name="body">
+
+						<section>
+
+							<widgets>
+
+								<screenlet>
+									<section>
+										<widgets>
+											<container style="button-bar">
+												<link target="processMemberPhotos"
+													text="Process Member Photos"
+													style="buttontext">
+													<!-- parameter param-name="loanApplicationId"/ -->
+													<image url-mode="raw" src="${iconsLocation}/add.png" />
+												</link>
+											</container>
+										</widgets>
+									</section>
+								</screenlet>
+							</widgets>
+						</section>
+
+
+						
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+</screens>
