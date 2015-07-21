@@ -2462,7 +2462,6 @@ public class OrderServices {
 			}
 
 			// Check Budget From Here.
-<<<<<<< HEAD
 			//if ("ORDER_APPROVED".equals(statusId)) {
 			//	if (!isBudgetEnough(orderHeader, delegator, locale)) {
 
@@ -2470,7 +2469,6 @@ public class OrderServices {
 			//				"BudgetDeficiencyMessage", locale));
 			//	}
 			//}
-=======
 //			if ("ORDER_APPROVED".equals(statusId)) {
 //				if (!isBudgetEnough(orderHeader, delegator, locale)) {
 
@@ -2478,7 +2476,6 @@ public class OrderServices {
 //							"BudgetDeficiencyMessage", locale));
 //				}
 //			}
->>>>>>> a333cdc83d786130b11f249ceaa93eba55c5d4d9
 
 			// update the current status
 			orderHeader.set("statusId", statusId);
