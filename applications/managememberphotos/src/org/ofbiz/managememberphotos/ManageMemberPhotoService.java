@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 
 /***
  * @author Japheth Odonya  @when Jul 20, 2015 5:42:36 PM
@@ -13,6 +14,8 @@ import org.apache.commons.io.FileUtils;
  * org.ofbiz.managememberphotos.ManageMemberPhotoService.loadMembersPhotos(sourcepath, destinationPath, userLogin)
  * */
 public class ManageMemberPhotoService {
+	
+	public static Logger log = Logger.getLogger(ManageMemberPhotoService.class);
 	
 	public static String loadMembersPhotos(String sourcepath, String destinationPath, Map<String, String> userLogin){
 		String success = "success";
@@ -47,6 +50,9 @@ public class ManageMemberPhotoService {
 		} catch (IOException e) {
 		    e.printStackTrace();
 		}
+		
+		log.info("source folder .... "+source.getParent());
+		log.info("destination folder .... "+dest.getParent());
 		
 		//Get 100 members from members without photos and load the photos
 		

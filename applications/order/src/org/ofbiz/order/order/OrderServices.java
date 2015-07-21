@@ -1023,7 +1023,7 @@ public class OrderServices {
 		 * ("PURCHASE_ORDER".equals(orderTypeId)) { userOrderRoleTypes =
 		 * UtilMisc.toList("SHIP_FROM_VENDOR", "BILL_FROM_VENDOR",
 		 * "SUPPLIER_AGENT"); } else { // TODO: some default behavior }
-		 * 
+		 *
 		 * // now add the roles if (userOrderRoleTypes != null) { Iterator i =
 		 * userOrderRoleTypes.iterator(); while (i.hasNext()) { String roleType
 		 * = (String) i.next(); String thisParty = partyId; if (thisParty ==
@@ -2462,6 +2462,7 @@ public class OrderServices {
 			}
 
 			// Check Budget From Here.
+<<<<<<< HEAD
 			//if ("ORDER_APPROVED".equals(statusId)) {
 			//	if (!isBudgetEnough(orderHeader, delegator, locale)) {
 
@@ -2469,6 +2470,15 @@ public class OrderServices {
 			//				"BudgetDeficiencyMessage", locale));
 			//	}
 			//}
+=======
+//			if ("ORDER_APPROVED".equals(statusId)) {
+//				if (!isBudgetEnough(orderHeader, delegator, locale)) {
+
+//					return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+//							"BudgetDeficiencyMessage", locale));
+//				}
+//			}
+>>>>>>> a333cdc83d786130b11f249ceaa93eba55c5d4d9
 
 			// update the current status
 			orderHeader.set("statusId", statusId);
@@ -4848,7 +4858,7 @@ public class OrderServices {
 
 	/**
 	 * Service to create a payment using an order payment preference.
-	 * 
+	 *
 	 * @return Map
 	 */
 	public static Map<String, Object> createPaymentFromPreference(DispatchContext dctx, Map<String, ? extends Object> context) {
@@ -5390,7 +5400,7 @@ public class OrderServices {
 	/**
 	 * Generates a product requirement for the total cancelled quantity over all
 	 * order items for each product
-	 * 
+	 *
 	 * @param dctx
 	 *            the dispatch context
 	 * @param context
@@ -5471,7 +5481,7 @@ public class OrderServices {
 	/**
 	 * Cancels remaining (unreceived) quantities for items of an order. Does not
 	 * consider received-but-rejected quantities.
-	 * 
+	 *
 	 * @param dctx
 	 *            the dispatch context
 	 * @param context
@@ -5707,7 +5717,7 @@ public class OrderServices {
 	 * percentage of the items total that the item represents to the order-level
 	 * adjustments total (also via OrderAdjustmentBilling). Also returns the
 	 * quantity invoiced for the item over all invoices, to aid in prorating.
-	 * 
+	 *
 	 * @param dctx
 	 *            DispatchContext
 	 * @param context

@@ -211,10 +211,10 @@ under the License.
                                 
                                 <#if transaction.repaymentMode?? >
                                 	
-                                	${transaction.transactionDescription} (${transaction.repaymentMode})
+                                	${transaction.transactionDescription?if_exists} (${transaction.repaymentMode?if_exists})
                                 
                                 <#else>
-                                	${transaction.transactionDescription}
+                                	${transaction.transactionDescription?if_exists}
                                 </#if>
                                 
                                 
