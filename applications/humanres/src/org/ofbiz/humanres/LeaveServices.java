@@ -1380,8 +1380,6 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 			payrolll = forwardedToName.getString("employeeNumber");
 			String fullName = " "+fname+" "+sname;
 			
-			
-			
 		leavesELI.set("responsibleEmployee", nextResponsibleStaff);
 		leavesELI.set("applicationStatus", "Application Forwarded to"+fullName);
 		leavesELI.set("approvalStatus", "Application Forwarded to"+fullName);
@@ -1554,9 +1552,49 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 
 	}
 	
+	/////
+	/*public static String runFileRequestService(HttpServletRequest request, HttpServletResponse response) {
+        Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+        LocalDispatcher dispatcher = (new GenericDispatcherFactory()).createLocalDispatcher("interestcalculations", delegator);
+         Map<String, Object> vlFulFill = FastMap.newInstance();
+         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+         vlFulFill.put("userLogin", userLogin);
+        try {
+            dispatcher.runAsync("requestfiles", vlFulFill);
+        } catch (GenericServiceException e) {
+            e.printStackTrace();
+        }
+                log.info("#######################>>>>>>>>>>#$$$$$$$$$$$$$$$$$$$$$$$$$Error");
+        Writer out;
+        try {
+            out = response.getWriter();
+            out.write("");
+            out.flush();
+        } catch (IOException e) {
+            try {
+                throw new EventHandlerException(
+                        "Unable to get response writer", e);
+            } catch (EventHandlerException e1) {
+                e1.printStackTrace();
+            }
+        }
+        return "";
+
+    }
+    
+   
+    
+    public static String RequestAndSendNotification(HttpServletRequest request, HttpServletResponse response) throws GenericEntityException {
+            String leaveid = (String) request.getParameter("partyId");
+            
+            runFileRequestService(request, response);
+            SendScheduledMail(request, response);
+            
+            
+        return leaveid;
+    }
 	
-	
-	
+	*/
 	
 	
 }
