@@ -98,7 +98,15 @@
     <!-- loansummaryReportForm -->
     <form name="loansummaryReportForm" type="single" target="loansummaryreportPDF" title="" header-row-style="header-row"
         default-table-style="basic-table"  target-window="_BLANK">
+		
+		<actions>
+			<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
 
+		</actions>
+		
+		
         <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
         <field name="stationId" title="Station">
         	<drop-down allow-empty="true">
@@ -106,6 +114,12 @@
         			<entity-order-by field-name="name"/>
         		</entity-options>
         	</drop-down>
+        </field>
+        
+        <field name="branchId" title="Branch">
+            <drop-down allow-empty="true" >
+                <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
+            </drop-down>
         </field>
         
         <field name="loanProductId" title="Loan Type">
@@ -121,7 +135,13 @@
    <!--  loanlistingreportForm -->
       <form name="loanlistingreportForm" type="single" target="loanlistingreportexcel.csv" title="" header-row-style="header-row"
         default-table-style="basic-table">
+		<actions>
+			<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
 
+		</actions>
+		
         <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
         <field name="stationId" title="Station">
         	<drop-down allow-empty="true">
@@ -129,6 +149,12 @@
         			<entity-order-by field-name="name"/>
         		</entity-options>
         	</drop-down>
+        </field>
+        
+        <field name="branchId" title="Branch">
+            <drop-down allow-empty="true" >
+                <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
+            </drop-down>
         </field>
         
         <field name="loanProductId" title="Loan Type">
