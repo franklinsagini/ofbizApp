@@ -420,8 +420,20 @@
 	</request-map>
 	
 	
+	<request-map uri="changeMyPassword">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="passwordChange" />
+	</request-map>
+	
+	<request-map uri="updatePassword">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updatePassword"/>
+        <response name="success" type="view" value="passwordChange"/>
+        <response name="error" type="view" value="passwordChange"/>
+    </request-map>
     
     <!-- View Mappings -->
+    <view-map name="passwordChange" type="screen" page="component://chaisacco/widget/chaisaccoScreens.xml#changeMyPassword"/>
     <view-map name="main" type="screen" page="component://chaisacco/widget/chaisaccoScreens.xml#main"/>
     <view-map name="MyProfile" type="screen" page="component://chaisacco/widget/chaisaccoScreens.xml#MyProfile"/>
 	<view-map name="humanresource" type="screen" page="component://chaisacco/widget/chaisaccoScreens.xml#FindEmplLeaves"/>
