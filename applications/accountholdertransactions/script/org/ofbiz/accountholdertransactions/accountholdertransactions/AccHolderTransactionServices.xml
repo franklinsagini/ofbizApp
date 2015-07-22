@@ -610,7 +610,8 @@
 		<field-to-result field="newEntity.accountTransactionParentId"
 													result-name="accountTransactionParentId" />
 			
-
+		<!-- Post Cheque to uncleared cheque and charges -->
+		<set field="poststatus" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.postUnclearedCheque(accountTransaction, userLogin);}"/>
 	</simple-method>
 
 	<simple-method method-name="removeTransaction"
