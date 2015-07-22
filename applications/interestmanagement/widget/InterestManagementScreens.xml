@@ -253,6 +253,9 @@
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<section>
+							<condition>
+								<if-compare operator="equals" value="admin" field="userLogin.userLoginId"/>
+							</condition>
 							<widgets>
 								<screenlet>
 									<link target="scheduleInterestCalculations"  text="Schedule Interest Calculations" style="buttontext create">
@@ -262,6 +265,11 @@
 								</screenlet>
 								
 							</widgets>
+							<fail-widgets>
+								<container>
+									<label> Must be admin !!</label>
+								</container>
+							</fail-widgets>
 						</section>
 					</decorator-section>
 				</decorator-screen>
