@@ -996,6 +996,31 @@
     </screen>
     
     
+    <!-- Change password Screen -->
+    <screen name="changeMyPassword">
+        <section>
+            <actions>
+                <set field="headerItem" value="changeMyPassword"/>
+                <set field="titleProperty" value="UserLoginUpdateSecuritySettings"/>
+                <set field="tabButtonItem" value="EditUserLogin"/>
+                <set field="cancelPage" from-field="parameters.CANCEL_PAGE" default-value="FindUserLogin"/>
+                <set field="updateUserLoginSecurityURI" value="updateUserLoginSecurity"/>
+                <set field="updatePasswordURI" value="updatePassword"/>
+                <set field="userLoginId" from-field="parameters.userLoginId"/>
+                <entity-one entity-name="UserLogin" value-field="editUserLogin"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="chaisaccoCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="Change My Password">
+                            <include-form name="updatePassword" location="component://chaisacco/widget/chaisaccoForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     
 	
 	
