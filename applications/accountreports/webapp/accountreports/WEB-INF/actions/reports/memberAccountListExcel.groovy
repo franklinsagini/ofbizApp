@@ -6,6 +6,8 @@ partyId = parameters.partyId
 stationId = parameters.stationId
 accountProductId = parameters.accountProductId
 
+branchId = parameters.branchId
+
 if ((partyId != null) && (partyId != "")){
 	lpartyId = partyId.toLong();
 }
@@ -22,6 +24,11 @@ if ((stationId != null) && (stationId != "")){
 
 //Loans - by member or by station or by product
 //disburseLoanStatusId = 6.toLong();
+
+if ((branchId != null) && (branchId != "")){
+		myAccountsList = delegator.findByAnd("MemberAccountBalance",  [branchId : branchId], null, false);
+}
+	
 if ((partyId != null) && (partyId != "")){
 	myAccountsList = delegator.findByAnd("MemberAccountBalance",  [partyId : lpartyId], null, false);
 }
