@@ -27,7 +27,8 @@ public class ManageMemberPhotoService {
 			imagesPath = "/home/online/sourceimages";
 			destinationpath = "/home/samuel/installations/chaisacco/framework/images/members"; 
 		} else{
-			imagesPath = "/F:/projects/vergeofbiz/vergesacco/sourceimages";
+			//imagesPath = "/F:/projects/vergeofbiz/vergesacco/sourceimages";
+			imagesPath = "/F:/verge/chaisacco_dbs_23012015/PHOTOS";
 			destinationpath = "/F:/projects/vergeofbiz/vergesacco/framework/images/members"; 
 		}
 
@@ -45,11 +46,25 @@ public class ManageMemberPhotoService {
 		String memberId = "";
 		File source = new File(imagesPath+"/"+"photo_"+memberId+".jpg");
 		File dest = new File(destinationpath+"/"+partyId.toString()+"/"+"photourl.jpg");
+		
+		
+		
+		//Copy photourl
+		partyId = 1000L;
+		memberId = "";
+		source = new File(imagesPath+"/"+"photo_"+memberId+".jpg");
+		dest = new File(destinationpath+"/"+partyId.toString()+"/"+"photourl.jpg");
 		try {
 		    FileUtils.copyDirectory(source, dest);
 		} catch (IOException e) {
 		    e.printStackTrace();
 		}
+		
+		//copy idback
+		
+		//copy idhind
+		
+		//copy signature
 		
 		log.info("source folder .... "+source.getParent());
 		log.info("destination folder .... "+dest.getParent());
