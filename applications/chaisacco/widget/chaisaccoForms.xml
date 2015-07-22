@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+ xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
+
+<form name="updatePassword" type="single" target="updatePassword"
+        focus-field-name="currentPassword" header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+            <set field="passwordHint" from-field="editUserLogin.passwordHint"/>
+        </actions>
+        <auto-fields-service service-name="updatePassword"/>
+        <field name="partyId"><hidden/></field>
+        <field name="userLoginId"><hidden/></field>
+        <field name="currentPassword" title="Current Password" widget-style="required" required-field="true"><password/></field>
+        <field name="newPassword" title="New Password" widget-style="required" required-field="true"><password/></field>
+        <field name="newPasswordVerify" title="New Password Verify" widget-style="required" required-field="true"><password/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        
+    </form>
 
 </forms>
