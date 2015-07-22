@@ -81,7 +81,7 @@ if ((branchId != null) && (branchId != "")){
 }
 
 
-if ((partyId == "") && (loanProductId == "") && (stationId == "")){
+if ((partyId == "") && (loanProductId == "") && (stationId == "") && (branchId == "")){
 	myLoansList = delegator.findByAnd("LoanApplication",  [loanStatusId: disburseLoanStatusId], null, false);
 	overpayedList = delegator.findByAnd("LoanApplication",  [loanStatusId: overpayedLoanStatusId], null, false);
 	defaultedList = delegator.findByAnd("LoanApplication",  [loanStatusId: defaultedLoanStatusId], null, false);
