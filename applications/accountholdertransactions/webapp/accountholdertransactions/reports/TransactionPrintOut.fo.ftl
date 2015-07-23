@@ -69,8 +69,14 @@ under the License.
     <#list accountTransactionList as transaction>
 	    <fo:list-block provisional-distance-between-starts="2.0in" font-size="10pt" text-align="left" margin-left="20%" margin-bottom="0.2in">
 	        <fo:list-item>
-	            <fo:list-item-label>
-	                <fo:block font-weight="bold">${transaction.transactionType?if_exists}</fo:block>
+	            <fo:list-item-label >
+	                <fo:block font-weight="bold">
+	                <#if transaction.transactionType == "NORMAL CHEQUE WITHDRAWAL CHARGES">
+	                	"CHARGES"
+	                <#else>
+	                	${transaction.transactionType?if_exists}
+	                </#if>
+	                </fo:block>
 	            </fo:list-item-label>
 	            <fo:list-item-body start-indent="body-start()">
 	                <fo:block>Kshs. ${transaction.transactionAmount?string(",##0.00")}</fo:block>
