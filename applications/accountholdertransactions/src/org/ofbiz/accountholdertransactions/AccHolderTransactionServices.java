@@ -55,6 +55,7 @@ public class AccHolderTransactionServices {
 	public static Long CHEQUEWITHDRAWALID = 10020L;
 	public static Long BANKERSWITHDRAWALID = 10000L;
 	public static String HQBRANCH = "Company";
+	private static Long ONEHUNDRED = 100L;
 
 	public static String WITHDRAWALOK = "OK";
 
@@ -6658,9 +6659,152 @@ public class AccHolderTransactionServices {
 		log.info(" Party ID "+accountTransaction.getLong("partyId"));
 		log.info(" Amount "+accountTransaction.getBigDecimal("transactionAmount"));
 		
-		//postCash
+		BigDecimal bdChequeAmount = accountTransaction.getBigDecimal("transactionAmount");
+		
+		Long memberAccountId = accountTransaction.getLong("memberAccountId");
+		ChargeDutyItem chargeDutyItem =  getChequeDepositChargeAmount(accountTransaction.getLong("memberAccountId"));
+		
+		BigDecimal bdChequeDepositChargeAmount = chargeDutyItem.getChargeAmount();
+		String chequeDepositChargeAccountId = chargeDutyItem.getChargeAccountId();
+		
+		BigDecimal bdExciseDutyAmount = chargeDutyItem.getDutyAmount();
+		String exciseDutyAccountId = chargeDutyItem.getDutyAccountId();
+		
+		GenericValue accountProduct = getAccountProductEntity(memberAccountId);
+		String unclearedChequeAccountId = accountProduct.getString("unclearedChequesAccountId");
+		BigDecimal bdUnclearedAmount = bdChequeAmount.subtract(bdChequeDepositChargeAmount.add(bdExciseDutyAmount));
+		//Post Cheque
+		
+		/****
+		 * CR Cheque Deposit Charge for this Product
+		 * CR Excise Duty
+		 * CR Uncleared Cheque
+		 * 
+		 * Dr Bank A/C (Bank Cheque Account for this product)
+		 * 
+		 * */
+		// Get tha acctgTransId
+		String acctgTransId = creatAccountTransRecordVer2(accountTransaction,
+				userLogin);
+		String glAccountTypeId = "MEMBER_DEPOSIT";
+		String partyId = LoanUtilities
+				.getMemberPartyIdFromMemberAccountId(memberAccountId);
+
+		// LoanUtilities.getE
+		String employeeBranchId = getEmployeeBranch(userLogin.get("partyId"));
+		String memberBranchId = LoanUtilities.getMemberBranchId(partyId);
+		
+		
+		String entrySequenceId = "1";
+		// CR Cheque Deposit Charge for this Product
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		postTransactionEntry(delegator, bdChequeDepositChargeAmount,
+				employeeBranchId, memberBranchId, chequeDepositChargeAccountId, "C",
+				acctgTransId, glAccountTypeId, entrySequenceId);
+
+		entrySequenceId = "2";
+		// CR Excise Duty
+		postTransactionEntry(delegator, bdExciseDutyAmount,
+				employeeBranchId, memberBranchId, exciseDutyAccountId, "C",
+				acctgTransId, glAccountTypeId, entrySequenceId);
+		
+		entrySequenceId = "3";
+		// CR Uncleared Cheque Amount
+		postTransactionEntry(delegator, bdUnclearedAmount,
+				employeeBranchId, memberBranchId, unclearedChequeAccountId, "C",
+				acctgTransId, glAccountTypeId, entrySequenceId);
+		
+		
+		entrySequenceId = "4";
+		//Dr Bank A/C (Bank Cheque Account for this product)
+		postTransactionEntry(delegator, bdChequeAmount,
+				employeeBranchId, memberBranchId,unclearedChequeAccountId , "D",
+				acctgTransId, glAccountTypeId, entrySequenceId);
+		
+		// Create Transactions for the same (Member Statement)
+
+		// Source
+		// cashDepositVersion4(bdShareCapitalDeficit,
+		// Long.valueOf(sourceMemberAccountId), userLogin, "TRANSFERFROM",
+		// acctgTransId);
+//		memberTransactionDeposit(bdShareCapitalDeficit,
+//				Long.valueOf(sourceMemberAccountId), userLogin, "TRANSFERFROM",
+//				null, null, acctgTransId,
+//				destAccountProduct.getLong("accountProductId"), null);
+		
+		
+		//Add Excise Duty and Charge Amount to MPA (Cheque Deposit Charges)
+		//Adding Cheque Charge to MPA
+		accountTransaction.setString("treasuryId", TreasuryUtility.getTreasuryId(userLogin));
+		createTransaction(accountTransaction, "Cheque Deposit Charge", userLogin, memberAccountId.toString(), bdChequeDepositChargeAmount, chargeDutyItem.getProductChargeId().toString(), accountTransaction.getString("accountTransactionParentId"), acctgTransId);
+
+		//Adding Excise Duty to MPA
+		createTransaction(accountTransaction, "Cheque Deposit Excise", userLogin, memberAccountId.toString(), bdExciseDutyAmount, chargeDutyItem.getExciseDutyChargeId().toString(), accountTransaction.getString("accountTransactionParentId"), acctgTransId);
+
 		
 		return "success";
+	}
+
+	private static ChargeDutyItem getChequeDepositChargeAmount(Long memberAccountId) {
+		// TODO Auto-generated method stub
+		ChargeDutyItem chargeDutyItem = new ChargeDutyItem();
+		GenericValue accountProduct = getAccountProductEntity(memberAccountId);
+		
+		
+//		private String chargeAccountId;
+//		private String dutyAccountId;
+//		private BigDecimal chargeAmount;
+//		private BigDecimal dutyAmount;
+		
+		//if (accountProduct != null)
+		//	return accountProduct.getString("chequeBankAccountId");
+		//CHEQUEDEPOSIT
+		//accountProductId
+		
+		//Get from AccountProductCharge where accountProductId is accountProduct.getLong("accountProductId")
+		List<GenericValue> accountProductChargeELI = null;
+		EntityConditionList<EntityExpr> accountProductChargeConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"accountProductId", EntityOperator.EQUALS,
+						accountProduct.getLong("accountProductId")), EntityCondition
+						.makeCondition("transactionType",
+								EntityOperator.EQUALS, "CHEQUEDEPOSIT")),
+						EntityOperator.AND);
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			accountProductChargeELI = delegator.findList("AccountProductCharge",
+					accountProductChargeConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		for (GenericValue genericValue : accountProductChargeELI) {
+			if (genericValue.getString("isFixed").equals("Y")){
+				chargeDutyItem.setChargeAmount(genericValue.getBigDecimal("fixedAmount"));
+				chargeDutyItem.setChargeAccountId(getChargeAccountId(genericValue.getLong("productChargeId")));
+				chargeDutyItem.setProductChargeId(genericValue.getLong("productChargeId"));
+				
+			} else{
+				chargeDutyItem.setDutyAmount(genericValue.getBigDecimal("rateAmount"));
+				chargeDutyItem.setDutyAccountId(getChargeAccountId(genericValue.getLong("productChargeId")));
+				chargeDutyItem.setExciseDutyChargeId(genericValue.getLong("productChargeId"));
+			}
+		}
+		
+		chargeDutyItem.setChargeAmount(chargeDutyItem.getChargeAmount().multiply(chargeDutyItem.getDutyAmount().divide(new BigDecimal(ONEHUNDRED), 4, RoundingMode.HALF_UP)));
+		
+		return chargeDutyItem;
+	}
+
+	private static String getChargeAccountId(Long productChargeId) {
+		
+		GenericValue productCharge = LoanUtilities.getEntityValue("ProductCharge", "productChargeId", productChargeId);
+		
+		if (productCharge != null)
+			return productCharge.getString("chargeAccountId");
+		return null;
 	}
 
 }
