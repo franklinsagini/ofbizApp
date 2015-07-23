@@ -6693,6 +6693,14 @@ public class AccHolderTransactionServices {
 		//Update Cheque Deposit Transaction
 		accountTransaction.setString("treasuryId", TreasuryUtility.getTreasuryId(userLogin));
 		accountTransaction.setString("acctgTransId", acctgTransId);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		try {
+			delegator.createOrStore(accountTransaction);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		// LoanUtilities.getE
 		String employeeBranchId = getEmployeeBranch(userLogin.get("partyId"));
@@ -6701,7 +6709,7 @@ public class AccHolderTransactionServices {
 		
 		String entrySequenceId = "1";
 		// CR Cheque Deposit Charge for this Product
-		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
 		postTransactionEntry(delegator, bdChequeDepositChargeAmount,
 				employeeBranchId, memberBranchId, chequeDepositChargeAccountId, "C",
 				acctgTransId, glAccountTypeId, entrySequenceId);
@@ -6797,7 +6805,7 @@ public class AccHolderTransactionServices {
 			}
 		}
 		
-		chargeDutyItem.setChargeAmount(chargeDutyItem.getChargeAmount().multiply(chargeDutyItem.getDutyAmount().divide(new BigDecimal(ONEHUNDRED), 4, RoundingMode.HALF_UP)));
+		chargeDutyItem.setDutyAmount(chargeDutyItem.getChargeAmount().multiply(chargeDutyItem.getDutyAmount().divide(new BigDecimal(ONEHUNDRED), 4, RoundingMode.HALF_UP)));
 		
 		return chargeDutyItem;
 	}
