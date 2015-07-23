@@ -6658,6 +6658,8 @@ public class AccHolderTransactionServices {
 		log.info(" Party ID "+accountTransaction.getLong("partyId"));
 		log.info(" Amount "+accountTransaction.getBigDecimal("transactionAmount"));
 		
+		//postCash
+		
 		return "success";
 	}
 
