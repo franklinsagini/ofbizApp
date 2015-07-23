@@ -72,7 +72,7 @@ under the License.
 	            <fo:list-item-label >
 	                <fo:block font-weight="bold">
 	                <#if transaction.transactionType == "NORMAL CHEQUE WITHDRAWAL CHARGES">
-	                	"CHARGES"
+	                	CHARGES
 	                <#else>
 	                	${transaction.transactionType?if_exists}
 	                </#if>
