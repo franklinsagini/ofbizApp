@@ -123,11 +123,10 @@ under the License.
         	</hyperlink -->
         </field>
         
-        <field name="test" title="Reverse">
-        <!-- display also-hidden="false"></display -->
+        <!-- field name="test" title="Reverse">
         	<hyperlink target-type="intra-app" target="reverseTransaction?accountTransactionParentId=${accountTransactionParentId}&amp;partyId=${partyId}" description="Reverse ${transactionType}">
         	</hyperlink>
-        </field>
+        </field -->
         <!-- field name="slipNumber" title="SLIP Number"><display also-hidden="false"></display></field -->
         <field name="transactionAmount" title="Amount">
         <display also-hidden="false" description="${transactionAmount}" type="currency" currency="KES"></display>
@@ -176,7 +175,7 @@ under the License.
             <entity-condition entity-name="MemberAccountWithProduct" list="memberAccountList">
             	<condition-list combine="and">
             		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
-            		<condition-expr field-name="withdrawable" operator="equals" value="Yes"/>
+            		<!-- condition-expr field-name="withdrawable" operator="equals" value="Yes"/ -->
             	</condition-list>
             </entity-condition>
             <set field="slipNumber" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getNextSlipNumber();}"/>	

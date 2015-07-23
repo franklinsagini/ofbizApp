@@ -6647,5 +6647,20 @@ public class AccHolderTransactionServices {
 			log.error("Could not create Transaction");
 		}
 	}
+	
+
+	/****
+	 *@author Japheth Odonya  @when Jul 22, 2015 6:29:05 PM
+	 * 
+	 * */
+	public static String postUnclearedCheque(GenericValue accountTransaction, Map<String, String> userLogin){
+		//Post the transaction
+		log.info(" Party ID "+accountTransaction.getLong("partyId"));
+		log.info(" Amount "+accountTransaction.getBigDecimal("transactionAmount"));
+		
+		//postCash
+		
+		return "success";
+	}
 
 }
