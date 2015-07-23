@@ -15,7 +15,10 @@ referenceNo = null;
 partyId = null;
 memberAccountId = null;
 totalAmount = BigDecimal.ZERO;
+depositTotalAmount = BigDecimal.ZERO;
 transactionType = null;
+transactionTypeWithdrawal = null;
+chequeNo = null;
 accountTransactionList.eachWithIndex { transactionItem, item ->
 	partyId = transactionItem.partyId
 	memberAccountId  = transactionItem.memberAccountId
@@ -24,7 +27,22 @@ accountTransactionList.eachWithIndex { transactionItem, item ->
 	
 	if (transactionItem.transactionType.equals("CASHWITHDRAWAL")){
 		transactionType = "CASHWITHDRAWAL"
+		transactionTypeWithdrawal = "CASHWITHDRAWAL"
 	}
+	
+	if (transactionItem.transactionType.equals("CHEQUEDEPOSIT")){
+		transactionType = "CHEQUEDEPOSIT";
+		depositTotalAmount = transactionItem.transactionAmount;
+		chequeNo = transactionItem.chequeNo;
+	}
+	
+	if (transactionItem.transactionType.equals("CHEQUEWITHDRAWAL")){
+		chequeNo = transactionItem.chequeNo;
+	}
+}
+
+if ((transactionType != null) && (transactionType.equals("CHEQUEDEPOSIT"))){
+	totalAmount = depositTotalAmount;
 }
 
 context.totalAmount = totalAmount
@@ -41,6 +59,9 @@ context.createdBy = accountTransactionParent.createdBy
 balanceAmount = org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getAvailableBalanceVer3(memberAccountId.toString());
 context.balanceAmount = balanceAmount
 context.referenceNo = referenceNo
+context.chequeNo = chequeNo
+context.transactionTypeWithdrawal = transactionTypeWithdrawal
+
 
 
 if (transactionType != null)
