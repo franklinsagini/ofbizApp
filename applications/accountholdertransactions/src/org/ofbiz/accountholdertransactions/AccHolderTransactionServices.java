@@ -6689,6 +6689,10 @@ public class AccHolderTransactionServices {
 		String glAccountTypeId = "MEMBER_DEPOSIT";
 		String partyId = LoanUtilities
 				.getMemberPartyIdFromMemberAccountId(memberAccountId);
+		
+		//Update Cheque Deposit Transaction
+		accountTransaction.setString("treasuryId", TreasuryUtility.getTreasuryId(userLogin));
+		accountTransaction.setString("acctgTransId", acctgTransId);
 
 		// LoanUtilities.getE
 		String employeeBranchId = getEmployeeBranch(userLogin.get("partyId"));
@@ -6735,7 +6739,7 @@ public class AccHolderTransactionServices {
 		
 		//Add Excise Duty and Charge Amount to MPA (Cheque Deposit Charges)
 		//Adding Cheque Charge to MPA
-		accountTransaction.setString("treasuryId", TreasuryUtility.getTreasuryId(userLogin));
+		
 		createTransaction(accountTransaction, "Cheque Deposit Charge", userLogin, memberAccountId.toString(), bdChequeDepositChargeAmount, chargeDutyItem.getProductChargeId().toString(), accountTransaction.getString("accountTransactionParentId"), acctgTransId);
 
 		//Adding Excise Duty to MPA
