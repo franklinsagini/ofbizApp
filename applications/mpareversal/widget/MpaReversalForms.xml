@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+<!-- List MPA Transactions -->
+      <form name="listMPATransactions" id="listMPATransactions" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="main" paginate-target="main"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	<set field="partyId" from-field="parameters.partyId" type="Long"/>
+            <entity-condition entity-name="AccountTransaction" >
+            	<!-- condition-list combine="and">
+            		<condition-expr field-name="isActive" value="Y"/>
+            		<condition-expr field-name="partyId"  value="${partyId}"/>
+            		<condition-expr field-name="increaseDecrease" operator="not-equals" value="R"/>
+            	</condition-list -->
+            	<order-by field-name="-accountTransactionId"></order-by>
+            </entity-condition>
+            
+            
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="accountTransactionCtx"/>
+                <field-map field-name="entityName" value="AccountTransaction"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+                
+            </service>
+            
+			<set field="partyIdStringTemp" from-field="parameters.partyId" type="String"/>
+			<set field="partyIdString" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.removeCommas(partyId);}"/>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateCashWithdrawal"/>
+		
+		<!-- acctgTransId -->
+		 <field name="acctgTransId" title="Ledger Transaction ID" header-link="">
+        	
+        	<!-- hyperlink target-type="inter-app"  target="http://127.0.0.1:55555/viewer/frameset?__report=C%3A\\Users\\USER\\birtreports\\VergeSaccoReports\\printout.rptdesign&amp;__format=pdf&amp;account_transaction_parent_id=${accountTransactionParentId}&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=C%3A\\Users\\USER\\birtreports\\VergeSaccoReports&amp;__dpi=96&amp;&amp;-1867522122&amp;" description="Print # ${accountTransactionParentId}">
+        		
+        	</hyperlink -->
+        	 <hyperlink target-type="intra-app" target="transactionPrintOut?accountTransactionParentId=${accountTransactionParentId}" description="Transaction # ${acctgTransId}">
+        	</hyperlink>
+        </field>
+        
+        <!-- field name="accountTransactionParentId" title="Transaction ID" header-link="">
+        	
+        	
+        	 <hyperlink target-type="intra-app" target="transactionPrintOut?accountTransactionParentId=${accountTransactionParentId}" description="Print # ${accountTransactionParentId}">
+        	</hyperlink>
+        </field -->	
+        
+        
+        <field name="memberAccountId" title="Account">
+        	<display-entity entity-name="MemberAccount" key-field-name="memberAccountId" description="${accountNo}" >
+        		<!-- sub-hyperlink target-type="inter-app" target="http://localhost:55555/viewer/frameset?__report=C%3A\\Users\\USER\\birtreports\\VergeSaccoReports\\memberministatement.rptdesign&amp;__format=pdf&amp;member_account_id=${memberAccountId}&amp;member_account_id2=${memberAccountId}&amp;member_account_id3=${memberAccountId}&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=C%3A\\Users\\USER\\birtreports\\VergeSaccoReports&amp;__dpi=96&amp;__parameterpage=false&amp;232000292" description="Print  Statement"></sub-hyperlink -->
+        		<sub-hyperlink target-type="intra-app" target="printMiniStatement?partyId=${partyIdString}" description="Print  Statement"></sub-hyperlink>
+        	</display-entity>
+        </field>
+        
+        
+        <field name="transactionType" title="Transaction Type">
+        	<display also-hidden="false"></display>
+        	<!-- hyperlink target-type="intra-app" target="generatedTransactionPrintout?accountTransactionParentId=${accountTransactionParentId}" description="Print ${transactionType}">
+        	</hyperlink -->
+        </field>
+        
+        <field name="test" title="Reverse">
+        	<hyperlink target-type="intra-app" target="reverseTransaction?acctgTransId=${acctgTransId}&amp;partyId=${partyId}" description="Reverse Transaction # ${acctgTransId}">
+        	</hyperlink>
+        </field>
+        <!-- field name="slipNumber" title="SLIP Number"><display also-hidden="false"></display></field -->
+        <field name="transactionAmount" title="Amount">
+        <display also-hidden="false" description="${transactionAmount}" type="currency" currency="KES"></display>
+        	
+        </field>
+        <field name="createdBy" title="Served By">
+        <display also-hidden="false"></display></field>
+        <field name="createdStamp" title="Transaction Date"><display also-hidden="false" type="date-time"></display></field>
+        <field name="clearDate" title="Clear By"><display also-hidden="false" type="date-time"></display></field>
+
+		        
+        
+        
+        <field name="payee" title="Payee"><display also-hidden="false"></display></field>
+		<field name="bankDetailsId" title="Bank">
+      		<!-- drop-down allow-empty="false">
+      			<list-options key-name="bankDetailsId" list-name="bankDetailsList" description="${bankName}"/>
+      		</drop-down -->
+      		<display-entity entity-name="BankDetails" key-field-name="bankDetailsId" description="${bankName}"></display-entity>
+      	</field>
+      	
+      	<field name="bankBranchId" title="Branch">
+      		<!-- drop-down allow-empty="false">
+      			<list-options key-name="bankBranchId" list-name="bankBranchList" description="${branchName}"/>
+      		</drop-down -->
+      		<display-entity entity-name="BankBranch" key-field-name="bankBranchId" description="${branchName}"></display-entity>
+      		
+      	</field>      	
+        <field name="drawer" title="Drawer" ><display also-hidden="false"/></field>
+        <field name="chequeNo" title="Cheque No" ><display also-hidden="false"/></field>
+        
+        <field name="memberAccountVoucherId" title="Member Account Voucher" ><display/></field>
+        
+    </form>
+    
+    
+    <form name="FindMpaTransaction" type="single" target="main" default-entity-name="AccountTransaction">
+       
+        
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+
+        <field name="acctgTransId" title="Transaction #"><text-find/></field>
+
+        <field name="transactionType" title="Transaction Type" position="2"><text-find/></field>
+
+        <field name="createdBy" title="Served By"><text-find/></field>
+
+        <field name="chequeNo" title="Cheque No" position="2"><text-find/></field>
+
+        
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
+    </form>
+</forms>
