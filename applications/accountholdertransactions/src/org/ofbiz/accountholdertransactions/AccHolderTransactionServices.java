@@ -5367,21 +5367,14 @@ public class AccHolderTransactionServices {
 	/****
 	 * Reverse Transaction
 	 * */
-	public static String reverseTransaction(HttpServletRequest request,
-			HttpServletResponse response) {
+	public static String reverseTransaction(String acctgTransId ,
+			Map<String, String> userLogin) {
 
-		Delegator delegator = (Delegator) request.getAttribute("delegator");
-
-		String acctgTransId = (String) request.getParameter("acctgTransId");
-		String partyId = (String) request.getParameter("partyId");
-
-		System.out.println(" TTTTTTTTTTTTTTTTTTTT Transaction ID "
-				+ acctgTransId);
-		System.out.println(" PPPPPPPPPPPPPPPPPPPP PartyId " + partyId);
-
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String createdBy = userLogin.get("userLoginId");
 		// Get all the account transactions under parent and set their
 		// increase/decrease to R
-
+		log.info(" TRansaction ID AAAAAAAAAAAAAA "+acctgTransId);
 		// GenericValue userLogin = (GenericValue) request
 		// .getAttribute("userLogin");
 
@@ -5407,7 +5400,7 @@ public class AccHolderTransactionServices {
 		}
 
 		// Reverse MPA Records
-		String newacctgTransId = creatAccountTransRecord(null, null);
+		String newacctgTransId = creatAccountTransRecord(null, userLogin);
 
 		String accountTransactionId = null;
 		for (GenericValue accountTransaction : accountTransactionELI) {
@@ -5430,6 +5423,7 @@ public class AccHolderTransactionServices {
 			accountTransaction.set("transactionType",
 					getTransactionTypeReversalName(accountTransaction
 							.getString("transactionType")));
+			accountTransaction.set("createdBy", createdBy);
 
 			String originalAccountTransactionId = accountTransaction
 					.getString("accountTransactionId");
@@ -5474,6 +5468,7 @@ public class AccHolderTransactionServices {
 				genericValue.setString("debitCreditFlag", "C");
 			}
 			genericValue.setString("acctgTransId", newacctgTransId);
+			//genericValue.setString("createdBy", createdBy);
 
 			try {
 				delegator.createOrStore(genericValue);
@@ -5482,21 +5477,8 @@ public class AccHolderTransactionServices {
 				e.printStackTrace();
 			}
 		}
-
-		Writer out;
-		try {
-			out = response.getWriter();
-			out.write("");
-			out.flush();
-		} catch (IOException e) {
-			try {
-				throw new EventHandlerException(
-						"Unable to get response writer", e);
-			} catch (EventHandlerException e1) {
-				e1.printStackTrace();
-			}
-		}
-		return "";
+		
+		return "success";
 	}
 
 	private static Object getTransactionTypeReversalName(String transactionType) {
