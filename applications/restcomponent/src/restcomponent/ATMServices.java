@@ -113,7 +113,7 @@ public class ATMServices {
 	@Produces("application/json")
 	@Path("/withdrawal/{cardNumber}/{amount}")
 	public Response withdrawal(@PathParam("cardNumber") String cardNumber,
-			@PathParam("amount") BigDecimal amount) {
+			@PathParam("amount") BigDecimal amount, @PathParam("SystemTrace") String SystemTrace) {
 
 		ATMStatus atmStatus = ATMManagementServices.getATMAccount(cardNumber);
 		// .getMSaccoAccount(phoneNumber);
@@ -130,7 +130,7 @@ public class ATMServices {
 
 			// Check if Member Has Enough Money - Limit, charges
 			transaction = AccHolderTransactionServices.cashWithdrawal(amount,
-					String.valueOf(memberAccountId), "ATMWITHDRAWAL");
+					String.valueOf(memberAccountId), "ATMWITHDRAWAL", SystemTrace);
 			// transaction.setStatus("NOTENOUGHMONEY");
 			// transaction.setStatus(atmStatus.getStatus());
 			transaction.setCardNumber(cardNumber);
@@ -178,7 +178,7 @@ public class ATMServices {
 
 			// Check if Member Has Enough Money - Limit, charges
 			transaction = AccHolderTransactionServices.cashWithdrawal(amount,
-					String.valueOf(memberAccountId), "ATMWITHDRAWAL");
+					String.valueOf(memberAccountId), "ATMWITHDRAWAL", SystemTrace);
 			// transaction.setStatus("NOTENOUGHMONEY");
 			// transaction.setStatus(atmStatus.getStatus());
 			transaction.setCardNumber(cardNumber);
@@ -316,8 +316,8 @@ public class ATMServices {
 //		} catch (GenericEntityException e) {
 //			e.printStackTrace();
 //		}
-		AccHolderTransactionServices.cashWithdrawalATMReversal(accountTransaction, userLogin, "ATMWITHDRAWALREVERSAL");
-		
+		//AccHolderTransactionServices.cashWithdrawalATMReversal(accountTransaction, userLogin, "ATMWITHDRAWALREVERSAL", SystemTrace);
+		String reverseStatus = AccHolderTransactionServices.reverseATMTransaction(SystemTrace);
 		//Reverse GL
 		
 		//Now build the transaction and return it as json
@@ -339,14 +339,13 @@ public class ATMServices {
 		if (bdBalance != null) {
 			// transaction.setAmount(bdBalance);
 			bdAvailableBalance = AccHolderTransactionServices
-					.getAvailableBalanceVer2(String.valueOf(atmStatus
-							.getCardApplication().getLong("memberAccountId")),
-							new Timestamp(Calendar.getInstance()
-									.getTimeInMillis()));
-			bdBookBalance = AccHolderTransactionServices.getBookBalanceVer2(
-					String.valueOf(atmStatus.getCardApplication().getLong(
-							"memberAccountId")),
-					DelegatorFactoryImpl.getDelegator(null));
+					.getAvailableBalanceVer3(memberAccountId, new Timestamp(
+							Calendar.getInstance().getTimeInMillis()));
+			transaction.setAvailableBalance(bdAvailableBalance);
+			bdBookBalance = AccHolderTransactionServices
+					.getBookBalanceVer3(memberAccountId, delegator);
+			transaction.setBookBalance(bdBookBalance);
+					
 			transaction.setAvailableBalance(bdAvailableBalance);
 			transaction.setBookBalance(bdBookBalance);
 			transaction.setCardStatusId(atmStatus.getCardStatusId());
@@ -364,7 +363,15 @@ public class ATMServices {
 			System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBBBB ---- "
 					+ bdBookBalance);
 		}
-		transaction.setStatus(atmStatus.getStatus());
+		if (reverseStatus.equals("success"))
+		{
+			transaction.setStatus(atmStatus.getStatus());
+		} else if (reverseStatus.equals("notransaction")){
+			transaction.setStatus("NOTRANSACTION");
+		} else if (reverseStatus.equals("reversed")){
+			transaction.setStatus("REVRESEDALREADY");
+		}
+		
 
 		System.out.println("ATM REVERSAL TRANSACTION ---- " + transaction.toString());
 		addServiceLog(cardNumber, "ATMWITHDRAWALREVERSAL");
