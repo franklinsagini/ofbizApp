@@ -123,11 +123,10 @@ under the License.
         	</hyperlink -->
         </field>
         
-        <field name="test" title="Reverse">
-        <!-- display also-hidden="false"></display -->
+        <!-- field name="test" title="Reverse">
         	<hyperlink target-type="intra-app" target="reverseTransaction?accountTransactionParentId=${accountTransactionParentId}&amp;partyId=${partyId}" description="Reverse ${transactionType}">
         	</hyperlink>
-        </field>
+        </field -->
         <!-- field name="slipNumber" title="SLIP Number"><display also-hidden="false"></display></field -->
         <field name="transactionAmount" title="Amount">
         <display also-hidden="false" description="${transactionAmount}" type="currency" currency="KES"></display>
@@ -155,7 +154,16 @@ under the License.
       		</drop-down -->
       		<display-entity entity-name="BankBranch" key-field-name="bankBranchId" description="${branchName}"></display-entity>
       		
-      	</field>      	
+      	</field>
+      	
+      	 <field name="loanApplicationId" title="Loan No">
+      		<!-- drop-down allow-empty="false">
+      			<list-options key-name="bankBranchId" list-name="bankBranchList" description="${branchName}"/>
+      		</drop-down -->
+      		<display-entity entity-name="LoanApplication" key-field-name="loanApplicationId" description="${loanNo}"></display-entity>
+      		
+      	</field>
+      	  	
         <field name="drawer" title="Drawer" ><display also-hidden="false"/></field>
         <field name="chequeNo" title="Cheque No" ><display also-hidden="false"/></field>
         
@@ -176,7 +184,7 @@ under the License.
             <entity-condition entity-name="MemberAccountWithProduct" list="memberAccountList">
             	<condition-list combine="and">
             		<condition-expr field-name="partyId" from-field="parameters.partyId"/>
-            		<condition-expr field-name="withdrawable" operator="equals" value="Yes"/>
+            		<!-- condition-expr field-name="withdrawable" operator="equals" value="Yes"/ -->
             	</condition-list>
             </entity-condition>
             <set field="slipNumber" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getNextSlipNumber();}"/>	

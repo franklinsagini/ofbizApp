@@ -5,6 +5,7 @@ import org.ofbiz.entity.Delegator;
 partyId = parameters.partyId
 stationId = parameters.stationId
 loanProductId = parameters.loanProductId
+branchId = parameters.branchId
 
 def combinedList = [];
 def loanItem;
@@ -66,7 +67,21 @@ if ((stationId != null) && (stationId != "")){
 }
 
 
-if ((partyId == "") && (loanProductId == "") && (stationId == "")){
+
+if ((branchId != null) && (branchId != "")){
+	myLoansList = delegator.findByAnd("LoansByStation",  [branchId : branchId, loanStatusId: disburseLoanStatusId], null, false);
+	overpayedList = delegator.findByAnd("LoansByStation",  [branchId : branchId, loanStatusId: overpayedLoanStatusId], null, false);
+	defaultedList = delegator.findByAnd("LoansByStation",  [branchId : branchId, loanStatusId: defaultedLoanStatusId], null, false);
+	claimedLoanList = delegator.findByAnd("LoansByStation",  [branchId : branchId, loanStatusId: claimedLoanStatusId], null, false);
+	
+	myLoansList =  overpayedList + myLoansList;
+	myLoansList =  myLoansList + defaultedList;
+	myLoansList =  myLoansList + claimedLoanList;
+	
+}
+
+
+if ((partyId == "") && (loanProductId == "") && (stationId == "") && (branchId == "")){
 	myLoansList = delegator.findByAnd("LoanApplication",  [loanStatusId: disburseLoanStatusId], null, false);
 	overpayedList = delegator.findByAnd("LoanApplication",  [loanStatusId: overpayedLoanStatusId], null, false);
 	defaultedList = delegator.findByAnd("LoanApplication",  [loanStatusId: defaultedLoanStatusId], null, false);

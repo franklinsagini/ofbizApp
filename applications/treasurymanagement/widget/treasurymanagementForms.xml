@@ -634,6 +634,24 @@
             			<condition-expr field-name="createdStamp" operator="less" value="${endOfDay}"/>
             			<condition-expr field-name="transactionType" operator="equals" value="CASHWITHDRAWAL"/>
             		</condition-list>
+
+
+             		<condition-list combine="and">
+            			<condition-expr field-name="isActive" value="Y"/>
+            			<condition-expr field-name="treasuryId" operator="equals" value="${treasuryId}"/>
+            			<condition-expr field-name="createdStamp" operator="greater-equals" value="${transferDate}"/>
+            			<condition-expr field-name="createdStamp" operator="less" value="${endOfDay}"/>
+            			<condition-expr field-name="transactionType" operator="equals" value="CASHWITHDRAWALREVERSED"/>
+            		</condition-list>
+
+
+             		<condition-list combine="and">
+            			<condition-expr field-name="isActive" value="Y"/>
+            			<condition-expr field-name="treasuryId" operator="equals" value="${treasuryId}"/>
+            			<condition-expr field-name="createdStamp" operator="greater-equals" value="${transferDate}"/>
+            			<condition-expr field-name="createdStamp" operator="less" value="${endOfDay}"/>
+            			<condition-expr field-name="transactionType" operator="equals" value="CASHDEPOSITREVERSED"/>
+            		</condition-list>
             	
             	</condition-list>
             	<order-by field-name="-accountTransactionId"></order-by>
@@ -766,7 +784,7 @@
     
     <!-- List Transfer Sources -->
     <form name="listTransferSources" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateTreasury" paginate-target="treasury"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-widget-area-style="tabletextright"  default-widget-style="tabletext" default-table-style="basic-table hover-bar">
         <actions>
         	<entity-condition entity-name="Treasury">
             </entity-condition>
@@ -812,7 +830,7 @@
        		<display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity>
         </field>
         
-        <field name="balanceAmount" title="Balance Amount" widget-style="buttontext">
+        <field name="balanceAmount" title="Balance Amount" widget-area-style="align-text" title-style="align-right" >
             <display default-value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getNetAllocation(treasuryId);}"></display>
         </field>
         

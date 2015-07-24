@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>MpaReversal Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+
+    <service name="noSyntaxError" engine="interface">
+        <description>
+            Dummy service to prevent empty files and syntax error - Remove when the 1st real service will be added here 
+        </description>
+    </service> 
+    
+    <!-- reverseTransaction -->
+    <service name="reverseTransaction" engine="simple" default-entity-name="AccountTransaction"
+             location="component://mpareversal/script/org/ofbiz/mpareversal/MpaReversalService.xml" invoke="reverseTransaction" auth="true">
+        <description>Reverse Transaction</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+</services>

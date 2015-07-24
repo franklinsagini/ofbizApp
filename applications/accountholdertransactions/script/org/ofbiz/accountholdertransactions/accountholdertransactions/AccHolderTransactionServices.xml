@@ -610,7 +610,6 @@
 		<field-to-result field="newEntity.accountTransactionParentId"
 													result-name="accountTransactionParentId" />
 			
-
 	</simple-method>
 
 	<simple-method method-name="removeTransaction"
@@ -657,6 +656,10 @@
 		<!-- set field="productType" value="Loan"/ -->
 
 		<create-value value-field="newEntity" />
+		
+		<!-- Post Cheque to uncleared cheque and charges -->
+		<set field="poststatus" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.postUnclearedCheque(newEntity, userLogin);}"/>
+
 	</simple-method>
 
 	<simple-method method-name="createChequeDepositWithEndDate"

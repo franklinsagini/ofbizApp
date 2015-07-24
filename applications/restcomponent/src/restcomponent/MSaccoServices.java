@@ -15,6 +15,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
 import org.ofbiz.accountholdertransactions.LoanRepayments;
@@ -61,6 +62,9 @@ public class MSaccoServices {
 	public static String TRANSACTION_LOANREPAYMENT = "Loan_Repayment";
 	public static String TRANSACTION_WITHDRAWAL = "Withdrawal";
 	public static String TRANSACTION_DEPOSIT = "Deposit ";
+	
+	private static Logger log = Logger
+			.getLogger(MSaccoServices.class);
 
 	/****
 	 * Gets the Members with new MSacco Applications - Not sent to Cortec
@@ -393,6 +397,15 @@ public class MSaccoServices {
 			@PathParam("withdrawalStage") String withdrawalStage) {
 
 		addServiceLog(phoneNumber, withdrawalStage, amount);
+		
+		/****
+		 * Withdrawal Stage
+		 * 
+		 * Withdrawal_Request
+		 * Withdrawal_Confirm
+		 * Withdrawal_Decline
+		 * 
+		 * */
 
 		if (withdrawalStage.equals("Withdrawal_Confirm")) {
 			AccHolderTransactionServices.WITHDRAWALOK = "OK";
@@ -419,11 +432,12 @@ public class MSaccoServices {
 			// .getLong("memberAccountId").toString();
 			memberAccountId = memberAccountId.replaceAll(",", "");
 			System.out.println("AAAAAAAAAAAAA Account ID " + memberAccountId);
-
+			log.info("PPPPPPP partnerTransactionId 1 "+transactionId);
 			// Check if Member Has Enough Money - Limit, charges
 			atmtransaction = AccHolderTransactionServices
 					.cashWithdrawal(amount, String.valueOf(memberAccountId),
-							"MSACCOWITHDRAWAL");
+							"MSACCOWITHDRAWAL",
+							withdrawalStage, reference, transactionId);
 			// transaction.setStatus("NOTENOUGHMONEY");
 			// transaction.setStatus(atmStatus.getStatus());
 			// transaction.setCardNumber(cardNumber);

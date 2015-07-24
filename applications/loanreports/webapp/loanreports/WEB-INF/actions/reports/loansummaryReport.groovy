@@ -5,6 +5,7 @@ import org.ofbiz.entity.Delegator;
 partyId = parameters.partyId
 stationId = parameters.stationId
 loanProductId = parameters.loanProductId
+branchId = parameters.branchId
 
 if ((partyId != null) && (partyId != "")){
 	lpartyId = partyId.toLong();
@@ -69,11 +70,28 @@ if ((stationId != null) && (stationId != "")){
 	
 }
 
+
+
+if ((branchId != null) && (branchId != "")){
+	myLoansList = delegator.findByAnd("LoansByStation",  [branchId : branchId, loanStatusId: disburseLoanStatusId], null, false);
+	overpayedList = delegator.findByAnd("LoansByStation",  [branchId : branchId, loanStatusId: overpayedLoanStatusId], null, false);
+	
+	defaultedLoansList = delegator.findByAnd("LoansByStation",  [branchId : branchId, loanStatusId: defaultedLoanStatusId], null, false);
+	
+	claimedLoansList = delegator.findByAnd("LoansByStation",  [branchId : branchId, loanStatusId: claimedLoanStatusId], null, false);
+	
+	
+	myLoansList =  overpayedList + myLoansList;
+	myLoansList = myLoansList + defaultedLoansList;
+	myLoansList = myLoansList + claimedLoansList;
+	
+}
+
 //if ((partyId == "") && (loanProductId == "") && (stationId == "")){
 //	myLoansList = delegator.findByAnd("LoanApplication",  [loanStatusId: disburseLoanStatusId], null, false);
 //}
 
-if ((partyId == "") && (loanProductId == "") && (stationId == "")){
+if ((partyId == "") && (loanProductId == "") && (stationId == "")  && (branchId == "") ){
 	myLoansList = delegator.findByAnd("LoanApplication",  [loanStatusId: disburseLoanStatusId], null, false);
 	overpayedList = delegator.findByAnd("LoanApplication",  [loanStatusId: overpayedLoanStatusId], null, false);
 	defaultedLoansList = delegator.findByAnd("LoanApplication",  [loanStatusId: defaultedLoanStatusId], null, false);

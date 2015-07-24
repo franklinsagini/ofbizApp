@@ -52,14 +52,31 @@ under the License.
             <fo:list-item-body start-indent="body-start()">
                 <fo:block> ${memberAccount.accountNo}</fo:block>
             </fo:list-item-body>
-        </fo:list-item>        
+        </fo:list-item>  
+        
+        <#if chequeNo?has_content>
+        <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold">Cheque No. :</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+                <fo:block> ${chequeNo}</fo:block>
+            </fo:list-item-body>
+        </fo:list-item>  
+        </#if>
     </fo:list-block>
     
     <#list accountTransactionList as transaction>
 	    <fo:list-block provisional-distance-between-starts="2.0in" font-size="10pt" text-align="left" margin-left="20%" margin-bottom="0.2in">
 	        <fo:list-item>
-	            <fo:list-item-label>
-	                <fo:block font-weight="bold">${transaction.transactionType?if_exists}</fo:block>
+	            <fo:list-item-label >
+	                <fo:block font-weight="bold">
+	                <#if transaction.transactionType == "NORMAL CHEQUE WITHDRAWAL CHARGES">
+	                	CHARGES
+	                <#else>
+	                	${transaction.transactionType?if_exists}
+	                </#if>
+	                </fo:block>
 	            </fo:list-item-label>
 	            <fo:list-item-body start-indent="body-start()">
 	                <fo:block>Kshs. ${transaction.transactionAmount?string(",##0.00")}</fo:block>
@@ -80,7 +97,7 @@ under the License.
 	    </fo:list-block>
 	    
 	    
-	    <#if transactionType?has_content>
+	    <#if transactionTypeWithdrawal?has_content>
 	     <fo:list-block provisional-distance-between-starts="2.0in" font-size="10pt" text-align="left" margin-left="20%" margin-bottom="0.2in">
 	        <fo:list-item>
 	            <fo:list-item-label>

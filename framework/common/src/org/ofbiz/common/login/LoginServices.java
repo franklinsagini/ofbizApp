@@ -954,7 +954,7 @@ public class LoginServices {
 
         if (newPassword != null) {
             // Matching password with pattern
-            String passwordPattern = UtilProperties.getPropertyValue("security.properties", "security.login.password.pattern", "^.*(?=.{5,}).*$");
+            String passwordPattern = UtilProperties.getPropertyValue("security.properties", "security.login.password.pattern", "^.*(?=.{5,})(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*]).*$");
             boolean usePasswordPattern = UtilProperties.getPropertyAsBoolean("security.properties", "security.login.password.pattern.enable", true);
             if (usePasswordPattern) {
                 Pattern pattern = Pattern.compile(passwordPattern);

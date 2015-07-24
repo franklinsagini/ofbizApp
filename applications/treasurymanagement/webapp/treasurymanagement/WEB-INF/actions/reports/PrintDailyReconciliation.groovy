@@ -147,8 +147,8 @@ transfersOutTotalList.eachWithIndex { transferOutItem, outIndex ->
 		//totalOut = totalOut.add(transferOutItem.transactionAmount);
 		
 		treasuryTransaction =  new TreasuryTransaction();
-		
-		treasuryTransaction.memberAccountNo = ""
+		loanApplicationId = depositsItem.loanApplicationId
+		treasuryTransaction.memberAccountNo = org.ofbiz.accountholdertransactions.LoanUtilities.getMemberNumberLoanNumber(loanApplicationId.toLong());
 		treasuryTransaction.description = " (Loan Cash Pay)"
 		treasuryTransaction.transactionAmount = depositsItem.transactionAmount
 		treasuryTransaction.increaseDecrease = "I"
@@ -171,6 +171,77 @@ transfersOutTotalList.eachWithIndex { transferOutItem, outIndex ->
 		LESS_THAN_EQUAL_TO(createdStamp: endOfDay)
 		EQUALS(treasuryId: destinationTreasury)
 		EQUALS(transactionType: 'CASHWITHDRAWAL')
+	}
+	
+	//allTransactions = delegator.findByAnd("AccountTransaction",  expr, null, false);
+	
+	//membersList = delegator.findList("Member", expr, null, ["joinDate ASC"], findOptions, false)
+	findOptions = new EntityFindOptions();
+	accountTransactionCashDepositList = delegator.findList("AccountTransaction", expr, null, null, findOptions, false)
+	
+	
+	accountTransactionCashDepositList.eachWithIndex { depositsItem, depIndex ->
+		//totalOut = totalOut.add(transferOutItem.transactionAmount);
+		
+		treasuryTransaction =  new TreasuryTransaction();
+		
+		treasuryTransaction.memberAccountNo = org.ofbiz.accountholdertransactions.LoanUtilities.getMemberAccountNumber(depositsItem.memberAccountId)
+		treasuryTransaction.description = org.ofbiz.accountholdertransactions.LoanUtilities.getMemberAccountName(depositsItem.memberAccountId)+" (Cash Withdrawal)"
+		treasuryTransaction.transactionAmount = depositsItem.transactionAmount
+		treasuryTransaction.increaseDecrease = "D"
+		treasuryTransaction.transactionDateTime = depositsItem.createdStamp
+		
+		mergedTransactionsList.add(treasuryTransaction)
+		
+	}
+	
+	//add CASHWITHDRAWALREVERSED
+	exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder();
+	
+	transferDateTimestamp = new Timestamp(sqlTransferDate.getTime());
+	//endDateTimestamp = new Timestamp(endOfDay.getTime());
+	
+	expr = exprBldr.AND() { //Timestamp
+		GREATER_THAN_EQUAL_TO(createdStamp: transferDateTimestamp)
+		LESS_THAN_EQUAL_TO(createdStamp: endOfDay)
+		EQUALS(treasuryId: destinationTreasury)
+		EQUALS(transactionType: 'CASHWITHDRAWALREVERSED')
+	}
+	
+	//allTransactions = delegator.findByAnd("AccountTransaction",  expr, null, false);
+	
+	//membersList = delegator.findList("Member", expr, null, ["joinDate ASC"], findOptions, false)
+	findOptions = new EntityFindOptions();
+	accountTransactionCashDepositList = delegator.findList("AccountTransaction", expr, null, null, findOptions, false)
+	
+	
+	accountTransactionCashDepositList.eachWithIndex { depositsItem, depIndex ->
+		//totalOut = totalOut.add(transferOutItem.transactionAmount);
+		
+		treasuryTransaction =  new TreasuryTransaction();
+		
+		treasuryTransaction.memberAccountNo = org.ofbiz.accountholdertransactions.LoanUtilities.getMemberAccountNumber(depositsItem.memberAccountId)
+		treasuryTransaction.description = org.ofbiz.accountholdertransactions.LoanUtilities.getMemberAccountName(depositsItem.memberAccountId)+" (Cash Withdrawal)"
+		treasuryTransaction.transactionAmount = depositsItem.transactionAmount
+		treasuryTransaction.increaseDecrease = "I"
+		treasuryTransaction.transactionDateTime = depositsItem.createdStamp
+		
+		mergedTransactionsList.add(treasuryTransaction)
+		
+	}
+	
+	
+	//minus CASHDEPOSITREVERSED
+	exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder();
+	
+	transferDateTimestamp = new Timestamp(sqlTransferDate.getTime());
+	//endDateTimestamp = new Timestamp(endOfDay.getTime());
+	
+	expr = exprBldr.AND() { //Timestamp
+		GREATER_THAN_EQUAL_TO(createdStamp: transferDateTimestamp)
+		LESS_THAN_EQUAL_TO(createdStamp: endOfDay)
+		EQUALS(treasuryId: destinationTreasury)
+		EQUALS(transactionType: 'CASHDEPOSITREVERSED')
 	}
 	
 	//allTransactions = delegator.findByAnd("AccountTransaction",  expr, null, false);

@@ -5,7 +5,11 @@
 	<!-- memberAccountsReportForm -->
     <form name="memberAccountsReportForm" type="single" target="memberAccountListPDF" title="" header-row-style="header-row"
         default-table-style="basic-table" target-window="_BLANK">
-
+		<actions>
+			<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+		</actions>
         <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
         <field name="stationId" title="Station">
         	<drop-down allow-empty="true">
@@ -20,6 +24,13 @@
         		<entity-options description="${code} - ${name}" entity-name="AccountProduct" key-field-name="accountProductId"></entity-options>
         	</drop-down>
         </field>
+        
+        <field name="branchId" title="Branch">
+            <drop-down allow-empty="true" no-current-selected-key="${userLogin.partyId}" >
+                <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
+            </drop-down>
+        </field>
+        
         <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
@@ -29,7 +40,12 @@
 
     <form name="memberAccountListingDownloadForm" type="single" target="memberAccountListDownloadexcel.csv" title="" header-row-style="header-row"
         default-table-style="basic-table" target-window="_BLANK">
+		<actions>
+			<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
 
+		</actions>
         <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
         <field name="stationId" title="Station">
         	<drop-down allow-empty="true">
@@ -44,12 +60,19 @@
         		<entity-options description="${code} - ${name}" entity-name="AccountProduct" key-field-name="accountProductId"></entity-options>
         	</drop-down>
         </field>
+        
+        <field name="branchId" title="Branch">
+            <drop-down allow-empty="true" no-current-selected-key="${userLogin.partyId}" >
+                <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
+            </drop-down>
+        </field>
+        
         <field name="submitButton" title="Generate Excel" widget-style="smallSubmit" >
             <submit button-type="button" />
         </field>
     </form>
 
-       <form name="memberAccountBalanceExport" list-name="myAccountsList" default-map-name="accountBalance" target="" title=""
+    <form name="memberAccountBalanceExport" list-name="myAccountsList" default-map-name="accountBalance" target="" title=""
          type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2"
          default-table-style="basic-table hover-bar" paginate="false" >
          <!-- actions>
@@ -65,6 +88,7 @@
          <field name="idNumber" title="ID No"><display/></field>
 
         <field name="stationId" title="Station"><display-entity entity-name="Station" description="${name}"></display-entity></field>
+        <field name="branchId" title="Branch"><display-entity entity-name="PartyGroup" description="${groupName}" key-field-name="partyId"></display-entity></field>
 
         <field name="accountNo" title="Account No"><display/></field>
         <field name="accountName" title="Account Name"><display/></field>
