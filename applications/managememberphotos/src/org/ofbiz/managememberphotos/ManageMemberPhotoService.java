@@ -4,16 +4,25 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.DelegatorFactoryImpl;
+import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
 
 /***
  * @author Japheth Odonya  @when Jul 20, 2015 5:42:36 PM
@@ -32,10 +41,10 @@ public class ManageMemberPhotoService {
 //		String imagesPath = "";
 //		String sourcePath = "";
 //		if (!folder.exists()){
-//			sourcePath = "/home/online/sourceimages";
+//			sourcePath = "/home/online/sourceimages/PHOTOS";
 //			destinationpath = "/home/samuel/installations/chaisacco/framework/images/members"; 
 //		} else{
-//			//imagesPath = "/F:/projects/vergeofbiz/vergesacco/sourceimages";
+//			//imagesPath = "/F:/projects/vergeofbiz/vergesacco/sourceimages/PHOTOS";
 //			imagesPath = "/F:/verge/chaisacco_dbs_23012015/PHOTOS";
 //			destinationpath = "/F:/projects/vergeofbiz/vergesacco/framework/images/members"; 
 //		}
@@ -86,19 +95,69 @@ public class ManageMemberPhotoService {
 //		//create a directory in the destination folder with name as member party id
 //		//copy the id into directory named photorurl, idfronturl, idbackurl, signatureurl
 //		
+		
 //		//repeat until the list of 100 members is zero
 		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		
-		List<String> listMemberId = new ArrayList<String>();
-        listMemberId.add("10000");
-        listMemberId.add("10001");
-        listMemberId.add("10002");
-        listMemberId.add("10003");
-        listMemberId.add("10004");
-        listMemberId.add("10005");
-        listMemberId.add("10006");
-        listMemberId.add("10007");
-        listMemberId.add("10008");
+		//delegator.findList(entityName, entityCondition, fieldsToSelect, orderBy, findOptions, useCache);
+		//18948
+		List<GenericValue> memberELI = null; // =
+		EntityConditionList<EntityExpr> memberConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"idNumber", EntityOperator.NOT_EQUAL, "0"),
+
+				EntityCondition.makeCondition("idNumber",
+						EntityOperator.NOT_EQUAL, "1"),
+						
+				EntityCondition.makeCondition("idNumber",
+								EntityOperator.NOT_EQUAL, ""),
+								EntityCondition.makeCondition("idNumber",
+										EntityOperator.NOT_EQUAL, "."),
+										EntityCondition.makeCondition("idNumber",
+												EntityOperator.NOT_EQUAL, "-- NOT SET --"),
+								
+				EntityCondition.makeCondition("idNumber",
+										EntityOperator.NOT_EQUAL, "`")
+
+				), EntityOperator.AND);
+
+		// EntityOperator._emptyMap
+		Set<String> memberFields = new HashSet<String>();
+		memberFields.add("partyId");
+		memberFields.add("idNumber");
+		
+		
+		try {
+			memberELI = delegator.findList("Member",
+					memberConditions, memberFields, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		memberELI.subList(0, 18948);
+
+		Long memberAccountId = null;
+		// List<GenericValue> loansList = new LinkedList<GenericValue>();
+		for (GenericValue member : memberELI) {
+			//memberAccountId = genericValue.getLong("memberAccountId");
+			//Create folder
+			//Add photo
+			//add id back
+			//add id front
+			//add signature
+		}
+		
+//		List<String> listMemberId = new ArrayList<String>();
+//        listMemberId.add("10000");
+//        listMemberId.add("10001");
+//        listMemberId.add("10002");
+//        listMemberId.add("10003");
+//        listMemberId.add("10004");
+//        listMemberId.add("10005");
+//        listMemberId.add("10006");
+//        listMemberId.add("10007");
+//        listMemberId.add("10008");
         
 //        for (String listMemberId1 : listMemberId) {
 //            
@@ -107,20 +166,21 @@ public class ManageMemberPhotoService {
     	BufferedImage image = null;
         try {
          
-            
+        	//sourcePath = "/home/online/sourceimages/PHOTOS";
+			//destinationpath = "/home/samuel/installations/chaisacco/framework/images/members";
             File url = new File("D:\\photosManage\\LOGOS\\theuoelogo.png");
             image = ImageIO.read(url);
            
-       for (String listMemberId1 : listMemberId ) {
-            String dest="D:\\photosManage\\MyPhotoFolder\\"+listMemberId1+"";
-           Boolean success = (new File(dest)).mkdir();
-            if(success){
-            // File dest = new File("D:\\photosManage\\MyPhotoFolder\\"+photoFol+"");
-            ImageIO.write(image, "jpg",new File(""+dest+"\\"+listMemberId1+".jpg"));
-           
-            }
-          
-        }
+//       for (String listMemberId1 : listMemberId ) {
+//            String dest="D:\\photosManage\\MyPhotoFolder\\"+listMemberId1+"";
+//           Boolean success = (new File(dest)).mkdir();
+//            if(success){
+//            // File dest = new File("D:\\photosManage\\MyPhotoFolder\\"+photoFol+"");
+//            ImageIO.write(image, "jpg",new File(""+dest+"\\"+listMemberId1+".jpg"));
+//           
+//            }
+//          
+//        }
             
           // ImageIO.write(image, "gif",new File("D:\\out.gif"));
            // ImageIO.write(image, "png",new File("D:\\out.png"));
