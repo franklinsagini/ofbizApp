@@ -522,6 +522,15 @@ public class TreasuryReconciliation {
 			return bdNetAllocation;
 		}
 		
+		if (treasuryTypeName.equals("VAULT"))
+		{
+			log.info("IIIIIIIII Its a VAULT !!!!!!!!!!!!!!!!!!!!! ");
+			String glAccountId = getTreasuryAccountId(destinationTreasury);
+			bdNetAllocation = TreasuryAccounting.getAccountBalance(glAccountId);
+			
+			return bdNetAllocation;
+		}
+		
 		//getNetAllocation
 		if (treasuryTypeName.equals("TELLER")){
 			log.info("IIIIIIIII Its a teller !!!!!!!!!!!!!!!!!!!!! ");
