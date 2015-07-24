@@ -147,8 +147,8 @@ transfersOutTotalList.eachWithIndex { transferOutItem, outIndex ->
 		//totalOut = totalOut.add(transferOutItem.transactionAmount);
 		
 		treasuryTransaction =  new TreasuryTransaction();
-		
-		treasuryTransaction.memberAccountNo = ""
+		loanApplicationId = depositsItem.loanApplicationId
+		treasuryTransaction.memberAccountNo = org.ofbiz.accountholdertransactions.LoanUtilities.getMemberNumberLoanNumber(loanApplicationId.toLong());
 		treasuryTransaction.description = " (Loan Cash Pay)"
 		treasuryTransaction.transactionAmount = depositsItem.transactionAmount
 		treasuryTransaction.increaseDecrease = "I"

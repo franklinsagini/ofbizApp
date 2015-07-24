@@ -2920,6 +2920,18 @@ public class LoanUtilities {
 		log.info("RRRRRRRRRRRRRRREEEEEEEEEEEEEMMMMMMMMMMMM code is "+remitanceCode);
 		return remitanceCode;
 	}
+	
+	public static String getMemberNumberLoanNumber(Long loanApplicationId){
+		String description = "";
+		
+		GenericValue loanApplication = getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
+		
+		GenericValue member = getEntityValue("Member", "partyId", loanApplication.getLong("partyId"));
+		
+		description = "Member NO :"+member.getString("memberNumber")+" Loan No : "+loanApplication.getString("loanNo")+" ";
+		
+		return description;
+	}
 
 
 }
