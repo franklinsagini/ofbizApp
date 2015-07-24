@@ -3,7 +3,9 @@ package restcomponent;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -12,6 +14,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
+import org.ofbiz.accountholdertransactions.LoanUtilities;
 import org.ofbiz.accountholdertransactions.model.ATMTransaction;
 import org.ofbiz.atmmanagement.ATMManagementServices;
 import org.ofbiz.atmmanagement.ATMStatus;
@@ -261,33 +264,65 @@ public class ATMServices {
 		//Set the increaseDecrease to Reversed
 		//AccountTransaction
 		
-		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		List<GenericValue> accountTransactionELI = null;
-		EntityConditionList<EntityExpr> accountTransactionConditions = EntityCondition
-				.makeCondition(UtilMisc.toList(EntityCondition
-						.makeCondition("accountTransactionParentId",
-								EntityOperator.EQUALS, transactionId)),
-						EntityOperator.AND);
-
-		try {
-			accountTransactionELI = delegator.findList("AccountTransaction",
-					accountTransactionConditions, null, null, null, false);
-
-		} catch (GenericEntityException e2) {
-			e2.printStackTrace();
-		}
+	//		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+	//		List<GenericValue> accountTransactionELI = null;
+	//		EntityConditionList<EntityExpr> accountTransactionConditions = EntityCondition
+	//				.makeCondition(UtilMisc.toList(EntityCondition
+	//						.makeCondition("accountTransactionParentId",
+	//								EntityOperator.EQUALS, transactionId)),
+	//						EntityOperator.AND);
+	//
+	//		try {
+	//			accountTransactionELI = delegator.findList("AccountTransaction",
+	//					accountTransactionConditions, null, null, null, false);
+	//
+	//		} catch (GenericEntityException e2) {
+	//			e2.printStackTrace();
+	//		}
+	//		GenericValue accountTransaction = null;
+	//		String accountTransactionId = delegator.getNextSeqId("AccountTransaction");
+	//		for (GenericValue genericValue : accountTransactionELI) {
+	//			
+	//			accountTransaction = genericValue;
+	//			accountTransaction.set("accountTransactionId", accountTransactionId);
+	//			accountTransaction.set("increaseDecrease", "I");
+	//			accountTransaction.set("transactionType", "ATMWITHDRAWALREVERSAL");
+	//			try {
+	//				delegator.createOrStore(accountTransaction);
+	//			} catch (GenericEntityException e) {
+	//				e.printStackTrace();
+	//			}
+	//		}
+		
 		GenericValue accountTransaction = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		GenericValue cardApplication = ATMManagementServices.getMemberATMApplication(cardNumber);
+		String memberAccountId = cardApplication.getString("memberAccountId");
+		accountTransaction = delegator.makeValue("AccountTransaction");
+		String accountTransactionId = delegator.getNextSeqId("AccountTransaction");
+		accountTransaction
+				.put("memberAccountId", Long.valueOf(memberAccountId));
+		accountTransaction.put("transactionAmount", amount);
+		accountTransaction.set("accountTransactionId", accountTransactionId);
+		accountTransaction.set("increaseDecrease", "I");
+		accountTransaction.set("transactionType", "ATMWITHDRAWALREVERSAL");
 
-		for (GenericValue genericValue : accountTransactionELI) {
-			accountTransaction = genericValue;
-			accountTransaction.set("increaseDecrease", "R");
-			try {
-				delegator.createOrStore(accountTransaction);
-			} catch (GenericEntityException e) {
-				e.printStackTrace();
-			}
-		}
 
+		Map<String, String> userLogin = new HashMap<String, String>();
+		userLogin.put("userLoginId", "admin");
+		accountTransaction.setString("createdBy", userLogin.get("userLoginId"));
+		
+		GenericValue memberAccount = LoanUtilities.getEntityValue("MemberAccount", "memberAccountId", Long.valueOf(memberAccountId));
+		accountTransaction.set("partyId", memberAccount.getLong("partyId"));
+		
+//		try {
+//			delegator.createOrStore(accountTransaction);
+//		} catch (GenericEntityException e) {
+//			e.printStackTrace();
+//		}
+		AccHolderTransactionServices.cashWithdrawalATMReversal(accountTransaction, userLogin, "ATMWITHDRAWALREVERSAL");
+		
 		//Reverse GL
 		
 		//Now build the transaction and return it as json
@@ -322,7 +357,7 @@ public class ATMServices {
 			transaction.setCardStatusId(atmStatus.getCardStatusId());
 			transaction.setCardStatus(atmStatus.getCardStatus());
 			transaction.setStatus(atmStatus.getStatus());
-			GenericValue memberAccount = AccHolderTransactionServices
+			memberAccount = AccHolderTransactionServices
 					.getMemberAccount(atmStatus.getCardApplication().getLong(
 							"memberAccountId"));
 			transaction.setMemberAccountId(memberAccount
@@ -337,7 +372,7 @@ public class ATMServices {
 		transaction.setStatus(atmStatus.getStatus());
 
 		System.out.println("ATM REVERSAL TRANSACTION ---- " + transaction.toString());
-		addServiceLog(cardNumber, "REVERSEATMWITHDRAWAL");
+		addServiceLog(cardNumber, "ATMWITHDRAWALREVERSAL");
 		Gson gson = new Gson();
 		String json = gson.toJson(transaction);
 

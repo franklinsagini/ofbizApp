@@ -427,7 +427,7 @@ public class ATMManagementServices {
 	 * 
 	 * Either Returns an Card Application or Null if none exists
 	 * */
-	private static GenericValue getMemberATMApplication(String cardNumber) {
+	public static GenericValue getMemberATMApplication(String cardNumber) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		List<GenericValue> cardApplicationELI = null;
 		EntityConditionList<EntityExpr> cardApplicationConditions = EntityCondition
