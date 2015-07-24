@@ -26,7 +26,7 @@ public class ManageMemberPhotoService {
 	public static Logger log = Logger.getLogger(ManageMemberPhotoService.class);
 	
 	public static String loadMembersPhotos(String sourcepath, String destinationPath, Map<String, String> userLogin){
-		String success = "success";
+		//String success = "success";
 		
 //		File folder = new File("/F:/projects/vergeofbiz/vergesacco/sourceimages");
 //		String imagesPath = "";
@@ -113,7 +113,7 @@ public class ManageMemberPhotoService {
            
        for (String listMemberId1 : listMemberId ) {
             String dest="D:\\photosManage\\MyPhotoFolder\\"+listMemberId1+"";
-            boolean success = (new File(dest)).mkdir();
+           Boolean success = (new File(dest)).mkdir();
             if(success){
             // File dest = new File("D:\\photosManage\\MyPhotoFolder\\"+photoFol+"");
             ImageIO.write(image, "jpg",new File(""+dest+"\\"+listMemberId1+".jpg"));
@@ -133,7 +133,7 @@ public class ManageMemberPhotoService {
         }
 		
 		
-		return success;
+		return "";
 	}
 	
 	///photo here
@@ -142,7 +142,7 @@ public class ManageMemberPhotoService {
 	    GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
 	    String user = userLogin.getString("partyId");
 	    
-		
+		return "";
 	}
 	
 	
