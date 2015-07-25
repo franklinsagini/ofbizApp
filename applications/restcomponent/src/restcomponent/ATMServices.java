@@ -88,26 +88,41 @@ public class ATMServices {
 
 		System.out.println("ATM TRANSACTION ---- " + transaction.toString());
 
-		addServiceLog(cardNumber, "BALANCE");
+		addServiceLog(cardNumber, "BALANCE", transaction.getStatus());
 		Gson gson = new Gson();
 		String json = gson.toJson(transaction);
 
 		return Response.ok(json).type("application/json").build();
 	}
 
-	private void addServiceLog(String cardNumber, String transactionType) {
+	private void addServiceLog(String cardNumber, String transactionType, String transactionStatus) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		GenericValue atmTransactionsLog = null;
 		String atmransactionsLogId = delegator.getNextSeqId("ATMTransactionsLog");
 		atmTransactionsLog = delegator.makeValidValue("ATMTransactionsLog", UtilMisc
 				.toMap("atmransactionsLogId", atmransactionsLogId, "cardNumber",
-						cardNumber, "transactionType", transactionType));
+						cardNumber, "transactionType", transactionType, "transactionStatus", transactionStatus));
 		try {
 			delegator.createOrStore(atmTransactionsLog);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
 	}
+
+	private void addServiceLog(String cardNumber, String transactionType, BigDecimal transactionAmount, String transactionStatus) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		GenericValue atmTransactionsLog = null;
+		String atmransactionsLogId = delegator.getNextSeqId("ATMTransactionsLog");
+		atmTransactionsLog = delegator.makeValidValue("ATMTransactionsLog", UtilMisc
+				.toMap("atmransactionsLogId", atmransactionsLogId, "cardNumber",
+						cardNumber, "transactionType", transactionType, "transactionAmount", transactionAmount, "transactionStatus", transactionStatus));
+		try {
+			delegator.createOrStore(atmTransactionsLog);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+	}
+	
 
 	@GET
 	@Produces("application/json")
@@ -149,7 +164,7 @@ public class ATMServices {
 
 		}
 
-		addServiceLog(cardNumber, "WITHDRAWAL");
+		addServiceLog(cardNumber, "WITHDRAWAL", amount, transaction.getStatus());
 		Gson gson = new Gson();
 		String json = gson.toJson(transaction);
 
@@ -202,7 +217,7 @@ public class ATMServices {
 					new Timestamp(Calendar.getInstance().getTimeInMillis()));
 		}
 
-		addServiceLog(cardNumber, "WITHDRAWAL");
+		addServiceLog(cardNumber, "WITHDRAWAL", amount, transaction.getStatus());
 		Gson gson = new Gson();
 		String json = gson.toJson(transaction);
 
@@ -374,7 +389,7 @@ public class ATMServices {
 		
 
 		System.out.println("ATM REVERSAL TRANSACTION ---- " + transaction.toString());
-		addServiceLog(cardNumber, "ATMWITHDRAWALREVERSAL");
+		addServiceLog(cardNumber, "ATMWITHDRAWALREVERSAL", amount, transaction.getStatus());
 		Gson gson = new Gson();
 		String json = gson.toJson(transaction);
 
@@ -427,7 +442,7 @@ public class ATMServices {
 					String.valueOf(transaction.getTransactionId()), amount,
 					new Timestamp(Calendar.getInstance().getTimeInMillis()));
 		}
-		addServiceLog(cardNumber, "VISAWITHDRAWAL");
+		addServiceLog(cardNumber, "VISAWITHDRAWAL", amount, transaction.getStatus());
 		Gson gson = new Gson();
 		String json = gson.toJson(transaction);
 
@@ -480,7 +495,7 @@ public class ATMServices {
 					new Timestamp(Calendar.getInstance().getTimeInMillis()));
 		}
 
-		addServiceLog(cardNumber, "BALANCE");
+		addServiceLog(cardNumber, "BALANCE", transaction.getStatus());
 		Gson gson = new Gson();
 		String json = gson.toJson(transaction);
 
