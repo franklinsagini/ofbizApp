@@ -4,12 +4,14 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
+import javax.resource.cci.ResultSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -23,6 +25,9 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.datasource.GenericHelperInfo;
+import org.ofbiz.entity.jdbc.SQLProcessor;
+import org.ofbiz.entity.util.EntityFindOptions;
 
 /***
  * @author Japheth Odonya  @when Jul 20, 2015 5:42:36 PM
@@ -34,7 +39,8 @@ public class ManageMemberPhotoService {
 	
 	public static Logger log = Logger.getLogger(ManageMemberPhotoService.class);
 	
-	public static String loadMembersPhotos(String sourcepath, String destinationPath, Map<String, String> userLogin){
+
+	public static void loadMembersPhotos(){     //String sourcepath, String destinationPath, Map<String, String> userLogin
 		//String success = "success";
 		
 //		File folder = new File("/F:/projects/vergeofbiz/vergesacco/sourceimages");
@@ -121,13 +127,57 @@ public class ManageMemberPhotoService {
 										EntityOperator.NOT_EQUAL, "`")
 
 				), EntityOperator.AND);
-
-		// EntityOperator._emptyMap
+		
 		Set<String> memberFields = new HashSet<String>();
 		memberFields.add("partyId");
 		memberFields.add("idNumber");
 		
+		try {
+			memberELI = delegator.findList("Member",
+					memberConditions, memberFields, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+      //  String membersDet[] = {"Name","IDNumber","Mo","Ne"};
+        
+        
 		
+		   BufferedImage image = null;
+		
+	   try{
+		   File url = new File("D:\\photosManage\\media Icons\\mp3 player.jpg");
+           image = ImageIO.read(url);
+	       
+           for (GenericValue listMemberId1 : memberELI) {
+			    
+				 String membersDet = listMemberId1.getString("idNumber");
+                  
+		            String dest="D:\\photosManage\\MyPhotoFolder\\"+membersDet+"";
+		            boolean success = (new File(dest)).mkdir();
+		            if(success){
+
+		                try {
+		                	
+							ImageIO.write(image, "jpg",new File(""+dest+"\\"+membersDet+".jpg"));
+						   
+		                   } catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+		           
+		            }
+				 
+				 
+		            log.info(" ######### "+membersDet);
+		         
+			 
+			 }   // close for loop
+			
+	   }catch(Exception e){
+		   e.printStackTrace();
+	   }
+	/*	
 		try {
 			memberELI = delegator.findList("Member",
 					memberConditions, memberFields, null, null, false);
@@ -146,7 +196,7 @@ public class ManageMemberPhotoService {
 			//add id back
 			//add id front
 			//add signature
-		}
+		}*/
 		
 //		List<String> listMemberId = new ArrayList<String>();
 //        listMemberId.add("10000");
@@ -163,14 +213,14 @@ public class ManageMemberPhotoService {
 //            
 //        }
 //        
-    	BufferedImage image = null;
-        try {
+    
+/*        try {
          
         	//sourcePath = "/home/online/sourceimages/PHOTOS";
 			//destinationpath = "/home/samuel/installations/chaisacco/framework/images/members";
             File url = new File("D:\\photosManage\\LOGOS\\theuoelogo.png");
             image = ImageIO.read(url);
-           
+           */
 //       for (String listMemberId1 : listMemberId ) {
 //            String dest="D:\\photosManage\\MyPhotoFolder\\"+listMemberId1+"";
 //           Boolean success = (new File(dest)).mkdir();
@@ -188,12 +238,12 @@ public class ManageMemberPhotoService {
            // FileUtils	(source, dest);
            //  FileUtils.copyDirectory(url, dest);
  
-        } catch (IOException e) {
+/*        } catch (IOException e) {
         	e.printStackTrace();
-        }
+        }*/
 		
 		
-		return "";
+	//	return "";
 	}
 	
 	///photo here
