@@ -39,8 +39,8 @@ public class ManageMemberPhotoService {
 	
 	public static Logger log = Logger.getLogger(ManageMemberPhotoService.class);
 	
-
-	public static void loadMembersPhotos(){     //String sourcepath, String destinationPath, Map<String, String> userLogin
+	
+	public static void loadMembersPhotos() throws IOException{     //String sourcepath, String destinationPath, Map<String, String> userLogin
 		//String success = "success";
 		
 //		File folder = new File("/F:/projects/vergeofbiz/vergesacco/sourceimages");
@@ -138,39 +138,34 @@ public class ManageMemberPhotoService {
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-
       //  String membersDet[] = {"Name","IDNumber","Mo","Ne"};
-        
-        
 		
-		   BufferedImage image = null;
+		//ImageIO.write(image, "jpg",new File(""+dest+"\\"+membersDet+".jpg"));
 		
+		BufferedImage image = null;
+		 
 	   try{
-		   File url = new File("D:\\photosManage\\media Icons\\mp3 player.jpg");
-           image = ImageIO.read(url);
+		  
+		  // File url = new File("D:\\photosManage\\media Icons\\mp3 player.jpg");
+          // image = ImageIO.read(url);
 	       
+		   
            for (GenericValue listMemberId1 : memberELI) {
 			    
 				 String membersDet = listMemberId1.getString("idNumber");
-                  
-		            String dest="D:\\photosManage\\MyPhotoFolder\\"+membersDet+"";
+                 String partyIds=listMemberId1.getString("partyId");
+				 
+		            String dest="/home/samuel/installations/chaisacco/framework/images/members/"+membersDet+"/";
+		           
 		            boolean success = (new File(dest)).mkdir();
+		            
 		            if(success){
 
-		                try {
-		                	
-							ImageIO.write(image, "jpg",new File(""+dest+"\\"+membersDet+".jpg"));
-						   
-		                   } catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-		           
+		            	
 		            }
 				 
-				 
 		            log.info(" ######### "+membersDet);
-		         
+		            log.info("<<######<<<<"+partyIds);
 			 
 			 }   // close for loop
 			
