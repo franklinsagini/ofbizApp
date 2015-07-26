@@ -58,6 +58,7 @@ under the License.
         <field name="treasuryId" type="id"   enable-audit-log="true"></field>
         <field name="acctgTransId" type="id"   enable-audit-log="true"></field>
         <field name="partyId" type="id-vlong-int"   enable-audit-log="true"></field>
+        
         <field name="originalAcctgTransId" type="id"   enable-audit-log="true"></field>
         <field name="originalAccountTransactionId" type="id"   enable-audit-log="true"></field>
         
@@ -107,6 +108,8 @@ under the License.
          
          <field name="partnerTransactionId" type="id"   enable-audit-log="true"><description>Partner Transaction ID</description></field>
          <field name="reference" type="id"   enable-audit-log="true"><description>Reference ID</description></field>
+         
+         <field name="systemtrace" type="id"   enable-audit-log="true"><description>Reference ID</description></field>
          
         <prim-key field="accountTransactionId"/>
         
@@ -191,7 +194,8 @@ under the License.
         <field name="atmransactionsLogId" col-name="AccountID" type="id" enable-audit-log="true"><description>primary sequenced ID</description></field>
 		<field name="cardNumber"  type="id"   enable-audit-log="true"></field>
 		<field name="transactionType"  type="id"   enable-audit-log="true"></field>
-        
+        <field name="transactionAmount" type="currency-amount"   enable-audit-log="true"></field>
+        <field name="transactionStatus" type="name"   enable-audit-log="true"></field>
         <prim-key field="atmransactionsLogId"/>
      </entity>
     
@@ -694,20 +698,14 @@ under the License.
             	<key-map field-name="stationId"/>
         	</relation>
         </entity>
-    
-         <entity entity-name="ATMTransactionsLog" table-name="ATMTransactionsLog" sequence-bank-size="1" package-name="org.ofbiz.accountholdertransactions" title="ATMTransactions Entity">
-        <field name="atmransactionsLogId" col-name="AccountID" type="id" enable-audit-log="true"><description>primary sequenced ID</description></field>
-		<field name="cardNumber"  type="id"   enable-audit-log="true"></field>
-		<field name="transactionType"  type="id"   enable-audit-log="true"></field>
-        
-        <prim-key field="atmransactionsLogId"/>
-     </entity>
+
      
      <entity entity-name="MsaccoTransactionsLog" table-name="MsaccoTransactionsLog" sequence-bank-size="1" package-name="org.ofbiz.accountholdertransactions" title="MsaccoTransactionsLog Entity">
         <field name="msaccoTransactionsLogId" type="id" enable-audit-log="true"><description>primary sequenced ID</description></field>
 		<field name="phoneNo"  type="id"   enable-audit-log="true"></field>
 		<field name="transactionType"  type="id"   enable-audit-log="true"></field>
         <field name="transactionAmount" type="currency-amount"   enable-audit-log="true"></field>
+        <field name="transactionStatus" type="name"   enable-audit-log="true"></field>
         <prim-key field="msaccoTransactionsLogId"/>
      </entity>
      

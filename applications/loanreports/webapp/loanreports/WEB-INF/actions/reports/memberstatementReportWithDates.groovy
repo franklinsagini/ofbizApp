@@ -451,30 +451,50 @@ allAccountProducts.eachWithIndex { memberAccount, index ->
 		//println(theTransaction.transactionType) ;
 		if (theTransaction.transactionType.equals("CASHDEPOSIT"))
 		{
-			memberAccountTransaction.transactionDescription = 'Cash Deposit';
+			memberAccountTransaction.transactionDescription = 'Cash Deposit ('+theTransaction.acctgTransId+')';
 		} else if (theTransaction.transactionType.equals("CASHWITHDRAWAL")){
-			memberAccountTransaction.transactionDescription = 'Cash Withdrawal';
+			memberAccountTransaction.transactionDescription = 'Cash Withdrawal ('+theTransaction.acctgTransId+')';
 		}
 		
 		else if (theTransaction.transactionType.equals("TOOTHERACCOUNTS")){
-			memberAccountTransaction.transactionDescription = 'Transfer to other account (SALARY)';
+			memberAccountTransaction.transactionDescription = 'Transfer to other account (SALARY) ('+theTransaction.acctgTransId+')';
 		}
 		
 		else if (theTransaction.transactionType.equals("LOANREPAYMENT") ){
-			memberAccountTransaction.transactionDescription = 'Repayment of a loan';
+			memberAccountTransaction.transactionDescription = 'Repayment of a loan ('+theTransaction.acctgTransId+')';
 		}
 		
 		else if (theTransaction.transactionType.equals("WITHDRAWALCOMMISSION") ){
 			memberAccountTransaction.transactionDescription = 'Withdrawal Commission';
 		}
 		
+		else if (theTransaction.transactionType.equals("ATMWITHDRAWAL") ){
+			memberAccountTransaction.transactionDescription = 'ATM Withdrawal ('+theTransaction.acctgTransId+')';
+		}
+
+		else if (theTransaction.transactionType.equals("MSACCOWITHDRAWAL") ){
+			memberAccountTransaction.transactionDescription = 'MSACCO Withdrawal ('+theTransaction.acctgTransId+')';
+		}
+
+		else if (theTransaction.transactionType.equals("MSACCOWITHDRAWALREV") ){
+			memberAccountTransaction.transactionDescription = 'MSACCO Withdrawal Reversal ('+theTransaction.acctgTransId+')';
+		}
+
+		else if (theTransaction.transactionType.equals("ATMWITHDRAWALREVERSAL") ){
+			memberAccountTransaction.transactionDescription = 'ATM Withdrawal Reversal ('+theTransaction.acctgTransId+')';
+		}
+
+		else if (theTransaction.transactionType.equals("CHEQUEDEPOSIT") ){
+			memberAccountTransaction.transactionDescription = 'Cheque Deposit ('+theTransaction.acctgTransId+')';
+		}
+		
 		else if (theTransaction.transactionType.equals("EXCISEDUTY") ){
-			memberAccountTransaction.transactionDescription = 'Excise Duty';
+			memberAccountTransaction.transactionDescription = 'Excise Duty ('+theTransaction.acctgTransId+')';
 		}
 		
 		
 		else{
-			memberAccountTransaction.transactionDescription = theTransaction.transactionType;
+			memberAccountTransaction.transactionDescription = theTransaction.transactionType+'('+theTransaction.acctgTransId+')';
 		}
 		
 		//memberAccountTransaction.transactionDescription = theTransaction.transactionType
