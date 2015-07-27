@@ -558,7 +558,7 @@ public class TreasuryReconciliation {
 			
 			bdNetAllocation = bdNetAllocation.add(bdLoanCashPay);
 			bdNetAllocation = bdNetAllocation.add(bdCashWithdrawalReversed);
-			bdNetAllocation = bdNetAllocation.add(bdCashDepositReversed);
+			bdNetAllocation = bdNetAllocation.subtract(bdCashDepositReversed);
 			
 			
 			return bdNetAllocation;
