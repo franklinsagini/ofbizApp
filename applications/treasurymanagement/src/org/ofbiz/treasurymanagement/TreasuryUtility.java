@@ -271,7 +271,7 @@ public class TreasuryUtility {
 		userLogin.put("userLoginId", userLoginId);
 		userLogin.put("partyId", partyId);
 
-		//bdTotalsIn = getTotalCashDeposit(userLogin, transactionDate, true);
+		bdTotalsIn = getTotalCashDeposit(userLogin, transactionDate, true);
 		
 		
 		//Add CASHWITHDRAWALREVERSED
@@ -282,7 +282,7 @@ public class TreasuryUtility {
 		bdTotalsIn = bdTotalsIn.add(bdTotalLoanCashRepay);
 		
 		
-		bdTotalsIn = bdTotalsIn.add(getTotalLoanCashDeposit(userLogin, transactionDate, true));
+		//bdTotalsIn = bdTotalsIn.add(getTotalLoanCashDeposit(userLogin, transactionDate, true));
 		return bdTotalsIn;
 	}
 	
