@@ -80,6 +80,15 @@
                         value="memberRemittance"></response>
         </request-map>
         
+        <!-- processNormalRemittanceReceived -->
+        <request-map uri="processNormalRemittanceReceived">
+             <security https="true" auth="true" />
+             <event type="service" invoke="processNormalRemittanceReceived">
+             </event>
+             <response name="success" type="request-redirect" value="memberRemittance">
+             	<redirect-parameter name="normalRemittanceMonthYearId"/>
+             </response>
+     </request-map>
         
 
     <!-- View Mappings -->

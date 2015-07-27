@@ -52,6 +52,10 @@ public class AccHolderTransactionServices {
 	public static String MEMBER_DEPOSIT_CODE = "901";
 	public static String SHARE_CAPITAL_CODE = "902";
 	public static String SAVINGS_ACCOUNT_CODE = "999";
+	public static String HOLIDAY_ACCOUNT_CODE = "D122";
+	public static String JUNIOR_ACCOUNT_CODE = "D121";
+
+	
 	public static Long CHEQUEWITHDRAWALID = 10020L;
 	public static Long BANKERSWITHDRAWALID = 10000L;
 	public static String HQBRANCH = "Company";
@@ -2199,6 +2203,9 @@ public class AccHolderTransactionServices {
 
 					|| ((transactionType != null) && (transactionType
 							.equals("DEPOSITFROMSALARY")))
+					
+					|| ((transactionType != null) && (transactionType
+							.equals("DEPOSITFROMREMITTANCE")))
 
 					|| ((transactionType != null) && (transactionType
 							.equals("MEMBERACCOUNTJVINC")))) {
@@ -2592,7 +2599,7 @@ public class AccHolderTransactionServices {
 
 		String treasuryId = null;
 
-		treasuryId = TreasuryUtility.getTellerTreasuryId(userLogin);
+		//treasuryId = TreasuryUtility.getTellerTreasuryId(userLogin);
 
 		// loanApplication.getString("treasuryId");
 

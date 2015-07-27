@@ -56,4 +56,13 @@
     </service>
     
     
+    <service name="processNormalRemittanceReceived" engine="simple" default-entity-name="NormalRemittanceMonthYear"
+             location="component://normalremittanceprocessing/script/org/ofbiz/normalremittanceprocessing/NormalRemittanceProcessingServices.xml" invoke="processNormalRemittanceReceived" auth="true">
+        <description>processNormalRemittanceReceived</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    
 </services>

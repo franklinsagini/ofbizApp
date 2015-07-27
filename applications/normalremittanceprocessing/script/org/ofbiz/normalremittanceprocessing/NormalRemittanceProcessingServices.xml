@@ -69,4 +69,30 @@ under the License.
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     
+    
+        <!-- processNormalRemittanceReceived -->
+    <simple-method method-name="processNormalRemittanceReceived" short-description="processNormalRemittanceReceived">
+        <set field="normalRemittanceMonthYearId" from-field="parameters.normalRemittanceMonthYearId"/>
+				<set field="processingStatus" value="${bsh:org.ofbiz.normalremittanceprocessing.NormalRemittanceProcessingServices.processNormalRemittanceReceived(normalRemittanceMonthYearId, userLogin);}"></set>
+				<!-- success -->
+				<if>
+					<condition>
+						<if-compare operator="not-equals" value="success" field="processingStatus"></if-compare>
+					</condition>
+					<then>
+						<add-error> 
+		                    <!-- fail-property resource="SalaryProcessingUiLabels.xml"  
+		                        property="pullStationError" / --> 
+		                        <fail-message message="${processingStatus}"/>
+		                </add-error> 
+		                <check-errors /> 
+					</then>
+					<else>
+						 <property-to-field resource="NormalRemittanceProcessingUiLabels.xml" 
+            				property="Successfully processed the remittance" field="successMessage" />
+						
+					</else>
+				</if>
+    </simple-method>
+    
 </simple-methods>

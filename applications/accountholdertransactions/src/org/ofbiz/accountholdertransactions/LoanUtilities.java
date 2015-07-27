@@ -2191,6 +2191,53 @@ public class LoanUtilities {
 		return memberAccountId;
 	}
 
+	
+	public static Long getAccountProductMemberAccountId(String payrollNo, String accountCode) {
+		// TODO Auto-generated method stub
+		GenericValue accountProduct = LoanUtilities
+				.getAccountProductGivenCodeId(accountCode);
+		Long accountProductId = accountProduct.getLong("accountProductId");
+
+		// GenericValue loanApplication =
+		// getLoanApplicationEntity(theLoanApplicationId);
+
+		GenericValue member = getMemberGivenPayrollNumber(payrollNo);
+		Long partyId = member.getLong("partyId");
+
+		GenericValue memberAccount = null;
+
+		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"accountProductId", EntityOperator.EQUALS,
+						accountProductId),
+
+				EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,
+						partyId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> memberAccountELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			memberAccountELI = delegator.findList("MemberAccount",
+					memberAccountConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		for (GenericValue genericValue : memberAccountELI) {
+			memberAccount = genericValue;
+		}
+
+		Long memberAccountId = null;
+
+		if (memberAccount != null)
+			memberAccountId = memberAccount.getLong("memberAccountId");
+
+		return memberAccountId;
+	}
+
 	public static Timestamp getLoanLastRepaymentDate(String loanNo) {
 		Timestamp lastRepaymentDate = null;
 		GenericValue loanApplication = getLoanApplicationEntityGivenLoanNo(loanNo);
