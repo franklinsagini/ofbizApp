@@ -113,8 +113,7 @@ under the License.
                         <#assign carriedBy = delegator.findOne("Person", {"partyId" : movement.carriedBy}, false)/>
                     </#if>
                     <#if movement.releasedTo?has_content>
-                        <#-- <#assign releasedTo = delegator.findOne("Person", {"partyId" : movement.releasedTo}, false)/>		 -->
-                        <#assign releasedTowards = delegator.findOne("Person", {"partyId" : movement.releasedTo}, false)/>
+                    <#assign releasedTo = delegator.findOne("Person", {"partyId" : movement.releasedTo}, false)/>
                    </#if>
                    <#if movement.releasedTo?if_exists == "REGISTRY">
                         <#assign registry = "REGISTRY"/>
@@ -146,10 +145,12 @@ under the License.
                         </fo:table-cell>
 						
 						 <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if releasedTowards?has_content>
-                                <fo:block>${releasedTowards.firstName?if_exists} ${releasedTowards.lastName?if_exists}</fo:block>
-                            <#else>
-                                <fo:block>${movement.releasedTo?if_exists}</fo:block>
+						
+                            <#if movement.releasedTo?if_exists == "REGISTRY">
+                           <fo:block>REGISTRY</fo:block>
+                          <#else>
+                           <fo:block>${releasedTo.firstName?if_exists} ${releasedTo.lastName?if_exists}</fo:block>
+                            
                             </#if>
                         </fo:table-cell> 
 						
