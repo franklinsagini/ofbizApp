@@ -87,15 +87,14 @@
 				</entity-one>
 
 				<set field="month" value="${normalRemittanceMonthYear.month}" type="PlainString" />
-				<set field="year" value="${${normalRemittanceMonthYear.year}" type="PlainString" />
-				<set field="stationId" value="${${normalRemittanceMonthYear.stationId}"
+				<set field="year" value="${normalRemittanceMonthYear.year}" type="PlainString" />
+				<set field="stationId" value="${normalRemittanceMonthYear.stationId}"
 					type="PlainString" />
 				<set field="employerCode"
 					value="${bsh:org.ofbiz.accountholdertransactions.LoanUtilities.getStationEmployerCode(stationId);}"
 					type="PlainString" />
-				<set field="totalNetSalary"
-					value="${bsh:org.ofbiz.salaryprocessing.SalaryProcessingServices.getTotalNetSalaryAmount(salaryMonthYearId);}"
-					type="BigDecimal" />
+					
+				<set field="totalRemitted" value="${bsh:org.ofbiz.normalremittanceprocessing.NormalRemittanceProcessingServices.getTotalNormalRemittanceAmount(normalRemittanceMonthYearId)}"/>
 					
 					<set field="totalChequeAmount" global="true"
 					value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.getTotalRemittedChequeAmount(employerCode, month);}"
@@ -137,7 +136,7 @@
 										<widgets>
 
 											<container style="button-bar">
-												<link target="processRemittanceReceived"
+												<link target="processNormalRemittanceReceived"
 													text="Process Remittance Received" style="buttontext">
 													<!-- parameter param-name="loanApplicationId"/ -->
 													<parameter param-name="normalRemittanceMonthYearId" />
@@ -164,7 +163,7 @@
 									<!-- include-form name="listMemberSalaryTotals" location="component://salaryprocessing/widget/SalaryProcessingForms.xml"/ -->
 
 									<container style="button-bar">
-										<label style="h3" text="${totalNetSalary}" />
+										<label style="h3" text="${totalRemitted}" />
 									</container>
 								</screenlet>
 								

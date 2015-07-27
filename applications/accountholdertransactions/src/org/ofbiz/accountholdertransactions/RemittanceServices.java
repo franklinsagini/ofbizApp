@@ -1169,6 +1169,10 @@ public class RemittanceServices {
 	 * */
 	public static BigDecimal getTotalRemittedChequeAmountAvailable(
 			String employerCode, String month, String year) {
+		
+		log.info("CCCCCCCCCCCCCC Correct employerCode "+employerCode);
+		log.info("CCCCCCCCCCCCCC Correct month "+month);
+		log.info("CCCCCCCCCCCCCC Correct year "+year);
 
 		// GenericValue station = findStationGivenStationNumber(stationNumber);
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
