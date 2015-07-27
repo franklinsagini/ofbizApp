@@ -2067,6 +2067,14 @@ public class LoanRepayments {
 			totalInterestDue = totalInterestDue.add(loanExpectation
 					.getBigDecimal("amountAccrued"));
 		}
+		
+		 GenericValue loanAppEntity = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", Long.valueOf(loanApplicationId));
+			
+			if (loanAppEntity.getBigDecimal("interestDue") != null)
+			{
+				totalInterestDue = totalInterestDue.add(loanAppEntity.getBigDecimal("interestDue"));
+			}
+
 
 		return (totalInterestDue.subtract(getTotalInterestPaid(partyId,
 				loanApplicationId))).setScale(2, RoundingMode.HALF_UP);
@@ -2110,6 +2118,13 @@ public class LoanRepayments {
 		for (GenericValue loanExpectation : loanExpectationELI) {
 			totalInsuranceDue = totalInsuranceDue.add(loanExpectation
 					.getBigDecimal("amountAccrued"));
+		}
+		
+	 GenericValue loanAppEntity = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", Long.valueOf(loanApplicationId));
+		
+		if (loanAppEntity.getBigDecimal("insuranceDue") != null)
+		{
+			totalInsuranceDue = totalInsuranceDue.add(loanAppEntity.getBigDecimal("insuranceDue"));
 		}
 
 		return (totalInsuranceDue.subtract(getTotalInsurancePaid(partyId,
@@ -2683,16 +2698,16 @@ public class LoanRepayments {
 			}
 			totalLoanPaid = totalLoanPaid.add(principalAmount);
 
-			if (loanRepayment.getBigDecimal("insuranceAmount") != null) {
-				insuranceAmount = loanRepayment
-						.getBigDecimal("insuranceAmount");
-			}
-			totalLoanPaid = totalLoanPaid.add(insuranceAmount);
-
-			if (loanRepayment.getBigDecimal("interestAmount") != null) {
-				interestAmount = loanRepayment.getBigDecimal("interestAmount");
-			}
-			totalLoanPaid = totalLoanPaid.add(interestAmount);
+//			if (loanRepayment.getBigDecimal("insuranceAmount") != null) {
+//				insuranceAmount = loanRepayment
+//						.getBigDecimal("insuranceAmount");
+//			}
+//			totalLoanPaid = totalLoanPaid.add(insuranceAmount);
+//
+//			if (loanRepayment.getBigDecimal("interestAmount") != null) {
+//				interestAmount = loanRepayment.getBigDecimal("interestAmount");
+//			}
+//			totalLoanPaid = totalLoanPaid.add(interestAmount);
 		}
 
 		return totalLoanPaid;
