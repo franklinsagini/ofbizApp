@@ -2828,13 +2828,9 @@ Gender
         <!--  field name="USE_ADDRESS"><hidden value="${USE_ADDRESS}"/></field>
         <field name="require_email"><hidden value="${require_email}"/></field    default-field-type="edit"-->
         <!-- auto-fields-service service-name="getSaccoMember" map-name="memberContext"/ -->
-        <field name="memberStatus" title="Member Status">
-        	<drop-down>
-        		<option key="ACTIVE" description="ACTIVE"/>
-        		<option key="SEMI-ACTIVE" description="SEMI-ACTIVE"/>
-        		<option key="INACTIVE" description="INACTIVE"/>
-        		<option key="WITHDRAWN" description="WITHDRAWN"/>
-        		<option key="REJECTED" description="REJECTED"/>
+        <field name="memberStatusId" title="Member Status"  tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+        	<drop-down allow-empty="false">
+        		<entity-options description="${name}" entity-name="MemberStatus" key-field-name="memberStatusId"></entity-options>
         	</drop-down>
         </field>
         <field name="comment" title="Comments"><textarea/></field>
@@ -2848,6 +2844,7 @@ Gender
         <actions>
         	<entity-condition entity-name="MemberStatusLog">
         		<condition-expr field-name="partyId" operator="equals" from-field="partyId"/>
+        		<order-by field-name="-memberStatusLogId"/>
         	</entity-condition>
         </actions>
         <auto-fields-service default-field-type="hidden" service-name="updateApproveMemberLog"/>
@@ -2858,7 +2855,12 @@ Gender
         	<display-entity entity-name="BankDetails" description="${bankName}" also-hidden="false"></display-entity>
         </field -->
         <field name="createdBy" title="ChangedBy"><display also-hidden="false"></display></field>
-        <field name="memberStatus" title="Status"><display also-hidden="false"></display></field>
+        <!-- field name="memberStatus" title="Status"><display also-hidden="false"></display></field -->
+        <field name="memberStatusId" title="Status">
+        	<display-entity entity-name="MemberStatus" key-field-name="memberStatusId" description="${name}">
+        	
+        	</display-entity>
+        </field>
         <field name="comment" title="Comment"><display></display></field>
         <field name="createdStamp" title="When"><display also-hidden="false"></display></field>
     </form>
