@@ -143,11 +143,12 @@
 	
 	<service name="requestfiles" engine="simple" default-entity-name="RegistryRequestedFiles"
 	location="component://registry/script/org/ofbiz/registry/FileServices.xml" invoke="requestfiles" auth="true">
-		<description>Create File Request header record</description>
+		 <description>Create File Request header record</description>
 		<implements service="sendAllScheduledMails" optional="false"/>
 		<auto-attributes include="pk" mode="IN" optional="true" />
 		<auto-attributes include="nonpk" mode="IN" optional="true" />
-		<override name="Reason" allow-html="any"></override>
+		<override name="Reason" allow-html="any"></override> 
+		<!-- <attribute name="message" type="String" mode="IN"/> -->
 	</service>
 	
 	<service name="sendAllScheduledMails" engine="java"	location="org.ofbiz.common.email.EmailServices" invoke="sendStaffMail_verge">

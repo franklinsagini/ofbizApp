@@ -487,6 +487,14 @@
         <response name="success" type="request-redirect-noparam" value="regFileIssue"/>
 		<response name="error" type="request-redirect-noparam" value="regFileIssue"/>
     </request-map>
+    
+    <request-map uri="issuefiles22">
+		<security auth="true" https="true" />
+		<event type="java" path="org.ofbiz.registry.FileServices"
+			invoke="IssueAndSendNotification" />
+		<response name="success" type="request-redirect-noparam" value="regFileIssue"/>
+		<response name="error" type="request-redirect-noparam" value="regFileIssue" />
+	</request-map> 
 
 	
 	<!-- <request-map uri="divertfiles">
@@ -501,6 +509,16 @@
         <event type="service-multi" invoke="divertfiles"/>
         <response name="success" type="request-redirect-noparam" value="regFileDivert"/>
     </request-map>
+    
+    
+    
+    <request-map uri="divertfiles22">
+		<security auth="true" https="true" />
+		<event type="java" path="org.ofbiz.registry.FileServices"
+			invoke="divertToAnotherStaffAndSendNotification" />
+		<response name="success" type="request-redirect-noparam" value="regFileDivert"/>
+		<response name="error" type="request-redirect-noparam" value="regFileDivert" />
+	</request-map> 
 
 	<!-- ================ AUTHORIZATION ================= -->
 
