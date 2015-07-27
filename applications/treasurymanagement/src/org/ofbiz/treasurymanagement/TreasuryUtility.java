@@ -1480,6 +1480,233 @@ public class TreasuryUtility {
 		return bdTreasuryLimt;
 	}
 
+	public static BigDecimal getTotalLoanCashPay(String treasuryId) {
+		Map<String, String> userLogin = new HashMap<String, String>();
+
+		GenericValue treasury = getTreasury(treasuryId);
+		String partyId = treasury.getString("employeeResponsible");
+		String userLoginId = getUserLoginId(partyId);
+
+		userLogin.put("partyId", partyId);
+		userLogin.put("userLoginId", userLoginId);
+
+		return getTotalLoanCashPay(userLogin, treasuryId);
+	}
+	
+	public static BigDecimal getTotalCashWithdrawalReversed(String treasuryId) {
+		Map<String, String> userLogin = new HashMap<String, String>();
+
+		GenericValue treasury = getTreasury(treasuryId);
+		String partyId = treasury.getString("employeeResponsible");
+		String userLoginId = getUserLoginId(partyId);
+
+		userLogin.put("partyId", partyId);
+		userLogin.put("userLoginId", userLoginId);
+
+		return getTotalCashWithdrawalReversed(userLogin, treasuryId);
+	}
+
+	public static BigDecimal getTotalCashDepositReversed(String treasuryId) {
+		Map<String, String> userLogin = new HashMap<String, String>();
+
+		GenericValue treasury = getTreasury(treasuryId);
+		String partyId = treasury.getString("employeeResponsible");
+		String userLoginId = getUserLoginId(partyId);
+
+		userLogin.put("partyId", partyId);
+		userLogin.put("userLoginId", userLoginId);
+
+		return getTotalCashDepositReversed(userLogin, treasuryId);
+	}
+	
+	
+	
+	/***
+	 * CASHWITHDRAWALREVERSED
+	 * */
+	
+	public static BigDecimal getTotalCashWithdrawalReversed(Map<String, String> userLogin, String treasuryId) {
+		// TODO Auto-generated method stub
+		String createdBy = userLogin.get("userLoginId");
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.MILLISECOND, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+
+		// Timestamp tstampDateCreated = new
+		// Timestamp(calendar.getTimeInMillis());
+
+		List<GenericValue> cashDepositELI = null;
+
+		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"treasuryId", EntityOperator.EQUALS, treasuryId),
+						EntityCondition.makeCondition("transactionType",
+								EntityOperator.EQUALS, "CASHWITHDRAWALREVERSED")),
+						EntityOperator.AND);
+
+		// ,
+		// EntityCondition
+		// .makeCondition("createdStamp",
+		// EntityOperator.GREATER_THAN_EQUAL_TO, tstampDateCreated)
+		log.info(" ############ Cash CASHWITHDRAWALREVERSED createdBy : " + createdBy);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			cashDepositELI = delegator.findList("AccountTransaction",
+					transactionConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		BigDecimal bdBalance = BigDecimal.ZERO;
+		for (GenericValue genericValue : cashDepositELI) {
+			bdBalance = bdBalance.add(genericValue
+					.getBigDecimal("transactionAmount"));
+		}
+		return bdBalance;
+	}
+
+	/***
+	 * CASHDEPOSITREVERSED
+	 * */
+	public static BigDecimal getTotalCashDepositReversed(Map<String, String> userLogin, String treasuryId) {
+		// TODO Auto-generated method stub
+		String createdBy = userLogin.get("userLoginId");
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.MILLISECOND, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+
+		// Timestamp tstampDateCreated = new
+		// Timestamp(calendar.getTimeInMillis());
+
+		List<GenericValue> cashDepositELI = null;
+
+		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"treasuryId", EntityOperator.EQUALS, treasuryId),
+						EntityCondition.makeCondition("transactionType",
+								EntityOperator.EQUALS, "CASHDEPOSITREVERSED")),
+						EntityOperator.AND);
+
+		// ,
+		// EntityCondition
+		// .makeCondition("createdStamp",
+		// EntityOperator.GREATER_THAN_EQUAL_TO, tstampDateCreated)
+		log.info(" ############ CASHDEPOSITREVERSED : " + createdBy);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			cashDepositELI = delegator.findList("AccountTransaction",
+					transactionConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		BigDecimal bdBalance = BigDecimal.ZERO;
+		for (GenericValue genericValue : cashDepositELI) {
+			bdBalance = bdBalance.add(genericValue
+					.getBigDecimal("transactionAmount"));
+		}
+		return bdBalance;
+	}
+
+	
+	//getTotalLoanCashPay
+	public static BigDecimal getTotalLoanCashPay(Map<String, String> userLogin, String treasuryId) {
+		// TODO Auto-generated method stub
+		String createdBy = userLogin.get("userLoginId");
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.MILLISECOND, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+
+		// Timestamp tstampDateCreated = new
+		// Timestamp(calendar.getTimeInMillis());
+
+		List<GenericValue> cashDepositELI = null;
+
+		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"treasuryId", EntityOperator.EQUALS, treasuryId),
+						EntityCondition.makeCondition("transactionType",
+								EntityOperator.EQUALS, "LOANCASHPAY")),
+						EntityOperator.AND);
+
+		// ,
+		// EntityCondition
+		// .makeCondition("createdStamp",
+		// EntityOperator.GREATER_THAN_EQUAL_TO, tstampDateCreated)
+		log.info(" ############ Cash Deposit createdBy : " + createdBy);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			cashDepositELI = delegator.findList("AccountTransaction",
+					transactionConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		BigDecimal bdBalance = BigDecimal.ZERO;
+		for (GenericValue genericValue : cashDepositELI) {
+			bdBalance = bdBalance.add(genericValue
+					.getBigDecimal("transactionAmount"));
+		}
+		return bdBalance;
+	}
+	
+	//CASHLOANPAYREVERSED
+	public static BigDecimal getTotalCashLoanPayReversed(Map<String, String> userLogin) {
+		// TODO Auto-generated method stub
+		String createdBy = userLogin.get("userLoginId");
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.MILLISECOND, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+
+		// Timestamp tstampDateCreated = new
+		// Timestamp(calendar.getTimeInMillis());
+
+		List<GenericValue> cashDepositELI = null;
+
+		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"createdBy", EntityOperator.EQUALS, createdBy),
+						EntityCondition.makeCondition("transactionType",
+								EntityOperator.EQUALS, "CASHDEPOSIT")),
+						EntityOperator.AND);
+
+		// ,
+		// EntityCondition
+		// .makeCondition("createdStamp",
+		// EntityOperator.GREATER_THAN_EQUAL_TO, tstampDateCreated)
+		log.info(" ############ Cash Deposit createdBy : " + createdBy);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			cashDepositELI = delegator.findList("AccountTransaction",
+					transactionConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		BigDecimal bdBalance = BigDecimal.ZERO;
+		for (GenericValue genericValue : cashDepositELI) {
+			bdBalance = bdBalance.add(genericValue
+					.getBigDecimal("transactionAmount"));
+		}
+		return bdBalance;
+	}
+
 	
 
 }
