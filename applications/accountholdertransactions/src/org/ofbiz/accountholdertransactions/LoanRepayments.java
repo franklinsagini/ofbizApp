@@ -1766,7 +1766,7 @@ public class LoanRepayments {
 				}
 			}
 
-			if (amountRemaining.compareTo(BigDecimal.ZERO) >= 0) {
+			if (amountRemaining.compareTo(BigDecimal.ZERO) > 0) {
 				excessAmount = amountRemaining;
 
 				// Deposit Excess to Savings Account

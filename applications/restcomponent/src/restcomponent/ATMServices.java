@@ -2,8 +2,10 @@ package restcomponent;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.GET;
@@ -12,8 +14,11 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
+import org.joda.time.DateTime;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
 import org.ofbiz.accountholdertransactions.LoanUtilities;
+import org.ofbiz.accountholdertransactions.Ministatement;
+import org.ofbiz.accountholdertransactions.Transaction;
 import org.ofbiz.accountholdertransactions.model.ATMTransaction;
 import org.ofbiz.atmmanagement.ATMManagementServices;
 import org.ofbiz.atmmanagement.ATMStatus;
@@ -22,6 +27,11 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.msaccomanagement.MSaccoManagementServices;
 
 import com.google.gson.Gson;
 
@@ -498,6 +508,110 @@ public class ATMServices {
 		addServiceLog(cardNumber, "BALANCE", transaction.getStatus());
 		Gson gson = new Gson();
 		String json = gson.toJson(transaction);
+
+		return Response.ok(json).type("application/json").build();
+	}
+	
+	/****
+	 * ministatement
+	 * */
+	@GET
+	@Produces("application/json")
+	@Path("/ministatement/{cardNumber}/{transactionType}")
+	public Response atmWithdrawal(@PathParam("cardNumber") String cardNumber,
+			@PathParam("transactionType") String transactionType) {
+
+		ATMStatus atmStatus = ATMManagementServices.getATMAccount(cardNumber);
+		// .getMSaccoAccount(phoneNumber);
+
+		ATMTransaction transaction = new ATMTransaction();
+		transaction.setCardNumber(cardNumber);
+		transaction.setStatus(atmStatus.getStatus());
+		List<Ministatement> listMinistatement = null;
+		if (atmStatus.getStatus().equals("SUCCESS")) {
+			//partyId
+			GenericValue card = ATMManagementServices.getMemberATMApplication(cardNumber);
+			Long memberId = card.getLong("partyId");
+			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+			EntityConditionList<EntityExpr> transactionConditions = EntityCondition
+					.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+							"partyId", EntityOperator.EQUALS,
+							Long.valueOf(memberId))), EntityOperator.AND);
+			List<GenericValue> accountTransactionELI = null;
+			List<String> orderByList = new ArrayList<String>();
+			orderByList.add("createdStamp DESC");
+			try {
+				accountTransactionELI = delegator.findList("AccountTransaction",
+						transactionConditions, null, orderByList, null, false);
+
+			} catch (GenericEntityException e2) {
+				e2.printStackTrace();
+			}
+			
+			int MAXCOUNT = 10;
+			
+			if (accountTransactionELI.size() < MAXCOUNT){
+				MAXCOUNT = accountTransactionELI.size();
+			}
+			
+			List<GenericValue> statementList = accountTransactionELI.subList(0, MAXCOUNT);
+
+			//accountTransactionELI = 
+			//Transaction transaction;
+
+			/***
+			 * public String transactionType; public BigDecimal transactionAmount;
+			 * public Timestamp createdStamp;
+			 * 
+			 * public String accountNo; public String accountName;
+			 * 
+			 * **/
+			GenericValue memberAccount = null;
+
+			listMinistatement = new ArrayList<Ministatement>();
+			Ministatement ministatement = null;
+			Timestamp dateCreated;
+
+			for (GenericValue genericValue : statementList) {
+				ministatement = new Ministatement();
+
+				ministatement.setTransactionType(genericValue
+						.getString("transactionType"));
+				
+				ministatement.setAmount(genericValue
+						.getBigDecimal("transactionAmount"));
+
+				// genericValue.getT
+				dateCreated = new Timestamp(genericValue.getTimestamp(
+						"createdStamp").getTime());
+				DateTime dateTimeCreated = new DateTime(dateCreated.getTime());
+				ministatement.setDate(dateTimeCreated.toString("yyyy-MM-dd HH:mm:ss"));
+				try {
+					memberAccount = delegator
+							.findOne("MemberAccount", UtilMisc.toMap(
+									"memberAccountId",
+									genericValue.getLong("memberAccountId")), false);
+				} catch (GenericEntityException e) {
+					e.printStackTrace();
+				}
+				
+				String increaseDecrease = genericValue.getString("increaseDecrease");
+				String postingType = "";
+				if (increaseDecrease.equals("I")){
+					postingType = "Cr";
+				} else{
+					postingType = "Dr";
+				}
+				
+				ministatement.setPostingType(postingType);
+				listMinistatement.add(ministatement);
+			}
+
+		}
+
+		addServiceLog(cardNumber, "MINISTATEMENT", null, transaction.getStatus());
+		Gson gson = new Gson();
+		String json = gson.toJson(listMinistatement);
 
 		return Response.ok(json).type("application/json").build();
 	}
