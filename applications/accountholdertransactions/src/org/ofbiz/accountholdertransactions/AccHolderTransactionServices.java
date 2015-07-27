@@ -2599,9 +2599,12 @@ public class AccHolderTransactionServices {
 
 		String treasuryId = null;
 
-		//treasuryId = TreasuryUtility.getTellerTreasuryId(userLogin);
+		if ((userLogin != null) && (!userLogin.get("userLoginId").equals("admin"))){
+		treasuryId = TreasuryUtility.getTellerTreasuryId(userLogin);
+			
+		}
 
-		// loanApplication.getString("treasuryId");
+		//loanApplication.getString("treasuryId");
 
 		accountTransaction = delegator.makeValidValue("AccountTransaction",
 				UtilMisc.toMap("accountTransactionId", accountTransactionId,
