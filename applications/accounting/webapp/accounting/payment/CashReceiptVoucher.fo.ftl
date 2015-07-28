@@ -22,11 +22,11 @@ under the License.
         <fo:block font-size="18pt" font-weight="bold" text-align="center">
             CHAI SACCO
         </fo:block>
-        <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
+        <fo:block font-size="16pt" text-align="center"  font-weight="bold" >
             CASH RECEIPT VOUCHER
         </fo:block>
         <fo:block><fo:leader/></fo:block>
-        <fo:block text-decoration="underline" font-size="10pt" text-align="center"  font-weight="bold" >
+        <fo:block text-decoration="underline" font-size="14pt" text-align="center"  font-weight="bold" >
             CRV NO:  ${payment.paymentId?if_exists}
         </fo:block>
         <fo:block><fo:leader/></fo:block>
@@ -41,13 +41,13 @@ under the License.
             <#assign statusItem = delegator.findOne("StatusItem", {"statusId" : payment.statusId}, false)/>
         </#if>
 
-        <fo:table table-layout="fixed" width="100%" font-size="9pt" margin-left="0.3in">
+        <fo:table table-layout="fixed" width="100%" font-size="14pt" >
             <fo:table-column column-number="1" column-width="proportional-column-width(50)"/>
             <fo:table-column column-number="2" column-width="proportional-column-width(50)"/>
             <fo:table-body>
                 <fo:table-row>
                     <fo:table-cell>
-                        <fo:list-block provisional-distance-between-starts="1.1in">
+                        <fo:list-block provisional-distance-between-starts="1.4in">
                             <fo:list-item>
                                 <fo:list-item-label font-weight="bold">
                                     <fo:block>Receipt To:</fo:block>
@@ -87,7 +87,7 @@ under the License.
                         </fo:list-block>
                     </fo:table-cell>
                     <fo:table-cell>
-                        <fo:list-block provisional-distance-between-starts="1.1in">
+                        <fo:list-block provisional-distance-between-starts="1.4in">
                             <fo:list-item>
                                 <fo:list-item-label font-weight="bold">
                                     <fo:block>Receipt From:</fo:block>
@@ -114,7 +114,7 @@ under the License.
                             </fo:list-item>
                             <fo:list-item>
                                 <fo:list-item-label font-weight="bold">
-                                    <fo:block>EFT/CHQ/REF No: </fo:block>
+                                    <fo:block>CHQ/REF No: </fo:block>
                                 </fo:list-item-label>
                                 <fo:list-item-body start-indent="body-start()" text-decoration="underline">
                                     <fo:block>${payment.paymentRefNum?if_exists}</fo:block>
@@ -128,12 +128,12 @@ under the License.
 
         <fo:block><fo:leader/></fo:block>
         <fo:block font-size="9pt"  text-align="left" margin-left="0%" margin-top="0%" margin-bottom="0.0in">
-        <fo:table table-layout="fixed" width="100%" font-size="9pt" margin-left="0.3in">
+        <fo:table table-layout="fixed" width="100%" font-size="13pt" >
             <fo:table-column column-number="1" column-width="proportional-column-width(100)"/>
             <fo:table-body>
                 <fo:table-row>
                     <fo:table-cell>
-                        <fo:list-block provisional-distance-between-starts="1.3in">
+                        <fo:list-block provisional-distance-between-starts="1.8in">
                             <fo:list-item>
                                 <fo:list-item-label font-weight="bold">
                                     <fo:block>Receipt Description: </fo:block>
@@ -152,7 +152,7 @@ under the License.
         <fo:block><fo:leader/></fo:block>
         <#if acctgTransAndEntries?has_content>
         <fo:block space-after.optimum="10pt" font-size="9pt"  margin-right="0.4in">
-        <fo:table table-layout="fixed" width="100%" font-size="9pt" margin-left="0.2in" >
+        <fo:table table-layout="fixed" width="100%" font-size="13pt" >
             <fo:table-column column-number="1" column-width="proportional-column-width(37)"/>
             <fo:table-column column-number="2" column-width="proportional-column-width(22)"/>
             <fo:table-column column-number="3" column-width="proportional-column-width(20)"/>
@@ -202,8 +202,8 @@ under the License.
         </fo:table>
         </fo:block>
         </#if>
-        <fo:block font-size="9pt"  text-align="left" margin-left="3%" margin-top="20%" margin-bottom="0.2in">
-          RECEIVING OFFICER SIGNATURE ------------------------------------------------------------------------DATE--------------------------
+        <fo:block font-size="12pt"  text-align="left"  margin-top="20%" margin-bottom="0.2in">
+          RECEIVING OFFICER SIGNATURE -------------------------------------------------DATE--------------------------
         </fo:block>
         <fo:block><fo:leader/></fo:block>
         <fo:block><fo:leader/></fo:block>
