@@ -241,8 +241,8 @@ public class TreasuryUtility {
 
 		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"treasuryId", EntityOperator.EQUALS, createdBy),
-						EntityCondition.makeCondition(treasuryId,
+						"treasuryId", EntityOperator.EQUALS, treasuryId),
+						EntityCondition.makeCondition("transactionType",
 								EntityOperator.EQUALS, "LOANCASHPAY"),
 
 						EntityCondition.makeCondition("createdStamp",
@@ -293,8 +293,8 @@ public class TreasuryUtility {
 
 		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"treasuryId", EntityOperator.EQUALS, createdBy),
-						EntityCondition.makeCondition(treasuryId,
+						"treasuryId", EntityOperator.EQUALS, treasuryId),
+						EntityCondition.makeCondition("transactionType",
 								EntityOperator.EQUALS, "CASHWITHDRAWALREVERSED"),
 
 						EntityCondition.makeCondition("createdStamp",
