@@ -133,7 +133,7 @@ under the License.
             <fo:table-body>
                 <fo:table-row>
                     <fo:table-cell>
-                        <fo:list-block provisional-distance-between-starts="1.6in">
+                        <fo:list-block provisional-distance-between-starts="1.8in">
                             <fo:list-item>
                                 <fo:list-item-label font-weight="bold">
                                     <fo:block>Receipt Description: </fo:block>
