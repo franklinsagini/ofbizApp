@@ -224,6 +224,7 @@ public class AccHolderTransactionServices {
 	public static List<Long> getMemberAccountIdsWithdrawable(Long partyId) {
 		List<Long> listMemberAccountId = new ArrayList<Long>();
 
+		Long accountProductId = LoanUtilities.getAccountProductIdGivenCodeId(SAVINGS_ACCOUNT_CODE);
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		List<GenericValue> memberAccountELI = null;
 		
@@ -231,8 +232,8 @@ public class AccHolderTransactionServices {
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"partyId", EntityOperator.EQUALS,
 						partyId), EntityCondition
-						.makeCondition("withdrawable",
-								EntityOperator.EQUALS, "Yes")),
+						.makeCondition("accountProductId",
+								EntityOperator.EQUALS, accountProductId)),
 						EntityOperator.AND);
 		
 		try {
