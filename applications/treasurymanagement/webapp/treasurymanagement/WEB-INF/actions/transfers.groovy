@@ -67,6 +67,8 @@ transfersTotalList.eachWithIndex { transferItem, index ->
 	balanceAmount = balanceAmount.add(openingBalance).add(transactionsIn).subtract(totalOut);
 	balanceAmount = balanceAmount.subtract(transactionsOut);
 	
+	
+	
 
 	transferTotal = [destinationTreasury:transferItem.destinationTreasury, treasury:transferItem.destinationTreasury, name:transferItem.name, transferDate:transferItem.transferDate, openingBalance:openingBalance,  amountIn:transferItem.transactionAmount, amountOut:totalOut, transactionsIn:transactionsIn, transactionsOut:transactionsOut, amountBalance:balanceAmount ]
 	

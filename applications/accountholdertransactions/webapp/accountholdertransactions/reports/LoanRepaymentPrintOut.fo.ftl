@@ -68,10 +68,21 @@ under the License.
                 <fo:block font-weight="bold">Mode :</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>CASH</fo:block>
+                <fo:block>${loanRepayment.repaymentMode?if_exists}</fo:block>
             </fo:list-item-body>
         </fo:list-item>       
+    <#if loanRepayment.chequeNo?has_content>
+             <fo:list-item>
+            <fo:list-item-label>
+                <fo:block font-weight="bold">Cheque No :</fo:block>
+            </fo:list-item-label>
+            <fo:list-item-body start-indent="body-start()">
+                <fo:block>${loanRepayment.chequeNo?if_exists}</fo:block>
+            </fo:list-item-body>
+        </fo:list-item>   
+        </#if>    
     </fo:list-block>
+    
     
     <#-- list accountTransactionList as transaction -->
 	    <fo:list-block provisional-distance-between-starts="2.0in" font-size="10pt" text-align="left" margin-left="20%" margin-bottom="0.2in">
@@ -137,7 +148,7 @@ under the License.
 
     
      <fo:block font-size="12pt" text-align="left" margin-left="20%" margin-bottom="0.2in">
-      We acknowledge receipt of the above amount.
+      Thank you for banking with us.
     </fo:block>
     
      <fo:block font-size="12pt"  text-align="left" margin-left="20%" margin-bottom="0.2in">

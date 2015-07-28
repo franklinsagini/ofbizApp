@@ -112,7 +112,7 @@ under the License.
 
     
      <fo:block font-size="12pt" text-align="left" margin-left="20%" margin-bottom="0.2in">
-      We acknowledge receipt of the above amount.
+      Thank you for banking with us.
     </fo:block>
     
      <fo:block font-size="12pt"  text-align="left" margin-left="20%" margin-bottom="0.2in">

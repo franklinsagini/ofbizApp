@@ -3,7 +3,6 @@ package org.ofbiz.registry;
 import java.io.IOException;
 import java.io.Writer;
 import java.security.Security;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,16 +32,11 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.Days;
 import org.joda.time.Hours;
-import org.joda.time.Interval;
 import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 import org.joda.time.Minutes;
-import org.joda.time.Period;
 import org.joda.time.Seconds;
-import org.joda.time.Weeks;
 import org.joda.time.base.AbstractInstant;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -59,7 +53,6 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityUtilProperties;
-import org.ofbiz.humanres.HumanResServices;
 import org.ofbiz.humanres.LeaveServices;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericDispatcherFactory;
@@ -1139,6 +1132,7 @@ public class FileServices {
 				LeaveServices.SendScheduledMail(request, response);
 					}
 					else {
+
 						state = "INVALID";
 					}
 				
@@ -1632,5 +1626,170 @@ public class FileServices {
 						
 					return null;
 				}
+				
+				// ================= SEND MAIL ASYNCRONOUSLY ==============================
+				
+				public static String SendScheduledMailAfterRegActivity(HttpServletRequest request, HttpServletResponse response) {
+					Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+					LocalDispatcher dispatcher = (new GenericDispatcherFactory()).createLocalDispatcher("interestcalculations", delegator);
+
+					Map<String, String> context = UtilMisc.toMap("message",	"Email Sending !!");
+					try {
+						dispatcher.runAsync("sendScheduledEmailNotificationToStaff", context);
+					} catch (GenericServiceException e) {
+						e.printStackTrace();
+					}
+
+					Writer out;
+					try {
+						out = response.getWriter();
+						out.write("");
+						out.flush();
+					} catch (IOException e) {
+						try {
+							throw new EventHandlerException(
+									"Unable to get response writer", e);
+						} catch (EventHandlerException e1) {
+							e1.printStackTrace();
+						}
+					}
+					return "";
+
+				}
+				
+				// ================= REQUEST FILE ==============================
+				
+				public static String RequestFileService(HttpServletRequest request, HttpServletResponse response) {
+					Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+					LocalDispatcher dispatcher = (new GenericDispatcherFactory()).createLocalDispatcher("interestcalculations", delegator);
+
+					Map<String, String> context = UtilMisc.toMap("message",	"Requesting Files!!");
+					try {
+						dispatcher.runSync("requestfiles", context);
+					} catch (GenericServiceException e) {
+						e.printStackTrace();
+					}
+
+					Writer out;
+					try {
+						out = response.getWriter();
+						out.write("");
+						out.flush();
+					} catch (IOException e) {
+						try {
+							throw new EventHandlerException(
+									"Unable to get response writer", e);
+						} catch (EventHandlerException e1) {
+							e1.printStackTrace();
+						}
+					}
+					return "";
+
+				}
+				
+               // ================= ISSUE FILE ==============================
+				
+				public static String IssueFileService(HttpServletRequest request, HttpServletResponse response) {
+					Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+					LocalDispatcher dispatcher = (new GenericDispatcherFactory()).createLocalDispatcher("interestcalculations", delegator);
+
+					Map<String, String> context = UtilMisc.toMap("message",	"Requesting Files!!");
+					try {
+						dispatcher.runSync("issuefiles", context);
+					} catch (GenericServiceException e) {
+						e.printStackTrace();
+					}
+
+					Writer out;
+					try {
+						out = response.getWriter();
+						out.write("");
+						out.flush();
+					} catch (IOException e) {
+						try {
+							throw new EventHandlerException(
+									"Unable to get response writer", e);
+						} catch (EventHandlerException e1) {
+							e1.printStackTrace();
+						}
+					}
+					return "";
+
+				}
+				
+				
+                // ======================== REQUEST PLUS SEND MAILS ==================================
+				public static String requestFileAndSendNotification(HttpServletRequest request, HttpServletResponse response) {
+					
+						
+							RequestFileService(request, response);
+							SendScheduledMailAfterRegActivity(request, response);
+						
+						
+					return null;
+				}
+				
+				 // ======================== ISSUE PLUS SEND MAILS ==================================
+				public static String issueFileAndSendNotification(HttpServletRequest request, HttpServletResponse response) {
+					
+							IssueFileService(request, response);
+							SendScheduledMailAfterRegActivity(request, response);
+						
+					return null;
+				}
+				
+				
+				
+				
+				
+				
+//				public static String runFileRequestService(HttpServletRequest request, HttpServletResponse response) {
+//					Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+//					LocalDispatcher dispatcher = (new GenericDispatcherFactory()).createLocalDispatcher("interestcalculations", delegator);
+//					 Map<String, Object> vlFulFill = FastMap.newInstance();
+//					 GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+//						String user = userLogin.getString("partyId");
+//					 vlFulFill.put("userLogin", userLogin);
+//					try {
+//						dispatcher.runSync("requestfiles", vlFulFill);
+//					} catch (GenericServiceException e) {
+//						e.printStackTrace();
+//					}
+//
+//					Writer out;
+//					try {
+//						out = response.getWriter();
+//						out.write("");
+//						out.flush();
+//					} catch (IOException e) {
+//						try {
+//							throw new EventHandlerException(
+//									"Unable to get response writer", e);
+//						} catch (EventHandlerException e1) {
+//							e1.printStackTrace();
+//						}
+//					}
+//					return "";
+//
+//				}
+				
+				
+//				
+//				public static String RequestAndSendNotification(HttpServletRequest request, HttpServletResponse response) throws GenericEntityException {
+//						//String leaveid = (String) request.getParameter("partyId");
+//						
+//						runFileRequestService(request, response);
+//						LeaveServices.SendScheduledMail(request, response);
+//						
+//						
+//						
+//					return null;
+//				}
+				
+
+				
+			
+				
+				
 				
 }

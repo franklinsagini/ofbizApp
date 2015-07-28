@@ -301,7 +301,7 @@ public class MSaccoServices {
 		//AccHolderTransactionServices.
 
 		if (memberAccountId != null) {
-			listMemberAccountId = AccHolderTransactionServices.getMemberAccountIds(AccHolderTransactionServices
+			listMemberAccountId = AccHolderTransactionServices.getMemberAccountIdsWithdrawable(AccHolderTransactionServices
 					.getMemberAccount(memberAccountId).getLong("partyId"));
 			
 			for (Long currentMemberAccountId : listMemberAccountId) {
@@ -407,11 +407,11 @@ public class MSaccoServices {
 		 * 
 		 * */
 
-		if (withdrawalStage.equals("Withdrawal_Confirm")) {
-			AccHolderTransactionServices.WITHDRAWALOK = "OK";
-		} else {
-			AccHolderTransactionServices.WITHDRAWALOK = "FALSE";
-		}
+//		if (withdrawalStage.equals("Withdrawal_Confirm")) {
+//			AccHolderTransactionServices.WITHDRAWALOK = "OK";
+//		} else {
+//			AccHolderTransactionServices.WITHDRAWALOK = "FALSE";
+//		}
 
 		// withdrawalStage
 
@@ -484,7 +484,7 @@ public class MSaccoServices {
 
 		Gson gson = new Gson();
 		String json = gson.toJson(transaction);
-		AccHolderTransactionServices.WITHDRAWALOK = "OK";
+		//AccHolderTransactionServices.WITHDRAWALOK = "OK";
 		return Response.ok(json).type("application/json").build();
 	}
 

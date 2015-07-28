@@ -38,7 +38,7 @@
                 <!-- INTERNAL LGOIMGURL-->
                 <entity-and list="partyContentList" entity-name="PartyContent">
                     <field-map field-name="partyId" from-field="parameters.partyId"/>
-                    <field-map field-name="partyContentTypeId" value="INTERNAL"/>
+                    <field-map field-name="partyContentTypeId" value="LGOIMGURL"/>
                     <order-by field-name="-fromDate"/>
                 </entity-and>
                 <set field="partyContentId" from-field="partyContentList[0].contentId"/>
@@ -678,11 +678,11 @@
             <actions>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <entity-condition entity-name="PartyContentType" list="partyContentTypes">
-                	<condition-list combine="or">
-                		<condition-expr field-name="partyContentTypeId" operator="equals" from-field="INTERNAL"/>
-                		<condition-expr field-name="partyContentTypeId" operator="equals" from-field="LGOIMGURL"/>
+			<condition-list combine="or">
+                		<condition-expr field-name="partyContentTypeId" operator="equals" value="INTERNAL"/>
+                		<condition-expr field-name="partyContentTypeId" operator="equals" value="LGOIMGURL"/>
                 	</condition-list>
-                    <order-by field-name="description"/>
+			 <order-by field-name="description"/>
                 </entity-condition>
                 <entity-condition entity-name="MimeType" list="mimeTypes">
                     <order-by field-name="description"/>

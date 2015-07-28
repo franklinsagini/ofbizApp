@@ -2462,6 +2462,13 @@ public class OrderServices {
 			}
 
 			// Check Budget From Here.
+			//if ("ORDER_APPROVED".equals(statusId)) {
+			//	if (!isBudgetEnough(orderHeader, delegator, locale)) {
+
+			//		return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+			//				"BudgetDeficiencyMessage", locale));
+			//	}
+			//}
 //			if ("ORDER_APPROVED".equals(statusId)) {
 //				if (!isBudgetEnough(orderHeader, delegator, locale)) {
 

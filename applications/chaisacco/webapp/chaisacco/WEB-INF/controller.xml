@@ -91,6 +91,17 @@
 		<response name="success" type="view" value="requestingFiles" />
 	</request-map>
 	
+	
+	 <!-- ======================== REQUEST PLUS SEND MAILS  ============================ -->
+
+<request-map uri="requestingRegistryFiles"> 
+		<security auth="true" https="true" />
+		<event type="java" path="org.ofbiz.registry.FileServices"
+			invoke="requestFileAndSendNotification" />
+		<response name="success" type="view" value="regFileRequest"/>
+		<response name="error" type="view" value="regFileRequest" />
+	</request-map> 
+	
 	<request-map uri="goReleaseFile">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="releasingFiles" />
@@ -108,12 +119,18 @@
 	</request-map>
 	
 	<request-map uri="requestfiles22"> 
-        <security auth="true" https="true" />
+		<security auth="true" https="true" />
+		<event type="java" path="org.ofbiz.registry.FileServices"
+			invoke="RequestAndSendNotification" />
+		<response name="success" type="view" value="regFileRequest"/>
+		<response name="error" type="view" value="regFileRequest" />
+	</request-map> 
+        <!--security auth="true" https="true" />
         <event type="java" path="org.ofbiz.humanres.LeaveServices"
             invoke="RequestAndSendNotification" />
         <response name="success" type="view" value="regFileRequest"/>
         <response name="error" type="view" value="regFileRequest" />
-    </request-map>
+    </request-map -->
 	
 	<request-map uri="recieveFiles">
 		<security https="true" auth="true" />

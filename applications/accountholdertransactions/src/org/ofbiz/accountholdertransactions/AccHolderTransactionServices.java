@@ -220,6 +220,40 @@ public class AccHolderTransactionServices {
 
 		return listMemberAccountId;
 	}
+	
+	public static List<Long> getMemberAccountIdsWithdrawable(Long partyId) {
+		List<Long> listMemberAccountId = new ArrayList<Long>();
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> memberAccountELI = null;
+		
+		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS,
+						partyId), EntityCondition
+						.makeCondition("withdrawable",
+								EntityOperator.EQUALS, "Yes")),
+						EntityOperator.AND);
+		
+		try {
+			memberAccountELI = delegator.findList("MemberAccount",
+					memberAccountConditions, null,
+					null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		if (memberAccountELI == null) {
+			return listMemberAccountId;
+		}
+		// String accountDetails;
+		for (GenericValue genericValue : memberAccountELI) {
+			listMemberAccountId.add(genericValue.getLong("memberAccountId"));
+		}
+
+		return listMemberAccountId;
+	}
 
 	/****
 	 * Get Account Total Balance Total Opening Account + Total Deposits - Total
@@ -1108,14 +1142,19 @@ public class AccHolderTransactionServices {
 				+ accountProductChargeELI.size());
 		String chargeAccountId = commissionAccountId;
 		// Create a transaction in Account Transaction for each of the Charges
-		sequence = sequence + 1;
+		GenericValue productCharge = null;
+		
+		
 		for (GenericValue accountProductCharge : accountProductChargeELI) {
-
-			if (accountProductCharge.getLong("parentChargeId") == null) {
-				chargeAccountId = commissionAccountId;
-			} else {
-				chargeAccountId = exciseDutyAccountId;
-			}
+			sequence = sequence + 1;
+//			if (accountProductCharge.getLong("parentChargeId") == null) {
+//				chargeAccountId = commissionAccountId;
+//			} else {
+//				chargeAccountId = exciseDutyAccountId;
+//			}
+			productCharge = LoanUtilities.getEntityValue("ProductCharge", "productChargeId", accountProductCharge.getLong("productChargeId"));
+			
+			chargeAccountId = productCharge.getString("chargeAccountId");
 
 			// SEQUENCENO = sequence + 1;
 			sequence = addChargeVer2(accountProductCharge, accountTransaction,
@@ -1153,14 +1192,19 @@ public class AccHolderTransactionServices {
 				+ accountProductChargeELI.size());
 		String chargeAccountId = commissionAccountId;
 		// Create a transaction in Account Transaction for each of the Charges
-		sequence = sequence + 1;
+		GenericValue productCharge = null;
 		for (GenericValue accountProductCharge : accountProductChargeELI) {
 
-			if (accountProductCharge.getLong("parentChargeId") == null) {
-				chargeAccountId = commissionAccountId;
-			} else {
-				chargeAccountId = exciseDutyAccountId;
-			}
+			sequence = sequence + 1;
+//			if (accountProductCharge.getLong("parentChargeId") == null) {
+//				chargeAccountId = commissionAccountId;
+//			} else {
+//				chargeAccountId = exciseDutyAccountId;
+//			}
+			productCharge = LoanUtilities.getEntityValue("ProductCharge", "productChargeId", accountProductCharge.getLong("productChargeId"));
+			
+			chargeAccountId = productCharge.getString("chargeAccountId");
+
 			
 			// SEQUENCENO = sequence + 1;
 			sequence = addChargeVer2ATM(accountProductCharge, accountTransaction,
@@ -1566,9 +1610,9 @@ public class AccHolderTransactionServices {
 
 		// for the purpuse of getting charges, ATM withdrawal should just use
 		// the CASHWITHDRAWAL charges
-		if (transactionType.equals("ATMWITHDRAWAL")) {
-			transactionType = "CASHWITHDRAWAL";
-		}
+//		if (transactionType.equals("ATMWITHDRAWAL")) {
+//			transactionType = "CASHWITHDRAWAL";
+//		}
 
 		Delegator delegator = accountTransaction.getDelegator();
 		accountProductId = accountProductId.replaceAll(",", "");
@@ -2599,9 +2643,12 @@ public class AccHolderTransactionServices {
 
 		String treasuryId = null;
 
-		//treasuryId = TreasuryUtility.getTellerTreasuryId(userLogin);
+		if ((userLogin != null) && (!userLogin.get("userLoginId").equals("admin"))){
+		treasuryId = TreasuryUtility.getTellerTreasuryId(userLogin);
+			
+		}
 
-		// loanApplication.getString("treasuryId");
+		//loanApplication.getString("treasuryId");
 
 		accountTransaction = delegator.makeValidValue("AccountTransaction",
 				UtilMisc.toMap("accountTransactionId", accountTransactionId,
@@ -4163,7 +4210,6 @@ public class AccHolderTransactionServices {
 
 		String acctgTransId = postCashWithdrawalTransactionMsacco(
 				accountTransaction, userLogin, memberBranchId);
-		;
 		// Set the the Treasury ID
 		// String treasuryId = TreasuryUtility.getTellerId(userLogin);
 		// accountTransaction.set("treasuryId", treasuryId);
