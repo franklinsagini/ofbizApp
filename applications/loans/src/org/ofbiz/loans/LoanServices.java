@@ -631,7 +631,7 @@ public class LoanServices {
 		String memberId = String.valueOf(partyId);
 		memberId = memberId.replaceAll(",", "");
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		bdTotalDeposit = totalMemberDepositSavings(memberId, delegator);
+		bdTotalDeposit = totalMemberDepositOnlySavings(memberId, delegator);
 		return bdTotalDeposit;
 	}
 
@@ -685,6 +685,49 @@ public class LoanServices {
 			// genericValue.get("memberAccountId")
 			// .toString(), delegator));
 		}
+		// sum up all the savings
+		// bdTotalSavings = bdTotalSavings.add(bdOpeningBalance);
+		return bdTotalSavings;
+	}
+	
+	
+	/***
+	 * Only Member Deposits fix the problem combining all accounts
+	 * */
+	private static BigDecimal totalMemberDepositOnlySavings(String memberId,
+			Delegator delegator) {
+		// Get the multiplier account - the account being used to get the
+		// maximum loan as defined in the
+		// Loan Product Setup
+		memberId = memberId.replaceAll(",", "");
+		// Get Accounts for this member
+		
+		GenericValue accountProduct = LoanUtilities.getAccountProductGivenCodeId(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE);
+		Long accountProductId = accountProduct.getLong("accountProductId");
+		
+		List<GenericValue> memberAccountELI = null;
+		EntityConditionList<EntityExpr> accountsConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS,
+						Long.valueOf(memberId)), EntityCondition.makeCondition(
+								accountProductId, EntityOperator.EQUALS, accountProductId)),
+						EntityOperator.AND);
+
+		try {
+			memberAccountELI = delegator.findList("MemberAccount",
+					accountsConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		if (memberAccountELI == null) {
+			return BigDecimal.ZERO;
+		}
+		BigDecimal bdTotalSavings = BigDecimal.ZERO;
+		
+		bdTotalSavings = AccHolderTransactionServices.getAccountTotalBalance(accountProductId, Long.valueOf(memberId));
+		// BigDecimal bdOpeningBalance = BigDecimal.ZERO;
+
 		// sum up all the savings
 		// bdTotalSavings = bdTotalSavings.add(bdOpeningBalance);
 		return bdTotalSavings;

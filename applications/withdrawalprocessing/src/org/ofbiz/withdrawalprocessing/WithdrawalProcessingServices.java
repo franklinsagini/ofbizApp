@@ -203,6 +203,7 @@ public class WithdrawalProcessingServices {
 				.getTotalDisbursedLoanBalances(partyIdLong);
 		// LoansProcessingServices.getTotalLoanBalances(memberId,
 		// loanProductId);
+		bdTotalLoanBalance = bdTotalLoanBalance.setScale(2, RoundingMode.FLOOR);
 		return bdTotalLoanBalance;
 	}
 
@@ -213,6 +214,8 @@ public class WithdrawalProcessingServices {
 		BigDecimal bdTotalAccruedInterest = BigDecimal.ZERO;
 		// Long partyIdLong = Long.valueOf(partyId);
 		bdTotalAccruedInterest = LoanRepayments.getTotalInterestDue(partyId);
+		
+		bdTotalAccruedInterest = bdTotalAccruedInterest.setScale(2, RoundingMode.FLOOR);
 		return bdTotalAccruedInterest;
 	}
 
@@ -223,6 +226,7 @@ public class WithdrawalProcessingServices {
 		BigDecimal bdTotalAccruedInsurance = BigDecimal.ZERO;
 		bdTotalAccruedInsurance = LoanRepayments.getTotalInsuranceDue(partyId);
 
+		bdTotalAccruedInsurance = bdTotalAccruedInsurance.setScale(2, RoundingMode.FLOOR);
 		return bdTotalAccruedInsurance;
 	}
 
@@ -376,17 +380,17 @@ public class WithdrawalProcessingServices {
 		bdShareCapitalBalance = LoanUtilities
 				.getShareCapitalAccountBalance(partyId);
 		bdShareCapitalBalance = bdShareCapitalBalance.setScale(2,
-				RoundingMode.HALF_EVEN);
+				RoundingMode.FLOOR);
 
 		BigDecimal bdShareCapitalLimit = LoanUtilities
 				.getShareCapitalLimit(partyId);
 		bdShareCapitalLimit = bdShareCapitalLimit.setScale(2,
-				RoundingMode.HALF_EVEN);
+				RoundingMode.FLOOR);
 
 		BigDecimal bdMemberDepositAmount = LoanUtilities
 				.getMemberDepositAmount(partyId);
 		bdMemberDepositAmount = bdMemberDepositAmount.setScale(2,
-				RoundingMode.HALF_EVEN);
+				RoundingMode.FLOOR);
 
 		if (bdShareCapitalBalance.compareTo(bdShareCapitalLimit) == -1)
 			return "Please update share capital to share limit amount first before trying to offset loans. Share Limit amount is "
@@ -428,7 +432,7 @@ public class WithdrawalProcessingServices {
 		BigDecimal bdMemberWithdrawalExciseDuty = memberWithdrawalExciseDuty
 				.getBigDecimal("rateAmount")
 				.multiply(bdMemberWithdrawalCommissionAmount)
-				.divide(new BigDecimal(100), 4, RoundingMode.HALF_EVEN);
+				.divide(new BigDecimal(100), 4, RoundingMode.FLOOR);
 		BigDecimal bdTotalCharge = bdMemberWithdrawalCommissionAmount
 				.add(bdMemberWithdrawalExciseDuty);
 
@@ -443,10 +447,14 @@ public class WithdrawalProcessingServices {
 
 		BigDecimal bdTotalOffset = bdLoanBalancesTotal.add(bdTotalCharge);
 
-		BigDecimal bdTotalInterestDue = LoanRepayments
-				.getTotalInterestDue(partyId.toString());
-		BigDecimal bdTotalInsuranceDue = LoanRepayments
-				.getTotalInsuranceDue(partyId.toString());
+		BigDecimal bdTotalInterestDue = getTotalAccruedInterest(partyId.toString());
+				
+				//LoanRepayments
+				//.getTotalInterestDue(partyId.toString());
+		
+		BigDecimal bdTotalInsuranceDue = getTotalAccruedInsurance(partyId.toString());
+			//	LoanRepayments
+			//	.getTotalInsuranceDue(partyId.toString());
 
 		bdTotalOffset = bdTotalOffset.add(bdTotalInterestDue).add(
 				bdTotalInsuranceDue);
@@ -668,6 +676,8 @@ public class WithdrawalProcessingServices {
 				.getTotalInterestDue(partyId));
 		bdGrandTotal = bdGrandTotal.add(LoanRepayments
 				.getTotalInsuranceDue(partyId));
+		
+		bdGrandTotal = bdGrandTotal.setScale(2, RoundingMode.FLOOR);
 		return bdGrandTotal;
 	}
 }
