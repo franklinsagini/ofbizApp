@@ -220,6 +220,40 @@ public class AccHolderTransactionServices {
 
 		return listMemberAccountId;
 	}
+	
+	public static List<Long> getMemberAccountIdsWithdrawable(Long partyId) {
+		List<Long> listMemberAccountId = new ArrayList<Long>();
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> memberAccountELI = null;
+		
+		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS,
+						partyId), EntityCondition
+						.makeCondition("withdrawable",
+								EntityOperator.EQUALS, "Yes")),
+						EntityOperator.AND);
+		
+		try {
+			memberAccountELI = delegator.findList("MemberAccount",
+					memberAccountConditions, null,
+					null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		if (memberAccountELI == null) {
+			return listMemberAccountId;
+		}
+		// String accountDetails;
+		for (GenericValue genericValue : memberAccountELI) {
+			listMemberAccountId.add(genericValue.getLong("memberAccountId"));
+		}
+
+		return listMemberAccountId;
+	}
 
 	/****
 	 * Get Account Total Balance Total Opening Account + Total Deposits - Total

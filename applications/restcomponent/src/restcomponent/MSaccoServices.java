@@ -301,7 +301,7 @@ public class MSaccoServices {
 		//AccHolderTransactionServices.
 
 		if (memberAccountId != null) {
-			listMemberAccountId = AccHolderTransactionServices.getMemberAccountIds(AccHolderTransactionServices
+			listMemberAccountId = AccHolderTransactionServices.getMemberAccountIdsWithdrawable(AccHolderTransactionServices
 					.getMemberAccount(memberAccountId).getLong("partyId"));
 			
 			for (Long currentMemberAccountId : listMemberAccountId) {
