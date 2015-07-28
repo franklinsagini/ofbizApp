@@ -22,11 +22,11 @@ under the License.
         <fo:block font-size="18pt" font-weight="bold" text-align="center">
             CHAI SACCO
         </fo:block>
-        <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
+        <fo:block font-size="16pt" text-align="center"  font-weight="bold" >
             CASH PAYMENT VOUCHER
         </fo:block>
         <fo:block><fo:leader/></fo:block>
-        <fo:block text-decoration="underline" font-size="13pt" text-align="center"  font-weight="bold" >
+        <fo:block text-decoration="underline" font-size="14pt" text-align="center"  font-weight="bold" >
             CPV NO:  ${payment.paymentId?if_exists}
         </fo:block>
         <fo:block><fo:leader/></fo:block>
@@ -51,13 +51,14 @@ under the License.
         </#if> -->
 
 
-        <fo:table table-layout="fixed" width="100%" font-size="14pt" margin-left="0.3in">
+
+        <fo:table table-layout="fixed" width="100%" font-size="14pt" >
             <fo:table-column column-number="1" column-width="proportional-column-width(50)"/>
             <fo:table-column column-number="2" column-width="proportional-column-width(50)"/>
             <fo:table-body>
                 <fo:table-row>
                     <fo:table-cell>
-                        <fo:list-block provisional-distance-between-starts="1.1in">
+                        <fo:list-block provisional-distance-between-starts="1.4in">
                             <fo:list-item>
                                 <fo:list-item-label font-weight="bold">
                                     <fo:block>Payment To:</fo:block>
@@ -97,7 +98,7 @@ under the License.
                         </fo:list-block>
                     </fo:table-cell>
                     <fo:table-cell>
-                        <fo:list-block provisional-distance-between-starts="1.1in">
+                        <fo:list-block provisional-distance-between-starts="1.4in">
                             <fo:list-item>
                                 <fo:list-item-label font-weight="bold">
                                     <fo:block>Payment From:</fo:block>
@@ -138,12 +139,12 @@ under the License.
 
         <fo:block><fo:leader/></fo:block>
         <fo:block font-size="9pt"  text-align="left" margin-left="0%" margin-top="0%" margin-bottom="0.0in">
-        <fo:table table-layout="fixed" width="100%" font-size="9pt" margin-left="0.3in">
+        <fo:table table-layout="fixed" width="100%" font-size="13pt" >
             <fo:table-column column-number="1" column-width="proportional-column-width(100)"/>
             <fo:table-body>
                 <fo:table-row>
                     <fo:table-cell>
-                        <fo:list-block provisional-distance-between-starts="1.3in">
+                        <fo:list-block provisional-distance-between-starts="1.8in">
                             <fo:list-item>
                                 <fo:list-item-label font-weight="bold">
                                     <fo:block>Payment Description: </fo:block>
@@ -212,14 +213,14 @@ under the License.
         </fo:table>
         </fo:block>
         </#if>
-        <fo:block font-size="9pt"  text-align="left" margin-left="3%" margin-top="20%" margin-bottom="0.2in">
-          PAYING OFFICER SIGNATURE ------------------------------------------------------------------------DATE--------------------------
+        <fo:block font-size="12pt"  text-align="left"  margin-top="20%" margin-bottom="0.2in">
+          PAYING OFFICER SIGNATURE ------------------------------------------------DATE--------------------------
         </fo:block>
         <fo:block><fo:leader/></fo:block>
         <fo:block><fo:leader/></fo:block>
 
-        <fo:block font-size="9pt"  text-align="left" margin-left="3%" margin-bottom="0.2in">
-          PAYEE SIGNATURE ---------------------------------------------------------------------------------DATE----------------------------
+        <fo:block font-size="12pt"  text-align="left"  margin-top="20%" margin-bottom="0.2in">
+          PAYEE SIGNATURE ----------------------------------------------------------DATE----------------------------
         </fo:block>
 
     <#else>

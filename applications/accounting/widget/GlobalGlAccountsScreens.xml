@@ -234,12 +234,28 @@ under the License.
                         <screenlet title="${uiLabelMap[labelTitleProperty]}">
                             <container style="button-bar">
                                 <link target="ListGlAccountsReport" text="${uiLabelMap.CommonPrint}" style="buttontext"/>
-                                <link target="ListGlAccountsExport" text="${uiLabelMap.CommonExport}" style="buttontext"/>
+                                <!-- <link target="ListGlAccountsExport" text="${uiLabelMap.CommonExport}" style="buttontext"/> -->
+                                <link target="GlAccountsExport.CSV" text="Export to Excel" style="buttontext"/>
                             </container>
                             <include-form name="ListGlAccount" location="component://accounting/widget/GlobalGlAccountsForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="GlAccountsExportCSV">
+        <section>
+            <actions>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/GLAccountList.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <include-form name="GlAccountsExportCSV" location="component://accounting/widget/GlForms.xml"/>
+                </container>
             </widgets>
         </section>
     </screen>

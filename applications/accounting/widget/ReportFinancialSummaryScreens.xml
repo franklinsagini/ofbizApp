@@ -686,11 +686,11 @@ under the License.
                             </condition> -->
                             <widgets>
                                 <screenlet title="${uiLabelMap.AccountingTrialBalance}">
-<!--                                     <link text="${uiLabelMap.AccountingExportAsCsv}" style="buttontext" target="TrialBalanceSearchResultsCsv.csv">
+                                    <link text="Export to Excel" style="buttontext" target="TrialBalanceSearchResultsCsv.csv">
                                         <parameter param-name="organizationPartyId" from-field="organizationPartyId"/>
                                         <parameter param-name="customTimePeriodId" from-field="parameters.customTimePeriodId"/>
                                     </link>
-                                    <link text="${uiLabelMap.AccountingExportAsPdf}" style="buttontext" target="TrialBalanceSearchResultsPdf.pdf" target-window="_BLANK">
+ <!--                                    <link text="${uiLabelMap.AccountingExportAsPdf}" style="buttontext" target="TrialBalanceSearchResultsPdf.pdf" target-window="_BLANK">
                                         <parameter param-name="organizationPartyId" from-field="organizationPartyId"/>
                                         <parameter param-name="customTimePeriodId" from-field="parameters.customTimePeriodId"/>
                                     </link> -->
@@ -716,7 +716,9 @@ under the License.
         <section>
             <actions>
                 <set field="viewSize" value="99999"/>
-                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="AccountingTrialBalance"/>
+                <set field="tabButtonItem" value="OrganizationAccountingReports"/>
+                <set field="tabButtonItem2" value="TrialBalance"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
                 <service service-name="getPartyAccountingPreferences" result-map="result">
                     <field-map field-name="organizationPartyId"/>
@@ -728,11 +730,12 @@ under the License.
                     <condition-expr field-name="partyId" operator="in" from-field="partyIds"/>
                 </entity-condition>
                 <set field="partyIds[]" from-field="organizationPartyId"/>
+                <set field="thruDate" type="Timestamp" value="${nowTimestamp}"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/TrialBalance.groovy"/>
             </actions>
             <widgets>
                 <container>
-                    <include-form name="TrialBalanceReport" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
+                    <include-form name="TrialBalanceCSV" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                 </container>
             </widgets>
         </section>
