@@ -20,7 +20,7 @@
             </widgets>
         </section>
     </screen>
-	
+
 	<screen name="FindEmplLeaves">
         <section>
             <actions>
@@ -29,14 +29,13 @@
 				<set field="tabButtonItem" value="EmployeeLeave" />
 				<set field="leaveCtx" from-field="parameters"/>
 				<set field="partyId" from-field="userLogin.partyId"/>
-						<service service-name="humanResManagerPermission"
-					result-map="permResult">
+				<!-- <service service-name="humanResManagerPermission" result-map="permResult">
 					<field-map field-name="mainAction" value="ADMIN" />
 				</service>
-				<set field="hasAdminPermission" from-field="permResult.hasPermission" />
+				<set field="hasAdminPermission" from-field="permResult.hasPermission" /> -->
 				<property-map map-name="uiLabelMap" resource="HumanResUiLabels"
 					global="true" />
-					
+
 				<entity-condition entity-name="EmplLeave" list="EmplLeave">
         			<condition-expr field-name="partyId" operator="equals" from-field="userLogin.partyId"/>
         	</entity-condition>
@@ -50,10 +49,10 @@
                     <decorator-section name="body">
                         <section>
                             <!-- do check for PARTYMGR, _VIEW permission -->
-                            <condition>
+<!--                             <condition>
                                 <if-has-permission permission="HUMANRES"
 									action="_VIEW" />
-                            </condition>
+                            </condition> -->
 
                             <widgets>
 										<section>
@@ -70,8 +69,8 @@
                             	</screenlet>
                                 <screenlet title="My Leaves List">
                               <include-form name="ListEmplLeaves"
-											location="component://humanres/widget/forms/EmplLeaveForms.xml" /> 
-											
+											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
+
 											<!--  <include-form name="ListEmplLeavesForUpdateAndDelete"
 											location="component://humanres/widget/forms/EmplLeaveForms.xml" /> -->
                                 </screenlet>
@@ -85,7 +84,7 @@
             </widgets>
         </section>
     </screen>
-	
+
 	<screen name="EditEmplLeave">
 		<section>
 			<actions>
@@ -115,7 +114,7 @@
 					<decorator-section name="body">
 						<include-menu name="UniversalEmplLeaveTabBar"
 							location="component://humanres/widget/HumanresMenus.xml" />
-							
+
 							<section>
 											<widgets>
 												<container style="button-bar">
@@ -124,7 +123,7 @@
 												</container>
 											</widgets>
 										</section>
-										
+
 						<screenlet id="AddEmplLeavePanel" title="Apply Leave"
 							collapsible="true">
 							<include-form name="EditEmplLeave"
@@ -140,7 +139,7 @@
 			</widgets>
 		</section>
 	</screen>
-	
+
 	<!-- ======================================================FILE REQUEST====================================================== -->
 	<screen name="registryFileRequest">
 		<section>
@@ -179,7 +178,7 @@
 			</widgets>
 		</section>
 	</screen>
-	
+
 	<!-- ======================================================FILE RECEIVE====================================================== -->
 	<screen name="registryFileRecieve">
 		<section>
@@ -218,7 +217,7 @@
 			</widgets>
 		</section>
 	</screen>
-	
+
 	<!-- ======================================================FILE RELEASE====================================================== -->
 	<screen name="registryFileRelease">
 		<section>
@@ -260,9 +259,9 @@
 			</widgets>
 		</section>
 	</screen>
-	
+
 	                                          <!-- TO ANOTHER STAFF -->
-	
+
 	<screen name="registryFileReleaseToAnotherStaff">
 		<section>
 			<actions>
@@ -303,14 +302,14 @@
 			</widgets>
 		</section>
 	</screen>
-	
+
 	<screen name="StaffLeaveCalender">
 		<section>
 			<actions>
 				<set field="titleProperty" value="leave" />
 				<set field="headerItem" value="leaveCalender" />
 				<set field="tabButtonItem" value="leaveCalender" />
-				
+
 				<set field="OpeningLeaveBalanceContext" from-field="parameters"/>
 						<service service-name="humanResManagerPermission"
 					result-map="permResult">
@@ -329,8 +328,8 @@
 							location="component://humanres/widget/HumanresMenus.xml" />
 					</decorator-section>
 					<decorator-section name="body">
-					
-					
+
+
 					 <section>
 							<widgets>
 								<screenlet title="Add Leave To Leave Calender">
@@ -349,17 +348,17 @@
 						</section>
 						<screenlet>
 						</screenlet>
-						
-						 
+
+
 					</decorator-section>
 				</decorator-screen>
 			</widgets>
 		</section>
 	</screen>
-	
-	
-	
-    
+
+
+
+
       <screen name="MyProfile">
         <section>
             <actions>
@@ -391,21 +390,21 @@
                                             <include-screen name="myPartyPersonalInfo" location="component://chaisacco/widget/chaisaccoScreens.xml"/>
                                             <include-screen name="myContactInformation" location="component://chaisacco/widget/chaisaccoScreens.xml"/>
                                             <include-screen name="myEmployeeIdentificationNumbers" location="component://chaisacco/widget/chaisaccoScreens.xml"/>
-                                            
+
                                         </container>
                                         <container style="profile-right">
                                             <include-screen name="EmployementStatus" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                             <!-- <include-screen name="UserLogin" location="component://party/widget/partymgr/ProfileScreens.xml"/> -->
-                                            
-                                             
+
+
                                              <screenlet title="Staff Spouses">
                                               <include-form location="component://humanres/widget/forms/EmployeeForms.xml" name="ListemployeeSpouses"/>
                                              </screenlet>
-                                             
+
                                               <screenlet title="Staff Next of kin">
                                             <include-form location="component://humanres/widget/forms/EmployeeForms.xml" name="Listemployeenextkin"/>
                                             </screenlet>
-                                              
+
                                              <screenlet title="Staff Dependants">
                                               <include-form location="component://humanres/widget/forms/EmployeeForms.xml" name="ListemployeeDependants"/>
                                              </screenlet>
@@ -424,7 +423,7 @@
             </widgets>
         </section>
     </screen>
-    
+
      <screen name="myPartyPersonalInfo">
         <section>
             <actions>
@@ -461,7 +460,7 @@
                                 <screenlet title="${uiLabelMap.PartyPersonalInformation}">
                                           <!--  <include-menu name="personUpdate" location="component://party/widget/partymgr/PartyMenus.xml"/> -->
                                     <include-form name="ViewPartyPerson" location="component://party/widget/partymgr/PartyForms.xml"/>
-                                   
+
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
@@ -519,7 +518,7 @@
             </widgets>
         </section>
     </screen>
-    
+
      <screen name="myContactInformation">
         <section>
             <actions>
@@ -552,7 +551,7 @@
                             <fail-widgets>
                                 <screenlet title="Employee Contact Information" id="PartyPersonalInformationPanel">
                                     <include-form name="emplContactDetails" location="component://humanres/widget/forms/EmployeeForms.xml"/>
-                                   
+
                                 </screenlet>
                             </fail-widgets>
                         </section>
@@ -561,7 +560,7 @@
             </widgets>
         </section>
     </screen>
-    
+
      <screen name="myEmployeeIdentificationNumbers">
         <section>
             <actions>
@@ -594,7 +593,7 @@
                             <fail-widgets>
                                 <screenlet title="Employee Identification Numbers" id="PartyPersonalInformationPanel">
                                     <include-form name="emplIdentificationNumbers" location="component://humanres/widget/forms/EmployeeForms.xml"/>
-                                   
+
                                 </screenlet>
                             </fail-widgets>
                         </section>
@@ -603,7 +602,7 @@
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="myEmployeeLeaves">
         <section>
             <actions>
@@ -613,8 +612,8 @@
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="EmplLeave" value-field="leaveApp"/>
                 <entity-one entity-name="LeavesBalanceView" value-field="leavebal"/>
-                
-               
+
+
                 <entity-condition list="leaveLogs" entity-name="LeaveStatusLog">
                 <condition-expr field-name="partyId" from-field="partyId"/>
                 <order-by field-name="lastUpdatedStamp"/>
@@ -625,7 +624,7 @@
                     <decorator-section name="body">
                     <include-menu location="component://chaisacco/widget/chaisaccoMenus.xml" name="myProfileTabBar"/>
                      <container style="leftclear">
-							<label style="h1" 
+							<label style="h1"
 							text="My Leave Details" />
 					</container>
                      <screenlet title="My Leave Balance">
@@ -635,13 +634,13 @@
                         <screenlet id="AddEmplLeavePanel" title="My Leave History" collapsible="true">
                             <include-form name="EmplProfileLeaves" location="component://humanres/widget/forms/EmplLeaveForms.xml"/>
                         </screenlet>
-                       
+
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="mySkills">
         <section>
             <actions>
@@ -651,27 +650,27 @@
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="EmplLeave" value-field="leaveApp"/>
                 <entity-one entity-name="LeavesBalanceView" value-field="leavebal"/>
-                
-               
+
+
             </actions>
             <widgets>
                  <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                     <include-menu location="component://chaisacco/widget/chaisaccoMenus.xml" name="myProfileTabBar"/>
                      <container style="leftclear">
-							<label style="h1" 
+							<label style="h1"
 							text="My Skills Details" />
 					</container>
                         <screenlet title="My Skills">
                             <include-form name="myEmployeeSkills" location="component://humanres/widget/forms/EmployeeForms.xml"/>
                         </screenlet>
-                       
+
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="myQualifications">
         <section>
             <actions>
@@ -681,27 +680,27 @@
                 <set field="partyId" from-field="parameters.partyId"/>
                 <entity-one entity-name="EmplLeave" value-field="leaveApp"/>
                 <entity-one entity-name="LeavesBalanceView" value-field="leavebal"/>
-                
+
             </actions>
             <widgets>
                  <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                     <include-menu location="component://chaisacco/widget/chaisaccoMenus.xml" name="myProfileTabBar"/>
                      <container style="leftclear">
-							<label style="h1" 
+							<label style="h1"
 							text="My Qualifications Details" />
 					</container>
                         <screenlet title="My Qualifications">
                             <include-form name="myEmployeeQualification" location="component://humanres/widget/forms/EmployeeForms.xml"/>
                         </screenlet>
-                       
+
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
-    
-    
+
+
     <screen name="myPayslipReport">
 		<section>
 			<actions>
@@ -719,7 +718,7 @@
 					<decorator-section name="body">
 					 <include-menu location="component://chaisacco/widget/chaisaccoMenus.xml" name="myProfileTabBar"/>
                      <container style="leftclear">
-							<label style="h1" 
+							<label style="h1"
 							text="My Payslip Details" />
 					</container>
 						<section>
@@ -727,8 +726,8 @@
                             <screenlet title="My Payslip (pdf)">
                                 <include-form name="myPayslip" location="component://payroll/widget/payroll/PayrollReportForms.xml"/>
                             </screenlet>
-                        
-                       
+
+
 							</widgets>
 							<fail-widgets>
 								<label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}
@@ -740,32 +739,32 @@
 			</widgets>
 		</section>
 	</screen>
-    
-    
-    
-     <!--======================= PERSONAL REVIEW =================================== -->    
+
+
+
+     <!--======================= PERSONAL REVIEW =================================== -->
     <screen name="PerfPersonalReviewScreen">
     <section>
             <actions>
                 <set field="titleProperty" value="Perf Reviews"/>
                 <set field="headerItem" value="PersonalReview"/>
-                <set field="tabButtonItem" value="PersonalReview"/>                
+                <set field="tabButtonItem" value="PersonalReview"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createPerfGoals"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <set field="partyId" value="${userLogin.partyId}"/>
-                
+
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                   
+
                     <include-menu name="personalReviewMenuBar" location="component://humanres/widget/HumanresMenus.xml"/>
                     <container style="leftclear">
-							<label style="h1" 
+							<label style="h1"
 							text="My Personal Performance Review" />
 					</container>
-                        
+
                         <section name="search-results">
                         	<widgets>
                         	<screenlet title="Quantitative Goals Scores">
@@ -786,31 +785,31 @@
             </widgets>
         </section>
     </screen>
-    
-	
-	 <!--======================= HOD REVIEW LISTING=================================== -->      
+
+
+	 <!--======================= HOD REVIEW LISTING=================================== -->
     <screen name="PerfHODReviewScreen">
     <section>
             <actions>
                 <set field="titleProperty" value="Perf Reviews"/>
                 <set field="headerItem" value="PersonalReview"/>
-                <set field="tabButtonItem" value="HODReview"/>                
+                <set field="tabButtonItem" value="HODReview"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createPerfGoals"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <set field="hod" value="${userLogin.partyId}"/>
-                
+
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                   
+
                     <include-menu name="personalReviewMenuBar" location="component://humanres/widget/HumanresMenus.xml"/>
                     <container style="leftclear">
-							<label style="h1" 
+							<label style="h1"
 							text="Staff Under Your Review" />
 					</container>
-                        
+
                         <section name="search-results">
                         	<widgets>
                         	<screenlet title="Review Staff">
@@ -823,30 +822,30 @@
             </widgets>
         </section>
     </screen>
-    
-     <!--======================= HOD ADD STAFF WITH TRAINING NEEDS LISTING=================================== -->      
+
+     <!--======================= HOD ADD STAFF WITH TRAINING NEEDS LISTING=================================== -->
     <screen name="PerfHODReviewAddStaffWithTrainingNeedScreen">
     <section>
             <actions>
                 <set field="titleProperty" value="Perf Reviews"/>
                 <set field="headerItem" value="PersonalReview"/>
-                <set field="tabButtonItem" value="staffTrainingNeeds"/>                
+                <set field="tabButtonItem" value="staffTrainingNeeds"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createPerfGoals"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <set field="hod" value="${userLogin.partyId}"/>
-                
+
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                   
+
                     <include-menu name="personalReviewMenuBar" location="component://humanres/widget/HumanresMenus.xml"/>
                     <container style="leftclear">
-							<label style="h1" 
+							<label style="h1"
 							text="Staff Under Your Review" />
 					</container>
-                        
+
                         <section name="search-results">
                         	<widgets>
                         	<screenlet title="Review Staff">
@@ -859,31 +858,31 @@
             </widgets>
         </section>
     </screen>
-    
-	
-	 <!--======================= HARMONIZED REVIEW LISTING=================================== -->    
+
+
+	 <!--======================= HARMONIZED REVIEW LISTING=================================== -->
     <screen name="PerfHarmonizedReviewScreen">
     <section>
             <actions>
                 <set field="titleProperty" value="Perf Reviews"/>
                 <set field="headerItem" value="PersonalReview"/>
-                <set field="tabButtonItem" value="HarmonizedReview"/>                
+                <set field="tabButtonItem" value="HarmonizedReview"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createPerfGoals"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <set field="hod" value="${userLogin.partyId}"/>
-                
+
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                   
+
                     <include-menu name="personalReviewMenuBar" location="component://humanres/widget/HumanresMenus.xml"/>
                     <container style="leftclear">
-							<label style="h1" 
+							<label style="h1"
 							text="Discuss With Staff As You Review Them" />
 					</container>
-                        
+
                         <section name="search-results">
                         	<widgets>
                         	<screenlet title="Review Staff">
@@ -896,35 +895,35 @@
             </widgets>
         </section>
     </screen>
-    
-    
-     <!--======================= HOD REVIEW =================================== -->    
+
+
+     <!--======================= HOD REVIEW =================================== -->
     <screen name="PerfHODReviewingsScreen">
     <section>
             <actions>
                 <set field="titleProperty" value="Perf Reviews"/>
                <set field="headerItem" value="PersonalReview"/>
-                <set field="tabButtonItem" value="HODReview"/>                 
+                <set field="tabButtonItem" value="HODReview"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createPerfGoals"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <set field="partyId" from-field="parameters.partyId"/>
-                
+
                 <entity-one value-field="staff" entity-name="Person">
                 <field-map field-name="partyId" from-field="partyId"/>
                 </entity-one>
-                
+
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                   
+
                     <include-menu name="personalReviewMenuBar" location="component://humanres/widget/HumanresMenus.xml"/>
                     <container style="leftclear">
-							<label style="h1" 
+							<label style="h1"
 							text="Review ${staff.firstName} ${staff.lastName}'s Performance" />
 					</container>
-                        
+
                         <section name="search-results">
                         	<widgets>
                         	<screenlet title="Quantitative Goals Scores">
@@ -945,35 +944,35 @@
             </widgets>
         </section>
     </screen>
-    
-     <!--======================= HARMONIZED REVIEW =================================== -->    
+
+     <!--======================= HARMONIZED REVIEW =================================== -->
     <screen name="PerfHarmonizedReviewingsScreen">
     <section>
             <actions>
                 <set field="titleProperty" value="Perf Reviews"/>
                 <set field="headerItem" value="PersonalReview"/>
-                <set field="tabButtonItem" value="HarmonizedReview"/>                 
+                <set field="tabButtonItem" value="HarmonizedReview"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createPerfGoals"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <set field="hod" value="${userLogin.partyId}"/>
                  <set field="partyId" value="${parameters.partyId}"/>
-                
+
                 <entity-one value-field="staff" entity-name="Person">
                 <field-map field-name="partyId" from-field="partyId"/>
                 </entity-one>
-                
+
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                   
+
                     <include-menu name="personalReviewMenuBar" location="component://humanres/widget/HumanresMenus.xml"/>
                     <container style="leftclear">
-							<label style="h1" 
+							<label style="h1"
 							text="Discuss And Review ${staff.firstName} ${staff.lastName}'s Performance" />
 					</container>
-                        
+
                         <section name="search-results">
                         	<widgets>
                         	<screenlet title="Quantitative Goals Scores">
@@ -994,8 +993,8 @@
             </widgets>
         </section>
     </screen>
-    
-    
+
+
     <!-- Change password Screen -->
     <screen name="changeMyPassword">
         <section>
@@ -1020,9 +1019,9 @@
             </widgets>
         </section>
     </screen>
-    
-    
-	
-	
+
+
+
+
 
 </screens>
