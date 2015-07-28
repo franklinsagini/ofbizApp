@@ -104,9 +104,22 @@ public class TreasuryUtility {
 		BigDecimal bdTotalCashDeposits = getTotalCashDeposit(userLogin, date);
 		BigDecimal bdTotalCashWithdrawals = getTotalCashWithdrawal(userLogin,
 				date);
+		
+		//Add Loan Cash Pay
+		
+		//Add Cash Withdrawal Reversal
+		
+		BigDecimal bdTotalLoanCashPay = getTotalLoanCashPay(userLogin, date);
+		BigDecimal bdTotalCashWithdrawalReversal = getTotalCashWithdrawalReversed(userLogin,
+				date);
+
 
 		bdTellerBalance = bdTotalAllocated.subtract(bdTotalDeAllocated)
 				.add(bdTotalCashDeposits).subtract(bdTotalCashWithdrawals);
+		
+		bdTellerBalance = bdTellerBalance.add(bdTotalLoanCashPay);
+		bdTellerBalance = bdTellerBalance.add(bdTotalCashWithdrawalReversal);
+		
 
 		return bdTellerBalance;
 	}
@@ -179,6 +192,110 @@ public class TreasuryUtility {
 						"createdBy", EntityOperator.EQUALS, createdBy),
 						EntityCondition.makeCondition("transactionType",
 								EntityOperator.EQUALS, "CASHDEPOSIT"),
+
+						EntityCondition.makeCondition("createdStamp",
+								EntityOperator.LESS_THAN, tstampDateCreated)
+
+				), EntityOperator.AND);
+
+		log.info(" ############ Cash Deposit createdBy : " + createdBy);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			cashDepositELI = delegator.findList("AccountTransaction",
+					transactionConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		BigDecimal bdBalance = BigDecimal.ZERO;
+		for (GenericValue genericValue : cashDepositELI) {
+			bdBalance = bdBalance.add(genericValue
+					.getBigDecimal("transactionAmount"));
+		}
+		return bdBalance;
+	}
+	
+	/***
+	 * Get Loan Cash Pay
+	 * */
+	private static BigDecimal getTotalLoanCashPay(
+			Map<String, String> userLogin, Timestamp date) {
+		// TODO Auto-generated method stub
+		String createdBy = userLogin.get("userLoginId");
+
+		String partyId = userLogin.get("partyId");
+		String treasuryId = getTeller(partyId).getString("treasuryId");
+
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(date.getTime());
+		calendar.set(Calendar.MILLISECOND, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+
+		Timestamp tstampDateCreated = new Timestamp(calendar.getTimeInMillis());
+
+		List<GenericValue> cashDepositELI = null;
+
+		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"treasuryId", EntityOperator.EQUALS, createdBy),
+						EntityCondition.makeCondition(treasuryId,
+								EntityOperator.EQUALS, "LOANCASHPAY"),
+
+						EntityCondition.makeCondition("createdStamp",
+								EntityOperator.LESS_THAN, tstampDateCreated)
+
+				), EntityOperator.AND);
+
+		log.info(" ############ Cash Deposit createdBy : " + createdBy);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			cashDepositELI = delegator.findList("AccountTransaction",
+					transactionConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		BigDecimal bdBalance = BigDecimal.ZERO;
+		for (GenericValue genericValue : cashDepositELI) {
+			bdBalance = bdBalance.add(genericValue
+					.getBigDecimal("transactionAmount"));
+		}
+		return bdBalance;
+	}
+	
+	/****
+	 * Get Cash Withdrawal Reversed
+	 * */
+	private static BigDecimal getTotalCashWithdrawalReversed(
+			Map<String, String> userLogin, Timestamp date) {
+		// TODO Auto-generated method stub
+		String createdBy = userLogin.get("userLoginId");
+
+		String partyId = userLogin.get("partyId");
+		String treasuryId = getTeller(partyId).getString("treasuryId");
+
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(date.getTime());
+		calendar.set(Calendar.MILLISECOND, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+
+		Timestamp tstampDateCreated = new Timestamp(calendar.getTimeInMillis());
+
+		List<GenericValue> cashDepositELI = null;
+
+		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"treasuryId", EntityOperator.EQUALS, createdBy),
+						EntityCondition.makeCondition(treasuryId,
+								EntityOperator.EQUALS, "CASHWITHDRAWALREVERSED"),
 
 						EntityCondition.makeCondition("createdStamp",
 								EntityOperator.LESS_THAN, tstampDateCreated)
