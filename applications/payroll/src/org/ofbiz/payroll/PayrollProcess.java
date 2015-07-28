@@ -577,8 +577,8 @@ public class PayrollProcess {
 		listSystemElements.add(createElementToSave(delegator, "NETPAY", bdNETPAY, staffPayrollId));
 		bdNHIF = bdNHIF.setScale(4, RoundingMode.HALF_UP);
 		listSystemElements.add(createElementToSave(delegator, "NHIF", bdNHIF, staffPayrollId));
-		bdNHIFEmployer = bdNHIFEmployer.setScale(4, RoundingMode.HALF_UP);
-		listSystemElements.add(createElementToSave(delegator, "NHIFEMPLOYER", bdNHIFEmployer, staffPayrollId));
+		//bdNHIFEmployer = bdNHIFEmployer.setScale(4, RoundingMode.HALF_UP);
+		//listSystemElements.add(createElementToSave(delegator, "NHIFEMPLOYER", bdNHIFEmployer, staffPayrollId));
 		bdPAYE = bdPAYE.setScale(4, RoundingMode.HALF_UP);
 		listSystemElements.add(createElementToSave(delegator, "PAYE", bdPAYE, staffPayrollId));
 		bdTAXABLEINCOME = bdTAXABLEINCOME.setScale(4, RoundingMode.HALF_UP);
@@ -597,7 +597,7 @@ public class PayrollProcess {
 		listSystemElements.add(createElementToSave(delegator, "PENSIONEMPLOYER", bdPensionEmployer, staffPayrollId));
 		
 		bdNSSFSUMMARY = bdNSSFSUMMARY.add(bdNSSFStatutory).add(bdNSSFVoluntary).add(bdNSSFEmployer);
-		bdNHIFSUMMARY = bdNHIFSUMMARY.add(bdNHIF).add(bdNHIFEmployer);
+		bdNHIFSUMMARY = bdNHIFSUMMARY.add(bdNHIF);//.add(bdNHIFEmployer);
 		bdPENSIONSUMMARY = bdPENSIONSUMMARY.add(bdPensionAmt).add(bdPensionEmployer);
 		bdPAYESUMMARY = bdPAYESUMMARY.add(bdPAYE);
 		bdNETPAYSUMMARY = bdNETPAYSUMMARY.add(bdNETPAY);
