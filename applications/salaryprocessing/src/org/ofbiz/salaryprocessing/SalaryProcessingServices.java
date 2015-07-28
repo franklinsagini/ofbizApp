@@ -1271,6 +1271,9 @@ public class SalaryProcessingServices {
 						"month", EntityOperator.EQUALS, month.toString()),
 						EntityCondition.makeCondition("year",
 								EntityOperator.EQUALS, year.toString()),
+						
+						EntityCondition.makeCondition("salaryMonthYearId",
+										EntityOperator.EQUALS, salaryMonthYearId),
 
 						EntityCondition.makeCondition("employerCode",
 								EntityOperator.EQUALS, employerCode)),
