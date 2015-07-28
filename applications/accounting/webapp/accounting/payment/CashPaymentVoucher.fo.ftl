@@ -26,7 +26,7 @@ under the License.
             CASH PAYMENT VOUCHER
         </fo:block>
         <fo:block><fo:leader/></fo:block>
-        <fo:block text-decoration="underline" font-size="10pt" text-align="center"  font-weight="bold" >
+        <fo:block text-decoration="underline" font-size="13pt" text-align="center"  font-weight="bold" >
             CPV NO:  ${payment.paymentId?if_exists}
         </fo:block>
         <fo:block><fo:leader/></fo:block>
@@ -51,7 +51,7 @@ under the License.
         </#if> -->
 
 
-        <fo:table table-layout="fixed" width="100%" font-size="9pt" margin-left="0.3in">
+        <fo:table table-layout="fixed" width="100%" font-size="14pt" margin-left="0.3in">
             <fo:table-column column-number="1" column-width="proportional-column-width(50)"/>
             <fo:table-column column-number="2" column-width="proportional-column-width(50)"/>
             <fo:table-body>
