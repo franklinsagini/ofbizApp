@@ -87,7 +87,7 @@ public class LoanAccounting {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		createChargesEntries(loanApplication, userLogin, glAcctTypeIdcharges, accountTransactionParentId);
+		createChargesEntries(loanApplication, userLogin, glAcctTypeIdcharges, accountTransactionParentId, acctgTransId);
 		try {
 			TransactionUtil.commit();
 		} catch (GenericTransactionException e) {
@@ -101,7 +101,7 @@ public class LoanAccounting {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		createLoanDisbursementAccountingTransaction(loanApplication, userLogin, accountTransactionParentId);
+		createLoanDisbursementAccountingTransaction(loanApplication, userLogin, accountTransactionParentId, acctgTransId);
 		
 		//If the Loan Was cleared - get cleared amount and post to mpa 
 		if (loanWasCleared(loanApplicationId)){
@@ -126,7 +126,7 @@ public class LoanAccounting {
 				BigDecimal bdInterestAmount = LoanRepayments.getTotalInterestByLoanDue(clearedLoanApplicationId.toString());
 				BigDecimal bdTotalInsuranceAmount = LoanRepayments.getTotalInsurancByLoanDue(clearedLoanApplicationId.toString());
 				log.info(" LLLLLLLL Loan Amount to offset AAAAAAAAAA"+bdTotalLoanBalanceAmount);
-				saveLoanRepaymentClearance(clearedLoanApplicationId, bdTotalLoanBalanceAmount, bdInterestAmount, bdTotalInsuranceAmount);
+				saveLoanRepaymentClearance(clearedLoanApplicationId, bdTotalLoanBalanceAmount, bdInterestAmount, bdTotalInsuranceAmount, acctgTransId);
 				//LoansProcessingServices.get
 				bdTotalLoanCost = bdTotalLoanCost.add(LoanRepayments.getTotalInterestByLoanDue(clearedLoanApplicationId.toString()));
 				bdTotalLoanCost = bdTotalLoanCost.add(LoanRepayments.getTotalInsurancByLoanDue(clearedLoanApplicationId.toString()));
@@ -281,7 +281,7 @@ public class LoanAccounting {
 	 * */
 	private static void createLoanDisbursementAccountingTransaction(
 			GenericValue loanApplication, Map<String, String> userLogin,
-			String accountTransactionParentId) {
+			String accountTransactionParentId, String acctgTransId) {
 		// Create an Account Holder Transaction for this disbursement
 
 		BigDecimal transactionAmount = loanApplication.getBigDecimal("loanAmt");
@@ -320,7 +320,7 @@ public class LoanAccounting {
 
 				createTransaction(loanApplication, retentionTransactionType,
 						userLogin, memberDepositAccountId,
-						bdBosaRetainedAmount, null, accountTransactionParentId);
+						bdBosaRetainedAmount, null, accountTransactionParentId, acctgTransId);
 
 				transactionAmount = transactionAmount
 						.subtract(bdBosaRetainedAmount);
@@ -334,7 +334,7 @@ public class LoanAccounting {
 
 		createTransaction(loanApplication, transactionType, userLogin,
 				memberAccountId, transactionAmount, null,
-				accountTransactionParentId);
+				accountTransactionParentId, acctgTransId);
 	}
 
 	// Get Account Product Id given Code, for instance, Savings Account is code
@@ -370,7 +370,7 @@ public class LoanAccounting {
 	private static void createTransaction(GenericValue loanApplication,
 			String transactionType, Map<String, String> userLogin,
 			String memberAccountId, BigDecimal transactionAmount,
-			String productChargeId, String accountTransactionParentId) {
+			String productChargeId, String accountTransactionParentId, String acctgTransId) {
 		Delegator delegator = loanApplication.getDelegator();
 		GenericValue accountTransaction;
 		String accountTransactionId = delegator
@@ -405,7 +405,7 @@ public class LoanAccounting {
 						"memberAccountId", Long.valueOf(memberAccountId),
 						"productChargeId", productChargeIdLong,
 						"transactionAmount", transactionAmount,
-						"transactionType", transactionType));
+						"transactionType", transactionType, "acctgTransId", acctgTransId));
 		try {
 			delegator.createOrStore(accountTransaction);
 		} catch (GenericEntityException e) {
@@ -495,7 +495,7 @@ public class LoanAccounting {
 	 * **/
 	private static void createChargesEntries(GenericValue loanApplication,
 			Map<String, String> userLogin, String acctgTransType,
-			String accountTransactionParentId) {
+			String accountTransactionParentId, String acctgTransId) {
 		// Give Loan Application get the charges and post to each
 		Delegator delegator = loanApplication.getDelegator();
 		List<GenericValue> loanApplicationChargeELI = null;
@@ -526,7 +526,7 @@ public class LoanAccounting {
 		for (GenericValue loanApplicationCharge : loanApplicationChargeELI) {
 			// Make entries for this charge
 			processCharge(loanApplication, userLogin, acctgTransType,
-					loanApplicationCharge);
+					loanApplicationCharge, acctgTransId);
 
 			// transactionAmount =
 			// loanApplicationCharge.getBigDecimal("fixedAmount");
@@ -541,7 +541,7 @@ public class LoanAccounting {
 					.getString("productChargeId");
 			createTransaction(loanApplication, transactionType, userLogin,
 					memberAccountId, transactionAmount, productChargeId,
-					accountTransactionParentId);
+					accountTransactionParentId, acctgTransId);
 		}
 
 	}
@@ -551,9 +551,9 @@ public class LoanAccounting {
 	 * */
 	private static void processCharge(GenericValue loanApplication,
 			Map<String, String> userLogin, String acctgTransType,
-			GenericValue loanApplicationCharge) {
-		String acctgTransId = createAccountingTransaction(loanApplication,
-				acctgTransType, userLogin);
+			GenericValue loanApplicationCharge, String acctgTransId) {
+		//String acctgTransId = createAccountingTransaction(loanApplication,
+		//		acctgTransType, userLogin);
 
 		log.info(" ### Transaction ID Charge ##### " + acctgTransId);
 
@@ -568,17 +568,20 @@ public class LoanAccounting {
 		Delegator delegator = loanApplication.getDelegator();
 		String partyId = (String) userLogin.get("partyId");
 		String postingType = "C";
-		String entrySequenceId = "00001";
+		String entrySequenceId = "00003";
 		// Post to charge service (Cr)
 		postTransactionEntry(delegator, dbChargeAmount, partyId,
 				chargeAccountId, postingType, acctgTransId, acctgTransType,
-				entrySequenceId);
+				entrySequenceId, userLogin);
+		
 		// Debit the Member Deposit
 		postingType = "D";
-		entrySequenceId = "00002";
+		entrySequenceId = "00004";
+		//postTra
 		postTransactionEntry(delegator, dbChargeAmount, partyId,
 				memberDepositsAccountId, postingType, acctgTransId,
-				acctgTransType, entrySequenceId);
+				acctgTransType, entrySequenceId, userLogin);
+		
 	}
 
 	private static String getMemberDepositsAccountToCharge(
@@ -678,9 +681,42 @@ public class LoanAccounting {
 		String entrySequenceId = "00002";
 		postTransactionEntry(delegator, bdLoanAmount, partyId,
 				loanReceivableAccount, postingType, acctgTransId,
-				acctgTransType, entrySequenceId);
+				acctgTransType, entrySequenceId, userLogin);
 	}
 
+	public static void postTransactionEntry(Delegator delegator,
+			BigDecimal bdLoanAmount, String partyId,
+			String loanReceivableAccount, String postingType,
+			String acctgTransId, String acctgTransType, String entrySequenceId, Map<String, String> userLogin) {
+		GenericValue acctgTransEntry;
+		
+		String employeeBranchId = null;
+				
+		if ((userLogin != null) && (!userLogin.get("userLoginId").equals("admin"))){
+			employeeBranchId = AccHolderTransactionServices.getEmployeeBranch(userLogin.get("partyId"));
+		} else{
+			employeeBranchId = "Company";
+		}
+		
+		acctgTransEntry = delegator.makeValidValue("AcctgTransEntry", UtilMisc
+				.toMap("acctgTransId", acctgTransId, "acctgTransEntrySeqId",
+						entrySequenceId, "partyId", partyId, "glAccountTypeId",
+						acctgTransType, "glAccountId", loanReceivableAccount,
+
+						"organizationPartyId", employeeBranchId, "amount",
+						bdLoanAmount, "currencyUomId", "KES", "origAmount",
+						bdLoanAmount, "origCurrencyUomId", "KES",
+						"debitCreditFlag", postingType, "reconcileStatusId",
+						"AES_NOT_RECONCILED"));
+
+		try {
+			delegator.createOrStore(acctgTransEntry);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("Could post an entry");
+		}
+	}
+	
 	public static void postTransactionEntry(Delegator delegator,
 			BigDecimal bdLoanAmount, String partyId,
 			String loanReceivableAccount, String postingType,
@@ -695,7 +731,7 @@ public class LoanAccounting {
 						bdLoanAmount, "currencyUomId", "KES", "origAmount",
 						bdLoanAmount, "origCurrencyUomId", "KES",
 						"debitCreditFlag", postingType, "reconcileStatusId",
-						"AES_NOT_RECONCILED"));
+						"AES_NOT_RECONCILED", "acctgTransId", acctgTransId));
 
 		try {
 			delegator.createOrStore(acctgTransEntry);
@@ -704,6 +740,7 @@ public class LoanAccounting {
 			log.error("Could post an entry");
 		}
 	}
+	
 	
 	public static void postTransactionEntryParty(Delegator delegator,
 			BigDecimal bdLoanAmount, String partyId, String organizationPartyId,
@@ -745,7 +782,7 @@ public class LoanAccounting {
 		BigDecimal bdLoanAmount = loanApplication.getBigDecimal("loanAmt");
 		postTransactionEntry(delegator, bdLoanAmount, partyId,
 				memberDepositAccount, postingType, acctgTransId,
-				acctgTransType, entrySequenceId);
+				acctgTransType, entrySequenceId,userLogin);
 	}
 
 	/**
@@ -897,7 +934,7 @@ public class LoanAccounting {
 
 	}
 	
-	public static void saveLoanRepaymentClearance(Long loanApplicationId, BigDecimal bdTotalLoanBalanceAmount, BigDecimal bdInterestAmount, BigDecimal bdTotalInsuranceAmount) {
+	public static void saveLoanRepaymentClearance(Long loanApplicationId, BigDecimal bdTotalLoanBalanceAmount, BigDecimal bdInterestAmount, BigDecimal bdTotalInsuranceAmount, String acctgTransId) {
 		BigDecimal loanPrincipal = BigDecimal.ZERO;
 		BigDecimal loanInterest = BigDecimal.ZERO;
 		BigDecimal loanInsurance = BigDecimal.ZERO;
@@ -945,7 +982,7 @@ public class LoanAccounting {
 				"totalPrincipalDue", totalPrincipalDue, "interestAmount",
 				loanInterest, "insuranceAmount", loanInsurance,
 				"principalAmount", loanPrincipal, "transactionAmount",
-				transactionAmount));
+				transactionAmount, "acctgTransId", acctgTransId));
 		try {
 			delegator.createOrStore(loanRepayment);
 		} catch (GenericEntityException e) {

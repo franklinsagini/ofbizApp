@@ -1108,14 +1108,19 @@ public class AccHolderTransactionServices {
 				+ accountProductChargeELI.size());
 		String chargeAccountId = commissionAccountId;
 		// Create a transaction in Account Transaction for each of the Charges
-		sequence = sequence + 1;
+		GenericValue productCharge = null;
+		
+		
 		for (GenericValue accountProductCharge : accountProductChargeELI) {
-
-			if (accountProductCharge.getLong("parentChargeId") == null) {
-				chargeAccountId = commissionAccountId;
-			} else {
-				chargeAccountId = exciseDutyAccountId;
-			}
+			sequence = sequence + 1;
+//			if (accountProductCharge.getLong("parentChargeId") == null) {
+//				chargeAccountId = commissionAccountId;
+//			} else {
+//				chargeAccountId = exciseDutyAccountId;
+//			}
+			productCharge = LoanUtilities.getEntityValue("ProductCharge", "productChargeId", accountProductCharge.getLong("productChargeId"));
+			
+			chargeAccountId = productCharge.getString("chargeAccountId");
 
 			// SEQUENCENO = sequence + 1;
 			sequence = addChargeVer2(accountProductCharge, accountTransaction,
@@ -1153,14 +1158,19 @@ public class AccHolderTransactionServices {
 				+ accountProductChargeELI.size());
 		String chargeAccountId = commissionAccountId;
 		// Create a transaction in Account Transaction for each of the Charges
-		sequence = sequence + 1;
+		GenericValue productCharge = null;
 		for (GenericValue accountProductCharge : accountProductChargeELI) {
 
-			if (accountProductCharge.getLong("parentChargeId") == null) {
-				chargeAccountId = commissionAccountId;
-			} else {
-				chargeAccountId = exciseDutyAccountId;
-			}
+			sequence = sequence + 1;
+//			if (accountProductCharge.getLong("parentChargeId") == null) {
+//				chargeAccountId = commissionAccountId;
+//			} else {
+//				chargeAccountId = exciseDutyAccountId;
+//			}
+			productCharge = LoanUtilities.getEntityValue("ProductCharge", "productChargeId", accountProductCharge.getLong("productChargeId"));
+			
+			chargeAccountId = productCharge.getString("chargeAccountId");
+
 			
 			// SEQUENCENO = sequence + 1;
 			sequence = addChargeVer2ATM(accountProductCharge, accountTransaction,
@@ -1566,9 +1576,9 @@ public class AccHolderTransactionServices {
 
 		// for the purpuse of getting charges, ATM withdrawal should just use
 		// the CASHWITHDRAWAL charges
-		if (transactionType.equals("ATMWITHDRAWAL")) {
-			transactionType = "CASHWITHDRAWAL";
-		}
+//		if (transactionType.equals("ATMWITHDRAWAL")) {
+//			transactionType = "CASHWITHDRAWAL";
+//		}
 
 		Delegator delegator = accountTransaction.getDelegator();
 		accountProductId = accountProductId.replaceAll(",", "");
@@ -4166,7 +4176,6 @@ public class AccHolderTransactionServices {
 
 		String acctgTransId = postCashWithdrawalTransactionMsacco(
 				accountTransaction, userLogin, memberBranchId);
-		;
 		// Set the the Treasury ID
 		// String treasuryId = TreasuryUtility.getTellerId(userLogin);
 		// accountTransaction.set("treasuryId", treasuryId);
