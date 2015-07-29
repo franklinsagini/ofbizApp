@@ -125,7 +125,7 @@ under the License.
                             </fo:list-item>
                             <fo:list-item>
                                 <fo:list-item-label font-weight="bold">
-                                    <fo:block>EFT/CHQ/REF No: </fo:block>
+                                    <fo:block>CHQ/REF No: </fo:block>
                                 </fo:list-item-label>
                                 <fo:list-item-body start-indent="body-start()" text-decoration="underline">
                                     <fo:block>${payment.paymentRefNum?if_exists}</fo:block>
