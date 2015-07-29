@@ -240,10 +240,10 @@
     	if ((transactionAmount == ''))
     		return false;
 
-		if (parseFloat(transactionAmount, 10) > parseFloat(availableInSource, 10)){
-    		alert('You cannot transfer more than available in the source treasury,  reduce the amount!');
-    		return false;
-    	}
+//		if (parseFloat(transactionAmount, 10) > parseFloat(availableInSource, 10)){
+//    		alert('You cannot transfer more than available in the source treasury,  reduce the amount!');
+//    		return false;
+ //   	}
     	
     	//if bank return true
     	
