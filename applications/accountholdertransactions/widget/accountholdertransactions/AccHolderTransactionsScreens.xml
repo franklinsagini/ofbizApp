@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
-	license agreements. See the NOTICE file distributed with this work for additional 
-	information regarding copyright ownership. The ASF licenses this file to 
-	you under the Apache License, Version 2.0 (the "License"); you may not use 
-	this file except in compliance with the License. You may obtain a copy of 
-	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
-	by applicable law or agreed to in writing, software distributed under the 
-	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
-	OF ANY KIND, either express or implied. See the License for the specific 
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor
+	license agreements. See the NOTICE file distributed with this work for additional
+	information regarding copyright ownership. The ASF licenses this file to
+	you under the Apache License, Version 2.0 (the "License"); you may not use
+	this file except in compliance with the License. You may obtain a copy of
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required
+	by applicable law or agreed to in writing, software distributed under the
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
+	OF ANY KIND, either express or implied. See the License for the specific
 	language governing permissions and limitations under the License. -->
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -22,7 +22,7 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createCashWithdrawal" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
 					property="KEN" default="KEN"/ -->
 				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
 
@@ -37,8 +37,8 @@
 				<set field="bdTotalAllocated"
 					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalAllocated(userLogin);}"
 					type="BigDecimal" />
-					
-				
+
+
 				<set field="bdTotalDeAllocated"
 					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalDeAllocatedToday(userLogin);}"
 					type="BigDecimal" />
@@ -49,22 +49,22 @@
 					type="BigDecimal" />
 				<!-- set field="tellerBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getTotalBalanceForDestinationTreasury(destinationTreasury, transferDate);}" type="BigDecimal"/>
           		<set field="bdTotalOpeningBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getOpeningBalance(destinationTreasury, transferDate);}" type="BigDecimal"/-->
-				
-					
+
+
 				<set field="totalCashWithdrawal"
 					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalCashWithdrawalToday(userLogin);}"
 					type="BigDecimal" />
 				<set field="totalCashDeposit"
 					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalCashDepositToday(userLogin);}"
 					type="BigDecimal" />
-					
-					
+
+
 				<set field="totalLoanCashPayment" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalLoanCashDepositToday(userLogin);}" type="BigDecimal"/>
 					<set field="bdTotalOpeningBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getOpeningBalance(userLogin);}" type="BigDecimal"/>
-					
+
 				<set field="amTeller" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.hasTellerAssigned(userLogin);}" type="Boolean"/>
-				
-				
+
+
 				<set field="treasuryId"	value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTreasuryId(userLogin);}" type="String" />
 			</actions>
 			<widgets>
@@ -73,12 +73,12 @@
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<section>
-							
+
 							<condition>
 								<!-- if-has-permission permission="ACCOUNTHOLDER"
 									action="_CREATE" / -->
 								<if-compare operator="equals" value="true" field="amTeller" type="Boolean"/>
-								
+
 							</condition>
 							<widgets>
 								<screenlet>
@@ -90,7 +90,7 @@
 												<label style="h3"> Today Transactions</label>
 												<label style="h3"> Total Available (Opening Balance + Transfer In - Transfer Out + Deposits -
 													Withdrawals) : Kshs. ${tellerBalance}</label>
-												
+
 												<label style="h3"> Opening Balance  : KShs. ${bdTotalOpeningBalance}</label>
 
 												<label style="h3"> Transfer In : KShs.
@@ -101,7 +101,7 @@
 													${totalCashWithdrawal}</label>
 												<label style="h3"> Total Deposits : KShs.
 													${totalCashDeposit}</label>
-												
+
 												<label style="h3"> Total Cash Loan Payment : KShs.
 													${totalLoanCashPayment}</label>
 											</container>
@@ -145,7 +145,7 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createCashDeposit" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
 					property="KEN" default="KEN"/ -->
 				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
 				<entity-one entity-name="AccountTransaction" value-field="accountTransactionContext" />
@@ -159,9 +159,9 @@
 				<set field="bdTotalAllocated"
 					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalAllocated(userLogin);}"
 					type="BigDecimal" />
-				
+
 				<set field="bdTotalOpeningBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getOpeningBalance(userLogin);}" type="BigDecimal"/>
-				
+
 				<set field="bdTotalDeAllocated"
 					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalDeAllocatedToday(userLogin);}"
 					type="BigDecimal" />
@@ -172,8 +172,8 @@
 					type="BigDecimal" />
 				<!-- set field="tellerBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getTotalBalanceForDestinationTreasury(destinationTreasury, transferDate);}" type="BigDecimal"/>
           		<set field="bdTotalOpeningBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getOpeningBalance(destinationTreasury, transferDate);}" type="BigDecimal"/-->
-				
-					
+
+
 				<set field="totalCashWithdrawal"
 					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalCashWithdrawalToday(userLogin);}"
 					type="BigDecimal" />
@@ -188,14 +188,14 @@
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<section>
-							
+
 							<condition>
 								<!-- if-has-permission permission="ACCOUNTHOLDER"
 									action="_CREATE" / -->
 								<if-compare operator="equals" value="true" field="amTeller" type="Boolean"/>
 							</condition>
 							<widgets>
-								<!-- screenlet title="Accounts"> <include-form location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml" 
+								<!-- screenlet title="Accounts"> <include-form location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"
 									name="listMemberAccount"/> </screenlet -->
 								<screenlet>
 									<section>
@@ -205,7 +205,7 @@
 												<label style="h3"> Teller Name : ${assignedteller} </label>
 												<label style="h3"> Total Available (Opening Balance + Transfer In - Transfer Out + Deposits -
 													Withdrawals) : Kshs. ${tellerBalance}</label>
-												
+
 												<label style="h3"> Opening Balance  : KShs. ${bdTotalOpeningBalance}</label>
 												<label style="h3"> Transfer In : KShs.
 													${bdTotalAllocated}</label>
@@ -246,7 +246,7 @@
 			</widgets>
 		</section>
 	</screen>
-	
+
 	<!-- NewDirectDebit -->
 		<screen name="NewDirectDebit">
 		<section>
@@ -258,7 +258,7 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createCashDeposit" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
 					property="KEN" default="KEN"/ -->
 				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
 				<entity-one entity-name="AccountTransaction" value-field="accountTransactionContext" />
@@ -272,9 +272,9 @@
 				<set field="bdTotalAllocated"
 					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalAllocated(userLogin);}"
 					type="BigDecimal" />
-				
+
 				<set field="bdTotalOpeningBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getOpeningBalance(userLogin);}" type="BigDecimal"/>
-				
+
 				<set field="bdTotalDeAllocated"
 					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalDeAllocatedToday(userLogin);}"
 					type="BigDecimal" />
@@ -285,8 +285,8 @@
 					type="BigDecimal" />
 				<!-- set field="tellerBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getTotalBalanceForDestinationTreasury(destinationTreasury, transferDate);}" type="BigDecimal"/>
           		<set field="bdTotalOpeningBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getOpeningBalance(destinationTreasury, transferDate);}" type="BigDecimal"/-->
-				
-					
+
+
 				<set field="totalCashWithdrawal"
 					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalCashWithdrawalToday(userLogin);}"
 					type="BigDecimal" />
@@ -301,14 +301,14 @@
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<section>
-							
+
 							<condition>
 								<!-- if-has-permission permission="ACCOUNTHOLDER"
 									action="_CREATE" / -->
 								<if-compare operator="equals" value="true" field="amTeller" type="Boolean"/>
 							</condition>
 							<widgets>
-								<!-- screenlet title="Accounts"> <include-form location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml" 
+								<!-- screenlet title="Accounts"> <include-form location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"
 									name="listMemberAccount"/> </screenlet -->
 								<screenlet>
 									<section>
@@ -318,7 +318,7 @@
 												<label style="h3"> Teller Name : ${assignedteller} </label>
 												<label style="h3"> Total Available (Opening Balance + Transfer In - Transfer Out + Deposits -
 													Withdrawals) : Kshs. ${tellerBalance}</label>
-												
+
 												<label style="h3"> Opening Balance  : KShs. ${bdTotalOpeningBalance}</label>
 												<label style="h3"> Transfer In : KShs.
 													${bdTotalAllocated}</label>
@@ -369,12 +369,12 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createChequeWithdrawal" global="true" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
 					property="KEN" default="KEN"/ -->
 				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
 
 				<!-- set field="partyId" from-field="parameters.partyId"/ -->
-				
+
 				<entity-one entity-name="AccountTransaction" value-field="accountTransactionContext" />
 						<set field="assignee"
 					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTelleAssignee(userLogin);}"
@@ -385,8 +385,8 @@
 				<set field="bdTotalAllocated"
 					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalAllocated(userLogin);}"
 					type="BigDecimal" />
-					
-				
+
+
 				<set field="bdTotalDeAllocated"
 					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalDeAllocatedToday(userLogin);}"
 					type="BigDecimal" />
@@ -397,22 +397,22 @@
 					type="BigDecimal" />
 				<!-- set field="tellerBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getTotalBalanceForDestinationTreasury(destinationTreasury, transferDate);}" type="BigDecimal"/>
           		<set field="bdTotalOpeningBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getOpeningBalance(destinationTreasury, transferDate);}" type="BigDecimal"/-->
-				
-					
+
+
 				<set field="totalCashWithdrawal"
 					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalCashWithdrawalToday(userLogin);}"
 					type="BigDecimal" />
 				<set field="totalCashDeposit"
 					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalCashDepositToday(userLogin);}"
 					type="BigDecimal" />
-					
-					
+
+
 				<set field="totalLoanCashPayment" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalLoanCashDepositToday(userLogin);}" type="BigDecimal"/>
 					<set field="bdTotalOpeningBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getOpeningBalance(userLogin);}" type="BigDecimal"/>
-					
+
 				<set field="amTeller" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.hasTellerAssigned(userLogin);}" type="Boolean"/>
-				
-				
+
+
 				<set field="treasuryId"	value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTreasuryId(userLogin);}" type="String" />
 			</actions>
 			<widgets>
@@ -421,12 +421,12 @@
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<section>
-							
+
 							<condition>
 								<!-- if-has-permission permission="ACCOUNTHOLDER"
 									action="_CREATE" / -->
 								<if-compare operator="equals" value="true" field="amTeller" type="Boolean"/>
-								
+
 							</condition>
 							<widgets>
 								<screenlet>
@@ -438,7 +438,7 @@
 												<label style="h3"> Today Transactions</label>
 												<label style="h3"> Total Available (Opening Balance + Transfer In - Transfer Out + Deposits -
 													Withdrawals) : Kshs. ${tellerBalance}</label>
-												
+
 												<label style="h3"> Opening Balance  : KShs. ${bdTotalOpeningBalance}</label>
 
 												<label style="h3"> Transfer In : KShs.
@@ -449,7 +449,7 @@
 													${totalCashWithdrawal}</label>
 												<label style="h3"> Total Deposits : KShs.
 													${totalCashDeposit}</label>
-												
+
 												<label style="h3"> Total Cash Loan Payment : KShs.
 													${totalLoanCashPayment}</label>
 											</container>
@@ -491,7 +491,7 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createChequeDeposit" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
 					property="KEN" default="KEN"/ -->
 				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
 
@@ -506,8 +506,8 @@
 				<set field="bdTotalAllocated"
 					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalAllocated(userLogin);}"
 					type="BigDecimal" />
-					
-				
+
+
 				<set field="bdTotalDeAllocated"
 					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalDeAllocatedToday(userLogin);}"
 					type="BigDecimal" />
@@ -518,22 +518,22 @@
 					type="BigDecimal" />
 				<!-- set field="tellerBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getTotalBalanceForDestinationTreasury(destinationTreasury, transferDate);}" type="BigDecimal"/>
           		<set field="bdTotalOpeningBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getOpeningBalance(destinationTreasury, transferDate);}" type="BigDecimal"/-->
-				
-					
+
+
 				<set field="totalCashWithdrawal"
 					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalCashWithdrawalToday(userLogin);}"
 					type="BigDecimal" />
 				<set field="totalCashDeposit"
 					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalCashDepositToday(userLogin);}"
 					type="BigDecimal" />
-					
-					
+
+
 				<set field="totalLoanCashPayment" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalLoanCashDepositToday(userLogin);}" type="BigDecimal"/>
 					<set field="bdTotalOpeningBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getOpeningBalance(userLogin);}" type="BigDecimal"/>
-					
+
 				<set field="amTeller" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.hasTellerAssigned(userLogin);}" type="Boolean"/>
-				
-				
+
+
 				<set field="treasuryId"	value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTreasuryId(userLogin);}" type="String" />
 			</actions>
 			<widgets>
@@ -542,12 +542,12 @@
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<section>
-							
+
 							<condition>
 								<!-- if-has-permission permission="ACCOUNTHOLDER"
 									action="_CREATE" / -->
 								<if-compare operator="equals" value="true" field="amTeller" type="Boolean"/>
-								
+
 							</condition>
 							<widgets>
 								<screenlet>
@@ -559,7 +559,7 @@
 												<label style="h3"> Today Transactions</label>
 												<label style="h3"> Total Available (Opening Balance + Transfer In - Transfer Out + Deposits -
 													Withdrawals) : Kshs. ${tellerBalance}</label>
-												
+
 												<label style="h3"> Opening Balance  : KShs. ${bdTotalOpeningBalance}</label>
 
 												<label style="h3"> Transfer In : KShs.
@@ -570,7 +570,7 @@
 													${totalCashWithdrawal}</label>
 												<label style="h3"> Total Deposits : KShs.
 													${totalCashDeposit}</label>
-												
+
 												<label style="h3"> Total Cash Loan Payment : KShs.
 													${totalLoanCashPayment}</label>
 											</container>
@@ -613,7 +613,7 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createLoanRepayment" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
 					property="KEN" default="KEN"/ -->
 				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
 
@@ -621,7 +621,7 @@
 				<!-- entity-one entity-name="AccountTransaction" value-field="accountTransactionContext"/ -->
 
 				<entity-one entity-name="LoanRepayment" value-field="loanRepaymentContext" />
-				
+
 							<set field="assignee"
 					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTelleAssignee(userLogin);}"
 					type="String" />
@@ -631,8 +631,8 @@
 				<set field="bdTotalAllocated"
 					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalAllocated(userLogin);}"
 					type="BigDecimal" />
-					
-				
+
+
 				<set field="bdTotalDeAllocated"
 					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalDeAllocatedToday(userLogin);}"
 					type="BigDecimal" />
@@ -643,22 +643,22 @@
 					type="BigDecimal" />
 				<!-- set field="tellerBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getTotalBalanceForDestinationTreasury(destinationTreasury, transferDate);}" type="BigDecimal"/>
           		<set field="bdTotalOpeningBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getOpeningBalance(destinationTreasury, transferDate);}" type="BigDecimal"/-->
-				
-					
+
+
 				<set field="totalCashWithdrawal"
 					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalCashWithdrawalToday(userLogin);}"
 					type="BigDecimal" />
 				<set field="totalCashDeposit"
 					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalCashDepositToday(userLogin);}"
 					type="BigDecimal" />
-					
-					
+
+
 				<set field="totalLoanCashPayment" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalLoanCashDepositToday(userLogin);}" type="BigDecimal"/>
 					<set field="bdTotalOpeningBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getOpeningBalance(userLogin);}" type="BigDecimal"/>
-					
+
 				<set field="amTeller" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.hasTellerAssigned(userLogin);}" type="Boolean"/>
-				
-				
+
+
 				<set field="treasuryId"	value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTreasuryId(userLogin);}" type="String" />
 			</actions>
 			<widgets>
@@ -667,12 +667,12 @@
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<section>
-							
+
 							<condition>
 								<!-- if-has-permission permission="ACCOUNTHOLDER"
 									action="_CREATE" / -->
 								<if-compare operator="equals" value="true" field="amTeller" type="Boolean"/>
-								
+
 							</condition>
 							<widgets>
 								<screenlet>
@@ -684,7 +684,7 @@
 												<label style="h3"> Today Transactions</label>
 												<label style="h3"> Total Available (Opening Balance + Transfer In - Transfer Out + Deposits -
 													Withdrawals) : Kshs. ${tellerBalance}</label>
-												
+
 												<label style="h3"> Opening Balance  : KShs. ${bdTotalOpeningBalance}</label>
 
 												<label style="h3"> Transfer In : KShs.
@@ -695,7 +695,7 @@
 													${totalCashWithdrawal}</label>
 												<label style="h3"> Total Deposits : KShs.
 													${totalCashDeposit}</label>
-												
+
 												<label style="h3"> Total Cash Loan Payment : KShs.
 													${totalLoanCashPayment}</label>
 											</container>
@@ -740,7 +740,7 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createLoanAccountsRepayment" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
 					property="KEN" default="KEN"/ -->
 				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
 
@@ -776,14 +776,14 @@
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<section>
-							
+
 							<condition>
 								<!-- if-has-permission permission="ACCOUNTHOLDER"
 									action="_CREATE" / -->
 								<if-compare operator="equals" value="true" field="amTeller" type="Boolean"/>
 							</condition>
 							<widgets>
-								<!-- screenlet title="Accounts"> <include-form location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml" 
+								<!-- screenlet title="Accounts"> <include-form location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"
 									name="listMemberAccount"/> </screenlet -->
 								<screenlet>
 									<section>
@@ -846,7 +846,7 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createApplyStandingOrder" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
 					property="KEN" default="KEN"/ -->
 				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
 
@@ -878,14 +878,14 @@
 					location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<section>
-							
+
 							<condition>
 								<!-- if-has-permission permission="ACCOUNTHOLDER"
 									action="_CREATE" / -->
 								<if-compare operator="equals" value="true" field="amTeller" type="Boolean"/>
 							</condition>
 							<widgets>
-								<!-- screenlet title="Accounts"> <include-form location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml" 
+								<!-- screenlet title="Accounts"> <include-form location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"
 									name="listMemberAccount"/> </screenlet -->
 								<screenlet>
 									<section>
@@ -945,7 +945,7 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createChequeType" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
 					property="KEN" default="KEN"/ -->
 				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
 
@@ -998,7 +998,7 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createATMTransactionsLog" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
 					property="KEN" default="KEN"/ -->
 				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
 
@@ -1034,7 +1034,7 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createChequeSetup" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
 					property="KEN" default="KEN"/ -->
 				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
 
@@ -1085,7 +1085,7 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createStationDeposit" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
 					property="KEN" default="KEN"/ -->
 				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
 
@@ -1141,7 +1141,7 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createCodesSetup" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
 					property="KEN" default="KEN"/ -->
 				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
 
@@ -1198,7 +1198,7 @@
 				<set field="target" value="createExpectedPaymentStations" />
 				<set field="stationExpectationCtx" from-field="parameters" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
 					property="KEN" default="KEN"/ -->
 				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
 
@@ -1213,10 +1213,10 @@
 						<include-menu
 							location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsMenus.xml"
 							name="expectedPaymentsTabBar" />
-						<!-- section> <condition> <if-has-permission permission="ACCOUNTHOLDER" 
-							action="_CREATE"/> </condition> <widgets> <screenlet title="Station Deposit"> 
-							<include-form name="stationDeposit" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/> 
-							</screenlet> </widgets> <fail-widgets> <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label> 
+						<!-- section> <condition> <if-has-permission permission="ACCOUNTHOLDER"
+							action="_CREATE"/> </condition> <widgets> <screenlet title="Station Deposit">
+							<include-form name="stationDeposit" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+							</screenlet> </widgets> <fail-widgets> <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
 							</fail-widgets> </section -->
 						<section>
 							<widgets>
@@ -1275,7 +1275,7 @@
 				<set field="target" value="createReceivedPaymentStation" />
 				<set field="stationExpectationCtx" from-field="parameters" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
 					property="KEN" default="KEN"/ -->
 				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
 
@@ -1290,10 +1290,10 @@
 						<include-menu
 							location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsMenus.xml"
 							name="expectedPaymentsTabBar" />
-						<!-- section> <condition> <if-has-permission permission="ACCOUNTHOLDER" 
-							action="_CREATE"/> </condition> <widgets> <screenlet title="Station Deposit"> 
-							<include-form name="stationDeposit" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/> 
-							</screenlet> </widgets> <fail-widgets> <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label> 
+						<!-- section> <condition> <if-has-permission permission="ACCOUNTHOLDER"
+							action="_CREATE"/> </condition> <widgets> <screenlet title="Station Deposit">
+							<include-form name="stationDeposit" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+							</screenlet> </widgets> <fail-widgets> <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
 							</fail-widgets> </section -->
 <!-- ExpectedPaymentReceivedAll -->
 						<section name="Received Stations">
@@ -1342,13 +1342,13 @@
 						<section>
 							<!-- do check for PARTYMGR, _VIEW permission -->
 							<condition>
-								<!-- if-service-permission service-name="partyBasePermissionCheck" 
+								<!-- if-service-permission service-name="partyBasePermissionCheck"
 									main-action="VIEW"/ -->
 								<if-has-permission permission="ACCOUNTHOLDER"
 									action="_VIEW" />
 							</condition>
 							<widgets>
-								<!-- platform-specific> <html><html-template location="component://party/webapp/partymgr/party/listsaccomembers.ftl"/></html> 
+								<!-- platform-specific> <html><html-template location="component://party/webapp/partymgr/party/listsaccomembers.ftl"/></html>
 									</platform-specific -->
 								<screenlet title="Search Members">
 									<include-form name="FindMember"
@@ -1379,7 +1379,7 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createAccountHolderTransactionSetup" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
 					property="KEN" default="KEN"/ -->
 				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
 
@@ -1430,7 +1430,7 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="postUnpostedCheques" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
 					property="KEN" default="KEN"/ -->
 				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
 
@@ -1452,12 +1452,12 @@
 											<container>
 												<label style="h3">POST Unposted Cheques (End Of Day or
 													Start Of Day Process)</label>
-												<!-- label style="h3">Product(Loan Type) : ${loanProduct.name} 
-													- ${loanProduct.code}</label> <label style="h3">Amount : KES ${loanApplication.loanAmt}</label> 
-													<label style="h3">Interest(P.M.) : ${loanApplication.interestRatePM}</label> 
-													<label style="h3">Repayment(Months) : ${loanApplication.repaymentPeriod}</label> 
-													<label style="h3">Deduction Method : ${loanProduct.deductionType}</label> 
-													<label style="h3">Per Month Repayment : KES ${loanApplication.monthlyRepayment}</label> 
+												<!-- label style="h3">Product(Loan Type) : ${loanProduct.name}
+													- ${loanProduct.code}</label> <label style="h3">Amount : KES ${loanApplication.loanAmt}</label>
+													<label style="h3">Interest(P.M.) : ${loanApplication.interestRatePM}</label>
+													<label style="h3">Repayment(Months) : ${loanApplication.repaymentPeriod}</label>
+													<label style="h3">Deduction Method : ${loanProduct.deductionType}</label>
+													<label style="h3">Per Month Repayment : KES ${loanApplication.monthlyRepayment}</label>
 													<label style="h3">Total Repayment : KES ${loanApplication.totalRepayment}</label -->
 
 											</container>
@@ -1478,7 +1478,7 @@
 												</link>
 											</container>
 										</widgets>
-										<!-- fail-widgets> <container style="button-bar"> <label style="h3"> 
+										<!-- fail-widgets> <container style="button-bar"> <label style="h3">
 											Waiting for Disbursement to Generate Schedule</label> </container> </fail-widgets -->
 									</section>
 								</screenlet>
@@ -1524,7 +1524,7 @@
 				<set field="target" value="generateLoansRepaymentExpected" />
 				<set field="loanExpectationCtx" from-field="parameters" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
 					property="KEN" default="KEN"/ -->
 				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
 
@@ -1546,12 +1546,12 @@
 											<container>
 												<label style="h3">Generate Loans Repayment Expected (Charge
 													Interest)</label>
-												<!-- label style="h3">Product(Loan Type) : ${loanProduct.name} 
-													- ${loanProduct.code}</label> <label style="h3">Amount : KES ${loanApplication.loanAmt}</label> 
-													<label style="h3">Interest(P.M.) : ${loanApplication.interestRatePM}</label> 
-													<label style="h3">Repayment(Months) : ${loanApplication.repaymentPeriod}</label> 
-													<label style="h3">Deduction Method : ${loanProduct.deductionType}</label> 
-													<label style="h3">Per Month Repayment : KES ${loanApplication.monthlyRepayment}</label> 
+												<!-- label style="h3">Product(Loan Type) : ${loanProduct.name}
+													- ${loanProduct.code}</label> <label style="h3">Amount : KES ${loanApplication.loanAmt}</label>
+													<label style="h3">Interest(P.M.) : ${loanApplication.interestRatePM}</label>
+													<label style="h3">Repayment(Months) : ${loanApplication.repaymentPeriod}</label>
+													<label style="h3">Deduction Method : ${loanProduct.deductionType}</label>
+													<label style="h3">Per Month Repayment : KES ${loanApplication.monthlyRepayment}</label>
 													<label style="h3">Total Repayment : KES ${loanApplication.totalRepayment}</label -->
 
 											</container>
@@ -1590,7 +1590,7 @@
 												</link>
 											</container>
 										</widgets>
-										<!-- fail-widgets> <container style="button-bar"> <label style="h3"> 
+										<!-- fail-widgets> <container style="button-bar"> <label style="h3">
 											Waiting for Disbursement to Generate Schedule</label> </container> </fail-widgets -->
 									</section>
 								</screenlet>
@@ -1605,8 +1605,8 @@
 									<include-form name="unpaidExpectedPayments"
 										location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml" />
 								</screenlet>
-								<!-- screenlet title="Paid Expected Payments"> <include-form name="unposteddepositedcheques" 
-									location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/> 
+								<!-- screenlet title="Paid Expected Payments"> <include-form name="unposteddepositedcheques"
+									location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
 									</screenlet -->
 
 							</widgets>
@@ -1641,7 +1641,7 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createExpectedPayment" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
 					property="KEN" default="KEN"/ -->
 				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
 
@@ -1756,7 +1756,7 @@
 				<entity-one entity-name="ExpectedPayment" value-field="expectedPaymentContext" />
 			</actions>
 			<widgets>
-				<!-- decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml"> 
+				<!-- decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
 					<decorator-section name="body" -->
 				<section name="search-results">
 					<widgets>
@@ -1783,7 +1783,7 @@
 				<set field="target" value="createExpectedPaymentSent" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
 				<set field="expectedPaymentBreakdownCtx" from-field="parameters" />
-				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
 					property="KEN" default="KEN"/ -->
 				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
 				<set field="employerCode" from-field="parameters.employerCode"></set>
@@ -1811,10 +1811,10 @@
 						<include-menu
 							location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsMenus.xml"
 							name="expectedPaymentsTabBar" />
-						<!-- section> <condition> <if-has-permission permission="ACCOUNTHOLDER" 
-							action="_CREATE"/> </condition> <widgets> <screenlet title="Expected Payment"> 
-							<include-form name="NewExpectedPayment" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/> 
-							</screenlet> </widgets> <fail-widgets> <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label> 
+						<!-- section> <condition> <if-has-permission permission="ACCOUNTHOLDER"
+							action="_CREATE"/> </condition> <widgets> <screenlet title="Expected Payment">
+							<include-form name="NewExpectedPayment" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+							</screenlet> </widgets> <fail-widgets> <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
 							</fail-widgets> </section -->
 						<section>
 							<widgets>
@@ -1859,10 +1859,10 @@
 									<include-form name="listExpectedPaymentSentBreakdown"
 										location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml" />
 								</screenlet>
-								
-								
+
+
 																<screenlet>
-									<!-- include-form name="listExpectedPaymentReceivedBreakdownTotals" 
+									<!-- include-form name="listExpectedPaymentReceivedBreakdownTotals"
 										location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/ -->
 									<section>
 										<widgets>
@@ -1899,7 +1899,7 @@
 				<set field="target" value="createExpectedPaymentReceived" />
 				<set field="receivedPaymentBreakdownCtx" from-field="parameters" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
 					property="KEN" default="KEN"/ -->
 				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
 				<set field="employerCode" from-field="parameters.employerCode"></set>
@@ -1926,7 +1926,7 @@
 				<set field="chequeValueEqual" global="true"
 					value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.remittedEqualsCheque(employerCode, month);}"
 					type="Boolean" />
-					
+
 				<set field="stationProcessed" value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.stationProcessed(employerCode, month);}" type="Boolean"/>
 				<entity-one entity-name="ExpectedPaymentReceived"
 					value-field="expectedPaymentReceivedContext" />
@@ -1938,10 +1938,10 @@
 						<include-menu
 							location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsMenus.xml"
 							name="expectedPaymentsTabBar" />
-						<!-- section> <condition> <if-has-permission permission="ACCOUNTHOLDER" 
-							action="_CREATE"/> </condition> <widgets> <screenlet title="Expected Payment"> 
-							<include-form name="NewExpectedPayment" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/> 
-							</screenlet> </widgets> <fail-widgets> <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label> 
+						<!-- section> <condition> <if-has-permission permission="ACCOUNTHOLDER"
+							action="_CREATE"/> </condition> <widgets> <screenlet title="Expected Payment">
+							<include-form name="NewExpectedPayment" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+							</screenlet> </widgets> <fail-widgets> <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
 							</fail-widgets> </section -->
 						<section>
 
@@ -1960,22 +1960,22 @@
 									<section>
 
 										<condition>
-											<!-- if-compare-field operator="equals" field="totalRemitted" 
+											<!-- if-compare-field operator="equals" field="totalRemitted"
 												to-field="totalChequeAmount" type="BigDecimal"/ -->
 											<if-compare-field operator="equals"
 												field="chequeValueEqual" to-field="valueEqual" type="Boolean" />
 
-											<!-- if-compare-field operator="greater-equals" field="totalChequeAmount" 
+											<!-- if-compare-field operator="greater-equals" field="totalChequeAmount"
 												field="totalExpected"/ -->
 
 										</condition>
 										<widgets>
 
 											<container style="button-bar">
-												<!-- link target="receivedPaymentBreakdownpdf" text="Print Received 
-													Payment Breakdown" style="buttontext"> <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/> 
-													</link> <link target="receivedPaymentBreakdowncsv" text="Generate Received 
-													Payment Breakdown CSV" style="buttontext"> <image url-mode="raw" src="${iconsLocation}/page_excel.png"/> 
+												<!-- link target="receivedPaymentBreakdownpdf" text="Print Received
+													Payment Breakdown" style="buttontext"> <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
+													</link> <link target="receivedPaymentBreakdowncsv" text="Generate Received
+													Payment Breakdown CSV" style="buttontext"> <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
 													</link -->
 												<!-- ?month=${month}&amp;employerCode=${employerCode} -->
 												<link
@@ -1984,7 +1984,7 @@
 													<parameter param-name="month"/>
 													<parameter param-name="employerCode"/>
 													<image url-mode="raw" src="${iconsLocation}/add.png" />
-													
+
 												</link>
 
 											</container>
@@ -1997,7 +1997,7 @@
 										</fail-widgets>
 
 									</section>
-									
+
 									<!-- Remove Pulled / Imported Received Remittance -->
 																		<section>
 
@@ -2014,7 +2014,7 @@
 													<parameter param-name="month"/>
 													<parameter param-name="employerCode"/>
 													<image url-mode="raw" src="${iconsLocation}/add.png" />
-													
+
 												</link>
 
 											</container>
@@ -2060,7 +2060,7 @@
 								</screenlet>
 
 								<screenlet>
-									<!-- include-form name="listExpectedPaymentReceivedBreakdownTotals" 
+									<!-- include-form name="listExpectedPaymentReceivedBreakdownTotals"
 										location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/ -->
 									<section>
 										<widgets>
@@ -2138,7 +2138,7 @@
 					value-field="expectedPaymentSentContext" />
 			</actions>
 			<widgets>
-				<!-- decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml"> 
+				<!-- decorator-screen name="FoReportDecorator" location="component://common/widget/CommonScreens.xml">
 					<decorator-section name="body" -->
 				<section name="search-results">
 					<widgets>
@@ -2176,13 +2176,13 @@
 						<section>
 							<!-- do check for PARTYMGR, _VIEW permission -->
 							<condition>
-								<!-- if-service-permission service-name="partyBasePermissionCheck" 
+								<!-- if-service-permission service-name="partyBasePermissionCheck"
 									main-action="VIEW"/ -->
 								<if-has-permission permission="ACCOUNTHOLDER"
 									action="_VIEW" />
 							</condition>
 							<widgets>
-								<!-- platform-specific> <html><html-template location="component://party/webapp/partymgr/party/listsaccomembers.ftl"/></html> 
+								<!-- platform-specific> <html><html-template location="component://party/webapp/partymgr/party/listsaccomembers.ftl"/></html>
 									</platform-specific -->
 								<screenlet title="Search Members">
 									<include-form name="remittanceByMember"
@@ -2214,7 +2214,7 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createExpectedPaymentReceived" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
 					property="KEN" default="KEN"/ -->
 				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
 				<set field="stationNumber" from-field="parameters.stationNumber"></set>
@@ -2243,10 +2243,10 @@
 						<include-menu
 							location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsMenus.xml"
 							name="expectedPaymentsTabBar" />
-						<!-- section> <condition> <if-has-permission permission="ACCOUNTHOLDER" 
-							action="_CREATE"/> </condition> <widgets> <screenlet title="Expected Payment"> 
-							<include-form name="NewExpectedPayment" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/> 
-							</screenlet> </widgets> <fail-widgets> <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label> 
+						<!-- section> <condition> <if-has-permission permission="ACCOUNTHOLDER"
+							action="_CREATE"/> </condition> <widgets> <screenlet title="Expected Payment">
+							<include-form name="NewExpectedPayment" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+							</screenlet> </widgets> <fail-widgets> <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
 							</fail-widgets> </section -->
 
 						<section>
@@ -2277,7 +2277,7 @@
 								</screenlet>
 
 								<screenlet>
-									<!-- include-form name="listExpectedPaymentReceivedBreakdownTotals" 
+									<!-- include-form name="listExpectedPaymentReceivedBreakdownTotals"
 										location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/ -->
 									<section>
 										<widgets>
@@ -2306,7 +2306,7 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="transactionPrintOut" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
 					property="KEN" default="KEN"/ -->
 				<set field="accountTransactionParentId" from-field="parameters.accountTransactionParentId" />
 
@@ -2331,7 +2331,7 @@
 			</widgets>
 		</section>
 	</screen>
-	
+
 	<!-- transactionPrintOutDirectDebit -->
 		<screen name="transactionPrintOutDirectDebit">
 		<section>
@@ -2341,7 +2341,7 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="transactionPrintOutDirectDebit" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
 					property="KEN" default="KEN"/ -->
 				<set field="accountTransactionParentId" from-field="parameters.accountTransactionParentId" />
 
@@ -2366,8 +2366,8 @@
 			</widgets>
 		</section>
 	</screen>
-	
-	
+
+
 	<!-- loanRepaymentPrintOut -->
 		<screen name="loanRepaymentPrintOut">
 		<section>
@@ -2377,7 +2377,7 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="loanRepaymentPrintOut" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
 					property="KEN" default="KEN"/ -->
 				<set field="acctgTransId" from-field="parameters.acctgTransId" />
 
@@ -2413,7 +2413,7 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createMsaccoTransactionsLog" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
 					property="KEN" default="KEN"/ -->
 				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
 
@@ -2425,6 +2425,12 @@
 					location="${parameters.mainDecoratorLocation}">
 
 					<decorator-section name="body">
+					<decorator-section name="search-options">
+						<screenlet title="MSacco Transactions Log Search">
+              <include-form name="FindMsaccoTransactionsLog"
+              	location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+            </screenlet>
+           </decorator-section>
 						<section name="search-results">
 							<widgets>
 								<screenlet title="MSacco Transactions Log">
@@ -2450,7 +2456,7 @@
 				<set field="target" value="createMissingMemberLog" />
 				<set field="missingMemberLogCtx" from-field="parameters" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
 					property="KEN" default="KEN"/ -->
 				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
 
@@ -2465,10 +2471,10 @@
 						<include-menu
 							location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsMenus.xml"
 							name="expectedPaymentsTabBar" />
-						<!-- section> <condition> <if-has-permission permission="ACCOUNTHOLDER" 
-							action="_CREATE"/> </condition> <widgets> <screenlet title="Station Deposit"> 
-							<include-form name="stationDeposit" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/> 
-							</screenlet> </widgets> <fail-widgets> <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label> 
+						<!-- section> <condition> <if-has-permission permission="ACCOUNTHOLDER"
+							action="_CREATE"/> </condition> <widgets> <screenlet title="Station Deposit">
+							<include-form name="stationDeposit" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+							</screenlet> </widgets> <fail-widgets> <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
 							</fail-widgets> </section -->
 
 
