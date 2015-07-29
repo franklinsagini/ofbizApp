@@ -224,6 +224,7 @@ public class AccHolderTransactionServices {
 	public static List<Long> getMemberAccountIdsWithdrawable(Long partyId) {
 		List<Long> listMemberAccountId = new ArrayList<Long>();
 
+		Long accountProductId = LoanUtilities.getAccountProductIdGivenCodeId(SAVINGS_ACCOUNT_CODE);
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		List<GenericValue> memberAccountELI = null;
 		
@@ -231,8 +232,8 @@ public class AccHolderTransactionServices {
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"partyId", EntityOperator.EQUALS,
 						partyId), EntityCondition
-						.makeCondition("withdrawable",
-								EntityOperator.EQUALS, "Yes")),
+						.makeCondition("accountProductId",
+								EntityOperator.EQUALS, accountProductId)),
 						EntityOperator.AND);
 		
 		try {
@@ -1947,6 +1948,12 @@ public class AccHolderTransactionServices {
 
 					|| ((transactionType != null) && (transactionType
 							.equals("VISAWITHDRAW")))
+					|| ((transactionType != null) && (transactionType
+							.equals("VISAWITHDRAWAL")))
+					|| ((transactionType != null) && (transactionType
+							.equals("POSWITHDRAWAL")))
+							
+							
 
 					|| ((transactionType != null) && (transactionType
 							.equals("MSACCOWITHDRAWAL")))
@@ -2073,6 +2080,11 @@ public class AccHolderTransactionServices {
 
 					|| ((transactionType != null) && (transactionType
 							.equals("VISAWITHDRAW")))
+						
+					|| ((transactionType != null) && (transactionType
+							.equals("VISAWITHDRAWAL")))
+					|| ((transactionType != null) && (transactionType
+							.equals("POSWITHDRAWAL")))
 
 					|| ((transactionType != null) && (transactionType
 							.equals("MSACCOWITHDRAWAL")))
@@ -2200,6 +2212,11 @@ public class AccHolderTransactionServices {
 
 					|| ((transactionType != null) && (transactionType
 							.equals("VISAWITHDRAW")))
+							
+					|| ((transactionType != null) && (transactionType
+							.equals("VISAWITHDRAWAL")))
+					|| ((transactionType != null) && (transactionType
+							.equals("POSWITHDRAWAL")))
 
 					|| ((transactionType != null) && (transactionType
 							.equals("MSACCOWITHDRAWAL")))
@@ -2347,6 +2364,11 @@ public class AccHolderTransactionServices {
 
 					|| ((transactionType != null) && (transactionType
 							.equals("VISAWITHDRAW")))
+							
+										|| ((transactionType != null) && (transactionType
+							.equals("VISAWITHDRAWAL")))
+					|| ((transactionType != null) && (transactionType
+							.equals("POSWITHDRAWAL")))
 
 					|| ((transactionType != null) && (transactionType
 							.equals("MSACCOWITHDRAWAL")))
@@ -2474,6 +2496,11 @@ public class AccHolderTransactionServices {
 
 					|| ((transactionType != null) && (transactionType
 							.equals("VISAWITHDRAW")))
+							
+					|| ((transactionType != null) && (transactionType
+							.equals("VISAWITHDRAWAL")))
+					|| ((transactionType != null) && (transactionType
+							.equals("POSWITHDRAWAL")))
 
 					|| ((transactionType != null) && (transactionType
 							.equals("MSACCOWITHDRAWAL")))
@@ -2592,6 +2619,11 @@ public class AccHolderTransactionServices {
 
 					|| ((transactionType != null) && (transactionType
 							.equals("VISAWITHDRAW")))
+							
+					|| ((transactionType != null) && (transactionType
+							.equals("VISAWITHDRAWAL")))
+					|| ((transactionType != null) && (transactionType
+							.equals("POSWITHDRAWAL")))
 
 					|| ((transactionType != null) && (transactionType
 							.equals("MSACCOWITHDRAWAL")))
@@ -7803,9 +7835,13 @@ public class AccHolderTransactionServices {
 	/****
 	 * Reverse ATM Transaction
 	 * */
-	public static String reverseATMTransaction(String SystemTrace) {
+	public static String reverseATMTransaction(String SystemTrace, String sourceTransactionType, String reverseTransactionType) {
 		
-		
+		/****
+		 * sourceTransactionType ATMWITHDRAWAL, VISAWITHRAWAL
+		 *reverseTransactionType  ATMWITHDRAWALWITHDRAWAL, VISAWITHDRAWALREVERSAL
+		 * 
+		 * */
 		
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		
@@ -7815,7 +7851,7 @@ public class AccHolderTransactionServices {
 						"systemtrace", EntityOperator.EQUALS,
 						SystemTrace), EntityCondition
 						.makeCondition("transactionType",
-								EntityOperator.EQUALS, "ATMWITHDRAWAL")),
+								EntityOperator.EQUALS, sourceTransactionType)),
 						EntityOperator.AND);
 		List<GenericValue> withdrawalTransactionELI = null; 
 		try {
@@ -7841,7 +7877,7 @@ public class AccHolderTransactionServices {
 						"systemtrace", EntityOperator.EQUALS,
 						SystemTrace), EntityCondition
 						.makeCondition("transactionType",
-								EntityOperator.EQUALS, "ATMWITHDRAWALREVERSAL")),
+								EntityOperator.EQUALS, reverseTransactionType)),
 						EntityOperator.AND);
 		List<GenericValue> accountWithdrawalTransactionELI = null; 
 		try {
@@ -7902,7 +7938,7 @@ public class AccHolderTransactionServices {
 
 			accountTransactionId = delegator.getNextSeqId("AccountTransaction");
 			accountTransaction.setString("transactionType",
-					"ATMWITHDRAWALREVERSAL");
+					reverseTransactionType);
 			accountTransaction.setString("increaseDecrease", "I");
 			accountTransaction.setString("acctgTransId", newacctgTransId);
 			accountTransaction.setString("systemtrace",

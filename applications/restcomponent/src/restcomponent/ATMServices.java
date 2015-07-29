@@ -284,35 +284,6 @@ public class ATMServices {
 		//Set the increaseDecrease to Reversed
 		//AccountTransaction
 		
-	//		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-	//		List<GenericValue> accountTransactionELI = null;
-	//		EntityConditionList<EntityExpr> accountTransactionConditions = EntityCondition
-	//				.makeCondition(UtilMisc.toList(EntityCondition
-	//						.makeCondition("accountTransactionParentId",
-	//								EntityOperator.EQUALS, transactionId)),
-	//						EntityOperator.AND);
-	//
-	//		try {
-	//			accountTransactionELI = delegator.findList("AccountTransaction",
-	//					accountTransactionConditions, null, null, null, false);
-	//
-	//		} catch (GenericEntityException e2) {
-	//			e2.printStackTrace();
-	//		}
-	//		GenericValue accountTransaction = null;
-	//		String accountTransactionId = delegator.getNextSeqId("AccountTransaction");
-	//		for (GenericValue genericValue : accountTransactionELI) {
-	//			
-	//			accountTransaction = genericValue;
-	//			accountTransaction.set("accountTransactionId", accountTransactionId);
-	//			accountTransaction.set("increaseDecrease", "I");
-	//			accountTransaction.set("transactionType", "ATMWITHDRAWALREVERSAL");
-	//			try {
-	//				delegator.createOrStore(accountTransaction);
-	//			} catch (GenericEntityException e) {
-	//				e.printStackTrace();
-	//			}
-	//		}
 		
 		GenericValue accountTransaction = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -342,7 +313,7 @@ public class ATMServices {
 //			e.printStackTrace();
 //		}
 		//AccHolderTransactionServices.cashWithdrawalATMReversal(accountTransaction, userLogin, "ATMWITHDRAWALREVERSAL", SystemTrace);
-		String reverseStatus = AccHolderTransactionServices.reverseATMTransaction(SystemTrace);
+		String reverseStatus = AccHolderTransactionServices.reverseATMTransaction(SystemTrace, "ATMWITHDRAWAL", "ATMWITHDRAWALREVERSAL");
 		//Reverse GL
 		
 		//Now build the transaction and return it as json
@@ -428,8 +399,12 @@ public class ATMServices {
 			System.out.println("AAAAAAAAAAAAA Account ID " + memberAccountId);
 
 			// Check if Member Has Enough Money - Limit, charges
+			
+			//transaction = AccHolderTransactionServices.cashWithdrawal(amount,
+			//		String.valueOf(memberAccountId), "VISAWITHDRAW");
+			
 			transaction = AccHolderTransactionServices.cashWithdrawal(amount,
-					String.valueOf(memberAccountId), "VISAWITHDRAW");
+					String.valueOf(memberAccountId), "VISAWITHDRAWAL", SystemTrace);
 			// transaction.setStatus("NOTENOUGHMONEY");
 			// transaction.setStatus(atmStatus.getStatus());
 			transaction.setCardNumber(cardNumber);
@@ -480,8 +455,11 @@ public class ATMServices {
 			System.out.println("AAAAAAAAAAAAA Account ID " + memberAccountId);
 
 			// Check if Member Has Enough Money - Limit, charges
+//			transaction = AccHolderTransactionServices.cashWithdrawal(amount,
+//					String.valueOf(memberAccountId), "POSCASHPURCHASE");
+			
 			transaction = AccHolderTransactionServices.cashWithdrawal(amount,
-					String.valueOf(memberAccountId), "POSCASHPURCHASE");
+					String.valueOf(memberAccountId), "POSWITHDRAWAL", SystemTrace);
 			// transaction.setStatus("NOTENOUGHMONEY");
 			// transaction.setStatus(atmStatus.getStatus());
 			transaction.setCardNumber(cardNumber);
@@ -615,5 +593,223 @@ public class ATMServices {
 
 		return Response.ok(json).type("application/json").build();
 	}
+	
+	
+	/****
+	 * VISAWITHDRAWAL REVERSAL
+	 * */
+	@GET
+	@Produces("application/json")
+	@Path("/reversevisawithdrawal/{cardNumber}/{amount}/{SystemTrace}/{transactionId}")
+	public Response reversevisawithdrawal(@PathParam("cardNumber") String cardNumber,
+			@PathParam("amount") BigDecimal amount,
+			@PathParam("SystemTrace") String SystemTrace,
+			@PathParam("transactionId") String transactionId) {
+		//Get all the Account Transaction Items, given the transactionId and
+		//Set the increaseDecrease to Reversed
+		//AccountTransaction
+		
+		
+		GenericValue accountTransaction = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		GenericValue cardApplication = ATMManagementServices.getMemberATMApplication(cardNumber);
+		String memberAccountId = cardApplication.getString("memberAccountId");
+		accountTransaction = delegator.makeValue("AccountTransaction");
+		String accountTransactionId = delegator.getNextSeqId("AccountTransaction");
+		accountTransaction
+				.put("memberAccountId", Long.valueOf(memberAccountId));
+		accountTransaction.put("transactionAmount", amount);
+		accountTransaction.set("accountTransactionId", accountTransactionId);
+		accountTransaction.set("increaseDecrease", "I");
+		accountTransaction.set("transactionType", "VISAWITHDRAWALREVERSAL");
+
+
+		Map<String, String> userLogin = new HashMap<String, String>();
+		userLogin.put("userLoginId", "admin");
+		accountTransaction.setString("createdBy", userLogin.get("userLoginId"));
+		
+		GenericValue memberAccount = LoanUtilities.getEntityValue("MemberAccount", "memberAccountId", Long.valueOf(memberAccountId));
+		accountTransaction.set("partyId", memberAccount.getLong("partyId"));
+		
+//		try {
+//			delegator.createOrStore(accountTransaction);
+//		} catch (GenericEntityException e) {
+//			e.printStackTrace();
+//		}
+		//AccHolderTransactionServices.cashWithdrawalATMReversal(accountTransaction, userLogin, "ATMWITHDRAWALREVERSAL", SystemTrace);
+		String reverseStatus = AccHolderTransactionServices.reverseATMTransaction(SystemTrace, "VISAWITHDRAWAL", "VISAWITHDRAWALREVERSAL");
+		//Reverse GL
+		
+		//Now build the transaction and return it as json
+		
+		BigDecimal bdBalance = null;
+		BigDecimal bdAvailableBalance = null;
+		BigDecimal bdBookBalance = null;
+
+		ATMStatus atmStatus = ATMManagementServices.getATMAccount(cardNumber);
+		ATMTransaction transaction = new ATMTransaction();
+		transaction.setCardNumber(cardNumber);
+		if (atmStatus.getStatus().equals("SUCCESS")) {
+			bdBalance = AccHolderTransactionServices.getTotalBalance(String
+					.valueOf(atmStatus.getCardApplication().getLong(
+							"memberAccountId")), new Timestamp(Calendar
+					.getInstance().getTimeInMillis()));
+		}
+
+		if (bdBalance != null) {
+			// transaction.setAmount(bdBalance);
+			bdAvailableBalance = AccHolderTransactionServices
+					.getAvailableBalanceVer3(memberAccountId, new Timestamp(
+							Calendar.getInstance().getTimeInMillis()));
+			transaction.setAvailableBalance(bdAvailableBalance);
+			bdBookBalance = AccHolderTransactionServices
+					.getBookBalanceVer3(memberAccountId, delegator);
+			transaction.setBookBalance(bdBookBalance);
+					
+			transaction.setAvailableBalance(bdAvailableBalance);
+			transaction.setBookBalance(bdBookBalance);
+			transaction.setCardStatusId(atmStatus.getCardStatusId());
+			transaction.setCardStatus(atmStatus.getCardStatus());
+			transaction.setStatus(atmStatus.getStatus());
+			memberAccount = AccHolderTransactionServices
+					.getMemberAccount(atmStatus.getCardApplication().getLong(
+							"memberAccountId"));
+			transaction.setMemberAccountId(memberAccount
+					.getLong("memberAccountId"));
+			transaction.setAccountNo(memberAccount.getString("accountNo"));
+			transaction.setAccountName(memberAccount.getString("accountName"));
+			System.out.println("AAAAAAAAAAAAAAAAVVVVVVVVVVVV --- "
+					+ bdAvailableBalance);
+			System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBBBB ---- "
+					+ bdBookBalance);
+		}
+		if (reverseStatus.equals("success"))
+		{
+			transaction.setStatus(atmStatus.getStatus());
+		} else if (reverseStatus.equals("notransaction")){
+			transaction.setStatus("NOTRANSACTION");
+		} else if (reverseStatus.equals("reversed")){
+			transaction.setStatus("REVRESEDALREADY");
+		}
+		
+
+		System.out.println("ATM REVERSAL TRANSACTION ---- " + transaction.toString());
+		addServiceLog(cardNumber, "ATMWITHDRAWALREVERSAL", amount, transaction.getStatus());
+		Gson gson = new Gson();
+		String json = gson.toJson(transaction);
+
+		return Response.ok(json).type("application/json").build();
+	}
+
+	
+	/****
+	 * POSWITHDRAWALREVERSAL
+	 * */
+	@GET
+	@Produces("application/json")
+	@Path("/reverseposwithdrawal/{cardNumber}/{amount}/{SystemTrace}/{transactionId}")
+	public Response reverseposwithdrawal(@PathParam("cardNumber") String cardNumber,
+			@PathParam("amount") BigDecimal amount,
+			@PathParam("SystemTrace") String SystemTrace,
+			@PathParam("transactionId") String transactionId) {
+		//Get all the Account Transaction Items, given the transactionId and
+		//Set the increaseDecrease to Reversed
+		//AccountTransaction
+		
+		
+		GenericValue accountTransaction = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		GenericValue cardApplication = ATMManagementServices.getMemberATMApplication(cardNumber);
+		String memberAccountId = cardApplication.getString("memberAccountId");
+		accountTransaction = delegator.makeValue("AccountTransaction");
+		String accountTransactionId = delegator.getNextSeqId("AccountTransaction");
+		accountTransaction
+				.put("memberAccountId", Long.valueOf(memberAccountId));
+		accountTransaction.put("transactionAmount", amount);
+		accountTransaction.set("accountTransactionId", accountTransactionId);
+		accountTransaction.set("increaseDecrease", "I");
+		accountTransaction.set("transactionType", "POSWITHDRAWALREVERSAL");
+
+
+		Map<String, String> userLogin = new HashMap<String, String>();
+		userLogin.put("userLoginId", "admin");
+		accountTransaction.setString("createdBy", userLogin.get("userLoginId"));
+		
+		GenericValue memberAccount = LoanUtilities.getEntityValue("MemberAccount", "memberAccountId", Long.valueOf(memberAccountId));
+		accountTransaction.set("partyId", memberAccount.getLong("partyId"));
+		
+//		try {
+//			delegator.createOrStore(accountTransaction);
+//		} catch (GenericEntityException e) {
+//			e.printStackTrace();
+//		}
+		//AccHolderTransactionServices.cashWithdrawalATMReversal(accountTransaction, userLogin, "ATMWITHDRAWALREVERSAL", SystemTrace);
+		String reverseStatus = AccHolderTransactionServices.reverseATMTransaction(SystemTrace, "POSWITHDRAWAL", "POSWITHDRAWALREVERSAL");
+		//Reverse GL
+		
+		//Now build the transaction and return it as json
+		
+		BigDecimal bdBalance = null;
+		BigDecimal bdAvailableBalance = null;
+		BigDecimal bdBookBalance = null;
+
+		ATMStatus atmStatus = ATMManagementServices.getATMAccount(cardNumber);
+		ATMTransaction transaction = new ATMTransaction();
+		transaction.setCardNumber(cardNumber);
+		if (atmStatus.getStatus().equals("SUCCESS")) {
+			bdBalance = AccHolderTransactionServices.getTotalBalance(String
+					.valueOf(atmStatus.getCardApplication().getLong(
+							"memberAccountId")), new Timestamp(Calendar
+					.getInstance().getTimeInMillis()));
+		}
+
+		if (bdBalance != null) {
+			// transaction.setAmount(bdBalance);
+			bdAvailableBalance = AccHolderTransactionServices
+					.getAvailableBalanceVer3(memberAccountId, new Timestamp(
+							Calendar.getInstance().getTimeInMillis()));
+			transaction.setAvailableBalance(bdAvailableBalance);
+			bdBookBalance = AccHolderTransactionServices
+					.getBookBalanceVer3(memberAccountId, delegator);
+			transaction.setBookBalance(bdBookBalance);
+					
+			transaction.setAvailableBalance(bdAvailableBalance);
+			transaction.setBookBalance(bdBookBalance);
+			transaction.setCardStatusId(atmStatus.getCardStatusId());
+			transaction.setCardStatus(atmStatus.getCardStatus());
+			transaction.setStatus(atmStatus.getStatus());
+			memberAccount = AccHolderTransactionServices
+					.getMemberAccount(atmStatus.getCardApplication().getLong(
+							"memberAccountId"));
+			transaction.setMemberAccountId(memberAccount
+					.getLong("memberAccountId"));
+			transaction.setAccountNo(memberAccount.getString("accountNo"));
+			transaction.setAccountName(memberAccount.getString("accountName"));
+			System.out.println("AAAAAAAAAAAAAAAAVVVVVVVVVVVV --- "
+					+ bdAvailableBalance);
+			System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBBBB ---- "
+					+ bdBookBalance);
+		}
+		if (reverseStatus.equals("success"))
+		{
+			transaction.setStatus(atmStatus.getStatus());
+		} else if (reverseStatus.equals("notransaction")){
+			transaction.setStatus("NOTRANSACTION");
+		} else if (reverseStatus.equals("reversed")){
+			transaction.setStatus("REVRESEDALREADY");
+		}
+		
+
+		System.out.println("POSWITHDRAWAL TRANSACTION ---- " + transaction.toString());
+		addServiceLog(cardNumber, "POSWITHDRAWAL", amount, transaction.getStatus());
+		Gson gson = new Gson();
+		String json = gson.toJson(transaction);
+
+		return Response.ok(json).type("application/json").build();
+	}
+
+	
 
 }

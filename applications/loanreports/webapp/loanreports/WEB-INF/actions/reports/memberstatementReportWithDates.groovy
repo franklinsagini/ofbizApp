@@ -270,6 +270,34 @@ allLoansList.eachWithIndex { loanItem, index ->
 		memberStatement.listOfTransactions.add(loanTransaction);
 		
 	}
+	
+	
+	if ((loanItem.interestDue != null) && (loanItem.interestDue != BigDecimal.ZERO)){
+		//Add Opening Balance
+		loanTransaction = new MemberTransaction()
+		loanTransaction.transactionDate = loanItem.createdStamp
+		loanTransaction.transactionDescription = 'Interest Due at Opening'
+		loanTransaction.increaseDecrease = 'D'
+		loanTransaction.transactionAmount = loanItem.interestDue
+		//loanTransaction.isLoan = true
+		loanTransaction.isLoanTransaction = true
+		memberStatement.listOfTransactions.add(loanTransaction);
+		
+	}
+	
+	if ((loanItem.insuranceDue != null) && (loanItem.insuranceDue != BigDecimal.ZERO)){
+		//Add Opening Balance
+		loanTransaction = new MemberTransaction()
+		loanTransaction.transactionDate = loanItem.createdStamp
+		loanTransaction.transactionDescription = 'Insurance Due at Opening'
+		loanTransaction.increaseDecrease = 'D'
+		loanTransaction.transactionAmount = loanItem.insuranceDue
+		//loanTransaction.isLoan = true
+		loanTransaction.isLoanTransaction = true
+		memberStatement.listOfTransactions.add(loanTransaction);
+		
+	}
+	
 
 	//Get all interest and insurance charges
 	allInterestInsuranceCharges = delegator.findByAnd("LoanExpectation",  [loanApplicationId : loanItem.loanApplicationId], null, false);
