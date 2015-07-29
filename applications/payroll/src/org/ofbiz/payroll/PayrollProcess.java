@@ -1207,8 +1207,12 @@ public class PayrollProcess {
 			bdPensionAmount = getPensionPercentage(employee, delegator)
 					.multiply(bdBasicPay);
 			
+			if (getPensionPercentage(employee, delegator).compareTo(BigDecimal.ZERO) != 0){
 			 bdPensionEmployer=getPensionEmployerRate(delegator)
 				.multiply(bdBasicPay);
+			} else{
+				bdPensionEmployer = BigDecimal.ZERO;
+			}
 		}
 
 		return bdPensionAmount;
