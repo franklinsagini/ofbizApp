@@ -126,6 +126,9 @@ under the License.
                     <condition-expr field-name="statusId" operator="not-equals" value="FNACT_CANCELLED"/>
                 </condition-list>
             </entity-condition>
+            <entity-condition entity-name="PartyAcctgPrefAndGroup" list="partyAcctgPrefAndGroup">
+                <condition-expr field-name="partyId" operator="not-equals" value="Company"/>
+            </entity-condition>
         </actions>
         <field name="statusId"><hidden value="PMNT_NOT_PAID"/></field>
         <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
@@ -137,14 +140,20 @@ under the License.
                 </entity-options>
             </drop-down>
         </field> -->
-        <field position="1" name="organizationPartyId" parameter-name="partyIdFrom">
+<!--
+<field position="1" name="organizationPartyId" parameter-name="partyIdFrom">
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
                 <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
                     <entity-order-by field-name="groupName"/>
                 </entity-options>
             </drop-down>
+        </field> -->
+        <field position="1" name="organizationPartyId" parameter-name="partyIdFrom" title="Branch">
+            <drop-down allow-empty="false">
+                <list-options key-name="partyId" list-name="partyAcctgPrefAndGroup"
+                    description="${groupName}" />
+            </drop-down>
         </field>
-
         <field name="partyIdTo" position="2"><lookup target-form-name="LookupPartyName"/></field>
         <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
             <drop-down allow-empty="false">
@@ -171,13 +180,24 @@ under the License.
     </form>
     <form name="NewPaymentIn" type="single" target="createPayment" default-map-name="payment"
         header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+            <entity-condition entity-name="PartyAcctgPrefAndGroup" list="partyAcctgPrefAndGroup">
+                <condition-expr field-name="partyId" operator="not-equals" value="Company"/>
+            </entity-condition>
+        </actions>
         <field name="statusId"><hidden value="PMNT_NOT_PAID"/></field>
         <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
-        <field position="1" name="organizationPartyId" parameter-name="partyIdTo">
+<!--         <field position="1" name="organizationPartyId" parameter-name="partyIdTo">
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
                 <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
                     <entity-order-by field-name="groupName"/>
                 </entity-options>
+            </drop-down>
+        </field> -->
+        <field position="1" name="organizationPartyId" parameter-name="partyIdTo" title="Branch">
+            <drop-down allow-empty="false">
+                <list-options key-name="partyId" list-name="partyAcctgPrefAndGroup"
+                    description="${groupName}" />
             </drop-down>
         </field>
         <field name="partyIdFrom" position="2"><lookup target-form-name="LookupPartyName"/></field>
