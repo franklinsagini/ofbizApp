@@ -1034,7 +1034,7 @@ public class LoanServices {
 		}
 
 		// Get Salary processing day
-		Timestamp repaymentStartDate = getProcessingDate(delegator);
+		Timestamp repaymentStartDate = getProcessingDate(delegator, loanApplicationId);
 
 		// loanApplication.set("monthlyRepayment", paymentAmount);
 		loanApplication.set("repaymentStartDate", repaymentStartDate);
@@ -1051,7 +1051,12 @@ public class LoanServices {
 		return repaymentStartDate;
 	}
 
-	private static Timestamp getProcessingDate(Delegator delegator) {
+	private static Timestamp getProcessingDate(Delegator delegator, String loanApplicationId) {
+		
+		Long loanApplicationIdLong = Long.valueOf(loanApplicationId);
+		
+		GenericValue loanApplicationEntity = LoanUtilities.getLoanApplicationEntity(loanApplicationIdLong);
+		
 		List<GenericValue> salaryProcessingDateELI = null; // =
 		Long processingDay = 0l;
 		try {
@@ -1069,29 +1074,29 @@ public class LoanServices {
 
 		Timestamp currentDate = new Timestamp(Calendar.getInstance()
 				.getTimeInMillis());
-		Timestamp repaymentDate = new Timestamp(Calendar.getInstance()
-				.getTimeInMillis());
+		Timestamp repaymentDate = loanApplicationEntity.getTimestamp("disbursementDate");
 		;
 		LocalDateTime localDateCurrent = new LocalDateTime(
 				currentDate.getTime());
 		LocalDateTime localDateRepaymentDate = new LocalDateTime(
 				repaymentDate.getTime());
 
-		if (localDateCurrent.getDayOfMonth() < processingDay.intValue()) {
+		if (localDateRepaymentDate.getDayOfMonth() < processingDay.intValue()) {
 			// Repayment Date is Beginning of Next Month
 			localDateRepaymentDate = localDateRepaymentDate.plusMonths(1);
 			// localDateRepaymentDate = localDateRepaymentDate.getD
 			// DateMidnight firstDay = new DateMidnight().withDayOfMonth(1);
-			DateTime startOfTheMonth = new DateTime().dayOfMonth()
-					.withMinimumValue().withTimeAtStartOfDay();
+			DateTime startOfTheMonth = localDateRepaymentDate.dayOfMonth()
+					.withMinimumValue().toDateTime().withTimeAtStartOfDay();
+			
 			DateTime startOfNextMonth = startOfTheMonth.plusMonths(1)
 					.dayOfMonth().withMinimumValue().withTimeAtStartOfDay();
 			repaymentDate = new Timestamp(startOfNextMonth.toLocalDate()
 					.toDate().getTime());
 		} else {
 			// from 15th and beyond then start paying two months later
-			DateTime startOfTheMonth = new DateTime().dayOfMonth()
-					.withMinimumValue().withTimeAtStartOfDay();
+			DateTime startOfTheMonth =localDateRepaymentDate.dayOfMonth()
+					.withMinimumValue().toDateTime().withTimeAtStartOfDay();
 			DateTime startOfNextMonth = startOfTheMonth.plusMonths(2)
 					.dayOfMonth().withMinimumValue().withTimeAtStartOfDay();
 			repaymentDate = new Timestamp(startOfNextMonth.toLocalDate()

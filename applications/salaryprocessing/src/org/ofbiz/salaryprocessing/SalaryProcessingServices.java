@@ -941,14 +941,18 @@ public class SalaryProcessingServices {
 						acctgTransId, null, loanApplicationId);
 				}
 
-				BigDecimal totalLoanDue = LoanRepayments
-						.getTotalLoanByLoanDue(loanApplicationId.toString());
+				BigDecimal totalLoanDue = BigDecimal.ZERO;
+						
+						//LoanRepayments
+						//.getTotalLoanByLoanDue(loanApplicationId.toString());
 				BigDecimal totalInterestDue = LoanRepayments
 						.getTotalInterestByLoanDue(loanApplicationId.toString());
 				BigDecimal totalInsuranceDue = LoanRepayments
 						.getTotalInsurancByLoanDue(loanApplicationId.toString());
 				BigDecimal totalPrincipalDue = LoanRepayments
 						.getTotalPrincipaByLoanDue(loanApplicationId.toString());
+				
+				totalLoanDue = totalLoanDue.add(totalInterestDue).add(totalInsuranceDue).add(totalPrincipalDue);
 
 				BigDecimal interestAmount = totalInterestDue;
 				BigDecimal insuranceAmount = totalInsuranceDue;
