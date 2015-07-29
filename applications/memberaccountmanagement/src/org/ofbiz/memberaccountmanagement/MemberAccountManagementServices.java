@@ -146,6 +146,36 @@ public class MemberAccountManagementServices {
 			result.put(genericValue.get("loanApplicationId").toString(), loanProduct.get("name")+" - "+loanProduct.getString("code")+" - Loan Amt : "+genericValue.getBigDecimal("loanAmt")+" Balance : "+bdLoanAmt);
 		}
 		
+		//Add Defaulted loans DEFAULTED
+		List<GenericValue> loanApplicationClearedELI = null;
+		Long loanClearedStatusId = getLoanStatusId("CLEARED");
+		EntityConditionList<EntityExpr> loanApplicationClearedConditions = EntityCondition
+				.makeCondition(
+						UtilMisc.toList(EntityCondition.makeCondition(
+								"loanStatusId", EntityOperator.EQUALS,
+								loanClearedStatusId),
+								EntityCondition
+										.makeCondition("partyId",
+												EntityOperator.EQUALS,
+												Long.valueOf(partyId))), EntityOperator.AND);
+		try {
+			loanApplicationClearedELI = delegator.findList("LoanApplication",
+					loanApplicationConditions, null, null, null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		for (GenericValue genericValue : loanApplicationClearedELI) {
+			//accountProduct = LoanUtilities.getAccountProduct(genericValue.getLong("accountProductId"));
+			Long loanApplicationId = genericValue.getLong("loanApplicationId");
+			//loanProduct = LoanUtilities.getLoanApplicationEntity(loanApplicationId);
+			loanProduct = LoanUtilities.getLoanProduct(genericValue.getLong("loanProductId"));
+			BigDecimal bdLoanAmt = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
+			result.put(genericValue.get("loanApplicationId").toString(), loanProduct.get("name")+" - "+loanProduct.getString("code")+" - Loan Amt : "+genericValue.getBigDecimal("loanAmt")+" Balance : "+bdLoanAmt);
+		}
+		
+
+		
 		Gson gson = new Gson();
 		String json = gson.toJson(result);
 
