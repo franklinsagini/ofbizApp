@@ -199,12 +199,19 @@
 	<!-- Account Contribution Only -->
 	
 	<request-map uri="processSalaryReceivedAccountContributionOnly">
-		<security auth="true" https="true" />
+		<!-- security auth="true" https="true" />
 		<event type="java"
 			path="org.ofbiz.salaryprocessing.SalaryProcessingServices" invoke="processSalaryReceivedAccountContributionOnly" />
 		<response name="success" type="view" value="memberSalary">
 			<redirect-parameter name="salaryMonthYearId"/>
-		</response>
+		</response -->
+		 <security https="true" auth="true" />
+             <event type="service" invoke="processSalaryReceivedAccountContributionOnly" />
+             <response name="success" type="request-redirect" value="employerSalary">
+             	<redirect-parameter name="salaryMonthYearId"/>
+             	<redirect-parameter name="deductType"/>
+             	<redirect-parameter name="deductTypeLink"/>
+             </response>
 		<response name="error" type="view" value="memberSalary" />
 	</request-map>
         
