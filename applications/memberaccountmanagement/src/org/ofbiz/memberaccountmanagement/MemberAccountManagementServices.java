@@ -160,7 +160,7 @@ public class MemberAccountManagementServices {
 												Long.valueOf(partyId))), EntityOperator.AND);
 		try {
 			loanApplicationClearedELI = delegator.findList("LoanApplication",
-					loanApplicationConditions, null, null, null, false);
+					loanApplicationClearedConditions, null, null, null, false);
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
