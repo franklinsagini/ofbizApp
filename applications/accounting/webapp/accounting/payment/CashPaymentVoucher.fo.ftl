@@ -58,7 +58,7 @@ under the License.
             <fo:table-body>
                 <fo:table-row>
                     <fo:table-cell>
-                        <fo:list-block provisional-distance-between-starts="1.4in">
+                        <fo:list-block provisional-distance-between-starts="1.5in">
                             <fo:list-item>
                                 <fo:list-item-label font-weight="bold">
                                     <fo:block>Payment To:</fo:block>
@@ -98,7 +98,7 @@ under the License.
                         </fo:list-block>
                     </fo:table-cell>
                     <fo:table-cell>
-                        <fo:list-block provisional-distance-between-starts="1.4in">
+                        <fo:list-block provisional-distance-between-starts="1.5in">
                             <fo:list-item>
                                 <fo:list-item-label font-weight="bold">
                                     <fo:block>Payment From:</fo:block>
