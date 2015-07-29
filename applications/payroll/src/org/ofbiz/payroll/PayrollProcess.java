@@ -1123,6 +1123,8 @@ public class PayrollProcess {
 		bdNSSFVoluntary = getNSSFVolAmount(employee, delegator, staffPayrollId);
 		log.info("######### NSSF Voluntary " + bdNSSFVoluntary);
 		bdPensionAmt = getPensionAmount(employee, delegator, staffPayrollId);
+		
+		
 		log.info("######### Pension " + bdPensionAmt);
 		log.info("######### Pension " + bdPensionEmployer);
 		bdMAX_PENSION_CONTRIBUTION = getMaxPensionContribution(employee,
