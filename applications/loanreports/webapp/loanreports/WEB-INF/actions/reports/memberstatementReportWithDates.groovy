@@ -277,7 +277,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 		loanTransaction = new MemberTransaction()
 		loanTransaction.transactionDate = loanItem.createdStamp
 		loanTransaction.transactionDescription = 'Interest Due at Opening'
-		loanTransaction.increaseDecrease = 'I'
+		loanTransaction.increaseDecrease = 'D'
 		loanTransaction.transactionAmount = loanItem.interestDue
 		//loanTransaction.isLoan = true
 		loanTransaction.isLoanTransaction = true
@@ -290,7 +290,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 		loanTransaction = new MemberTransaction()
 		loanTransaction.transactionDate = loanItem.createdStamp
 		loanTransaction.transactionDescription = 'Insurance Due at Opening'
-		loanTransaction.increaseDecrease = 'I'
+		loanTransaction.increaseDecrease = 'D'
 		loanTransaction.transactionAmount = loanItem.insuranceDue
 		//loanTransaction.isLoan = true
 		loanTransaction.isLoanTransaction = true
