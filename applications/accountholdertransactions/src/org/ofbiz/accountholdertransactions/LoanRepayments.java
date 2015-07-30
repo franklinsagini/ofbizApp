@@ -30,6 +30,7 @@ import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.loans.AmortizationServices;
 import org.ofbiz.loans.LoanServices;
+import org.ofbiz.loansprocessing.LoansProcessingServices;
 import org.ofbiz.treasurymanagement.TreasuryUtility;
 import org.ofbiz.webapp.event.EventHandlerException;
 
@@ -2931,7 +2932,7 @@ public class LoanRepayments {
 		 * */
 		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
 		BigDecimal paymentAmount;
-
+		BigDecimal bdRepaymentInterestAmt = BigDecimal.ZERO;
 		/***
 		 * Get Loan Product or Loan Type
 		 * */
@@ -2971,7 +2972,17 @@ public class LoanRepayments {
 		}
 		
 		//Get Interest
-		BigDecimal bdInterestAmt = getTotalInterestByLoanDue(loanApplicationId.toString());
+		BigDecimal bdInterestAmt = BigDecimal.ZERO;
+		BigDecimal bdLoanBalance = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
+		
+		if (deductionType.equals(REDUCING_BALANCE)){
+			bdRepaymentInterestAmt = bdLoanBalance.multiply(bdInterestRatePM);
+		} else{
+			bdRepaymentInterestAmt = dbLoanAmt
+					.multiply(bdInterestRatePM);
+		}
+				
+		//getTotalInterestByLoanDue(loanApplicationId.toString());
 		
 		BigDecimal principalDue = paymentAmount.subtract(bdInterestAmt);
 		
