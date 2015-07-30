@@ -44,7 +44,8 @@ acctgTransEntry.each { obj ->
 accountTransList.each { objTrans ->
   println "########################## OBJ: "+objTrans
   finalTransListBuilder = []
-  member = delegator.findOne("Member", UtilMisc.toMap("partyId", objTrans.partyId), true);
+ // member = delegator.findOne("Member", UtilMisc.toMap("partyId", objTrans.partyId), true);
+  member = delegator.findOne("Member", [partyId : objTrans.partyId.toLong()], false);
   memberName = member.firstName + " " + member.middleName + " " + member.lastName
   println "#################################### memberName: "+memberName
   finalTransListBuilder = [

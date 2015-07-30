@@ -2158,8 +2158,10 @@ public class SalaryProcessingServices {
 					bdSalaryChargeAmt).subtract(bdSalaryExciseAmt);
 			for (Long loanApplicationId : listLoanApplicationIds) {
 
-				bdLoanExpectedAmt = LoanRepayments
-						.getTotalPrincipaByLoanDue(loanApplicationId.toString());
+				bdLoanExpectedAmt = LoanRepayments.getTotalPrincipalDue(loanApplicationId);
+						
+						//LoanRepayments
+						//.getTotalPrincipaByLoanDue(loanApplicationId.toString());
 				
 				bdLoanExpectedAmt = bdLoanExpectedAmt
 						.add(LoanRepayments
