@@ -480,6 +480,18 @@ public class TreasuryUtility {
 
 			return bdBalance;
 		}
+		
+		
+		if (treasuryTypeName.equals("VAULT")) {
+
+			log.info("IIIIIIIII Its a VAULT !!!!!!!!!!!!!!!!!!!!! ");
+			String glAccountId = TreasuryReconciliation
+					.getTreasuryAccountId(treasuryId);
+			bdBalance = TreasuryAccounting.getAccountBalance(glAccountId,
+					transactionDate);
+
+			return bdBalance;
+		}
 
 		bdBalance = getTellerBalanceBeforeDate(userLogin, transactionDate);
 
