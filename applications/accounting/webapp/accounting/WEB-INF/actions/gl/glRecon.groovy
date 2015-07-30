@@ -1,6 +1,7 @@
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilMisc;
 if (!glAccountId) {
   return;
 }
@@ -37,23 +38,22 @@ acctgTransEntry.each { obj ->
   transCond.add(EntityCondition.makeCondition("acctgTransId", EntityOperator.EQUALS, obj.acctgTransId));
   accountTransaction = delegator.findList('AccountTransaction', EntityCondition.makeCondition(transCond, EntityOperator.AND), null, null, null, false)
   accountTransList.add(accountTransaction)
-  println "#################################### acctgTransId: "+obj.acctgTransId
+  println "#################################### accountTransaction: "+ accountTransaction
 }
 
-accountTransList.each { obj ->
+accountTransList.each { objTrans ->
+  println "########################## OBJ: "+objTrans
   finalTransListBuilder = []
-  memberCond = []
-  memberCond.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, obj.partyId));
-  member = delegator.findList('Member', EntityCondition.makeCondition(memberCond, EntityOperator.AND), null, null, null, false)
+  member = delegator.findOne("Member", UtilMisc.toMap("partyId", objTrans.partyId), true);
   memberName = member.firstName + " " + member.middleName + " " + member.lastName
   println "#################################### memberName: "+memberName
   finalTransListBuilder = [
-    createdStamp:obj.createdStamp,
+    createdStamp:objTrans.createdStamp,
     memberName:memberName,
     memberPhone:member.mobileNumber,
     memberPhone:member.mobileNumber,
-    transactionType:obj.transactionType,
-    transactionAmount:obj.transactionAmount,
+    transactionType:objTrans.transactionType,
+    transactionAmount:objTrans.transactionAmount,
   ]
 
   finalTransList.add(finalTransListBuilder);
