@@ -36,12 +36,12 @@ acctgTransEntry.each { obj ->
   println "#################################### TRYING TO ITERATE OVER AcctgTransEntry: "
   transCond = []
   transCond.add(EntityCondition.makeCondition("acctgTransId", EntityOperator.EQUALS, obj.acctgTransId));
-  
+
   accountTransactionSublist = delegator.findList('AccountTransaction', EntityCondition.makeCondition(transCond, EntityOperator.AND), null, null, null, false)
   accountTransactionSublist.each { singleTransaction ->
 	  accountTransList.add(singleTransaction)
   }
-  
+
   println "#################################### accountTransaction: "+ accountTransactionSublist
 }
 
@@ -55,7 +55,6 @@ accountTransList.each { objTrans ->
   finalTransListBuilder = [
     createdStamp:objTrans.createdStamp,
     memberName:memberName,
-    memberPhone:member.mobileNumber,
     memberPhone:member.mobileNumber,
     transactionType:objTrans.transactionType,
     transactionAmount:objTrans.transactionAmount,

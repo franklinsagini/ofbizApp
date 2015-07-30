@@ -1095,7 +1095,15 @@ under the License.
         <field name="performSearch"><hidden value="Y"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSearch}" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
-    <form name="ListGlAccountReconciliations" type="list" default-entity-name="GlReconciliation"
+    <form name="ListGlAccountReconciliations" type="list" list-name="finalTransList"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="createdStamp" title-area-style="tableheadwide"><display description="${createdStamp}"/></field>
+        <field name="memberName" title-area-style="tableheadwide"><display description="${memberName}"/></field>
+        <field name="memberPhone" title-area-style="tableheadwide"><display description="${memberPhone}"/></field>
+        <field name="transactionType" title-area-style="tableheadwide"><display description="${transactionType}"/></field>
+        <field name="transactionAmount" widget-style="tabletextright"><display type="currency" currency="${currencyUomId}"/></field>
+    </form>
+    <form name="ListGlAccountReconciliationsOld" type="list" default-entity-name="GlReconciliation"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="GlReconciliation">
