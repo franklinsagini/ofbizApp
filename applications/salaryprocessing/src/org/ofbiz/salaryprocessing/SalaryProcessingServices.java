@@ -533,7 +533,7 @@ public class SalaryProcessingServices {
 		for (GenericValue genericValue : memberSalaryELI) {
 			// check if this Payroll Number exists in Member
 			// If does not exist set missing to true
-			payrollNumber = genericValue.getString("payrollNumber");
+			payrollNumber = genericValue.getString("payrollNumber").trim();
 
 			Boolean payrollExists = LoanUtilities
 					.payrollNumberExists(payrollNumber);
@@ -560,7 +560,74 @@ public class SalaryProcessingServices {
 
 		return missing;
 	}
+	
+	/***
+	 * Missing List
+	 * */
+	private static String getMissingPayrollNumbersString(String month, String year,
+			String employerCode, Long salaryMonthYearId) {
+		Boolean missing = false;
 
+		// Get All the Payroll Numbers in the Member Salary given month, year
+		// and employerCode
+		List<GenericValue> memberSalaryELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		EntityConditionList<EntityExpr> memberSalaryConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"salaryMonthYearId", EntityOperator.EQUALS,
+						salaryMonthYearId)
+
+				// EntityCondition
+				// .makeCondition("year", EntityOperator.EQUALS, year),
+				//
+				// EntityCondition.makeCondition("employerCode",
+				// EntityOperator.EQUALS, employerCode)
+
+						), EntityOperator.AND);
+
+		try {
+			memberSalaryELI = delegator.findList("MemberSalary",
+					memberSalaryConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		GenericValue missingSalaryPayrollNumber = null;
+		String payrollNumber = "";
+		
+		String theList = "";
+		for (GenericValue genericValue : memberSalaryELI) {
+			// check if this Payroll Number exists in Member
+			// If does not exist set missing to true
+			payrollNumber = genericValue.getString("payrollNumber");
+
+			Boolean payrollExists = LoanUtilities
+					.payrollNumberExists(payrollNumber);
+
+			if (!payrollExists) {
+				missing = true;
+				theList = theList + payrollNumber+" , ";
+				// Save the Payroll Number Missing
+				// Long missingMemberLogId =
+				// delegator.getNextSeqIdLong("MissingMemberLog", 1);
+				missingSalaryPayrollNumber = delegator.makeValue(
+						"MissingSalaryPayrollNumber", UtilMisc.toMap(
+								"isActive", "Y", "createdBy", "admin",
+								"employerCode", employerCode, "payrollNumber",
+								payrollNumber, "year", year, "month", month));
+				try {
+					delegator.createOrStore(missingSalaryPayrollNumber);
+				} catch (GenericEntityException e) {
+					e.printStackTrace();
+				}
+			}
+
+		}
+
+		return theList;
+	}
 	/***
 	 * Full deduction
 	 * **/
@@ -627,8 +694,12 @@ public class SalaryProcessingServices {
 
 		Boolean missingPayrollNumbers = getMissingPayrollNumbers(month, year,
 				employerCode, salaryMonthIdLong);
+		
+		
 
 		if (missingPayrollNumbers) {
+			String theMissing = getMissingPayrollNumbersString(month, year,
+					employerCode, salaryMonthIdLong);
 
 			log.info("MMMMMMMMMMMMMMM Missing Payroll Numbe, will exit LLLLLLLLLLLLLLLL Month "
 					+ month
@@ -636,7 +707,7 @@ public class SalaryProcessingServices {
 					+ year
 					+ " Employer Code  "
 					+ employerCode);
-			return "One or more payroll numbers missing in the system , please check the missing payroll numbers menu/link!";
+			return "One or more payroll numbers missing in the system , please check the missing payroll numbers menu/link! list :: "+theMissing;
 		} else {
 			log.info("EEEEEEEEEEEEEE Available Payroll Numbers, will continue LLLLLLLLLLLLLLLL Month "
 					+ month
@@ -941,14 +1012,18 @@ public class SalaryProcessingServices {
 						acctgTransId, null, loanApplicationId);
 				}
 
-				BigDecimal totalLoanDue = LoanRepayments
-						.getTotalLoanByLoanDue(loanApplicationId.toString());
+				BigDecimal totalLoanDue = BigDecimal.ZERO;
+						
+						//LoanRepayments
+						//.getTotalLoanByLoanDue(loanApplicationId.toString());
 				BigDecimal totalInterestDue = LoanRepayments
 						.getTotalInterestByLoanDue(loanApplicationId.toString());
 				BigDecimal totalInsuranceDue = LoanRepayments
 						.getTotalInsurancByLoanDue(loanApplicationId.toString());
 				BigDecimal totalPrincipalDue = LoanRepayments
 						.getTotalPrincipaByLoanDue(loanApplicationId.toString());
+				
+				totalLoanDue = totalLoanDue.add(totalInterestDue).add(totalInsuranceDue).add(totalPrincipalDue);
 
 				BigDecimal interestAmount = totalInterestDue;
 				BigDecimal insuranceAmount = totalInsuranceDue;
@@ -1560,7 +1635,9 @@ public class SalaryProcessingServices {
 					+ year
 					+ " Employer Code  "
 					+ employerCode);
-			return "One or more payroll numbers missing in the system , please check the missing payroll numbers menu/link!";
+			
+			String missingNumbers = getMissingPayrollNumbersString(month, year, employerCode, salaryMonthYearId);
+			return "One or more payroll numbers missing in the system , please check the missing payroll numbers menu/link! Payroll Numbers"+missingNumbers;
 		} else {
 			log.info("EEEEEEEEEEEEEE Available Payroll Numbers, will continue LLLLLLLLLLLLLLLL Month "
 					+ month
@@ -2116,6 +2193,7 @@ public class SalaryProcessingServices {
 				BigDecimal totalPrincipalDue = LoanRepayments
 						.getTotalPrincipaByLoanDue(loanApplicationId.toString());
 
+				totalLoanDue = totalInterestDue.add(totalInsuranceDue).add(totalPrincipalDue);
 				BigDecimal interestAmount = totalInterestDue;
 				BigDecimal insuranceAmount = totalInsuranceDue;
 				BigDecimal principalAmount = totalPrincipalDue;

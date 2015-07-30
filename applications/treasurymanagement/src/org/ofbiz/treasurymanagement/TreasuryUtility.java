@@ -1344,9 +1344,9 @@ public class TreasuryUtility {
 
 		if (teller != null) // check that the teller assigned is of type teller
 		{
-			if (bdTellerBalance.compareTo(BigDecimal.ZERO) == 1) {
+			//if (bdTellerBalance.compareTo(BigDecimal.ZERO) == 1) {
 				return true;
-			}
+			//}
 		}
 
 		return false;

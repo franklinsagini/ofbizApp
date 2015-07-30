@@ -24,7 +24,6 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.payroll.TaxTracker;
 import org.ofbiz.webapp.event.EventHandlerException;
 
 
@@ -64,6 +63,8 @@ public class PayrollProcess {
 	public static BigDecimal bdPAYESUMMARY = BigDecimal.ZERO;
 	public static BigDecimal bdNETPAYSUMMARY = BigDecimal.ZERO;
 	public static BigDecimal bdPENSIONSUMMARY = BigDecimal.ZERO;
+	
+	public static String LOSTDAYSELEMENTID = "10065"; //this is evil a programmer of your stature should not be doing this.
 	
 	
 
@@ -502,6 +503,10 @@ public class PayrollProcess {
 			bdPAYEAmount = BigDecimal.ZERO;
 			bdPAYE = bdPAYEAmount;
 		}
+		
+		if (bdPAYE.compareTo(BigDecimal.ZERO) < 1){
+			bdPAYE = BigDecimal.ZERO;
+		}
 
 		bdNHIFEmployer=bdNHIF;		
 
@@ -800,6 +805,8 @@ public class PayrollProcess {
 		BigDecimal bdDisabilityAllowance = BigDecimal.ZERO;
 		BigDecimal bdNonTaxableAmounts = BigDecimal.ZERO;
 		BigDecimal bdReliefOnTaxableIncome = BigDecimal.ZERO;
+		//10065
+		BigDecimal bdLostDays = BigDecimal.ZERO;
 
 		bdExcessPensionBenefit = calcExcessPensionBen(employee, delegator,
 				staffPayrollId);
@@ -808,12 +815,14 @@ public class PayrollProcess {
 		bdDisabilityAllowance = getDisabilityAllowance(employee, delegator);
 		bdNonTaxableAmounts = getNonTaxableAmounts(employee, staffPayrollId, delegator);
 		bdReliefOnTaxableIncome = getReliefOnTaxableIncome(employee, staffPayrollId, delegator);
+		//String lostDaysElementId = 
 		
+		bdLostDays = getLostDaysAmount(LOSTDAYSELEMENTID, staffPayrollId);
 
 		bdTaxableIncome = bdGrossPay.add(bdExcessPensionBenefit).add(
 				bdLowInterestBenefit).subtract(bdNSSFStatutory).subtract(
 				bdNSSFVoluntary).subtract(bdPensionAmt).subtract(
-				bdDisabilityAllowance).subtract(bdNonTaxableAmounts).subtract(bdReliefOnTaxableIncome);
+				bdDisabilityAllowance).subtract(bdNonTaxableAmounts).subtract(bdReliefOnTaxableIncome).subtract(bdLostDays.abs());
 
 		if (bdTaxableIncome.compareTo(BigDecimal.ZERO) <= 0) {
 			bdTaxableIncome = BigDecimal.ZERO;
@@ -821,6 +830,37 @@ public class PayrollProcess {
 
 		return bdTaxableIncome;
 	}
+
+	private static BigDecimal getLostDaysAmount(String lOSTDAYSELEMENTID2,
+			String staffPayrollId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> staffPayrollElementsELI = null;
+		BigDecimal bdLostDay = BigDecimal.ZERO;
+
+		EntityConditionList<EntityExpr> staffPayrollElementsConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"staffPayrollId", EntityOperator.EQUALS, staffPayrollId),
+						EntityCondition.makeCondition("payrollElementId",
+								EntityOperator.EQUALS, lOSTDAYSELEMENTID2)),
+						EntityOperator.AND);
+
+		try {
+			staffPayrollElementsELI = delegator.findList("StaffPayrollElements",
+					staffPayrollElementsConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue staffPayrollElements : staffPayrollElementsELI) {
+			// Get the amount
+
+			bdLostDay = bdLostDay.add(staffPayrollElements.getBigDecimal("amount"));
+		}
+
+		return bdLostDay;
+	}
+
+
 
 	private static BigDecimal getReliefOnTaxableIncome(GenericValue employee,
 			String staffPayrollId, Delegator delegator) {
@@ -1207,8 +1247,12 @@ public class PayrollProcess {
 			bdPensionAmount = getPensionPercentage(employee, delegator)
 					.multiply(bdBasicPay);
 			
+			if (getPensionPercentage(employee, delegator).compareTo(BigDecimal.ZERO) != 0){
 			 bdPensionEmployer=getPensionEmployerRate(delegator)
 				.multiply(bdBasicPay);
+			} else{
+				bdPensionEmployer = BigDecimal.ZERO;
+			}
 		}
 
 		return bdPensionAmount;

@@ -1090,30 +1090,32 @@ under the License.
     </form>
 
 
+  <form name="FindAtmServiceLogs" target="atmServiceLogs" title="" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+        <auto-fields-entity entity-name="ATMTransactionsLog" default-field-type="find"/>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
 
     <form name="listATMTransactionsLog" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="atmServiceLogs" paginate-target="atmServiceLogs"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
-            <entity-condition entity-name="ATMTransactionsLog">
-            	<!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
-            	<order-by field-name="-createdStamp"/>
-            </entity-condition>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="ATMTransactionsLog"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="orderBy" value="-createdStamp"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+                
+            </service>
+            
         </actions>
-        <!-- auto-fields-service default-field-type="hidden" service-name="updateATMTransactionsLog"/ -->
-
-
         <field name="cardNumber" title="Card Number"><display></display></field>
         <field name="transactionType" title="Transaction Type"><display></display></field>
         <field name="transactionAmount" title="Transaction Amount"><display></display></field>
         <field name="transactionStatus" title="Transaction Status"><display></display></field>
         <field name="createdStamp" title="Time"><display type="date-time"></display></field>
-
-        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
-            <hyperlink target="deleteChequeType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
-                <parameter param-name="chequeTypeId"/>
-            </hyperlink>
-        </field -->
-        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
     </form>
 
     <form name="FindMsaccoTransactionsLog" target="msaccoTransactionLogs" title="" type="single"
@@ -1130,6 +1132,7 @@ under the License.
                 <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="MsaccoTransactionsLog"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="orderBy" value="-createdStamp"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
@@ -2623,5 +2626,7 @@ under the License.
             </hyperlink>
         </field>
     </form>
+    
+    
 
 </forms>
