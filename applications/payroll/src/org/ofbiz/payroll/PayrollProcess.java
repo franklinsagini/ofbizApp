@@ -503,6 +503,10 @@ public class PayrollProcess {
 			bdPAYEAmount = BigDecimal.ZERO;
 			bdPAYE = bdPAYEAmount;
 		}
+		
+		if (bdPAYE.compareTo(BigDecimal.ZERO) < 1){
+			bdPAYE = BigDecimal.ZERO;
+		}
 
 		bdNHIFEmployer=bdNHIF;		
 
