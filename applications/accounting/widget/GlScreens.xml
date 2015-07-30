@@ -725,6 +725,37 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <screen name="FindGlAccountReconciliationsOld">
+        <section>
+            <actions>
+                <set field="titleProperty" value="AccountingAcctRecons"/>
+                <set field="tabButtonItem" value="AccountReconciliations"/>
+                <set field="labelTitleProperty" value="AccountingAcctRecons"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
+                <set field="glAccountId" from-field="parameters.glAccountId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyGlDecorator" location="${parameters.partyGlDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="${uiLabelMap.AccountingAcctRecons}">
+                            <include-form name="FindGlAccountReconciliations" location="component://accounting/widget/GlForms.xml"/>
+                        </screenlet>
+                        <section>
+                            <condition>
+                                <if-compare field="parameters.performSearch" operator="equals" value="Y"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.AccountingAcctRecons}">
+                                    <include-form name="ListGlAccountReconciliations" location="component://accounting/widget/GlForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
     <screen name="FindGlAccountReconciliations">
         <section>
             <actions>
@@ -733,6 +764,9 @@ under the License.
                 <set field="labelTitleProperty" value="AccountingAcctRecons"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
                 <set field="glAccountId" from-field="parameters.glAccountId"/>
+                <set field="thruDate" from-field="parameters.thruDate" type="Timestamp"  default-value="${nowTimestamp}"/>
+                <set field="fromDate" from-field="parameters.fromDate" type="Timestamp" />
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/gl/glRecon.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyGlDecorator" location="${parameters.partyGlDecoratorLocation}">
