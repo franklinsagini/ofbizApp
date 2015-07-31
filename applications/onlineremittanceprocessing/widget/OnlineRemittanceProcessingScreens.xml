@@ -157,6 +157,50 @@
 		</section>
 	</screen>
 	
+	<!-- pushMonthYearStation -->
+			<screen name="pushMonthYearStation">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Generate/Push and Pull Station" />
+				<set field="headerItem" value="pushMonthYearStation" />
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="createPushMonthYearStation" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+				
+				<property-to-field field="defaultCountryGeoId"
+					resource="general" property="KEN" default="KEN" />
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+
+						<section>
+							<widgets>
+								<screenlet title="Generate and Push/Pull Month Year">
+									<include-form name="NewPushMonthYearStation"
+										location="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<!-- screenlet> <include-form name="FindLoansForwarded" location="component://loansprocessing/widget/loansprocessingForms.xml"/> 
+									</screenlet -->
+								<screenlet title="Generate Push/Pull (Month Year) Station">
+									<include-form name="pushMonthYearStation"
+										location="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+
+
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
 	<!-- stationCodeMap -->
 	<screen name="stationProductCodeMap">
 		<section>
@@ -281,5 +325,173 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	<!-- showGeneratedExpectation -->
+	<!-- screen name="showGeneratedExpectation">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Show Generated Expectation" />
+				<set field="headerItem" value="showGeneratedExpectation" />
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="createExpectedPaymentSent" />
+				<set field="expectedPaymentSentCtx" from-field="parameters" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+				<set field="pushMonthYearStationId" from-field="parameters.pushMonthYearStationId" type="Long" global="true"/>
+				<property-to-field field="defaultCountryGeoId"
+					resource="general" property="KEN" default="KEN" />
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+
+						<section name="search-results">
+							<widgets>
+								<screenlet title="Find ">
+									<include-form name="FindStationPullStatus"
+										location="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingForms.xml" />
+								</screenlet >
+
+								<screenlet title="Show Expectations">
+									<include-form name="showGeneratedExpectationsToBeSent"
+										location="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+
+
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen -->
+	
+	<screen name="showGeneratedExpectation">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Expected Payment Breakdown" />
+				<set field="headerItem" value="pushMonthYearStation" />
+				<set field="tabButtonItem" value="pushMonthYearStation" />
+
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="createExpectedPaymentSent" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+				<set field="expectedPaymentBreakdownCtx" from-field="parameters" />
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
+					property="KEN" default="KEN"/ -->
+				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+				<set field="pushMonthYearStationId" from-field="parameters.pushMonthYearStationId" type="Long"/>
+				
+				<entity-one value-field="pushMonthYearStation" entity-name="PushMonthYearStation">
+					<field-map field-name="pushMonthYearStationId" from-field="pushMonthYearStationId"/>
+				</entity-one>
+				<entity-one value-field="station" entity-name="Station">
+					<field-map field-name="stationId" from-field="pushMonthYearStation.stationId"/>
+				</entity-one>
+				<set field="employerCode" from-field="station.employerCode"></set>
+				
+				<set field="employerName"
+					value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.getEmployerName(employerCode);}"
+					type="String" />
+				<set field="month" from-field="pushMonthYearStation.month" type="PlainString" />
+				<set field="year" from-field="pushMonthYearStation.year" type="PlainString" />
+				<set field="totalExpected" global="true"
+					value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.getTotalExpected(employerCode, month, pushMonthYearStationId);}"
+					type="BigDecimal" />
+				<set field="totalRemitted" global="true"
+					value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.getTotalRemitted(employerCode, month);}"
+					type="BigDecimal" />
+				<set field="totalChequeAmount" global="true"
+					value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.getTotalRemittedChequeAmount(employerCode, month);}"
+					type="BigDecimal" />
+
+				<entity-one entity-name="ExpectedPaymentSent"
+					value-field="expectedPaymentSentContext" />
+					
+
+			</actions>
+			<widgets>
+				<decorator-screen name="OnlineRemittanceProcessingCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<!-- include-menu
+							location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsMenus.xml"
+							name="expectedPaymentsTabBar" / -->
+						<!-- section> <condition> <if-has-permission permission="ACCOUNTHOLDER"
+							action="_CREATE"/> </condition> <widgets> <screenlet title="Expected Payment">
+							<include-form name="NewExpectedPayment" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+							</screenlet> </widgets> <fail-widgets> <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+							</fail-widgets> </section -->
+						<section>
+							<widgets>
+								<screenlet>
+									<section>
+
+										<widgets>
+
+											<container style="button-bar">
+												<label style="h3">Expected Payments from ${employerName}
+													for ${month}${year} </label>
+
+												<link
+													target="expectedPaymentBreakdownpdf.pdf?month=${month}&amp;employerCode=${employerCode}"
+													text="Print Expected Payment Breakdown" style="buttontext">
+													<!-- parameter param-name="loanApplicationId"/ -->
+													<image url-mode="raw"
+														src="${iconsLocation}/page_white_acrobat.png" />
+												</link>
+
+												<link
+													target="expectedPaymentBreakdowncsv.csv?month=${month}&amp;employerCode=${employerCode}"
+													text="Generate Expected Payment Breakdown CSV" style="buttontext">
+													<image url-mode="raw" src="${iconsLocation}/page_excel.png" />
+
+												</link>
+											</container>
+										</widgets>
+
+									</section>
+								</screenlet>
+							</widgets>
+						</section>
+
+						<section name="Expected Payment Breakdown">
+							<widgets>
+								<!--screenlet title="Find Expected Payment Sent">
+									<include-form name="FindExpectedPaymentSent"
+										location="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingForms.xml" />
+								</screenlet -->
+								<screenlet title="Expected Payment Breakdown">
+									<include-form name="listExpectedPaymentSentBreakdown"
+										location="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingForms.xml" />
+								</screenlet>
+
+
+																<screenlet>
+									<!-- include-form name="listExpectedPaymentReceivedBreakdownTotals"
+										location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/ -->
+									<section>
+										<widgets>
+											<container style="button-bar">
+												<label style="h3">Total Expected : Kshs. ${totalExpected}
+												</label>
+												<label style="h3">Total Received (Schedule) : Kshs.
+													${totalRemitted} </label>
+												<label style="h3">Total Received (Cheque Amount) : Kshs.
+													${totalChequeAmount} </label>
+
+
+											</container>
+										</widgets>
+									</section>
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
 
 </screens>

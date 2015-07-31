@@ -267,6 +267,37 @@ transfersOutTotalList.eachWithIndex { transferOutItem, outIndex ->
 	}
 
 	
+	//Minus LOANCASHPAYREVERSED
+	expr = exprBldr.AND() { //Timestamp
+		GREATER_THAN_EQUAL_TO(createdStamp: transferDateTimestamp)
+		LESS_THAN_EQUAL_TO(createdStamp: endOfDay)
+		EQUALS(treasuryId: destinationTreasury)
+		EQUALS(transactionType: 'LOANCASHPAYREVERSED')
+	}
+	
+	//allTransactions = delegator.findByAnd("AccountTransaction",  expr, null, false);
+	
+	//membersList = delegator.findList("Member", expr, null, ["joinDate ASC"], findOptions, false)
+	findOptions = new EntityFindOptions();
+	accountTransactionLoanCashReversalList = delegator.findList("AccountTransaction", expr, null, null, findOptions, false)
+	
+	
+	accountTransactionLoanCashReversalList.eachWithIndex { depositsItem, depIndex ->
+		//totalOut = totalOut.add(transferOutItem.transactionAmount);
+		
+		treasuryTransaction =  new TreasuryTransaction();
+		loanApplicationId = depositsItem.loanApplicationId
+		treasuryTransaction.memberAccountNo = org.ofbiz.accountholdertransactions.LoanUtilities.getMemberNumberLoanNumber(loanApplicationId.toLong());
+		treasuryTransaction.description = " (Loan Cash Reversal)"
+		treasuryTransaction.transactionAmount = depositsItem.transactionAmount
+		treasuryTransaction.increaseDecrease = "D"
+		treasuryTransaction.transactionDateTime = depositsItem.createdStamp
+		
+		mergedTransactionsList.add(treasuryTransaction)
+		
+	}
+	
+	
 	mergedTransactionsList.sort{it.transactionDateTime};
 
 	context.mergedTransactionsList = mergedTransactionsList

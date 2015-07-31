@@ -35,6 +35,12 @@
 		<response name="success" type="view" value="pushMonthYear" />
 	</request-map>
 	
+	<!-- pushMonthYearStation -->
+	<request-map uri="pushMonthYearStation">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="pushMonthYearStation" />
+	</request-map>
+	
 	<!-- request-map uri="pushAllStations">
 		<security auth="true" https="true" />
 		<event type="java"
@@ -224,6 +230,48 @@
 		</response>
 		<response name="error" type="view" value="showStationPullStatus" />
 	</request-map>
+	
+	<!-- generateTheMonthStationExpectation -->
+		<request-map uri="generateTheMonthStationExpectation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="generateTheMonthStationExpectation" />
+		<response name="success" type="request-redirect" value="showGeneratedExpectation">
+			<redirect-parameter name="pushMonthYearStationId"/>
+		</response>
+		<response name="error" type="view" value="showGeneratedExpectation">
+			<redirect-parameter name="pushMonthYearStationId"/>
+		</response>
+	</request-map>
+	
+	<!-- PushMonthYearStation -->
+	<request-map uri="createPushMonthYearStation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createPushMonthYearStation" />
+		<response name="success" type="request-redirect" value="pushMonthYearStation"></response>
+		<response name="error" type="view" value="pushMonthYearStation" />
+	</request-map>
+
+	<request-map uri="updatePushMonthYearStation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updatePushMonthYearStation" />
+		<response name="success" type="request-redirect" value="pushMonthYearStation"></response>
+		<response name="error" type="view" value="pushMonthYearStation" />
+	</request-map>
+
+	<request-map uri="deletePushMonthYearStation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deletePushMonthYearStation" />
+		<response name="success" type="request-redirect" value="pushMonthYearStation"></response>
+		<response name="error" type="view" value="pushMonthYearStation" />
+	</request-map>
+	
+	<!-- showGeneratedExpectation -->
+	<request-map uri="showGeneratedExpectation">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="showGeneratedExpectation">
+			<redirect-parameter name="pushMonthYearStationId" from="pushMonthYearStationId"/>
+		</response>
+	</request-map>
 
 	<!-- View Mappings -->
 	<view-map name="main" type="screen"
@@ -236,6 +284,14 @@
 		<view-map name="pushMonthYear" type="screen"
 		page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#pushMonthYear" />
 	
+	<!-- pushMonthYearStation -->
+			<view-map name="pushMonthYearStation" type="screen"
+		page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#pushMonthYearStation" />
+	
+	<!-- showGeneratedExpectation -->
+		<view-map name="showGeneratedExpectation" type="screen"
+		page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#showGeneratedExpectation" />
+
 	<!-- 
 		showStationPushStatus
 	showStationPullStatus

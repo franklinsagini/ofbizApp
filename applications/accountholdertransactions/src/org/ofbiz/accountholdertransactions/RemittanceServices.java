@@ -981,6 +981,49 @@ public class RemittanceServices {
 
 		return totalExpected;
 	}
+	
+	
+	
+	public static BigDecimal getTotalExpected(String employerCode, String month, Long pushMonthYearStationId) {
+		BigDecimal totalExpected = BigDecimal.ZERO;
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> expectedPaymentReceivedELI = new ArrayList<GenericValue>();
+
+		
+//		//EntityCondition.makeCondition(
+//		"employerCode", EntityOperator.EQUALS,
+//		employerCode.trim()), EntityCondition.makeCondition(
+//		"month", EntityOperator.EQUALS, month),
+		EntityConditionList<EntityExpr> expectedPaymentReceivedConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(
+						//pushMonthYearStationId
+						EntityCondition.makeCondition(
+								"pushMonthYearStationId", EntityOperator.EQUALS, pushMonthYearStationId),	
+
+				EntityCondition.makeCondition("expectationType",
+						EntityOperator.NOT_EQUAL, "BALANCE")
+
+				), EntityOperator.AND);
+
+		try {
+			expectedPaymentReceivedELI = delegator.findList(
+					"ExpectedPaymentSent", expectedPaymentReceivedConditions,
+					null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		for (GenericValue expectedPaymentReceived : expectedPaymentReceivedELI) {
+			if (expectedPaymentReceived.getBigDecimal("amount") != null) {
+				totalExpected = totalExpected.add(expectedPaymentReceived
+						.getBigDecimal("amount"));
+			}
+		}
+
+		return totalExpected;
+	}
 
 	/***
 	 * Get total remitted by station
