@@ -18,9 +18,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
-        
+
         <form name="PayslipGen" type="single" target="payslipViewpdf"
         focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="payslipViewContext">
         <actions>
@@ -34,32 +34,32 @@ under the License.
         		<order-by field-name="payrollPeriodId"/>
         	</entity-condition>
         	<set field="payrollPeriodId" from-field="payrollPeriodId"/>
-        	
+
         </actions>
-        
-      	<field name="payrollPeriodId" title="Payroll Period">        	
+
+      	<field name="payrollPeriodId" title="Payroll Period">
        	 <drop-down allow-empty="true">
        	 	<list-options list-name="periodList" key-name="payrollPeriodId" description="${name}"/>
        	 </drop-down>
         </field>
-        
+
         <field name="partyId" title="Employee">
         	<drop-down>
         		<list-options key-name="partyId" list-name="personList" description="${firstName} - ${lastName}"/>
         	</drop-down>
         </field>
-        
+
         <field name="submitButton" title="Run" widget-style="smallSubmit"><submit button-type="text-link"/></field>
         </form>
-    
+
     <form name="listPayrollCodesReport" type="single" target="payrollCodesViewPDF" title=""
         header-row-style="header-row" default-table-style="basic-table">
         <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
-    
-    
+
+
     <form name="listPayrollCodesByType" type="single" target="payrollCodesByTypePDF" title="" header-row-style="header-row"
         default-table-style="basic-table">
         <field name="elementType" title="Code Type" required-field="true"  tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
@@ -73,10 +73,10 @@ under the License.
             <submit button-type="button"/>
         </field>
     </form>
-    
+
     <form name="listPayPointsReport" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" paginate-target="payPointsReport"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        <actions>        
+        <actions>
         	<entity-condition entity-name="PayPoints">
         		<order-by field-name="partyId"/>
         	</entity-condition>
@@ -89,17 +89,17 @@ under the License.
          <field name="partyId" title="Employee">
          	<display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName} (${employeeNumber})"/>
         </field>
-        <field name="bankDetailsId" title="Bank">  
-        	<display-entity entity-name="BankDetails" key-field-name="bankDetailsId" description="${bankName}"/> 
+        <field name="bankDetailsId" title="Bank">
+        	<display-entity entity-name="BankDetails" key-field-name="bankDetailsId" description="${bankName}"/>
         </field>
         <field name="bankBranchId" title="Bank Branch">
-        	<display-entity entity-name="BankBranch" key-field-name="bankBranchId" description="${branchName}"/> 
+        	<display-entity entity-name="BankBranch" key-field-name="bankBranchId" description="${branchName}"/>
         </field>
         <field name="accountName" title="Account Name"><display/></field>
         <field name="accountNumber" title="Account No."><display/></field>
         <field name="payMode"  title="Pay Mode" > <display/></field>
     </form>
-    
+
      <form name="IndividualPayslip" type="single" target="individualPayslippdf" title="" header-row-style="header-row"
         default-table-style="basic-table">
         <field name="payrollPeriodId" title="Payroll Period" required-field="true" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
@@ -117,7 +117,7 @@ under the License.
             <submit button-type="button"/>
         </field>
     </form>
-    
+
                                          <!-- FOR MY PROFILE -->
      <form name="myPayslip" type="single" target="individualPayslippdf" title="" header-row-style="header-row"
         default-table-style="basic-table">
@@ -136,7 +136,7 @@ under the License.
             <submit button-type="button"/>
         </field>
     </form>
-    
+
     <form name="P9Report" type="single" target="p9reportPdf" title="" header-row-style="header-row"
         default-table-style="basic-table">
         <field name="payrollYearId" title="Year" required-field="true" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
@@ -153,7 +153,7 @@ under the License.
             <submit button-type="button"/>
         </field>
     </form>
-    
+
     <form name="P9ReportIndividual" type="single" target="P9ReportPdfIndividual" title="" header-row-style="header-row"
         default-table-style="basic-table">
         <field name="payrollYearId" title="Year" required-field="true" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
@@ -170,7 +170,7 @@ under the License.
             <submit button-type="button"/>
         </field>
     </form>
-    
+
     <form name="P10Report" type="single" target="P10ReportPDF" title="" header-row-style="header-row"
         default-table-style="basic-table">
         <field name="payrollYearId" title="Year" required-field="true" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
@@ -184,7 +184,7 @@ under the License.
             <submit button-type="button"/>
         </field>
     </form>
-    
+
     <form name="P10AReport" type="single" target="P10AReportPDF" title="" header-row-style="header-row"
         default-table-style="basic-table">
         <field name="payrollYearId" title="Year" required-field="true" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
@@ -198,8 +198,8 @@ under the License.
             <submit button-type="button"/>
         </field>
     </form>
-    
-    
+
+
     <form name="NSSFReport" type="single" target="NSSFReportViewPDF" title="" header-row-style="header-row"
         default-table-style="basic-table">
         <field name="payrollPeriodId" title="Period" required-field="true" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
@@ -210,12 +210,12 @@ under the License.
         		</entity-options>
         	</drop-down>
         </field>
-        
+
         <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
-    
+
     <form name="NHIFReport" type="single" target="NHIFReportViewPDF" title="" header-row-style="header-row"
         default-table-style="basic-table">
         <field name="payrollPeriodId" title="Period" required-field="true" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
@@ -226,13 +226,38 @@ under the License.
         		</entity-options>
         	</drop-down>
         </field>
-        
+
         <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
-    
+
     <form name="PayrollCodeSummary" type="single" target="payrollCodeSummaryPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="payrollPeriodId" title="Period" required-field="true" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+            <drop-down allow-empty="true">
+                <entity-options description="${name}" entity-name="PayrollPeriod" key-field-name="payrollPeriodId">
+                    <!--entity-constraint name="status" operator="equals" value="Closed"/-->
+                    <!-- entity-constraint name="status" operator="equals" value="Closed"/ -->
+                    <entity-order-by field-name="-payrollPeriodId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+
+         <field name="payrollElementId" title="Code Name" required-field="true" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+            <drop-down allow-empty="true">
+                <entity-options description="${name}" entity-name="PayrollElement" key-field-name="payrollElementId">
+                    <entity-order-by field-name="elementCode"/>
+                </entity-options>
+            </drop-down>
+        </field>
+
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <form name="PayrollCodeSummaryCSV" type="single" target="payrollCodeSummary.csv" title="" header-row-style="header-row"
         default-table-style="basic-table">
         <field name="payrollPeriodId" title="Period" required-field="true" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
         	<drop-down allow-empty="true">
@@ -243,7 +268,7 @@ under the License.
         		</entity-options>
         	</drop-down>
         </field>
-        
+
          <field name="payrollElementId" title="Code Name" required-field="true" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
         	<drop-down allow-empty="true">
         		<entity-options description="${name}" entity-name="PayrollElement" key-field-name="payrollElementId">
@@ -251,11 +276,17 @@ under the License.
         		</entity-options>
         	</drop-down>
         </field>
-        
+
         <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
     </form>
-    
-    
+
+    <form name="payrollCodeSummarycsv" type="list" title="List Accounting Transactions" list-name="codes" paginate="false">
+        <field name="employeeNumber"><display/></field>
+        <field name="firstName"><display/></field>
+        <field name="lastName"><display/></field>
+        <field name="amount"><display/></field>
+    </form>
+
 </forms>

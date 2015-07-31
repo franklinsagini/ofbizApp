@@ -741,6 +741,27 @@ under the License.
         </section>
     </screen>
 
+    <screen name="FindGlAccountReconciliationsCSV">
+        <section>
+            <actions>
+                <set field="viewSize" value="99999"/>
+                <set field="titleProperty" value="AccountingTrialBalance"/>
+                <set field="tabButtonItem" value="OrganizationAccountingReports"/>
+                <set field="tabButtonItem2" value="TrialBalance"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
+                <set field="glAccountId" from-field="parameters.glAccountId"/>
+                <set field="thruDate" from-field="parameters.thruDate" type="Timestamp"  default-value="${nowTimestamp}"/>
+                <set field="fromDate" from-field="parameters.fromDate" type="Timestamp" />
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/gl/glRecon.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <include-form name="FindGlAccountReconciliationsCSV" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
+                </container>
+            </widgets>
+        </section>
+    </screen>
+
     <screen name="TrialBalanceSearchResultsPdf">
         <section>
             <actions>
