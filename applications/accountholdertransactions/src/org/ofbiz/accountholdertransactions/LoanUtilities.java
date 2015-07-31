@@ -2815,8 +2815,9 @@ public class LoanUtilities {
 		
 		for (GenericValue genericValue : loanGuarantorELI) {
 			Long memberAccountId = LoanUtilities.getMemberAccountIdFromMemberAccount(genericValue.getLong("guarantorId"), accountProductId);
-			
-			bdTotalDepositAmount = bdTotalDepositAmount.add(AccHolderTransactionServices.getAvailableBalanceVer3(memberAccountId.toString()));
+			if (memberAccountId != null){
+				bdTotalDepositAmount = bdTotalDepositAmount.add(AccHolderTransactionServices.getAvailableBalanceVer3(memberAccountId.toString()));
+			}
 		}
 
 		
