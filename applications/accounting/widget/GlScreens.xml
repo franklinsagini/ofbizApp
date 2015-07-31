@@ -773,6 +773,12 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.AccountingAcctRecons}">
                             <include-form name="FindGlAccountReconciliations" location="component://accounting/widget/GlForms.xml"/>
+                            <link text="Export to Excel" style="button" widget-style="buttontext" target="FindGlAccountReconciliations.csv">
+                                <parameter param-name="fromDate"/>
+                                <parameter param-name="thruDate"/>
+                                <parameter param-name="glAccountId"/>
+                                <parameter param-name="organizationPartyId"/>
+                            </link>
                         </screenlet>
                         <section>
                             <condition>
@@ -784,6 +790,32 @@ under the License.
                                 </screenlet>
                             </widgets>
                         </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="FindGlAccountReconciliationsCSV">
+        <section>
+            <actions>
+                <set field="viewSize" value="99999"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="titleProperty" value="AccountingAcctRecons"/>
+                <set field="tabButtonItem" value="AccountReconciliations"/>
+                <set field="labelTitleProperty" value="AccountingAcctRecons"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
+                <set field="glAccountId" from-field="parameters.glAccountId"/>
+                <set field="thruDate" from-field="parameters.thruDate" type="Timestamp"  default-value="${nowTimestamp}"/>
+                <set field="fromDate" from-field="parameters.fromDate" type="Timestamp" />
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/gl/glRecon.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyGlDecorator" location="${parameters.partyGlDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="${uiLabelMap.AccountingAcctRecons}">
+                            <include-form name="FindGlAccountReconciliationsCSV" location="component://accounting/widget/GlForms.xml"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
