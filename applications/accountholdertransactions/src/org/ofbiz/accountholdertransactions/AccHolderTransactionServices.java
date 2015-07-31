@@ -2777,8 +2777,7 @@ public class AccHolderTransactionServices {
 					.getTotalInsuranceDue(loanApplication.getString("partyId"),
 							loanApplication.getString("loanApplicationId")));
 			result.put("totalPrincipalDue", LoanRepayments
-					.getTotalPrincipalDue(loanApplication.getString("partyId"),
-							loanApplication.getString("loanApplicationId")));
+					.getTotalPrincipalDue(loanApplication.getLong("loanApplicationId")));
 
 			// result.put("selectedRepaymentPeriod",
 			// saccoProduct.get("selectedRepaymentPeriod"));
@@ -6460,8 +6459,9 @@ public class AccHolderTransactionServices {
 
 			deductionItem.setCode(code + "A");
 
-			BigDecimal bdAmount = LoanRepayments.getTotalPrincipalDue(
-					partyId.toString(), loanApplicationId.toString());
+			BigDecimal bdAmount = LoanRepayments.getTotalPrincipaByLoanDue(loanApplicationId.toString());
+					//(
+				//	partyId.toString(), loanApplicationId.toString());
 			deductionItem.setBdAmount(bdAmount);
 
 			BigDecimal bdBalance = loanApplication

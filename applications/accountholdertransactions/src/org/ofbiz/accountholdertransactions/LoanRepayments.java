@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.apache.velocity.runtime.parser.node.GetExecutor;
 import org.joda.time.LocalDate;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
@@ -2196,39 +2195,9 @@ public class LoanRepayments {
 
 		BigDecimal totalDue = BigDecimal.ZERO;
 
-		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		List<GenericValue> loanExpectationELI = new ArrayList<GenericValue>();
-		// loanApplicationId
+		totalDue = getTotalPrincipalDue(Long.valueOf(loanApplicationId)).add(getTotalInterestByLoanDue(loanApplicationId)).add(getTotalInsurancByLoanDue(loanApplicationId));
 
-		// EntityCondition.makeCondition(
-		// "isPaid", EntityOperator.EQUALS, "N"),
-		partyId = partyId.replaceAll(",", "");
-		loanApplicationId = loanApplicationId.replaceFirst(",", "");
-		EntityConditionList<EntityExpr> loanExpectationConditions = EntityCondition
-				.makeCondition(UtilMisc.toList(
-						EntityCondition.makeCondition("partyId",
-								EntityOperator.EQUALS, Long.valueOf(partyId)),
-						EntityCondition.makeCondition("loanApplicationId",
-								EntityOperator.EQUALS,
-								Long.valueOf(loanApplicationId))
-
-				), EntityOperator.AND);
-
-		try {
-			loanExpectationELI = delegator.findList("LoanExpectation",
-					loanExpectationConditions, null, null, null, false);
-
-		} catch (GenericEntityException e2) {
-			e2.printStackTrace();
-		}
-
-		for (GenericValue loanExpectation : loanExpectationELI) {
-			totalDue = totalDue.add(loanExpectation
-					.getBigDecimal("amountAccrued"));
-		}
-
-		return (totalDue.subtract(getTotalLoanPaid(partyId, loanApplicationId)))
-				.setScale(2, RoundingMode.HALF_UP);
+		return totalDue;
 	}
 
 	/***
