@@ -361,7 +361,7 @@
 
 
     <!-- listStationProductCodeMap -->
-    	<form name="listStationProductCodeMap" type="list" list-name="listIt"
+    <form name="listStationProductCodeMap" type="list" list-name="listIt"
 		paginate-target="stationProductCodeMap" default-entity-name="StationProductCodeMap"
 		separate-columns="true" odd-row-style="alternate-row"
 		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="stationProductCodeMap">
@@ -390,5 +390,197 @@
 		</field>
 	</form>
 	
+	<!-- NewPushMonthYearStation -->
+		<form name="NewPushMonthYearStation" type="single" target="createPushMonthYearStation"
+        focus-field-name="year" header-row-style="header-row" default-table-style="basic-table" default-map-name="pushMonthYearStationContext">
+        
+          <field name="stationId" title="Station" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<drop-down allow-empty="true" >
+       			<entity-options description="${name} - ${stationNumber}" entity-name="Station">
+       				<entity-order-by field-name="name"/>
+       			</entity-options>
+       		</drop-down>
+        </field>
+        
+        <field name="month" title="Month" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<drop-down allow-empty="true" >
+       			<option key="1" description="1"/>
+       			<option key="2" description="2"/>
+       			<option key="3" description="3"/>
+       			<option key="4" description="4"/>
+       			<option key="5" description="5"/>
+       			<option key="6" description="6"/>
+       			<option key="7" description="7"/>
+       			<option key="8" description="8"/>
+       			<option key="9" description="9"/>
+       			<option key="10" description="10"/>
+       			<option key="11" description="11"/>
+       			<option key="12" description="12"/>
+       		</drop-down>
+        </field>
+        
+         <field name="year" title="Year" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<text size="25" default-value="20"></text>
+        </field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+	
+	<!-- pushMonthYearStation -->
+	<form name="pushMonthYearStation" type="list" list-name="listIt"
+		paginate-target="pushMonthYearStation" default-entity-name="PushMonthYearStation"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="pushMonthYearStation">
+		<actions>
+            <entity-condition entity-name="PushMonthYearStation">
+            	<order-by field-name="-pushMonthYearStationId"/>
+            </entity-condition>
+        </actions>
+		<field name="pushMonthYearStationId"><hidden/></field>
+		
+		<field name="month" title="Month">
+			<display></display>
+		</field>
+		
+		<field name="year" title="Year">
+			<display></display>
+		</field>
+		
+		
+		<field name="createdStamp" title="Created">
+			<display type="date-time" />
+		</field>
+		
+		<field name="createdBy" title="Created By">
+			<display />
+		</field>
+		
+		
+		<!-- field name="addToClearList" title="Add To Clear List"
+			widget-style="buttontext" use-when="(&quot;${bsh:org.ofbiz.loans.LoanServices.alloweToClear(loanApplicationId);}&quot;.equals(&quot;${yes}&quot;)&amp;&amp;(isAddedToClear==null))||(&quot;${bsh:org.ofbiz.loans.LoanServices.alloweToClear(loanApplicationId);}&quot;.equals(&quot;${yes}&quot;)&amp;&amp;!isAddedToClear.equals(&quot;${yes}&quot;))" >
+			<hyperlink  target="addToClearList" description="Add To Clear List "
+				also-hidden="true" >
+				
+				<parameter param-name="loanApplicationId" />
+				<parameter param-name="partyId"/>
+			</hyperlink>
+		</field -->
+		
+		<field name="generateTheMonthStationExpectation" title="Generate the Month Station Expectation"
+			widget-style="buttontext">
+			<hyperlink target="generateTheMonthStationExpectation" description="Generate the Expectation"
+				also-hidden="false" confirmation-message="Do you want to delete existing expectation and generate ?">
+				<parameter param-name="pushMonthYearStationId"/>
+			</hyperlink>
+		</field>
+		
+		<field name="pushTheStation" title="Push the Station to Online"
+			widget-style="buttontext">
+			<hyperlink target="pushTheStation" description="Push The Station"
+				also-hidden="false" confirmation-message="Are you sure you want to push this station?">
+				<parameter param-name="pushMonthYearStationId"/>
+			</hyperlink>
+		</field>
+		
+		<field name="showGeneratedExpectation" title="Push generated expectation"
+			widget-style="buttontext">
+			<hyperlink target="showGeneratedExpectation" description="Show Generated Expectation"
+				also-hidden="false">
+				<parameter param-name="pushMonthYearStationId" from-field="pushMonthYearStationId"/>
+			</hyperlink>
+		</field>
+		
+		
+	</form>
+	
+	<!--  -->
+	        	<!-- entity-condition entity-name="MonthStationCount" list="monthStationList"></entity-condition>
+        	<set field="month" from-field="parameters.month"/>
+        	<set field="employerCode" from-field="parameters.employerCode"/ -->
+	
+	     <!-- form name="FindExpectedPaymentSent" type="single" target="showGeneratedExpectation" default-entity-name="ExpectedPaymentSent">
+        <actions>
+
+
+        </actions>
+
+        <field name="noConditionFind"><hidden value="Y"/></field>
+
+        <field name="employerCode" title="Employer Code" >
+        	<hidden value="${employerCode}"/>
+        </field>
+        
+         <field name="pushMonthYearStationId" title="Push Month Year Station ID" >
+         	<hidden value="${pushMonthYearStationId}"/>
+        </field>
+        <field name="remitanceCode" title="Remittance Code"><text-find size="10"/></field>
+        <field name="payrollNo" title="Payroll No" position="1"><text-find size="10"/></field>
+ 		<field name="memberNumber" title="Member Number" position="2"><text-find size="10"/></field>
+
+		<field name="loanNo" title="Loan No" position="1"><text-find size="10"/></field>
+		<field name="remitanceDescription" title="Remittance Description" position="1"><text-find size="10"/></field>
+
+
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
+    </form -->
+    
+    
+        <form name="listExpectedPaymentSentBreakdown" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="pushMonthYearStation" paginate-target="pushMonthYearStation"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        <!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
+            <entity-condition entity-name="ExpectedPaymentSent">
+
+            	<condition-list combine="and">
+            		<condition-expr field-name="pushMonthYearStationId" operator="equals" from-field="pushMonthYearStationId"/>
+            		<condition-expr field-name="month" operator="equals" from-field="parameters.month"/>
+            	</condition-list>
+            	<order-by field-name="remitanceCode"/>
+
+
+            </entity-condition>
+
+            <!-- service service-name="performFind" result-map="result" result-map-list="listIt">
+
+            	<field-map field-name="inputFields" from-field="expectedPaymentBreakdownCtx"/>
+                
+                <field-map field-name="entityName" value="ExpectedPaymentSent"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+
+            </service -->
+            <!-- field-map field-name="inputFields" from-field="stationExpectationCtx"/ -->
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateExpectedPaymentSent"/ -->
+
+		<field name="stationNumber" title="Station No"><display also-hidden="false"></display></field>
+		<field name="stationName" title="Station Name"><display also-hidden="false"></display></field>
+		<field name="remitanceCode" title="Remitance Code"><display also-hidden="false"></display></field>
+		<field name="payrollNo" title="Payroll No"><display also-hidden="false"></display></field>
+
+		<field name="employeeNumber" title="Employee No"><display also-hidden="false"></display></field>
+		<field name="memberNumber" title="Member No"><display also-hidden="false"></display></field>
+
+
+
+		<field name="month" title="Month"><display also-hidden="false"></display></field>
+        <field name="loanNo" title="Loan No"><display also-hidden="false"></display></field>
+        <field name="employerNo" title="Employer No"><display also-hidden="false"></display></field>
+
+
+        <field name="amount" title="Amount"><display also-hidden="false"></display></field>
+        <field name="remitanceDescription" title="Remitance Description"><display also-hidden="false"></display></field>
+
+        <field name="employeeName" title="Employee Name"><display also-hidden="false"></display></field>
+        <field name="generatedDate" title="Generated Date"><display also-hidden="false"></display></field>
+
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteChequeSetup" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="chequeSetupId"/>
+            </hyperlink>
+        </field -->
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+    </form>
 
 </forms>
