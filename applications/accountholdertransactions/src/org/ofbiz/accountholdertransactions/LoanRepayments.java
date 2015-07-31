@@ -2941,7 +2941,6 @@ public class LoanRepayments {
 		}
 		
 		//Get Interest
-		BigDecimal bdInterestAmt = BigDecimal.ZERO;
 		BigDecimal bdLoanBalance = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
 		
 		if (deductionType.equals(REDUCING_BALANCE)){
@@ -2953,7 +2952,7 @@ public class LoanRepayments {
 				
 		//getTotalInterestByLoanDue(loanApplicationId.toString());
 		
-		BigDecimal principalDue = paymentAmount.subtract(bdInterestAmt);
+		BigDecimal principalDue = paymentAmount.subtract(bdRepaymentInterestAmt);
 		
 		return principalDue;
 	}
