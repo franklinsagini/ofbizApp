@@ -27,7 +27,10 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.transaction.GenericTransactionException;
+import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.loans.LoanServices;
+import org.ofbiz.loansprocessing.LoansProcessingServices;
 
 public class SalaryProcessingServices {
 	public static Logger log = Logger.getLogger(SalaryProcessingServices.class);
@@ -2147,8 +2150,10 @@ public class SalaryProcessingServices {
 					.getMemberByPayrollNo(payrollNumber);
 			List<Long> listLoanApplicationIds = LoanServices
 					.getDisbursedLoansIds(member.getLong("partyId"));
-			BigDecimal bdMemberTotalLoanExpectedAmt = BigDecimal.ZERO;
-			BigDecimal bdLoanExpectedAmt = BigDecimal.ZERO;
+			//BigDecimal bdMemberTotalLoanExpectedAmt = BigDecimal.ZERO;
+			BigDecimal bdMemberTotalDeductedAmount = BigDecimal.ZERO;
+			BigDecimal bdLoanDeductedAmount = BigDecimal.ZERO;
+			//BigDecimal bdLoanExpectedAmt = BigDecimal.ZERO;
 			// String productName = "";
 			GenericValue loanRepayment;
 			Long loanRepaymentId = null;
@@ -2156,49 +2161,88 @@ public class SalaryProcessingServices {
 
 			BigDecimal bdSalaryBalance = bdNetSalaryAmt.subtract(
 					bdSalaryChargeAmt).subtract(bdSalaryExciseAmt);
+			
 			for (Long loanApplicationId : listLoanApplicationIds) {
-
-				bdLoanExpectedAmt = LoanRepayments.getTotalPrincipalDue(loanApplicationId);
-						
-						//LoanRepayments
-						//.getTotalPrincipaByLoanDue(loanApplicationId.toString());
-				
-				bdLoanExpectedAmt = bdLoanExpectedAmt
-						.add(LoanRepayments
-								.getTotalInterestByLoanDue(loanApplicationId
-										.toString()));
-				// if (bdSalaryBalance.compareTo(bdLoanExpectedAmt) >= 0)
-
-				bdLoanExpectedAmt = bdLoanExpectedAmt
-						.add(LoanRepayments
-								.getTotalInsurancByLoanDue(loanApplicationId
-										.toString()));
-				
-
-				bdMemberTotalLoanExpectedAmt = bdMemberTotalLoanExpectedAmt
-						.add(bdLoanExpectedAmt);
-				
-				if (bdLoanExpectedAmt.compareTo(BigDecimal.ZERO) > 0)
-				{
-				AccHolderTransactionServices.memberTransactionDeposit(
-						bdLoanExpectedAmt, memberAccountId, userLogin,
-						"LOANREPAYMENT", accountTransactionParentId, null,
-						acctgTransId, null, loanApplicationId);
-				}
-
 				BigDecimal totalLoanDue = LoanRepayments
 						.getTotalLoanByLoanDue(loanApplicationId.toString());
-				BigDecimal totalInterestDue = LoanRepayments
-						.getTotalInterestByLoanDue(loanApplicationId.toString());
+				
 				BigDecimal totalInsuranceDue = LoanRepayments
 						.getTotalInsurancByLoanDue(loanApplicationId.toString());
+				
+				BigDecimal totalInterestDue = LoanRepayments
+						.getTotalInterestByLoanDue(loanApplicationId.toString());
+				
 				BigDecimal totalPrincipalDue = LoanRepayments
 						.getTotalPrincipaByLoanDue(loanApplicationId.toString());
 
 				totalLoanDue = totalInterestDue.add(totalInsuranceDue).add(totalPrincipalDue);
-				BigDecimal interestAmount = totalInterestDue;
-				BigDecimal insuranceAmount = totalInsuranceDue;
-				BigDecimal principalAmount = totalPrincipalDue;
+				
+				BigDecimal interestAmount = BigDecimal.ZERO;
+				BigDecimal insuranceAmount = BigDecimal.ZERO;
+				BigDecimal principalAmount = BigDecimal.ZERO;
+
+				
+				//Get the Insurance
+				if (bdSalaryBalance.compareTo(totalInsuranceDue) > 0){
+					insuranceAmount = totalInsuranceDue;
+					bdSalaryBalance = bdSalaryBalance.subtract(insuranceAmount);
+				} else {
+					insuranceAmount = bdSalaryBalance;
+					bdSalaryBalance = BigDecimal.ZERO;
+				}
+				
+				//Get the Interest
+				if (bdSalaryBalance.compareTo(totalInterestDue) > 0){
+					interestAmount = totalInterestDue;
+					bdSalaryBalance = bdSalaryBalance.subtract(interestAmount);
+				} else {
+					interestAmount = bdSalaryBalance;
+					bdSalaryBalance = BigDecimal.ZERO;
+				}
+				
+				
+				//Get the Principal
+				
+				BigDecimal bdLoanBalance = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
+				if (totalPrincipalDue.compareTo(bdLoanBalance) > 0){
+					principalAmount = bdLoanBalance;
+				} else{
+					principalAmount = totalPrincipalDue;
+				}
+				
+				if (bdLoanBalance.compareTo(BigDecimal.ZERO) < 0){
+					principalAmount = BigDecimal.ZERO;
+				}
+				
+				if (bdSalaryBalance.compareTo(principalAmount) > 0){
+					//principalAmount = principalAmount;
+					bdSalaryBalance = bdSalaryBalance.subtract(principalAmount);
+				} else {
+					principalAmount = bdSalaryBalance;
+					bdSalaryBalance = BigDecimal.ZERO;
+				}
+				
+				
+				//Deducted will be Insurance + Interest + Principal
+				bdLoanDeductedAmount = insuranceAmount.add(interestAmount).add(principalAmount);
+				
+
+				bdMemberTotalDeductedAmount = bdMemberTotalDeductedAmount
+						.add(bdLoanDeductedAmount);
+				
+				if (bdLoanDeductedAmount.compareTo(BigDecimal.ZERO) < 1)
+					continue;
+				
+				
+				AccHolderTransactionServices.memberTransactionDeposit(
+						bdLoanDeductedAmount, memberAccountId, userLogin,
+						"LOANREPAYMENT", accountTransactionParentId, null,
+						acctgTransId, null, loanApplicationId);
+
+				
+//				BigDecimal interestAmount = totalInterestDue;
+//				BigDecimal insuranceAmount = totalInsuranceDue;
+//				BigDecimal principalAmount = totalPrincipalDue;
 
 				bdTotalPrincipalPaid = bdTotalPrincipalPaid
 						.add(principalAmount);
@@ -2211,12 +2255,12 @@ public class SalaryProcessingServices {
 						.toMap("loanRepaymentId", loanRepaymentId, "isActive",
 								"Y",
 								"createdBy",
-								"admin",
+								userLogin.get("userLoginId"),
 								// "transactionType", "LOANREPAYMENT",
 								"loanApplicationId", loanApplicationId,
 								"partyId", member.getLong("partyId"),
 
-								"transactionAmount", bdLoanExpectedAmt,
+								"transactionAmount", bdLoanDeductedAmount,
 
 								"totalLoanDue", totalLoanDue,
 
@@ -2233,10 +2277,24 @@ public class SalaryProcessingServices {
 								"acctgTransId", acctgTransId
 
 						));
+				
+				try {
+					TransactionUtil.begin();
+				} catch (GenericTransactionException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 
 				try {
 					delegator.createOrStore(loanRepayment);
 				} catch (GenericEntityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				try {
+					TransactionUtil.commit();
+				} catch (GenericTransactionException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -2245,6 +2303,13 @@ public class SalaryProcessingServices {
 				// userLogin);
 				// TODO use this to calcuate whether a loan can be paid
 				// listLoanRepayments.add(loanRepayment);
+				
+				//If the loan balance after this is ZERO then clear / set loan as cleared
+				BigDecimal newLoanBalance = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
+				if (newLoanBalance.compareTo(BigDecimal.ZERO) < 1){
+					//Clear Loan
+					LoanRepayments.clearLoan(loanApplicationId, userLogin, "CLeared by salary processing");
+				}
 			}
 
 			// Repay Loan with total loan repaid amount above for each loan
@@ -2304,9 +2369,11 @@ public class SalaryProcessingServices {
 
 		BigDecimal bdTotalCharges = bdTotalSalaryCharge
 				.add(bdTotalSalaryExciseDuty);
+		BigDecimal bdTotalLoanAmountPaid = bdTotalPrincipalPaid.add(
+		bdTotalInterestPaid).add(bdTotalInsurancePaid);
 		BigDecimal bdTotalMemberDepositAmt = bdTotalSalaryPosted
 				.subtract(bdTotalCharges);
-
+		bdTotalMemberDepositAmt = bdTotalMemberDepositAmt.subtract(bdTotalLoanAmountPaid);
 		// Credit Member Deposits with (total net - (total charge + total excise
 		// duty))
 		entrySequence = entrySequence + 1;
@@ -2328,12 +2395,12 @@ public class SalaryProcessingServices {
 
 		// Post the Loan Repayments
 		// DR the savings withdrawable savingsAccountGLAccountId
-		BigDecimal bdTotalLoanAmountPaid = bdTotalPrincipalPaid.add(
-				bdTotalInterestPaid).add(bdTotalInsurancePaid);
-		entrySequence = entrySequence + 1;
-		AccHolderTransactionServices.createAccountPostingEntry(
-				bdTotalLoanAmountPaid, acctgTransId, "D",
-				savingsAccountGLAccountId, entrySequence.toString(), branchId);
+//		BigDecimal bdTotalLoanAmountPaid = bdTotalPrincipalPaid.add(
+//				bdTotalInterestPaid).add(bdTotalInsurancePaid);
+//		entrySequence = entrySequence + 1;
+//		AccHolderTransactionServices.createAccountPostingEntry(
+//				bdTotalLoanAmountPaid, acctgTransId, "D",
+//				savingsAccountGLAccountId, entrySequence.toString(), branchId);
 
 		// Principal Payment
 		// CR Loan Receivable bdTotalPrincipalPaid

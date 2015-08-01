@@ -1687,20 +1687,7 @@ public class LoanRepayments {
 					amountRemaining = amountRemaining.subtract(bdLoanBalance);
 
 					// Set loan as cleared
-
-					Long loanStatusId = LoanUtilities
-							.getLoanStatusId("CLEARED");
-					GenericValue loanApplication = LoanUtilities
-							.getEntityValue("LoanApplication",
-									"loanApplicationId",
-									loanRepayment.getLong("loanApplicationId"));
-					loanApplication.set("loanStatusId", loanStatusId);
-					try {
-						delegator.createOrStore(loanApplication);
-					} catch (GenericEntityException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					clearLoan(loanRepayment.getLong("loanApplicationId"), userLogin, "Cleared in Loan Repayment");
 
 				} else {
 					principalAmount = amountRemaining;
@@ -3567,6 +3554,49 @@ public class LoanRepayments {
 			expectedPaymentReceived = genericValue;
 		}
 		return expectedPaymentReceived.getTimestamp("createdStamp");
+	}
+	
+	
+	public static void clearLoan(Long loanApplicationId, Map<String, String> userLogin, String comment){
+
+		Long loanStatusId = LoanUtilities
+				.getLoanStatusId("CLEARED");
+		GenericValue loanApplication = LoanUtilities
+				.getEntityValue("LoanApplication",
+						"loanApplicationId",
+						loanApplicationId);
+		loanApplication.set("loanStatusId", loanStatusId);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			delegator.createOrStore(loanApplication);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//Add Loan Clear Log
+		GenericValue loanStatusLog;
+		Long loanStatusLogId = delegator.getNextSeqIdLong("LoanStatusLog");
+		loanStatusLog = delegator.makeValue("LoanStatusLog", UtilMisc
+				.toMap("loanStatusLogId", loanStatusLogId,
+						
+						"loanApplicationId",
+						loanApplicationId,
+						
+						"isActive", "Y",
+						"createdBy", userLogin.get("userLoginId"), 
+						"updatedBy", null,
+						"loanStatusId", loanStatusId,
+						
+						"comment", comment));
+		try {
+			delegator.createOrStore(loanStatusLog);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
 	}
 
 }
