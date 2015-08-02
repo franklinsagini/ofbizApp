@@ -1281,13 +1281,8 @@ public class SalaryProcessingServices {
 				.add(bdTotalSalaryExciseDuty);
 		BigDecimal bdTotalMemberDepositAmt = bdTotalSalaryPosted
 				.subtract(bdTotalCharges);
+		
 
-		// Credit Member Deposits with (total net - (total charge + total excise
-		// duty))
-		entrySequence = entrySequence + 1;
-		AccHolderTransactionServices.createAccountPostingEntry(
-				bdTotalMemberDepositAmt, acctgTransId, "C",
-				savingsAccountGLAccountId, entrySequence.toString(), branchId);
 		// Credit Salary Charge with total salary charge
 		entrySequence = entrySequence + 1;
 		AccHolderTransactionServices
@@ -1303,12 +1298,11 @@ public class SalaryProcessingServices {
 
 		// Post the Loan Repayments
 		// DR the savings withdrawable savingsAccountGLAccountId
-		BigDecimal bdTotalLoanAmountPaid = bdTotalPrincipalPaid.add(
-				bdTotalInterestPaid).add(bdTotalInsurancePaid);
-		entrySequence = entrySequence + 1;
-		AccHolderTransactionServices.createAccountPostingEntry(
-				bdTotalLoanAmountPaid, acctgTransId, "D",
-				savingsAccountGLAccountId, entrySequence.toString(), branchId);
+
+//		entrySequence = entrySequence + 1;
+//		AccHolderTransactionServices.createAccountPostingEntry(
+//				bdTotalLoanAmountPaid, acctgTransId, "D",
+//				savingsAccountGLAccountId, entrySequence.toString(), branchId);
 
 		// Principal Payment
 		// CR Loan Receivable bdTotalPrincipalPaid
@@ -1400,9 +1394,21 @@ public class SalaryProcessingServices {
 		}
 
 		// Debit savings with total account contributions
+//		entrySequence = entrySequence + 1;
+//		AccHolderTransactionServices.createAccountPostingEntry(
+//				bdTotalAmountContributedToAccounts, acctgTransId, "D",
+//				savingsAccountGLAccountId, entrySequence.toString(), branchId);
+		
+		BigDecimal bdTotalLoanAmountPaid = bdTotalPrincipalPaid.add(
+				bdTotalInterestPaid).add(bdTotalInsurancePaid);
+		bdTotalMemberDepositAmt = bdTotalMemberDepositAmt.subtract(bdTotalLoanAmountPaid);
+		bdTotalMemberDepositAmt = bdTotalMemberDepositAmt.subtract(bdTotalAmountContributedToAccounts);
+
+		// Credit Member Deposits with (total net - (total charge + total excise
+		// duty))
 		entrySequence = entrySequence + 1;
 		AccHolderTransactionServices.createAccountPostingEntry(
-				bdTotalAmountContributedToAccounts, acctgTransId, "D",
+				bdTotalMemberDepositAmt, acctgTransId, "C",
 				savingsAccountGLAccountId, entrySequence.toString(), branchId);
 
 	}
