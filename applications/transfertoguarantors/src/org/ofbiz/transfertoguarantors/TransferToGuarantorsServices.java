@@ -90,6 +90,11 @@ public class TransferToGuarantorsServices {
 			e.printStackTrace();
 		}
 		
+		Long disbursedLoanStatusId = LoanServices.getLoanStatusId("DISBURSED");
+		
+		if (loanApplication.getLong("loanStatusId") != disbursedLoanStatusId)
+			return "Can only transfer to guarantors a running/disbursed loan ! This loan may have been disbursed already !";
+		
 		String statusName = "DEFAULTED";
 		Long loanStatusId = LoanServices.getLoanStatusId(statusName);
 
@@ -340,9 +345,7 @@ public class TransferToGuarantorsServices {
 						loanApplication.getLong("loanProductId"),
 
 						"accountProductId",
-						loanApplication.getLong("accountProductId"),
-						
-						"parentLoanApplicationId", loanApplication.getLong("loanApplicationId")
+						loanApplication.getLong("accountProductId")
 
 				));
 		try {
