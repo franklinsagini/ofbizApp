@@ -874,15 +874,17 @@ public class NormalRemittanceProcessingServices {
 									
 								//Mark loan as cleared
 									
-									Long loanStatusId = LoanUtilities.getLoanStatusId("CLEARED");
-									GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
-									loanApplication.set("loanStatusId", loanStatusId);
-									try {
-										delegator.createOrStore(loanApplication);
-									} catch (GenericEntityException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
+//									Long loanStatusId = LoanUtilities.getLoanStatusId("CLEARED");
+//									GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
+//									loanApplication.set("loanStatusId", loanStatusId);
+//									try {
+//										delegator.createOrStore(loanApplication);
+//									} catch (GenericEntityException e) {
+//										// TODO Auto-generated catch block
+//										e.printStackTrace();
+//									}
+									
+									LoanRepayments.clearLoan(loanApplicationId, userLogin, " Cleared From Remittance Processing");
 								} else {
 									principalAmount = bdLoanAmount;
 									bdLoanAmount = BigDecimal.ZERO;
