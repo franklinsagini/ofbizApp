@@ -457,6 +457,8 @@ under the License.
 		 
 		 <field name="loanSecurityId" type="id-int"   enable-audit-log="true"></field>
 		 
+		 <field name="parentLoanApplicationId" type="id-vlong-int"   enable-audit-log="true"></field>
+		 
 		<prim-key field="loanApplicationId"/>
 		<relation type="one" fk-name="PAYMENT_PMETH_TP" rel-entity-name="PaymentMethodType">
         <key-map field-name="paymentMethodTypeId"/>
@@ -684,6 +686,14 @@ under the License.
 		 <field name="repaymentStartDate" type="date-time"   enable-audit-log="true"></field>
 		
 		<field name="branchId" type="id-int"   enable-audit-log="true"></field>
+		
+		<!-- Attaching Loan Details -->
+		<field name="dateAttached" type="date-time" enable-audit-log="true"></field>
+
+		<field name="memberDepositsAtAttachment" type="fixed-point" enable-audit-log="true"></field>
+		<field name="balanceAtAttachment" type="fixed-point" enable-audit-log="true"></field>
+		<field name="interestDueAtAttachment" type="fixed-point" enable-audit-log="true"></field>
+		<field name="insuranceDueAtAttachment" type="fixed-point" enable-audit-log="true"></field>
 		
 		<prim-key field="loanStatusLogId"/>
 		<!-- relation type="one" fk-name="LoanStatusLog_MemberCreate" title="Parent" rel-entity-name="Member">

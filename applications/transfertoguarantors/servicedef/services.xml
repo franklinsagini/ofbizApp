@@ -11,4 +11,12 @@
         </description>
     </service> 
     
+    <service name="transferToGuarantorsProcessing" engine="simple"  default-entity-name="LoanApplication"
+             location="component://transfertoguarantors/script/org/ofbiz/transfertoguarantors/TransferToGuarantorsServices.xml" invoke="transferToGuarantorsProcessing" auth="true">
+        <description>transferToGuarantorsProcessing</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
 </services>

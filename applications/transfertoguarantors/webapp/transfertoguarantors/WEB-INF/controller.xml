@@ -43,6 +43,32 @@
 		<response name="success" type="view" value="LookupActiveMember" />
 	</request-map>
 	
+	<request-map uri="transferToGuarantors">
+		<security auth="true" https="true" />
+		
+		<event type="java" path="org.ofbiz.loansprocessing.LoansProcessingServices" invoke="transferToGuarantors" />
+		<response name="success" type="request-redirect" value="lastrepaymentdatemorethanthreemonthsago">
+		</response>
+		<response name="error" type="view" value="lastrepaymentdatemorethanthreemonthsago" />
+	</request-map>
+	
+	
+	<request-map uri="transferToGuarantorsProcessing">
+		 <security https="true" auth="true" />
+             <event type="service" invoke="transferToGuarantorsProcessing" />
+             <response name="success" type="request-redirect" value="viewapplicationprofile">
+             	<redirect-parameter name="loanApplicationId"/>
+             </response>
+		<response name="error" type="view" value="viewapplicationprofile" />
+	</request-map>
+	
+	<request-map uri="loanLogs">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="loanLogs">
+			<redirect-parameter name="loanApplicationId" />
+			<redirect-parameter name="partyId" />
+		</response>
+	</request-map>
 	
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://transfertoguarantors/widget/TransferToGuarantorsScreens.xml#main"/>
@@ -52,6 +78,10 @@
 	<view-map name="viewapplicationprofile" type="screen"
 		page="component://transfertoguarantors/widget/TransferToGuarantorsScreens.xml#viewapplicationprofile" />
 		
-		<view-map name="LookupActiveMember" type="screen"
+	<view-map name="LookupActiveMember" type="screen"
 		page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember" />
+		
+	<view-map name="loanLogs" type="screen"
+		page="component://transfertoguarantors/widget/TransferToGuarantorsScreens.xml#loanLogs" />
+		
 </site-conf>
