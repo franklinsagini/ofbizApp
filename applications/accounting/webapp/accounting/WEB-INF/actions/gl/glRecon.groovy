@@ -40,13 +40,13 @@ acctgTransEntry.each { obj ->
   currentacctgTransId = obj.acctgTransId
   transCond.add(EntityCondition.makeCondition("acctgTransId", EntityOperator.EQUALS, obj.acctgTransId));
   if (currentacctgTransId != obj.acctgTransId) {
+
+  }
     accountTransactionSublist = delegator.findList('AccountTransaction', EntityCondition.makeCondition(transCond, EntityOperator.AND), null, null, null, false)
     accountTransactionSublist.each { singleTransaction ->
       println "########################### ADDING  singleTransaction "+ singleTransaction.accountTransactionId
       accountTransList.add(singleTransaction)
     }
-  }
-
 
 
 }
