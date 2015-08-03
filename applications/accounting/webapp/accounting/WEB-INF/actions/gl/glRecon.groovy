@@ -32,6 +32,7 @@ summaryCondition = [];
 summaryCondition.add(EntityCondition.makeCondition("createdTxStamp", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
 summaryCondition.add(EntityCondition.makeCondition("createdTxStamp", EntityOperator.LESS_THAN, thruDate));
 summaryCondition.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, glAccountId));
+summaryCondition.add(EntityCondition.makeCondition("glAccountTypeId", EntityOperator.EQUALS, "MEMBER_DEPOSIT"));
 acctgTransEntry = delegator.findList('AcctgTransEntry', EntityCondition.makeCondition(summaryCondition, EntityOperator.AND), null, null, null, false)
 
 acctgTransEntry.each { obj ->
@@ -39,16 +40,14 @@ acctgTransEntry.each { obj ->
   transCond = []
   currentacctgTransId = obj.acctgTransId
   transCond.add(EntityCondition.makeCondition("acctgTransId", EntityOperator.EQUALS, obj.acctgTransId));
-  if (currentacctgTransId != obj.acctgTransId) {
 
+  accountTransactionSublist = delegator.findList('AccountTransaction', EntityCondition.makeCondition(transCond, EntityOperator.AND), null, null, null, false)
+  accountTransactionSublist.each { singleTransaction ->
+    println "########################### ADDING  singleTransaction "+ singleTransaction.accountTransactionId
+	  accountTransList.add(singleTransaction)
   }
-    accountTransactionSublist = delegator.findList('AccountTransaction', EntityCondition.makeCondition(transCond, EntityOperator.AND), null, null, null, false)
-    accountTransactionSublist.each { singleTransaction ->
-      println "########################### ADDING  singleTransaction "+ singleTransaction.accountTransactionId
-      accountTransList.add(singleTransaction)
-    }
 
-
+  println "#################################### accountTransaction: "+ accountTransactionSublist
 }
 
 accountTransList.each { objTrans ->
@@ -58,8 +57,7 @@ accountTransList.each { objTrans ->
   member = delegator.findOne("Member", [partyId : objTrans.partyId.toLong()], false);
   memberName = member.firstName + " " + member.middleName + " " + member.lastName
   println "#################################### memberName: "+memberName
-  if (objTrans.transactionType != "Commission on MSACCO Withdrawal" || objTrans.transactionType != "Excise Duty") {
-      finalTransListBuilder = [
+  finalTransListBuilder = [
     createdStamp:objTrans.createdStamp,
     memberName:memberName,
     memberPhone:member.mobileNumber,
@@ -68,8 +66,6 @@ accountTransList.each { objTrans ->
   ]
 
   finalTransList.add(finalTransListBuilder);
-  }
-
 }
 
 
