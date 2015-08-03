@@ -659,7 +659,7 @@ under the License.
 	
 	<entity entity-name="LoanStatusLog" package-name="org.ofbiz.loans"
 		title="LoanStatusLog Entity">
-		<field name="loanStatusLogId" type="id-int"   enable-audit-log="true"></field>
+		<field name="loanStatusLogId" type="id-vlong-int"   enable-audit-log="true"></field>
 		<field name="loanApplicationId" type="id-vlong-int"   enable-audit-log="true"></field>
 		
 		<field name="isActive" type="indicator"   enable-audit-log="true"></field>
@@ -684,6 +684,14 @@ under the License.
 		 <field name="repaymentStartDate" type="date-time"   enable-audit-log="true"></field>
 		
 		<field name="branchId" type="id-int"   enable-audit-log="true"></field>
+		
+		<!-- Attaching Loan Details -->
+		<field name="dateAttached" type="date-time" enable-audit-log="true"></field>
+
+		<field name="memberDepositsAtAttachment" type="fixed-point" enable-audit-log="true"></field>
+		<field name="balanceAtAttachment" type="fixed-point" enable-audit-log="true"></field>
+		<field name="interestDueAtAttachment" type="fixed-point" enable-audit-log="true"></field>
+		<field name="insuranceDueAtAttachment" type="fixed-point" enable-audit-log="true"></field>
 		
 		<prim-key field="loanStatusLogId"/>
 		<!-- relation type="one" fk-name="LoanStatusLog_MemberCreate" title="Parent" rel-entity-name="Member">

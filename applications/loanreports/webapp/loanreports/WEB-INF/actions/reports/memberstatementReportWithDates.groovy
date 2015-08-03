@@ -205,18 +205,21 @@ def memberStatementList = []
 
 theDisburseLoanStatusId = 6.toLong();
 theClearedLoanStatusId = 7.toLong();
+defaultedLoanStatusId = 10030.toLong();
 
 allDisbursedLoansList = null;
 allClearedLoansList = null;
+allDefaultedLoansList = null;
 allLoansList = null;
 //loanApplicationId
 if (((accountProductId == null) || (accountProductId.equals(""))) && ((loanApplicationId == null) || (loanApplicationId.equals("")))){
 	allDisbursedLoansList = delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: theDisburseLoanStatusId], null, false);
 	allClearedLoansList = delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: theClearedLoanStatusId], null, false);
-
+	allDefaultedLoansList = delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: defaultedLoanStatusId], null, false);
+	
 	allLoansList = allDisbursedLoansList;
 
-	allLoansList = allLoansList + allClearedLoansList;
+	allLoansList = allLoansList + allClearedLoansList + allDefaultedLoansList;
 }
 
 if ((loanApplicationId != null) && (!loanApplicationId.equals(""))){
@@ -224,8 +227,9 @@ if ((loanApplicationId != null) && (!loanApplicationId.equals(""))){
 
 	allDisbursedLoansList = delegator.findByAnd("LoanApplication",  [partyId : lpartyId,  loanApplicationId: loanApplicationIdLong], null, false);
 	//allClearedLoansList = delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanApplicationId: loanApplicationIdLong], null, false);
-
-	allLoansList = allDisbursedLoansList;
+	allDefaultedLoansList = delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: defaultedLoanStatusId], null, false);
+	
+	allLoansList = allDisbursedLoansList + allDefaultedLoansList;
 
 	//	allLoansList = allLoansList + allClearedLoansList;
 
