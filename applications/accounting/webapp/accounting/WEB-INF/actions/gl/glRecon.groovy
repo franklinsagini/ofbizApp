@@ -88,6 +88,53 @@ accountTransList.each { objTrans ->
 
 //ATM SETTLEMENT
 if (glAccountId == atmSettlementAc) {
+  accountTransList = []
+  finalTransListBuilder = []
+
+
+  summaryCondition = [];
+  summaryCondition.add(EntityCondition.makeCondition("createdTxStamp", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
+  summaryCondition.add(EntityCondition.makeCondition("createdTxStamp", EntityOperator.LESS_THAN, thruDate));
+  summaryCondition.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, glAccountId));
+  summaryCondition.add(EntityCondition.makeCondition("glAccountTypeId", EntityOperator.EQUALS, "MEMBER_DEPOSIT"));
+  acctgTransEntry = delegator.findList('AcctgTransEntry', EntityCondition.makeCondition(summaryCondition, EntityOperator.AND), null, null, null, false)
+
+  acctgTransEntry.each { obj ->
+    transCond = []
+    transCond.add(EntityCondition.makeCondition("acctgTransId", EntityOperator.EQUALS, obj.acctgTransId));
+    accountTransactionSublist = delegator.findList('AccountTransaction', EntityCondition.makeCondition(transCond, EntityOperator.AND), null, null, null, false)
+    accountTransactionSublist.each { singleTransaction ->
+      accountTransList.add(singleTransaction)
+    }
+  }
+
+accountTransList.each { objTrans ->
+  cardNumber = null
+  conditions = []
+  conditions.add(EntityCondition.makeCondition("memberAccountId", EntityOperator.EQUALS, objTrans.memberAccountId));
+  cardApplication = delegator.findList('CardApplication', EntityCondition.makeCondition(conditions, EntityOperator.AND), null, null, null, false)
+  cardApplication.each { singlemcardApplication ->
+    cardNumber = singlemcardApplication.cardNumber
+  }
+ // member = delegator.findOne("Member", UtilMisc.toMap("partyId", objTrans.partyId), true);
+  member = delegator.findOne("Member", [partyId : objTrans.partyId.toLong()], false);
+  memberName = member.firstName + " " + member.middleName + " " + member.lastName
+  println "#################################### memberName: "+memberName
+
+  if (objTrans.transactionType == 'MSACCOWITHDRAWAL' || objTrans.transactionType == 'M-sacco Settlement Charge') {
+    finalTransListBuilder = [
+      createdStamp:objTrans.createdStamp,
+      memberName:memberName,
+      memberPhone:cardNumber,
+      transactionType:objTrans.transactionType,
+      transactionAmount:objTrans.transactionAmount,
+    ]
+
+    finalTransList.add(finalTransListBuilder);
+  }
+
+}
+
 
 }
 
