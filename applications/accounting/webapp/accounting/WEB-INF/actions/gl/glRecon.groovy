@@ -17,15 +17,20 @@ if (!fromDate) {
   fromDate = thruDate - 1
 }
 
+msaccoSettlementAc = "34000013"
+atmSettlementAc = "34000010"
+
 
 println "############################################## "+thruDate
 println "############################################## "+fromDate
 println "############################################## "+glAccountId
-
 finalTransList = []
-accountTransList = []
-finalTransListBuilder = []
-currentacctgTransId = 0
+
+//MSACCO SETTLEMENT
+if(glAccountId == msaccoSettlementAc) {
+  accountTransList = []
+  finalTransListBuilder = []
+  currentacctgTransId = 0
 
 
 summaryCondition = [];
@@ -44,7 +49,7 @@ acctgTransEntry.each { obj ->
   accountTransactionSublist = delegator.findList('AccountTransaction', EntityCondition.makeCondition(transCond, EntityOperator.AND), null, null, null, false)
   accountTransactionSublist.each { singleTransaction ->
     println "########################### ADDING  singleTransaction "+ singleTransaction.accountTransactionId
-	  accountTransList.add(singleTransaction)
+    accountTransList.add(singleTransaction)
   }
 
   println "#################################### accountTransaction: "+ accountTransactionSublist
@@ -78,5 +83,12 @@ accountTransList.each { objTrans ->
 
 }
 
+}
+
+
+//ATM SETTLEMENT
+if (glAccountId == atmSettlementAc) {
+
+}
 
 context.finalTransList = finalTransList
