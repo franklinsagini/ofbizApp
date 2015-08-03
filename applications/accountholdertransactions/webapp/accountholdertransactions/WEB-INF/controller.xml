@@ -87,6 +87,13 @@
 			save-current-view="true" />
 	</request-map>
 	
+	<!-- loanRepaymentFromMemberAccount -->
+	<request-map uri="loanRepaymentFromMemberAccount">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="loanRepaymentFromMemberAccount"
+			save-current-view="true" />
+	</request-map>
+	
 	<request-map uri="loanAccountsPayment">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="loanAccountsPayment"
@@ -314,6 +321,23 @@
 		
 		<response name="error" type="view" value="loanRepayment" />
 	</request-map>
+	
+	
+	<!-- createLoanRepaymentFromMemberAccount -->
+	<request-map uri="createLoanRepaymentFromMemberAccount">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createLoanRepaymentFromMemberAccount" />
+		<!--response name="success" type="request-redirect" value="loanRepayment">
+			<redirect-parameter name="partyId" />
+		</response -->
+		
+		<response name="success" type="request-redirect" value="loanRepaymentPrintOut">
+			<redirect-parameter name="acctgTransId" />
+		</response>
+		
+		<response name="error" type="view" value="loanRepaymentFromMemberAccount" />
+	</request-map>
+	
 
 	<request-map uri="updateLoanRepayment">
 		<security https="true" auth="true" />
@@ -948,6 +972,10 @@
 
 	<view-map name="loanRepayment" type="screen"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewLoanRepayment" />
+	
+	<!-- loanRepaymentFromMemberAccount -->
+	<view-map name="loanRepaymentFromMemberAccount" type="screen"
+		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewLoanRepaymentFromMemberAccount" />
 	
 	
 	<view-map name="loanAccountsPayment" type="screen"

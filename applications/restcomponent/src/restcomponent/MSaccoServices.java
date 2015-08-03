@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
 import org.ofbiz.accountholdertransactions.LoanRepayments;
+import org.ofbiz.accountholdertransactions.LoanUtilities;
 import org.ofbiz.accountholdertransactions.Transaction;
 import org.ofbiz.accountholdertransactions.model.ATMTransaction;
 import org.ofbiz.base.util.UtilMisc;
@@ -304,6 +305,54 @@ public class MSaccoServices {
 		//AccHolderTransactionServices.
 
 		if (memberAccountId != null) {
+			//Post MSacco Enquiry Charge
+			BigDecimal bdMsaccoEnquiryChargeAmt = new BigDecimal(10);
+			BigDecimal bdMsaccoEnquiryExcise = new BigDecimal(1);
+			Long partyId = LoanUtilities.getMemberAccount(memberAccountId).getLong("partyId");
+			String memberBranchId = LoanUtilities.getMemberBranchId(partyId.toString());
+			String acctgTransId = AccHolderTransactionServices.creatAccountTransRecordMsaccoEnquiry(null, null, partyId, memberBranchId);
+			String glAccountTypeId = "MEMBER_DEPOSIT";
+			String memberPartyId = LoanUtilities
+					.getMemberPartyIdFromMemberAccountId(memberAccountId);
+
+			AccHolderTransactionServices.memberTransactionDeposit(
+					bdMsaccoEnquiryChargeAmt, memberAccountId, null,
+					"MSACCOENQUIRY", null, null,
+					acctgTransId, null, null);
+			//Post MSacco Enquiry Excise
+			AccHolderTransactionServices.memberTransactionDeposit(
+					bdMsaccoEnquiryExcise, memberAccountId, null,
+					"MSACCOENQUIRYEXCISE", null, null,
+					acctgTransId, null, null);
+			
+			
+			//Post to the GL
+			
+			//Dr Member Savings
+			Long entrySequence = 0L;
+			entrySequence = entrySequence + 1;
+			String savingsAccountGLAccountId = LoanUtilities
+					.getGLAccountIDForAccountProduct(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
+			BigDecimal bdTotalBalanceCharge = bdMsaccoEnquiryChargeAmt.add(bdMsaccoEnquiryExcise);
+			AccHolderTransactionServices.createAccountPostingEntry(
+					bdTotalBalanceCharge, acctgTransId, "D",
+					savingsAccountGLAccountId, entrySequence.toString(), memberBranchId);
+			
+			//Cr Msacco commission
+			entrySequence = entrySequence + 1;
+			
+			String msaccoCommissionAccountId = getMsaccoCommissionChargeAccount();
+			AccHolderTransactionServices.createAccountPostingEntry(
+					bdMsaccoEnquiryChargeAmt, acctgTransId, "C",
+					msaccoCommissionAccountId, entrySequence.toString(), memberBranchId);
+			
+			//Credit Excise
+			entrySequence = entrySequence + 1;
+			String exciseDutyAccountId = getMsaccoExciseDutyAccount();
+			AccHolderTransactionServices.createAccountPostingEntry(
+					bdMsaccoEnquiryExcise, acctgTransId, "C",
+					exciseDutyAccountId, entrySequence.toString(), memberBranchId);
+			
 			listMemberAccountId = AccHolderTransactionServices.getMemberAccountIdsWithdrawable(AccHolderTransactionServices
 					.getMemberAccount(memberAccountId).getLong("partyId"));
 			
@@ -333,6 +382,48 @@ public class MSaccoServices {
 		
 		return listAccount;
 
+	}
+
+	private String getMsaccoExciseDutyAccount() {
+		// TODO Auto-generated method stub
+		//msaccoCommissionAccountId
+		//Msacco Enquiry Commission
+		List<GenericValue> chargesELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			chargesELI = delegator.findList("ProductCharge",
+					EntityCondition.makeCondition("name", "Excise Duty"), null,
+					null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		String chargeAccountId = "";
+		for (GenericValue genericValue : chargesELI) {
+			chargeAccountId = genericValue.getString("chargeAccountId");
+		}
+		return chargeAccountId;
+	}
+
+	private String getMsaccoCommissionChargeAccount() {
+		// TODO Auto-generated method stub
+		//msaccoCommissionAccountId
+		//Msacco Enquiry Commission
+		List<GenericValue> chargesELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			chargesELI = delegator.findList("ProductCharge",
+					EntityCondition.makeCondition("name", "Msacco Enquiry Commission"), null,
+					null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		String chargeAccountId = "";
+		for (GenericValue genericValue : chargesELI) {
+			chargeAccountId = genericValue.getString("chargeAccountId");
+		}
+		return chargeAccountId;
 	}
 
 	private List<Account> getMemberAccounts(Long partyId) {

@@ -171,6 +171,17 @@ under the License.
         <attribute name="acctgTransId" mode="OUT" type="String"></attribute>
     </service>
     
+    <!-- createLoanRepaymentFromMemberAccount -->
+     <service name="createLoanRepaymentFromMemberAccount" engine="simple" default-entity-name="LoanRepayment"
+             location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="createLoanRepaymentFromMemberAccount" auth="true">
+        <description>Create LoanRepaymentFromMemberAccount</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        
+        <attribute name="acctgTransId" mode="OUT" type="String"></attribute>
+    </service>
+    
     <service name="updateLoanRepayment" engine="simple" default-entity-name="LoanRepayment"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="updateLoanRepayment" auth="true">
         <description>Update LoanRepayment</description>

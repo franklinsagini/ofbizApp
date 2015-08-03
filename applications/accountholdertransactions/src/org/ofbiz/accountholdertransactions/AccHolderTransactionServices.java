@@ -2395,6 +2395,13 @@ public class AccHolderTransactionServices {
 
 					|| ((transactionType != null) && (transactionType
 							.equals("TOOTHERACCOUNTS")))
+							
+					|| ((transactionType != null) && (transactionType
+							.equals("MSACCOENQUIRY")))	
+						
+					|| ((transactionType != null) && (transactionType
+							.equals("MSACCOENQUIRYEXCISE")))	
+						
 
 					|| ((transactionType != null) && (transactionType
 							.equals("POSCASHPURCHASE")))) {
@@ -4896,7 +4903,7 @@ public class AccHolderTransactionServices {
 					"C", sequence.toString(), memberBranchId));
 
 			// Cr Settlement Member Branch
-
+			sequence = sequence + 1;
 			listPostEntity.add(createAccountPostingEntryVer2(
 					memberBranchSettlementAccountId, glAccountTypeId,
 					hqBranchId, bdTotalAmount, memberAccountId, acctgTransId,
@@ -5802,6 +5809,51 @@ public class AccHolderTransactionServices {
 		}
 		return acctgTransId;
 	}
+	
+	
+	public static String creatAccountTransRecordMsaccoEnquiry(
+			GenericValue accountTransaction, Map<String, String> userLogin, Long partyId, String memberBranchId) {
+
+		GenericValue acctgTrans = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String acctgTransId = delegator.getNextSeqId("AcctgTrans", 1);
+
+		if (userLogin != null) {
+			memberBranchId = LoanUtilities.getMemberBranchId(userLogin
+					.get("partyId"));
+		}
+
+		if (userLogin == null) {
+			userLogin = new HashMap<String, String>();
+			userLogin.put("userLoginId", "admin");
+			userLogin.put("partyId", "Company");
+			memberBranchId = "Company";
+		}
+		String createdBy = (String) userLogin.get("userLoginId");
+		String updatedBy = (String) userLogin.get("userLoginId");
+
+		acctgTrans = delegator.makeValidValue("AcctgTrans", UtilMisc.toMap(
+				"acctgTransId", acctgTransId,
+
+				"acctgTransTypeId", "MEMBER_DEPOSIT", "transactionDate",
+				new Timestamp(Calendar.getInstance().getTimeInMillis()),
+				"isPosted", "Y", "postedDate", new Timestamp(Calendar
+						.getInstance().getTimeInMillis()),
+
+				"glFiscalTypeId", "ACTUAL", "partyId", memberBranchId,
+				"createdDate", new Timestamp(Calendar.getInstance()
+						.getTimeInMillis()), "createdByUserLogin", createdBy,
+				"lastModifiedDate", new Timestamp(Calendar.getInstance()
+						.getTimeInMillis()), "lastModifiedByUserLogin",
+				updatedBy));
+		try {
+			delegator.createOrStore(acctgTrans);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("Could not create acctgTrans");
+		}
+		return acctgTransId;
+	}
 
 	private static GenericValue createAccountTransactionParent(
 			GenericValue accounTransaction, Map<String, String> userLogin) {
@@ -6574,6 +6626,7 @@ public class AccHolderTransactionServices {
 				accountTransaction.setString("increaseDecrease", "I");
 			}
 
+			String currentTransactionType = accountTransaction.getString("transactionType");
 			accountTransaction.set("transactionType",
 					getTransactionTypeReversalName(accountTransaction
 							.getString("transactionType")));
@@ -6597,6 +6650,51 @@ public class AccHolderTransactionServices {
 				TransactionUtil.commit();
 			} catch (GenericTransactionException e) {
 				e.printStackTrace();
+			}
+			
+			//In case of loans reverse loan repayments too
+			//LOANCHEQUEPAY
+			//LOANCASHPAY
+			//LOANCHEQUEPAY
+			//currentTransactionType
+			if ((currentTransactionType.equals("LOANCHEQUEPAY")) || (currentTransactionType.equals("LOANCASHPAY")) || (currentTransactionType.equals("LOANACCOUNTPAY") || currentTransactionType.equals("LOANREPAYMENT"))){
+				//Reverse loan repayment
+				
+				EntityConditionList<EntityExpr> loanRepaymentConditions = EntityCondition
+						.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+								"acctgTransId", EntityOperator.EQUALS, acctgTransId)),
+								EntityOperator.AND);
+
+				List<GenericValue> loanRepaymentELI = null;
+				try {
+					loanRepaymentELI = delegator.findList("LoanRepayment",
+							loanRepaymentConditions, null, null, null, false);
+
+				} catch (GenericEntityException e2) {
+					e2.printStackTrace();
+				}
+				
+				for (GenericValue loanRepayment : loanRepaymentELI) {
+					Long originalRepaymentId = loanRepayment.getLong("loanRepaymentId");
+					Long loanRepaymentId = delegator.getNextSeqIdLong("LoanRepayment");
+					loanRepayment.set("loanRepaymentId", loanRepaymentId);
+					loanRepayment.set("acctgTransId", newacctgTransId);
+					loanRepayment.set("reverseStatus", "Y");
+					loanRepayment.set("parentLoanRepaymentId", originalRepaymentId);
+					
+					loanRepayment.set("interestAmount", loanRepayment.getBigDecimal("interestAmount").multiply(new BigDecimal(-1)));
+					loanRepayment.set("insuranceAmount", loanRepayment.getBigDecimal("insuranceAmount").multiply(new BigDecimal(-1)));
+					loanRepayment.set("principalAmount", loanRepayment.getBigDecimal("principalAmount").multiply(new BigDecimal(-1)));
+					loanRepayment.set("transactionAmount", loanRepayment.getBigDecimal("transactionAmount").multiply(new BigDecimal(-1)));
+					
+					try {
+						delegator.createOrStore(loanRepayment);
+					} catch (GenericEntityException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
 			}
 
 		}

@@ -375,7 +375,7 @@ public class RemittanceServices {
 
 		for (GenericValue member : memeberELI) {
 
-			addMemberExpectedAccountContributions(member);
+			addMemberExpectedAccountContributions(member, null);
 		}
 	}
 
@@ -384,8 +384,8 @@ public class RemittanceServices {
 	 * 
 	 * @author Japheth Odonya @when Sep 22, 2014 3:40:45 PM
 	 * */
-	private static void addMemberExpectedAccountContributions(
-			GenericValue member) {
+	public static void addMemberExpectedAccountContributions(
+			GenericValue member, Long pushMonthYearStationId) {
 		// Get from MemberAccount - accounts that are contributing and belong to
 		// this member
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -432,7 +432,7 @@ public class RemittanceServices {
 			} else {
 				sequence = 1;
 			}
-			addExpectedAccountContribution(memberAccount, member, sequence);
+			addExpectedAccountContribution(memberAccount, member, sequence, pushMonthYearStationId);
 
 			previousAccountProductId = currentAccountProduct;
 		}
@@ -442,7 +442,7 @@ public class RemittanceServices {
 	 * Create Expectation
 	 * **/
 	private static void addExpectedAccountContribution(
-			GenericValue memberAccount, GenericValue member, int sequence) {
+			GenericValue memberAccount, GenericValue member, int sequence, Long pushMonthYearStationId) {
 		GenericValue station = findStation(member.getString("stationId"));
 		String month = getCurrentMonth();
 
@@ -519,7 +519,7 @@ public class RemittanceServices {
 						bdContributingAmt, "remitanceDescription",
 						accountProduct.getString("name"), "employeeName",
 						employeeNames, "expectationType",
-						accountProduct.getString("code"), "month", month));
+						accountProduct.getString("code"), "month", month, "pushMonthYearStationId", pushMonthYearStationId));
 		try {
 			delegator.createOrStore(expectedPaymentSent);
 		} catch (GenericEntityException e) {
@@ -3653,5 +3653,209 @@ public class RemittanceServices {
 
 		return null;
 	}
+	
+	
+	/****
+	 * Add Loan Expectation
+	 * @author Japheth Odonya
+	 * */
+	private static void addLoanExpectation(Long loanApplicationId, Long pushMonthYearStationId) {
+		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
+		
+		GenericValue member = findMember(loanApplication.getLong("partyId").toString());
+
+		Long activeMemberStatusId = getMemberStatusId("ACTIVE");
+		if (member.getLong("memberStatusId").equals(activeMemberStatusId)) {
+
+			GenericValue loanProduct = findLoanProduct(loanApplication
+					.getString("loanProductId"));
+			GenericValue station = findStation(member.getLong("stationId")
+					.toString());
+
+			String month = getCurrentMonth();
+
+			String employerName = "";
+
+			String stationNumber = "";
+			String stationName = "";
+			String employerCode = "";
+
+			if (station != null) {
+				employerName = station.getString("name");// getEmployer(station.getString("employerId"));
+				stationNumber = station.getString("stationNumber").trim();
+				;
+				stationName = station.getString("name");
+				employerCode = station.getString("employerCode").trim();
+			}
+			// String employerName = station.getString("name");
+			// getEmployer(station.getString("employerId"));
+
+			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+			// Create an expectation
+			GenericValue expectedPaymentSent = null;
+
+			String employeeNames = getNames(member);
+
+			String remitanceCode = "";
+			String expectationType = "";
+			String remitanceDescription = loanProduct.getString("name");
+
+			String remitanceCodeBal = "";
+			String expectationTypeBal = "";
+			String remitanceDescriptionBal = "";
+			
+			//Add Expectation Balance
+			remitanceCodeBal = loanProduct.getString("code") + "D";
+			expectationTypeBal = "BALANCE";
+			remitanceDescriptionBal = loanProduct.getString("name")
+					+ " BALANCE";
+			
+			addExpectationBalanceWithPushId(remitanceCodeBal, expectationTypeBal,
+					remitanceDescriptionBal, member, loanApplication,
+					null, station, month, stationNumber,
+					stationName, employerCode, employerName, employeeNames, pushMonthYearStationId);
+			
+			//Add Principal
+			remitanceCode = loanProduct.getString("code") + "A";
+			remitanceDescription = remitanceDescription + " PRINCIPAL";
+			expectationType = "PRINCIPAL";
+			BigDecimal bdPrincipalDue = LoanRepayments.getTotalPrincipaByLoanDue(loanApplicationId.toString());
+			expectedPaymentSent = delegator.makeValue("ExpectedPaymentSent",
+					UtilMisc.toMap("isActive", "Y", "branchId",
+							member.getString("branchId"), "remitanceCode",
+							remitanceCode, "stationNumber", stationNumber,
+							"stationName", stationName,
+
+							"payrollNo", member.getString("payrollNumber"),
+							"employerCode", employerCode,
+
+							"employeeNumber",
+							member.getString("employeeNumber"), "memberNumber",
+							member.getString("memberNumber"),
+
+							"loanNo", loanApplication.getString("loanNo"),
+							"employerNo", employerName, "amount",
+							bdPrincipalDue,
+							"remitanceDescription", remitanceDescription,
+							"employeeName", employeeNames, "expectationType",
+							expectationType, "month", month, "pushMonthYearStationId", pushMonthYearStationId));
+			try {
+				delegator.createOrStore(expectedPaymentSent);
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+
+			
+			//Add Interest
+			remitanceCode = loanProduct.getString("code") + "B";
+			remitanceDescription = remitanceDescription + " INTEREST";
+			expectationType = "INTEREST";
+			BigDecimal bdInterestDue = LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString());
+			expectedPaymentSent = delegator.makeValue("ExpectedPaymentSent",
+					UtilMisc.toMap("isActive", "Y", "branchId",
+							member.getString("branchId"), "remitanceCode",
+							remitanceCode, "stationNumber", stationNumber,
+							"stationName", stationName,
+
+							"payrollNo", member.getString("payrollNumber"),
+							"employerCode", employerCode,
+
+							"employeeNumber",
+							member.getString("employeeNumber"), "memberNumber",
+							member.getString("memberNumber"),
+
+							"loanNo", loanApplication.getString("loanNo"),
+							"employerNo", employerName, "amount",
+							bdInterestDue,
+							"remitanceDescription", remitanceDescription,
+							"employeeName", employeeNames, "expectationType",
+							expectationType, "month", month, "pushMonthYearStationId", pushMonthYearStationId));
+			try {
+				delegator.createOrStore(expectedPaymentSent);
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+
+			
+			//Add Insurance
+			remitanceCode = loanProduct.getString("code") + "C";
+			remitanceDescription = remitanceDescription + " INSURANCE";
+			expectationType = "INSURANCE";
+			BigDecimal bdInsuranceDue = LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString());
+			
+			expectedPaymentSent = delegator.makeValue("ExpectedPaymentSent",
+					UtilMisc.toMap("isActive", "Y", "branchId",
+							member.getString("branchId"), "remitanceCode",
+							remitanceCode, "stationNumber", stationNumber,
+							"stationName", stationName,
+
+							"payrollNo", member.getString("payrollNumber"),
+							"employerCode", employerCode,
+
+							"employeeNumber",
+							member.getString("employeeNumber"), "memberNumber",
+							member.getString("memberNumber"),
+
+							"loanNo", loanApplication.getString("loanNo"),
+							"employerNo", employerName, "amount",
+							bdInsuranceDue,
+							"remitanceDescription", remitanceDescription,
+							"employeeName", employeeNames, "expectationType",
+							expectationType, "month", month, "pushMonthYearStationId", pushMonthYearStationId));
+			try {
+				delegator.createOrStore(expectedPaymentSent);
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+
+
+			
+
+		}
+
+	}
+	
+	
+	
+	private static void addExpectationBalanceWithPushId(String remitanceCodeBal,
+			String expectationTypeBal, String remitanceDescriptionBal,
+			GenericValue member, GenericValue loanApplication,
+			GenericValue loanExpectation, GenericValue station, String month,
+			String stationNumber, String stationName, String employerCode,
+			String employerName, String employeeNames, Long pushMonthYearStationId) {
+
+		BigDecimal bdLoanBalance = LoansProcessingServices
+				.getTotalLoanBalancesByLoanApplicationId(loanApplication
+						.getLong("loanApplicationId"));
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		GenericValue expectedPaymentSent = null;
+		expectedPaymentSent = delegator.makeValue("ExpectedPaymentSent",
+				UtilMisc.toMap("isActive", "Y", "branchId",
+						member.getString("branchId"), "remitanceCode",
+						remitanceCodeBal, "stationNumber", stationNumber,
+						"stationName", stationName,
+
+						"payrollNo", member.getString("payrollNumber"),
+						"employerCode", employerCode,
+
+						"employeeNumber", member.getString("employeeNumber"),
+						"memberNumber", member.getString("memberNumber"),
+
+						"loanNo", loanApplication.getString("loanNo"),
+						"employerNo", employerName, "amount", bdLoanBalance,
+						"remitanceDescription", remitanceDescriptionBal,
+						"employeeName", employeeNames, "expectationType",
+						expectationTypeBal, "month", month, "pushMonthYearStationId", pushMonthYearStationId));
+
+		try {
+			delegator.createOrStore(expectedPaymentSent);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	
 
 }
