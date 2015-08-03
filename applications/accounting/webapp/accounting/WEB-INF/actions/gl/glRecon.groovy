@@ -52,7 +52,13 @@ acctgTransEntry.each { obj ->
 
 accountTransList.each { objTrans ->
   println "########################## OBJ: "+objTrans
-
+  mobileNumber = null
+  conditions = []
+  conditions.add(EntityCondition.makeCondition("memberAccountId", EntityOperator.EQUALS, objTrans.memberAccountId));
+  mSaccoApplication = delegator.findList('MSaccoApplication', EntityCondition.makeCondition(conditions, EntityOperator.AND), null, null, null, false)
+  mSaccoApplication.each { singlemSaccoApplication ->
+    mobileNumber = singlemSaccoApplication.mobilePhoneNumber
+  }
  // member = delegator.findOne("Member", UtilMisc.toMap("partyId", objTrans.partyId), true);
   member = delegator.findOne("Member", [partyId : objTrans.partyId.toLong()], false);
   memberName = member.firstName + " " + member.middleName + " " + member.lastName
@@ -62,7 +68,7 @@ accountTransList.each { objTrans ->
     finalTransListBuilder = [
       createdStamp:objTrans.createdStamp,
       memberName:memberName,
-      memberPhone:member.mobileNumber,
+      memberPhone:mobileNumber,
       transactionType:objTrans.transactionType,
       transactionAmount:objTrans.transactionAmount,
     ]
