@@ -49,7 +49,7 @@ acctgTransEntry.each { obj ->
   }
 
 
-  println "#################################### accountTransaction: "+ accountTransactionSublist
+
 }
 
 accountTransList.each { objTrans ->
