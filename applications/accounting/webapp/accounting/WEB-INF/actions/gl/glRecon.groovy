@@ -57,15 +57,19 @@ accountTransList.each { objTrans ->
   member = delegator.findOne("Member", [partyId : objTrans.partyId.toLong()], false);
   memberName = member.firstName + " " + member.middleName + " " + member.lastName
   println "#################################### memberName: "+memberName
-  finalTransListBuilder = [
-    createdStamp:objTrans.createdStamp,
-    memberName:memberName,
-    memberPhone:member.mobileNumber,
-    transactionType:objTrans.transactionType,
-    transactionAmount:objTrans.transactionAmount,
-  ]
 
-  finalTransList.add(finalTransListBuilder);
+  if (objTrans.transactionType == 'MSACCOWITHDRAWAL' || objTrans.transactionType == 'M-sacco Settlement Charge') {
+    finalTransListBuilder = [
+      createdStamp:objTrans.createdStamp,
+      memberName:memberName,
+      memberPhone:member.mobileNumber,
+      transactionType:objTrans.transactionType,
+      transactionAmount:objTrans.transactionAmount,
+    ]
+
+    finalTransList.add(finalTransListBuilder);
+  }
+
 }
 
 
