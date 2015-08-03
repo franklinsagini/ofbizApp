@@ -41,7 +41,7 @@ acctgTransEntry.each { obj ->
 
   accountTransactionSublist = delegator.findList('AccountTransaction', EntityCondition.makeCondition(transCond, EntityOperator.AND), null, null, null, false)
   accountTransactionSublist.each { singleTransaction ->
-    println "########################### ADDING  singleTransaction "+ singleTransaction
+    println "########################### ADDING  singleTransaction "+ singleTransaction.accountTransactionId
 	  accountTransList.add(singleTransaction)
   }
 
