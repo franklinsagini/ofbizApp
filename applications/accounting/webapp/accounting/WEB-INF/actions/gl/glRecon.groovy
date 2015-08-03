@@ -25,7 +25,7 @@ println "############################################## "+glAccountId
 finalTransList = []
 accountTransList = []
 finalTransListBuilder = []
-
+currentacctgTransId = 0
 
 
 summaryCondition = [];
@@ -37,13 +37,17 @@ acctgTransEntry = delegator.findList('AcctgTransEntry', EntityCondition.makeCond
 acctgTransEntry.each { obj ->
   println "#################################### TRYING TO ITERATE OVER AcctgTransEntry: "
   transCond = []
-  transCond.add(EntityCondition.makeCondition("acctgTransId", EntityOperator.EQUALS, obj.acctgTransId));
+  currentacctgTransId = obj.acctgTransId
+  if (currentacctgTransId != obj.acctgTransId) {
+      transCond.add(EntityCondition.makeCondition("acctgTransId", EntityOperator.EQUALS, obj.acctgTransId));
 
   accountTransactionSublist = delegator.findList('AccountTransaction', EntityCondition.makeCondition(transCond, EntityOperator.AND), null, null, null, false)
   accountTransactionSublist.each { singleTransaction ->
     println "########################### ADDING  singleTransaction "+ singleTransaction.accountTransactionId
-	  accountTransList.add(singleTransaction)
+    accountTransList.add(singleTransaction)
   }
+  }
+
 
   println "#################################### accountTransaction: "+ accountTransactionSublist
 }
@@ -55,6 +59,9 @@ accountTransList.each { objTrans ->
   member = delegator.findOne("Member", [partyId : objTrans.partyId.toLong()], false);
   memberName = member.firstName + " " + member.middleName + " " + member.lastName
   println "#################################### memberName: "+memberName
+  if (objTrans.transactionType != "Commission on MSACCO Withdrawal" || objTrans.transactionType != "Excise Duty") {
+
+  }
   finalTransListBuilder = [
     createdStamp:objTrans.createdStamp,
     memberName:memberName,
