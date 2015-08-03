@@ -2980,6 +2980,70 @@ public class LoanUtilities {
 		
 		return description;
 	}
+	
+	
+	
+	public static String getMemberNumberGivenPartyId(
+			Long partyId) {
+		String memberNumber = "";
+
+
+		GenericValue member = getMember(partyId);
+
+		if (member == null)
+			return "";
+
+		if ((member.getString("memberNumber") != null) && (!member.getString("memberNumber").equals(""))) {
+			memberNumber = member.getString("memberNumber");
+		}
+		
+		return memberNumber;
+	}
+	
+	
+	public static String getPayrollNumberGivenPartyId(
+			Long partyId) {
+		String payrollNumber = "";
+
+		GenericValue member = getMember(partyId);
+
+		if (member == null)
+			return "";
+
+		if ((member.getString("payrollNumber") != null) && (!member.getString("payrollNumber").equals(""))) {
+			payrollNumber = member.getString("payrollNumber");
+		}
+		
+		return payrollNumber;
+	}
+	
+	public static String getMobileNumberGivenPartyId(
+			Long partyId) {
+		String mobileNumber = "";
+
+		GenericValue member = getMember(partyId);
+
+		if (member == null)
+			return "";
+
+		if ((member.getString("mobileNumber") != null) && (!member.getString("mobileNumber").equals(""))) {
+			mobileNumber = member.getString("mobileNumber");
+		}
+		
+		return mobileNumber;
+	}
+	
+	public static String getMemberStationNameGivenPartyId(Long partyId) {
+		GenericValue member = getMember(partyId);
+
+		if (member == null)
+			return "";
+		
+		Long stationId = member.getLong("stationId");
+		
+		return getStationName(getStation(stationId.toString()).getString("employerCode"));
+		
+	}
 
 
 }
