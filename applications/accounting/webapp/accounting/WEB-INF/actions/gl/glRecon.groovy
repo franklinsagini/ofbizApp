@@ -59,9 +59,7 @@ accountTransList.each { objTrans ->
   memberName = member.firstName + " " + member.middleName + " " + member.lastName
   println "#################################### memberName: "+memberName
   if (objTrans.transactionType != "Commission on MSACCO Withdrawal" || objTrans.transactionType != "Excise Duty") {
-
-  }
-  finalTransListBuilder = [
+      finalTransListBuilder = [
     createdStamp:objTrans.createdStamp,
     memberName:memberName,
     memberPhone:member.mobileNumber,
@@ -70,6 +68,8 @@ accountTransList.each { objTrans ->
   ]
 
   finalTransList.add(finalTransListBuilder);
+  }
+
 }
 
 
