@@ -31,6 +31,7 @@ if(glAccountId == msaccoSettlementAc) {
   accountTransList = []
   finalTransListBuilder = []
   currentacctgTransId = 0
+  runningBalance = 0
 
 
 summaryCondition = [];
@@ -67,6 +68,7 @@ accountTransList.each { objTrans ->
  // member = delegator.findOne("Member", UtilMisc.toMap("partyId", objTrans.partyId), true);
   member = delegator.findOne("Member", [partyId : objTrans.partyId.toLong()], false);
   memberName = member.firstName + " " + member.middleName + " " + member.lastName
+  runningBalance = objTrans.transactionAmount
   println "#################################### memberName: "+memberName
 
   if (objTrans.transactionType == 'MSACCOWITHDRAWAL' || objTrans.transactionType == 'M-sacco Settlement Charge') {
@@ -76,6 +78,8 @@ accountTransList.each { objTrans ->
       memberPhone:mobileNumber,
       transactionType:objTrans.transactionType,
       transactionAmount:objTrans.transactionAmount,
+      runningBalance:runningBalance
+
     ]
 
     finalTransList.add(finalTransListBuilder);
