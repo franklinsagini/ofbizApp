@@ -6575,12 +6575,21 @@ public class AccHolderTransactionServices {
 	 * */
 	public static String reverseTransaction(String acctgTransId ,
 			Map<String, String> userLogin) {
+		
+		Boolean alreadyReversed = false;
+		
+		alreadyReversed = getAlreadyReversed(acctgTransId);
+		
+		
+		if (alreadyReversed){
+			return "This transaction has already been reversed, you cannot reverse it again!";
+		}
 
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		String createdBy = userLogin.get("userLoginId");
 		// Get all the account transactions under parent and set their
 		// increase/decrease to R
-		log.info(" TRansaction ID AAAAAAAAAAAAAA "+acctgTransId);
+		log.info(" Transaction ID AAAAAAAAAAAAAA "+acctgTransId);
 		// GenericValue userLogin = (GenericValue) request
 		// .getAttribute("userLogin");
 
@@ -6639,6 +6648,7 @@ public class AccHolderTransactionServices {
 			accountTransaction.setString("originalAccountTransactionId",
 					originalAccountTransactionId);
 			accountTransaction.setString("acctgTransId", newacctgTransId);
+			accountTransaction.set("reverseStatus", "REVERSED");
 			// Get new Accounting Transaction ID
 			try {
 				delegator.createOrStore(accountTransaction);
@@ -6731,6 +6741,31 @@ public class AccHolderTransactionServices {
 		}
 		
 		return "success";
+	}
+
+	private static Boolean getAlreadyReversed(String acctgTransId) {
+		
+		//Check if the transaction has already been reversed
+		
+		List<GenericValue> accountTransactionELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"originalAcctgTransId", EntityOperator.EQUALS, acctgTransId)),
+						EntityOperator.AND);
+
+		try {
+			accountTransactionELI = delegator.findList("AccountTransaction",
+					transactionConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if ((accountTransactionELI != null) && (accountTransactionELI.size() > 0))
+			return true;
+		
+		return false;
 	}
 
 	private static Object getTransactionTypeReversalName(String transactionType) {
