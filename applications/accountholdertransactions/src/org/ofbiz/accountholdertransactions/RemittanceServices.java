@@ -1062,6 +1062,40 @@ public class RemittanceServices {
 
 		return totalRemitted;
 	}
+	
+	//pushMonthYearStationId
+	public static BigDecimal getTotalRemitted(String employerCode, String month, Long pushMonthYearStationId) {
+		BigDecimal totalRemitted = BigDecimal.ZERO;
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> expectedPaymentReceivedELI = new ArrayList<GenericValue>();
+
+		EntityConditionList<EntityExpr> expectedPaymentReceivedConditions = EntityCondition
+				.makeCondition(UtilMisc.toList( EntityCondition.makeCondition(
+						"pushMonthYearStationId", EntityOperator.EQUALS, pushMonthYearStationId)
+
+				), EntityOperator.AND);
+
+		try {
+			expectedPaymentReceivedELI = delegator.findList(
+					"ExpectedPaymentReceived",
+					expectedPaymentReceivedConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		for (GenericValue expectedPaymentReceived : expectedPaymentReceivedELI) {
+			if (expectedPaymentReceived.getBigDecimal("amount") != null) {
+				totalRemitted = totalRemitted.add(expectedPaymentReceived
+						.getBigDecimal("amount"));
+			}
+		}
+
+		// totalRemitted = totalRemitted.setScale(newScale)
+
+		return totalRemitted;
+	}
 
 	public static String isRemitanceEnough(HttpServletRequest request,
 			HttpServletResponse response) {

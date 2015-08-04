@@ -359,5 +359,91 @@ under the License.
         
     </simple-method>
     
+    <!-- pushTheStation  -->
+    <simple-method method-name="pushTheStation" short-description="Push Station Expectation">
+         <set field="pushMonthYearStationId" from-field="parameters.pushMonthYearStationId" type="Long"/>
+        <set field="generateStatus" value="${bsh:org.ofbiz.onlineremittanceprocessing.OnlineRemittanceProcessingServices.pushTheStation(userLogin, pushMonthYearStationId);}"></set>
+        <!-- store-value value-field="lookedUpValue"/ -->
+        
+        <log message="NNNNNNNNNNNNNNN Pulling" level="info"/>
+    	<log message="${pushMonthYearStationId}" level="info"/>
+		<if>
+			 <condition> 
+			 		<if-compare operator="equals" value="success" field="generateStatus"></if-compare>
+            </condition> 
+            <then> 
+						 <property-to-field resource="OnlineRemittanceProcessingUiLabels.xml" 
+            				property="Successfully pushed expectation" field="successMessage" />
+                
+            </then>
+		
+		<else>
+			<add-error> 
+                    <fail-message message="${generateStatus}"/>
+                </add-error> 
+                <check-errors /> 
+		
+        </else>
+        </if>
+        
+    </simple-method>
+    
+    <!-- pullTheStationWithOldLoanNo -->
+     <simple-method method-name="pullTheStationWithOldLoanNo" short-description="Pull Station Expectation with old Loan Nos">
+         <set field="pushMonthYearStationId" from-field="parameters.pushMonthYearStationId" type="Long"/>
+        <set field="generateStatus" value="${bsh:org.ofbiz.onlineremittanceprocessing.OnlineRemittanceProcessingServices.pullTheStationWithOldLoanNo(userLogin, pushMonthYearStationId);}"></set>
+        <!-- store-value value-field="lookedUpValue"/ -->
+        
+        <log message="NNNNNNNNNNNNNNN Pulling" level="info"/>
+    	<log message="${pushMonthYearStationId}" level="info"/>
+		<if>
+			 <condition> 
+			 		<if-compare operator="equals" value="success" field="generateStatus"></if-compare>
+            </condition> 
+            <then> 
+						 <property-to-field resource="OnlineRemittanceProcessingUiLabels.xml" 
+            				property="Successfully pulled expectation" field="successMessage" />
+                
+            </then>
+		
+		<else>
+			<add-error> 
+                    <fail-message message="${generateStatus}"/>
+                </add-error> 
+                <check-errors /> 
+		
+        </else>
+        </if>
+        
+    </simple-method>
+       
+    <!-- pullTheStationWithNewLoanNo -->
+       <simple-method method-name="pullTheStationWithNewLoanNo" short-description="Pull Station Expectation with New Loan Nos">
+         <set field="pushMonthYearStationId" from-field="parameters.pushMonthYearStationId" type="Long"/>
+        <set field="generateStatus" value="${bsh:org.ofbiz.onlineremittanceprocessing.OnlineRemittanceProcessingServices.pullTheStationWithNewLoanNo(userLogin, pushMonthYearStationId);}"></set>
+        <!-- store-value value-field="lookedUpValue"/ -->
+        
+        <log message="NNNNNNNNNNNNNNN Pulling" level="info"/>
+    	<log message="${pushMonthYearStationId}" level="info"/>
+		<if>
+			 <condition> 
+			 		<if-compare operator="equals" value="success" field="generateStatus"></if-compare>
+            </condition> 
+            <then> 
+						 <property-to-field resource="OnlineRemittanceProcessingUiLabels.xml" 
+            				property="Successfully pulled expectation" field="successMessage" />
+                
+            </then>
+		
+		<else>
+			<add-error> 
+                    <fail-message message="${generateStatus}"/>
+                </add-error> 
+                <check-errors /> 
+		
+        </else>
+        </if>
+        
+    </simple-method> 
     
 </simple-methods>

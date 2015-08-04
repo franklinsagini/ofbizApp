@@ -29,6 +29,11 @@
     <security https="true" auth="true" />
     <response name="success" type="view" value="expectedRemittanceExport" save-home-view="true" />
   </request-map>
+  
+  	<request-map uri="receivedRemittanceExport.csv">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="receivedRemittanceExport" save-home-view="true" />
+  </request-map>
 	
 	<request-map uri="manageOnlineStations">
 		<security https="true" auth="true" />
@@ -248,6 +253,42 @@
 		</response>
 	</request-map>
 	
+	<!-- pushTheStation  -->
+	<request-map uri="pushTheStation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="pushTheStation" />
+		<response name="success" type="request-redirect" value="showGeneratedExpectation">
+			<redirect-parameter name="pushMonthYearStationId"/>
+		</response>
+		<response name="error" type="view" value="showGeneratedExpectation">
+			<redirect-parameter name="pushMonthYearStationId"/>
+		</response>
+	</request-map>
+	
+	<!-- pullTheStationWithOldLoanNo -->
+	<request-map uri="pullTheStationWithOldLoanNo">
+		<security https="true" auth="true" />
+		<event type="service" invoke="pullTheStationWithOldLoanNo" />
+		<response name="success" type="request-redirect" value="showGeneratedExpectation">
+			<redirect-parameter name="pushMonthYearStationId"/>
+		</response>
+		<response name="error" type="view" value="showGeneratedExpectation">
+			<redirect-parameter name="pushMonthYearStationId"/>
+		</response>
+	</request-map>
+	
+	<!-- pullTheStationWithNewLoanNo -->
+	<request-map uri="pullTheStationWithNewLoanNo">
+		<security https="true" auth="true" />
+		<event type="service" invoke="pullTheStationWithNewLoanNo" />
+		<response name="success" type="request-redirect" value="showGeneratedExpectation">
+			<redirect-parameter name="pushMonthYearStationId"/>
+		</response>
+		<response name="error" type="view" value="showGeneratedExpectation">
+			<redirect-parameter name="pushMonthYearStationId"/>
+		</response>
+	</request-map>
+	
 	<!-- PushMonthYearStation -->
 	<request-map uri="createPushMonthYearStation">
 		<security https="true" auth="true" />
@@ -277,6 +318,14 @@
 			<redirect-parameter name="pushMonthYearStationId" from="pushMonthYearStationId"/>
 		</response>
 	</request-map>
+	
+	<!-- showReceivedRemittance -->
+	<request-map uri="showReceivedRemittance">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="showReceivedRemittance">
+			<redirect-parameter name="pushMonthYearStationId" from="pushMonthYearStationId"/>
+		</response>
+	</request-map>
 
 	<!-- View Mappings -->
 	<view-map name="main" type="screen"
@@ -297,6 +346,10 @@
 		<view-map name="showGeneratedExpectation" type="screen"
 		page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#showGeneratedExpectation" />
 
+<!-- showReceivedRemittance -->
+		<view-map name="showReceivedRemittance" type="screen"
+		page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#showReceivedRemittance" />
+
 	<!-- 
 		showStationPushStatus
 	showStationPullStatus
@@ -313,5 +366,7 @@
 		
 	<view-map name="expectedRemittanceExport" type="screencsv" page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#expectedRemittanceExport" content-type="text/csv" encoding="none"/>
 
+	<!-- receivedRemittanceExport -->
+		<view-map name="receivedRemittanceExport" type="screencsv" page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#receivedRemittanceExport" content-type="text/csv" encoding="none"/>
 	
 </site-conf>
