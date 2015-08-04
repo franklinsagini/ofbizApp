@@ -39,6 +39,13 @@ accountTransactionList.eachWithIndex { transactionItem, item ->
 	if (transactionItem.transactionType.equals("CHEQUEWITHDRAWAL")){
 		chequeNo = transactionItem.chequeNo;
 	}
+	
+	if (transactionItem.transactionType.equals("BANKERSWITHDRAWAL")){
+		chequeNo = transactionItem.chequeNo;
+		transactionTypeWithdrawal = "Bankers Cheque"
+		transactionType = "Bankers Cheque";
+	}
+	
 }
 
 if ((transactionType != null) && (transactionType.equals("CHEQUEDEPOSIT"))){

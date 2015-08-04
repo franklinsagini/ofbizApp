@@ -28,6 +28,7 @@ import org.ofbiz.entity.datasource.GenericHelperInfo;
 import org.ofbiz.entity.jdbc.SQLProcessor;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.loansprocessing.LoansProcessingServices;
 import org.ofbiz.party.party.SaccoUtility;
 
 public class OnlineRemittanceProcessingServices {
@@ -966,6 +967,18 @@ public class OnlineRemittanceProcessingServices {
 		for (GenericValue member : memberELI) {
 			RemittanceServices.addMemberExpectedAccountContributions(member, pushMonthYearStationId);
 		}
+		
+		
+		//Add Loan Applications
+		for (GenericValue member : memberELI) {
+			//Get Disbursed Loans for this member
+			List<Long> loanApplications = LoansProcessingServices.getDisbursedLoanApplicationList(member.getLong("partyId"));
+			
+			for (Long loanApplicationId : loanApplications) {
+				RemittanceServices.addLoanExpectation(loanApplicationId, pushMonthYearStationId);
+			}
+		}
+		
 		
 	}
 
