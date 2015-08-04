@@ -336,9 +336,16 @@ allLoansList.eachWithIndex { loanItem, index ->
 			loanTransaction = new MemberTransaction()
 			loanTransaction.transactionDate = loanRepaymentItem.createdStamp
 
+			if (loanRepaymentItem.acctgTransId != null){
+			loanTransaction.transactionDescription = "Insurance Paid ("+loanRepaymentItem.acctgTransId+")";
+			} else{
+				loanTransaction.transactionDescription = "Insurance Paid ";
+			}
 
-			loanTransaction.transactionDescription = "Insurance Paid"
-
+			
+			if (loanRepaymentItem.reverseStatus.equals("Y")){
+				loanTransaction.transactionDescription = "Insurance Payment Reversed ("+loanRepaymentItem.acctgTransId+")";
+			}
 
 			loanTransaction.increaseDecrease = 'I'
 			loanTransaction.transactionAmount = loanRepaymentItem.insuranceAmount
@@ -355,7 +362,17 @@ allLoansList.eachWithIndex { loanItem, index ->
 			loanTransaction.transactionDate = loanRepaymentItem.createdStamp
 
 
-			loanTransaction.transactionDescription = "Interest Paid"
+			
+			
+			if (loanRepaymentItem.acctgTransId != null){
+				loanTransaction.transactionDescription = "Interest Paid ("+loanRepaymentItem.acctgTransId+")";
+				} else{
+					loanTransaction.transactionDescription = "Interest Paid"
+				}
+				
+				if (loanRepaymentItem.reverseStatus.equals("Y")){
+					loanTransaction.transactionDescription = "Interest Payment Reversed ("+loanRepaymentItem.acctgTransId+")";
+				}
 
 
 			loanTransaction.increaseDecrease = 'I'
@@ -373,8 +390,17 @@ allLoansList.eachWithIndex { loanItem, index ->
 			loanTransaction.transactionDate = loanRepaymentItem.createdStamp
 
 
-			loanTransaction.transactionDescription = "Principal Paid"
+			
 
+			if (loanRepaymentItem.acctgTransId != null){
+				loanTransaction.transactionDescription = "Principal Paid ("+loanRepaymentItem.acctgTransId+")";
+			} else{
+					loanTransaction.transactionDescription = "Principal Paid"
+			}
+			
+			if (loanRepaymentItem.reverseStatus.equals("Y")){
+				loanTransaction.transactionDescription = "Principal Payment Reversed ("+loanRepaymentItem.acctgTransId+")";
+			} 
 
 			loanTransaction.increaseDecrease = 'I'
 			loanTransaction.transactionAmount = loanRepaymentItem.principalAmount

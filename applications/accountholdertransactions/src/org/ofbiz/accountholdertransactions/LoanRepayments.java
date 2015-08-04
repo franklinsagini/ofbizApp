@@ -1610,6 +1610,17 @@ public class LoanRepayments {
 	 * */
 	public static String repayLoan(GenericValue loanRepayment,
 			Map<String, String> userLogin) {
+		
+		if (loanRepayment.getString("repaymentMode").equals("FROMACCOUNT")) {
+			
+			//GenericValue accountProduct = LoanUtilities.getAccountProductGivenMemberAccountId(loanRepayment.getLong("memberAccountId"));
+			BigDecimal bdAccountBalance = AccHolderTransactionServices.getAvailableBalanceVer3(loanRepayment.getLong("memberAccountId").toString());
+			BigDecimal bdTransactionAmount = loanRepayment.getBigDecimal("transactionAmount");
+			
+			if (bdAccountBalance.compareTo(bdTransactionAmount) < 1){
+				return " The account does not have enough balance to make the loan repayment !";
+			}
+		}
 
 		log.info("FFFFFFFFF start loan repayment FFFFFFFFFF");
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -1748,7 +1759,7 @@ public class LoanRepayments {
 		// Return if amount provided is zero
 		if (loanRepayment.getBigDecimal("transactionAmount").compareTo(
 				BigDecimal.ZERO) != 1) {
-			return "";
+			return "Transaction amount must be more than Zero !";
 		}
 		// Create Acctg Transa
 
@@ -1767,7 +1778,19 @@ public class LoanRepayments {
 		// Long memberAccountId = accountTransaction.getLong("memberAccountId");
 
 		// if CASH then its teller else its Bank/Cheque Account ID
-		if (loanRepayment.getString("repaymentMode").equals("CASH")) {
+		if (loanRepayment.getString("repaymentMode").equals("FROMACCOUNT")) {
+			
+			GenericValue accountProduct = LoanUtilities.getAccountProductGivenMemberAccountId(loanRepayment.getLong("memberAccountId"));
+			accountToDebit = accountProduct.getString("glAccountId");
+		
+			//Debit member account in the MPA
+			AccHolderTransactionServices.memberTransactionDeposit(
+					loanRepayment.getBigDecimal("transactionAmount"), loanRepayment.getLong("memberAccountId"), userLogin,
+					"LOANREPAYMENT", null, null,
+					acctgTransId, accountProduct.getLong("accountProductId"), loanRepayment.getLong("loanApplicationId"));
+
+		}
+		else if (loanRepayment.getString("repaymentMode").equals("CASH")) {
 			accountToDebit = TreasuryUtility.getTellerAccountId(userLogin);
 
 			log.info("CCCCCCC Cash Loan Repayment");
@@ -1855,6 +1878,11 @@ public class LoanRepayments {
 		// AccHolderTransactionServices.cashDeposit(transactionAmount,
 		// memberAccountId, userLogin, "LOANCASHDEPOSIT");
 
+		if (loanRepayment.getString("repaymentMode").equals("FROMACCOUNT")) {
+			AccHolderTransactionServices.cashDepositLoan(transactionAmount,
+					loanRepayment.getLong("loanApplicationId"), userLogin,
+					"LOANACCOUNTPAY", acctgTransId);
+		} else 		
 		if (loanRepayment.getString("repaymentMode").equals("CASH")) {
 			AccHolderTransactionServices.cashDepositLoan(transactionAmount,
 					loanRepayment.getLong("loanApplicationId"), userLogin,
@@ -1866,7 +1894,7 @@ public class LoanRepayments {
 
 		}
 		// getTotalCashWithdrawalToday
-		return "";
+		return "success";
 	}
 
 	/***
