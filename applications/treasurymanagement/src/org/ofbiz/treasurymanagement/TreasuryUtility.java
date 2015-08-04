@@ -1755,6 +1755,19 @@ public class TreasuryUtility {
 		return getTotalLoanCashPay(userLogin, treasuryId);
 	}
 	
+	public static BigDecimal getTotalLoanCashPayReversed(String treasuryId) {
+		Map<String, String> userLogin = new HashMap<String, String>();
+
+		GenericValue treasury = getTreasury(treasuryId);
+		String partyId = treasury.getString("employeeResponsible");
+		String userLoginId = getUserLoginId(partyId);
+
+		userLogin.put("partyId", partyId);
+		userLogin.put("userLoginId", userLoginId);
+
+		return getTotalLoanCashPayReversed(userLogin, treasuryId);
+	}
+	
 	public static BigDecimal getTotalCashWithdrawalReversed(String treasuryId) {
 		Map<String, String> userLogin = new HashMap<String, String>();
 
@@ -1923,6 +1936,53 @@ public class TreasuryUtility {
 		}
 		return bdBalance;
 	}
+	
+	
+	/****
+	 * 
+	 * Loan Cash Pay reversed
+	 * */
+	public static BigDecimal getTotalLoanCashPayReversed(Map<String, String> userLogin, String treasuryId) {
+		// TODO Auto-generated method stub
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.MILLISECOND, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+
+		// Timestamp tstampDateCreated = new
+		// Timestamp(calendar.getTimeInMillis());
+
+		List<GenericValue> cashDepositELI = null;
+
+		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"treasuryId", EntityOperator.EQUALS, treasuryId),
+						EntityCondition.makeCondition("transactionType",
+								EntityOperator.EQUALS, "LOANCASHPAYREVERSED")),
+						EntityOperator.AND);
+
+		// ,
+		// EntityCondition
+		// .makeCondition("createdStamp",
+		// EntityOperator.GREATER_THAN_EQUAL_TO, tstampDateCreated)
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			cashDepositELI = delegator.findList("AccountTransaction",
+					transactionConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		BigDecimal bdBalance = BigDecimal.ZERO;
+		for (GenericValue genericValue : cashDepositELI) {
+			bdBalance = bdBalance.add(genericValue
+					.getBigDecimal("transactionAmount"));
+		}
+		return bdBalance;
+	}
+	
 	
 	//CASHLOANPAYREVERSED
 	public static BigDecimal getTotalCashLoanPayReversed(Map<String, String> userLogin) {
