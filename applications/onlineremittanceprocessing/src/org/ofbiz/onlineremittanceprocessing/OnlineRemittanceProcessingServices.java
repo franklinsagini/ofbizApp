@@ -895,6 +895,16 @@ public class OnlineRemittanceProcessingServices {
 	
 	public static String generateTheMonthStationExpectation(Map<String, String> userLogin, Long pushMonthYearStationId){
 		log.info(" ########## "+pushMonthYearStationId);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		//Delete from  ExpectedPaymentSent
+		try {
+			delegator.removeByCondition("ExpectedPaymentSent", EntityCondition.makeCondition("pushMonthYearStationId", pushMonthYearStationId));
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 		GenericValue pushMonthYearStation = LoanUtilities.getEntityValue("PushMonthYearStation", "pushMonthYearStationId", pushMonthYearStationId);
 		String stationId = pushMonthYearStation.getString("stationId");
 		
@@ -913,7 +923,6 @@ public class OnlineRemittanceProcessingServices {
 				), EntityOperator.AND);
 		
 		List<GenericValue> stationELI = null;
-		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
 			stationELI = delegator.findList(
 					"Station", employerStationConditions, null,
@@ -941,6 +950,7 @@ public class OnlineRemittanceProcessingServices {
 	 * */
 	private static void processStationMembers(String currentStationId,
 			Long pushMonthYearStationId) {
+		
 		//Get all the members belonging to this station
 		EntityConditionList<EntityExpr> memberConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(

@@ -444,7 +444,7 @@ public class RemittanceServices {
 	private static void addExpectedAccountContribution(
 			GenericValue memberAccount, GenericValue member, int sequence, Long pushMonthYearStationId) {
 		GenericValue station = findStation(member.getString("stationId"));
-		String month = getCurrentMonth();
+		String month = getPushMonthYearMonth(pushMonthYearStationId);
 
 		String employerName = "";
 
@@ -3672,8 +3672,8 @@ public class RemittanceServices {
 			GenericValue station = findStation(member.getLong("stationId")
 					.toString());
 
-			String month = getCurrentMonth();
-
+			//String month = getCurrentMonth();
+			String month = getPushMonthYearMonth(pushMonthYearStationId);
 			String employerName = "";
 
 			String stationNumber = "";
@@ -3817,6 +3817,13 @@ public class RemittanceServices {
 	
 	
 	
+	private static String getPushMonthYearMonth(Long pushMonthYearStationId) {
+		GenericValue pushMonthYearStation = LoanUtilities.getEntityValue("PushMonthYearStation", "pushMonthYearStationId", pushMonthYearStationId);
+		String month = pushMonthYearStation.getLong("month").toString()+pushMonthYearStation.getLong("year").toString();
+		
+		return month;
+	}
+
 	private static void addExpectationBalanceWithPushId(String remitanceCodeBal,
 			String expectationTypeBal, String remitanceDescriptionBal,
 			GenericValue member, GenericValue loanApplication,

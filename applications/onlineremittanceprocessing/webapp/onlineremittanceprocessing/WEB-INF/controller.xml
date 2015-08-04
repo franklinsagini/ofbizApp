@@ -25,6 +25,11 @@
 		<response name="success" type="view" value="manageOnlineStations" />
 	</request-map>
 	
+	<request-map uri="expectedRemittanceExport.csv">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="expectedRemittanceExport" save-home-view="true" />
+  </request-map>
+	
 	<request-map uri="manageOnlineStations">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="manageOnlineStations" />
@@ -232,7 +237,7 @@
 	</request-map>
 	
 	<!-- generateTheMonthStationExpectation -->
-		<request-map uri="generateTheMonthStationExpectation">
+	<request-map uri="generateTheMonthStationExpectation">
 		<security https="true" auth="true" />
 		<event type="service" invoke="generateTheMonthStationExpectation" />
 		<response name="success" type="request-redirect" value="showGeneratedExpectation">
@@ -305,4 +310,8 @@
 	 <!-- stationProductCodeMap -->
 		<view-map name="stationProductCodeMap" type="screen"
 		page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#stationProductCodeMap" />
+		
+	<view-map name="expectedRemittanceExport" type="screencsv" page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#expectedRemittanceExport" content-type="text/csv" encoding="none"/>
+
+	
 </site-conf>

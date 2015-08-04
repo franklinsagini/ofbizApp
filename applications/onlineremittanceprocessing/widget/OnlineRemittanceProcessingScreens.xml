@@ -432,11 +432,11 @@
 											<container style="button-bar">
 												<label style="h3">Expected Payments from ${employerName}
 													for ${month}${year} </label>
-
-												<link
+												<!-- parameter param-name="loanApplicationId"/ -->
+												<!-- link
 													target="expectedPaymentBreakdownpdf.pdf?month=${month}&amp;employerCode=${employerCode}"
 													text="Print Expected Payment Breakdown" style="buttontext">
-													<!-- parameter param-name="loanApplicationId"/ -->
+													
 													<image url-mode="raw"
 														src="${iconsLocation}/page_white_acrobat.png" />
 												</link>
@@ -444,6 +444,13 @@
 												<link
 													target="expectedPaymentBreakdowncsv.csv?month=${month}&amp;employerCode=${employerCode}"
 													text="Generate Expected Payment Breakdown CSV" style="buttontext">
+													<image url-mode="raw" src="${iconsLocation}/page_excel.png" />
+
+												</link -->
+												
+												<link
+													target="expectedRemittanceExport.csv?pushMonthYearStationId=${pushMonthYearStationId}"
+													text="Expected Remittance CSV (Download)" style="buttontext">
 													<image url-mode="raw" src="${iconsLocation}/page_excel.png" />
 
 												</link>
@@ -494,4 +501,18 @@
 	</screen>
 	
 
+	<screen name="expectedRemittanceExport">
+		<section>
+			<actions>
+				<set field="viewSize" value="99999" />
+				<!-- script location="component://party/webapp/partymgr/WEB-INF/actions/reports/loanDetails.groovy"/ -->
+				<script
+					location="component://onlineremittanceprocessing/webapp/onlineremittanceprocessing/WEB-INF/actions/reports/expectedRemittanceSent.groovy" />
+			</actions>
+			<widgets>
+				<include-form name="expectedRemittanceExport"
+					location="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingForms.xml" />
+			</widgets>
+		</section>
+	</screen>
 </screens>
