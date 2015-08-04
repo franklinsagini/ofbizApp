@@ -553,12 +553,16 @@ public class TreasuryReconciliation {
 			//Subtract CASHDEPOSITREVERSED
 			
 			BigDecimal bdLoanCashPay = TreasuryUtility.getTotalLoanCashPay(destinationTreasury);
+			//Subtract LOANCASHPAYREVERSED
+			BigDecimal bdLoanCashPayReversed = TreasuryUtility.getTotalLoanCashPayReversed(destinationTreasury);
+			
 			BigDecimal bdCashWithdrawalReversed = TreasuryUtility.getTotalCashWithdrawalReversed(destinationTreasury);
 			BigDecimal bdCashDepositReversed = TreasuryUtility.getTotalCashDepositReversed(destinationTreasury);
 			
 			bdNetAllocation = bdNetAllocation.add(bdLoanCashPay);
 			bdNetAllocation = bdNetAllocation.add(bdCashWithdrawalReversed);
 			bdNetAllocation = bdNetAllocation.subtract(bdCashDepositReversed);
+			bdNetAllocation = bdNetAllocation.subtract(bdLoanCashPayReversed);
 			
 			
 			return bdNetAllocation;
