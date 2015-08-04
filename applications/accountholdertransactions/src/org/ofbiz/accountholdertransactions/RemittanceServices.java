@@ -3659,7 +3659,7 @@ public class RemittanceServices {
 	 * Add Loan Expectation
 	 * @author Japheth Odonya
 	 * */
-	private static void addLoanExpectation(Long loanApplicationId, Long pushMonthYearStationId) {
+	public static void addLoanExpectation(Long loanApplicationId, Long pushMonthYearStationId) {
 		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
 		
 		GenericValue member = findMember(loanApplication.getLong("partyId").toString());

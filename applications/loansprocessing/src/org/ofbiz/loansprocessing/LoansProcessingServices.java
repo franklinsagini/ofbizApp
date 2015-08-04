@@ -948,6 +948,44 @@ public class LoansProcessingServices {
 	}
 	
 	
+	/****
+	 * Get disbursed loans list
+	 * */
+	public static List<Long> getDisbursedLoanApplicationList(Long partyId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> loanApplicationELI = new ArrayList<GenericValue>();
+		
+		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
+				.makeCondition(
+						UtilMisc.toList(EntityCondition.makeCondition(
+								"partyId", EntityOperator.EQUALS,
+								partyId),
+								
+								EntityCondition.makeCondition(
+										"loanStatusId", EntityOperator.EQUALS,
+										6L)
+								
+								
+								), EntityOperator.AND);
+		
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					loanApplicationConditions, null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		List<Long> listApplicationIds = new ArrayList<Long>();
+		for (GenericValue genericValue : loanApplicationELI) {
+			listApplicationIds.add(genericValue.getLong("loanApplicationId"));
+		}
+
+		return listApplicationIds;
+	}
+	
+	
+	
 	public static List<String> getDefaultedLoanApplicationList(Long partyId) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		List<GenericValue> loanApplicationELI = new ArrayList<GenericValue>();

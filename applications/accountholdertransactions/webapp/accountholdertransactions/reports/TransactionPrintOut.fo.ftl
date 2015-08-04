@@ -71,11 +71,17 @@ under the License.
 	        <fo:list-item>
 	            <fo:list-item-label >
 	                <fo:block font-weight="bold">
-	                <#if transaction.transactionType == "NORMAL CHEQUE WITHDRAWAL CHARGES">
+	                <#if (transaction.transactionType == "NORMAL CHEQUE WITHDRAWAL CHARGES")>
+	                	CHARGES
+	                <#else>
+	               	<#if (transaction.transactionType == "COMMISSION ON BANKERS CHEQUE")>
 	                	CHARGES
 	                <#else>
 	                	${transaction.transactionType?if_exists}
 	                </#if>
+	                </#if>
+	                
+
 	                </fo:block>
 	            </fo:list-item-label>
 	            <fo:list-item-body start-indent="body-start()">
