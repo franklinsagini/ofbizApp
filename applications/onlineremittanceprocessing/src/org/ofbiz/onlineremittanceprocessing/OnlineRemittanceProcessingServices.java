@@ -890,5 +890,83 @@ public class OnlineRemittanceProcessingServices {
 
 		return employeeNames;
 	}
+	
+	
+	public static String generateTheMonthStationExpectation(Map<String, String> userLogin, Long pushMonthYearStationId){
+		log.info(" ########## "+pushMonthYearStationId);
+		GenericValue pushMonthYearStation = LoanUtilities.getEntityValue("PushMonthYearStation", "pushMonthYearStationId", pushMonthYearStationId);
+		String stationId = pushMonthYearStation.getString("stationId");
+		
+		//Get Station Employer code
+		GenericValue station = LoanUtilities.getEntityValue("Station", "stationId", stationId);
+		
+		String employerCode = station.getString("employerCode");
+		
+		//Get all stations with under this employer
+		// String employerCode
+		EntityConditionList<EntityExpr> employerStationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"employerCode", EntityOperator.EQUALS,
+						employerCode.trim())
+
+				), EntityOperator.AND);
+		
+		List<GenericValue> stationELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			stationELI = delegator.findList(
+					"Station", employerStationConditions, null,
+					null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		log.info("SSSSSSSSS The Stations ##########");
+		for (GenericValue genericValue : stationELI) {
+			String currentStationId = genericValue.getString("stationId");
+			log.info(" IIIIIIII "+genericValue.getString("stationId"));
+			
+			//Get members and process
+			processStationMembers(currentStationId, pushMonthYearStationId);
+		}
+		
+		return "success";
+	}
+
+	/*******
+	 * Process Station Members
+	 * @author Japheth Odonya
+	 * */
+	private static void processStationMembers(String currentStationId,
+			Long pushMonthYearStationId) {
+		//Get all the members belonging to this station
+		EntityConditionList<EntityExpr> memberConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"stationId", EntityOperator.EQUALS,
+						Long.valueOf(currentStationId.trim())),
+						
+					EntityCondition.makeCondition("memberStatusId", EntityOperator.EQUALS , LoanUtilities.getMemberStatusId("ACTIVE"))	
+
+				), EntityOperator.AND);
+		
+		
+		List<GenericValue> memberELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			memberELI = delegator.findList(
+					"Member", memberConditions, null,
+					null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		log.info(" The Active Members Count is "+memberELI.size());
+		for (GenericValue member : memberELI) {
+			RemittanceServices.addMemberExpectedAccountContributions(member, pushMonthYearStationId);
+		}
+		
+	}
 
 }

@@ -763,6 +763,73 @@
 		<!-- set field="productType" value="Loan"/ -->
 		<create-value value-field="newEntity" />
 	</simple-method>
+	
+	
+	<!-- createLoanRepaymentFromMemberAccount -->
+	<simple-method method-name="createLoanRepaymentFromMemberAccount"
+		short-description="Create LoanRepaymentFromMemberAccount">
+
+		<make-value entity-name="LoanRepayment" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<set field="entityName" value="LoanRepayment"></set>
+		<set field="newEntity.loanRepaymentId"
+			value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+		<call-simple-method method-name="createAccountTransactionParent"
+			scope="inline"></call-simple-method>
+		<set field="newEntity.accountTransactionParentId" value="${transactionParent.accountTransactionParentId}" />
+		<set field="newEntity.isActive" value="Y" />
+		<set field="newEntity.createdBy" from-field="userLogin.userLoginId" />
+		<!-- set field="newEntity.repaymentMode" value="CASH" / -->
+		<set field="loggedInPartyId" from-field="userLogin.partyId" />
+		<!-- set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getEmployeeBranch(loggedInPartyId);}" 
+			type="String"/ -->
+		<set field="memberAccountId" from-field="newEntity.memberAccountId" />
+		<!--set field="newEntity.branchId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getMemberBranch(memberAccountId);}" 
+			type="String"/ -->
+
+		<!-- set field="newEntity.branchId" from-field="userLogin.partyId"/ -->
+		<set field="newEntity.transactionType" from-field="LOANREPAYMENT" />
+
+		<call-simple-method method-name="saveLoanRepayment"
+			scope="inline"></call-simple-method>
+		<!-- distribute repayment -->
+
+
+		<entity-one entity-name="LoanRepayment" value-field="loanRepayment">
+			<field-map field-name="loanRepaymentId" value="${newEntity.loanRepaymentId}" />
+		</entity-one>
+
+		<set field="repayLoan"
+			value="${bsh:org.ofbiz.accountholdertransactions.LoanRepayments.repayLoan(loanRepayment, userLogin);}"
+			type="String" />
+			
+						<if>
+					<condition>
+						<if-compare operator="not-equals" value="success" field="repayLoan"></if-compare>
+					</condition>
+					<then>
+						<add-error> 
+		                    <!-- fail-property resource="SalaryProcessingUiLabels.xml"  
+		                        property="pullStationError" / --> 
+		                        <fail-message message="${repayLoan}"/>
+		                </add-error> 
+		                <check-errors /> 
+					</then>
+					<else>
+						 <property-to-field resource="AccountHolderTransactionsEntityLabels.xml" 
+            				property="Successfully reapid loan from account " field="successMessage" />
+						
+					</else>
+				</if>
+
+		<set field="acctgTransId"
+			value="${bsh:org.ofbiz.accountholdertransactions.LoanRepayments.getTransactionId(loanRepayment);}"
+			type="String" />
+
+		<field-to-result field="acctgTransId" result-name="acctgTransId" />
+
+	</simple-method>
 
 	<simple-method method-name="updateLoanRepayment"
 		short-description="Update LoanRepayment">
