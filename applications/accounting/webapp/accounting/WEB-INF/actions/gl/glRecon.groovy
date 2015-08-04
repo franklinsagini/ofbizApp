@@ -68,10 +68,11 @@ accountTransList.each { objTrans ->
  // member = delegator.findOne("Member", UtilMisc.toMap("partyId", objTrans.partyId), true);
   member = delegator.findOne("Member", [partyId : objTrans.partyId.toLong()], false);
   memberName = member.firstName + " " + member.middleName + " " + member.lastName
-  runningBalance = objTrans.transactionAmount
+
   println "#################################### memberName: "+memberName
 
   if (objTrans.transactionType == 'MSACCOWITHDRAWAL' || objTrans.transactionType == 'M-sacco Settlement Charge') {
+    runningBalance = runningBalance + objTrans.transactionAmount
     finalTransListBuilder = [
       createdStamp:objTrans.createdStamp,
       memberName:memberName,
@@ -94,7 +95,7 @@ accountTransList.each { objTrans ->
 if (glAccountId == atmSettlementAc) {
   accountTransList = []
   finalTransListBuilder = []
-
+  runningBalance = 0
 
   summaryCondition = [];
   summaryCondition.add(EntityCondition.makeCondition("createdTxStamp", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
@@ -126,6 +127,7 @@ accountTransList.each { objTrans ->
   println "#################################### memberName: "+memberName
 
   if (objTrans.transactionType == 'ATMWITHDRAWAL' || objTrans.transactionType == 'ATM Clearing Account') {
+    runningBalance = runningBalance + objTrans.transactionAmount
     finalTransListBuilder = [
       createdStamp:objTrans.createdStamp,
       memberName:memberName,
