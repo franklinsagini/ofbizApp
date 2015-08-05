@@ -115,12 +115,14 @@ if (glAccountId == atmSettlementAc) {
 
 accountTransList.each { objTrans ->
   cardNumber = null
+   def cardNumberSliced = null
   conditions = []
   conditions.add(EntityCondition.makeCondition("memberAccountId", EntityOperator.EQUALS, objTrans.memberAccountId));
   cardApplication = delegator.findList('CardApplication', EntityCondition.makeCondition(conditions, EntityOperator.AND), null, null, null, false)
   cardApplication.each { singlemcardApplication ->
     cardNumber = singlemcardApplication.cardNumber
-    cardNumber = cardNumber[0..4]
+
+    def cardNumberSliced = cardNumber[-11..-1]
   }
  // member = delegator.findOne("Member", UtilMisc.toMap("partyId", objTrans.partyId), true);
   member = delegator.findOne("Member", [partyId : objTrans.partyId.toLong()], false);
