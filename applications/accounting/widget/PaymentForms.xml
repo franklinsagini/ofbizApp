@@ -148,20 +148,20 @@ under the License.
                 </entity-options>
             </drop-down>
         </field> -->
-        <field position="1" name="organizationPartyId" parameter-name="partyIdFrom" title="Branch">
-            <drop-down allow-empty="false">
+        <field position="1" name="organizationPartyId" parameter-name="partyIdFrom" title="Branch" required-field="true">
+            <drop-down allow-empty="true">
                 <list-options key-name="partyId" list-name="partyAcctgPrefAndGroup"
                     description="${groupName}" />
             </drop-down>
         </field>
         <field name="partyIdTo" position="2"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
-            <drop-down allow-empty="false">
+        <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1" required-field="true">
+            <drop-down allow-empty="true">
                 <list-options list-name="paymentTypes" key-name="paymentTypeId" description="${description}"/>
             </drop-down>
         </field>
-        <field name="paymentMethodId" title="${uiLabelMap.AccountingPaymentMethodId}" position="2">
-            <drop-down allow-empty="false">
+        <field name="paymentMethodId" title="${uiLabelMap.AccountingPaymentMethodId}" position="2" required-field="true">
+            <drop-down allow-empty="true">
                 <entity-options entity-name="PaymentMethod" description="${paymentMethodId}">
                     <!-- <entity-constraint name="partyId" operator="equals" env-name="defaultOrganizationPartyId"/> -->
                     <entity-order-by field-name="paymentMethodId"/>
@@ -170,7 +170,7 @@ under the License.
         </field>
         <field name="paymentRefNum" title="CHQ No/EFT No/REF No" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true" position="1"><text/></field>
         <field name="overrideGlAccountId" position="2"><lookup target-form-name="LookupGlAccount"/></field>
-        <field name="amount" position="1"><text/></field>
+        <field name="amount" position="1" required-field="true"><text/></field>
         <field name="comments" title="Description" position="2" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="70"/></field>
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
         <field name="finAccountTransTypeId"><hidden value="WITHDRAWAL"/></field>
@@ -194,23 +194,23 @@ under the License.
                 </entity-options>
             </drop-down>
         </field> -->
-        <field position="1" name="organizationPartyId" parameter-name="partyIdTo" title="Branch">
-            <drop-down allow-empty="false">
+        <field position="1" name="organizationPartyId" parameter-name="partyIdTo" title="Branch" required-field="true">
+            <drop-down allow-empty="true">
                 <list-options key-name="partyId" list-name="partyAcctgPrefAndGroup"
                     description="${groupName}" />
             </drop-down>
         </field>
         <field name="partyIdFrom" position="2"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1">
-            <drop-down allow-empty="false">
+        <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1" required-field="true">
+            <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="PaymentType">
                     <entity-constraint name="parentTypeId" value="RECEIPT"/>
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="paymentMethodId" title="${uiLabelMap.AccountingPaymentMethodId}" position="2">
-            <drop-down allow-empty="false">
+        <field name="paymentMethodId" title="${uiLabelMap.AccountingPaymentMethodId}" position="2" required-field="true">
+            <drop-down allow-empty="true">
                 <entity-options entity-name="PaymentMethod" description="${paymentMethodId}">
                     <!-- <entity-constraint name="partyId" operator="equals" env-name="defaultOrganizationPartyId"/> -->
                     <entity-order-by field-name="paymentMethodId"/>
@@ -219,16 +219,16 @@ under the License.
         </field>
         <field name="paymentRefNum" title="CHQ No/EFT No/REF No" position="1" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
         <field name="overrideGlAccountId" position="2"><lookup target-form-name="LookupGlAccount"/></field>
-        <field name="amount" position="1"><text/></field>
+        <field name="amount" position="1" required-field="true"><text/></field>
         <field name="comments" title="Description" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true" position="2"><text size="70"/></field>
-        <field name="finAccountId">
-            <drop-down allow-empty="true">
+        <field name="finAccountId"><hidden/>
+<!--             <drop-down allow-empty="true">
                 <entity-options entity-name="FinAccount" description="${finAccountName} [${finAccountId}]" filter-by-date="true">
                     <entity-constraint name="finAccountTypeId" value="BANK_ACCOUNT"/>
                     <entity-constraint name="statusId" operator="not-equals" value="FNACT_MANFROZEN"/>
                     <entity-constraint name="statusId" operator="not-equals" value="FNACT_CANCELLED"/>
                 </entity-options>
-            </drop-down>
+            </drop-down> -->
         </field>
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
         <field name="finAccountTransTypeId"><hidden value="DEPOSIT"/></field>

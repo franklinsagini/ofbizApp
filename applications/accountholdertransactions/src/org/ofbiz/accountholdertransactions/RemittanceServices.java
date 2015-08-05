@@ -444,7 +444,7 @@ public class RemittanceServices {
 	private static void addExpectedAccountContribution(
 			GenericValue memberAccount, GenericValue member, int sequence, Long pushMonthYearStationId) {
 		GenericValue station = findStation(member.getString("stationId"));
-		String month = getCurrentMonth();
+		String month = getPushMonthYearMonth(pushMonthYearStationId);
 
 		String employerName = "";
 
@@ -1039,6 +1039,40 @@ public class RemittanceServices {
 						"employerCode", EntityOperator.EQUALS,
 						employerCode.trim()), EntityCondition.makeCondition(
 						"month", EntityOperator.EQUALS, month)
+
+				), EntityOperator.AND);
+
+		try {
+			expectedPaymentReceivedELI = delegator.findList(
+					"ExpectedPaymentReceived",
+					expectedPaymentReceivedConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		for (GenericValue expectedPaymentReceived : expectedPaymentReceivedELI) {
+			if (expectedPaymentReceived.getBigDecimal("amount") != null) {
+				totalRemitted = totalRemitted.add(expectedPaymentReceived
+						.getBigDecimal("amount"));
+			}
+		}
+
+		// totalRemitted = totalRemitted.setScale(newScale)
+
+		return totalRemitted;
+	}
+	
+	//pushMonthYearStationId
+	public static BigDecimal getTotalRemitted(String employerCode, String month, Long pushMonthYearStationId) {
+		BigDecimal totalRemitted = BigDecimal.ZERO;
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> expectedPaymentReceivedELI = new ArrayList<GenericValue>();
+
+		EntityConditionList<EntityExpr> expectedPaymentReceivedConditions = EntityCondition
+				.makeCondition(UtilMisc.toList( EntityCondition.makeCondition(
+						"pushMonthYearStationId", EntityOperator.EQUALS, pushMonthYearStationId)
 
 				), EntityOperator.AND);
 
@@ -3672,8 +3706,8 @@ public class RemittanceServices {
 			GenericValue station = findStation(member.getLong("stationId")
 					.toString());
 
-			String month = getCurrentMonth();
-
+			//String month = getCurrentMonth();
+			String month = getPushMonthYearMonth(pushMonthYearStationId);
 			String employerName = "";
 
 			String stationNumber = "";
@@ -3817,6 +3851,13 @@ public class RemittanceServices {
 	
 	
 	
+	private static String getPushMonthYearMonth(Long pushMonthYearStationId) {
+		GenericValue pushMonthYearStation = LoanUtilities.getEntityValue("PushMonthYearStation", "pushMonthYearStationId", pushMonthYearStationId);
+		String month = pushMonthYearStation.getLong("month").toString()+pushMonthYearStation.getLong("year").toString();
+		
+		return month;
+	}
+
 	private static void addExpectationBalanceWithPushId(String remitanceCodeBal,
 			String expectationTypeBal, String remitanceDescriptionBal,
 			GenericValue member, GenericValue loanApplication,
