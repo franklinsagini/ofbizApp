@@ -120,7 +120,7 @@ accountTransList.each { objTrans ->
   cardApplication = delegator.findList('CardApplication', EntityCondition.makeCondition(conditions, EntityOperator.AND), null, null, null, false)
   cardApplication.each { singlemcardApplication ->
     cardNumber = singlemcardApplication.cardNumber
-    cardNumber = Integer.toString(cardNumber)
+    cardNumber = cardNumber[0..4]
   }
  // member = delegator.findOne("Member", UtilMisc.toMap("partyId", objTrans.partyId), true);
   member = delegator.findOne("Member", [partyId : objTrans.partyId.toLong()], false);
