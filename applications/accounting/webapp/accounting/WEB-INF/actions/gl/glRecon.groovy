@@ -76,7 +76,7 @@ accountTransList.each { objTrans ->
     finalTransListBuilder = [
       createdStamp:objTrans.createdStamp,
       memberName:memberName,
-      reference:mobileNumber,
+      memberPhone:mobileNumber,
       transactionType:objTrans.transactionType,
       transactionAmount:objTrans.transactionAmount,
       runningBalance:runningBalance
@@ -131,7 +131,7 @@ accountTransList.each { objTrans ->
     finalTransListBuilder = [
       createdStamp:objTrans.createdStamp,
       memberName:memberName,
-      reference:cardNumber,
+      memberPhone:cardNumber,
       transactionType:objTrans.transactionType,
       transactionAmount:objTrans.transactionAmount,
       runningBalance:runningBalance
