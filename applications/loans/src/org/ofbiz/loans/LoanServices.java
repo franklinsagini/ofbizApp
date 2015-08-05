@@ -2072,13 +2072,11 @@ public class LoanServices {
 	 * */
 	private static List<Long> getDisbursedLoansIdsByLoanApplicationId(
 			Long loanApplicationId) {
-		Long loanStatusId = getLoanStatusId("DISBURSED");
+		//Long loanStatusId = getLoanStatusId("DISBURSED");
 		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"loanApplicationId", EntityOperator.EQUALS,
-						loanApplicationId), EntityCondition.makeCondition(
-						"loanStatusId", EntityOperator.EQUALS,
-						Long.valueOf(loanStatusId))), EntityOperator.AND);
+						loanApplicationId)), EntityOperator.AND);
 
 		List<GenericValue> loanApplicationELI = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
