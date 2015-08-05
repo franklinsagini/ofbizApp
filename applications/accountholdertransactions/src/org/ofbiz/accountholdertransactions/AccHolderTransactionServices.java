@@ -3353,10 +3353,12 @@ public class AccHolderTransactionServices {
 		for (GenericValue genericValue : memberAccountELI) {
 			memberAccountId = genericValue.getLong("memberAccountId");
 		}
-
-		BigDecimal bdTotalAmount = getAvailableBalanceVer3(
+		BigDecimal bdTotalAmount = BigDecimal.ZERO;
+		if (memberAccountId != null){
+		bdTotalAmount = getAvailableBalanceVer3(
 				memberAccountId.toString(), new Timestamp(Calendar
 						.getInstance().getTimeInMillis()));
+		}
 		return bdTotalAmount;
 	}
 
