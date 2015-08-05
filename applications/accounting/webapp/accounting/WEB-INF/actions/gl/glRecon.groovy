@@ -122,7 +122,7 @@ accountTransList.each { objTrans ->
   cardApplication.each { singlemcardApplication ->
     cardNumber = singlemcardApplication.cardNumber
 
-    def cardNumberSliced = cardNumber[-11..-1]
+    cardNumberSliced = cardNumber[-11..-1]
   }
  // member = delegator.findOne("Member", UtilMisc.toMap("partyId", objTrans.partyId), true);
   member = delegator.findOne("Member", [partyId : objTrans.partyId.toLong()], false);
