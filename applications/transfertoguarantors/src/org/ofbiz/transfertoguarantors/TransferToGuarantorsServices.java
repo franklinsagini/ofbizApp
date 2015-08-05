@@ -348,6 +348,8 @@ public class TransferToGuarantorsServices {
 
 						"originalLoanProductId",
 						loanApplication.getLong("loanProductId"),
+						
+						"disbursementDate", new Timestamp(Calendar.getInstance().getTimeInMillis()),
 
 						"accountProductId",
 						loanApplication.getLong("accountProductId")
