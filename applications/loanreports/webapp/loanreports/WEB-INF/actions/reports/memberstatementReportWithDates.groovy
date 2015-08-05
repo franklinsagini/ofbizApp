@@ -249,14 +249,14 @@ allLoansList.eachWithIndex { loanItem, index ->
 
 	loanTransaction = new MemberTransaction();
 	loanTransaction.transactionDate = loanItem.disbursementDate;
-	
-	if (loanTransaction.parentLoanApplicationId == null){
-		loanTransaction.transactionDescription = 'Loan Disbursed'
-	} else{
-		parentLoanApplicationId = loanItem.parentLoanApplicationId;
-		parentLoanApplication = delegator.findOne("LoanApplication", [loanApplicationId : parentLoanApplicationId], false);
-		loanTransaction.transactionDescription = 'Loan Attached from ( Loan No : '+parentLoanApplication.loanNo+")";
-	}
+	loanTransaction.transactionDescription = 'Loan Disbursed'
+//	if (loanTransaction.parentLoanApplicationId == null){
+//		loanTransaction.transactionDescription = 'Loan Disbursed'
+//	} else{
+//		parentLoanApplicationId = loanItem.parentLoanApplicationId;
+//		parentLoanApplication = delegator.findOne("LoanApplication", [loanApplicationId : parentLoanApplicationId], false);
+//		loanTransaction.transactionDescription = 'Loan Attached from ( Loan No : '+parentLoanApplication.loanNo+")";
+//	}
 	
 	loanTransaction.increaseDecrease = 'D'
 	loanTransaction.transactionAmount = loanItem.loanAmt
