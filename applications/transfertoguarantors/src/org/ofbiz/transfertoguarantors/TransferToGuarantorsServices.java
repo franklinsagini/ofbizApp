@@ -170,9 +170,12 @@ public class TransferToGuarantorsServices {
 			//Repay Loan with the proportion Balance
 			
 			if (bdDepositsBalance.compareTo(BigDecimal.ZERO) > 0){
+				
+				//Only do this if the member has deposits
+				
 				String accountToDebit = LoanUtilities.getAccountProductGivenCodeId(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE).getString("glAccountId");
 				sequence = Long.valueOf(LoanRepayments.repayLoanOnLoanAttachment(loanRepayment, userLogin, acctgTransId, acctgTransType, accountToDebit, sequence));
-			}
+			
 			Long memberAccountId = LoanUtilities.getMemberAccountIdFromMemberAccount(partyId, accountProductId);
 			
 			String accountTransactionParentId = AccHolderTransactionServices
@@ -184,6 +187,7 @@ public class TransferToGuarantorsServices {
 					bdProportionForThisLoan, memberAccountId, userLogin,
 					"LOANREPAYMENT", accountTransactionParentId, null,
 					acctgTransId, null, loanApplicationId);
+			}
 			
 			
 		}
