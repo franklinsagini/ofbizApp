@@ -96,10 +96,10 @@ public class ChequeProcessing {
 			} catch (GenericTransactionException e) {
 				e.printStackTrace();
 			}
-			acctgTransId = postChequeDeposit(accountTransaction, delegator, acctgTransType);
+			//acctgTransId = postChequeDeposit(accountTransaction, delegator, acctgTransType);
 			log.info("#####PPPPPPPPPPPPPP Posted ####  "+accountTransaction.getBigDecimal("transactionAmount"));
 			// Update Account Transaction to read Posted and when it was Posted
-			updateAccountTransaction(accountTransaction, delegator, acctgTransId);
+			updateAccountTransaction(accountTransaction, delegator, null);
 			try {
 				TransactionUtil.commit();
 			} catch (GenericTransactionException e) {
@@ -191,7 +191,7 @@ public class ChequeProcessing {
 		accountTransaction.set("isPosted", "Y");
 		accountTransaction.set("datePosted", new Timestamp(Calendar
 				.getInstance().getTimeInMillis()));
-		accountTransaction.setString("acctgTransId", acctgTransId);
+		//accountTransaction.setString("acctgTransId", acctgTransId);
 
 		try {
 			delegator.createOrStore(accountTransaction);
