@@ -253,7 +253,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 	if (loanTransaction.parentLoanApplicationId == null){
 		loanTransaction.transactionDescription = 'Loan Disbursed'
 	} else{
-		parentLoanApplicationId = loanTransaction.parentLoanApplicationId;
+		parentLoanApplicationId = loanItem.parentLoanApplicationId;
 		parentLoanApplication = delegator.findOne("LoanApplication", [loanApplicationId : parentLoanApplicationId], false);
 		loanTransaction.transactionDescription = 'Loan Attached from ( Loan No : '+parentLoanApplication.loanNo+")";
 	}
