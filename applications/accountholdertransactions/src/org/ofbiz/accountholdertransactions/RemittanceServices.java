@@ -1313,14 +1313,16 @@ public class RemittanceServices {
 		
 		GenericValue pushMonthYearStation = LoanUtilities.getEntityValue("PushMonthYearStation", "pushMonthYearStationId", pushMonthYearStationId);
 		//pushMonthYearStationId
-		employerCode = pushMonthYearStation.getString("employerCode");
+		
 		month = pushMonthYearStation.getLong("month").toString();
 		year = pushMonthYearStation.getLong("year").toString();
 		log.info("CCCCCCCCCCCCCC Correct employerCode "+employerCode);
 		log.info("CCCCCCCCCCCCCC Correct month "+month);
 		log.info("CCCCCCCCCCCCCC Correct year "+year);
 		
+		GenericValue station = LoanUtilities.getEntityValue("Station", "stationId", pushMonthYearStation.getString("stationId"));
 		
+		employerCode = station.getString("employerCode");
 
 		// GenericValue station = findStationGivenStationNumber(stationNumber);
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
