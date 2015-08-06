@@ -249,7 +249,15 @@ allLoansList.eachWithIndex { loanItem, index ->
 
 	loanTransaction = new MemberTransaction();
 	loanTransaction.transactionDate = loanItem.disbursementDate;
-	loanTransaction.transactionDescription = 'Loan Disbursed'
+	//loanTransaction.transactionDescription = 'Loan Disbursed'
+	if (loanItem.parentLoanApplicationId == null){
+		loanTransaction.transactionDescription = 'Loan Disbursed'
+	} else{
+		parentLoanApplicationId = loanItem.parentLoanApplicationId;
+		parentLoanApplication = delegator.findOne("LoanApplication", [loanApplicationId : parentLoanApplicationId], false);
+		loanTransaction.transactionDescription = 'Loan Attached from ( Loan No : '+parentLoanApplication.loanNo+") - "+loanProduct.name;
+	}
+	
 	loanTransaction.increaseDecrease = 'D'
 	loanTransaction.transactionAmount = loanItem.loanAmt
 	loanTransaction.isLoan = true

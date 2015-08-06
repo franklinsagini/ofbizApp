@@ -169,9 +169,13 @@ public class TransferToGuarantorsServices {
 					acctgTransType, userLogin, delegator);
 			//Repay Loan with the proportion Balance
 			
-			String accountToDebit = LoanUtilities.getAccountProductGivenCodeId(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE).getString("glAccountId");
-			sequence = Long.valueOf(LoanRepayments.repayLoanOnLoanAttachment(loanRepayment, userLogin, acctgTransId, acctgTransType, accountToDebit, sequence));
-	
+			if (bdDepositsBalance.compareTo(BigDecimal.ZERO) > 0){
+				
+				//Only do this if the member has deposits
+				
+				String accountToDebit = LoanUtilities.getAccountProductGivenCodeId(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE).getString("glAccountId");
+				sequence = Long.valueOf(LoanRepayments.repayLoanOnLoanAttachment(loanRepayment, userLogin, acctgTransId, acctgTransType, accountToDebit, sequence));
+			
 			Long memberAccountId = LoanUtilities.getMemberAccountIdFromMemberAccount(partyId, accountProductId);
 			
 			String accountTransactionParentId = AccHolderTransactionServices
@@ -183,6 +187,7 @@ public class TransferToGuarantorsServices {
 					bdProportionForThisLoan, memberAccountId, userLogin,
 					"LOANREPAYMENT", accountTransactionParentId, null,
 					acctgTransId, null, loanApplicationId);
+			}
 			
 			
 		}
@@ -343,6 +348,8 @@ public class TransferToGuarantorsServices {
 
 						"originalLoanProductId",
 						loanApplication.getLong("loanProductId"),
+						
+						"disbursementDate", new Timestamp(Calendar.getInstance().getTimeInMillis()),
 
 						"accountProductId",
 						loanApplication.getLong("accountProductId")
