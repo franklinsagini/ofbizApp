@@ -373,7 +373,10 @@ public class WithdrawalProcessingServices {
 		
 		List<String> listDisbursedLoans = LoansProcessingServices
 				.getLoanApplicationList(partyId);
-		if ((listDisbursedLoans == null) || (listDisbursedLoans.size() < 1))
+		
+		
+		BigDecimal bdMemberDepositsBalanceNow = getMemberDepositBalance(partyId.toString());
+		if (((listDisbursedLoans == null) || (listDisbursedLoans.size() < 1)) && (bdMemberDepositsBalanceNow.compareTo(BigDecimal.ZERO) < 1))
 			return " The member has already offset or cleared all his/her loans";
 
 		BigDecimal bdShareCapitalBalance = BigDecimal.ZERO;
