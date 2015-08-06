@@ -75,6 +75,7 @@ accountTransList.each { objTrans ->
     runningBalance = runningBalance + objTrans.transactionAmount
     finalTransListBuilder = [
       createdStamp:objTrans.createdStamp,
+      createdStamp:objTrans.createdStamp,
       memberName:memberName,
       memberPhone:mobileNumber,
       transactionType:objTrans.transactionType,
@@ -126,7 +127,7 @@ accountTransList.each { objTrans ->
   memberName = member.firstName + " " + member.middleName + " " + member.lastName
   println "#################################### memberName: "+memberName
 
-  if (objTrans.transactionType == 'ATMWITHDRAWAL' || objTrans.transactionType == 'ATM Clearing Account') {
+  if (objTrans.transactionType == 'ATMWITHDRAWAL' || objTrans.transactionType == 'ATM Clearing Account' objTrans.transactionType == 'POSWITHDRAWAL) {
     runningBalance = runningBalance + objTrans.transactionAmount
     finalTransListBuilder = [
       createdStamp:objTrans.createdStamp,
