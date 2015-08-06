@@ -378,7 +378,7 @@ under the License.
                 <set field="personalImage" from-field="partyContent"/>
                 
                 <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
-                
+                <set field="isSelfGuaranteed" from-field="lookupLoanApplication.isSelfGuaranteed"/>
                 <set field="collateralsAvailable" value="${bsh:org.ofbiz.loans.LoanServices.loanHasCollateral(loanApplicationId);}" type="String"   />
 				<set field="guarantorsAvailable" value="${bsh:org.ofbiz.loans.LoanServices.loanHasGuarantors(loanApplicationId);}" type="String"   />
 				<set field="guarantorsTotalDepositsEnough" value="${bsh:org.ofbiz.loans.LoanServices.guarantorTotalsEqualLoanTotal(loanApplicationId);}" type="String"   />
@@ -421,6 +421,7 @@ under the License.
 											<!-- if-compare operator="equals" value="Y" field="lookupLoanApplication.isGuarantorLoan"/ -->
 											<if-compare operator="equals" value="N" field="collateralsAvailable"/>
 											<if-compare operator="equals" value="N" field="guarantorsAvailable"/>
+											<if-compare operator="not-equals" value="Y" field="isSelfGuaranteed"/>
 										</and>
 									</condition>
 									<widgets>
@@ -436,6 +437,7 @@ under the License.
 										<and>
 											<!-- if-compare operator="equals" value="Y" field="lookupLoanApplication.isGuarantorLoan"/ -->
 											<if-compare operator="equals" value="N" field="guarantorsTotalDepositsEnough"/>
+											<if-compare operator="not-equals" value="Y" field="isSelfGuaranteed"/>
 										</and>
 										
 									</condition>

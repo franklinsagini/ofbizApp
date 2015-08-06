@@ -423,7 +423,9 @@ public class LoanAccounting {
 	 * */
 	private static String getMemberAccountId(GenericValue loanApplication) {
 		String memberId = loanApplication.getString("partyId");
-
+		
+		GenericValue accountProduct = LoanUtilities.getAccountProductGivenCodeId(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
+		Long accountProductId = accountProduct.getLong("accountProductId");
 		List<GenericValue> memberAccountELI = new ArrayList<GenericValue>();
 		Delegator delegator = loanApplication.getDelegator();
 		memberId = memberId.replaceAll(",", "");
@@ -431,7 +433,7 @@ public class LoanAccounting {
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"partyId", EntityOperator.EQUALS,
 						Long.valueOf(memberId)), EntityCondition.makeCondition(
-						"withdrawable", EntityOperator.EQUALS, "Yes")),
+						"accountProductId", EntityOperator.EQUALS, accountProductId)),
 						EntityOperator.AND);
 		try {
 			memberAccountELI = delegator.findList("MemberAccount",
@@ -586,25 +588,30 @@ public class LoanAccounting {
 
 	private static String getMemberDepositsAccountToCharge(
 			GenericValue loanApplication) {
-		GenericValue accountHolderTransactionSetup = null;
-		Delegator delegator = loanApplication.getDelegator();
-		try {
-			accountHolderTransactionSetup = delegator.findOne(
-					"AccountHolderTransactionSetup", UtilMisc.toMap(
-							"accountHolderTransactionSetupId",
-							"MEMBERTRANSACTIONCHARGE"), false);
-		} catch (GenericEntityException e) {
-			e.printStackTrace();
-			log.error("######## Cannot Get Member Deposit Account in Member Transaction Charge, make sure there is a record in Account Holder Transaction Setup with ID MEMBERTRANSACTIONCHARGE and accounts configured ");
-		}
+//		GenericValue accountHolderTransactionSetup = null;
+//		Delegator delegator = loanApplication.getDelegator();
+//		try {
+//			accountHolderTransactionSetup = delegator.findOne(
+//					"AccountHolderTransactionSetup", UtilMisc.toMap(
+//							"accountHolderTransactionSetupId",
+//							"MEMBERTRANSACTIONCHARGE"), false);
+//		} catch (GenericEntityException e) {
+//			e.printStackTrace();
+//			log.error("######## Cannot Get Member Deposit Account in Member Transaction Charge, make sure there is a record in Account Holder Transaction Setup with ID MEMBERTRANSACTIONCHARGE and accounts configured ");
+//		}
 
 		String memberDepositAccountId = "";
-		if (accountHolderTransactionSetup != null) {
-			memberDepositAccountId = accountHolderTransactionSetup
-					.getString("memberDepositAccId");
-		} else {
-			log.error("######## Cannot Get Member Deposit Account in Member Transaction Charge, make sure there is a record in Account Holder Transaction Setup with ID MEMBERTRANSACTIONCHARGE and accounts configured ");
-		}
+//		if (accountHolderTransactionSetup != null) {
+//			memberDepositAccountId = accountHolderTransactionSetup
+//					.getString("memberDepositAccId");
+//		} else {
+//			log.error("######## Cannot Get Member Deposit Account in Member Transaction Charge, make sure there is a record in Account Holder Transaction Setup with ID MEMBERTRANSACTIONCHARGE and accounts configured ");
+//		}
+		
+		//Pick this from members savings account
+		GenericValue accountProduct = LoanUtilities.getAccountProductGivenCodeId(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
+		memberDepositAccountId = accountProduct.getString("glAccountId");
+		
 		return memberDepositAccountId;
 	}
 

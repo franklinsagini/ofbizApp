@@ -45,6 +45,7 @@ import org.ofbiz.webapp.event.EventHandlerException;
 
 import com.google.gson.Gson;
 
+//org.ofbiz.loans.LoanServices.updateLoanApplicationToSelfGuaranteed
 public class LoanServices {
 	public static Logger log = Logger.getLogger(LoanServices.class);
 	public static Long ONEHUNDRED = 100L;
@@ -2904,18 +2905,51 @@ public class LoanServices {
 	}
 
 	public static String updateLoanApplicationToSelfGuaranteed(
-			String loanApplicationId) {
+			Long loanApplicationId, Long loanSecurityId) {
 		GenericValue loanApplication = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		loanApplicationId = loanApplicationId.replaceAll("", ",");
 		try {
 			loanApplication = delegator.findOne(
 					"LoanApplication",
 					UtilMisc.toMap("loanApplicationId",
-							Long.valueOf(loanApplicationId)), false);
+							loanApplicationId), false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 			return "Cannot Get Loan Application";
+		}
+		
+		GenericValue loanSecurity = null;
+				
+		try {
+			loanSecurity =	delegator.findOne(
+					"LoanSecurity",
+					UtilMisc.toMap("loanSecurityId",
+							loanSecurityId), false);
+		} catch (GenericEntityException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		if (!loanSecurity.getString("description").trim().equals("Self"))
+		{
+			return "success";
+		}
+		
+		
+		//Check if member has guarantedd any other loan
+		
+		BigDecimal bdTotalGuaranteedValue = getTotalGuaranteedValueByMember(loanApplication.getLong("partyId"));
+		
+		if (bdTotalGuaranteedValue.compareTo(BigDecimal.ZERO) > 0)
+		{
+			return " The member has already guaranteed other Loans, cannot therefore self guarantee";
+		}
+		
+		BigDecimal bdMemberDepositBalanceAmt = LoanUtilities.getMemberDepositAmount(loanApplication.getLong("partyId"));
+		BigDecimal bdLoanAmount = loanApplication.getBigDecimal("loanAmt");
+		
+		if (bdMemberDepositBalanceAmt.compareTo(bdLoanAmount) < 0){
+			return "Member must have more deposits than the loan amount applied to self guarantee";
 		}
 
 		loanApplication.set("isSelfGuaranteed", "Y");
@@ -2925,7 +2959,7 @@ public class LoanServices {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return "";
+		return "success";
 	}
 
 	public static String hasSavingsAccount(HttpServletRequest request,
