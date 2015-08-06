@@ -42,15 +42,44 @@
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
        </form>
         
+        
+       <form name="findNormalRemittanceMonthYear" target="remittanceMonth" title="" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+      <!--  <auto-fields-entity entity-name="SalaryMonthYear" default-field-type="find"/>  -->
+        <field name="normalRemittanceMonthYearId"><hidden/></field>
+        <field name="isActive"><hidden/></field>
+        <field name="createdBy" title="Processed By"><text-find default-option="equals"></text-find></field>
+        <field name="updatedBy"><hidden/></field>
+        <field name="processed"><hidden/></field>
+        <field name="month" title="Month" ><text-find default-option="equals"></text-find></field>
+		<field name="year" title="Year"><text-find default-option="equals"></text-find></field>
+        <field name="stationId" title="Station / Employer" >
+        	<drop-down allow-empty="true">
+        		<entity-options description="${employerName} - ${employerCode}" entity-name="Station">
+        			<entity-order-by field-name="employerName"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+		<field name="remittanceNumber" title="Remittance Number"><text-find default-option="equals"></text-find></field> 
+        <field name="noConditionFind"><hidden value="Y"/>       
+         <!-- if this isn't there then with all fields empty no query will be done -->
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        </form>
+        
       <form name="listNormalRemittanceMonthYear" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateNormalRemittanceMonthYear" paginate-target="remittanceMonth"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        <actions>
-            <entity-condition entity-name="NormalRemittanceMonthYear">
-            	<!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
-            	<order-by field-name="-normalRemittanceMonthYearId"/>
-            </entity-condition>
-            
-        </actions>
+       <actions>
+               <entity-condition entity-name="NormalRemittanceMonthYear">
+               <order-by field-name="remittanceNumber DESC"/>
+               </entity-condition>
+           	    <service service-name="performFind" result-map="result" result-map-list="listIt">
+	                <field-map field-name="inputFields" from-field="parameters"/>
+	                <field-map field-name="entityName" value="NormalRemittanceMonthYear"/>
+	                <field-map field-name="viewIndex" from-field="viewIndex"/>
+	                <field-map field-name="viewSize" from-field="viewSize"/>
+                </service>
+        </actions>		 
         <auto-fields-service default-field-type="hidden" service-name="updateNormalRemittanceMonthYear"/>
 		
 		<field name="createdBy" title="Processed By"><display></display></field>
