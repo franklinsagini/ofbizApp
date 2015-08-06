@@ -32,7 +32,7 @@
         		<option key="12" description="12"/>
         	</drop-down>
         </field>
-         <field name="year" title="Year"><text default-value="${currentYear}"></text></field>
+         <field name="year" title="Year" required-field="true"><text default-value="${currentYear}"></text></field>
         
         <field name="stationId" title="Station / Employer" required-field="true">
         	<drop-down allow-empty="true">
@@ -44,50 +44,62 @@
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
        </form>
         
-      <form name="listSalaryMonthYear" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateSalaryMonthYear" paginate-target="salaryMonthYear"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        <actions>
-            <entity-condition entity-name="SalaryMonthYear">
-            	<!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
-            	<order-by field-name="-salaryMonthYearId"/>
-            </entity-condition>
-            
-        </actions>
-        <auto-fields-service default-field-type="hidden" service-name="updateSalaryMonthYear"/>
-		
-		
-        <field name="month" title="Month"><display></display></field>
-         <field name="year" title="Year"><display></display></field>
-         
-
-         
-         <field name="stationId" title="Station / Employer" required-field="true">
-        	<!-- drop-down allow-empty="true">
+        <form name="findSalaryMonth" target="salaryMonthYear" title="" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+      <!--  <auto-fields-entity entity-name="SalaryMonthYear" default-field-type="find"/>  -->
+        <field name="salaryMonthYearId"><hidden/></field>
+        <field name="isActive"><hidden/></field>
+        <field name="createdBy"><text-find default-option="equals"></text-find></field>
+        <field name="updatedBy"><hidden/></field>
+        <field name="processed"><hidden/></field>
+        <field name="month" title="Month" ><text-find default-option="equals"></text-find></field>
+		<field name="year" title="Year"><text-find default-option="equals"></text-find></field>
+        <field name="stationId" title="Station / Employer" >
+        	<drop-down allow-empty="true">
         		<entity-options description="${employerName} - ${employerCode}" entity-name="Station">
         			<entity-order-by field-name="employerName"/>
         		</entity-options>
-        	</drop-down -->
-        	<display-entity entity-name="Station" description="${employerName} - ${employerCode}"></display-entity>
+        	</drop-down >
         </field>
+
+		<field name="salaryNumber" title="Salary Number"><text-find default-option="equals"></text-find></field> 
+        <field name="noConditionFind"><hidden value="Y"/>       
+         <!-- if this isn't there then with all fields empty no query will be done -->
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        </form>
         
+        
+      <form name="listSalaryMonthYear" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateSalaryMonthYear" paginate-target="salaryMonthYear"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+         <actions>
+           <entity-condition entity-name="SalaryMonthYear">
+           <order-by field-name="salaryNumber DESC"/>
+           </entity-condition>
+         
+           	    <service service-name="performFind" result-map="result" result-map-list="listIt">
+	                <field-map field-name="inputFields" from-field="parameters"/>
+	                <field-map field-name="entityName" value="SalaryMonthYear"/>
+	                <field-map field-name="viewIndex" from-field="viewIndex"/>
+	                <field-map field-name="viewSize" from-field="viewSize"/>
+                </service>
+        </actions>	
+        <auto-fields-service default-field-type="hidden" service-name="updateSalaryMonthYear"/>
+	
+         <field name="month" title="Month"><display></display></field>
+         <field name="year" title="Year"><display></display></field>
+      
+         <field name="stationId" title="Station / Employer" required-field="true">
+         <display-entity entity-name="Station" description="${employerName} - ${employerCode}"></display-entity>
+         </field>
         <field name="salaryNumber">
         	<display></display>
         </field>
-       
         <field name="memberSalary" title="Member Salaries" widget-style="buttontext">
             <hyperlink target="memberSalary" description="Member Salaries" also-hidden="false">
                 <parameter param-name="salaryMonthYearId"/>
             </hyperlink>
         </field>
-        
-        
-        <!-- field name="employer" title="Employer/Station" widget-style="buttontext">
-            <hyperlink target="employerSalary" description="Employer/Station" also-hidden="false">
-                <parameter param-name="salaryMonthYearId"/>
-            </hyperlink>
-        </field -->
-        
-        
         <field name="salaryImport" title="Salary Import" widget-style="buttontext">
             <hyperlink target="salaryImport" description="SalaryImport" also-hidden="false">
                 <parameter param-name="salaryMonthYearId"/>
@@ -96,9 +108,7 @@
         
          <field name="createdBy" title="Created By"><display></display></field>
          <field name="createdStamp" title="Time Created"><display type="date-time"></display></field>
-               
-        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
-    </form>
+         </form>
     
     <!-- MemberSalary -->
     <form name="MemberSalary" type="single" target="createMemberSalary"
