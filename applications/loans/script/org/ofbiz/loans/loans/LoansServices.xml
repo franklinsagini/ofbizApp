@@ -262,6 +262,15 @@ under the License.
             
             <sequenced-id field="newEntity.loanNo" sequence-name="LoanNumber" stagger-max="1"  />
             
+            <!-- to-string field="newEntity.loanApplicationId">
+            	
+            </to-string -->
+            <set field="loanApplicationIdLong" from-field="newEntity.loanApplicationId" type="Long"/>
+            <set field="newLoanNumber" value="${bsh:org.ofbiz.accountholdertransactions.LoanUtilities.convertLoanToString(loanApplicationIdLong);}" type="String"/>
+            
+            <!-- set field="newLoanNumber" value="${newEntity.loanApplicationId}" type="PlainString"/ -->
+             <set field="newEntity.loanNo" from-field="newLoanNumber" type="PlainString"/>
+            
             <!-- Set WorkflowDocument -->
             <set field="documentName" value="LOAN"/>
             <!-- set field="newEntity.workflowDocumentTypeId" value="${bsh:org.ofbiz.workflow.WorkflowServices.getWorkflowDocumentType(documentName);}" type="Long"/ -->
@@ -416,9 +425,35 @@ under the License.
 		<set field="newEntity.loanApplicationSecurityId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <!--  set field="entity.loanStatus" value="DRAFT"/ -->
         <!-- set field="productType" value="Loan"/ -->
-        <create-value value-field="newEntity"/>
-        <set field="loanApplicationId" value="newEntity.loanApplicationId"/>
-        <set field="status" value="${bsh:org.ofbiz.loans.LoanServices.updateLoanApplicationToSelfGuaranteed(loanApplicationId);}"/>
+        
+
+        <set field="loanApplicationId" from-field="parameters.loanApplicationId" type="Long"/>
+        <set field="loanSecurityId" from-field="parameters.loanSecurityId" type="Long"/>
+      
+        <set field="status" value="${bsh:org.ofbiz.loans.LoanServices.updateLoanApplicationToSelfGuaranteed(loanApplicationId, loanSecurityId);}"/>
+        
+        		<if>
+			 <condition> 
+			 		<if-compare operator="equals" value="success" field="status"></if-compare>
+            </condition> 
+            <then> 
+            			<!--  Self -->
+        				<create-value value-field="newEntity"/>
+						<property-to-field resource="LoanUiLabels.xml" 
+            				property="Successfully set Loan Security Type" field="successMessage" />
+                
+            </then>
+		
+		<else>
+			<add-error> 
+                    <fail-message message="${status}"/>
+                </add-error> 
+                <check-errors /> 
+		
+        </else>
+        </if>
+        
+
     </simple-method>
     <simple-method method-name="updateLoanApplicationSecurity" short-description="Update Loan Application Security">
         <entity-one entity-name="LoanApplicationSecurity" value-field="lookedUpValue"/>

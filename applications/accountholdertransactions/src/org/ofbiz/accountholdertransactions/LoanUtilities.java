@@ -963,10 +963,21 @@ public class LoanUtilities {
 
 		System.out.println(" OOOOOOOOOOOOOOOOOOOOOO The Sizzzzzzzzzzzze "
 				+ loanGuarantorELI.size());
+		
+		
+		
 		if (loanGuarantorELI.size() > 0) {
 			return true;
-		} else
+		} else{
+			//If its self guarantee, return true
+			GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
+			if (loanApplication.getString("isSelfGuaranteed").equals("Y"))
+			{
+				return true;
+			}
+			
 			return false;
+		}
 	}
 
 	/***
@@ -982,6 +993,12 @@ public class LoanUtilities {
 
 		if (bdTotalDepositAmt.compareTo(bdLoanAmt) >= 0)
 			return true;
+		
+		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
+		if (loanApplication.getString("isSelfGuaranteed").equals("Y"))
+		{
+			return true;
+		}
 
 		return false;
 	}
@@ -3043,6 +3060,15 @@ public class LoanUtilities {
 		
 		return getStationName(getStation(stationId.toString()).getString("employerCode"));
 		
+	}
+	
+	
+	public static String convertLoanToString(Long longValue){
+		String stringValue = String.valueOf(longValue);
+		
+		stringValue = stringValue.replaceAll(",", "");
+		stringValue = stringValue.trim();
+		return stringValue;
 	}
 
 
