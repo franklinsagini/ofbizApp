@@ -1344,12 +1344,15 @@ public class OnlineRemittanceProcessingServices {
 		}
 		
 		GenericValue loanProduct = LoanUtilities.getLoanProductGivenCode(productCode.trim());
-		
+		log.info(" GGGGGGGGGGGGGGGGGGGG Product Code "+productCode);
+		log.info(" GGGGGGGGGGGGGGGGGGGG What we got "+loanProduct.getString("fosaOrBosa"));
 		if (loanProduct.getString("fosaOrBosa").equals("BOSA")){
 			//Add 10000000
 			loanNo = String.valueOf((Long.valueOf(loanNo) + 10000000L));
+			log.info(" GGGGGGGGGGGGGGGGGGGG BOSA LOan "+loanNo);
 		} else if (loanProduct.getString("fosaOrBosa").equals("FOSA")){
 			loanNo = String.valueOf((Long.valueOf(loanNo) + 20000L));
+			log.info(" GGGGGGGGGGGGGGGGGGGG Fosa "+loanNo);
 			//Add 20000
 		}
 		
