@@ -383,7 +383,7 @@ public class MemberAccountManagementServices {
 				"totalPrincipalDue", totalPrincipalDue, "interestAmount",
 				loanInterest, "insuranceAmount", loanInsurance,
 				"principalAmount", loanPrincipal, "transactionAmount",
-				transactionAmount));
+				transactionAmount, "acctgTransId", acctgTransId));
 		try {
 			delegator.createOrStore(loanRepayment);
 		} catch (GenericEntityException e) {
