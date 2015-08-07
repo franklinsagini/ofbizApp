@@ -734,7 +734,6 @@
 		</field>
 
 	</form>
-
 	<form name="ListMyLeaves" list-name="emplLeaves" target="" title=""
 		type="list" paginate-target="ListMyLeaves" odd-row-style="alternate-row"
 		default-table-style="basic-table hover-bar">
@@ -1122,7 +1121,11 @@
 	<form name="findLeaveRecord" target="leaveRecord" title="" type="single"
         header-row-style="header-row" default-table-style="basic-table">
       <!-- <auto-fields-entity entity-name="EmplLeave" default-field-type="find"/>  -->
-      
+        <actions>
+        <entity-condition entity-name="EmplLeave">
+        <order-by field-name="fromDate DESC"/>
+        </entity-condition>
+        </actions>
        
         <field name="partyId" title="Employee"><lookup target-form-name="LookupEmployee"/></field>
    
@@ -1146,6 +1149,7 @@
         <actions>
         
         <entity-condition entity-name="EmplLeave">
+        <order-by field-name="fromDate DESC"/>
         			<!--  <condition-expr field-name="partyId" operator="equals" from-field="userLogin.partyId"/>  -->
         	</entity-condition> 
         
@@ -1209,6 +1213,49 @@
     </form>
     
 	
-	
+	  <form name="ListPerApproverLeaveBalances" target="" title="" list-name="listIt" type="list" paginate-target="LeaveApprovals"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+          <entity-condition entity-name="EmplLeave">
+        			 <condition-expr field-name="responsibleEmployee" operator="equals" from-field="userLogin.partyId"/> 
+        	</entity-condition> 
+        
+            <service result-map-list="listIt" result-map="result" service-name="performFind">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="LeavesBalanceView"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+         <set field="partyId" from-field="parameters.partyId" />
+        </actions>
+        <!-- <auto-fields-entity entity-name="EmplLeave" default-field-type="display"/> -->
+          
+		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
+			<display-entity entity-name="Person" description="${lastName}, ${firstName}">
+			</display-entity>
+		</field>
+		<field name="annualCarriedOverDays" title="Annual Leave Balance">
+			<display />
+		</field>	
+		<field name="annualaccruedDays" title="Annual Accrued Leave Days">
+			<display />
+		</field>
+		<field name="accruedDayswe" title="Monthly Annual Leave accruals(Days)">
+		<display-entity entity-name="EmplLeaveType" key-field-name="leaveTypeId" description="${accrualRate}"></display-entity>
+		</field>
+		<field name="annualUsedLeaveDays" title="Annual Used Leave Days">
+			<display />
+		</field>
+				
+		<field name="annualLostLeaveDays" title="Annual Lost Leave Days">
+			<display />
+		</field>		
+		<field name="annualAvailableLeaveDays" title="Annual Available Leave Days">
+			<display />
+		</field>
+		
+		
+    </form>
 	
 </forms>
