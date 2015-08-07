@@ -1307,6 +1307,75 @@ public class RemittanceServices {
 		return totalAmount;
 	}
 	
+	
+	//CHeque available where month is actually Month + Year
+	public static BigDecimal getTotalRemittedChequeAmountAvailable(
+			String employerCode, String month) {
+		
+		log.info("CCCCCCCCCCCCCC Correct employerCode "+employerCode);
+		log.info("CCCCCCCCCCCCCC Correct month "+month);
+
+		// GenericValue station = findStationGivenStationNumber(stationNumber);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		// Get
+		List<GenericValue> stationAccountTransactionELI = null;
+		String monthYear = month;
+		monthYear = monthYear.toString();
+		// Get total amount given station and month
+		EntityConditionList<EntityExpr> stationAccountTransactionConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"employerCode", EntityOperator.EQUALS,
+						employerCode.trim()), EntityCondition.makeCondition(
+						"monthyear", EntityOperator.EQUALS, monthYear)
+
+				), EntityOperator.AND);
+
+		try {
+			stationAccountTransactionELI = delegator.findList(
+					"StationAccountTransaction",
+					stationAccountTransactionConditions, null, null, null,
+					false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		// TransactionAmount
+		BigDecimal totalAmount = BigDecimal.ZERO;
+		for (GenericValue stationAccountTransaction : stationAccountTransactionELI) {
+			if (stationAccountTransaction.getBigDecimal("transactionAmount") != null) {
+				totalAmount = totalAmount.add(stationAccountTransaction
+						.getBigDecimal("transactionAmount"));
+			}
+		}
+
+		BigDecimal bdTotalRemittanceProcessedAmt = BigDecimal.ZERO;
+
+		bdTotalRemittanceProcessedAmt = getTotalRemittanceProcessed(
+				employerCode, monthYear);
+		log.info("TTTTTTTTTT totalAmount " + totalAmount);
+		log.info("TTTTTTTTTT bdTotalRemittanceProcessedAmt "
+				+ bdTotalRemittanceProcessedAmt);
+		BigDecimal bdTotalSalaryProcessedAmt = BigDecimal.ZERO;
+
+		log.info("EEEEEEEE employerCode == " + employerCode);
+		log.info("EEEEEEEE month == " + month);
+		
+		String realMonthRemovedYear = month;
+				
+		if (month.length() > 4){		
+			realMonthRemovedYear = month.substring(0, (month.length()-4));
+		}
+		bdTotalSalaryProcessedAmt = getTotalSalaryProcessed(employerCode, realMonthRemovedYear);
+		log.info("TTTTTTTTTT bdTotalSalaryProcessedAmt "
+				+ bdTotalSalaryProcessedAmt);
+		totalAmount = totalAmount.subtract(bdTotalRemittanceProcessedAmt);
+		totalAmount = totalAmount.subtract(bdTotalSalaryProcessedAmt);
+		log.info("TTTTTTTTTT totalAmount after " + totalAmount);
+		return totalAmount;
+	}
+	
+	
 	//Show Cheque Available
 	public static BigDecimal getTotalRemittedChequeAmountAvailable(
 			String employerCode, String month, String year, Long pushMonthYearStationId) {
@@ -3505,7 +3574,10 @@ public class RemittanceServices {
 		BigDecimal chequeAmount = BigDecimal.ZERO;
 
 		totalRemitted = getTotalRemitted(employerCode, month);
-		chequeAmount = getTotalRemittedChequeAmount(employerCode, month);
+		
+		chequeAmount = getTotalRemittedChequeAmountAvailable(employerCode, month);
+				
+				//getTotalRemittedChequeAmount(employerCode, month);
 
 		totalRemitted = totalRemitted.setScale(0, RoundingMode.FLOOR);
 		chequeAmount = chequeAmount.setScale(0, RoundingMode.FLOOR);
