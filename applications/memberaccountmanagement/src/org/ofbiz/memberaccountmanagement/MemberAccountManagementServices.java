@@ -337,10 +337,10 @@ public class MemberAccountManagementServices {
 		log.info(" destLoanApplicationId "+destLoanApplicationId);
 		
 		//Add a negative transaction to source loan application
-		reduceLoanRepaymentInSource(sourceLoanApplicationId, principalAmount, interestAmount, insuranceAmount, amount, userLogin);
+		reduceLoanRepaymentInSource(sourceLoanApplicationId, principalAmount, interestAmount, insuranceAmount, amount, userLogin, null);
 		
 		//Add a positive transaction to destination loan application
-		addLoanRepaymentInDestination(destLoanApplicationId, principalAmount, interestAmount, insuranceAmount, amount,  userLogin);
+		addLoanRepaymentInDestination(destLoanApplicationId, principalAmount, interestAmount, insuranceAmount, amount,  userLogin, null);
 		//LoanRepayments.repayLoanWithoutDebitingCash(loanRepayment, userLogin, entrySequence)
 
 		return "success";
@@ -350,7 +350,7 @@ public class MemberAccountManagementServices {
 	private static void addLoanRepaymentInDestination(
 			Long destLoanApplicationId, BigDecimal principalAmount,
 			BigDecimal interestAmount, BigDecimal insuranceAmount,
-			BigDecimal amount, Map<String, String> userLogin) {
+			BigDecimal amount, Map<String, String> userLogin, String acctgTransId) {
 		GenericValue loanApplication = LoanUtilities.getLoanApplicationEntity(destLoanApplicationId);
 		GenericValue loanRepayment = null; 
 		//String partyId = (String) userLogin.get("partyId");
@@ -383,7 +383,7 @@ public class MemberAccountManagementServices {
 				"totalPrincipalDue", totalPrincipalDue, "interestAmount",
 				loanInterest, "insuranceAmount", loanInsurance,
 				"principalAmount", loanPrincipal, "transactionAmount",
-				transactionAmount));
+				transactionAmount, "acctgTransId", acctgTransId));
 		try {
 			delegator.createOrStore(loanRepayment);
 		} catch (GenericEntityException e) {
@@ -395,7 +395,7 @@ public class MemberAccountManagementServices {
 	private static void reduceLoanRepaymentInSource(
 			Long sourceLoanApplicationId, BigDecimal principalAmount,
 			BigDecimal interestAmount, BigDecimal insuranceAmount,
-			BigDecimal amount, Map<String, String> userLogin) {
+			BigDecimal amount, Map<String, String> userLogin, String acctgTransId) {
 		GenericValue loanApplication = LoanUtilities.getLoanApplicationEntity(sourceLoanApplicationId);
 		GenericValue loanRepayment = null; 
 		//String partyId = (String) userLogin.get("partyId");
@@ -440,7 +440,7 @@ public class MemberAccountManagementServices {
 				"totalPrincipalDue", totalPrincipalDue, "interestAmount",
 				loanInterest, "insuranceAmount", loanInsurance,
 				"principalAmount", loanPrincipal, "transactionAmount",
-				transactionAmount));
+				transactionAmount, "acctgTransId", acctgTransId));
 		try {
 			delegator.createOrStore(loanRepayment);
 		} catch (GenericEntityException e) {
@@ -768,6 +768,8 @@ public class MemberAccountManagementServices {
 		
 		header.set("processed", "Y");
 		header.set("updatedBy", userLogin.get("userLoginId"));
+		header.set("acctgTransId", acctgTransId);
+		
 		
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
@@ -858,7 +860,7 @@ public class MemberAccountManagementServices {
 			//Get Loan ID and post the principal
 			loanApplicationId = genericValue.getLong("destLoanApplicationId");
 			principalAmount = amount;
-			addLoanRepaymentInDestination(loanApplicationId, principalAmount, interestAmount, insuranceAmount, amount, userLogin);
+			addLoanRepaymentInDestination(loanApplicationId, principalAmount, interestAmount, insuranceAmount, amount, userLogin, acctgTransId);
 		}
 		else if (destinationType.equals("INTERESTCHARGE")){
 			//Get Loan ID and add interest charge
@@ -869,7 +871,7 @@ public class MemberAccountManagementServices {
 			//Get Loan ID and add interest paid
 			loanApplicationId = genericValue.getLong("destLoanApplicationId");
 			interestAmount = amount;
-			addLoanRepaymentInDestination(loanApplicationId, principalAmount, interestAmount, insuranceAmount, amount, userLogin);
+			addLoanRepaymentInDestination(loanApplicationId, principalAmount, interestAmount, insuranceAmount, amount, userLogin, acctgTransId);
 		}
 		else if (destinationType.equals("INSURANCECHARGE")){
 			//Get Loan ID and add insurance charge
@@ -880,7 +882,7 @@ public class MemberAccountManagementServices {
 			//Get Loan ID and add insurance payment
 			loanApplicationId = genericValue.getLong("destLoanApplicationId");
 			insuranceAmount = amount;
-			addLoanRepaymentInDestination(loanApplicationId, principalAmount, interestAmount, insuranceAmount, amount, userLogin);
+			addLoanRepaymentInDestination(loanApplicationId, principalAmount, interestAmount, insuranceAmount, amount, userLogin, acctgTransId);
 		}
 	}
 
@@ -974,7 +976,7 @@ public class MemberAccountManagementServices {
 		
 		String monthPadded = String.valueOf(month);//paddString(2, String.valueOf(month));
 		String monthYear = monthPadded+String.valueOf(year);
-		
+		//acctgTransId
 		loanExpectation = delegator.makeValue("LoanExpectation", UtilMisc
 				.toMap("loanExpectationId", loanExpectationId, "loanNo",
 						loanApplication.getString("loanNo"), "loanApplicationId", loanApplicationId,
@@ -1071,7 +1073,7 @@ public class MemberAccountManagementServices {
 			//Get Loan ID and post the principal
 			loanApplicationId = genericValue.getLong("sourceLoanApplicationId");
 			principalAmount = genericValue.getBigDecimal("amount");
-			reduceLoanRepaymentInSource(loanApplicationId, principalAmount, interestAmount, insuranceAmount, amount, userLogin);
+			reduceLoanRepaymentInSource(loanApplicationId, principalAmount, interestAmount, insuranceAmount, amount, userLogin, acctgTransId);
 			
 		}
 		else if (sourceType.equals("INTERESTCHARGE")){
@@ -1083,7 +1085,7 @@ public class MemberAccountManagementServices {
 			//Get Loan ID and add interest paid
 			loanApplicationId = genericValue.getLong("sourceLoanApplicationId");
 			interestAmount = genericValue.getBigDecimal("amount");
-			reduceLoanRepaymentInSource(loanApplicationId, principalAmount, interestAmount, insuranceAmount, amount, userLogin);
+			reduceLoanRepaymentInSource(loanApplicationId, principalAmount, interestAmount, insuranceAmount, amount, userLogin, acctgTransId);
 		}
 		else if (sourceType.equals("INSURANCECHARGE")){
 			//Get Loan ID and add insurance charge
@@ -1094,7 +1096,7 @@ public class MemberAccountManagementServices {
 			//Get Loan ID and add insurance payment
 			loanApplicationId = genericValue.getLong("sourceLoanApplicationId");
 			insuranceAmount = genericValue.getBigDecimal("amount");
-			reduceLoanRepaymentInSource(loanApplicationId, principalAmount, interestAmount, insuranceAmount, amount, userLogin);
+			reduceLoanRepaymentInSource(loanApplicationId, principalAmount, interestAmount, insuranceAmount, amount, userLogin, acctgTransId);
 		}
 		
 	}

@@ -13,6 +13,9 @@ public class PrincipalInterestInsurance {
 	private BigDecimal insuranceAmt;
 	private BigDecimal interestAmt;
 	private BigDecimal principalAmt;
+	
+	private BigDecimal excessToSavingsAmt;
+	
 	public BigDecimal getInsuranceAmt() {
 		return insuranceAmt;
 	}
@@ -31,5 +34,13 @@ public class PrincipalInterestInsurance {
 	public void setPrincipalAmt(BigDecimal principalAmt) {
 		this.principalAmt = principalAmt;
 	}
+	public BigDecimal getExcessToSavingsAmt() {
+		return excessToSavingsAmt;
+	}
+	public void setExcessToSavingsAmt(BigDecimal excessToSavingsAmt) {
+		this.excessToSavingsAmt = excessToSavingsAmt;
+	}
+	
+	
 	
 }

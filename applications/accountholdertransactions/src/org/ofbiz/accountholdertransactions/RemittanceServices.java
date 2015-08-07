@@ -1307,6 +1307,75 @@ public class RemittanceServices {
 		return totalAmount;
 	}
 	
+	
+	//CHeque available where month is actually Month + Year
+	public static BigDecimal getTotalRemittedChequeAmountAvailable(
+			String employerCode, String month) {
+		
+		log.info("CCCCCCCCCCCCCC Correct employerCode "+employerCode);
+		log.info("CCCCCCCCCCCCCC Correct month "+month);
+
+		// GenericValue station = findStationGivenStationNumber(stationNumber);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		// Get
+		List<GenericValue> stationAccountTransactionELI = null;
+		String monthYear = month;
+		monthYear = monthYear.toString();
+		// Get total amount given station and month
+		EntityConditionList<EntityExpr> stationAccountTransactionConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"employerCode", EntityOperator.EQUALS,
+						employerCode.trim()), EntityCondition.makeCondition(
+						"monthyear", EntityOperator.EQUALS, monthYear)
+
+				), EntityOperator.AND);
+
+		try {
+			stationAccountTransactionELI = delegator.findList(
+					"StationAccountTransaction",
+					stationAccountTransactionConditions, null, null, null,
+					false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		// TransactionAmount
+		BigDecimal totalAmount = BigDecimal.ZERO;
+		for (GenericValue stationAccountTransaction : stationAccountTransactionELI) {
+			if (stationAccountTransaction.getBigDecimal("transactionAmount") != null) {
+				totalAmount = totalAmount.add(stationAccountTransaction
+						.getBigDecimal("transactionAmount"));
+			}
+		}
+
+		BigDecimal bdTotalRemittanceProcessedAmt = BigDecimal.ZERO;
+
+		bdTotalRemittanceProcessedAmt = getTotalRemittanceProcessed(
+				employerCode, monthYear);
+		log.info("TTTTTTTTTT totalAmount " + totalAmount);
+		log.info("TTTTTTTTTT bdTotalRemittanceProcessedAmt "
+				+ bdTotalRemittanceProcessedAmt);
+		BigDecimal bdTotalSalaryProcessedAmt = BigDecimal.ZERO;
+
+		log.info("EEEEEEEE employerCode == " + employerCode);
+		log.info("EEEEEEEE month == " + month);
+		
+		String realMonthRemovedYear = month;
+				
+		if (month.length() > 4){		
+			realMonthRemovedYear = month.substring(0, (month.length()-4));
+		}
+		bdTotalSalaryProcessedAmt = getTotalSalaryProcessed(employerCode, realMonthRemovedYear);
+		log.info("TTTTTTTTTT bdTotalSalaryProcessedAmt "
+				+ bdTotalSalaryProcessedAmt);
+		totalAmount = totalAmount.subtract(bdTotalRemittanceProcessedAmt);
+		totalAmount = totalAmount.subtract(bdTotalSalaryProcessedAmt);
+		log.info("TTTTTTTTTT totalAmount after " + totalAmount);
+		return totalAmount;
+	}
+	
+	
 	//Show Cheque Available
 	public static BigDecimal getTotalRemittedChequeAmountAvailable(
 			String employerCode, String month, String year, Long pushMonthYearStationId) {
@@ -2046,6 +2115,8 @@ public class RemittanceServices {
 		BigDecimal bdPrincipal = BigDecimal.ZERO;
 		BigDecimal bdInterest = BigDecimal.ZERO;
 		BigDecimal bdInsurance = BigDecimal.ZERO;
+		BigDecimal bdExcessToSavings = BigDecimal.ZERO;
+		
 		BigDecimal bdAccount = BigDecimal.ZERO;
 		BigDecimal bdTotal = BigDecimal.ZERO;
 
@@ -2061,6 +2132,8 @@ public class RemittanceServices {
 				accountHolderTransactionSetup, acctgTransType, branchId);
 
 		List<String> accountProductCodesList = getAccountProductCodesList();
+		
+		Set<String> loansRemittedSet = new HashSet<String>();
 
 		// String branchId = "";
 		log.info(" SSSSSSSSSSSSSS Number of Records is "
@@ -2154,57 +2227,10 @@ public class RemittanceServices {
 					.getLoanProductCodeGivenLoanNo(expectedPaymentReceived
 							.getString("loanNo"));
 
-			BigDecimal bdTotalAmountRemitted = BigDecimal.ZERO;
+			
 			if (loanProductCode != null) {
-
-				String remittanceCodePrincipal = loanProductCode + "A";
-				String remittanceCodeInterest = loanProductCode + "B";
-				String remittanceCodeInsurance = loanProductCode + "C";
-				GenericValue principalExpectedRecived = null;
-
-				if (expectedPaymentReceived.getString("remitanceCode").equals(
-						remittanceCodePrincipal)) {
-					// bdPrincipal = bdPrincipal.add(expectedPaymentReceived
-					// .getBigDecimal("amount"));
-					bdTotalAmountRemitted = bdTotalAmountRemitted
-							.add(expectedPaymentReceived
-									.getBigDecimal("amount"));
-					// Save the Repayment to loan_repayment (LoanRepayment)
-					// saveLoanRepaymentRemittance(expectedPaymentReceived,
-					// acctgTransId, "REMITTANCE");
-					principalExpectedRecived = expectedPaymentReceived;
-				} else if (expectedPaymentReceived.getString("remitanceCode")
-						.equals(remittanceCodeInterest)) {
-					// bdInterest = bdInterest.add(expectedPaymentReceived
-					// .getBigDecimal("amount"));
-					bdTotalAmountRemitted = bdTotalAmountRemitted
-							.add(expectedPaymentReceived
-									.getBigDecimal("amount"));
-				} else if (expectedPaymentReceived.getString("remitanceCode")
-						.equals(remittanceCodeInsurance)) {
-					// bdInsurance = bdInsurance.add(expectedPaymentReceived
-					// .getBigDecimal("amount"));
-					bdTotalAmountRemitted = bdTotalAmountRemitted
-							.add(expectedPaymentReceived
-									.getBigDecimal("amount"));
-				}
-
-				PrincipalInterestInsurance principalInterestInsurance = null;
-						
-				if (principalExpectedRecived != null){
-					principalInterestInsurance = saveLoanRepaymentRemittance(
-							expectedPaymentReceived, acctgTransId, "REMITTANCE",
-							bdTotalAmountRemitted, userLogin, month);
-	
-					bdPrincipal = bdPrincipal.add(principalInterestInsurance
-							.getPrincipalAmt());
-					bdInterest = bdInterest.add(principalInterestInsurance
-							.getInterestAmt());
-					bdInsurance = bdInsurance.add(principalInterestInsurance
-							.getInsuranceAmt());
-				
-					principalInterestInsurance = null;
-				}
+				//Add the Loan No to a set
+				loansRemittedSet.add(expectedPaymentReceived.getString("loanNo"));
 			}
 
 			bdTotal = bdTotal.add(expectedPaymentReceived
@@ -2220,6 +2246,43 @@ public class RemittanceServices {
 			} catch (GenericEntityException e) {
 				e.printStackTrace();
 			}
+		}
+		
+		for (String loanNo : loansRemittedSet) {
+			
+//			String remittanceCodePrincipal = loanProductCode + "A";
+//			String remittanceCodeInterest = loanProductCode + "B";
+//			String remittanceCodeInsurance = loanProductCode + "C";
+			
+			//remittanceCodePrincipal
+			//remittanceCodeInterest
+			//remittanceCodeInsurance
+			BigDecimal bdTotalAmountRemitted = BigDecimal.ZERO;
+			
+			//Given Loan No , get total Remitted Amount
+			bdTotalAmountRemitted = getTotalRemittedGivenLoanNo(loanNo, employerCode, month);
+
+
+			PrincipalInterestInsurance principalInterestInsurance = null;
+					
+			//if (principalExpectedRecived != null){
+				principalInterestInsurance = saveLoanRepaymentRemittance(
+						null, acctgTransId, "REMITTANCE",
+						bdTotalAmountRemitted, userLogin, month, loanNo);
+
+				bdPrincipal = bdPrincipal.add(principalInterestInsurance
+						.getPrincipalAmt());
+				bdInterest = bdInterest.add(principalInterestInsurance
+						.getInterestAmt());
+				bdInsurance = bdInsurance.add(principalInterestInsurance
+						.getInsuranceAmt());
+				
+				if (principalInterestInsurance.getExcessToSavingsAmt().compareTo(BigDecimal.ZERO) > 0){
+					bdExcessToSavings = bdExcessToSavings.add(principalInterestInsurance.getExcessToSavingsAmt());
+				}
+			
+				//principalInterestInsurance = null;
+			//}
 		}
 
 		// Ommit Shares and Member Deposits from the Debit because they are
@@ -2344,6 +2407,23 @@ public class RemittanceServices {
 			postTransaction(creditAccountId, postingType, entrySequenceId,
 					bdInsurance, branchId, acctgTransId, acctgTransType);
 		}
+		
+		//Credit Savings with excess from Loan Remittances
+		//bdExcessToSavings
+		
+		sequenceId = sequenceId + 1;
+
+		sequenceString = "0000" + sequenceId;
+		entrySequenceId = sequenceString;
+		postingType = "C";
+		creditAccountId = LoanUtilities
+				.getGLAccountIDForAccountProduct(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
+
+		if (bdExcessToSavings.compareTo(BigDecimal.ZERO) > 0) {
+			postTransaction(creditAccountId, postingType, entrySequenceId,
+					bdExcessToSavings, branchId, acctgTransId,
+					acctgTransType);
+		}
 
 		// Writer out;
 		// try {
@@ -2361,6 +2441,38 @@ public class RemittanceServices {
 		// return
 		// "Successufully Processed remittance for "+bdTotal+" shillings, the transaction ID is "+acctgTransId;
 		return "Successufully Processed remittance";
+	}
+
+	private static BigDecimal getTotalRemittedGivenLoanNo(String loanNo,
+			String employerCode, String month) {
+		List<GenericValue> expectedPaymentReceivedELI = new ArrayList<GenericValue>();
+
+		EntityConditionList<EntityExpr> expectedPaymentReceivedConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"employerCode", EntityOperator.EQUALS,
+						employerCode.trim()), EntityCondition.makeCondition(
+						"month", EntityOperator.EQUALS, month),
+						EntityCondition.makeCondition("loanNo",
+								EntityOperator.EQUALS, loanNo)
+
+				), EntityOperator.AND);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		try {
+			expectedPaymentReceivedELI = delegator.findList(
+					"ExpectedPaymentReceived",
+					expectedPaymentReceivedConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		BigDecimal bdTotal = BigDecimal.ZERO;
+		
+		for (GenericValue genericValue : expectedPaymentReceivedELI) {
+			bdTotal = bdTotal.add(genericValue.getBigDecimal("amount"));
+		}
+
+		return bdTotal;
 	}
 
 	/****
@@ -2751,7 +2863,7 @@ public class RemittanceServices {
 	// saveLoanRepaymentRemittance
 	private static PrincipalInterestInsurance saveLoanRepaymentRemittance(
 			GenericValue expectedPaymentReceived, String acctgTransId,
-			String repaymentMode, BigDecimal bdTotalAmountRemitted, Map<String, String> userLogin, String month) {
+			String repaymentMode, BigDecimal bdTotalAmountRemitted, Map<String, String> userLogin, String month, String loanNo) {
 		BigDecimal principalAmount = BigDecimal.ZERO;
 		BigDecimal interestAmount = BigDecimal.ZERO;
 		BigDecimal insuranceAmount = BigDecimal.ZERO;
@@ -2759,6 +2871,7 @@ public class RemittanceServices {
 
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		PrincipalInterestInsurance principalInterestInsurance = new PrincipalInterestInsurance();
+		principalInterestInsurance.setExcessToSavingsAmt(BigDecimal.ZERO);
 
 		// Loan Principal
 		// loanPrincipal = expectedPaymentReceived.getBigDecimal("amount");
@@ -2787,10 +2900,8 @@ public class RemittanceServices {
 		// loanPrincipal.add(loanInterest).add(
 		// loanInsurance);
 
-		BigDecimal bdLoanAmt = getLoanAmount(expectedPaymentReceived
-				.getString("loanNo"));
-		Long loanApplicationId = getLoanApplicationId(expectedPaymentReceived
-				.getString("loanNo"));
+		BigDecimal bdLoanAmt = getLoanAmount(loanNo);
+		Long loanApplicationId = getLoanApplicationId(loanNo);
 		Long partyId = LoanUtilities.getEntityValue("LoanApplication",
 				"loanApplicationId", loanApplicationId).getLong("partyId");
 		BigDecimal totalInterestDue = LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString());
@@ -2927,7 +3038,7 @@ public class RemittanceServices {
 
 			if (amountRemaining.compareTo(BigDecimal.ZERO) > 0) {
 				excessAmount = amountRemaining;
-
+				principalInterestInsurance.setExcessToSavingsAmt(amountRemaining);
 				// Deposit Excess to Savings Account
 				GenericValue loanApplication = LoanUtilities.getEntityValue(
 						"LoanApplication", "loanApplicationId",
@@ -2951,7 +3062,7 @@ public class RemittanceServices {
 				"createdBy", "admin", "partyId", partyId, "loanApplicationId",
 				loanApplicationId,
 
-				"loanNo", expectedPaymentReceived.getString("loanNo"),
+				"loanNo", loanNo,
 				"loanAmt", bdLoanAmt,
 
 				"totalLoanDue", totalLoanDue, "totalInterestDue",
@@ -3463,7 +3574,10 @@ public class RemittanceServices {
 		BigDecimal chequeAmount = BigDecimal.ZERO;
 
 		totalRemitted = getTotalRemitted(employerCode, month);
-		chequeAmount = getTotalRemittedChequeAmount(employerCode, month);
+		
+		chequeAmount = getTotalRemittedChequeAmountAvailable(employerCode, month);
+				
+				//getTotalRemittedChequeAmount(employerCode, month);
 
 		totalRemitted = totalRemitted.setScale(0, RoundingMode.FLOOR);
 		chequeAmount = chequeAmount.setScale(0, RoundingMode.FLOOR);
