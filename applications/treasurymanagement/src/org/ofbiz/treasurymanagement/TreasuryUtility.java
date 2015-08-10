@@ -58,9 +58,17 @@ public class TreasuryUtility {
 		BigDecimal bdTotalCashWithdrawals = getTotalCashWithdrawalToday(userLogin);
 		
 		BigDecimal bdTotalLoanCashDeposit = getTotalLoanCashDepositToday(userLogin);
-
+		
 		String partyId = userLogin.get("partyId");
 		String treasuryId = getTeller(partyId).getString("treasuryId");
+		
+		//Add CASHWITHDRAWALREVERSED
+		//Subtract CASHDEPOSITREVERSED
+		//Subtract LOANCASHPAYREVERSED
+		BigDecimal bdTotalCashDepositsReversed = getTotalCashDepositTodayReversed(treasuryId);
+		BigDecimal bdTotalCashWithdrawalsReversed = getTotalCashWithdrawalTodayReversed(treasuryId);
+		
+		BigDecimal bdTotalLoanCashDepositReversed = getTotalLoanCashDepositTodayReversed(treasuryId);
 
 		// Date date = new Date
 		Calendar calendar = Calendar.getInstance();
@@ -79,6 +87,16 @@ public class TreasuryUtility {
 				.add(bdTotalCashDeposits).subtract(bdTotalCashWithdrawals);
 		
 		bdTellerBalance = bdTellerBalance.add(bdTotalLoanCashDeposit);
+		
+		//Add CASHWITHDRAWALREVERSED
+		//Subtract CASHDEPOSITREVERSED
+		//Subtract LOANCASHPAYREVERSED
+		
+		bdTellerBalance = bdTellerBalance.add(bdTotalCashWithdrawalsReversed);
+		bdTellerBalance = bdTellerBalance.subtract(bdTotalCashDepositsReversed);
+		bdTellerBalance = bdTellerBalance.subtract(bdTotalLoanCashDepositReversed);
+		
+
 		
 		bdTellerBalance = bdTellerBalance.subtract(bdDeallocatedAmount);
 		log.info("DDDDDDDD DDDDDDDDDDD ########## ");
@@ -2279,5 +2297,130 @@ public class TreasuryUtility {
 		}
 		return bdBalance;
 	}
+	
+	
+	public static BigDecimal getTotalCashDepositTodayReversed(
+			String treasuryId) {
+		// TODO Auto-generated method stub
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.MILLISECOND, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+
+		Timestamp tstampDateCreated = new Timestamp(calendar.getTimeInMillis());
+
+		List<GenericValue> cashDepositELI = null;
+
+		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"treasuryId", EntityOperator.EQUALS, treasuryId),
+						EntityCondition.makeCondition("transactionType",
+								EntityOperator.EQUALS, "CASHDEPOSITREVERSED")
+
+						, EntityCondition.makeCondition("createdStamp",
+								EntityOperator.GREATER_THAN_EQUAL_TO,
+								tstampDateCreated)), EntityOperator.AND);
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			cashDepositELI = delegator.findList("AccountTransaction",
+					transactionConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		BigDecimal bdBalance = BigDecimal.ZERO;
+		for (GenericValue genericValue : cashDepositELI) {
+			bdBalance = bdBalance.add(genericValue
+					.getBigDecimal("transactionAmount"));
+		}
+		return bdBalance;
+	}
+	
+	public static BigDecimal getTotalCashWithdrawalTodayReversed(
+			String treasuryId) {
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.MILLISECOND, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+
+		Timestamp tstampDateCreated = new Timestamp(calendar.getTimeInMillis());
+
+		List<GenericValue> cashWithdrawalELI = null;
+		// CASHWITHDRAWAL
+		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"treasuryId", EntityOperator.EQUALS, treasuryId),
+						EntityCondition.makeCondition("transactionType",
+								EntityOperator.EQUALS, "CASHWITHDRAWALREVERSED"),
+
+						EntityCondition.makeCondition("createdStamp",
+								EntityOperator.GREATER_THAN_EQUAL_TO,
+								tstampDateCreated)), EntityOperator.AND);
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		try {
+			cashWithdrawalELI = delegator.findList("AccountTransaction",
+					transactionConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		log.info(" ############ withdrawals size : " + cashWithdrawalELI.size());
+
+		BigDecimal bdBalance = BigDecimal.ZERO;
+		for (GenericValue genericValue : cashWithdrawalELI) {
+			bdBalance = bdBalance.add(genericValue
+					.getBigDecimal("transactionAmount"));
+		}
+		return bdBalance;
+	}
+	
+	
+	public static BigDecimal getTotalLoanCashDepositTodayReversed(
+			String treasuryId) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.MILLISECOND, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+
+		Timestamp tstampDateCreated = new Timestamp(calendar.getTimeInMillis());
+
+		List<GenericValue> cashDepositELI = null;
+
+		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"treasuryId", EntityOperator.EQUALS, treasuryId),
+						EntityCondition.makeCondition("transactionType",
+								EntityOperator.EQUALS, "LOANCASHPAYREVERSED")
+
+						, EntityCondition.makeCondition("createdStamp",
+								EntityOperator.GREATER_THAN_EQUAL_TO,
+								tstampDateCreated)), EntityOperator.AND);
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			cashDepositELI = delegator.findList("AccountTransaction",
+					transactionConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		BigDecimal bdBalance = BigDecimal.ZERO;
+		for (GenericValue genericValue : cashDepositELI) {
+			bdBalance = bdBalance.add(genericValue
+					.getBigDecimal("transactionAmount"));
+		}
+		return bdBalance;
+	}
+
 
 }
