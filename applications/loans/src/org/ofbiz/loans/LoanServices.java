@@ -1516,8 +1516,13 @@ public class LoanServices {
 		BigDecimal bdTotalDeposits = getGuarantorTotalDeposits(loanApplication);
 
 		String guarantorsTotalDepositsEnough = "";
+		Long partyId = loanApplication.getLong("partyId");
+		
+		BigDecimal bdMemberDepositsTotal = LoanUtilities.getMemberDepositAmount(partyId);
+		
+		BigDecimal loanAmountLessDeposits = bdLoanAmt.subtract(bdMemberDepositsTotal);
 
-		if (bdTotalDeposits.compareTo(bdLoanAmt) == -1) {
+		if (bdTotalDeposits.compareTo(loanAmountLessDeposits) == -1) {
 			guarantorsTotalDepositsEnough = "N";
 		} else {
 			guarantorsTotalDepositsEnough = "Y";

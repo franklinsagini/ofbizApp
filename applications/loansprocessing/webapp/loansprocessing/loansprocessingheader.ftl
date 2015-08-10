@@ -442,7 +442,7 @@
 				
 				
 				if (!hasGuarantors){
-					alert('Loan Application must have guarantors!!! ');
+					alert('Loan Application must either have guarantors, be a self guarantee loan or be a collateral loan!!! ');
 					return false;
 				} 
 		
