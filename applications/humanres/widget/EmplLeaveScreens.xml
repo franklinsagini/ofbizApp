@@ -523,7 +523,7 @@
 				<set field="tabButtonItem" value="LeaveApprovals" />
 				<set field="headerItem" value="EmployeeLeave" />
 				<set field="responsibleEmployee" value="${userLogin.partyId}"/>
-
+                
 				<set field="leaveApprovalCtx" from-field="parameters"/>
 
 						<service service-name="humanResManagerPermission"
@@ -562,6 +562,7 @@
                                 <include-form name="ListLeaveApprovals"
 											location="component://humanres/widget/forms/EmplLeaveForms.xml" />
                                 </screenlet>
+                               
                             </widgets>
                             <fail-widgets>
                                 <label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}"/>
@@ -823,9 +824,9 @@
 									<include-form name="ListMyLeaves"
 										location="component://humanres/widget/forms/EmplLeaveForms.xml" />
 								</screenlet>
-								<screenlet>
-
-								</screenlet>
+                                <screenlet title="Leave Balances">
+                                <include-form location="component://humanres/widget/forms/EmplLeaveForms.xml" name="ListPerApproverLeaveBalances"/>
+                                </screenlet>
 								<!-- <container style="lefthalf">
 									<screenlet title="${uiLabelMap.HumanResStaffHistory} : ${memberContext.firstName} ${memberContext.lastName}"
 										navigation-form-name="ListEmplLeaves">
