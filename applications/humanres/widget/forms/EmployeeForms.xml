@@ -1479,22 +1479,33 @@
         	<display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName} (${employeeNumber})"></display-entity>
         </field>
         <field name="separationTypeId" title="Separation Type">
-        	<display-entity entity-name="SeparationType" key-field-name="separationTypeId" description="${name}"></display-entity>
+           <drop-down>
+            <entity-options description="${name}" entity-name="SeparationType"></entity-options>
+        	<!-- <display-entity entity-name="SeparationType" key-field-name="separationTypeId" description="${name}"></display-entity> -->
+           </drop-down>
         </field>
-        <field name="reason" title="Reason For Separation"><display/></field>
-        <field name="effectiveDate" title="Effective Date"><display type="date"/></field>
+        <field name="reason" title="Reason For Separation"><text/></field>
+        <field name="effectiveDate" title="Effective Date"><date-time type="date"/></field>
         <field name="status" title="Status"><display /></field>
+        <field name="updateLink" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
         
-       <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+      <!--  <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
            <hyperlink target="deleteSeparationApplication" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete record?">
                <parameter param-name="separationApplicationId"/>
            </hyperlink>
-       </field>
+       </field> -->
        <field name="separateEmployee" title="Separate Employee" widget-style="buttontext" use-when="${status=='Not Separated'}">
            <hyperlink target="separateEmployee" description="Separate Employee" also-hidden="false" request-confirmation="true" confirmation-message="Are you sure of separating this staff?">
                <parameter param-name="partyId"/>
            </hyperlink>
        </field>
+       
+        <field name="cancelSeparation" title="Cancel Separation" widget-style="buttontext" use-when="${status=='Not Separated'}">
+           <hyperlink target="calcelSeparation" description="Calcel Separation" also-hidden="false" request-confirmation="true" confirmation-message="Are you sure cancelling Separation of this staff?">
+               <parameter param-name="separationApplicationId"/>
+           </hyperlink>
+       </field>
+       
        <!--<field name="createpayrollperiods" title="Create Periods" widget-style="buttontext">
            <hyperlink target="createpayrollperiods" description="Create Periods" also-hidden="false" 
            	request-confirmation="true" confirmation-message="Do you wish to create periods for this Year?">
