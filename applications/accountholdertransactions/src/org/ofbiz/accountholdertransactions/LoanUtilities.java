@@ -1096,6 +1096,9 @@ public class LoanUtilities {
 
 		BigDecimal bdEntitlementAmount = loanApplication
 				.getBigDecimal("maxLoanAmt");
+		
+		bdEntitlementAmount = bdEntitlementAmount.setScale(2, RoundingMode.FLOOR);
+		bdLoanAmt = bdLoanAmt.setScale(2, RoundingMode.FLOOR);
 
 		if (bdLoanAmt.compareTo(bdEntitlementAmount) == 1) {
 			return false;
