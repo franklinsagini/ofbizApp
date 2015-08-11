@@ -76,6 +76,17 @@
 		</response>
 	</request-map>
 	
+	<!-- transactionLogsForm -->
+	<request-map uri="transactionLogsForm">
+    	<security https="true" auth="true" />
+    	<response name="success" type="view" value="transactionLogsForm" save-home-view="true" />
+  	</request-map>
+  	
+  	<!-- transactionLogsExcel -->
+  	<request-map uri="transactionLogsExcel.csv">
+    	<security https="true" auth="true" />
+    	<response name="success" type="view" value="transactionLogsExcel" save-home-view="true" />
+  	</request-map>
 	
 	
 	<!-- visitsForm -->
@@ -119,5 +130,9 @@
 	<view-map name="viewprofile" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#viewprofileLogs" />
 		
+	<!-- transactionLogsForm -->
+	<view-map name="transactionLogsForm" type="screen" page="component://changelogs/widget/ChangeLogsScreens.xml#transactionLogsForm"/>
+	
+	<view-map name="transactionLogsExcel" type="screencsv" page="component://changelogs/widget/ChangeLogsScreens.xml#transactionLogsExcel" content-type="text/csv" encoding="none"/>
 		
 </site-conf>
