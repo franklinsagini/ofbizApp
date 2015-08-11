@@ -588,6 +588,9 @@ public class LoanServices {
 
 		// The Multiplier account id
 		String accountProductId = loanProduct.getString("accountProductId");
+		
+		if (accountProductId == null)
+			accountProductId = LoanUtilities.getAccountProductGivenCodeId(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE).toString();
 
 		// Get Accounts for this member
 		List<GenericValue> memberAccountELI = null;
