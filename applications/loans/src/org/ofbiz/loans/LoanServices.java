@@ -2588,10 +2588,15 @@ public class LoanServices {
 		GenericValue loanProduct = getLoanProduct(loanApplication
 				.getLong("loanProductId"));
 		Long accountProductId = loanProduct.getLong("accountProductId");
-		BigDecimal bdMaximumLoanAmt = calculateMaximumAmount(
+		BigDecimal bdMaximumLoanAmt  = null;
+		if (loanProduct.getBigDecimal("multipleOfSavingsAmt") != null){
+			bdMaximumLoanAmt = calculateMaximumAmount(
 				loanApplication.getLong("partyId"), accountProductId,
 				loanProduct.getBigDecimal("multipleOfSavingsAmt"),
 				bdTotalSavings);
+		} else{
+			bdMaximumLoanAmt = loanProduct.getBigDecimal("maximumAmt");
+		}
 
 		BigDecimal bdExistingLoans = calculateExistingLoansTotal(loanApplication
 				.getLong("partyId"));
@@ -2817,10 +2822,16 @@ public class LoanServices {
 		GenericValue loanProduct = getLoanProduct(loanApplication
 				.getLong("loanProductId"));
 		Long accountProductId = loanProduct.getLong("accountProductId");
-		BigDecimal bdMaximumLoanAmt = calculateMaximumAmount(
+		BigDecimal bdMaximumLoanAmt = null;
+				
+		if (loanProduct.getBigDecimal("multipleOfSavingsAmt") != null){
+			bdMaximumLoanAmt = calculateMaximumAmount(
 				loanApplication.getLong("partyId"), accountProductId,
 				loanProduct.getBigDecimal("multipleOfSavingsAmt"),
 				bdTotalSavings);
+		} else{
+			bdMaximumLoanAmt = loanProduct.getBigDecimal("maximumAmt");
+		}
 
 		BigDecimal bdExistingLoans = calculateExistingLoansTotal(loanApplication
 				.getLong("partyId"));
