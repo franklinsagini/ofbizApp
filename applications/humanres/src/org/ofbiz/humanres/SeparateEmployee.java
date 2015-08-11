@@ -49,6 +49,7 @@ public class SeparateEmployee {
 //			updateLoginInfo(delegator, partyId);
 			updatePersonalDetails(delegator, partyId);
 			updatePayroll(delegator, partyId);
+			disableUserLogin(delegator,partyId);
 			try {
 				delegator.createOrStore(genericValue);
 			} catch (GenericEntityException e) {
@@ -181,5 +182,33 @@ public class SeparateEmployee {
 		}
 		return ppId;
 	}
+	
+	private static void disableUserLogin(Delegator delegator,String partyId){
+		
+		log.info("######################DISABLING#################"+partyId);
+		
+		List<GenericValue> UserLoginELI=null;
+		
+		try{
+			UserLoginELI=delegator.findList("UserLogin", EntityCondition
+					.makeCondition("partyId",partyId), null,
+					null, null, false);
+		}catch(GenericEntityException ex){
+			ex.printStackTrace();
+		}
+		
+		for (GenericValue genericValue : UserLoginELI) 
+		{
+			genericValue.setString("enabled", "N");
+			try {
+				delegator.createOrStore(genericValue);
+			} catch (GenericEntityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
 }
 
