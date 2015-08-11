@@ -589,9 +589,11 @@ public class LoanServices {
 		// The Multiplier account id
 		String accountProductId = loanProduct.getString("accountProductId");
 		
-		if (accountProductId == null)
-			accountProductId = LoanUtilities.getAccountProductGivenCodeId(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE).toString();
+		if ((accountProductId == null) || (accountProductId.equals("")))
+			accountProductId = LoanUtilities.getAccountProductIdGivenCodeId(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE).toString();
 
+		log.info(" AAAAAAAAAAAAAAAAAAACCCCCCCCCCCC "+accountProductId);
+		log.info(" MMMMMMMMMMMMMMMMMMMAAAAAAAAA "+memberId);
 		// Get Accounts for this member
 		List<GenericValue> memberAccountELI = null;
 		accountProductId = accountProductId.replaceAll(",", "");
