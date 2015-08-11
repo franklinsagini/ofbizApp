@@ -402,6 +402,11 @@ public class LoanAccounting {
 		} else {
 			productChargeIdLong = null;
 		}
+		
+		Long loanApplicationId = null;
+		if ((loanApplication != null) && (loanApplication.getLong("loanApplicationId") != null)){
+			loanApplicationId = loanApplication.getLong("loanApplicationId");
+		}
 
 		memberAccountId = memberAccountId.replaceAll(",", "");
 		accountTransaction = delegator.makeValidValue("AccountTransaction",
@@ -415,7 +420,7 @@ public class LoanAccounting {
 						"memberAccountId", Long.valueOf(memberAccountId),
 						"productChargeId", productChargeIdLong,
 						"transactionAmount", transactionAmount,
-						"transactionType", transactionType, "acctgTransId", acctgTransId));
+						"transactionType", transactionType, "acctgTransId", acctgTransId, "loanApplicationId", loanApplicationId));
 		try {
 			delegator.createOrStore(accountTransaction);
 		} catch (GenericEntityException e) {

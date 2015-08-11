@@ -130,6 +130,39 @@ accountTransactionList.eachWithIndex { accountItem, index ->
 			statementItem.remitanceDescription = 'Repayment of a loan';
 		}
 		
+		//LOANDISBURSEMENT
+		else if (accountItem.transactionType.equals("LOANDISBURSEMENT") ){
+			if (accountItem.loanApplicationId != null){
+			loanApplication = delegator.findOne("LoanApplication", [loanApplicationId : accountItem.loanApplicationId], false);
+			loanProduct = delegator.findOne("LoanProduct", [loanProductId : loanApplication.loanProductId], false);
+			statementItem.remitanceDescription = loanProduct.name+' loan Disbursement ('+loanApplication.loanNo+')';
+			} else{
+				statementItem.remitanceDescription = ' Loan Disbursement ';
+			}
+		}
+		
+		
+		else if (accountItem.transactionType.equals("LOANCLEARANCE") ){
+			if (accountItem.loanApplicationId != null){
+			loanApplication = delegator.findOne("LoanApplication", [loanApplicationId : accountItem.loanApplicationId], false);
+			loanProduct = delegator.findOne("LoanProduct", [loanProductId : loanApplication.loanProductId], false);
+			statementItem.remitanceDescription = loanProduct.name+' loan Clearance ('+loanApplication.loanNo+')';
+			} else{
+				statementItem.remitanceDescription = ' Loan Clearance ';
+			}
+		}
+		
+		else if (accountItem.transactionType.equals("LOANCLEARANCECHARGES") ){
+			if (accountItem.loanApplicationId != null){
+			loanApplication = delegator.findOne("LoanApplication", [loanApplicationId : accountItem.loanApplicationId], false);
+			loanProduct = delegator.findOne("LoanProduct", [loanProductId : loanApplication.loanProductId], false);
+			statementItem.remitanceDescription = loanProduct.name+' loan Clearance Charges ('+loanApplication.loanNo+')';
+			} else{
+				statementItem.remitanceDescription = ' Loan Clearance Charges ';
+			}
+		}
+		
+		
 		else{
 			statementItem.remitanceDescription = accountItem.transactionType;
 		}
@@ -156,7 +189,7 @@ loansList.eachWithIndex { loanItem, index ->
 			null);
 	statementItem.loanNo = loanItem.loanNo;
 	statementItem.createdStamp = loanItem.disbursementDate;
-	statementItem.remitanceDescription = "Loan Disbursement";
+	statementItem.remitanceDescription = 'Loan Disbursement';
 	statementItem.amount = loanItem.loanAmt;
 	statementItem.isReceived = 'N';
 	totalAmount = totalAmount + statementItem.amount.toBigDecimal();
@@ -556,6 +589,37 @@ allAccountProducts.eachWithIndex { memberAccount, index ->
 		
 		else if (theTransaction.transactionType.equals("EXCISEDUTY") ){
 			memberAccountTransaction.transactionDescription = 'Excise Duty ('+theTransaction.acctgTransId+')';
+		}
+		
+		else if (theTransaction.transactionType.equals("LOANDISBURSEMENT") ){
+			if (theTransaction.loanApplicationId != null){
+			loanApplication = delegator.findOne("LoanApplication", [loanApplicationId : theTransaction.loanApplicationId], false);
+			loanProduct = delegator.findOne("LoanProduct", [loanProductId : loanApplication.loanProductId], false);
+			memberAccountTransaction.transactionDescription = loanProduct.name+' loan Disbursement ('+loanApplication.loanNo+') ('+theTransaction.acctgTransId+')';
+			} else{
+				memberAccountTransaction.transactionDescription = ' Loan Disbursement ('+theTransaction.acctgTransId+')';
+			}
+		}
+		
+		
+		else if (theTransaction.transactionType.equals("LOANCLEARANCE") ){
+			if (theTransaction.loanApplicationId != null){
+			loanApplication = delegator.findOne("LoanApplication", [loanApplicationId : theTransaction.loanApplicationId], false);
+			loanProduct = delegator.findOne("LoanProduct", [loanProductId : loanApplication.loanProductId], false);
+			memberAccountTransaction.transactionDescription = loanProduct.name+' loan Clearance ('+loanApplication.loanNo+') ('+theTransaction.acctgTransId+')';
+			} else{
+				memberAccountTransaction.transactionDescription = ' Loan Clearance ('+theTransaction.acctgTransId+')';
+			}
+		}
+		
+		else if (theTransaction.transactionType.equals("LOANCLEARANCECHARGES") ){
+			if (theTransaction.loanApplicationId != null){
+			loanApplication = delegator.findOne("LoanApplication", [loanApplicationId : theTransaction.loanApplicationId], false);
+			loanProduct = delegator.findOne("LoanProduct", [loanProductId : loanApplication.loanProductId], false);
+			memberAccountTransaction.transactionDescription = loanProduct.name+' loan Clearance Charges ('+loanApplication.loanNo+') ('+theTransaction.acctgTransId+')';
+			} else{
+				memberAccountTransaction.transactionDescription = ' Loan Clearance Charges ('+theTransaction.acctgTransId+')';
+			}
 		}
 		
 		
