@@ -178,5 +178,69 @@
         </section>
     </screen>
     
+    
+    <!-- transactionLogsForm -->
+          <screen name="transactionLogsForm">
+        <section>
+            <actions>
+                <set field="headerItem" value="transactionLogsForm" />
+                <set field="tabButtonItem" value="transactionLogsForm" />
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <!-- include-menu name="MemberReportsTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/ -->
+                        <!-- container style="lefthalf">
+                            <screenlet title="Member Listing Report">
+                                <include-form name="memeberListingForm" location="component://party/widget/partymgr/MemberReportForms.xml"/>
+                            </screenlet>
+                        </container -->
+                        <!-- style="righthalf" -->
+                        <container>
+                            <screenlet title="Transactions">
+                                <include-form name="transactionLogsForm" location="component://changelogs/widget/ChangeLogsForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="transactionLogsExcel">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+				<entity-one value-field="member" entity-name="Member">
+			   <field-map field-name="partyId" value="${parameters.partyId}"/>
+		       </entity-one>
+			   <set field="stationId" from-field = "member.stationId" type="String"/>
+			   <entity-one value-field="st" entity-name="Station">
+				<field-map field-name="stationId" from-field="stationId"/>
+		       </entity-one>
+                <script location="component://changelogs/webapp/changelogs/WEB-INF/actions/reports/transactionsExport.groovy"/>
+            </actions>
+            <widgets>
+                <!-- container>
+                    <label style="h1" text="MEMBER ACCOUNTS DETAILS"/>
+					<label style="h3" text="Member Name: ${member.firstName} ${member.lastName}"/>
+					<label style="h3" text="Member Number: ${member.memberNumber}"/>
+					<label style="h3" text="Member Station: ${st.stationNumber}-${st.name}"/>
+                </container -->
+                
+				<include-form name="transactionLogsExcelData" location="component://changelogs/widget/ChangeLogsForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
 
 </screens>
