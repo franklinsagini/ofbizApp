@@ -2282,7 +2282,7 @@ public class LoanServices {
 	
 	public static BigDecimal getLoanClearingCharge(Long loanApplicationId, BigDecimal bdAmount){
 		BigDecimal bdPercentagePaid = getLoanPercentageRepaidValue(loanApplicationId);
-		
+		log.info("133PPPPPPPPPPPPPPPPPPPP Percentage Paid "+bdPercentagePaid);
 		BigDecimal bdChargeRate = BigDecimal.ZERO;
 		EntityConditionList<EntityExpr> loanClearRateConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
@@ -2303,10 +2303,11 @@ public class LoanServices {
 		for (GenericValue genericValue : loanClearRateELI) {
 			bdChargeRate = genericValue.getBigDecimal("chargeRate");
 		}
-		
+		log.info("144PPPPPPPPPPPPPPPPPPPP Charge Rate "+bdChargeRate);
 		BigDecimal bdChargeAmt = BigDecimal.ZERO;
 		
 		bdChargeAmt = bdAmount.multiply(bdChargeRate).divide(new BigDecimal(ONEHUNDRED), 4, RoundingMode.HALF_UP);
+		log.info("155PPPPPPPPPPPPPPPPPPPP Charge Amt "+bdChargeAmt);
 		return bdChargeAmt;
 	}
 
