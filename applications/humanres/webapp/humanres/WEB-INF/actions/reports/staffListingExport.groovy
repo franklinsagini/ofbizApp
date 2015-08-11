@@ -3,7 +3,7 @@
 action = request.getParameter("action");
 
 stafflist = [];
- staff = delegator.findList("EmployeeRoleView", null, null, null,null, false);
+ staff = delegator.findByAnd("EmployeeRoleView", [isSeparated:  "N" ], null, false);
  
  staff.eachWithIndex { staffItem, index ->
  

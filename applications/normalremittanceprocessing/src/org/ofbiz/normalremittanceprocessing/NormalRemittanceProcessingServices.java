@@ -548,6 +548,15 @@ public class NormalRemittanceProcessingServices {
 			}
 		}
 		
+		//Update normalRemittanceMonthYearId
+		normalRemittanceMonthYear.set("postingacctgTransId", acctgTransId);
+		try {
+			delegator.createOrStore(normalRemittanceMonthYear);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return "success";
 	}
 
