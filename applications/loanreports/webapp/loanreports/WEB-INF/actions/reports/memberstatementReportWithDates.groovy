@@ -560,7 +560,18 @@ allAccountProducts.eachWithIndex { memberAccount, index ->
 		}
 		
 		else if (theTransaction.transactionType.equals("LOANREPAYMENT") ){
-			memberAccountTransaction.transactionDescription = 'Repayment of a loan ('+theTransaction.acctgTransId+')';
+			if (theTransaction.loanApplicationId != null){
+				loanApplication = delegator.findOne("LoanApplication", [loanApplicationId : theTransaction.loanApplicationId], false);
+				loanProduct = delegator.findOne("LoanProduct", [loanProductId : loanApplication.loanProductId], false);
+				memberAccountTransaction.transactionDescription = loanProduct.name+' Repayment ('+loanApplication.loanNo+') ('+theTransaction.acctgTransId+')';
+				} else{
+					memberAccountTransaction.transactionDescription = 'Repayment of a loan ('+theTransaction.acctgTransId+')';
+				}
+	
+			
+			
+			
+			
 		}
 		
 		else if (theTransaction.transactionType.equals("WITHDRAWALCOMMISSION") ){
