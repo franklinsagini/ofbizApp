@@ -8,5 +8,40 @@
     <description>None</description>
     <copyright></copyright>
     <version></version>
+    
+    <entity entity-name="TransferToGuarantorLog" package-name="org.ofbiz.transfertoguarantors"
+		title="TransferToGuarantorLog Entity">
+		<field name="transferToGuarantorLogId" type="id-vlong-int"   enable-audit-log="true"></field>
+		<field name="loanApplicationId" type="id-vlong-int"   enable-audit-log="true"></field>
+		
+		<field name="isActive" type="indicator"   enable-audit-log="true"></field>
+		<field name="createdBy" type="name"   enable-audit-log="true"></field>
+		<field name="updatedBy" type="name"   enable-audit-log="true"></field>
+		
+		
+		
+			
+		<!-- Attaching Loan Details -->
+		<field name="dateAttached" type="date-time" enable-audit-log="true"></field>
+
+		<field name="memberDepositsAtAttachment" type="fixed-point" enable-audit-log="true"></field>
+		<field name="balanceAtAttachment" type="fixed-point" enable-audit-log="true"></field>
+		<field name="interestDueAtAttachment" type="fixed-point" enable-audit-log="true"></field>
+		<field name="insuranceDueAtAttachment" type="fixed-point" enable-audit-log="true"></field>
+		
+		<prim-key field="transferToGuarantorLogId"/>
+		<!-- relation type="one" fk-name="LoanStatusLog_MemberCreate" title="Parent" rel-entity-name="Member">
+        <key-map field-name="createdBy" rel-field-name="partyId"/>
+      </relation>
+      
+      <relation type="one" fk-name="LoanStatusLog_MemberUpdate" title="Parent" rel-entity-name="Member">
+        <key-map field-name="updatedBy" rel-field-name="partyId"/>
+      </relation -->
+      
+       <relation type="one" fk-name="TransferToGuarantorLog_LoanApp" rel-entity-name="LoanApplication">
+        <key-map field-name="loanApplicationId"/>
+      </relation>
+     
+	</entity>
 
 </entitymodel>
