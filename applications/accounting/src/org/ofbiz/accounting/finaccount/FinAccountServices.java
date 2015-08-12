@@ -45,6 +45,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityListIterator;
@@ -220,8 +221,7 @@ public class FinAccountServices {
 			// create the credit transaction
 			Map<String, Object> transactionMap = FastMap.newInstance();
 			transactionMap.put("finAccountTransTypeId", "ADJUSTMENT");
-			transactionMap.put("finAccountId",
-					creditAccount.getString("finAccountId"));
+			transactionMap.put("finAccountId",creditAccount.getString("finAccountId"));
 			transactionMap.put("partyId", partyId);
 			transactionMap.put("amount", context.get("amount"));
 			transactionMap.put("reasonEnumId", context.get("reasonEnumId"));
@@ -242,6 +242,344 @@ public class FinAccountServices {
 
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		result.put("finAccountId", finAccountId);
+		return result;
+	}
+	
+	public static Map<String, Object> pullBankTrans(DispatchContext dctx, Map<String, Object> context){
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String finAccountId= (String) context.get("finAccountId");
+		
+		Timestamp generationDate = null;
+		Long count = 0L;
+		EntityConditionList<EntityExpr> cond = null;
+		
+		//using the passed finAccountId get the bank account
+		GenericValue bankAccount = null;
+		try {
+			bankAccount = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", finAccountId), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		//using the ReconPullLog pick only that have never been picked
+		GenericValue reconPullLog = null;
+		try {
+			reconPullLog = delegator.findOne("ReconPullLog", UtilMisc.toMap("finAccountId", finAccountId), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if (reconPullLog == null) {
+			//create a new record here and pick date
+			generationDate = UtilDateTime.nowTimestamp();
+			GenericValue newReconPullLog = delegator.makeValue("ReconPullLog");
+			//reconPullLog = delegator.makeValue("ReconPullLog");
+			newReconPullLog.put("finAccountId", finAccountId);
+			newReconPullLog.put("totalPulled", count);
+			newReconPullLog.put("generationDate",generationDate);
+			newReconPullLog.put("pulledBy","admin");
+			try {
+				newReconPullLog.create();
+			} catch (GenericEntityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			 cond = EntityCondition.makeCondition(UtilMisc.toList(
+					EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, bankAccount.getString("postToGlAccountId"))
+					));
+		}else {
+			//pick date from here
+			generationDate = reconPullLog.getTimestamp("generationDate");
+			 cond = EntityCondition.makeCondition(UtilMisc.toList(
+						EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, bankAccount.getString("postToGlAccountId")),
+						EntityCondition.makeCondition("createdTxStamp", EntityOperator.GREATER_THAN, generationDate)
+						));
+		}
+		
+		//get all transactions affecting the said account
+		//fetch all transactions from account trans entry with this account id
+		List<GenericValue>acctgTransEntryItems = null;
+		
+
+		
+		try {
+			acctgTransEntryItems = delegator.findList("AcctgTransEntry", cond, null, null, null, false);
+			System.out.println("#################################### RETRIEVED  acctgTransEntryItems Successfully: ");
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		ModelService createFinAccountTrans = null;
+		try {
+			createFinAccountTrans = dctx.getModelService("createFinAccountTrans");
+		} catch (GenericServiceException e1) {
+			e1.printStackTrace();
+		}
+		
+		Map<String, Object> inContext = createFinAccountTrans.makeValid(context,ModelService.IN_PARAM);
+		inContext.put("finAccountId", finAccountId);
+		Map<String, Object> createResult = null;
+		
+		StringBuffer sb = new StringBuffer();
+		
+		for (GenericValue acctgTransEntry : acctgTransEntryItems) {
+			
+			//Get Transactions from AccountTransaction, ensure use amounts in conditions
+			List<GenericValue> accountTransactions = null;
+			List<GenericValue> mSaccoApplication = null;
+			List<GenericValue> cardApplication = null;
+			
+			EntityConditionList<EntityExpr> accountTransactionsCond = EntityCondition.makeCondition(UtilMisc.toList(
+					EntityCondition.makeCondition("transactionAmount", EntityOperator.EQUALS, acctgTransEntry.getBigDecimal("origAmount")),
+					EntityCondition.makeCondition("acctgTransId", EntityOperator.EQUALS, acctgTransEntry.getString("acctgTransId"))
+					), EntityOperator.AND);
+			
+			try {
+				accountTransactions = delegator.findList("AccountTransaction", accountTransactionsCond, null, null, null, false);
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+	
+			
+			for (GenericValue accountTransaction : accountTransactions) {
+				GenericValue member = null;
+				
+				EntityConditionList<EntityExpr> msaccoApplCond = EntityCondition.makeCondition(UtilMisc.toList(
+						EntityCondition.makeCondition("partyId", EntityOperator.EQUALS,  accountTransaction.getLong("partyId"))
+						));
+				
+				try {
+					member = delegator.findOne("Member", UtilMisc.toMap("partyId", accountTransaction.getLong("partyId")), false);
+					mSaccoApplication = delegator.findList("MSaccoApplication", msaccoApplCond, null, null, null, false);
+					cardApplication = delegator.findList("CardApplication", msaccoApplCond, null, null, null, false);
+					
+					
+				} catch (GenericEntityException e2) {
+					e2.printStackTrace();
+				}
+				String cardNo = null;
+				for (GenericValue card : cardApplication) {
+					cardNo = card.getString("cardNumber");
+				}
+				String phoneNo = null;
+				for (GenericValue phone : mSaccoApplication) {
+					phoneNo = phone.getString("mobilePhoneNumber");
+				}
+				if (member != null) {
+					
+					sb.append(accountTransaction.getString("transactionType"));
+					sb.append("-");
+					sb.append(acctgTransEntry.getString("acctgTransId"));
+					if (cardNo != null) {
+						sb.append(" ");
+						sb.append(cardNo);
+					}
+					if (phoneNo != null) {
+						sb.append(" ");
+						sb.append(phoneNo);
+					}
+					sb.append(" ");
+					sb.append(member.getString("firstName"));
+					sb.append(" ");
+					sb.append(member.getString("middleName"));
+					sb.append(" ");
+					sb.append(member.getString("lastName"));
+					
+					System.out.println("############################### END OF STRING BUFFER ################################################");
+					
+				}
+			}
+				
+			
+			if (acctgTransEntry.getString("acctgTransTypeId") != null) {
+				if (!acctgTransEntry.getString("acctgTransTypeId").equals("INCOMING_PAYMENT") || acctgTransEntry.getString("acctgTransTypeId").equals("OUTGOING_PAYMENT")) {
+					if (acctgTransEntry.getString("debitCreditFlag").equals("D")) {
+						System.out.println("#################################### ABOUT TO DO A DEPOSIT: ");
+						//then do a deposit here
+						inContext.put("finAccountTransTypeId", "DEPOSIT");
+						inContext.put("comments",  sb.toString());
+						inContext.put("transactionDate", acctgTransEntry.getTimestamp("createdTxStamp"));
+						inContext.put("amount", acctgTransEntry.getBigDecimal("origAmount"));
+						inContext.put("userLogin", userLogin);
+						
+					}else {
+						System.out.println("#################################### ABOUT TO DO A WITHDRAWAL: ");
+						//do a withdrawal
+						inContext.put("finAccountTransTypeId", "WITHDRAWAL");
+						inContext.put("comments",  sb.toString());
+						inContext.put("transactionDate", acctgTransEntry.getTimestamp("createdTxStamp"));
+						inContext.put("amount", acctgTransEntry.getBigDecimal("origAmount"));
+						inContext.put("userLogin", userLogin);
+					}
+				}
+			}else {
+				if (acctgTransEntry.getString("debitCreditFlag").equals("D")) {
+					System.out.println("#################################### ABOUT TO DO A DEPOSIT: ");
+					//then do a deposit here
+					inContext.put("finAccountTransTypeId", "DEPOSIT");
+					inContext.put("comments",  sb.toString());
+					inContext.put("transactionDate", acctgTransEntry.getTimestamp("createdTxStamp"));
+					inContext.put("amount", acctgTransEntry.getBigDecimal("origAmount"));
+					inContext.put("userLogin", userLogin);
+					
+				}else {
+					System.out.println("#################################### ABOUT TO DO A WITHDRAWAL: ");
+					//do a withdrawal
+					inContext.put("finAccountTransTypeId", "WITHDRAWAL");
+					inContext.put("comments",  sb.toString());
+					inContext.put("transactionDate", acctgTransEntry.getTimestamp("createdTxStamp"));
+					inContext.put("amount", acctgTransEntry.getBigDecimal("origAmount"));
+					inContext.put("userLogin", userLogin);
+				}
+			}
+			sb.setLength(0);
+			try {
+				createResult = dispatcher.runSync("createFinAccountTrans", inContext);
+				System.out.println("#################################### TRYING TO CREATE FinAccountTrans : ");
+			} catch (GenericServiceException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			if (ServiceUtil.isError(createResult)) {
+				return createResult;
+			}
+			count ++;
+		}
+		//update Log
+		//using the ReconPullLog pick only that have never been picked
+		GenericValue reconPullLogUpdate = null;
+		try {
+			reconPullLogUpdate = delegator.findOne("ReconPullLog", UtilMisc.toMap("finAccountId", finAccountId), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		reconPullLogUpdate.set("generationDate", UtilDateTime.nowTimestamp());
+		reconPullLogUpdate.set("totalPulled", count);
+		reconPullLogUpdate.set("pulledBy", "admin");
+		
+		try {
+			reconPullLogUpdate.store();
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		result.put("finAccountId", finAccountId);
+		return result;
+		
+	}
+	
+	
+	public static Map<String, Object> pullBankTransOld(DispatchContext dctx, Map<String, Object> context){
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String finAccountId= (String) context.get("finAccountId");
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		
+		System.out.println("#################################### finAccountId Passed: " + finAccountId);
+		
+		//using the passed finAccountId get the bank account
+		GenericValue bankAccount = null;
+		try {
+			bankAccount = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", finAccountId), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		System.out.println("#################################### Bank Account Retrieved: " + bankAccount);
+		//get all transactions from AccountTransaction
+		List<GenericValue> accountTransactions = null;
+		
+		EntityConditionList<EntityExpr> accountTransactionsCond = EntityCondition.makeCondition(UtilMisc.toList(
+				EntityCondition.makeCondition("transactionType", EntityOperator.EQUALS, "COMMISSION ON BANKERS CHEQUE"),
+				EntityCondition.makeCondition("transactionType", EntityOperator.EQUALS, "LOANCHEQUEPAY"),
+				EntityCondition.makeCondition("transactionType", EntityOperator.EQUALS, "Cheque Deposit Charge"),
+				EntityCondition.makeCondition("transactionType", EntityOperator.EQUALS, "Cheque Deposit Excise")
+				), EntityOperator.AND);
+		
+		try {
+			accountTransactions = delegator.findList("AccountTransaction", accountTransactionsCond, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		for (GenericValue transaction : accountTransactions) {
+			String acctgTransId = transaction.getString("acctgTransId");
+			System.out.println("#################################### Working with : " + acctgTransId + " acctgTransId");
+			ModelService createFinAccountTrans = null;
+			try {
+				createFinAccountTrans = dctx.getModelService("createFinAccountTrans");
+			} catch (GenericServiceException e1) {
+				e1.printStackTrace();
+			}
+			
+			
+			Map<String, Object> inContext = createFinAccountTrans.makeValid(context,ModelService.IN_PARAM);
+			inContext.put("finAccountId", finAccountId);
+			Map<String, Object> createResult = null;
+			
+			//fetch all transactions from account trans entry with this account id
+			List<GenericValue>acctgTransEntryItems = null;
+			
+			EntityConditionList<EntityExpr> cond = EntityCondition.makeCondition(UtilMisc.toList(
+					EntityCondition.makeCondition("acctgTransId", EntityOperator.EQUALS, acctgTransId)
+					));
+			
+			try {
+				acctgTransEntryItems = delegator.findList("AcctgTransEntry", cond, null, null, null, false);
+				System.out.println("#################################### RETRIEVED  acctgTransEntryItems Successfully: ");
+			} catch (GenericEntityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			//check if it posted to any of the bank accounts
+			for (GenericValue acctgTransEntry : acctgTransEntryItems) {
+				System.out.println("#################################### WORKING WITH: " +acctgTransEntry.getString("glAccountId")+" glAccountId");
+				System.out.println("#################################### WORKING WITH: " +bankAccount.getString("postToGlAccountId")+" postToGlAccountId");
+				System.out.println("#################### COMPARING glAccountId: " +acctgTransEntry.getString("glAccountId")+ " WITH postToGlAccountId "+bankAccount.getString("postToGlAccountId"));
+				if (acctgTransEntry.getString("glAccountId").equals(bankAccount.getString("postToGlAccountId"))) {
+					System.out.println("#################################### WORKING WITH: " +bankAccount.getString("postToGlAccountId")+" postToGlAccountId");
+					if (acctgTransEntry.getString("debitCreditFlag").equals("D")) {
+						System.out.println("#################################### ABOUT TO DO A DEPOSIT: ");
+						//then do a deposit here
+						inContext.put("finAccountTransTypeId", "DEPOSIT");
+						inContext.put("comments", acctgTransEntry.getString("glAccountTypeId"));
+						inContext.put("transactionDate", acctgTransEntry.getTimestamp("createdTxStamp"));
+						inContext.put("amount", acctgTransEntry.getBigDecimal("origAmount"));
+						inContext.put("userLogin", userLogin);
+						
+					}else {
+						System.out.println("#################################### ABOUT TO DO A WITHDRAWAL: ");
+						//do a withdrawal
+						inContext.put("finAccountTransTypeId", "WITHDRAWAL");
+						inContext.put("comments", acctgTransEntry.getString("glAccountTypeId"));
+						inContext.put("transactionDate", acctgTransEntry.getTimestamp("createdTxStamp"));
+						inContext.put("amount", acctgTransEntry.getBigDecimal("origAmount"));
+						inContext.put("userLogin", userLogin);
+					}
+					
+					try {
+						createResult = dispatcher.runSync("createFinAccountTrans", inContext);
+						System.out.println("#################################### TRYING TO CREATE FinAccountTrans : ");
+					} catch (GenericServiceException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					if (ServiceUtil.isError(createResult)) {
+						return createResult;
+					}
+					result.put("finAccountId", createResult.get("finAccountId"));
+				}
+			}
+		}
 		return result;
 	}
 
