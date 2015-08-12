@@ -2228,9 +2228,14 @@ public class LoanUtilities {
 		BigDecimal bdBalance = BigDecimal.ZERO;
 
 		Long memberAccountId = getMemberDepositMemberAccountId(payrollNo);
-
-		bdBalance = AccHolderTransactionServices
-				.getBookBalanceNow(memberAccountId.toString());
+		
+		if (memberAccountId != null)
+		{
+			bdBalance = AccHolderTransactionServices
+					.getBookBalanceNow(memberAccountId.toString());
+		} else {
+			bdBalance = BigDecimal.ZERO;
+		}
 
 		return bdBalance;
 	}

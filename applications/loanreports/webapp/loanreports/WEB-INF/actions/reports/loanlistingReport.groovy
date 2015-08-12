@@ -119,6 +119,10 @@ myLoansList.eachWithIndex { loan, index ->
 	loanItem.productname = loanProduct.name;
 	loanItem.loanAmt = loan.loanAmt;
 	
+	loanItem.interestRatePM = loan.interestRatePM;
+	loanItem.maxRepaymentPeriod = loan.maxRepaymentPeriod;
+	loanItem.repaymentPeriod = loan.repaymentPeriod;
+	
 	
 	/*** statementItem.remitanceDescription = "Loan Disbursement";
 	statementItem.amount = loanItem.loanAmt;
