@@ -1621,7 +1621,8 @@ public class LoanRepayments {
 				return " The account does not have enough balance to make the loan repayment !";
 			}
 		}
-
+		String entrySequenceId = "";
+		Long sequence = 0L;
 		log.info("FFFFFFFFF start loan repayment FFFFFFFFFF");
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		String acctgTransType = "LOAN_RECEIVABLE";
@@ -1651,7 +1652,7 @@ public class LoanRepayments {
 
 		// BigDecimal bdTotalLoanRepaid = BigDecimal.ZERO;
 		BigDecimal bdLoanBalance = BigDecimal.ZERO;
-		bdLoanBalance = LoanServices.getLoanRemainingBalance(loanRepayment
+		bdLoanBalance = LoanServices.getLoanBalanceExcludeInterestAndInsurance(loanRepayment
 				.getLong("loanApplicationId"));
 		// BigDecimal bdLoanAmt = loanRepayment.getBigDecimal("loanAmt");
 
@@ -1724,7 +1725,26 @@ public class LoanRepayments {
 				AccHolderTransactionServices.cashDepositFromStationProcessing(
 						excessAmount, Long.valueOf(memberAccountId), userLogin,
 						"DEPOSITFROMEXCESS", acctgTransId);
+				
+				//Credit the savings or excess amount account
+				String excessCreditAccountId = LoanUtilities.getAccountProductGivenCodeId(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE).getString("glAccountId");
 
+				String postingType = "C";
+				sequence = sequence + 1;
+				entrySequenceId = sequence.toString();
+				// String partyId =
+				// getLoanApplication(loanExpectation.getString("loanApplicationId"),
+				// delegator).getString("partyId");
+				String partyId = getMemberGivenParty(
+						loanRepayment.getString("partyId"), delegator).getString(
+						"branchId");
+
+				log.info(" ####### Party or Branch or Company in Loan Repayment is ###### "
+						+ partyId);
+				postTransactionEntry(delegator,
+						excessAmount, partyId,
+						excessCreditAccountId, postingType, acctgTransId, acctgTransType,
+						entrySequenceId, userLogin);
 				// TODO
 			}
 
@@ -1804,7 +1824,8 @@ public class LoanRepayments {
 		}
 
 		String postingType = "D";
-		String entrySequenceId = "00001";
+		sequence = sequence + 1;
+		entrySequenceId = sequence.toString();
 		// String partyId =
 		// getLoanApplication(loanExpectation.getString("loanApplicationId"),
 		// delegator).getString("partyId");
@@ -1822,7 +1843,7 @@ public class LoanRepayments {
 		// Credit Interest_receivable
 		// INTERESTPAYMENT
 		postingType = "C";
-		entrySequenceId = "00002";
+		
 		accountHolderTransactionSetup = getAccountHolderTransactionSetupRecord(
 				"INTERESTPAYMENT", delegator);
 		String accountId = accountHolderTransactionSetup
@@ -1830,6 +1851,8 @@ public class LoanRepayments {
 		// createAccountingEntry(loanExpectation, acctgTransId, accountId,
 		// postingType, delegator);
 		if (interestAmount.compareTo(BigDecimal.ZERO) == 1) {
+			sequence = sequence + 1;
+			entrySequenceId = sequence.toString();
 			postTransactionEntry(delegator, interestAmount, partyId, accountId,
 					postingType, acctgTransId, acctgTransType, entrySequenceId,
 					userLogin);
@@ -1838,7 +1861,7 @@ public class LoanRepayments {
 		// Credit Insurance_receivable
 		// INSURANCEPAYMENT
 		postingType = "C";
-		entrySequenceId = "00003";
+		
 		accountHolderTransactionSetup = getAccountHolderTransactionSetupRecord(
 				"INSURANCEPAYMENT", delegator);
 		accountId = accountHolderTransactionSetup
@@ -1846,6 +1869,8 @@ public class LoanRepayments {
 		// createAccountingEntry(loanExpectation, acctgTransId, accountId,
 		// postingType, delegator);
 		if (insuranceAmount.compareTo(BigDecimal.ZERO) == 1) {
+			sequence = sequence + 1;
+			entrySequenceId = sequence.toString();
 			postTransactionEntry(delegator, insuranceAmount, partyId,
 					accountId, postingType, acctgTransId, acctgTransType,
 					entrySequenceId, userLogin);
@@ -1853,7 +1878,7 @@ public class LoanRepayments {
 		// Credit Principal Receivable
 		// PRINCIPALPAYMENT
 		postingType = "C";
-		entrySequenceId = "00004";
+		
 		accountHolderTransactionSetup = getAccountHolderTransactionSetupRecord(
 				"PRINCIPALPAYMENT", delegator);
 		accountId = accountHolderTransactionSetup
@@ -1862,6 +1887,8 @@ public class LoanRepayments {
 		// postingType, delegator);
 
 		if (principalAmount.compareTo(BigDecimal.ZERO) == 1) {
+			sequence = sequence + 1;
+			entrySequenceId = sequence.toString();
 			postTransactionEntry(delegator, principalAmount, partyId,
 					accountId, postingType, acctgTransId, acctgTransType,
 					entrySequenceId, userLogin);
@@ -1931,7 +1958,7 @@ public class LoanRepayments {
 
 		// BigDecimal bdTotalLoanRepaid = BigDecimal.ZERO;
 		BigDecimal bdLoanBalance = BigDecimal.ZERO;
-		bdLoanBalance = LoanServices.getLoanRemainingBalance(loanRepayment
+		bdLoanBalance = LoanServices.getLoanBalanceExcludeInterestAndInsurance(loanRepayment
 				.getLong("loanApplicationId"));
 		// BigDecimal bdLoanAmt = loanRepayment.getBigDecimal("loanAmt");
 
@@ -3668,7 +3695,7 @@ public class LoanRepayments {
 
 		// BigDecimal bdTotalLoanRepaid = BigDecimal.ZERO;
 		BigDecimal bdLoanBalance = BigDecimal.ZERO;
-		bdLoanBalance = LoanServices.getLoanRemainingBalance(loanRepayment
+		bdLoanBalance = LoanServices.getLoanBalanceExcludeInterestAndInsurance(loanRepayment
 				.getLong("loanApplicationId"));
 		// BigDecimal bdLoanAmt = loanRepayment.getBigDecimal("loanAmt");
 
