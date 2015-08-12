@@ -971,13 +971,74 @@ public class LoanUtilities {
 		} else{
 			//If its self guarantee, return true
 			GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
-			if (loanApplication.getString("isSelfGuaranteed").equals("Y"))
+			if ((loanApplication.getString("isSelfGuaranteed") != null) && (loanApplication.getString("isSelfGuaranteed").equals("Y")))
 			{
 				return true;
 			}
 			
-			return false;
+			//Check if its Collateral loan
+			Long loanSecurityIdCollateral = getCollateralSecurityId();
+			
+			return thereExistsCollateralSecurity(loanApplicationId, loanSecurityIdCollateral);
+			
+			//return false;
 		}
+	}
+
+	private static boolean thereExistsCollateralSecurity(
+			Long loanApplicationId, Long loanSecurityIdCollateral) {
+		EntityConditionList<EntityExpr> loanApplicationSecurityConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanApplicationId", EntityOperator.EQUALS,
+						loanApplicationId),
+						
+						EntityCondition.makeCondition(
+								"loanSecurityId", EntityOperator.EQUALS,
+								loanSecurityIdCollateral)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> loanApplicationSecurityELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplicationSecurityELI = delegator.findList("LoanApplicationSecurity",
+					loanApplicationSecurityConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if ((loanApplicationSecurityELI != null) && (loanApplicationSecurityELI.size() > 0))
+			return true;
+		
+		
+		return false;
+	}
+
+	private static Long getCollateralSecurityId() {
+		EntityConditionList<EntityExpr> securityConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"description", EntityOperator.EQUALS,
+						"Collateral")
+
+				), EntityOperator.AND);
+
+		List<GenericValue> loanSecurityELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanSecurityELI = delegator.findList("LoanSecurity",
+					securityConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		Long loanSecurityId = null;
+		for (GenericValue genericValue : loanSecurityELI) {
+			loanSecurityId = genericValue.getLong("loanSecurityId");
+		}
+		
+		return loanSecurityId;
 	}
 
 	/***
@@ -990,17 +1051,26 @@ public class LoanUtilities {
 
 		// depositAmt
 		BigDecimal bdTotalDepositAmt = getTotalDepositAmount(loanApplicationId);
+		
+		GenericValue loanApplication = getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
+		
+		BigDecimal bdTotalMemberDeposits = getMemberDepositAmount(loanApplication.getLong("partyId"));
+		BigDecimal loanAmountLessMemberDeposits  = bdLoanAmt.subtract(bdTotalMemberDeposits);
 
-		if (bdTotalDepositAmt.compareTo(bdLoanAmt) >= 0)
+		if (bdTotalDepositAmt.compareTo(loanAmountLessMemberDeposits) >= 0)
 			return true;
 		
-		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
-		if (loanApplication.getString("isSelfGuaranteed").equals("Y"))
+		if ((loanApplication.getString("isSelfGuaranteed") != null) && (loanApplication.getString("isSelfGuaranteed").equals("Y")))
 		{
 			return true;
 		}
+		
+		
+		//Check if its Collateral loan
+		Long loanSecurityIdCollateral = getCollateralSecurityId();
+		
+		return thereExistsCollateralSecurity(loanApplicationId, loanSecurityIdCollateral);
 
-		return false;
 	}
 
 	private static BigDecimal getTotalDepositAmount(Long loanApplicationId) {
@@ -2158,9 +2228,14 @@ public class LoanUtilities {
 		BigDecimal bdBalance = BigDecimal.ZERO;
 
 		Long memberAccountId = getMemberDepositMemberAccountId(payrollNo);
-
-		bdBalance = AccHolderTransactionServices
-				.getBookBalanceNow(memberAccountId.toString());
+		
+		if (memberAccountId != null)
+		{
+			bdBalance = AccHolderTransactionServices
+					.getBookBalanceNow(memberAccountId.toString());
+		} else {
+			bdBalance = BigDecimal.ZERO;
+		}
 
 		return bdBalance;
 	}

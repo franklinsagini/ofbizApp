@@ -588,7 +588,12 @@ public class LoanServices {
 
 		// The Multiplier account id
 		String accountProductId = loanProduct.getString("accountProductId");
+		
+		if ((accountProductId == null) || (accountProductId.equals("")))
+			accountProductId = LoanUtilities.getAccountProductIdGivenCodeId(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE).toString();
 
+		log.info(" AAAAAAAAAAAAAAAAAAACCCCCCCCCCCC "+accountProductId);
+		log.info(" MMMMMMMMMMMMMMMMMMMAAAAAAAAA "+memberId);
 		// Get Accounts for this member
 		List<GenericValue> memberAccountELI = null;
 		accountProductId = accountProductId.replaceAll(",", "");
@@ -1516,8 +1521,13 @@ public class LoanServices {
 		BigDecimal bdTotalDeposits = getGuarantorTotalDeposits(loanApplication);
 
 		String guarantorsTotalDepositsEnough = "";
+		Long partyId = loanApplication.getLong("partyId");
+		
+		BigDecimal bdMemberDepositsTotal = LoanUtilities.getMemberDepositAmount(partyId);
+		
+		BigDecimal loanAmountLessDeposits = bdLoanAmt.subtract(bdMemberDepositsTotal);
 
-		if (bdTotalDeposits.compareTo(bdLoanAmt) == -1) {
+		if (bdTotalDeposits.compareTo(loanAmountLessDeposits) == -1) {
 			guarantorsTotalDepositsEnough = "N";
 		} else {
 			guarantorsTotalDepositsEnough = "Y";
@@ -2272,7 +2282,7 @@ public class LoanServices {
 	
 	public static BigDecimal getLoanClearingCharge(Long loanApplicationId, BigDecimal bdAmount){
 		BigDecimal bdPercentagePaid = getLoanPercentageRepaidValue(loanApplicationId);
-		
+		log.info("133PPPPPPPPPPPPPPPPPPPP Percentage Paid "+bdPercentagePaid);
 		BigDecimal bdChargeRate = BigDecimal.ZERO;
 		EntityConditionList<EntityExpr> loanClearRateConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
@@ -2293,10 +2303,11 @@ public class LoanServices {
 		for (GenericValue genericValue : loanClearRateELI) {
 			bdChargeRate = genericValue.getBigDecimal("chargeRate");
 		}
-		
+		log.info("144PPPPPPPPPPPPPPPPPPPP Charge Rate "+bdChargeRate);
 		BigDecimal bdChargeAmt = BigDecimal.ZERO;
 		
 		bdChargeAmt = bdAmount.multiply(bdChargeRate).divide(new BigDecimal(ONEHUNDRED), 4, RoundingMode.HALF_UP);
+		log.info("155PPPPPPPPPPPPPPPPPPPP Charge Amt "+bdChargeAmt);
 		return bdChargeAmt;
 	}
 
@@ -2578,10 +2589,15 @@ public class LoanServices {
 		GenericValue loanProduct = getLoanProduct(loanApplication
 				.getLong("loanProductId"));
 		Long accountProductId = loanProduct.getLong("accountProductId");
-		BigDecimal bdMaximumLoanAmt = calculateMaximumAmount(
+		BigDecimal bdMaximumLoanAmt  = null;
+		if (loanProduct.getBigDecimal("multipleOfSavingsAmt") != null){
+			bdMaximumLoanAmt = calculateMaximumAmount(
 				loanApplication.getLong("partyId"), accountProductId,
 				loanProduct.getBigDecimal("multipleOfSavingsAmt"),
 				bdTotalSavings);
+		} else{
+			bdMaximumLoanAmt = loanProduct.getBigDecimal("maximumAmt");
+		}
 
 		BigDecimal bdExistingLoans = calculateExistingLoansTotal(loanApplication
 				.getLong("partyId"));
@@ -2807,10 +2823,16 @@ public class LoanServices {
 		GenericValue loanProduct = getLoanProduct(loanApplication
 				.getLong("loanProductId"));
 		Long accountProductId = loanProduct.getLong("accountProductId");
-		BigDecimal bdMaximumLoanAmt = calculateMaximumAmount(
+		BigDecimal bdMaximumLoanAmt = null;
+				
+		if (loanProduct.getBigDecimal("multipleOfSavingsAmt") != null){
+			bdMaximumLoanAmt = calculateMaximumAmount(
 				loanApplication.getLong("partyId"), accountProductId,
 				loanProduct.getBigDecimal("multipleOfSavingsAmt"),
 				bdTotalSavings);
+		} else{
+			bdMaximumLoanAmt = loanProduct.getBigDecimal("maximumAmt");
+		}
 
 		BigDecimal bdExistingLoans = calculateExistingLoansTotal(loanApplication
 				.getLong("partyId"));

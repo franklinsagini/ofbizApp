@@ -126,13 +126,22 @@ public class LoanAccounting {
 				BigDecimal bdInterestAmount = LoanRepayments.getTotalInterestByLoanDue(clearedLoanApplicationId.toString());
 				BigDecimal bdTotalInsuranceAmount = LoanRepayments.getTotalInsurancByLoanDue(clearedLoanApplicationId.toString());
 				log.info(" LLLLLLLL Loan Amount to offset AAAAAAAAAA"+bdTotalLoanBalanceAmount);
-				saveLoanRepaymentClearance(clearedLoanApplicationId, bdTotalLoanBalanceAmount, bdInterestAmount, bdTotalInsuranceAmount, acctgTransId);
+				
 				//LoansProcessingServices.get
 				bdTotalLoanCost = bdTotalLoanCost.add(LoanRepayments.getTotalInterestByLoanDue(clearedLoanApplicationId.toString()));
 				bdTotalLoanCost = bdTotalLoanCost.add(LoanRepayments.getTotalInsurancByLoanDue(clearedLoanApplicationId.toString()));
 			
-				BigDecimal bdTotal = bdTotalLoanBalanceAmount.add(bdInterestAmount).add(bdTotalInsuranceAmount);
+				log.info("1CCCCCCCCCCCC Total Loan Balance amount computed "+bdTotalLoanBalanceAmount);
+				//BigDecimal bdTotal = bdTotalLoanBalanceAmount.add(bdInterestAmount).add(bdTotalInsuranceAmount);
+				BigDecimal bdTotal = bdTotalLoanBalanceAmount;
+				bdTotal = bdTotal.add(bdInterestAmount);
+				bdTotal = bdTotal.add(bdTotalInsuranceAmount);
+				
+				log.info("2CCCCCCCCCCCC Total Loan Balance after adding interest and insurance "+bdTotal);
 				bdTotalCharge = bdTotalCharge.add(org.ofbiz.loans.LoanServices.getLoanClearingCharge(clearedLoanApplicationId, bdTotal));
+				log.info("3CCCCCCCCCCCC Charge Computed in iteration "+bdTotalCharge);
+				
+				saveLoanRepaymentClearance(clearedLoanApplicationId, bdTotalLoanBalanceAmount, bdInterestAmount, bdTotalInsuranceAmount, acctgTransId);
 			}
 			
 			//AccHolderTransactionServices.memberTransactionDeposit(bdTotalLoanCost, memberAccountId, userLogin, "LOANCLEARANCE", accountTransactionParentId, null);
@@ -140,7 +149,8 @@ public class LoanAccounting {
 			
 			//Debit Member Account with the rate charged for clearances
 			//AccHolderTransactionServices.memberTransactionDeposit(bdTotalCharge, memberAccountId, userLogin, "LOANCLEARANCECHARGES", accountTransactionParentId, null);
-			AccHolderTransactionServices.memberTransactionDeposit(bdTotalCharge, memberAccountId, userLogin, "LOANCLEARANCE", accountTransactionParentId, null, acctgTransId, null, loanApplicationId);
+			log.info("4CCCCCCCCCCCC The Charge passed to Account Transaction for capture "+bdTotalCharge);
+			AccHolderTransactionServices.memberTransactionDeposit(bdTotalCharge, memberAccountId, userLogin, "LOANCLEARANCECHARGES", accountTransactionParentId, null, acctgTransId, null, loanApplicationId);
 			
 			//Post the clearance charges
 			
@@ -392,6 +402,11 @@ public class LoanAccounting {
 		} else {
 			productChargeIdLong = null;
 		}
+		
+		Long loanApplicationId = null;
+		if ((loanApplication != null) && (loanApplication.getLong("loanApplicationId") != null)){
+			loanApplicationId = loanApplication.getLong("loanApplicationId");
+		}
 
 		memberAccountId = memberAccountId.replaceAll(",", "");
 		accountTransaction = delegator.makeValidValue("AccountTransaction",
@@ -405,7 +420,7 @@ public class LoanAccounting {
 						"memberAccountId", Long.valueOf(memberAccountId),
 						"productChargeId", productChargeIdLong,
 						"transactionAmount", transactionAmount,
-						"transactionType", transactionType, "acctgTransId", acctgTransId));
+						"transactionType", transactionType, "acctgTransId", acctgTransId, "loanApplicationId", loanApplicationId));
 		try {
 			delegator.createOrStore(accountTransaction);
 		} catch (GenericEntityException e) {

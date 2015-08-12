@@ -65,24 +65,24 @@
 		<response name="success" type="view" value="popup"
 			save-home-view="true" />
 	</request-map>
-	
-		<request-map uri="leaveWorkflow">
+
+	<request-map uri="leaveWorkflow">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="leaveWorkflow"
 			save-home-view="true" />
 	</request-map>
-	
+
 	<request-map uri="workFlowResponsibleStaff">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="workFlowResponsibleStaff"
 			save-home-view="true" />
 	</request-map>
-	
+
 	<request-map uri="findEmployeesResponsible">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="workFlowResponsibleStaff" />
 	</request-map>
-	
+
 	<request-map uri="WorkflowStaffMapping">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="WorkflowStaffMapping"
@@ -436,7 +436,7 @@
 		</response>
 		<response name="error" type="view" value="LeaveBalances" />
 	</request-map>
-	
+
 	<request-map uri="scheduleSendEmailNotificationNonStaff">
 		<security auth="true" https="true" />
 		<event type="java" path="org.ofbiz.humanres.HumanResServices"
@@ -474,8 +474,8 @@
 		<response name="success" type="view" value="LeaveBalances"></response>
 		<response name="error" type="view" value="LeaveBalances" />
 	</request-map>
-	
-	
+
+
 
 	<request-map uri="closeFinacialYearCompassionate">
 		<security auth="true" https="true" />
@@ -495,15 +495,16 @@
 			<redirect-parameter name="leaveId" />
 		</response>
 		<response name="error" type="view" value="FindLeaveApprovals" />
-	</request-map>  
-	
+	</request-map>
+
 	<request-map uri="approveApplication">
 		<security auth="true" https="true" />
 		<event type="java" path="org.ofbiz.humanres.LeaveServices"
 			invoke="approveLeave" />
-		<response name="success" type="request-redirect-noparam" value="FindLeaveApprovals"/>
+		<response name="success" type="request-redirect-noparam"
+			value="FindLeaveApprovals" />
 		<response name="error" type="view" value="FindLeaveApprovals" />
-	</request-map> 
+	</request-map>
 
 
 	<request-map uri="emplleavebalance">
@@ -1286,11 +1287,11 @@
 	<request-map uri="returnToHOD">
 		<security https="true" auth="true" />
 		<event type="service" invoke="returnToHOD" />
-		<response name="success" type="view" value="SubmittedScores"/>
+		<response name="success" type="view" value="SubmittedScores" />
 		<response name="error" type="view" value="SubmittedScores" />
 	</request-map>
-	
-<!--======================= ADD STAFF TO REVIEW GROUPS =================================== -->
+
+	<!--======================= ADD STAFF TO REVIEW GROUPS =================================== -->
 	<request-map uri="addStaffToReviewGroup">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="addStaffToReviewGroup" />
@@ -1352,75 +1353,78 @@
 
 
 
-<!--======================= LEAVE WORKFLOW SETUP =================================== -->
+	<!--======================= LEAVE WORKFLOW SETUP =================================== -->
 
 	<request-map uri="createWorkflow">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="createWorkflow" />
-		<response name="success" type="request-redirect-noparam" value="leaveWorkflow"/>
-		<response name="error" type="request-redirect-noparam" value="leaveWorkflow"/>
+		<response name="success" type="request-redirect-noparam"
+			value="leaveWorkflow" />
+		<response name="error" type="request-redirect-noparam" value="leaveWorkflow" />
 	</request-map>
 
 	<request-map uri="updateWorkflow">
 		<security https="true" auth="true" />
 		<event type="service-multi" invoke="updateWorkflow" />
-		<response name="success" type="view" value="leaveWorkflow"/>
+		<response name="success" type="view" value="leaveWorkflow" />
 		<response name="error" type="view" value="leaveWorkflow" />
 	</request-map>
 
 	<request-map uri="deleteWorkflow">
 		<security https="true" auth="true" />
 		<event type="service" invoke="deleteWorkflow" />
-		<response name="success" type="view" value="leaveWorkflow"/>
+		<response name="success" type="view" value="leaveWorkflow" />
 		<response name="error" type="view" value="leaveWorkflow" />
 	</request-map>
-	
+
 	<!--======================= LEAVE WORKFLOW RESPONSIBLE STAFF SETUP =================================== -->
 
 	<request-map uri="createWorkflowResponsibleStaff">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="createWorkflowResponsibleStaff" />
-		<response name="success" type="request-redirect-noparam" value="workFlowResponsibleStaff"/>
-		<response name="error" type="request-redirect-noparam" value="workFlowResponsibleStaff"/>
+		<response name="success" type="request-redirect-noparam"
+			value="workFlowResponsibleStaff" />
+		<response name="error" type="request-redirect-noparam" value="workFlowResponsibleStaff" />
 	</request-map>
 
 	<request-map uri="updateWorkflowResponsibleStaff">
 		<security https="true" auth="true" />
 		<event type="service-multi" invoke="updateWorkflowResponsibleStaff" />
-		<response name="success" type="view" value="workFlowResponsibleStaff"/>
+		<response name="success" type="view" value="workFlowResponsibleStaff" />
 		<response name="error" type="view" value="workFlowResponsibleStaff" />
 	</request-map>
 
 	<request-map uri="deleteWorkflowResponsibleStaff">
 		<security https="true" auth="true" />
 		<event type="service" invoke="deleteWorkflowResponsibleStaff" />
-		<response name="success" type="view" value="workFlowResponsibleStaff"/>
+		<response name="success" type="view" value="workFlowResponsibleStaff" />
 		<response name="error" type="view" value="workFlowResponsibleStaff" />
 	</request-map>
-	
-	<!--======================= LEAVE WORKFLOW  STAFF MAPPING SETUP =================================== -->
+
+	<!--======================= LEAVE WORKFLOW STAFF MAPPING SETUP =================================== -->
 
 	<request-map uri="createWorkflowStaffMapping">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="createWorkflowStaffMapping" />
-		<response name="success" type="request-redirect-noparam" value="WorkflowStaffMapping"/>
-		<response name="error" type="request-redirect-noparam" value="WorkflowStaffMapping"/>
+		<response name="success" type="request-redirect-noparam"
+			value="WorkflowStaffMapping" />
+		<response name="error" type="request-redirect-noparam" value="WorkflowStaffMapping" />
 	</request-map>
 
 	<request-map uri="updateWorkflowStaffMapping">
 		<security https="true" auth="true" />
 		<event type="service-multi" invoke="updateWorkflowStaffMapping" />
-		<response name="success" type="view" value="WorkflowStaffMapping"/>
+		<response name="success" type="view" value="WorkflowStaffMapping" />
 		<response name="error" type="view" value="WorkflowStaffMapping" />
 	</request-map>
 
 	<request-map uri="deleteWorkflowStaffMapping">
 		<security https="true" auth="true" />
 		<event type="service" invoke="deleteWorkflowStaffMapping" />
-		<response name="success" type="view" value="WorkflowStaffMapping"/>
+		<response name="success" type="view" value="WorkflowStaffMapping" />
 		<response name="error" type="view" value="WorkflowStaffMapping" />
 	</request-map>
-	
+
 
 
 
@@ -2349,14 +2353,14 @@
 	</request-map>
 
 
-     <request-map uri="leaveRecord">
-     <security https="true" auth="true"/>
-     <response name="success" type="view" value="leaveRecord"></response>
-     <response name="error" type="view" value="leaveRecord"></response>
-     </request-map>
-     
-     
-     
+	<request-map uri="leaveRecord">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="leaveRecord"></response>
+		<response name="error" type="view" value="leaveRecord"></response>
+	</request-map>
+
+
+
 
 	<request-map uri="forwardEmplLeave">
 		<security https="true" auth="true" />
@@ -2565,17 +2569,18 @@
 			value="FindEmplLeaves" />
 		<response name="error" type="view" value="EditEmplLeave" />
 	</request-map>
-	
+
 	<request-map uri="SubmitApplication">
 		<security https="true" auth="true" />
 		<event type="service" invoke="SubmitApplication" />
-		<response name="success" type="request-redirect-noparam" value="FindEmplLeaves" />
+		<response name="success" type="request-redirect-noparam"
+			value="FindEmplLeaves" />
 		<response name="error" type="view" value="FindEmplLeaves" />
 	</request-map>
-	
-	
-	
-	
+
+
+
+
 
 
 	<request-map uri="updateEmplLeaveExt">
@@ -3378,10 +3383,18 @@
 		<security https="true" auth="true" />
 		<event type="java" path="org.ofbiz.humanres.SeparateEmployee"
 			invoke="separateEmployee"></event>
-		<response name="success" type="request-redirect-noparam" value="separationApplication" />
+		<response name="success" type="request-redirect-noparam"
+			value="separationApplication" />
 		<response name="error" type="request-redirect-noparam" value="separationApplication" />
 	</request-map>
-	
+
+	<request-map uri="calcelSeparation">
+		<security https="true" auth="true" />
+		<event type="service" invoke="cancelSeparation"></event>
+		<response name="success" type="request-redirect-noparam"
+			value="separationApplication" />
+		<response name="error" type="request-redirect-noparam" value="separationApplication" />
+	</request-map>
 
 	<request-map uri="separationSummaryReport">
 		<security https="true" auth="true" />
@@ -3391,6 +3404,12 @@
 
 
 	<!-- ============Reports================================================ -->
+	<request-map uri="staffBranch">
+	   <security https="true" auth="true" />
+	   <response name="success" type="view" value="staffBranch"
+			save-home-view="true" />
+	</request-map>
+	
 	<request-map uri="staffList">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="staffList"
@@ -3617,6 +3636,12 @@
 			save-home-view="true" />
 	</request-map>
 
+    <request-map uri="employmentTermsPDF">
+    <security https="true" auth="true"/>
+    <response name="success" type="view" value="employmentTermsPDF" 
+    save-home-view="true">
+    </response>
+    </request-map>
 
 
 
@@ -3997,21 +4022,20 @@
 		<response name="success" type="view"
 			value="StaffPerformancePerBranchOrDepartmentPDF" />
 	</request-map>
-	
-	
+
+
 	<request-map uri="StaffPerformancePerDepartmentPDF">
 		<security https="true" auth="true" />
 		<response name="success" type="view"
 			value="StaffPerformancePerDepartmentPDF" />
 	</request-map>
-	
+
 	<request-map uri="StaffPerformancePerBranchPDF">
 		<security https="true" auth="true" />
-		<response name="success" type="view"
-			value="StaffPerformancePerBranchPDF" />
+		<response name="success" type="view" value="StaffPerformancePerBranchPDF" />
 	</request-map>
-	
-	
+
+
 
 	<request-map uri="staffOnTrainingPDF">
 		<security https="true" auth="true" />
@@ -4053,12 +4077,12 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="StaffTrainingHistoryCSV" />
 	</request-map>
-	
+
 	<request-map uri="staffSeparatedReportPDF">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="staffSeparatedReportPDF" />
 	</request-map>
-	
+
 	<request-map uri="staffSeparatedReportCSV.csv">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="staffSeparatedReportCSV" />
@@ -4129,27 +4153,58 @@
 		<security auth="true" https="true" />
 		<response name="success" type="view" value="LookupJobRequisition" />
 	</request-map>
+
+	<request-map uri="employeeLostItems">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="lostItems"></response>
+		<response name="error" type="view" value="lostItems"></response>
+	</request-map>
+
+	<request-map uri="LookupEmployee">
+		<security auth="true" https="true" />
+		<response name="success" type="view" value="LookupEmployee" />
+	</request-map>
 	
+	<request-map uri="createEmployeeLostItems">
+	<security https="true" auth="true"/>
+	<event type="service" invoke="createEmployeeLostItems"></event>
+	<response name="success" type="view" value="lostItems"></response>
+	<response name="error" type="view" value="lostItems"></response>
+	</request-map>
+
+  <request-map uri="updateEmployeeLostItems">
+	<security https="true" auth="true"/>
+	<event type="service" invoke="updateEmployeeLostItems"></event>
+	<response name="success" type="view" value="lostItems"></response>
+	<response name="error" type="view" value="lostItems"></response>
+	</request-map>
 	
+	<request-map uri="deleteEmployeeLostItems">
+	<security https="true" auth="true"/>
+	<event type="service" invoke="deleteEmployeeLostItems"></event>
+	<response name="success" type="view" value="lostItems"></response>
+	<response name="error" type="view" value="lostItems"></response>
+	</request-map>
+
 	<view-map name="staffSeparatedReportPDF" type="screenfop"
 		page="component://humanres/widget/ReportScreens.xml#staffSeparatedReportPDF"
 		content-type="application/pdf" encoding="none" />
-		
+
 	<view-map name="staffSeparatedReportCSV" type="screencsv"
 		page="component://humanres/widget/ReportScreens.xml#staffSeparatedReportCSV"
 		content-type="text/csv" encoding="none" />
-		
+
 	<view-map name="StaffPerformancePerDepartmentPDF" type="screenfop"
 		page="component://humanres/widget/PerfReportScreens.xml#StaffPerformancePerDepartmentPDF"
 		content-type="application/pdf" encoding="none" />
-		
-		<view-map name="StaffPerformancePerBranchPDF" type="screenfop"
+
+	<view-map name="StaffPerformancePerBranchPDF" type="screenfop"
 		page="component://humanres/widget/PerfReportScreens.xml#StaffPerformancePerBranchPDF"
 		content-type="application/pdf" encoding="none" />
-	
-	
-	
-	
+
+
+
+
 
 	<view-map name="staffOnTrainingCSV" type="screencsv"
 		page="component://humanres/widget/ReportScreens.xml#staffOnTrainingCSV"
@@ -4417,9 +4472,9 @@
 		page="component://humanres/widget/PerfReviewScreens.xml#NewPerfManagement" />
 	<view-map name="perfGoalsDef" type="screen"
 		page="component://humanres/widget/PerfReviewScreens.xml#NewPerfGoalDef" />
-		<view-map name="nonSubmitted" type="screen"
+	<view-map name="nonSubmitted" type="screen"
 		page="component://humanres/widget/PerfReviewScreens.xml#NotSubmittedScoresScreen" />
-		<view-map name="SubmittedScores" type="screen"
+	<view-map name="SubmittedScores" type="screen"
 		page="component://humanres/widget/PerfReviewScreens.xml#SubmittedScoresScreen" />
 	<view-map name="perfGoals" type="screen"
 		page="component://humanres/widget/PerfReviewScreens.xml#NewPerfGoal" />
@@ -4812,17 +4867,25 @@
 		page="component://humanres/widget/TrainingReportScreens.xml#TrainingSummaryReport" />
 	<view-map name="separationSummaryReport" type="screen"
 		page="component://humanres/widget/ReportScreens.xml#SeparationSummaryReport" />
-		
-		<view-map name="leaveWorkflow" type="screen"
-		page="component://humanres/widget/GlobalHRSettingScreens.xml#leaveWorkflowScreens" />
-		<view-map name="workFlowResponsibleStaff" type="screen"
-		page="component://humanres/widget/GlobalHRSettingScreens.xml#workFlowResponsibleStaffScreens" />
-		<view-map name="WorkflowStaffMapping" type="screen"
-		page="component://humanres/widget/GlobalHRSettingScreens.xml#WorkflowStaffMappingScreens" />
-		
-    <view-map name="leaveRecord" type="screen"
-		page="component://humanres/widget/EmplLeaveScreens.xml#leaveRecord" />
-		
-		
 
+	<view-map name="leaveWorkflow" type="screen"
+		page="component://humanres/widget/GlobalHRSettingScreens.xml#leaveWorkflowScreens" />
+	<view-map name="workFlowResponsibleStaff" type="screen"
+		page="component://humanres/widget/GlobalHRSettingScreens.xml#workFlowResponsibleStaffScreens" />
+	<view-map name="WorkflowStaffMapping" type="screen"
+		page="component://humanres/widget/GlobalHRSettingScreens.xml#WorkflowStaffMappingScreens" />
+
+	<view-map name="leaveRecord" type="screen"
+		page="component://humanres/widget/EmplLeaveScreens.xml#leaveRecord" />
+
+	<view-map name="lostItems" type="screen"
+		page="component://humanres/widget/EmployeeScreens.xml#lostItems" />
+	<view-map name="LookupEmployee" type="screen"
+		page="component://humanres/widget/LookupScreens.xml#LookupEmployee" />
+    <view-map name="employmentTermsPDF" type="screenfop"
+		page="component://humanres/widget/ReportScreens.xml#staffListEmploymentTermsPDF"
+		content-type="application/pdf" encoding="none" />
+    <view-map name="staffBranch" type="screenfop"
+		page="component://humanres/widget/ReportScreens.xml#staffBranchPDF"
+		content-type="application/pdf" encoding="none" />		
 </site-conf>
