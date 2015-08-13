@@ -2256,6 +2256,18 @@ public class LoanServices {
 	public static BigDecimal getLoanRemainingBalance(Long loanApplicationId) {
 		BigDecimal bdRemainingBalance = BigDecimal.ZERO;
 
+		bdRemainingBalance = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
+		
+		bdRemainingBalance = bdRemainingBalance.add(LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString()));
+		bdRemainingBalance = bdRemainingBalance.add(LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString()));
+		return bdRemainingBalance;
+
+	}
+	
+	
+	public static BigDecimal getLoanBalanceExcludeInterestAndInsurance(Long loanApplicationId) {
+		BigDecimal bdRemainingBalance = BigDecimal.ZERO;
+
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 //		bdRemainingBalance = getLoanAmount(delegator,
 //				String.valueOf(loanApplicationId)).subtract(
@@ -2263,8 +2275,6 @@ public class LoanServices {
 		
 		bdRemainingBalance = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
 		
-		bdRemainingBalance = bdRemainingBalance.add(LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString()));
-		bdRemainingBalance = bdRemainingBalance.add(LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString()));
 		return bdRemainingBalance;
 
 	}
