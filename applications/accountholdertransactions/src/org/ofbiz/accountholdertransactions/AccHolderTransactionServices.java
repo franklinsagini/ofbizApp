@@ -58,7 +58,7 @@ public class AccHolderTransactionServices {
 	public static Long CHEQUEWITHDRAWALID = 10020L;
 	public static Long BANKERSWITHDRAWALID = 10000L;
 	public static String HQBRANCH = "Company";
-	private static Long ONEHUNDRED = 100L;
+	public static Long ONEHUNDRED = 100L;
 
 	// public static String WITHDRAWALOK = "OK";
 

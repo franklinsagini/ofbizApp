@@ -827,7 +827,7 @@ public class LoanRepayments {
 		return bdTotalLoanBalance;
 	}
 
-	private static String getEmployeeNumber(String loanApplicationId,
+	public static String getEmployeeNumber(String loanApplicationId,
 			Delegator delegator) {
 		// TODO Auto-generated method stub
 		GenericValue loanApplication = null;
@@ -872,7 +872,7 @@ public class LoanRepayments {
 	/***
 	 * Get Loan Number given Loan Application ID
 	 * */
-	private static String getLoanNo(String loanApplicationId,
+	public static String getLoanNo(String loanApplicationId,
 			Delegator delegator) {
 		// TODO Auto-generated method stub
 		GenericValue loanApplication = null;
@@ -896,7 +896,7 @@ public class LoanRepayments {
 		return loanNo;
 	}
 
-	private static GenericValue getLoanApplication(String loanApplicationId,
+	public static GenericValue getLoanApplication(String loanApplicationId,
 			Delegator delegator) {
 		GenericValue loanApplication = null;
 		loanApplicationId = loanApplicationId.replaceAll(",", "");
@@ -913,7 +913,7 @@ public class LoanRepayments {
 		return loanApplication;
 	}
 
-	private static GenericValue getMember(String loanApplicationId,
+	public static GenericValue getMember(String loanApplicationId,
 			Delegator delegator) {
 
 		GenericValue loanApplication = null;
