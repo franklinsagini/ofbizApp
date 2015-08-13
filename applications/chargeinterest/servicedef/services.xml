@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>ChargeInterest Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+
+    <service name="noSyntaxError" engine="interface">
+        <description>
+            Dummy service to prevent empty files and syntax error - Remove when the 1st real service will be added here 
+        </description>
+    </service> 
+    
+        <!-- StationMonthInterestManagement -->
+    <service name="createStationMonthInterestManagement" engine="simple" default-entity-name="StationMonthInterestManagement"
+             location="component://chargeinterest/script/org/ofbiz/chargeinterest/ChargeInterestServices.xml" invoke="createStationMonthInterestManagement" auth="true">
+        <description>Create StationMonthInterestManagement</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    <service name="updateStationMonthInterestManagement" engine="simple" default-entity-name="StationMonthInterestManagement"
+             location="component://chargeinterest/script/org/ofbiz/chargeinterest/ChargeInterestServices.xml" invoke="updateStationMonthInterestManagement" auth="true">
+        <description>Update StationMonthInterestManagement</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+	
+	<service name="deleteStationMonthInterestManagement" engine="simple" default-entity-name="StationMonthInterestManagement"
+             location="component://chargeinterest/script/org/ofbiz/chargeinterest/ChargeInterestServices.xml" invoke="deleteStationMonthInterestManagement" auth="true">
+        <description>Delete StationMonthInterestManagement</description>
+        <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service> 
+    
+    	    <!-- generateInterest -->
+     <service name="generateInterest" engine="simple" default-entity-name="StationMonthInterestManagement"
+             location="component://chargeinterest/script/org/ofbiz/chargeinterest/ChargeInterestServices.xml" invoke="generateInterest" auth="true">
+        <description>generateInterest</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+</services>

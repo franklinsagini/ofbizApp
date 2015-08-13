@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+	<!-- Month Year -->
+	<form name="NewStationMonthInterestManagement" type="single" target="createStationMonthInterestManagement"
+        focus-field-name="year" header-row-style="header-row" default-table-style="basic-table" default-map-name="pushMonthYearContext">
+        
+         <field name="stationId" title="Station" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<drop-down allow-empty="true" >
+       			<entity-options description="${name} - ${stationNumber}" entity-name="Station">
+       				<entity-order-by field-name="name"/>
+       			</entity-options>
+       		</drop-down>
+        </field>
+        
+          <field name="year" title="Year" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<text size="25" default-value="20"></text>
+        </field>
+       
+        <field name="month" title="Month" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<drop-down allow-empty="true" >
+       			<option key="1" description="1"/>
+       			<option key="2" description="2"/>
+       			<option key="3" description="3"/>
+       			<option key="4" description="4"/>
+       			<option key="5" description="5"/>
+       			<option key="6" description="6"/>
+       			<option key="7" description="7"/>
+       			<option key="8" description="8"/>
+       			<option key="9" description="9"/>
+       			<option key="10" description="10"/>
+       			<option key="11" description="11"/>
+       			<option key="12" description="12"/>
+       		</drop-down>
+        </field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+	<form name="stationInterestManagement" type="list" list-name="listIt"
+		paginate-target="stationInterestManagement" default-entity-name="StationMonthInterestManagement"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="StationMonthInterestManagement">
+		<actions>
+            <entity-condition entity-name="StationMonthInterestManagement">
+            	<order-by field-name="-stationMonthInterestManagementId"/>
+            </entity-condition>
+        </actions>
+		<field name="stationMonthInterestManagementId"><hidden/></field>
+		
+		<field name="month" title="Month">
+			<display></display>
+		</field>
+		
+		<field name="year" title="Year">
+			<display></display>
+		</field>
+		
+		 <field name="stationId" title="Station"  widget-style="required">
+       		<display-entity entity-name="Station" description="${name} - ${stationNumber}"></display-entity>
+        </field>
+		
+		<field name="createdStamp" title="Created">
+			<display type="date-time" />
+		</field>
+		
+		<field name="createdBy" title="Created By">
+			<display />
+		</field>
+		
+		
+		<!-- field name="addToClearList" title="Add To Clear List"
+			widget-style="buttontext" use-when="(&quot;${bsh:org.ofbiz.loans.LoanServices.alloweToClear(loanApplicationId);}&quot;.equals(&quot;${yes}&quot;)&amp;&amp;(isAddedToClear==null))||(&quot;${bsh:org.ofbiz.loans.LoanServices.alloweToClear(loanApplicationId);}&quot;.equals(&quot;${yes}&quot;)&amp;&amp;!isAddedToClear.equals(&quot;${yes}&quot;))" >
+			<hyperlink  target="addToClearList" description="Add To Clear List "
+				also-hidden="true" >
+				
+				<parameter param-name="loanApplicationId" />
+				<parameter param-name="partyId"/>
+			</hyperlink>
+		</field -->
+		
+		<field name="generateInterest" title="Generate Interest"
+			widget-style="buttontext">
+			<hyperlink target="generateInterest" description="Generate Interest"
+				also-hidden="false">
+				<parameter param-name="stationMonthInterestManagementId"/>
+			</hyperlink>
+		</field>
+		
+		<field name="postInterestGenerated" title="Post Interest Generated"
+			widget-style="buttontext">
+			<hyperlink target="postInterestGenerated" description="Post Interest Generated"
+				also-hidden="false">
+				<parameter param-name="stationMonthInterestManagementId"/>
+			</hyperlink>
+		</field>
+		
+		
+		<field name="showInterestGenerated" title="Show Interest Generated"
+			widget-style="buttontext">
+			<hyperlink target="showInterestGenerated" description="Show Interest Generated"
+				also-hidden="false">
+				<parameter param-name="stationMonthInterestManagementId"/>
+			</hyperlink>
+		</field>
+		
+	</form>
+
+</forms>
