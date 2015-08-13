@@ -61,6 +61,18 @@ under the License.
       <prim-key field="generatedId"/>
       <prim-key field="acctgTransId"/>
 </entity>
+<entity entity-name="ReconPullLog"
+            package-name="org.ofbiz.accounting.ledger"
+            title="Generated End of Day Transactions Entity">
+      <field name="finAccountId" type="id-ne" enable-audit-log="true"></field>
+      <field name="generationDate" type="date-time"></field>
+      <field name="totalPulled" type="numeric" enable-audit-log="true"></field>
+      <field name="pulledBy" type="id" enable-audit-log="true"></field>
+      <prim-key field="finAccountId"/>
+      <relation type="one" fk-name="FINACCT_PULL_LOG" rel-entity-name="FinAccount">
+        <key-map field-name="finAccountId"/>
+      </relation>
+</entity>
     <entity entity-name="FundingTypes"
             package-name="org.ofbiz.accounting.reports"
             title="Sasra Report Entity">

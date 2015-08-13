@@ -50,7 +50,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <auto-fields-entity entity-name="FinAccount" default-field-type="display"/>
+        <!-- <auto-fields-entity entity-name="FinAccount" default-field-type="display"/> -->
         <field name="finAccountId">
             <hyperlink  description="${finAccountId}" target="EditFinAccount">
                 <parameter param-name="finAccountId"/>
@@ -63,7 +63,7 @@ under the License.
                 <parameter param-name="finAccountId"/>
             </hyperlink>
         </field>
-        <field name="organizationPartyId">
+<!--         <field name="organizationPartyId">
             <hyperlink target="/partymgr/control/viewprofile" description="${organizationPartyId}" target-type="inter-app">
                 <parameter param-name="partyId" from-field="organizationPartyId"/>
             </hyperlink>
@@ -72,9 +72,14 @@ under the License.
             <hyperlink target="/partymgr/control/viewprofile" description="${ownerPartyId}" target-type="inter-app">
                 <parameter param-name="partyId" from-field="ownerPartyId"/>
             </hyperlink>
-        </field>
+        </field> -->
         <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="deleteFinAccount" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="finAccountId"/>
+            </hyperlink>
+        </field>
+        <field name="pullTransLink" title=" " widget-style="buttontext">
+            <hyperlink target="PullBankTrans" description="Pull Transactions" also-hidden="false">
                 <parameter param-name="finAccountId"/>
             </hyperlink>
         </field>
