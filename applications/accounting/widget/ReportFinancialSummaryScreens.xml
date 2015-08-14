@@ -762,6 +762,40 @@ under the License.
         </section>
     </screen>
 
+    <screen name="ExportBankTransCSV">
+        <section>
+            <actions>
+                <set field="viewSize" value="99999"/>
+                <set field="titleProperty" value="PageTitleFindFinAccountTrans"/>
+                <set field="tabButtonItem" value="FinAccountTrans"/>
+                <service service-name="getFinAccountTransListAndTotals" result-map="finAccountTransListAndTotals" auto-field-map="true"/>
+                <set field="finAccountTransList" type="List" from-field="finAccountTransListAndTotals.finAccountTransList"/>
+                <set field="searchedNumberOfRecords" type="Integer" from-field="finAccountTransListAndTotals.searchedNumberOfRecords"/>
+                <set field="grandTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.grandTotal"/>
+                <set field="createdGrandTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.createdGrandTotal"/>
+                <set field="totalCreatedTransactions" type="Long" from-field="finAccountTransListAndTotals.totalCreatedTransactions"/>
+                <set field="approvedGrandTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.approvedGrandTotal"/>
+                <set field="totalApprovedTransactions" type="Long" from-field="finAccountTransListAndTotals.totalApprovedTransactions"/>
+                <set field="createdApprovedGrandTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.createdApprovedGrandTotal"/>
+                <set field="unpresentedChequesTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.unpresentedChequesTotal" global="true"/>
+                <set field="uncreditedBankingsTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.uncreditedBankingsTotal" global="true"/>
+                <set field="unreceiptedBankingsTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.unreceiptedBankingsTotal" global="true"/>
+                <set field="unidentifiedDebitsTotal" type="BigDecimal" from-field="finAccountTransListAndTotals.unidentifiedDebitsTotal" global="true"/>
+                <set field="totalCreatedApprovedTransactions" type="Long" from-field="finAccountTransListAndTotals.totalCreatedApprovedTransactions"/>
+                <set field="finAccountId" from-field="parameters.finAccountId"/>
+                <entity-one entity-name="FinAccount" value-field="finAccount"/>
+                <set field="glReconciliationId" from-field="parameters.glReconciliationId"/>
+                <set field="finAccountTransId" from-field="parameters.finAccountTransId"/>
+            </actions>
+            <widgets>
+                <container>
+                    <include-form name="ExportBankTransCSV" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
+                </container>
+            </widgets>
+        </section>
+    </screen>
+
+
     <screen name="TrialBalanceSearchResultsPdf">
         <section>
             <actions>
