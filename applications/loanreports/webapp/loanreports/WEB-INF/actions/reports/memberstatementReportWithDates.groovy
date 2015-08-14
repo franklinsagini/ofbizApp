@@ -398,7 +398,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 			{
 				loanTransaction.increaseDecrease = 'I'
 				loanTransaction.transactionAmount = loanTransaction.transactionAmount * -1;
-				loanTransaction.transactionDescription = loanTransaction.transactionDescription+' (JV) '
+				loanTransaction.transactionDescription = loanTransaction.transactionDescription+' (JV/Over Charge) '
 			}
 			//loanTransaction.isLoan = true
 			loanTransaction.isLoanTransaction = true
@@ -435,7 +435,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 			{
 				loanTransaction.increaseDecrease = 'D'
 				loanTransaction.transactionAmount = loanTransaction.transactionAmount * -1;
-				loanTransaction.transactionDescription = loanTransaction.transactionDescription+' (JV) '
+				loanTransaction.transactionDescription = loanTransaction.transactionDescription+' (JV/Over payment) '
 			}
 			//loanTransaction.isLoan = true
 			loanTransaction.isLoanTransaction = true
@@ -470,7 +470,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 			{
 				loanTransaction.increaseDecrease = 'D'
 				loanTransaction.transactionAmount = loanTransaction.transactionAmount * -1;
-				loanTransaction.transactionDescription = loanTransaction.transactionDescription+' (JV) '
+				loanTransaction.transactionDescription = loanTransaction.transactionDescription+' (JV/ Overpayment) '
 			}
 			//loanTransaction.isLoan = true
 			loanTransaction.isLoanTransaction = true
@@ -505,7 +505,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 				loanTransaction.increaseDecrease = 'D'
 				loanTransaction.transactionAmount = loanTransaction.transactionAmount * -1;
 				
-				loanTransaction.transactionDescription = loanTransaction.transactionDescription+' (JV) '
+				loanTransaction.transactionDescription = loanTransaction.transactionDescription+' (JV / Overpayment) '
 			}
 			//loanTransaction.isLoan = true
 			loanTransaction.isLoanTransaction = true
