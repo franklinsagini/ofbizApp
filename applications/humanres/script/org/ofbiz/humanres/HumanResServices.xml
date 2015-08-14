@@ -4969,5 +4969,28 @@
 		<create-value value-field="newEntity" />
 	</simple-method>
 		
-
-</simple-methods>
+	<simple-method method-name="createEmployeeLostItems" short-description="Save emplloyee lost items">
+	<make-value value-field="newEntity" entity-name="EmployeeLostItems"/>
+	<set-pk-fields value-field="newEntity" map="parameters"/>
+	<set-nonpk-fields value-field="newEntity" map="parameters"/>
+	<sequenced-id sequence-name="EmployeeLostItems" field="lostItemId"/>
+	<set field="newEntity.lostItemId" from-field="lostItemId"/>
+	<create-value value-field="newEntity"/>
+	<property-to-field resource="HumanResUiLabels" property="Record Successfully Saved" field="successMessage"/>
+	</simple-method>	
+	
+	<simple-method method-name="updateEmployeeLostItems">
+	<entity-one value-field="lookedUpValue" entity-name="EmployeeLostItems"></entity-one>
+	<set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+	<store-value value-field="lookedUpValue"/>
+	<property-to-field resource="HumanResUiLabels" property="Record Successfully Updated" field="successMessage"/>
+	</simple-method>
+	
+	<simple-method method-name="deleteEmployeeLostItems">
+	<entity-one value-field="lookedUpValue" entity-name="EmployeeLostItems"></entity-one>
+	<remove-value value-field="lookedUpValue"/>
+	<property-to-field resource="HumanResUiLabels" property="Record Successfully Deleted" field="successMessage"/>
+	</simple-method>
+	</simple-methods>
+	
+	

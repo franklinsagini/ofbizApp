@@ -592,6 +592,7 @@
         
         <entity-condition entity-name="EmplLeave">
         			 <condition-expr field-name="responsibleEmployee" operator="equals" from-field="userLogin.partyId"/> 
+        			  <order-by field-name="leaveId DESC"/>
         	</entity-condition> 
         
             <service result-map-list="listIt" result-map="result" service-name="performFind">
@@ -609,7 +610,7 @@
         <!-- <auto-fields-entity entity-name="EmplLeave" default-field-type="display"/> -->
           
       
-		
+		<field name="leaveId"><hidden/></field>
 		<field name="partyId" field-name="partyId" title="${uiLabelMap.HumanResStaff}">
 			<display-entity entity-name="PartyNameView"
 				description="${firstName} ${lastName}">
@@ -1123,7 +1124,7 @@
       <!-- <auto-fields-entity entity-name="EmplLeave" default-field-type="find"/>  -->
         <actions>
         <entity-condition entity-name="EmplLeave">
-        <order-by field-name="fromDate DESC"/>
+        <order-by field-name="leaveId DESC"/>
         </entity-condition>
         </actions>
        
@@ -1149,7 +1150,7 @@
         <actions>
         
         <entity-condition entity-name="EmplLeave">
-        <order-by field-name="fromDate DESC"/>
+        <order-by field-name="leaveId DESC"/>
         			<!--  <condition-expr field-name="partyId" operator="equals" from-field="userLogin.partyId"/>  -->
         	</entity-condition> 
         
@@ -1191,6 +1192,19 @@
 	<field name="approvalStatus" title="Approval Status">
 			<display />
 		</field>
+		
+		<field name="ByPassApprover" title="" widget-style="smallSubmit" use-when="${(approvalStatus != 'Approved') &amp;&amp; (applicationStatus !='NEW')&amp;&amp; (approvalStatus != 'Rejected')&amp;&amp; (responsibleEmployee != ${userLogin.partyId})}">
+			
+			<hyperlink target="byPassLeaveApprover" description="By Pass" also-hidden="false" request-confirmation="true" confirmation-message="Are you sure of By Passing this Staff?">
+			    <parameter param-name="leaveId" />
+				<parameter param-name="partyId" value="${partyId}" />
+				<parameter param-name="fromDate" />
+				<parameter param-name="leaveTypeId" />
+				<parameter param-name="approvalStatus" />
+				
+			</hyperlink>
+		</field>
+		
 		<field name="rejectReason" title="Reason/Comment">
 			<display />
 		</field>
