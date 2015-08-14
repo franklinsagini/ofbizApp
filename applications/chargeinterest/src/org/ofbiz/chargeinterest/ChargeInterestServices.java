@@ -320,6 +320,11 @@ GenericValue stationMonthInterestManagement = LoanUtilities.getEntityValue("Stat
 					1L);
 			bdInterestAccrued = bdInterestAccrued.setScale(4,
 					RoundingMode.HALF_UP);
+			if (bdInterestAccrued.compareTo(BigDecimal.ZERO) < 1)
+			{
+				bdInterestAccrued = BigDecimal.ZERO;
+			}
+			
 			loanExpectation = delegator.makeValue("LoanExpectation", UtilMisc
 					.toMap("loanExpectationId", loanExpectationId, "loanNo",
 							loanNo, "loanApplicationId", loanApplicationId,
@@ -337,6 +342,11 @@ GenericValue stationMonthInterestManagement = LoanUtilities.getEntityValue("Stat
 					1L);
 			bdInsuranceAccrued = bdInsuranceAccrued.setScale(4,
 					RoundingMode.HALF_UP);
+			
+			if (bdInsuranceAccrued.compareTo(BigDecimal.ZERO) < 1)
+				bdInsuranceAccrued = BigDecimal.ZERO;
+			
+			
 			loanExpectation = delegator.makeValue("LoanExpectation", UtilMisc
 					.toMap("loanExpectationId", loanExpectationId, "loanNo",
 							loanNo, "loanApplicationId", loanApplicationId,
