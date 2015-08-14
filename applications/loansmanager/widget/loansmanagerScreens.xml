@@ -24,6 +24,7 @@
                 <set field="headerItem" value="forwardedLoanApplications"/>
                 <set field="displayPassword" value="Y"/>
                 <set field="target" value="createLoanApplication"/>
+                 <set field="loanApplicationCtx" from-field="parameters"/>
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/>
                 <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
@@ -46,6 +47,10 @@
 
                         <section name="search-results">
                         	<widgets>
+                        		<screenlet title="Search Appraised Loans">
+                        			
+                        			<include-form name="FindLoansAppraised" location="component://loansmanager/widget/loansmanagerForms.xml"/>
+                        		</screenlet>
                         		<screenlet title="Loan Applications">
                         			<include-form name="listAppraisedLoanApplications" location="component://loansmanager/widget/loansmanagerForms.xml"/>
                         		</screenlet>

@@ -353,13 +353,53 @@ allLoansList.eachWithIndex { loanItem, index ->
 			loanTransaction.transactionDate = interestInsurance.dateAccrued
 
 			if (interestInsurance.repaymentName.equals("INTEREST")){
-				loanTransaction.transactionDescription = "Interest Charged"
+				
+				if (interestInsurance.acctgTransId != null){
+					
+					if (interestInsurance.stationMonthInterestManagementId != null){
+						stationMonthInterestManagement = delegator.findOne("StationMonthInterestManagement", [stationMonthInterestManagementId : interestInsurance.stationMonthInterestManagementId], false);
+						loanTransaction.transactionDescription = "Interest Charged ("+interestInsurance.acctgTransId+") for "+stationMonthInterestManagement.month+"/"+stationMonthInterestManagement.year;
+					} else{
+						loanTransaction.transactionDescription = "Interest Charged ("+interestInsurance.acctgTransId+")";
+					}
+					
+					
+					
+				}else{
+					loanTransaction.transactionDescription = "Interest Charged";
+				}
+				
+				
 			} else if (interestInsurance.repaymentName.equals("INSURANCE")){
-				loanTransaction.transactionDescription = "Insurance Charged"
+				if (interestInsurance.acctgTransId != null){
+					
+					if (interestInsurance.stationMonthInterestManagementId != null){
+						stationMonthInterestManagement = delegator.findOne("StationMonthInterestManagement", [stationMonthInterestManagementId : interestInsurance.stationMonthInterestManagementId], false);
+						loanTransaction.transactionDescription = "Insurance Charged ("+interestInsurance.acctgTransId+") for "+stationMonthInterestManagement.month+"/"+stationMonthInterestManagement.year;
+					} else{
+						loanTransaction.transactionDescription = "Insurance Charged ("+interestInsurance.acctgTransId+")";
+					}
+					
+					
+					
+				}else{
+					loanTransaction.transactionDescription = "Insurance Charged";
+				}
+				
 			}
 
 			loanTransaction.increaseDecrease = 'D'
+			
+			
+			
 			loanTransaction.transactionAmount = interestInsurance.amountAccrued
+			
+			if (interestInsurance.amountAccrued < 0)
+			{
+				loanTransaction.increaseDecrease = 'I'
+				loanTransaction.transactionAmount = loanTransaction.transactionAmount * -1;
+				loanTransaction.transactionDescription = loanTransaction.transactionDescription+' (JV) '
+			}
 			//loanTransaction.isLoan = true
 			loanTransaction.isLoanTransaction = true
 
@@ -390,6 +430,13 @@ allLoansList.eachWithIndex { loanItem, index ->
 
 			loanTransaction.increaseDecrease = 'I'
 			loanTransaction.transactionAmount = loanRepaymentItem.insuranceAmount
+			
+			if (loanRepaymentItem.insuranceAmount < 0)
+			{
+				loanTransaction.increaseDecrease = 'D'
+				loanTransaction.transactionAmount = loanTransaction.transactionAmount * -1;
+				loanTransaction.transactionDescription = loanTransaction.transactionDescription+' (JV) '
+			}
 			//loanTransaction.isLoan = true
 			loanTransaction.isLoanTransaction = true
 			loanTransaction.repaymentMode  = loanRepaymentItem.repaymentMode
@@ -418,6 +465,13 @@ allLoansList.eachWithIndex { loanItem, index ->
 
 			loanTransaction.increaseDecrease = 'I'
 			loanTransaction.transactionAmount = loanRepaymentItem.interestAmount
+			
+			if (loanRepaymentItem.interestAmount < 0)
+			{
+				loanTransaction.increaseDecrease = 'D'
+				loanTransaction.transactionAmount = loanTransaction.transactionAmount * -1;
+				loanTransaction.transactionDescription = loanTransaction.transactionDescription+' (JV) '
+			}
 			//loanTransaction.isLoan = true
 			loanTransaction.isLoanTransaction = true
 			loanTransaction.repaymentMode  = loanRepaymentItem.repaymentMode
@@ -445,6 +499,14 @@ allLoansList.eachWithIndex { loanItem, index ->
 
 			loanTransaction.increaseDecrease = 'I'
 			loanTransaction.transactionAmount = loanRepaymentItem.principalAmount
+			
+			if (loanRepaymentItem.principalAmount < 0)
+			{
+				loanTransaction.increaseDecrease = 'D'
+				loanTransaction.transactionAmount = loanTransaction.transactionAmount * -1;
+				
+				loanTransaction.transactionDescription = loanTransaction.transactionDescription+' (JV) '
+			}
 			//loanTransaction.isLoan = true
 			loanTransaction.isLoanTransaction = true
 			loanTransaction.repaymentMode  = loanRepaymentItem.repaymentMode
