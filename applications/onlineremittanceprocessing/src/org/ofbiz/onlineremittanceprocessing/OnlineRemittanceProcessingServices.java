@@ -868,9 +868,11 @@ public class OnlineRemittanceProcessingServices {
 				//.getMemberGivenEmployeeNumber(payrollNo);
 
 		String employeeNames = getNames(member);
-
+		Long expectedPaymentReceivedId = delegator.getNextSeqIdLong("ExpectedPaymentReceived");
 		expectedPaymentReceived = delegator.makeValue(
-				"ExpectedPaymentReceived", UtilMisc.toMap("isActive", "Y",
+				"ExpectedPaymentReceived", UtilMisc.toMap(
+						"expectedPaymentReceivedId", expectedPaymentReceivedId,
+						"isActive", "Y",
 						"branchId", member.getString("branchId"),
 						"remitanceCode", remitanceCode, "stationNumber",
 						stationNumber, "stationName", stationName,
