@@ -35,7 +35,7 @@
     </form>
     
     <!-- guantorsListingExcelForm -->
-        <form name="guantorsListingExcelForm" type="single" target="guantorsListingExcel" title="" header-row-style="header-row"
+        <form name="guantorsListingExcelForm" type="single" target="guantorsListingExcel.csv" title="" header-row-style="header-row"
         default-table-style="basic-table"  target-window="_BLANK">
 
         <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
@@ -56,5 +56,33 @@
             <submit button-type="button"/>
         </field>
     </form>
+    
+       <form name="guantorsListingExcelData" list-name="myGuarantorList" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false">
+         <field name="loanApplicationId">
+         	<hidden value="${loanApplicationId}"/>
+         </field> 
+        <field name="loanNo" title="Loan No"><display/></field>
+        <field name="partyId" title="Loanee Name">
+        	<display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${middleName} ${lastName}"></display-entity>
+        </field>
+         <field name="name" title="Loanee Status"><display/></field>
+         <field name="stationId" title="Loanee Station"> <display-entity entity-name="Station" description="${name}"></display-entity> </field>
+       
+         <field name="loanProductId" title="Loan Product"> <display-entity entity-name="LoanProduct" description="${name}"></display-entity> </field>
+         <field name="loanStatusId" title="Loan Status"> <display-entity entity-name="LoanStatus" description="${name}"></display-entity> </field>
+       
+       
+        <field name="guarantorMemberNumber" title="Guarantor Member Number"><display/></field>
+        <field name="guarantorId" title="Guarantor Name">
+        	<display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${middleName} ${lastName}"></display-entity>
+        </field>
+        <field name="disbursementDate" title="Disbursement Date"><display/></field>
+        <field name="loanAmt" title="Loan Amount"><display/></field>
+        <field name="loanBalance" title="Loan Balance"><display also-hidden="false" default-value="${bsh:org.ofbiz.withdrawalprocessing.WithdrawalProcessingServices.getLoanBalance(loanApplicationId);}" /></field>
+    </form>
+    
+    
 		
 </forms>
