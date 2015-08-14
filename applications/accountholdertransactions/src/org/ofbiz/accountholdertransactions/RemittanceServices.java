@@ -503,9 +503,9 @@ public class RemittanceServices {
 						.getBigDecimal("minSavingsAmt");
 			}
 		}
-
+		Long expectedPaymentSentId = delegator.getNextSeqIdLong("ExpectedPaymentSent");
 		expectedPaymentSent = delegator.makeValue("ExpectedPaymentSent",
-				UtilMisc.toMap("isActive", "Y", "branchId",
+				UtilMisc.toMap("expectedPaymentSentId", expectedPaymentSentId, "isActive", "Y", "branchId",
 						member.getString("branchId"), "remitanceCode",
 						remitanceCode, "stationNumber", stationNumber,
 						"stationName", stationName,
@@ -3941,8 +3941,13 @@ public class RemittanceServices {
 			remitanceDescription = remitanceDescription + " PRINCIPAL";
 			expectationType = "PRINCIPAL";
 			BigDecimal bdPrincipalDue = LoanRepayments.getTotalPrincipaByLoanDue(loanApplicationId.toString());
+			if (bdPrincipalDue.compareTo(BigDecimal.ZERO) < 1)
+			{
+				bdPrincipalDue = BigDecimal.ZERO;
+			}
+			Long expectedPaymentSentId = delegator.getNextSeqIdLong("ExpectedPaymentSent");
 			expectedPaymentSent = delegator.makeValue("ExpectedPaymentSent",
-					UtilMisc.toMap("isActive", "Y", "branchId",
+					UtilMisc.toMap("expectedPaymentSentId", expectedPaymentSentId, "isActive", "Y", "branchId",
 							member.getString("branchId"), "remitanceCode",
 							remitanceCode, "stationNumber", stationNumber,
 							"stationName", stationName,
@@ -3969,11 +3974,16 @@ public class RemittanceServices {
 			
 			//Add Interest
 			remitanceCode = loanProduct.getString("code") + "B";
-			remitanceDescription = remitanceDescription + " INTEREST";
+			remitanceDescription = loanProduct.getString("name") + " INTEREST";
 			expectationType = "INTEREST";
 			BigDecimal bdInterestDue = LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString());
+			if (bdInterestDue.compareTo(BigDecimal.ZERO) < 1)
+			{
+				bdInterestDue = BigDecimal.ZERO;
+			}
+			expectedPaymentSentId = delegator.getNextSeqIdLong("ExpectedPaymentSent");
 			expectedPaymentSent = delegator.makeValue("ExpectedPaymentSent",
-					UtilMisc.toMap("isActive", "Y", "branchId",
+					UtilMisc.toMap("expectedPaymentSentId", expectedPaymentSentId, "isActive", "Y", "branchId",
 							member.getString("branchId"), "remitanceCode",
 							remitanceCode, "stationNumber", stationNumber,
 							"stationName", stationName,
@@ -4000,12 +4010,17 @@ public class RemittanceServices {
 			
 			//Add Insurance
 			remitanceCode = loanProduct.getString("code") + "C";
-			remitanceDescription = remitanceDescription + " INSURANCE";
+			remitanceDescription = loanProduct.getString("name") + " INSURANCE";
 			expectationType = "INSURANCE";
 			BigDecimal bdInsuranceDue = LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString());
 			
+			if (bdInsuranceDue.compareTo(BigDecimal.ZERO) < 1)
+			{
+				bdInsuranceDue = BigDecimal.ZERO;
+			}
+			expectedPaymentSentId = delegator.getNextSeqIdLong("ExpectedPaymentSent");
 			expectedPaymentSent = delegator.makeValue("ExpectedPaymentSent",
-					UtilMisc.toMap("isActive", "Y", "branchId",
+					UtilMisc.toMap("expectedPaymentSentId", expectedPaymentSentId, "isActive", "Y", "branchId",
 							member.getString("branchId"), "remitanceCode",
 							remitanceCode, "stationNumber", stationNumber,
 							"stationName", stationName,
@@ -4058,8 +4073,10 @@ public class RemittanceServices {
 
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		GenericValue expectedPaymentSent = null;
+		Long expectedPaymentSentId = delegator.getNextSeqIdLong("ExpectedPaymentSent");
+		
 		expectedPaymentSent = delegator.makeValue("ExpectedPaymentSent",
-				UtilMisc.toMap("isActive", "Y", "branchId",
+				UtilMisc.toMap("expectedPaymentSentId", expectedPaymentSentId, "isActive", "Y", "branchId",
 						member.getString("branchId"), "remitanceCode",
 						remitanceCodeBal, "stationNumber", stationNumber,
 						"stationName", stationName,
