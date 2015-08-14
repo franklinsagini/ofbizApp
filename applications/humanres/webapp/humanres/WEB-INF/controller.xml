@@ -1401,6 +1401,22 @@
 		<response name="error" type="view" value="workFlowResponsibleStaff" />
 	</request-map>
 
+<!--     <request-map uri="byPassLeaveApprover">
+    <security https="true" auth="true"/>
+    <event type="service" invoke="byPassLeaveApprover"/>
+    <response name="success" type="request-redirect-noparam" value="leaveRecord"></response>
+    <response name="error" type="request-redirect-noparam" value="leaveRecord"></response>
+    </request-map>  --> 
+
+
+  <request-map uri="byPassLeaveApprover">
+		<security https="true" auth="true" />
+		<event type="java" path="org.ofbiz.humanres.LeaveServices"
+			invoke="byPassLeaveApprover"/>
+		<response name="success" type="view" value="leaveRecord" save-home-view="true"></response>
+		<response name="error" type="view" value="leaveRecord"></response>
+	</request-map>
+
 	<!--======================= LEAVE WORKFLOW STAFF MAPPING SETUP =================================== -->
 
 	<request-map uri="createWorkflowStaffMapping">
@@ -4642,7 +4658,7 @@
 	<view-map name="separationTypes" type="screen"
 		page="component://humanres/widget/EmployeeScreens.xml#SeparationTypes" />
 	<view-map name="separationApplication" type="screen"
-		page="component://humanres/widget/EmployeeScreens.xml#SeparationApplication" />
+		page="component://humanres/widget/EmployeeScreens.xml#separationApplication" />
 
 
 	<!-- ==================PayRoll History View Map===================== -->

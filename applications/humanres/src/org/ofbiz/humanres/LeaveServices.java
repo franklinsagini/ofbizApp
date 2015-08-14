@@ -1597,4 +1597,272 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 	*/
 	
 	
+	
+	/* ================================= BY PASS  LEAVE ===========================================================*/
+	
+	public static String byPassLeaveApprover(HttpServletRequest request, HttpServletResponse response) {
+		
+		Map<String, Object> result = FastMap.newInstance();
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+       GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+		String user = userLogin.getString("partyId");
+		String leaveid = (String) request.getParameter("leaveId");
+		
+		
+	
+		List<GenericValue> toBeStored = FastList.newInstance();
+		
+		GenericValue leavesELI = null; 
+		GenericValue workflowELI = null; 
+		GenericValue forwardedToName = null;
+		GenericValue workflowResponsibleStaff = null; 
+		GenericValue workflowNextResponsibleStaff = null; 
+		List <GenericValue> getWorkflowELI = null; 
+		List <GenericValue> getWorkflowNextResponsibleStaffELI = null;
+		List <GenericValue> getWorkflowResponsibleStaffELI = null;
+		String party = null;
+		String partyWorkFlow = null;
+		String isThemLast = null;
+		String nextResponsibleStaff = null;
+		String email_To_StaffHandedOver = null;
+		String leaveStart = null;
+		String leaveStop = null;
+		String leaveDuration = null;
+		GenericValue leaveLogs = null; 
+		GenericValue ForwaedTo = null; 
+		GenericValue LeaveTypeELI = null; 
+        String goToNextResponsibleStaff=null;
+		try {
+			
+			leavesELI = delegator.findOne("EmplLeave",
+							UtilMisc.toMap("leaveId", leaveid), false);
+					
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		if (leavesELI != null) {
+			party = leavesELI.getString("partyId");
+			email_To_StaffHandedOver = leavesELI.getString("handedOverTo");
+			leaveDuration = leavesELI.getString("leaveDuration");
+			leaveStart = leavesELI.getString("fromDate");
+			leaveStop = leavesELI.getString("thruDate");
+			goToNextResponsibleStaff=leavesELI.getString("responsibleEmployee");
+		} else {
+
+		}
+		log.info("##################################"+ goToNextResponsibleStaff);
+		
+		try {
+			getWorkflowELI = delegator.findList("LeaveWorkFlowStaffMapping",	EntityCondition.makeCondition("partyId", party), null,null, null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+			
+		}
+		
+		if (getWorkflowELI.size() > 0) {
+			workflowELI = getWorkflowELI.get(0);
+			partyWorkFlow = workflowELI.getString("leaveWorkFlowId");
+		}
+		
+		EntityConditionList<EntityExpr> workflowConditions = EntityCondition.makeCondition(UtilMisc.toList(
+					EntityCondition.makeCondition("leaveWorkFlowId", EntityOperator.EQUALS, partyWorkFlow),
+					EntityCondition.makeCondition("responsibleEmployee", EntityOperator.EQUALS, goToNextResponsibleStaff)),
+						EntityOperator.AND);
+		
+		try {
+			getWorkflowResponsibleStaffELI = delegator.findList("LeaveWorkFlowResponsibleStaff", workflowConditions, null,null, null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+			
+		}
+		
+		if (getWorkflowResponsibleStaffELI.size() > 0) {
+			workflowResponsibleStaff = getWorkflowResponsibleStaffELI.get(0);
+			isThemLast = workflowResponsibleStaff.getString("isLast");
+		}
+		
+		if (isThemLast.equalsIgnoreCase("YES")) {
+			
+			leavesELI.set("approvalStatus", "Approved");
+			leavesELI.set("applicationStatus", "Approved");
+			
+			
+			GenericValue emailRecord_handover = null;
+			GenericValue emailRecord_applicant = null; 
+			GenericValue staff = null;
+
+			try {
+				staff = delegator.findOne("Person",
+						UtilMisc.toMap("partyId", party), false);
+			} catch (GenericEntityException e) {
+				Debug.logWarning(e.getMessage(), null);
+			}
+			
+			String payroll = staff.getString("employeeNumber");
+			String fname = staff.getString("firstName");
+			String sname = staff.getString("lastName");
+			
+			try {
+				
+				ForwaedTo = delegator.findOne("Person",	UtilMisc.toMap("partyId", goToNextResponsibleStaff), false);
+						
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+			
+               try {
+				
+				LeaveTypeELI = delegator.findOne("EmplLeaveType",	UtilMisc.toMap("leaveTypeId", leavesELI.getString("leaveTypeId")), false);
+						
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+			
+			String fname2 = null;
+			String sname2 = null;
+			
+				fname2 = ForwaedTo.getString("firstName");
+				sname2 = ForwaedTo.getString("lastName");
+				String fullName2 = " "+fname2+" "+sname2;
+				
+			emailRecord_handover = delegator.makeValue("StaffScheduledMail", "msgId", delegator.getNextSeqId("StaffScheduledMail"), 
+					"partyId", email_To_StaffHandedOver,
+		            "subject", "RESPONSIBILITIES HANDOVER", 
+		            "body", "Leave application of ["+fname+" "+sname+"] Payroll:-["+payroll+"] has been Approved and they are handing over their resiponsibilities to you. Communicate to them for more information",
+		            "sendStatus", "NOTSEND");
+			
+			emailRecord_applicant = delegator.makeValue("StaffScheduledMail", "msgId", delegator.getNextSeqId("StaffScheduledMail"), 
+					"partyId", party,
+		            "subject", "LEAVE FORWARDED", 
+		            "body", "Your leave application has been been APPROVED. Duration of leave is :"+leaveDuration+" days, It starts on :"+leaveStart+" and end on :"+leaveStop,
+		            "sendStatus", "NOTSEND");
+			
+			leaveLogs = delegator.makeValue("staffLeaveLogs", "logId", delegator.getNextSeqId("staffLeaveLogs"), 
+					"partyId", party,
+		            "leaveType", LeaveTypeELI.getString("description"), 
+		            "action", "Approved By "+fullName2,
+		            "actionBy", user);
+			
+			toBeStored.add(leavesELI);
+			toBeStored.add(leaveLogs);
+			toBeStored.add(emailRecord_handover);
+			toBeStored.add(emailRecord_applicant);
+		} else if(isThemLast.equalsIgnoreCase("NO")){
+			
+			EntityConditionList<EntityExpr> workflowNextStaffConditions = EntityCondition.makeCondition(UtilMisc.toList(
+					EntityCondition.makeCondition("leaveWorkFlowId", EntityOperator.EQUALS, partyWorkFlow),
+					EntityCondition.makeCondition("comeAfter", EntityOperator.EQUALS, goToNextResponsibleStaff)),
+						EntityOperator.AND);
+		
+		try {
+			getWorkflowNextResponsibleStaffELI = delegator.findList("LeaveWorkFlowResponsibleStaff", workflowNextStaffConditions, null,null, null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+			
+		}
+		
+		if (getWorkflowNextResponsibleStaffELI.size() > 0) {
+			workflowNextResponsibleStaff = getWorkflowNextResponsibleStaffELI.get(0);
+			nextResponsibleStaff = workflowNextResponsibleStaff.getString("responsibleEmployee");
+		}
+		
+        try {
+			
+			forwardedToName = delegator.findOne("Person",
+							UtilMisc.toMap("partyId", nextResponsibleStaff), false);
+					
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		String fname = null;
+		String sname = null;
+		String payrolll = null;
+		
+			fname = forwardedToName.getString("firstName");
+			sname = forwardedToName.getString("lastName");
+			payrolll = forwardedToName.getString("employeeNumber");
+			String fullName = " "+fname+" "+sname;
+			
+		leavesELI.set("responsibleEmployee", nextResponsibleStaff);
+		leavesELI.set("applicationStatus", "Application Forwarded to"+fullName);
+		leavesELI.set("approvalStatus", "Application Forwarded to"+fullName);
+		
+		GenericValue Applicantstaff = null;
+
+		try {
+			Applicantstaff = delegator.findOne("Person",
+					UtilMisc.toMap("partyId", party), false);
+		} catch (GenericEntityException e) {
+			Debug.logWarning(e.getMessage(), null);
+		}
+		
+		String staffpayroll = Applicantstaff.getString("employeeNumber");
+		String staffirstname = Applicantstaff.getString("firstName");
+		String staflastsname = Applicantstaff.getString("lastName");
+		String staffullName = " "+staffirstname+" "+staflastsname;
+		
+		GenericValue ForwaedTo2 = null;
+		GenericValue LeaveTypeELI2 = null;
+		
+		try {
+			
+			ForwaedTo2 = delegator.findOne("Person",	UtilMisc.toMap("partyId", nextResponsibleStaff), false);
+					
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+           try {
+			
+			LeaveTypeELI2 = delegator.findOne("EmplLeaveType",	UtilMisc.toMap("leaveTypeId", leavesELI.getString("leaveTypeId")), false);
+					
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		String fname22 = null;
+		String sname22 = null;
+		
+			fname22 = ForwaedTo2.getString("firstName");
+			sname22 = ForwaedTo2.getString("lastName");
+			String fullName22 = " "+fname22+" "+sname22;
+			
+
+		GenericValue emailRecord_approver = null; GenericValue emailRecord_applicant = null; 
+		emailRecord_approver = delegator.makeValue("StaffScheduledMail", "msgId", delegator.getNextSeqId("StaffScheduledMail"), 
+				"partyId", nextResponsibleStaff,
+	            "subject", "LEAVE APPROVAL", 
+	            "body", "Leave application of ["+staffullName+"] Payroll:-["+staffpayroll+"]  has been forwarded to you and it requires your approval. Please log onto the System for details",
+	            "sendStatus", "NOTSEND");
+		
+		emailRecord_applicant = delegator.makeValue("StaffScheduledMail", "msgId", delegator.getNextSeqId("StaffScheduledMail"), 
+				"partyId", party,
+	            "subject", "LEAVE FORWARDED", 
+	            "body", "Your leave application has been been forwarded to :"+fullName+" Payroll :"+payrolll+" For approval",
+	            "sendStatus", "NOTSEND");
+		
+		leaveLogs = delegator.makeValue("staffLeaveLogs", "logId", delegator.getNextSeqId("staffLeaveLogs"), 
+				"partyId", party,
+	            "leaveType", LeaveTypeELI2.getString("description"), 
+	            "action", "Forwarded to "+fullName22,
+	            "actionBy", user);
+		
+		toBeStored.add(leavesELI);
+		toBeStored.add(leaveLogs);
+		toBeStored.add(emailRecord_approver);
+		toBeStored.add(emailRecord_applicant);
+
+		}
+
+		try {
+			delegator.storeAll(toBeStored);
+			SendScheduledMail(request, response);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		return leaveid;
+	}
+	
+	
 }
