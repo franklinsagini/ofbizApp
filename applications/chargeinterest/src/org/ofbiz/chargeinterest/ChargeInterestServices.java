@@ -29,9 +29,9 @@ import org.ofbiz.loans.LoanServices;
 //org.ofbiz.chargeinterest.ChargeInterestServices.chargeStationInterest
 public class ChargeInterestServices {
 	public static Logger log = Logger.getLogger(ChargeInterestServices.class);
-	public static String chargeStationInterest(Long stationMonthInterestManagementId, Map<String, String> userLogin){
+	public static synchronized String chargeStationInterest(Long stationMonthInterestManagementId, Map<String, String> userLogin){
 		
-		GenericValue stationMonthInterestManagement = LoanUtilities.getEntityValue("StationMonthInterestManagement", "stationMonthInterestManagementId", stationMonthInterestManagementId);
+GenericValue stationMonthInterestManagement = LoanUtilities.getEntityValue("StationMonthInterestManagement", "stationMonthInterestManagementId", stationMonthInterestManagementId);
 		
 		Long month = stationMonthInterestManagement.getLong("month");
 		Long year = stationMonthInterestManagement.getLong("year");
@@ -41,9 +41,14 @@ public class ChargeInterestServices {
 		
 		//Get Station Code
 		GenericValue station = LoanUtilities.getEntityValue("Station", "stationId", stationId);
-		String employerCode = station.getString("stationId");
+		String employerCode = station.getString("employerCode");
+		//Check if station has already been charged.
+		if (alreadyCharged(stationMonthInterestManagementId))
+			return station.getString("name")+" has already been charged for the "+monthYear;
 		
-		List<String> stationIdList = LoanUtilities.getStationIds(employerCode);
+		
+		
+		List<String> stationIdList = LoanUtilities.getStationIds(employerCode.trim());
 		//DisbursedLoansForActiveMembers
 		
 		ExpectTotal expectTotal = null;
@@ -91,6 +96,31 @@ public class ChargeInterestServices {
 	}
 	
 	
+	private static boolean alreadyCharged(Long stationMonthInterestManagementId) {
+		EntityConditionList<EntityExpr> expectationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"stationMonthInterestManagementId", EntityOperator.EQUALS,
+						stationMonthInterestManagementId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> expectationELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			expectationELI = delegator.findList("LoanExpectation",
+					expectationConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if ((expectationELI != null) && (expectationELI.size() > 0))
+			return true;
+		
+		return false;
+	}
+
+
 	private static void updateChargesWithTransactionId(
 			Long stationMonthInterestManagementId, String acctgTransId) {
 		EntityConditionList<EntityExpr> expectationConditions = EntityCondition
@@ -155,6 +185,9 @@ public class ChargeInterestServices {
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
+		
+		GenericValue currStation = LoanUtilities.getEntityValue("Station", "stationId", currentStationId);
+		log.info("..................... Station ID "+currentStationId+" station name "+currStation.getString("name")+" size "+loanApplicationELI.size());
 
 		ExpectItem expectItem = null;
 		ExpectTotal expectTotal = null;
