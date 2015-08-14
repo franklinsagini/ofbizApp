@@ -165,14 +165,17 @@
             	<!-- order-by field-name="-loanExpectationId"></order-by -->
 
 
-             <service service-name="performFind" result-map="result" result-map-list="listIt">
+             <!-- service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="loanExpectationCtx"/>
                 <field-map field-name="entityName" value="LoanExpectation"/>
                 <field-map field-name="orderBy" from-field="parameters.sortField"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
 
-            </service>
+            </service -->
+            <entity-condition entity-name="LoanExpectation">
+            	<condition-expr field-name="stationMonthInterestManagementId" operator="equals" from-field="stationMonthInterestManagementId"/>
+            </entity-condition>
 
 
         </actions>
