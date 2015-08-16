@@ -3172,9 +3172,15 @@ public class LoanServices {
 		result.put("otherLoansProcessing",
 				otherLoansInProcessing(loanApplicationId));
 		
+		UnpaidLoan unpaidLoan = otherLoanWithoutRepayment(loanApplicationId);
+		log.info(" LOANPPPPPPPPPPPPPPPPPPPAYMENT "+unpaidLoan.getUnpaid());
+		log.info(" LOANPPPPPPPPPPPPPPPPPPPAYMENT NOSSSSS "+unpaidLoan.getLoanNos());
 		
 		result.put("otherLoanNoRepayment",
-				otherLoanWithoutRepayment(loanApplicationId));
+				unpaidLoan.getUnpaid());
+		result.put("otherLoanNoRepaymentList",
+				unpaidLoan.getLoanNos());
+		
 		List<LoanUnderpay> listLoanUnderpays = otherLoanUnderpayment(loanApplicationId);
 		if (listLoanUnderpays.size() > 0){
 			result.put("otherLoanUnderpayment",
@@ -3280,6 +3286,7 @@ public class LoanServices {
 				loanUnderpay = new LoanUnderpay();
 				loanUnderpay.setLoanApplicationId(genericValue.getLong("loanApplicationId"));
 				loanUnderpay.setUnderPaid(true);
+				loanUnderpay.setLoanNo(genericValue.getString("loanNo"));
 				
 				listUnderpaidLoans.add(loanUnderpay);
 			}
@@ -3356,7 +3363,7 @@ public class LoanServices {
 	}
 
 	//True means repayment not started
-	private static boolean otherLoanWithoutRepayment(Long loanApplicationId) {
+	private static UnpaidLoan otherLoanWithoutRepayment(Long loanApplicationId) {
 		//Get if there is a disbursed loan that has not started repayment
 		List<GenericValue> loanApplicationELI = null;
 		GenericValue loanApplication = getLoanApplication(loanApplicationId);
@@ -3379,15 +3386,26 @@ public class LoanServices {
 		}
 		
 		Boolean repaymentNotStarted = false;
+		
+		String unpaidLoanNos = "";
+		UnpaidLoan unpaidLoans = new UnpaidLoan();
+		unpaidLoans.setUnpaid(false);
+		unpaidLoans.setLoanNos("");
 		for (GenericValue genericValue : loanApplicationELI) {
 			
 			if (repaymentNotStarted(genericValue.getLong("loanApplicationId"))){
 				repaymentNotStarted = true;
+				unpaidLoanNos = unpaidLoanNos+genericValue.getString("loanNo")+" , ";
+				unpaidLoans.setUnpaid(repaymentNotStarted);
+				log.info(genericValue.getString("loanNo")+" LLLLLLLLLLLL  loan is unpaid !!!");
 			}
 		}
 		
+		//unpaidLoans.setUnpaid(repaymentNotStarted);
+		unpaidLoans.setLoanNos(unpaidLoanNos);
 		
-		return repaymentNotStarted;
+		
+		return unpaidLoans;
 	}
 
 	private static boolean repaymentNotStarted(Long loanApplicationId) {
