@@ -229,6 +229,7 @@
     	var reqUrl = '/loans/control/otherExistingLoans';
     	var otherLoansProcessing = false;
     	var otherLoanNoRepayment = false;
+    	var otherLoanNoRepaymentList = '';
     	var otherLoanUnderpayment = true;
     	var underPaidLoans;
     	jQuery.ajax({
@@ -243,6 +244,7 @@
 			     			otherLoanUnderpayment = data.otherLoanUnderpayment;
 			     			anotherRunningLoanOfSameType = data.anotherRunningLoanOfSameType;
 			     			underPaidLoans = data.underPaidLoans;
+			     			otherLoanNoRepaymentList = data.otherLoanNoRepaymentList;
 			               },
 			      error : function(errorData){
 			
@@ -258,13 +260,13 @@
 		}
 		
 		if (otherLoanNoRepayment){
-			alert(' You must have started repaying the previous loan to try and apply for another loan !');
+			alert(' You must have started repaying the previous loan to try and apply for another loan ! ('+otherLoanNoRepaymentList+')');
 			return false;
 		}
 		
 		if (otherLoanUnderpayment){
-			alert(' Previous loan has been underpaid, make sure you pay atleast the full expected amount !');
-			// The underpaid loans are '+underPaidLoans
+			alert(' Previous loan has been underpaid, make sure you pay atleast the full expected amount ! ('+underPaidLoans+')');
+			// The underpaid loans are underPaidLoans
 			return false;
 		}
 		
