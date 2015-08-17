@@ -446,4 +446,33 @@ under the License.
         
     </simple-method> 
     
+    <!-- HeadOfficeMonthYear -->
+        <simple-method method-name="createHeadOfficeMonthYear" short-description="Create HeadOfficeMonthYear">
+        <make-value entity-name="HeadOfficeMonthYear" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set field="entityName" value="HeadOfficeMonthYear"></set>
+        <set field="newEntity.headOfficeMonthYearId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+        
+        
+        <!-- Create Push (HeadOfficeMonthYearItem) and Pull (PullMonthYearItem) year Items -->
+        <set field="headOfficeMonthYearId" value="${newEntity.headOfficeMonthYearId}" type="Long"/>
+        <!-- set field="status" value="${bsh:org.ofbiz.onlineremittanceprocessing.OnlineRemittanceProcessingServices.createPushAndPullStationItems(headOfficeMonthYearId, userLogin);}"></set -->
+    </simple-method>
+    
+     <simple-method method-name="updateHeadOfficeMonthYear" short-description="Update HeadOfficeMonthYear">
+        <entity-one entity-name="HeadOfficeMonthYear" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteHeadOfficeMonthYear" short-description="Delete HeadOfficeMonthYear">
+        <entity-one entity-name="HeadOfficeMonthYear" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
 </simple-methods>

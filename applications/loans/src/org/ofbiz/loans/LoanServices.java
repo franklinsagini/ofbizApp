@@ -3307,6 +3307,7 @@ public class LoanServices {
 		
 		BigDecimal loanDeductionAmt = LoansProcessingServices.getTotalLoanRepayment(monthlyRepaymentAmt, firstMonthInsuranceAmt);
 		
+		bdTotalRepaidAmt = bdTotalRepaidAmt.add(LoanRepayments.getTotalInterestPaid(loanApplicationId.toString()).add(LoanRepayments.getTotalInsurancePaid(loanApplicationId.toString())));
 		
 	//	BigDecimal bdFirstRepaymentExpected = 
 		log.info("BBBBBBBBBB bdTotalRepaidAmt "+bdTotalRepaidAmt);
