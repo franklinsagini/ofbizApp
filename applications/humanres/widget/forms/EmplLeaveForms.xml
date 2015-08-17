@@ -353,6 +353,7 @@
         
         <entity-condition entity-name="EmplLeave">
         			 <condition-expr field-name="partyId" operator="equals" from-field="userLogin.partyId"/> 
+        			 <order-by field-name="leaveId DESC"/>
         	</entity-condition> 
         
             <service result-map-list="listIt" result-map="result" service-name="performFind">
@@ -413,6 +414,7 @@
 				key-field-name="partyId">
 			</display-entity>
 		</field>
+		<field name="createdStamp" title="Time Created"><display></display></field>
 		
 		<!-- <field name="forwardLeave" title="${uiLabelMap.forward}"
 			widget-style="buttontext" use-when="${responsibleEmployee=='NEW'}">
@@ -1193,7 +1195,7 @@
 			<display />
 		</field>
 		
-		<field name="ByPassApprover" title="" widget-style="smallSubmit" use-when="${(approvalStatus != 'Approved') &amp;&amp; (applicationStatus !='NEW')&amp;&amp; (approvalStatus != 'Rejected')&amp;&amp; (responsibleEmployee != ${userLogin.partyId})}">
+		<field name="ByPassApprover" title="" widget-style="smallSubmit" use-when="${(approvalStatus != 'Approved')&amp;&amp; (approvalStatus != 'Rejected')&amp;&amp; (responsibleEmployee != ${userLogin.partyId})}">
 			
 			<hyperlink target="byPassLeaveApprover" description="By Pass" also-hidden="false" request-confirmation="true" confirmation-message="Are you sure of By Passing this Staff?">
 			    <parameter param-name="leaveId" />
@@ -1220,7 +1222,7 @@
 				key-field-name="partyId">
 			</display-entity>
 		</field>
-		
+		<field name="createdStamp" title="Time Created"><display></display></field>
 		<field name="description">
 			<hidden />
 		</field>
