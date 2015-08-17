@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
+import org.ofbiz.accountholdertransactions.LoanRepayments;
 import org.ofbiz.accountholdertransactions.LoanUtilities;
 import org.ofbiz.accountholdertransactions.RemittanceServices;
 import org.ofbiz.base.util.UtilMisc;
@@ -1519,5 +1522,617 @@ public class OnlineRemittanceProcessingServices {
 		}
 		return "success";
 	}
+	
+	
+	//generateShareCapitalBackofficeLoans
+	public static String generateShareCapitalBackofficeLoans(Map<String, String> userLogin, Long headOfficeMonthYearId){
+		log.info("PPPPPPPPPushing station !!");
+		log.info("HHHHHHHHH Head Office Month Year ID !!"+headOfficeMonthYearId);
+		
+		// Get pushMonthYearStation
+		
+		GenericValue headOfficeMonthYear = LoanUtilities.getEntityValue("HeadOfficeMonthYear", "headOfficeMonthYearId", headOfficeMonthYearId);
+		
+		// Get station from the PushMonthYear and see if it exists
+		// Get station from the PullMonthYearItem and see if it exists
+		GenericValue station = LoanUtilities.getStation(headOfficeMonthYear
+				.getString("stationId"));
+		// String employerCode = station.getString("employerCode");
+	//	String onlinecode = station.getString("Onlinecode");
+	//	onlinecode = onlinecode.trim();
 
+		// Concatenate Month and Year to get month to use in getting the data
+		//GenericValue pullMonthYear = getPullMonthYear(pushMonthYearItem
+		//		.getLong("pushMonthYearId"));
+
+		String month = headOfficeMonthYear.getLong("month").toString()
+				+ headOfficeMonthYear.getLong("year").toString();
+		month = month.trim();
+		
+		List<String> stationIds = LoanUtilities.getStationIds(station.getString("employerCode"));
+		
+		
+		for (String currentStationId : stationIds) {
+			processStationMembersForHeadOffice(currentStationId, headOfficeMonthYearId);
+		}
+		
+		return "success";
+	}
+	
+	//generateAccumulatedDepositsAndShareCapital
+	public static String generateAccumulatedDepositsAndShareCapital(Map<String, String> userLogin, Long headOfficeMonthYearId){
+		log.info(" Generating Accumulated Deposits and Share Capital !!");
+		
+		// Get pushMonthYearStation
+		
+		GenericValue headOfficeMonthYear = LoanUtilities.getEntityValue("HeadOfficeMonthYear", "headOfficeMonthYearId", headOfficeMonthYearId);
+		
+		// Get station from the PushMonthYear and see if it exists
+		// Get station from the PullMonthYearItem and see if it exists
+		GenericValue station = LoanUtilities.getStation(headOfficeMonthYear
+				.getString("stationId"));
+		// String employerCode = station.getString("employerCode");
+//		String onlinecode = station.getString("Onlinecode");
+//		onlinecode = onlinecode.trim();
+
+		// Concatenate Month and Year to get month to use in getting the data
+		//GenericValue pullMonthYear = getPullMonthYear(pushMonthYearItem
+		//		.getLong("pushMonthYearId"));
+
+		String month = headOfficeMonthYear.getLong("month").toString()
+				+ headOfficeMonthYear.getLong("year").toString();
+		month = month.trim();
+
+		
+		return "success";
+	}	
+	
+	//generateFosaJuniorHoliday
+	public static String generateFosaJuniorHoliday(Map<String, String> userLogin, Long headOfficeMonthYearId){
+		log.info(" Generating FOSA, Junior and Holiday !!");
+		
+		// Get pushMonthYearStation
+		
+		GenericValue headOfficeMonthYear = LoanUtilities.getEntityValue("HeadOfficeMonthYear", "headOfficeMonthYearId", headOfficeMonthYearId);
+		
+		// Get station from the PushMonthYear and see if it exists
+		// Get station from the PullMonthYearItem and see if it exists
+		GenericValue station = LoanUtilities.getStation(headOfficeMonthYear
+				.getString("stationId"));
+		// String employerCode = station.getString("employerCode");
+//		String onlinecode = station.getString("Onlinecode");
+//		onlinecode = onlinecode.trim();
+
+		// Concatenate Month and Year to get month to use in getting the data
+		//GenericValue pullMonthYear = getPullMonthYear(pushMonthYearItem
+		//		.getLong("pushMonthYearId"));
+
+		String month = headOfficeMonthYear.getLong("month").toString()
+				+ headOfficeMonthYear.getLong("year").toString();
+		month = month.trim();
+
+		
+		return "success";
+	}	
+	
+	//generateFosaLoans
+	public static String generateFosaLoans(Map<String, String> userLogin, Long headOfficeMonthYearId){
+		log.info(" Generating FOSA Loans !!");
+		
+		// Get pushMonthYearStation
+		
+		GenericValue headOfficeMonthYear = LoanUtilities.getEntityValue("HeadOfficeMonthYear", "headOfficeMonthYearId", headOfficeMonthYearId);
+		
+		// Get station from the PushMonthYear and see if it exists
+		// Get station from the PullMonthYearItem and see if it exists
+		GenericValue station = LoanUtilities.getStation(headOfficeMonthYear
+				.getString("stationId"));
+		// String employerCode = station.getString("employerCode");
+//		String onlinecode = station.getString("Onlinecode");
+//		onlinecode = onlinecode.trim();
+
+		// Concatenate Month and Year to get month to use in getting the data
+		//GenericValue pullMonthYear = getPullMonthYear(pushMonthYearItem
+		//		.getLong("pushMonthYearId"));
+
+		String month = headOfficeMonthYear.getLong("month").toString()
+				+ headOfficeMonthYear.getLong("year").toString();
+		month = month.trim();
+
+		
+		return "success";
+	}
+	
+	
+	/***
+	 * Process Head Office Remittance
+	 * **/
+	private static void processStationMembersForHeadOffice(String currentStationId,
+			Long headOfficeMonthYearId) {
+		
+		//Get all the members belonging to this station
+		EntityConditionList<EntityExpr> memberConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"stationId", EntityOperator.EQUALS,
+						Long.valueOf(currentStationId.trim())),
+						
+					EntityCondition.makeCondition("memberStatusId", EntityOperator.EQUALS , LoanUtilities.getMemberStatusId("ACTIVE"))	
+
+				), EntityOperator.AND);
+		
+		
+		List<GenericValue> memberELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			memberELI = delegator.findList(
+					"Member", memberConditions, null,
+					null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		log.info(" The Active Members Count is "+memberELI.size());
+		for (GenericValue member : memberELI) {
+			addMemberExpectedAccountContributionsHeadOffice(member, headOfficeMonthYearId);
+		}
+		
+		
+		//Add Loan Applications
+		for (GenericValue member : memberELI) {
+			//Get Disbursed Loans for this member
+			List<Long> loanApplications = LoansProcessingServices.getDisbursedLoanApplicationList(member.getLong("partyId"));
+			
+			for (Long loanApplicationId : loanApplications) {
+				addLoanExpectationHeadOffice(loanApplicationId, headOfficeMonthYearId);
+			}
+		}
+		
+		
+	}
+	
+	
+	public static void addMemberExpectedAccountContributionsHeadOffice(
+			GenericValue member, Long headOfficeMonthYearId) {
+		// Get from MemberAccount - accounts that are contributing and belong to
+		// this member
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> memberAccountELI = new ArrayList<GenericValue>();
+
+		List<String> orderByList = new LinkedList<String>();
+		orderByList.add("accountProductId");
+		// String accountProductId =
+		// getShareDepositAccountId(MEMBER_DEPOSIT_CODE);
+		// accountProductId = accountProductId.replaceAll(",", "");
+		// Long accountProductIdLong = Long.valueOf(accountProductId);
+		// And accountProductId not equal to memberDeposit, not equal to share
+		// capital and not equal to
+		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"contributing", EntityOperator.EQUALS, "YES"),
+				//
+				// EntityCondition.makeCondition(
+				// "accountProductId", EntityOperator.NOT_EQUAL,
+				// accountProductIdLong),
+
+						EntityCondition.makeCondition("partyId",
+								EntityOperator.EQUALS,
+								member.getLong("partyId"))
+
+				), EntityOperator.AND);
+
+		try {
+			memberAccountELI = delegator.findList("MemberAccount",
+					memberAccountConditions, null, orderByList, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		Long previousAccountProductId = null;
+		Long currentAccountProduct = null;
+		int sequence = 1;
+		for (GenericValue memberAccount : memberAccountELI) {
+			// Add an expectation based on this member
+			currentAccountProduct = memberAccount.getLong("accountProductId");
+			if (currentAccountProduct.equals(previousAccountProductId)) {
+				sequence = sequence + 1;
+			} else {
+				sequence = 1;
+			}
+			addExpectedAccountContributionHeadOffice(memberAccount, member, sequence, headOfficeMonthYearId);
+
+			previousAccountProductId = currentAccountProduct;
+		}
+	}
+	
+	private static void addExpectedAccountContributionHeadOffice(
+			GenericValue memberAccount, GenericValue member, int sequence, Long headOfficeMonthYearId) {
+		GenericValue station = findStation(member.getString("stationId"));
+		GenericValue headOfficeMonthYear = LoanUtilities.getEntityValue("HeadOfficeMonthYear", "headOfficeMonthYearId", headOfficeMonthYearId);
+		
+		String month = headOfficeMonthYear.getLong("month").toString()+headOfficeMonthYear.getLong("year").toString();
+
+		String employerName = "";
+
+		String stationNumber = "";
+		String stationName = "";
+		String employerCode = "";
+
+		if (station != null) {
+			employerName = station.getString("name");// getEmployer(station.getString("employerId"));
+			stationNumber = station.getString("stationNumber").trim();
+			;
+			stationName = station.getString("name");
+			employerCode = station.getString("employerCode").trim();
+		}
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String employeeNames = getNames(member);
+
+		GenericValue accountProduct = LoanUtilities.findAccountProduct(memberAccount.getLong(
+				"accountProductId").toString());
+
+		String remitanceCode = accountProduct.getString("code");
+		// + String.valueOf(sequence);
+
+		try {
+			TransactionUtil.begin();
+		} catch (GenericTransactionException e1) {
+			e1.printStackTrace();
+		}
+
+		// Get Contributing Amount
+		BigDecimal bdContributingAmt = BigDecimal.ZERO;
+		BigDecimal balanceamount = BigDecimal.ZERO;
+		String codevalue = "";
+		if (accountProduct.getString("code").equals(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE)) {
+			// Calculate Contribution based on graduated scale this is for
+			// Member Deposits
+			bdContributingAmt = LoansProcessingServices
+					.getLoanCurrentContributionAmount(member.getLong("partyId"));
+
+			BigDecimal bdSpecifiedAmount = memberAccount
+					.getBigDecimal("contributingAmount");
+
+			if ((bdSpecifiedAmount != null)
+					&& (bdSpecifiedAmount.compareTo(bdContributingAmt) == 1)) {
+				bdContributingAmt = bdSpecifiedAmount;
+			}
+			
+			codevalue = "D101";
+
+		} else if (accountProduct.getString("code").equals(AccHolderTransactionServices.SHARE_CAPITAL_CODE)) {
+			if (memberAccount.getBigDecimal("contributingAmount") != null) {
+				bdContributingAmt = memberAccount
+						.getBigDecimal("contributingAmount");
+				
+				codevalue = "D136";
+			}
+		}
+		
+		//FOSA Savings
+		else if (accountProduct.getString("code").equals(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE)) {
+			if (memberAccount.getBigDecimal("contributingAmount") != null) {
+				bdContributingAmt = memberAccount
+						.getBigDecimal("contributingAmount");
+				
+				codevalue = "D117";
+			}
+			balanceamount = AccHolderTransactionServices.getBookBalanceNow(LoanUtilities.getMemberAccountIdGivenMemberAndAccountCode(member.getLong("partyId"), AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE));
+		}
+		//Junior
+		else if (accountProduct.getString("code").equals(AccHolderTransactionServices.JUNIOR_ACCOUNT_CODE)) {
+			if (memberAccount.getBigDecimal("contributingAmount") != null) {
+				bdContributingAmt = memberAccount
+						.getBigDecimal("contributingAmount");
+				
+				codevalue = "D121";
+			}
+			balanceamount = AccHolderTransactionServices.getBookBalanceNow(LoanUtilities.getMemberAccountIdGivenMemberAndAccountCode(member.getLong("partyId"), AccHolderTransactionServices.JUNIOR_ACCOUNT_CODE));
+		}
+		//Holiday
+		else if (accountProduct.getString("code").equals(AccHolderTransactionServices.HOLIDAY_ACCOUNT_CODE)) {
+			if (memberAccount.getBigDecimal("contributingAmount") != null) {
+				bdContributingAmt = memberAccount
+						.getBigDecimal("contributingAmount");
+				
+				codevalue = "D122";
+			}
+			balanceamount = AccHolderTransactionServices.getBookBalanceNow(LoanUtilities.getMemberAccountIdGivenMemberAndAccountCode(member.getLong("partyId"), AccHolderTransactionServices.HOLIDAY_ACCOUNT_CODE));
+
+		}
+		
+		
+		String payroll = member.getString("payrollNumber");
+		//Split payroll
+		String payrollcode = payroll.substring(0, 2);
+		String payrollnumber = payroll.substring(3);
+		//
+		
+		//Case of Deposits or Share Capital
+		
+		if ((accountProduct.getString("code").equals(AccHolderTransactionServices.SHARE_CAPITAL_CODE)) || (accountProduct.getString("code").equals(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE))){
+			GenericValue shareCapitalBackofficeLoans = null;
+			Long shareCapitalBackofficeLoansId = delegator.getNextSeqIdLong("ShareCapitalBackofficeLoans");
+			shareCapitalBackofficeLoans = delegator.makeValue("ShareCapitalBackofficeLoans",
+				UtilMisc.toMap("shareCapitalBackofficeLoansId", shareCapitalBackofficeLoansId,
+						
+						"headOfficeMonthYearId", headOfficeMonthYearId,
+						"monthyear", month, 
+						
+						"payroll", payroll,
+						"continuitycode", "13",
+						
+						"payrollcode", payrollcode,
+
+						"payrollnumber", payrollnumber,
+						"zerovalue", "0",
+						"typediscriminator", "92",
+						"codevalue", codevalue,
+						"partyId", member.getLong("partyId"),
+						
+						"originalamount", bdContributingAmt,
+						
+						"balanceamount", BigDecimal.ZERO,
+						"principaldue", BigDecimal.ZERO,
+						"interestrate", BigDecimal.ZERO,
+						"interestdue", BigDecimal.ZERO
+						
+						));
+		try {
+			delegator.createOrStore(shareCapitalBackofficeLoans);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		}
+		//Case Fosa Savings, Junior or Holiday
+		else if ((accountProduct.getString("code").equals(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE)) || (accountProduct.getString("code").equals(AccHolderTransactionServices.JUNIOR_ACCOUNT_CODE)) || (accountProduct.getString("code").equals(AccHolderTransactionServices.HOLIDAY_ACCOUNT_CODE))){
+			GenericValue fosaJuniorHoliday = null;
+			Long fosaJuniorHolidayId = delegator.getNextSeqIdLong("FosaJuniorHoliday");
+			
+			 
+			
+			fosaJuniorHoliday = delegator.makeValue("FosaJuniorHoliday",
+					UtilMisc.toMap("fosaJuniorHolidayId", fosaJuniorHolidayId,
+							
+							"headOfficeMonthYearId", headOfficeMonthYearId,
+							"monthyear", month, 
+							
+							"payroll", payroll,
+							
+							"payrollcode", payrollcode,
+
+							"payrollnumber", payrollnumber,
+							"codevalue", codevalue,
+							
+							"contributingamount", bdContributingAmt,
+							
+							"balanceamount", balanceamount
+							
+							
+							));
+			try {
+				delegator.createOrStore(fosaJuniorHoliday);
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+		}
+
+		try {
+			TransactionUtil.commit();
+		} catch (GenericTransactionException e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	private static GenericValue findStation(String tempStationId) {
+		// TODO Auto-generated method stub
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		GenericValue station = null;
+		try {
+			station = delegator.findOne("Station",
+					UtilMisc.toMap("stationId", tempStationId), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		return station;
+	}
+	
+	
+	public static void addLoanExpectationHeadOffice(Long loanApplicationId, Long headOfficeMonthYearId) {
+		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
+		
+		GenericValue member = LoanUtilities.findMember(loanApplication.getLong("partyId").toString());
+
+		Long activeMemberStatusId = LoanUtilities.getMemberStatusId("ACTIVE");
+		//if (member.getLong("memberStatusId").equals(activeMemberStatusId)) {
+
+			GenericValue loanProduct = LoanUtilities.findLoanProduct(loanApplication
+					.getString("loanProductId"));
+			GenericValue station = findStation(member.getLong("stationId")
+					.toString());
+
+			//String month = getCurrentMonth();
+			String month = getHeadOfficeMonthYear(headOfficeMonthYearId);
+			String employerName = "";
+
+			String stationNumber = "";
+			String stationName = "";
+			String employerCode = "";
+
+			if (station != null) {
+				employerName = station.getString("name");// getEmployer(station.getString("employerId"));
+				stationNumber = station.getString("stationNumber").trim();
+				;
+				stationName = station.getString("name");
+				employerCode = station.getString("employerCode").trim();
+			}
+			// String employerName = station.getString("name");
+			// getEmployer(station.getString("employerId"));
+
+			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+			// Create an expectation
+			GenericValue shareCapitalBackofficeLoans = null;
+
+			String employeeNames = getNames(member);
+
+			String remitanceCode = "";
+			String expectationType = "";
+			String remitanceDescription = loanProduct.getString("name");
+
+			String remitanceCodeBal = "";
+			String expectationTypeBal = "";
+			String remitanceDescriptionBal = "";
+			
+			//Add Expectation Balance
+			remitanceCodeBal = loanProduct.getString("code") + "D";
+			expectationTypeBal = "BALANCE";
+			remitanceDescriptionBal = loanProduct.getString("name")
+					+ " BALANCE";
+			
+			String productCode = loanProduct.getString("code");
+			BigDecimal bdLoanBalance = LoansProcessingServices
+					.getTotalLoanBalancesByLoanApplicationId(loanApplication
+							.getLong("loanApplicationId"));
+			
+			BigDecimal bdOriginalAmount = loanApplication.getBigDecimal("loanAmt");
+			//BigDecimal bdPrincipalDue = LoanRepayments.getTotalPrincipalDue(loanApplicationId);
+			//Add Principal
+			remitanceCode = loanProduct.getString("code") + "A";
+			remitanceDescription = remitanceDescription + " PRINCIPAL";
+			expectationType = "PRINCIPAL";
+			BigDecimal bdPrincipalDue = LoanRepayments.getTotalPrincipaByLoanDue(loanApplicationId.toString());
+			if (bdPrincipalDue.compareTo(BigDecimal.ZERO) < 1)
+			{
+				bdPrincipalDue = BigDecimal.ZERO;
+			}
+			
+			//Add Interest
+			remitanceCode = loanProduct.getString("code") + "B";
+			remitanceDescription = loanProduct.getString("name") + " INTEREST";
+			expectationType = "INTEREST";
+			BigDecimal bdInterestDue = LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString());
+			if (bdInterestDue.compareTo(BigDecimal.ZERO) < 1)
+			{
+				bdInterestDue = BigDecimal.ZERO;
+			}
+			
+			//Add Insurance
+			remitanceCode = loanProduct.getString("code") + "C";
+			remitanceDescription = loanProduct.getString("name") + " INSURANCE";
+			expectationType = "INSURANCE";
+			BigDecimal bdInsuranceDue = LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString());
+			
+			if (bdInsuranceDue.compareTo(BigDecimal.ZERO) < 1)
+			{
+				bdInsuranceDue = BigDecimal.ZERO;
+			}
+			
+			
+			
+			String payroll = member.getString("payrollNumber");
+			//Split payroll
+			String payrollcode = payroll.substring(0, 2);
+			String payrollnumber = payroll.substring(3);
+			
+			BigDecimal interestRate = loanApplication.getBigDecimal("");
+			if (!loanProduct.getString("deductionType").equals(LoanRepayments.REDUCING_BALANCE)){
+				interestRate = loanApplication.getBigDecimal("interestRatePM");
+				bdInterestDue = BigDecimal.ZERO;
+			} else{
+				interestRate = BigDecimal.ZERO;
+			}
+			
+			//if BOSA save Here
+			if (loanProduct.getString("fosaOrBosa").equals("BOSA")){
+			Long shareCapitalBackofficeLoansId = delegator.getNextSeqIdLong("ShareCapitalBackofficeLoans");
+			shareCapitalBackofficeLoans = delegator.makeValue("ShareCapitalBackofficeLoans",
+					UtilMisc.toMap("shareCapitalBackofficeLoansId", shareCapitalBackofficeLoansId,
+							"headOfficeMonthYearId", headOfficeMonthYearId,
+							"monthyear",month,
+							"payroll", payroll,
+							
+							"continuitycode", "15",
+							
+							"payrollcode", payrollcode,
+
+							"payrollnumber", payrollnumber,
+							"zerovalue", "0",
+
+							"typediscriminator", "94",
+							"codevalue",	productCode,
+							"loanApplicationId", loanApplication.getLong("loanApplicationId"),
+							"partyId", member.getLong("partyId"),
+							"loanNo", loanApplication.getString("loanNo"),
+							
+
+							"originalamount", loanApplication.getBigDecimal("loanAmt"),
+							
+							"balanceamount", bdLoanBalance,
+							"principaldue", bdPrincipalDue,
+							
+							
+							"interestrate", interestRate,
+							"interestdue", bdInterestDue
+							
+							
+							));
+			try {
+				delegator.createOrStore(shareCapitalBackofficeLoans);
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+			
+			//else if FOSA save here
+			} else if (loanProduct.getString("fosaOrBosa").equals("FOSA")){
+				GenericValue fosaLoans = null;
+				Long fosaLoansId = delegator.getNextSeqIdLong("FosaLoans");
+				fosaLoans = delegator.makeValue("FosaLoans",
+						UtilMisc.toMap("fosaLoansId", fosaLoansId,
+								"headOfficeMonthYearId", headOfficeMonthYearId,
+								"monthyear",month,
+								"payroll", payroll,
+								
+								"payrollcode", payrollcode,
+
+								"payrollnumber", payrollnumber,
+								"codevalue",	productCode,
+								"loanApplicationId", loanApplication.getLong("loanApplicationId"),
+								"partyId", member.getLong("partyId"),
+								"loanNo", loanApplication.getString("loanNo"),
+								
+
+								"originalamount", loanApplication.getBigDecimal("loanAmt"),
+								
+								"balanceamount", bdLoanBalance,
+								"principaldue", bdPrincipalDue,
+								
+								
+								"interestrate", interestRate,
+								"interestdue", bdInterestDue
+								
+								
+								));
+				try {
+					delegator.createOrStore(fosaLoans);
+				} catch (GenericEntityException e) {
+					e.printStackTrace();
+				}				
+			}
+			
+			
+
+	}
+	
+	
+	private static String getHeadOfficeMonthYear(Long headOfficeMonthYearId) {
+		GenericValue headOfficeMonthYear = LoanUtilities.getEntityValue("HeadOfficeMonthYear", "headOfficeMonthYearId", headOfficeMonthYearId);
+		String month = headOfficeMonthYear.getLong("month").toString()+headOfficeMonthYear.getLong("year").toString();
+		
+		return month;
+	}
+
+	
 }

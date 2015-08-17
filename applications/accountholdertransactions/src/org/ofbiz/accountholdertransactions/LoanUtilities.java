@@ -3148,6 +3148,48 @@ public class LoanUtilities {
 		stringValue = stringValue.trim();
 		return stringValue;
 	}
+	
+	
+	public static GenericValue findAccountProduct(String accountProductId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		GenericValue accountProduct = null;
+		accountProductId = accountProductId.replaceFirst(",", "");
+		try {
+			accountProduct = delegator.findOne(
+					"AccountProduct",
+					UtilMisc.toMap("accountProductId",
+							Long.valueOf(accountProductId)), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		return accountProduct;
+	}
 
+	public static GenericValue findMember(String partyId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		GenericValue member = null;
+		partyId = partyId.replaceAll(",", "");
+		try {
+			member = delegator.findOne("Member",
+					UtilMisc.toMap("partyId", Long.valueOf(partyId)), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		return member;
+	}
+	
+	
+	public static GenericValue findLoanProduct(String loanProductId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		GenericValue loanProduct = null;
+		loanProductId = loanProductId.replaceAll(",", "");
+		try {
+			loanProduct = delegator.findOne("LoanProduct", UtilMisc.toMap(
+					"loanProductId", Long.valueOf(loanProductId)), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		return loanProduct;
+	}
 
 }
