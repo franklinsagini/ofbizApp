@@ -728,6 +728,267 @@
 
     </form>
     
+    <!-- HeadOfficeMonthYear -->
+    	<!-- NewHeadOfficeMonthYear -->
+		<form name="NewHeadOfficeMonthYear" type="single" target="createHeadOfficeMonthYear"
+        focus-field-name="year" header-row-style="header-row" default-table-style="basic-table" default-map-name="headOfficeMonthYearContext">
+        
+          <field name="stationId" title="Station" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<drop-down allow-empty="true" >
+       			<entity-options description="${name} - ${stationNumber}" entity-name="Station">
+       				<entity-order-by field-name="name"/>
+       			</entity-options>
+       		</drop-down>
+        </field>
+        
+        <field name="month" title="Month" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<drop-down allow-empty="true" >
+       			<option key="1" description="1"/>
+       			<option key="2" description="2"/>
+       			<option key="3" description="3"/>
+       			<option key="4" description="4"/>
+       			<option key="5" description="5"/>
+       			<option key="6" description="6"/>
+       			<option key="7" description="7"/>
+       			<option key="8" description="8"/>
+       			<option key="9" description="9"/>
+       			<option key="10" description="10"/>
+       			<option key="11" description="11"/>
+       			<option key="12" description="12"/>
+       		</drop-down>
+        </field>
+        
+         <field name="year" title="Year" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<text size="25" default-value="20"></text>
+        </field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+	
+	<!-- headOfficeMonthYear -->
+	<form name="headOfficeMonthYear" type="list" list-name="listIt"
+		paginate-target="headOfficeMonthYear" default-entity-name="HeadOfficeMonthYear"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="headOfficeMonthYear">
+		<actions>
+            <entity-condition entity-name="HeadOfficeMonthYear">
+            	<order-by field-name="-headOfficeMonthYearId"/>
+            </entity-condition>
+        </actions>
+		<field name="headOfficeMonthYearId"><hidden/></field>
+		
+		<field name="month" title="Month">
+			<display></display>
+		</field>
+		
+		<field name="year" title="Year">
+			<display></display>
+		</field>
+		
+		<field name="stationId" title="Station" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<display-entity entity-name="Station" description="${name}"></display-entity>
+        </field>
+		
+		<field name="createdStamp" title="Created">
+			<display type="date-time" />
+		</field>
+		
+		<field name="createdBy" title="Created By">
+			<display />
+		</field>
+		
+		
+		<!-- field name="addToClearList" title="Add To Clear List"
+			widget-style="buttontext" use-when="(&quot;${bsh:org.ofbiz.loans.LoanServices.alloweToClear(loanApplicationId);}&quot;.equals(&quot;${yes}&quot;)&amp;&amp;(isAddedToClear==null))||(&quot;${bsh:org.ofbiz.loans.LoanServices.alloweToClear(loanApplicationId);}&quot;.equals(&quot;${yes}&quot;)&amp;&amp;!isAddedToClear.equals(&quot;${yes}&quot;))" >
+			<hyperlink  target="addToClearList" description="Add To Clear List "
+				also-hidden="true" >
+				
+				<parameter param-name="loanApplicationId" />
+				<parameter param-name="partyId"/>
+			</hyperlink>
+		</field -->
+		
+		<field name="showShareCapitalBackofficeLoans" title="Show Share Capital and Backoffice Loans"
+			widget-style="buttontext">
+			<hyperlink target="showShareCapitalBackofficeLoans" description="Show Share Capital Back office Loans"
+				also-hidden="false" >
+				<parameter param-name="headOfficeMonthYearId"/>
+			</hyperlink>
+		</field>
+		
+		<field name="showAccumulatedDepositShareCapital" title="Show Accumulated Deposit Share Capital"
+			widget-style="buttontext">
+			<hyperlink target="showAccumulatedDepositShareCapital" description="Show Accumulated Deposit Share Capital"
+				also-hidden="false" >
+				<parameter param-name="headOfficeMonthYearId"/>
+			</hyperlink>
+		</field>
+		
+				<field name="showFosaJuniorHoliday" title="Show Fosa Junior Holiday"
+			widget-style="buttontext">
+			<hyperlink target="showFosaJuniorHoliday" description="Show Fosa Junior Holiday"
+				also-hidden="false" >
+				<parameter param-name="headOfficeMonthYearId"/>
+			</hyperlink>
+		</field>
+		
+		<field name="showFosaLoans" title="Show Fosa Loans"
+			widget-style="buttontext">
+			<hyperlink target="showFosaLoans" description="Show Fosa Loans"
+				also-hidden="false" >
+				<parameter param-name="headOfficeMonthYearId"/>
+			</hyperlink>
+		</field>
+		
+		
+	</form>
+	
+	
+	<!-- listShareCapitalBackofficeLoans -->
+	<form name="listShareCapitalBackofficeLoans" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="showShareCapitalBackofficeLoans" paginate-target="showShareCapitalBackofficeLoans"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        <!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
+            <entity-condition entity-name="ShareCapitalBackofficeLoans">
+
+            	<condition-list combine="and">
+            		<condition-expr field-name="headOfficeMonthYearId" operator="equals" from-field="headOfficeMonthYearId"/>
+            		<!-- condition-expr field-name="month" operator="equals" from-field="parameters.month"/ -->
+            	</condition-list>
+            	<!-- order-by field-name="remitanceCode"/ -->
+
+
+            </entity-condition>
+
+            <!-- service service-name="performFind" result-map="result" result-map-list="listIt">
+
+            	<field-map field-name="inputFields" from-field="expectedPaymentBreakdownCtx"/>
+                
+                <field-map field-name="entityName" value="ExpectedPaymentSent"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+
+            </service -->
+            <!-- field-map field-name="inputFields" from-field="stationExpectationCtx"/ -->
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateExpectedPaymentSent"/ -->
+
+		<!-- field name="stationNumber" title="Station No"><display also-hidden="false"></display></field>
+		<field name="stationName" title="Station Name"><display also-hidden="false"></display></field>
+		<field name="remitanceCode" title="Remitance Code"><display also-hidden="false"></display></field -->
+		<field name="payrollNo" title="Payroll No"><display also-hidden="false"></display></field>
+
+		<field name="continuitycode" title="Code"><display also-hidden="false"></display></field>
+		<field name="payrollcode" title="Payroll Code"><display also-hidden="false"></display></field>
+		<field name="payrollnumber" title="Payroll Number"><display also-hidden="false"></display></field>
+
+
+		<field name="month" title="Month"><display also-hidden="false"></display></field>
+		<field name="zerovalue" title="Zero"><display also-hidden="false"></display></field>
+		<field name="typediscriminator" title="Type"><display also-hidden="false"></display></field>
+		<field name="codevalue" title="Code Value"><display also-hidden="false"></display></field>
+		
+        <field name="loanNo" title="Loan No"><display also-hidden="false"></display></field>
+
+
+        <field name="originalamount" title="Original Amount"><display also-hidden="false"></display></field>
+        <field name="balanceamount" title="Balance"><display also-hidden="false"></display></field>
+
+        <field name="principaldue" title="Principal"><display also-hidden="false"></display></field>
+        <field name="interestrate" title="Interest Rate"><display also-hidden="false"></display></field>
+        <field name="interestdue" title="Interest Due"><display also-hidden="false"></display></field>
+
+    </form>
+    
+    <!-- listAccumulatedDepositShareCapital -->
+    <form name="listAccumulatedDepositShareCapital" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="showAccumulatedDepositShareCapital" paginate-target="showAccumulatedDepositShareCapital"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        <!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
+            <entity-condition entity-name="AccumulatedDepositShareCapital">
+
+            	<condition-list combine="and">
+            		<condition-expr field-name="headOfficeMonthYearId" operator="equals" from-field="headOfficeMonthYearId"/>
+            		<!-- condition-expr field-name="month" operator="equals" from-field="parameters.month"/ -->
+            	</condition-list>
+            	<!-- order-by field-name="remitanceCode"/ -->
+
+
+            </entity-condition>
+          
+        </actions>
+		<field name="monthyear" title="Month"><display also-hidden="false"></display></field>
+		<field name="payroll" title="Payroll No"><display also-hidden="false"></display></field>
+		<field name="accumulatedamount" title="Accumulated Amount"><display also-hidden="false"></display></field>
+
+		<field name="payrollnumber" title="Payroll Number"><display also-hidden="false"></display></field>
+    </form>
+    
+    <!-- listFosaJuniorHoliday -->
+        <form name="listFosaJuniorHoliday" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="showFosaJuniorHoliday" paginate-target="showFosaJuniorHoliday"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        <!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
+            <entity-condition entity-name="FosaJuniorHoliday">
+
+            	<condition-list combine="and">
+            		<condition-expr field-name="headOfficeMonthYearId" operator="equals" from-field="headOfficeMonthYearId"/>
+            		<!-- condition-expr field-name="month" operator="equals" from-field="parameters.month"/ -->
+            	</condition-list>
+            	<!-- order-by field-name="remitanceCode"/ -->
+
+
+            </entity-condition>
+          
+        </actions>
+		<field name="monthyear" title="Month"><display also-hidden="false"></display></field>
+		<field name="payroll" title="Payroll No"><display also-hidden="false"></display></field>
+		<field name="codevalue" title="Code Value"><display also-hidden="false"></display></field>
+		
+		
+		<field name="payrollcode" title="Payroll Code"><display also-hidden="false"></display></field>
+		<field name="payrollnumber" title="Payroll Number"><display also-hidden="false"></display></field>
+		
+		<field name="contributingamount" title="Contributing Amount"><display also-hidden="false"></display></field>
+		<field name="balanceamount" title="Balance Amount"><display also-hidden="false"></display></field>
+    </form>
+    
+    <!-- listFosaLoans -->
+          <form name="listFosaLoans" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="showFosaLoans" paginate-target="showFosaLoans"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        <!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
+            <entity-condition entity-name="FosaLoans">
+
+            	<condition-list combine="and">
+            		<condition-expr field-name="headOfficeMonthYearId" operator="equals" from-field="headOfficeMonthYearId"/>
+            		<!-- condition-expr field-name="month" operator="equals" from-field="parameters.month"/ -->
+            	</condition-list>
+            	<!-- order-by field-name="remitanceCode"/ -->
+
+
+            </entity-condition>
+          
+        </actions>
+		<field name="monthyear" title="Month"><display also-hidden="false"></display></field>
+		<field name="payroll" title="Payroll No"><display also-hidden="false"></display></field>
+		<field name="codevalue" title="Code Value"><display also-hidden="false"></display></field>
+		
+		
+		<field name="payrollcode" title="Payroll Code"><display also-hidden="false"></display></field>
+		<field name="payrollnumber" title="Payroll Number"><display also-hidden="false"></display></field>
+		
+		        <field name="loanNo" title="Loan No"><display also-hidden="false"></display></field>
+
+
+        <field name="originalamount" title="Original Amount"><display also-hidden="false"></display></field>
+        <field name="balanceamount" title="Balance"><display also-hidden="false"></display></field>
+
+        <field name="principaldue" title="Principal"><display also-hidden="false"></display></field>
+        <field name="interestrate" title="Interest Rate"><display also-hidden="false"></display></field>
+        <field name="interestdue" title="Interest Due"><display also-hidden="false"></display></field>
+    </form>
     
 
 </forms>

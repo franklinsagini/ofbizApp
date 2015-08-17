@@ -51,6 +51,12 @@
 		<response name="success" type="view" value="pushMonthYearStation" />
 	</request-map>
 	
+	
+		<request-map uri="headOfficeMonthYear">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="headOfficeMonthYear" />
+	</request-map>
+	
 	<!-- request-map uri="pushAllStations">
 		<security auth="true" https="true" />
 		<event type="java"
@@ -311,6 +317,28 @@
 		<response name="error" type="view" value="pushMonthYearStation" />
 	</request-map>
 	
+	<!-- HeadOfficeMonthYear -->
+	<request-map uri="createHeadOfficeMonthYear">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createHeadOfficeMonthYear" />
+		<response name="success" type="request-redirect" value="headOfficeMonthYear"></response>
+		<response name="error" type="view" value="headOfficeMonthYear" />
+	</request-map>
+
+	<request-map uri="updateHeadOfficeMonthYear">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateHeadOfficeMonthYear" />
+		<response name="success" type="request-redirect" value="headOfficeMonthYear"></response>
+		<response name="error" type="view" value="headOfficeMonthYear" />
+	</request-map>
+
+	<request-map uri="deleteHeadOfficeMonthYear">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteHeadOfficeMonthYear" />
+		<response name="success" type="request-redirect" value="headOfficeMonthYear"></response>
+		<response name="error" type="view" value="headOfficeMonthYear" />
+	</request-map>
+	
 	<!-- showGeneratedExpectation -->
 	<request-map uri="showGeneratedExpectation">
 		<security https="true" auth="true" />
@@ -324,6 +352,39 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="showReceivedRemittance">
 			<redirect-parameter name="pushMonthYearStationId" from="pushMonthYearStationId"/>
+		</response>
+	</request-map>
+	
+	<!-- from showGeneratedExpectation -->
+	<!-- showShareCapitalBackofficeLoans -->
+	<request-map uri="showShareCapitalBackofficeLoans">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="showShareCapitalBackofficeLoans">
+			<redirect-parameter name="headOfficeMonthYearId" from="headOfficeMonthYearId"/>
+		</response>
+	</request-map>
+	
+	<!-- showAccumulatedDepositShareCapital -->
+	<request-map uri="showAccumulatedDepositShareCapital">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="showAccumulatedDepositShareCapital">
+			<redirect-parameter name="headOfficeMonthYearId" from="headOfficeMonthYearId"/>
+		</response>
+	</request-map>
+	
+		<!-- showFosaJuniorHoliday -->
+	<request-map uri="showFosaJuniorHoliday">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="showFosaJuniorHoliday">
+			<redirect-parameter name="headOfficeMonthYearId" from="headOfficeMonthYearId"/>
+		</response>
+	</request-map>
+	
+		<!-- showFosaLoans -->
+	<request-map uri="showFosaLoans">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="showFosaLoans">
+			<redirect-parameter name="headOfficeMonthYearId" from="headOfficeMonthYearId"/>
 		</response>
 	</request-map>
 
@@ -342,6 +403,11 @@
 			<view-map name="pushMonthYearStation" type="screen"
 		page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#pushMonthYearStation" />
 	
+	
+	<!-- headOfficeMonthYear -->
+			<view-map name="headOfficeMonthYear" type="screen"
+		page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#headOfficeMonthYear" />
+
 	<!-- showGeneratedExpectation -->
 		<view-map name="showGeneratedExpectation" type="screen"
 		page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#showGeneratedExpectation" />
@@ -368,5 +434,22 @@
 
 	<!-- receivedRemittanceExport -->
 		<view-map name="receivedRemittanceExport" type="screencsv" page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#receivedRemittanceExport" content-type="text/csv" encoding="none"/>
+	
+	<!-- from showGeneratedExpectation -->
+		<!-- showFosaLoans -->
+		<view-map name="showFosaLoans" type="screen"
+		page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#showFosaLoans" />
+
+		<!-- showFosaJuniorHoliday -->
+		<view-map name="showFosaJuniorHoliday" type="screen"
+		page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#showFosaJuniorHoliday" />
+
+		<!-- showAccumulatedDepositShareCapital -->
+		<view-map name="showAccumulatedDepositShareCapital" type="screen"
+		page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#showAccumulatedDepositShareCapital" />
+
+		<!-- showShareCapitalBackofficeLoans -->
+		<view-map name="showShareCapitalBackofficeLoans" type="screen"
+		page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#showShareCapitalBackofficeLoans" />
 	
 </site-conf>
