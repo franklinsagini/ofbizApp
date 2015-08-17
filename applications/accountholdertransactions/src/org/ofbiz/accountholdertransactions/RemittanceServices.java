@@ -3886,7 +3886,7 @@ public class RemittanceServices {
 		GenericValue member = findMember(loanApplication.getLong("partyId").toString());
 
 		Long activeMemberStatusId = getMemberStatusId("ACTIVE");
-		if (member.getLong("memberStatusId").equals(activeMemberStatusId)) {
+		//if (member.getLong("memberStatusId").equals(activeMemberStatusId)) {
 
 			GenericValue loanProduct = findLoanProduct(loanApplication
 					.getString("loanProductId"));
@@ -4047,7 +4047,7 @@ public class RemittanceServices {
 
 			
 
-		}
+		//}
 
 	}
 	
