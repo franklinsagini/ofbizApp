@@ -106,5 +106,105 @@
 		</field>
 		
 	</form>
+	
+	   <form name="FindExpectation" type="single" target="showInterestGenerated" default-entity-name="LoanExpectation">
+        <actions>
+
+        	<entity-condition entity-name="LoanExpectationMonth" list="monthExpectationList">
+        		<order-by field-name="-month"/>
+        	</entity-condition>
+
+        	<entity-condition entity-name="LoanExpectationRepaymentType" list="repaymentTypeList">
+        		<order-by field-name="-repaymentName"/>
+        	</entity-condition>
+
+
+        </actions>
+
+        <field name="noConditionFind"><hidden value="N"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+
+        <field name="month" title="Month">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${month}"  entity-name="LoanExpectationMonth">
+        			<entity-order-by field-name="-month"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+
+        <!-- field name="partyId" title="Member" position="2"><text-find/></field -->
+        <field name="partyId" title="Member" position="2"><lookup target-form-name="LookupActiveMember"/></field>
+
+        <field name="repaymentName" title="Repayment Name">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${repaymentName}"  entity-name="LoanExpectationRepaymentType"></entity-options>
+        	</drop-down>
+        </field>
+
+
+
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
+    </form>
+    
+       <!-- Unpaid Expected Payments - unpaidExpectedPayments -->
+    <form name="chargedInterestInsurance" type="list" list-name="listIt" use-row-submit="true" separate-columns="true"  paginate-target="showInterestGenerated"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	<set field="currentDate" value="${nowTimestamp}"/>
+            <!-- entity-condition entity-name="LoanExpectation">
+
+            </entity-condition -->
+
+                        	<!-- condition-expr field-name="isPaid" operator="equals" value="N"/ -->
+            	<!-- condition-list combine="and">
+            		<condition-expr field-name="isActive" value="Y"/>
+            		<condition-expr field-name="transactionType" value="CHEQUEDEPOSIT"/>
+            		<condition-expr field-name="isPosted" operator="not-equals" value="Y"/>
+            		<condition-expr field-name="clearDate" operator="greater" from-field="currentDate"/>
+
+            	</condition-list -->
+            	<!-- order-by field-name="-loanExpectationId"></order-by -->
+
+
+             <!-- service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="loanExpectationCtx"/>
+                <field-map field-name="entityName" value="LoanExpectation"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+
+            </service -->
+            <entity-condition entity-name="LoanExpectation">
+            	<condition-expr field-name="stationMonthInterestManagementId" operator="equals" from-field="stationMonthInterestManagementId"/>
+            </entity-condition>
+
+
+        </actions>
+ 		<!--field name="partyId" title="Member">
+        	< drop-down>
+        		<list-options key-name="partyId" list-name="memberList" description="${firstName} ${middleName} ${lastName}"/>
+        	</drop-down
+        	<display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${middleName} ${lastName}"></display-entity>
+        </field-->
+        <field name="loanExpectationId"><hidden/></field>
+        <field name="loanApplicationId"><hidden/></field>
+
+        <field name="loanNo" title="Loan No"> <display also-hidden="false"></display> </field>
+        <field name="loanAmt" title="Loan Amount"> <display also-hidden="false"></display> </field>
+
+         <field name="dateDue" title="Date Due"><display also-hidden="false"></display></field>
+         <field name="employeeNo" title="Employee No"><display also-hidden="false"></display></field>
+         <field name="employeeNames" title="Member Names"><display also-hidden="false"></display></field>
+
+         <field name="repaymentName" title="Repayment Type"><display also-hidden="false"></display></field>
+
+          <field name="dateAccrued" title="Date Accrued"><display also-hidden="false" type="date-time"></display></field>
+          <field name="datePaid" title="Date Paid"><display also-hidden="false" type="date-time"></display></field>
+
+         <field name="amountAccrued" title="Amount Accrued"><display also-hidden="false"></display></field>
+         <field name="amountPaid" title="Amount Paid"><display also-hidden="false"></display></field>
+         <field name="month" title="Month Accrued"><display also-hidden="false"></display></field>
+
+
+    </form>
 
 </forms>
