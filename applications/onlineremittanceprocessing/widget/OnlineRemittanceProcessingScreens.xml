@@ -794,8 +794,8 @@
 												</link -->
 												
 												<link
-													target="expectedRemittanceExport.csv?pushMonthYearStationId=${pushMonthYearStationId}"
-													text="Expected Remittance CSV (Download)" style="buttontext">
+													target="shareCapitalBackofficeLoans.csv?headOfficeMonthYearId=${headOfficeMonthYearId}"
+													text="Deposits, Share capital and Back Office Loans CSV (Download)" style="buttontext">
 													<image url-mode="raw" src="${iconsLocation}/page_excel.png" />
 
 												</link>
@@ -830,7 +830,7 @@
 										location="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingForms.xml" />
 								</screenlet -->
 								<screenlet title="Share Capital Backoffice Loans">
-									<include-form name="listExpectedPaymentSentBreakdown"
+									<include-form name="listShareCapitalBackofficeLoans"
 										location="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingForms.xml" />
 								</screenlet>
 
@@ -904,12 +904,13 @@
 									<section>
 										<widgets>
 											<container style="button-bar">
-												<label style="h3">Expected Payments from ${employerName}
+												<label style="h3">Accumulated Deposits and Share Capital from ${employerName}
 													for ${month}${year} </label>
 												<link
-													target="expectedRemittanceExport.csv?pushMonthYearStationId=${pushMonthYearStationId}"
-													text="Expected Remittance CSV (Download)" style="buttontext">
+													target="accumulatedDepositShareCapital.csv?headOfficeMonthYearId=${headOfficeMonthYearId}"
+													text="Accumulated Deposits and Share Capital CSV (Download)" style="buttontext">
 													<image url-mode="raw" src="${iconsLocation}/page_excel.png" />
+
 												</link>
 											</container>
 										</widgets>
@@ -996,12 +997,12 @@
 										<widgets>
 
 											<container style="button-bar">
-												<label style="h3">Expected Payments from ${employerName}
+												<label style="h3">Fosa, Junior and Holiday Contributions from ${employerName}
 													for ${month}${year} </label>
 												
 												<link
-													target="expectedRemittanceExport.csv?pushMonthYearStationId=${pushMonthYearStationId}"
-													text="Expected Remittance CSV (Download)" style="buttontext">
+													target="fosaJuniorHoliday.csv?headOfficeMonthYearId=${headOfficeMonthYearId}"
+													text="Fosa, Junior and Holiday CSV (Download)" style="buttontext">
 													<image url-mode="raw" src="${iconsLocation}/page_excel.png" />
 
 												</link>
@@ -1091,12 +1092,12 @@
 										<widgets>
 
 											<container style="button-bar">
-												<label style="h3">Expected Payments from ${employerName}
+												<label style="h3">Fosa Loans from ${employerName}
 													for ${month}${year} </label>
 												
 												<link
-													target="expectedRemittanceExport.csv?pushMonthYearStationId=${pushMonthYearStationId}"
-													text="Expected Remittance CSV (Download)" style="buttontext">
+													target="fosaLoans.csv?headOfficeMonthYearId=${headOfficeMonthYearId}"
+													text="Fosa Loans CSV (Download)" style="buttontext">
 													<image url-mode="raw" src="${iconsLocation}/page_excel.png" />
 
 												</link>
@@ -1138,4 +1139,70 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	
+	<!-- fosaLoans -->
+	<screen name="fosaLoans">
+		<section>
+			<actions>
+				<set field="viewSize" value="99999" />
+				<!-- script location="component://party/webapp/partymgr/WEB-INF/actions/reports/loanDetails.groovy"/ -->
+				<script
+					location="component://onlineremittanceprocessing/webapp/onlineremittanceprocessing/WEB-INF/actions/reports/fosaLoans.groovy" />
+			</actions>
+			<widgets>
+				<include-form name="fosaLoans"
+					location="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingForms.xml" />
+			</widgets>
+		</section>
+	</screen>
+	
+	<!-- fosaJuniorHoliday -->
+	<screen name="fosaJuniorHoliday">
+		<section>
+			<actions>
+				<set field="viewSize" value="99999" />
+				<!-- script location="component://party/webapp/partymgr/WEB-INF/actions/reports/loanDetails.groovy"/ -->
+				<script
+					location="component://onlineremittanceprocessing/webapp/onlineremittanceprocessing/WEB-INF/actions/reports/fosaJuniorHoliday.groovy" />
+			</actions>
+			<widgets>
+				<include-form name="fosaJuniorHoliday"
+					location="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingForms.xml" />
+			</widgets>
+		</section>
+	</screen>
+	
+	<!-- accumulatedDepositShareCapital -->
+	<screen name="accumulatedDepositShareCapital">
+		<section>
+			<actions>
+				<set field="viewSize" value="99999" />
+				<!-- script location="component://party/webapp/partymgr/WEB-INF/actions/reports/loanDetails.groovy"/ -->
+				<script
+					location="component://onlineremittanceprocessing/webapp/onlineremittanceprocessing/WEB-INF/actions/reports/accumulatedDepositShareCapital.groovy" />
+			</actions>
+			<widgets>
+				<include-form name="accumulatedDepositShareCapital"
+					location="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingForms.xml" />
+			</widgets>
+		</section>
+	</screen>
+	
+	<!-- shareCapitalBackofficeLoans -->
+	<screen name="shareCapitalBackofficeLoans">
+		<section>
+			<actions>
+				<set field="viewSize" value="99999" />
+				<!-- script location="component://party/webapp/partymgr/WEB-INF/actions/reports/loanDetails.groovy"/ -->
+				<script
+					location="component://onlineremittanceprocessing/webapp/onlineremittanceprocessing/WEB-INF/actions/reports/shareCapitalBackofficeLoans.groovy" />
+			</actions>
+			<widgets>
+				<include-form name="shareCapitalBackofficeLoans"
+					location="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingForms.xml" />
+			</widgets>
+		</section>
+	</screen>
+	
 </screens>
