@@ -1750,9 +1750,10 @@ public class OnlineRemittanceProcessingServices {
 		// Long accountProductIdLong = Long.valueOf(accountProductId);
 		// And accountProductId not equal to memberDeposit, not equal to share
 		// capital and not equal to
+		//EntityCondition.makeCondition(
+		//		"contributing", EntityOperator.EQUALS, "YES"),
 		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
-				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"contributing", EntityOperator.EQUALS, "YES"),
+				.makeCondition(UtilMisc.toList(
 				//
 				// EntityCondition.makeCondition(
 				// "accountProductId", EntityOperator.NOT_EQUAL,
@@ -2215,7 +2216,11 @@ public class OnlineRemittanceProcessingServices {
 			remitanceCode = loanProduct.getString("code") + "B";
 			remitanceDescription = loanProduct.getString("name") + " INTEREST";
 			expectationType = "INTEREST";
-			BigDecimal bdInterestDue = LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString());
+			BigDecimal bdInterestDue = LoanRepayments.getInterestOnSchedule(loanApplicationId);
+					
+				//	LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString());
+					
+					//LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString());
 			if (bdInterestDue.compareTo(BigDecimal.ZERO) < 1)
 			{
 				bdInterestDue = BigDecimal.ZERO;
