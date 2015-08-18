@@ -1916,23 +1916,17 @@ public class OnlineRemittanceProcessingServices {
 		if (accountProduct.getString("code").equals(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE)) {
 			// Calculate Contribution based on graduated scale this is for
 			// Member Deposits
-			bdContributingAmt = LoansProcessingServices
-					.getLoanCurrentContributionAmount(member.getLong("partyId"));
+			bdContributingAmt = AccHolderTransactionServices.getBookBalanceNow(LoanUtilities.getMemberAccountIdGivenMemberAndAccountCode(member.getLong("partyId"), AccHolderTransactionServices.MEMBER_DEPOSIT_CODE));
+					
+					//LoansProcessingServices
+					//.getLoanCurrentContributionAmount(member.getLong("partyId"));
 
-			BigDecimal bdSpecifiedAmount = memberAccount
-					.getBigDecimal("contributingAmount");
-
-			if ((bdSpecifiedAmount != null)
-					&& (bdSpecifiedAmount.compareTo(bdContributingAmt) == 1)) {
-				bdContributingAmt = bdSpecifiedAmount;
-			}
 			
 			codevalue = "D101";
 
 		} else if (accountProduct.getString("code").equals(AccHolderTransactionServices.SHARE_CAPITAL_CODE)) {
 			if (memberAccount.getBigDecimal("contributingAmount") != null) {
-				bdContributingAmt = memberAccount
-						.getBigDecimal("contributingAmount");
+				bdContributingAmt = AccHolderTransactionServices.getBookBalanceNow(LoanUtilities.getMemberAccountIdGivenMemberAndAccountCode(member.getLong("partyId"), AccHolderTransactionServices.SHARE_CAPITAL_CODE));
 				
 				codevalue = "D136";
 			}
