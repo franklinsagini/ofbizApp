@@ -1926,11 +1926,12 @@ public class OnlineRemittanceProcessingServices {
 			codevalue = "D101";
 
 		} else if (accountProduct.getString("code").equals(AccHolderTransactionServices.SHARE_CAPITAL_CODE)) {
-			if (memberAccount.getBigDecimal("contributingAmount") != null) {
-				bdContributingAmt = AccHolderTransactionServices.getBookBalanceNow(LoanUtilities.getMemberAccountIdGivenMemberAndAccountCode(member.getLong("partyId"), AccHolderTransactionServices.SHARE_CAPITAL_CODE));
-				
+			bdContributingAmt = AccHolderTransactionServices.getBookBalanceNow(LoanUtilities.getMemberAccountIdGivenMemberAndAccountCode(member.getLong("partyId"), AccHolderTransactionServices.SHARE_CAPITAL_CODE));
+
+			//if (memberAccount.getBigDecimal("contributingAmount") != null) {
+					
 				codevalue = "D136";
-			}
+			//}
 		}
 		
 
