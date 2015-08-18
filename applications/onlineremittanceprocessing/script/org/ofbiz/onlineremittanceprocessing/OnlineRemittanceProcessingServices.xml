@@ -475,4 +475,119 @@ under the License.
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     
+    
+    <!-- Head Office Generation Services -->
+       <!-- generateShareCapitalBackofficeLoans  -->
+    <simple-method method-name="generateShareCapitalBackofficeLoans" short-description="generate Share Capital Back office Loans">
+         <set field="headOfficeMonthYearId" from-field="parameters.headOfficeMonthYearId" type="Long"/>
+        <set field="generateStatus" value="${bsh:org.ofbiz.onlineremittanceprocessing.OnlineRemittanceProcessingServices.generateShareCapitalBackofficeLoans(userLogin, headOfficeMonthYearId);}"></set>
+        <!-- store-value value-field="lookedUpValue"/ -->
+        
+        <log message="NNNNNNNNNNNNNNN Pulling" level="info"/>
+    	<log message="${headOfficeMonthYearId}" level="info"/>
+		<if>
+			 <condition> 
+			 		<if-compare operator="equals" value="success" field="generateStatus"></if-compare>
+            </condition> 
+            <then> 
+						 <property-to-field resource="OnlineRemittanceProcessingUiLabels.xml" 
+            				property="Successfully Generated" field="successMessage" />
+                
+            </then>
+		
+		<else>
+			<add-error> 
+                    <fail-message message="${generateStatus}"/>
+                </add-error> 
+                <check-errors /> 
+		
+        </else>
+        </if>
+        
+    </simple-method>
+    
+    <!-- generateAccumulatedDepositsAndShareCapital -->
+        <simple-method method-name="generateAccumulatedDepositsAndShareCapital" short-description="generate Accumulated Deposits and Share Capital">
+         <set field="headOfficeMonthYearId" from-field="parameters.headOfficeMonthYearId" type="Long"/>
+        <set field="generateStatus" value="${bsh:org.ofbiz.onlineremittanceprocessing.OnlineRemittanceProcessingServices.generateAccumulatedDepositsAndShareCapital(userLogin, headOfficeMonthYearId);}"></set>
+        <!-- store-value value-field="lookedUpValue"/ -->
+        
+        <log message="NNNNNNNNNNNNNNN Generating" level="info"/>
+    	<log message="${headOfficeMonthYearId}" level="info"/>
+		<if>
+			 <condition> 
+			 		<if-compare operator="equals" value="success" field="generateStatus"></if-compare>
+            </condition> 
+            <then> 
+						 <property-to-field resource="OnlineRemittanceProcessingUiLabels.xml" 
+            				property="Successfully Generated" field="successMessage" />
+                
+            </then>
+		
+		<else>
+			<add-error> 
+                    <fail-message message="${generateStatus}"/>
+                </add-error> 
+                <check-errors /> 
+		
+        </else>
+        </if>
+        
+    </simple-method>
+    
+    <!-- generateFosaJuniorHoliday -->
+    <simple-method method-name="generateFosaJuniorHoliday" short-description="generate Fosa, Junior and Holiday">
+         <set field="headOfficeMonthYearId" from-field="parameters.headOfficeMonthYearId" type="Long"/>
+        <set field="generateStatus" value="${bsh:org.ofbiz.onlineremittanceprocessing.OnlineRemittanceProcessingServices.generateFosaJuniorHoliday(userLogin, headOfficeMonthYearId);}"></set>
+        <!-- store-value value-field="lookedUpValue"/ -->
+        
+        <log message="NNNNNNNNNNNNNNN Generating" level="info"/>
+    	<log message="${headOfficeMonthYearId}" level="info"/>
+		<if>
+			 <condition> 
+			 		<if-compare operator="equals" value="success" field="generateStatus"></if-compare>
+            </condition> 
+            <then> 
+						 <property-to-field resource="OnlineRemittanceProcessingUiLabels.xml" 
+            				property="Successfully Generated" field="successMessage" />
+                
+            </then>
+		
+		<else>
+			<add-error> 
+                    <fail-message message="${generateStatus}"/>
+                </add-error> 
+                <check-errors /> 
+		
+        </else>
+        </if>
+        
+    </simple-method>
+    <!-- generateFosaLoans -->
+    <simple-method method-name="generateFosaLoans" short-description="generate Fosa Loans">
+         <set field="headOfficeMonthYearId" from-field="parameters.headOfficeMonthYearId" type="Long"/>
+        <set field="generateStatus" value="${bsh:org.ofbiz.onlineremittanceprocessing.OnlineRemittanceProcessingServices.generateFosaLoans(userLogin, headOfficeMonthYearId);}"></set>
+        <!-- store-value value-field="lookedUpValue"/ -->
+        
+        <log message="NNNNNNNNNNNNNNN Generating" level="info"/>
+    	<log message="${headOfficeMonthYearId}" level="info"/>
+		<if>
+			 <condition> 
+			 		<if-compare operator="equals" value="success" field="generateStatus"></if-compare>
+            </condition> 
+            <then> 
+						 <property-to-field resource="OnlineRemittanceProcessingUiLabels.xml" 
+            				property="Successfully Generated" field="successMessage" />
+                
+            </then>
+		<else>
+			<add-error> 
+                    <fail-message message="${generateStatus}"/>
+                </add-error> 
+                <check-errors /> 
+        </else>
+        </if>
+        
+    </simple-method>
+    
 </simple-methods>

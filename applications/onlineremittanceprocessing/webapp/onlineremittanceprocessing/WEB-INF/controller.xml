@@ -30,6 +30,29 @@
     <response name="success" type="view" value="expectedRemittanceExport" save-home-view="true" />
   </request-map>
   
+  
+  <!-- expectedRemittanceExport.csv -->
+   <!-- fosaLoans.csv -->
+  <request-map uri="fosaLoans.csv">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="fosaLoans" save-home-view="true" />
+  </request-map>
+    <!-- fosaJuniorHoliday.csv -->
+   <request-map uri="fosaJuniorHoliday.csv">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="fosaJuniorHoliday" save-home-view="true" />
+  </request-map>
+     <!-- accumulatedDepositShareCapital.csv -->
+   <request-map uri="accumulatedDepositShareCapital.csv">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="accumulatedDepositShareCapital" save-home-view="true" />
+  </request-map>
+  <!-- shareCapitalBackofficeLoans.csv -->
+  <request-map uri="shareCapitalBackofficeLoans.csv">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="shareCapitalBackofficeLoans" save-home-view="true" />
+  </request-map>
+  
   	<request-map uri="receivedRemittanceExport.csv">
     <security https="true" auth="true" />
     <response name="success" type="view" value="receivedRemittanceExport" save-home-view="true" />
@@ -387,6 +410,66 @@
 			<redirect-parameter name="headOfficeMonthYearId" from="headOfficeMonthYearId"/>
 		</response>
 	</request-map>
+	
+	<!-- Generating Head Office Data -->
+		<!-- generateAccumulatedDepositsAndShareCapital  -->
+	<!-- request-map uri="generateAccumulatedDepositsAndShareCapital">
+		<security https="true" auth="true" />
+		<event type="service" invoke="generateAccumulatedDepositsAndShareCapital" />
+		<response name="success" type="request-redirect" value="showAccumulatedDepositShareCapital">
+			<redirect-parameter name="headOfficeMonthYearId"/>
+		</response>
+		<response name="error" type="view" value="showAccumulatedDepositShareCapital">
+			<redirect-parameter name="headOfficeMonthYearId"/>
+		</response>
+	</request-map -->
+	<request-map uri="generateAccumulatedDepositsAndShareCapital">
+		<security https="true" auth="true" />
+		<event type="service" invoke="generateAccumulatedDepositsAndShareCapital" />
+		<response name="success" type="request-redirect" value="showAccumulatedDepositShareCapital">
+			<redirect-parameter name="headOfficeMonthYearId"/>
+		</response>
+		<response name="error" type="view" value="showAccumulatedDepositShareCapital">
+			<redirect-parameter name="headOfficeMonthYearId"/>
+		</response>
+	</request-map>
+	
+	<!-- generateShareCapitalBackofficeLoans -->
+	<request-map uri="generateShareCapitalBackofficeLoans">
+		<security https="true" auth="true" />
+		<event type="service" invoke="generateShareCapitalBackofficeLoans" />
+		<response name="success" type="request-redirect" value="showShareCapitalBackofficeLoans">
+			<redirect-parameter name="headOfficeMonthYearId"/>
+		</response>
+		<response name="error" type="view" value="showShareCapitalBackofficeLoans">
+			<redirect-parameter name="headOfficeMonthYearId"/>
+		</response>
+	</request-map>
+	
+	<!-- generateFosaJuniorHoliday -->
+	<request-map uri="generateFosaJuniorHoliday">
+		<security https="true" auth="true" />
+		<event type="service" invoke="generateFosaJuniorHoliday" />
+		<response name="success" type="request-redirect" value="showFosaJuniorHoliday">
+			<redirect-parameter name="headOfficeMonthYearId"/>
+		</response>
+		<response name="error" type="view" value="showFosaJuniorHoliday">
+			<redirect-parameter name="headOfficeMonthYearId"/>
+		</response>
+	</request-map>
+	
+	<!-- generateFosaLoans -->
+	<request-map uri="generateFosaLoans">
+		<security https="true" auth="true" />
+		<event type="service" invoke="generateFosaLoans" />
+		<response name="success" type="request-redirect" value="showFosaLoans">
+			<redirect-parameter name="headOfficeMonthYearId"/>
+		</response>
+		<response name="error" type="view" value="showFosaLoans">
+			<redirect-parameter name="headOfficeMonthYearId"/>
+		</response>
+	</request-map>
+
 
 	<!-- View Mappings -->
 	<view-map name="main" type="screen"
@@ -452,4 +535,13 @@
 		<view-map name="showShareCapitalBackofficeLoans" type="screen"
 		page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#showShareCapitalBackofficeLoans" />
 	
+		<!-- fosaLoans -->
+		<view-map name="fosaLoans" type="screencsv" page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#fosaLoans" content-type="text/csv" encoding="none"/>
+	
+		<view-map name="fosaJuniorHoliday" type="screencsv" page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#fosaJuniorHoliday" content-type="text/csv" encoding="none"/>
+	
+		<view-map name="accumulatedDepositShareCapital" type="screencsv" page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#accumulatedDepositShareCapital" content-type="text/csv" encoding="none"/>
+	
+		<view-map name="shareCapitalBackofficeLoans" type="screencsv" page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#shareCapitalBackofficeLoans" content-type="text/csv" encoding="none"/>
+		
 </site-conf>
