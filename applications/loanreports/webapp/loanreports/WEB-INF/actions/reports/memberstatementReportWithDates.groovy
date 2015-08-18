@@ -361,6 +361,10 @@ allLoansList.eachWithIndex { loanItem, index ->
 						loanTransaction.transactionDescription = "Interest Charged ("+interestInsurance.acctgTransId+") for "+stationMonthInterestManagement.month+"/"+stationMonthInterestManagement.year;
 					} else{
 						loanTransaction.transactionDescription = "Interest Charged ("+interestInsurance.acctgTransId+")";
+						
+						if (interestInsurance.acctgTransId=='197933'){
+							loanTransaction.transactionDescription = "Interest Paid ("+interestInsurance.acctgTransId+") (JV/Overpayment)";
+						}
 					}
 					
 					
