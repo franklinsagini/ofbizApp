@@ -1015,7 +1015,8 @@ public class OnlineRemittanceProcessingServices {
 						"stationId", EntityOperator.EQUALS,
 						Long.valueOf(currentStationId.trim())),
 						
-					EntityCondition.makeCondition("memberStatusId", EntityOperator.EQUALS , LoanUtilities.getMemberStatusId("ACTIVE"))	
+					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("DEAD")),
+					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("CLOSED"))
 
 				), EntityOperator.AND);
 		
@@ -1583,6 +1584,11 @@ public class OnlineRemittanceProcessingServices {
 				+ headOfficeMonthYear.getLong("year").toString();
 		month = month.trim();
 
+		List<String> stationIds = LoanUtilities.getStationIds(station.getString("employerCode"));
+		
+		for (String currentStationId : stationIds) {
+			processStationMembersForHeadOfficeCombineShare(currentStationId, headOfficeMonthYearId);
+		}
 		
 		return "success";
 	}	
@@ -1656,7 +1662,9 @@ public class OnlineRemittanceProcessingServices {
 						"stationId", EntityOperator.EQUALS,
 						Long.valueOf(currentStationId.trim())),
 						
-					EntityCondition.makeCondition("memberStatusId", EntityOperator.EQUALS , LoanUtilities.getMemberStatusId("ACTIVE"))	
+					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("DEAD")),
+					
+					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("CLOSED"))	
 
 				), EntityOperator.AND);
 		
@@ -1690,6 +1698,130 @@ public class OnlineRemittanceProcessingServices {
 		
 		
 	}
+	
+	
+	private static void processStationMembersForHeadOfficeCombineShare(String currentStationId,
+			Long headOfficeMonthYearId) {
+		
+		//Get all the members belonging to this station
+		EntityConditionList<EntityExpr> memberConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"stationId", EntityOperator.EQUALS,
+						Long.valueOf(currentStationId.trim())),
+						
+					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("DEAD")),
+					
+					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("CLOSED"))	
+
+				), EntityOperator.AND);
+		
+		
+		List<GenericValue> memberELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			memberELI = delegator.findList(
+					"Member", memberConditions, null,
+					null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		log.info(" The Active Members Count is "+memberELI.size());
+		for (GenericValue member : memberELI) {
+			addMemberExpectedAccountContributionsHeadOfficeCombine(member, headOfficeMonthYearId);
+		}
+		
+		
+	}
+	
+	public static void addMemberExpectedAccountContributionsHeadOfficeCombine(
+			GenericValue member, Long headOfficeMonthYearId) {
+		// Get from MemberAccount - accounts that are contributing and belong to
+		// this member
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> memberAccountELI = new ArrayList<GenericValue>();
+
+		List<String> orderByList = new LinkedList<String>();
+		orderByList.add("accountProductId");
+		// String accountProductId =
+		// getShareDepositAccountId(MEMBER_DEPOSIT_CODE);
+		// accountProductId = accountProductId.replaceAll(",", "");
+		// Long accountProductIdLong = Long.valueOf(accountProductId);
+		// And accountProductId not equal to memberDeposit, not equal to share
+		// capital and not equal to
+		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"contributing", EntityOperator.EQUALS, "YES"),
+				//
+				// EntityCondition.makeCondition(
+				// "accountProductId", EntityOperator.NOT_EQUAL,
+				// accountProductIdLong),
+
+						EntityCondition.makeCondition("partyId",
+								EntityOperator.EQUALS,
+								member.getLong("partyId"))
+
+				), EntityOperator.AND);
+
+		try {
+			memberAccountELI = delegator.findList("MemberAccount",
+					memberAccountConditions, null, orderByList, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		Long previousAccountProductId = null;
+		Long currentAccountProduct = null;
+		int sequence = 1;
+		
+		BigDecimal bdAccumulatedAmount = BigDecimal.ZERO;
+		
+		for (GenericValue memberAccount : memberAccountELI) {
+			// Add an expectation based on this member
+			currentAccountProduct = memberAccount.getLong("accountProductId");
+			if (currentAccountProduct.equals(previousAccountProductId)) {
+				sequence = sequence + 1;
+			} else {
+				sequence = 1;
+			}
+			bdAccumulatedAmount = bdAccumulatedAmount.add(addExpectedAccountContributionHeadOfficeCombine(memberAccount, member, sequence, headOfficeMonthYearId));
+
+			previousAccountProductId = currentAccountProduct;
+		}
+		
+		String month = getHeadOfficeMonthYear(headOfficeMonthYearId);
+		String payroll = member.getString("payrollNumber");
+		
+		String payrollnumber = payroll.substring(3);
+		
+		if (bdAccumulatedAmount.compareTo(BigDecimal.ZERO) > 0){
+			GenericValue accumulatedDepositShareCapital = null;
+			Long accumulatedDepositShareCapitalId = delegator.getNextSeqIdLong("AccumulatedDepositShareCapital");
+			accumulatedDepositShareCapital = delegator.makeValue("AccumulatedDepositShareCapital",
+				UtilMisc.toMap("accumulatedDepositShareCapitalId", accumulatedDepositShareCapitalId,
+						
+						"headOfficeMonthYearId", headOfficeMonthYearId,
+						"monthyear", month, 
+						
+						"payroll", payroll,
+						
+
+						"payrollnumber", payrollnumber,
+						
+						"accumulatedamount", bdAccumulatedAmount
+						
+						));
+		try {
+			delegator.createOrStore(accumulatedDepositShareCapital);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		}
+	}
+
 	
 	
 	public static void addMemberExpectedAccountContributionsHeadOffice(
@@ -1744,6 +1876,82 @@ public class OnlineRemittanceProcessingServices {
 
 			previousAccountProductId = currentAccountProduct;
 		}
+	}
+	
+	
+	private static BigDecimal addExpectedAccountContributionHeadOfficeCombine(
+			GenericValue memberAccount, GenericValue member, int sequence, Long headOfficeMonthYearId) {
+		GenericValue station = findStation(member.getString("stationId"));
+		GenericValue headOfficeMonthYear = LoanUtilities.getEntityValue("HeadOfficeMonthYear", "headOfficeMonthYearId", headOfficeMonthYearId);
+		
+		String month = headOfficeMonthYear.getLong("month").toString()+headOfficeMonthYear.getLong("year").toString();
+
+		String employerName = "";
+
+		String stationNumber = "";
+		String stationName = "";
+		String employerCode = "";
+
+		if (station != null) {
+			employerName = station.getString("name");// getEmployer(station.getString("employerId"));
+			stationNumber = station.getString("stationNumber").trim();
+			;
+			stationName = station.getString("name");
+			employerCode = station.getString("employerCode").trim();
+		}
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String employeeNames = getNames(member);
+
+		GenericValue accountProduct = LoanUtilities.findAccountProduct(memberAccount.getLong(
+				"accountProductId").toString());
+
+		String remitanceCode = accountProduct.getString("code");
+		// + String.valueOf(sequence);
+
+
+		// Get Contributing Amount
+		BigDecimal bdContributingAmt = BigDecimal.ZERO;
+		BigDecimal balanceamount = BigDecimal.ZERO;
+		String codevalue = "";
+		if (accountProduct.getString("code").equals(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE)) {
+			// Calculate Contribution based on graduated scale this is for
+			// Member Deposits
+			bdContributingAmt = LoansProcessingServices
+					.getLoanCurrentContributionAmount(member.getLong("partyId"));
+
+			BigDecimal bdSpecifiedAmount = memberAccount
+					.getBigDecimal("contributingAmount");
+
+			if ((bdSpecifiedAmount != null)
+					&& (bdSpecifiedAmount.compareTo(bdContributingAmt) == 1)) {
+				bdContributingAmt = bdSpecifiedAmount;
+			}
+			
+			codevalue = "D101";
+
+		} else if (accountProduct.getString("code").equals(AccHolderTransactionServices.SHARE_CAPITAL_CODE)) {
+			if (memberAccount.getBigDecimal("contributingAmount") != null) {
+				bdContributingAmt = memberAccount
+						.getBigDecimal("contributingAmount");
+				
+				codevalue = "D136";
+			}
+		}
+		
+
+		
+		
+		String payroll = member.getString("payrollNumber");
+		//Split payroll
+		String payrollcode = payroll.substring(0, 3);
+		String payrollnumber = payroll.substring(3);
+		//
+		
+		//Case of Deposits or Share Capital
+
+		
+		return bdContributingAmt;
+
 	}
 	
 	private static void addExpectedAccountContributionHeadOffice(
@@ -1845,7 +2053,7 @@ public class OnlineRemittanceProcessingServices {
 		
 		String payroll = member.getString("payrollNumber");
 		//Split payroll
-		String payrollcode = payroll.substring(0, 2);
+		String payrollcode = payroll.substring(0, 3);
 		String payrollnumber = payroll.substring(3);
 		//
 		
@@ -2034,7 +2242,7 @@ public class OnlineRemittanceProcessingServices {
 			
 			String payroll = member.getString("payrollNumber");
 			//Split payroll
-			String payrollcode = payroll.substring(0, 2);
+			String payrollcode = payroll.substring(0, 3);
 			String payrollnumber = payroll.substring(3);
 			
 			BigDecimal interestRate = loanApplication.getBigDecimal("");
