@@ -2330,7 +2330,7 @@ public class OnlineRemittanceProcessingServices {
 									"monthyear",month,
 									"payroll", payroll,
 									
-									"continuitycode", "15",
+									"continuitycode", continuitycode,
 									
 									"payrollcode", payrollcode,
 
