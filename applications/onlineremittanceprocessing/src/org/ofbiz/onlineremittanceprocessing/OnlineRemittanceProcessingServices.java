@@ -1661,13 +1661,13 @@ public class OnlineRemittanceProcessingServices {
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"stationId", EntityOperator.EQUALS,
 						Long.valueOf(currentStationId.trim())),
-						
-					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("DEAD")),
-					
-					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("CLOSED"))	
+						EntityCondition.makeCondition("memberStatusId", EntityOperator.EQUALS , LoanUtilities.getMemberStatusId("ACTIVE"))
 
 				), EntityOperator.AND);
-		
+//		EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("DEAD")),
+//		
+//		EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("CLOSED"))	
+	
 		
 		List<GenericValue> memberELI = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -2259,6 +2259,7 @@ public class OnlineRemittanceProcessingServices {
 				//check if payroll number in Loan In FOSA
 				if (!payrollNumberInFOSA(payroll)){
 				
+					if (bdLoanBalance.compareTo(BigDecimal.ZERO) > 0){
 			Long shareCapitalBackofficeLoansId = delegator.getNextSeqIdLong("ShareCapitalBackofficeLoans");
 			shareCapitalBackofficeLoans = delegator.makeValue("ShareCapitalBackofficeLoans",
 					UtilMisc.toMap("shareCapitalBackofficeLoansId", shareCapitalBackofficeLoansId,
@@ -2291,8 +2292,10 @@ public class OnlineRemittanceProcessingServices {
 							
 							
 							));
+					}
 				} else{
 					
+					if (bdLoanBalance.compareTo(BigDecimal.ZERO) > 0){
 					Long shareCapitalBackofficeLoansId = delegator.getNextSeqIdLong("ShareCapitalBackofficeLoans");
 					shareCapitalBackofficeLoans = delegator.makeValue("ShareCapitalBackofficeLoans",
 							UtilMisc.toMap("shareCapitalBackofficeLoansId", shareCapitalBackofficeLoansId,
@@ -2325,6 +2328,7 @@ public class OnlineRemittanceProcessingServices {
 									
 									
 									));
+					}
 					
 				}
 			try {
@@ -2339,6 +2343,7 @@ public class OnlineRemittanceProcessingServices {
 				Long fosaLoansId = delegator.getNextSeqIdLong("FosaLoans");
 				
 				if (!payrollNumberInFOSA(payroll)){
+					if (bdLoanBalance.compareTo(BigDecimal.ZERO) > 0){
 				fosaLoans = delegator.makeValue("FosaLoans",
 						UtilMisc.toMap("fosaLoansId", fosaLoansId,
 								"headOfficeMonthYearId", headOfficeMonthYearId,
@@ -2365,7 +2370,9 @@ public class OnlineRemittanceProcessingServices {
 								
 								
 								));
+					}
 				} else{
+					if (bdLoanBalance.compareTo(BigDecimal.ZERO) > 0){
 					fosaLoans = delegator.makeValue("FosaLoans",
 							UtilMisc.toMap("fosaLoansId", fosaLoansId,
 									"headOfficeMonthYearId", headOfficeMonthYearId,
@@ -2392,6 +2399,7 @@ public class OnlineRemittanceProcessingServices {
 									
 									
 									));
+					}
 				}
 				try {
 					delegator.createOrStore(fosaLoans);
