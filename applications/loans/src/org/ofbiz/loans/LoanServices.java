@@ -3325,7 +3325,7 @@ public class LoanServices {
 			
 			BigDecimal interestAmt = bdInterestAccrued.subtract(bdInterestExpectedPerMonth);
 			
-			if (interestAmt.compareTo(BigDecimal.ZERO) < 1)
+			if (interestAmt.compareTo(BigDecimal.ZERO) == 1)
 				return true;
 			
 		}
