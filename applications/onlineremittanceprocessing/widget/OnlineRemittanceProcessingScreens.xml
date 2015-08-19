@@ -244,6 +244,50 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	<!-- passingFosa -->
+		<screen name="passingFosa">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Passing FOSA" />
+				<set field="headerItem" value="passingFosa" />
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="createPassingFosa" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+				
+				<property-to-field field="defaultCountryGeoId"
+					resource="general" property="KEN" default="KEN" />
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+
+						<section>
+							<widgets>
+								<screenlet title="Passing Fosa">
+									<include-form name="NewPassingFosa"
+										location="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<!-- screenlet> <include-form name="FindLoansForwarded" location="component://loansprocessing/widget/loansprocessingForms.xml"/> 
+									</screenlet -->
+								<screenlet title="Passing Fosa">
+									<include-form name="listPassingFosa"
+										location="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+
+
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
 		<!-- 
 		showStationPushStatus
 	
