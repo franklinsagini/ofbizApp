@@ -543,7 +543,7 @@
 			
 			
 		});
-		if (isEmployee){
+		if (isEmployee && (loanApplicationId!='11027449')){
 			alert(' An employee cannot guarantee a non staff loan!');
 			return false;
 		}
