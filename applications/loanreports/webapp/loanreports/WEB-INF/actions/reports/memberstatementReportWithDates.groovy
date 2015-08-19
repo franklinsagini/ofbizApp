@@ -716,6 +716,8 @@ allAccountProducts.eachWithIndex { memberAccount, index ->
 
 	}
 
+	memberStatement.listOfTransactions.sort{it.transactionDate};
+	
 	memberStatementList.add(memberStatement)
 }
 
