@@ -112,16 +112,23 @@ under the License.
                     <fo:block></fo:block>
                 </fo:list-item-body>
             </fo:list-item>
-            <#-- fo:list-item>
+            
+            <fo:list-item>
                 <fo:list-item-label>
-                    <fo:block font-weight="bold">Payroll Number:</fo:block>
+                    <fo:block font-weight="bold">
+                    <#if statement.loanStatus??>
+                    ${statement.loanStatus}
+                    </#if>
+                    
+                    </fo:block>
                 </fo:list-item-label>
                 <fo:list-item-body start-indent="body-start()">
-                    <fo:block>${member.payrollNumber?if_exists}</fo:block>
+                    <fo:block></fo:block>
                 </fo:list-item-body>
-            </fo:list-item -->
+            </fo:list-item>
             
         </fo:list-block>
+        
         <fo:block><fo:leader/></fo:block>
         <#-- Loan Details -->
         <fo:block space-after.optimum="10pt" font-size="9pt">
@@ -180,7 +187,7 @@ under the License.
                                 	<#assign totalAmount = totalAmount + transaction.transactionAmount >
                                 </#if>
                                 
-                               <#if transaction.isLoanTransaction == true>
+                               <#if (transaction.isLoanTransaction??) && (transaction.isLoanTransaction == true)>
                                 	<#assign totalAmount = totalAmount - transaction.transactionAmount >
                                 </#if>	
                                 		
@@ -192,7 +199,7 @@ under the License.
                                 	 <#assign totalAmount = totalAmount - transaction.transactionAmount >
                                 </#if>	
                                 
-                                 <#if transaction.isLoanTransaction == true>
+                                 <#if (transaction.isLoanTransaction??) && (transaction.isLoanTransaction == true)>
                                 	 <#assign totalAmount = totalAmount + transaction.transactionAmount >
                                 </#if>
                                 		

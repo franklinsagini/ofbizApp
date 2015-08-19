@@ -63,6 +63,7 @@ class MemberStatement{
 	def accountName
 	def itemTotal
 	def availableBalace
+	def loanStatus
 	def listOfTransactions = []
 }
 
@@ -300,6 +301,9 @@ allLoansList.eachWithIndex { loanItem, index ->
 	memberStatement.name = "LOAN TYPE : "+loanProduct.name;
 	memberStatement.code = "LOAN CODE : "+loanProduct.code;
 	memberStatement.loanNo = "LOAN NO :  "+loanItem.loanNo;
+	
+	loanStatusItem = delegator.findOne("LoanStatus", [loanStatusId : loanItem.loanStatusId], false);
+	memberStatement.loanStatus = "LOAN STATUS :  "+loanStatusItem.name;
 
 	memberStatement.listOfTransactions.add(loanTransaction);
 

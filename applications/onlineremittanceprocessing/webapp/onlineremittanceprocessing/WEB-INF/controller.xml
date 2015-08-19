@@ -469,7 +469,35 @@
 			<redirect-parameter name="headOfficeMonthYearId"/>
 		</response>
 	</request-map>
+	
+	<!-- FOSA Mapping -->
+<!-- PassingFosa -->
+	
+	<request-map uri="passingFosa">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="passingFosa" />
+	</request-map>
+	
+	<request-map uri="createPassingFosa">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createPassingFosa" />
+		<response name="success" type="request-redirect" value="passingFosa"></response>
+		<response name="error" type="view" value="passingFosa" />
+	</request-map>
 
+	<request-map uri="updatePassingFosa">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updatePassingFosa" />
+		<response name="success" type="request-redirect" value="passingFosa"></response>
+		<response name="error" type="view" value="passingFosa" />
+	</request-map>
+	
+	<request-map uri="deletePassingFosa">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deletePassingFosa" />
+		<response name="success" type="request-redirect" value="passingFosa"></response>
+		<response name="error" type="view" value="passingFosa" />
+	</request-map>
 
 	<!-- View Mappings -->
 	<view-map name="main" type="screen"
@@ -513,6 +541,10 @@
 		<view-map name="stationProductCodeMap" type="screen"
 		page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#stationProductCodeMap" />
 		
+		<!-- passingFosa -->
+		<view-map name="passingFosa" type="screen"
+		page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#passingFosa" />
+
 	<view-map name="expectedRemittanceExport" type="screencsv" page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#expectedRemittanceExport" content-type="text/csv" encoding="none"/>
 
 	<!-- receivedRemittanceExport -->
