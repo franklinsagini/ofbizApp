@@ -3,6 +3,7 @@ package org.ofbiz.onlineremittanceprocessing;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
 import org.ofbiz.accountholdertransactions.LoanRepayments;
 import org.ofbiz.accountholdertransactions.LoanUtilities;
@@ -2197,9 +2199,35 @@ public class OnlineRemittanceProcessingServices {
 					+ " BALANCE";
 			
 			String productCode = loanProduct.getString("code");
+			
+			if (productCode.equals("D325"))
+			{
+				productCode = "D335";
+			}
+			
+			//Set continuity code
+			//if (loanApplication.getTime("disbursementDate"))
+			DateTime firstDayThisMonth = new DateTime().dayOfMonth().withMinimumValue();
+			firstDayThisMonth = firstDayThisMonth.minusMonths(1);
+			firstDayThisMonth = firstDayThisMonth.plusDays(15);
+			
+			Timestamp dateOfInterest = new Timestamp(firstDayThisMonth.toDate().getTime());
+			
+			String continuitycode = "";
+			if (loanApplication.getTimestamp("disbursementDate").compareTo(dateOfInterest) < 0){
+				continuitycode = "16";
+			}else{
+				continuitycode = "15";
+			}
+			
+			//Set continuity
+				
 			BigDecimal bdLoanBalance = LoansProcessingServices
 					.getTotalLoanBalancesByLoanApplicationId(loanApplication
 							.getLong("loanApplicationId"));
+			
+			if (bdLoanBalance.compareTo(BigDecimal.ZERO) < 1)
+				return;
 			
 			BigDecimal bdOriginalAmount = loanApplication.getBigDecimal("loanAmt");
 			//BigDecimal bdPrincipalDue = LoanRepayments.getTotalPrincipalDue(loanApplicationId);
@@ -2259,7 +2287,7 @@ public class OnlineRemittanceProcessingServices {
 				//check if payroll number in Loan In FOSA
 				if (!payrollNumberInFOSA(payroll)){
 				
-					if (bdLoanBalance.compareTo(BigDecimal.ZERO) > 0){
+					
 			Long shareCapitalBackofficeLoansId = delegator.getNextSeqIdLong("ShareCapitalBackofficeLoans");
 			shareCapitalBackofficeLoans = delegator.makeValue("ShareCapitalBackofficeLoans",
 					UtilMisc.toMap("shareCapitalBackofficeLoansId", shareCapitalBackofficeLoansId,
@@ -2267,7 +2295,8 @@ public class OnlineRemittanceProcessingServices {
 							"monthyear",month,
 							"payroll", payroll,
 							
-							"continuitycode", "15",
+							//"continuitycode", "15",
+							"continuitycode", continuitycode,
 							
 							"payrollcode", payrollcode,
 
@@ -2292,10 +2321,8 @@ public class OnlineRemittanceProcessingServices {
 							
 							
 							));
-					}
 				} else{
 					
-					if (bdLoanBalance.compareTo(BigDecimal.ZERO) > 0){
 					Long shareCapitalBackofficeLoansId = delegator.getNextSeqIdLong("ShareCapitalBackofficeLoans");
 					shareCapitalBackofficeLoans = delegator.makeValue("ShareCapitalBackofficeLoans",
 							UtilMisc.toMap("shareCapitalBackofficeLoansId", shareCapitalBackofficeLoansId,
@@ -2328,7 +2355,6 @@ public class OnlineRemittanceProcessingServices {
 									
 									
 									));
-					}
 					
 				}
 			try {
@@ -2343,7 +2369,6 @@ public class OnlineRemittanceProcessingServices {
 				Long fosaLoansId = delegator.getNextSeqIdLong("FosaLoans");
 				
 				if (!payrollNumberInFOSA(payroll)){
-					if (bdLoanBalance.compareTo(BigDecimal.ZERO) > 0){
 				fosaLoans = delegator.makeValue("FosaLoans",
 						UtilMisc.toMap("fosaLoansId", fosaLoansId,
 								"headOfficeMonthYearId", headOfficeMonthYearId,
@@ -2370,9 +2395,7 @@ public class OnlineRemittanceProcessingServices {
 								
 								
 								));
-					}
 				} else{
-					if (bdLoanBalance.compareTo(BigDecimal.ZERO) > 0){
 					fosaLoans = delegator.makeValue("FosaLoans",
 							UtilMisc.toMap("fosaLoansId", fosaLoansId,
 									"headOfficeMonthYearId", headOfficeMonthYearId,
@@ -2399,7 +2422,6 @@ public class OnlineRemittanceProcessingServices {
 									
 									
 									));
-					}
 				}
 				try {
 					delegator.createOrStore(fosaLoans);
