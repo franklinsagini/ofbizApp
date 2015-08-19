@@ -3317,18 +3317,17 @@ public class LoanServices {
 		
 		if ((bdTotalRepaidAmt == null) || (loanDeductionAmt == null) || (bdTotalRepaidAmt.compareTo(loanDeductionAmt) == -1))
 		{
-			return true;
-		} else{
-			//Check interest
+			
 			BigDecimal bdInterestAccrued = LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString());
 			BigDecimal bdInterestExpectedPerMonth = LoanRepayments.getInterestOnSchedule(loanApplicationId);
 			
 			BigDecimal interestAmt = bdInterestAccrued.subtract(bdInterestExpectedPerMonth);
 			
-			if (interestAmt.compareTo(BigDecimal.ZERO) == 1)
-				return true;
+			if (interestAmt.compareTo(BigDecimal.ZERO) < 1)
+				return false;
 			
-		}
+			return true;
+		} 
 		
 		return false;
 	}
