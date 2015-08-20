@@ -2032,15 +2032,15 @@ public class LoanServices {
 				//Add Interest and insurance if they are -ve
 				
 				//TODO need some clarification on calculating the total paid amount
-				if ((genericValue.getBigDecimal("interestAmount") != null) && (genericValue.getBigDecimal("interestAmount").compareTo(BigDecimal.ZERO) == -1)){
-					bdTotalRepayment = bdTotalRepayment.add(genericValue
-							.getBigDecimal("interestAmount"));
-				}
-				
-				if ((genericValue.getBigDecimal("insuranceAmount") != null) && (genericValue.getBigDecimal("insuranceAmount").compareTo(BigDecimal.ZERO) == -1)){
-					bdTotalRepayment = bdTotalRepayment.add(genericValue
-							.getBigDecimal("insuranceAmount"));
-				}
+//				if ((genericValue.getBigDecimal("interestAmount") != null) && (genericValue.getBigDecimal("interestAmount").compareTo(BigDecimal.ZERO) == -1)){
+//					bdTotalRepayment = bdTotalRepayment.add(genericValue
+//							.getBigDecimal("interestAmount"));
+//				}
+//				
+//				if ((genericValue.getBigDecimal("insuranceAmount") != null) && (genericValue.getBigDecimal("insuranceAmount").compareTo(BigDecimal.ZERO) == -1)){
+//					bdTotalRepayment = bdTotalRepayment.add(genericValue
+//							.getBigDecimal("insuranceAmount"));
+//				}
 			}
 		}
 
@@ -2600,7 +2600,22 @@ public class LoanServices {
 				.getLong("loanProductId"));
 		Long accountProductId = loanProduct.getLong("accountProductId");
 		BigDecimal bdMaximumLoanAmt  = null;
-		if (loanProduct.getBigDecimal("multipleOfSavingsAmt") != null){
+		
+		BigDecimal bdNetSalaryAmount = null;
+		
+		if (loanProduct.getString("percentageOfMemberNetSalary").equals("Yes")){
+			log.info(" LLLLLLLLLLLLLLL Percentage of Net Salary !!!!!!!!! ");
+			bdNetSalaryAmount = getNetSalaryIsSetAmount(Long.valueOf(partyId));
+			bdMaximumLoanAmt = BigDecimal.ZERO;
+			if (bdNetSalaryAmount != null){
+				log.info(" LLLLLLLLLLLLLLL Has Net Amount !!!!!!!!! ");
+				bdMaximumLoanAmt = bdNetSalaryAmount.multiply(loanProduct.getBigDecimal("percentageOfMemberNetSalaryAmt")).divide(new BigDecimal(ONEHUNDRED), 4, RoundingMode.HALF_UP);
+			} else{
+				log.info(" LLLLLLLLLLLLLLL DOES NOT HAVE Net Amount !!!!!!!!! ");
+			}
+			
+			
+		} else if (loanProduct.getBigDecimal("multipleOfSavingsAmt") != null){
 			bdMaximumLoanAmt = calculateMaximumAmount(
 				loanApplication.getLong("partyId"), accountProductId,
 				loanProduct.getBigDecimal("multipleOfSavingsAmt"),
