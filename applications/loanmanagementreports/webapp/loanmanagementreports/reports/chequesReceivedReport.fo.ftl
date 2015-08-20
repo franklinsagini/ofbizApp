@@ -101,8 +101,8 @@ under the License.
             <fo:table table-layout="fixed" width="100%">
                 <fo:table-column column-width="80pt"/>
                 <fo:table-column column-width="80pt"/>
-                <fo:table-column column-width="80pt"/>
-                <fo:table-column column-width="80pt"/>
+                <fo:table-column column-width="60pt"/>
+                <fo:table-column column-width="60pt"/>
                 <fo:table-column column-width="80pt"/>
                 
                 <fo:table-column column-width="50pt"/>
@@ -277,8 +277,8 @@ under the License.
             <fo:table table-layout="fixed" width="100%">
                 <fo:table-column column-width="80pt"/>
                 <fo:table-column column-width="80pt"/>
-                <fo:table-column column-width="80pt"/>
-                <fo:table-column column-width="80pt"/>
+                <fo:table-column column-width="60pt"/>
+                <fo:table-column column-width="60pt"/>
                 <fo:table-column column-width="80pt"/>
                 
                 <fo:table-column column-width="50pt"/>
