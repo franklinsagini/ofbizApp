@@ -177,7 +177,7 @@ under the License.
                                
                                 <#assign stationId = transactionItem.stationId />
                                 
-                               <#if (stationId??) && (!stationId.equal("")) >
+                               <#if (stationId??) && (!stationId != "") >
                               	<#assign stationIdString = stationId.toString() />
                               	<#assign station = delegator.findOne("Station", Static["org.ofbiz.base.util.UtilMisc"].toMap("stationId", stationIdString), true)/>
 								${station.name}
