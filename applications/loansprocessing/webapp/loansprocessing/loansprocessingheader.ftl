@@ -535,6 +535,7 @@
 			     			isSelf 		= data.isSelf;
 			     			hasDeposits = data.hasDeposits;
 			     			alreadyAdded = data.alreadyAdded;
+			     			isStaffLoan = data.isStaffLoan;
 			               },
 			      error : function(errorData){
 			
@@ -543,7 +544,10 @@
 			
 			
 		});
-		if (isEmployee && (loanApplicationId!='11027449')){
+		
+		
+		//loanApplicationId!='11027449'
+		if (isEmployee && (!isStaffLoan)){
 			alert(' An employee cannot guarantee a non staff loan!');
 			return false;
 		}

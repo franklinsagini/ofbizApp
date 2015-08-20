@@ -657,6 +657,8 @@ public class LoansProcessingServices {
 		if (!isEmployee){
 			isEmployee = guarantorIsSaccoEmployee(guarantorId);
 		}
+		
+		Boolean isStaffLoan = isStaffLoan(loanApplicationId);
 
 		Boolean isSelf = guarantorIsSelf(guarantorId, loanApplicationId);
 
@@ -678,6 +680,8 @@ public class LoansProcessingServices {
 		result.put("alreadyAdded", alreadyAdded);
 
 		result.put("isBoardMember", isBoardMember);
+		result.put("isStaffLoan", isStaffLoan);
+		
 
 		Gson gson = new Gson();
 		String json = gson.toJson(result);
@@ -716,6 +720,26 @@ public class LoansProcessingServices {
 	}
 	
 	
+	private static Boolean isStaffLoan(Long loanApplicationId) {
+		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
+		
+		if (loanApplication == null)
+			return false;
+		
+		if (loanApplication.getLong("loanProductId") == null)
+			return false;
+		
+		GenericValue loanProduct = LoanUtilities.getEntityValue("LoanProduct", "loanProductId", loanApplication.getLong("loanProductId"));
+		
+		if (loanProduct.getString("isStaffLoan") == null)
+			return false;
+		
+		if (loanProduct.getString("isStaffLoan").trim().equals("Y"))
+			return true;
+		
+		return false;
+	}
+
 	/*****
 	 * Delete Guarantor Record
 	 * */
