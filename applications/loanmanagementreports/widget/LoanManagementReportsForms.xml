@@ -84,4 +84,73 @@
         <field name="stationName" title="Station"><display/></field>
         
     </form>
+    
+    <!-- stationChequeReceivedReport -->
+    <form name="stationChequeReceivedReportForm" type="single" target="stationChequeReceivedReportPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+		<actions>
+			<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+
+			<entity-condition entity-name="MonthStationCount" list="monthStationList"></entity-condition>
+		</actions>
+		
+        <!-- field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field -->
+        
+        <!-- field name="startDate" title="From"  widget-style="required" required-field="true">
+        	<date-time type="date"/>
+        		
+        	
+        </field>
+        
+        <field name="endDate" title="To" position="2"  widget-style="required" required-field="true">
+        	<date-time type="date"/>
+        </field -->
+        
+        <field name="createdBy" title="Received By"  widget-style="required" required-field="true">
+        	<text-find></text-find>
+        </field>
+        
+        <field name="stationId" title="Station">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name} - ${stationNumber}" key-field-name="stationId" entity-name="Station">
+        			<entity-order-by field-name="name"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        
+        <field name="branchId" title="Branch">
+            <drop-down allow-empty="true" >
+                <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
+            </drop-down>
+        </field>
+        
+        <field name="monthyear" title="Month of the Year (MonthYear)" widget-style="required" required-field="true">
+        	<drop-down allow-empty="true">
+        		<!-- entity-options description="${month}"  key-field-name="month" entity-name="MonthStationCount">
+        			<entity-order-by field-name="-month"/>
+        		</entity-options -->
+        		<option key="32015" description="32015"/>
+        		<option key="42015" description="42015"/>
+        		<option key="52015" description="52015"/>
+        		<option key="62015" description="62015"/>
+        		<option key="72015" description="72015"/>
+        		<option key="82015" description="82015"/>
+        		<option key="92015" description="92015"/>
+        		<option key="102015" description="102015"/>
+        		<option key="11015" description="112015"/>
+        		<option key="122015" description="122015"/>
+        		
+        	</drop-down>
+        </field>
+        <field name="chequeNumber" title="Cheque No">
+        	<text-find></text-find>
+        </field>
+
+        
+        <field name="submitButton" title="Show" widget-style="smallSubmit">
+            <submit button-type="button" />
+        </field>
+    </form>
 </forms>
