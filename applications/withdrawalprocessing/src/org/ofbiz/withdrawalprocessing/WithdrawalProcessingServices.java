@@ -381,7 +381,12 @@ public class WithdrawalProcessingServices {
 			BigDecimal disbursedLoanBalanceAmount = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(Long.valueOf(disbursedLoanId));
 			BigDecimal disbursedLoanTotalInterestAmount = LoanRepayments.getTotalInterestByLoanDue(disbursedLoanId);
 			BigDecimal disbursedLoanTotalInsuranceAmount = LoanRepayments.getTotalInsurancByLoanDue(disbursedLoanId);
+		
 			
+			disbursedLoanBalanceAmount = disbursedLoanBalanceAmount.setScale(2, RoundingMode.FLOOR);
+			disbursedLoanTotalInterestAmount = disbursedLoanTotalInterestAmount.setScale(2, RoundingMode.FLOOR);
+			disbursedLoanTotalInsuranceAmount = disbursedLoanTotalInsuranceAmount.setScale(2, RoundingMode.FLOOR);
+
 			if (disbursedLoanBalanceAmount.compareTo(BigDecimal.ZERO) == -1)
 				return " One or more loans have an overpayment on principal, please make sure the loans overpaid or with negative balances and recovered by passing a JV";
 
@@ -398,6 +403,10 @@ public class WithdrawalProcessingServices {
 			BigDecimal clearedLoanBalanceAmount = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(Long.valueOf(clearedLoanId));
 			BigDecimal clearedLoanTotalInterestAmount = LoanRepayments.getTotalInterestByLoanDue(clearedLoanId);
 			BigDecimal clearedLoanTotalInsuranceAmount = LoanRepayments.getTotalInsurancByLoanDue(clearedLoanId);
+
+			clearedLoanBalanceAmount = clearedLoanBalanceAmount.setScale(2, RoundingMode.FLOOR);
+			clearedLoanTotalInterestAmount = clearedLoanTotalInterestAmount.setScale(2, RoundingMode.FLOOR);
+			clearedLoanTotalInsuranceAmount = clearedLoanTotalInsuranceAmount.setScale(2, RoundingMode.FLOOR);
 
 			if (clearedLoanBalanceAmount.compareTo(BigDecimal.ZERO) == -1)
 				return " One or more loans have an overpayment on principal, please make sure the loans overpaid or with negative balances and recovered by passing a JV";

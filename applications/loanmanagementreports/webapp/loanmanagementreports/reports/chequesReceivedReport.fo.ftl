@@ -176,7 +176,7 @@ under the License.
                                 <fo:block>
                                
                                 <#assign stationId = transactionItem.stationId />
-                                loanProduct.deductionType.equals("REDUCING_BALANCE")
+                                
                                <#if (stationId??) >
                               	<#assign stationIdString = stationId.toString() />
                               	<#assign station = delegator.findOne("Station", Static["org.ofbiz.base.util.UtilMisc"].toMap("stationId", stationIdString), true)/>
