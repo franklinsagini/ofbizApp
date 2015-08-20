@@ -3252,5 +3252,64 @@ public class LoanUtilities {
 		}
 		return loanProduct;
 	}
+	
+	public static void reduceLoanRepaymentInSourceWithType(
+			Long sourceLoanApplicationId, BigDecimal principalAmount,
+			BigDecimal interestAmount, BigDecimal insuranceAmount,
+			BigDecimal amount, Map<String, String> userLogin, String acctgTransId, String repaymentType) {
+		GenericValue loanApplication = LoanUtilities.getLoanApplicationEntity(sourceLoanApplicationId);
+		GenericValue loanRepayment = null; 
+		//String partyId = (String) userLogin.get("partyId");
+		String userLoginId = (String) userLogin.get("userLoginId");
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		Long loanRepaymentId = delegator.getNextSeqIdLong("LoanRepayment", 1);
+		Long loanApplicationId = sourceLoanApplicationId;
+		BigDecimal bdLoanAmt = loanApplication.getBigDecimal("loanAmt");
+		//LoanRepayments.getT
+		BigDecimal totalLoanDue = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
+		BigDecimal totalInterestDue = LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString());
+		BigDecimal totalInsuranceDue = LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString());
+		BigDecimal totalPrincipalDue = LoanRepayments.getTotalPrincipaByLoanDue(loanApplicationId.toString());
+		
+		if (interestAmount == null)
+			interestAmount = BigDecimal.ZERO;
+		
+		if (insuranceAmount == null)
+			insuranceAmount = BigDecimal.ZERO;
+		
+		if (insuranceAmount == null)
+			insuranceAmount = BigDecimal.ZERO;
+
+		if (principalAmount == null)
+			principalAmount = BigDecimal.ZERO;
+		
+		BigDecimal loanInterest = interestAmount.multiply(new BigDecimal(-1));
+		BigDecimal loanInsurance = insuranceAmount.multiply(new BigDecimal(-1));
+		BigDecimal loanPrincipal = principalAmount.multiply(new BigDecimal(-1));
+		BigDecimal transactionAmount = amount.multiply(new BigDecimal(-1));
+				
+		loanRepayment = delegator.makeValue("LoanRepayment", UtilMisc.toMap(
+				"loanRepaymentId", loanRepaymentId, "isActive", "Y",
+				"createdBy", userLoginId, "partyId", loanApplication.getLong("partyId"), "loanApplicationId",
+				loanApplication.getLong("loanApplicationId"),
+
+				"loanNo", loanApplication.getString("loanNo"),
+				"loanAmt", bdLoanAmt,
+
+				"totalLoanDue", totalLoanDue, "totalInterestDue",
+				totalInterestDue, "totalInsuranceDue", totalInsuranceDue,
+				"totalPrincipalDue", totalPrincipalDue, "interestAmount",
+				loanInterest, "insuranceAmount", loanInsurance,
+				"principalAmount", loanPrincipal, "transactionAmount",
+				transactionAmount, "acctgTransId", acctgTransId, "repaymentType", repaymentType));
+		try {
+			delegator.createOrStore(loanRepayment);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		
+	}
+
 
 }
