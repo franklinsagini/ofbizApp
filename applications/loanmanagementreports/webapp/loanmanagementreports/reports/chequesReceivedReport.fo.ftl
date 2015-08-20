@@ -174,9 +174,8 @@ under the License.
                         <fo:table-row>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" background-color="${zebra(transactionItem_index)}" text-align="left">
                                 <fo:block>
-                               
+                               <#if transactionItem.stationId?? >
                                 <#assign stationId = transactionItem.stationId />
-                               <#if stationId?? >
                               	<#assign stationIdString = stationId.toString() />
                               	<#assign station = delegator.findOne("Station", Static["org.ofbiz.base.util.UtilMisc"].toMap("stationId", stationIdString), true)/>
 								${station.name}
