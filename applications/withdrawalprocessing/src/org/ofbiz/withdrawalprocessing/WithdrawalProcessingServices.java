@@ -371,9 +371,44 @@ public class WithdrawalProcessingServices {
 			return "The member has "+defaultedLoansList.size()+" defaulted loan(s), cannot therefore withdraw from the society !";
 		}
 		
+		
+		//Check that a member does not have any loan with negative balance 
+		
 		List<String> listDisbursedLoans = LoansProcessingServices
 				.getLoanApplicationList(partyId);
+		for (String disbursedLoanId : listDisbursedLoans) {
+			//Ensure that each of these loans does not have -ve balance
+			BigDecimal disbursedLoanBalanceAmount = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(Long.valueOf(disbursedLoanId));
+			BigDecimal disbursedLoanTotalInterestAmount = LoanRepayments.getTotalInterestByLoanDue(disbursedLoanId);
+			BigDecimal disbursedLoanTotalInsuranceAmount = LoanRepayments.getTotalInsurancByLoanDue(disbursedLoanId);
+			
+			if (disbursedLoanBalanceAmount.compareTo(BigDecimal.ZERO) == -1)
+				return " One or more loans have an overpayment on principal, please make sure the loans overpaid or with negative balances and recovered by passing a JV";
+
+			if (disbursedLoanTotalInterestAmount.compareTo(BigDecimal.ZERO) == -1)
+				return " One or more loans have an overpayment on Interest, please make sure the loans overpaid or with negative balances and recovered by passing a JV";
+
+			if (disbursedLoanTotalInsuranceAmount.compareTo(BigDecimal.ZERO) == -1)
+				return " One or more loans have an overpayment on Insurance, please make sure the loans overpaid or with negative balances and recovered by passing a JV";
+
+		}
 		
+		List<String> listClearedLoans = LoansProcessingServices.getLoanApplicationListClearedLoans(partyId);
+		for (String clearedLoanId : listClearedLoans) {
+			BigDecimal clearedLoanBalanceAmount = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(Long.valueOf(clearedLoanId));
+			BigDecimal clearedLoanTotalInterestAmount = LoanRepayments.getTotalInterestByLoanDue(clearedLoanId);
+			BigDecimal clearedLoanTotalInsuranceAmount = LoanRepayments.getTotalInsurancByLoanDue(clearedLoanId);
+
+			if (clearedLoanBalanceAmount.compareTo(BigDecimal.ZERO) == -1)
+				return " One or more loans have an overpayment on principal, please make sure the loans overpaid or with negative balances and recovered by passing a JV";
+
+			if (clearedLoanTotalInterestAmount.compareTo(BigDecimal.ZERO) == -1)
+				return " One or more loans have an overpayment on Interest, please make sure the loans overpaid or with negative balances and recovered by passing a JV";
+
+			if (clearedLoanTotalInsuranceAmount.compareTo(BigDecimal.ZERO) == -1)
+				return " One or more loans have an overpayment on Insurance, please make sure the loans overpaid or with negative balances and recovered by passing a JV";
+			
+		}
 		
 		BigDecimal bdMemberDepositsBalanceNow = getMemberDepositBalance(partyId.toString());
 		if (((listDisbursedLoans == null) || (listDisbursedLoans.size() < 1)) && (bdMemberDepositsBalanceNow.compareTo(BigDecimal.ZERO) < 1))
