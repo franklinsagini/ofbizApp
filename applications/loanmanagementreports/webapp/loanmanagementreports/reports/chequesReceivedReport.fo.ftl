@@ -176,11 +176,14 @@ under the License.
                                 <fo:block>
                                
                                 <#assign stationId = transactionItem.stationId />
-                                
-                               <#if (stationId??) && (!stationId != "") >
+                                loanProduct.deductionType.equals("REDUCING_BALANCE")
+                               <#if (stationId??) >
                               	<#assign stationIdString = stationId.toString() />
                               	<#assign station = delegator.findOne("Station", Static["org.ofbiz.base.util.UtilMisc"].toMap("stationId", stationIdString), true)/>
+								
+								<#if station??>
 								${station.name}
+								</#if>
 							</#if>
                                 </fo:block>
                             </fo:table-cell>
