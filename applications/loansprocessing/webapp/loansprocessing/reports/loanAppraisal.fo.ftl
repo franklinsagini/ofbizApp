@@ -212,7 +212,12 @@ under the License.
                 <fo:block font-weight="bold">Loan Entitlement</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>KES ${loanApplication.maxLoanAmt?string(",##0.00")} </fo:block>
+                <fo:block>
+                <#if loanApplication.maxLoanAmt?? >
+                KES ${loanApplication.maxLoanAmt?string(",##0.00")}
+                </#if>
+                
+                 </fo:block>
             </fo:list-item-body>
         </fo:list-item>
         
