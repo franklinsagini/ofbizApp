@@ -3001,6 +3001,87 @@ public class LoanRepayments {
 		
 		return principalDue;
 	}
+	
+	
+	public static BigDecimal getInterestOnSchedule(Long loanApplicationId) {
+		// Get total principal that should have been paid from disbursement date
+		// to now
+//		BigDecimal bdTotalExpectedPrincipalAmountByToday = getTotalExpectedPrincipalAmountByLoanApplicationId(loanApplicationId);
+//		log.info("TTTTTTTTTTTTTTTT PPPPPPPPPPP Due bdTotalExpectedPrincipalAmountByToday "+bdTotalExpectedPrincipalAmountByToday);
+//		// Get total principal amount paid from disbursement date to now
+//		BigDecimal bdTotalRepaidPrincipalAmountByToday = getTotalPrincipalPaid(loanApplicationId);
+//		log.info("TTTTTTTTTTTTTTTT PPPPPPPPPPP What Should be paid Due bdTotalExpectedPrincipalAmountByToday "+bdTotalExpectedPrincipalAmountByToday);
+//		log.info("TTTTTTTTTTTTTTTT PPPPPPPPPPP What has been paid Due bdTotalExpectedPrincipalAmountByToday "+bdTotalRepaidPrincipalAmountByToday);
+//		// Return the difference as the principal due
+//		BigDecimal principalDue = bdTotalExpectedPrincipalAmountByToday
+//				.subtract(bdTotalRepaidPrincipalAmountByToday);
+//		log.info("TTTTTTTTTTTTTTTT PPPPPPPPPPP The difference is Due bdTotalExpectedPrincipalAmountByToday "+principalDue);
+//
+//		log.info("TTTTTTTTTTTTTTTT PPPPPPPPPPP  principalDue "+principalDue);
+		
+		/***
+		 * The above piece of code was tried but failed because of the dates issue.
+		 * 
+		 * Using advice from Kiptoo I will now just compute loan balances using 
+		 * current balance
+		 * */
+		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
+		BigDecimal paymentAmount;
+		BigDecimal bdRepaymentInterestAmt = BigDecimal.ZERO;
+		/***
+		 * Get Loan Product or Loan Type
+		 * */
+		GenericValue loanProduct = null;
+		Long loanProductId = loanApplication.getLong("loanProductId");
+		//loanProductId = loanProductId.replaceAll(",", "");
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanProduct = delegator.findOne("LoanProduct",
+					UtilMisc.toMap("loanProductId", Long.valueOf(loanProductId)), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		// Determine the Deduction Type
+		String deductionType = null;
+		deductionType = loanProduct.getString("deductionType");
+		
+		BigDecimal dbLoanAmt = loanApplication.getBigDecimal("loanAmt");
+		//.subtract(bdTotalRepaidLoan);
+		BigDecimal bdInterestRatePM = loanApplication.getBigDecimal(
+		"interestRatePM").divide(new BigDecimal(ONEHUNDRED));
+		//openingRepaymentPeriod
+		int iRepaymentPeriod;
+		//if (loanApplication.getLong("openingRepaymentPeriod") != null){
+		//	iRepaymentPeriod = loanApplication.getLong("openingRepaymentPeriod").intValue();
+		//} else{
+		iRepaymentPeriod = loanApplication.getLong("repaymentPeriod").intValue();
+		
+
+		if (deductionType.equals(REDUCING_BALANCE)) {
+			paymentAmount =AmortizationServices.calculateReducingBalancePaymentAmount(dbLoanAmt,
+					bdInterestRatePM, iRepaymentPeriod);
+		} else {
+			paymentAmount = AmortizationServices.calculateFlatRatePaymentAmount(dbLoanAmt,
+					bdInterestRatePM, iRepaymentPeriod);
+		}
+		
+		//Get Interest
+		BigDecimal bdLoanBalance = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
+		
+		if (deductionType.equals(REDUCING_BALANCE)){
+			bdRepaymentInterestAmt = bdLoanBalance.multiply(bdInterestRatePM);
+		} else{
+			bdRepaymentInterestAmt = dbLoanAmt
+					.multiply(bdInterestRatePM);
+		}
+				
+		//getTotalInterestByLoanDue(loanApplicationId.toString());
+		
+		//BigDecimal principalDue = paymentAmount.subtract(bdRepaymentInterestAmt);
+		
+		return bdRepaymentInterestAmt;
+	}
 
 	/****
 	 * @author Japheth Odonya @when Jul 9, 2015 10:56:40 PM

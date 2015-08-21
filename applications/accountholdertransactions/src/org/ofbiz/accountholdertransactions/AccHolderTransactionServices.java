@@ -2419,6 +2419,8 @@ public class AccHolderTransactionServices {
 
 					|| ((transactionType != null) && (transactionType
 							.equals("DEPOSITFROMREMITTANCE")))
+					|| ((transactionType != null) && (transactionType
+							.equals("OVERRECOVERY")))
 
 					|| ((transactionType != null) && (transactionType
 							.equals("MEMBERACCOUNTJVINC")))) {

@@ -657,6 +657,8 @@ public class LoansProcessingServices {
 		if (!isEmployee){
 			isEmployee = guarantorIsSaccoEmployee(guarantorId);
 		}
+		
+		Boolean isStaffLoan = isStaffLoan(loanApplicationId);
 
 		Boolean isSelf = guarantorIsSelf(guarantorId, loanApplicationId);
 
@@ -678,6 +680,8 @@ public class LoansProcessingServices {
 		result.put("alreadyAdded", alreadyAdded);
 
 		result.put("isBoardMember", isBoardMember);
+		result.put("isStaffLoan", isStaffLoan);
+		
 
 		Gson gson = new Gson();
 		String json = gson.toJson(result);
@@ -716,6 +720,26 @@ public class LoansProcessingServices {
 	}
 	
 	
+	private static Boolean isStaffLoan(Long loanApplicationId) {
+		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
+		
+		if (loanApplication == null)
+			return false;
+		
+		if (loanApplication.getLong("loanProductId") == null)
+			return false;
+		
+		GenericValue loanProduct = LoanUtilities.getEntityValue("LoanProduct", "loanProductId", loanApplication.getLong("loanProductId"));
+		
+		if (loanProduct.getString("isStaffLoan") == null)
+			return false;
+		
+		if (loanProduct.getString("isStaffLoan").trim().equals("Y"))
+			return true;
+		
+		return false;
+	}
+
 	/*****
 	 * Delete Guarantor Record
 	 * */
@@ -930,6 +954,41 @@ public class LoansProcessingServices {
 								
 								
 								), EntityOperator.AND);
+		
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					loanApplicationConditions, null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		List<String> listApplicationIds = new ArrayList<String>();
+		for (GenericValue genericValue : loanApplicationELI) {
+			listApplicationIds.add(genericValue.getLong("loanApplicationId").toString());
+		}
+
+		return listApplicationIds;
+	}
+	
+	public static List<String> getLoanApplicationListClearedLoans(Long partyId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> loanApplicationELI = new ArrayList<GenericValue>();
+		
+		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
+				.makeCondition(
+						UtilMisc.toList(EntityCondition.makeCondition(
+								"partyId", EntityOperator.EQUALS,
+								partyId),
+								
+								EntityCondition.makeCondition(
+										"loanStatusId", EntityOperator.EQUALS,
+										LoanUtilities.getLoanStatusId("CLEARED"))
+								
+								
+								), EntityOperator.AND);
+		
+		
 		
 		try {
 			loanApplicationELI = delegator.findList("LoanApplication",

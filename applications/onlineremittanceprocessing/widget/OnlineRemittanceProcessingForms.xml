@@ -1050,5 +1050,48 @@
          <field name="interestdue" title="Interest Due"><display/></field>
     </form>
     
+    <!-- passing FOSA listPassingFosa -->
+        	<form name="NewPassingFosa" type="single" target="createPassingFosa"
+        focus-field-name="payrollNumber" header-row-style="header-row" default-table-style="basic-table" default-map-name="passingFosaContext">
+        
+        <field name="payrollNumber" title="Payroll Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<text size="25"></text>
+        </field>
+
+       
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+
+    <!-- listStationProductCodeMap -->
+    <form name="listPassingFosa" type="list" list-name="listIt"
+		paginate-target="passingFosa" default-entity-name="PassingFosa"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="stationProductCodeMap">
+		<actions>
+            <entity-condition entity-name="PassingFosa">
+            	<order-by field-name="-passingFosaId"/>
+            </entity-condition>
+        </actions>
+		<field name="passingFosaId"><hidden/></field>
+		
+		<field name="onlineShareCapitalCode" title="Online Share Capital Code">
+			<display></display>
+		</field>
+		
+		<field name="systemShareCapitalCode" title="System Share Capital Code">
+			<display></display>
+		</field>
+		
+		
+		<field name="createdStamp" title="Created">
+			<display type="date-time" />
+		</field>
+		
+		<field name="createdBy" title="Created By">
+			<display />
+		</field>
+	</form>
+    
 
 </forms>

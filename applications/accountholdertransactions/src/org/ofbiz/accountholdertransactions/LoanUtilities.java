@@ -603,6 +603,64 @@ public class LoanUtilities {
 
 		return bdRecommendeAmt;
 	}
+	
+	public static BigDecimal getLoanMaxAmount(Long loanApplicationId) {
+		GenericValue loanApplication = getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
+		BigDecimal maxLoanAmt = loanApplication.getBigDecimal("maxLoanAmt");
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		//BigDecimal bdMaximumLoanAmt  = null;
+		if (maxLoanAmt == null)
+		{
+			
+			BigDecimal bdTotalSavings = LoanServices.totalSavings(
+					loanApplication.getLong("partyId").toString(), loanApplication
+							.getLong("loanProductId").toString(), delegator);
+			// bdMaximumLoanAmt =
+			// (bdTotalSavings.multiply(savingsMultiplier))
+			// .subtract(bdExistingLoans);
+			GenericValue loanProduct = getLoanProduct(loanApplication
+					.getLong("loanProductId"));
+			Long accountProductId = loanProduct.getLong("accountProductId");
+			maxLoanAmt  = null;
+			
+			BigDecimal bdNetSalaryAmount = null;
+			
+			if (loanProduct.getString("percentageOfMemberNetSalary").equals("Yes")){
+				log.info(" LLLLLLLLLLLLLLL Percentage of Net Salary !!!!!!!!! ");
+				bdNetSalaryAmount = LoanServices.getNetSalaryIsSetAmount(loanApplication.getLong("partyId"));
+				maxLoanAmt = BigDecimal.ZERO;
+				if (bdNetSalaryAmount != null){
+					log.info(" LLLLLLLLLLLLLLL Has Net Amount !!!!!!!!! ");
+					maxLoanAmt = bdNetSalaryAmount.multiply(loanProduct.getBigDecimal("percentageOfMemberNetSalaryAmt")).divide(new BigDecimal(AccHolderTransactionServices.ONEHUNDRED), 4, RoundingMode.HALF_UP);
+				} else{
+					log.info(" LLLLLLLLLLLLLLL DOES NOT HAVE Net Amount !!!!!!!!! ");
+				}
+				
+				
+			} else if (loanProduct.getBigDecimal("multipleOfSavingsAmt") != null){
+				maxLoanAmt = LoanServices.calculateMaximumAmount(
+					loanApplication.getLong("partyId"), accountProductId,
+					loanProduct.getBigDecimal("multipleOfSavingsAmt"),
+					bdTotalSavings);
+			} else{
+				maxLoanAmt = loanProduct.getBigDecimal("maximumAmt");
+			}
+
+			BigDecimal bdExistingLoans = LoanServices.calculateExistingLoansTotal(loanApplication
+					.getLong("partyId"));
+			loanApplication.set("maxLoanAmt", maxLoanAmt);
+			loanApplication.set("existingLoans", bdExistingLoans);
+			try {
+				delegator.createOrStore(loanApplication);
+			} catch (GenericEntityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return maxLoanAmt;
+	}
 
 	public static Long getMemberAge(Long partyId) {
 		Long memberAge = 0L;
@@ -1166,6 +1224,9 @@ public class LoanUtilities {
 
 		BigDecimal bdEntitlementAmount = loanApplication
 				.getBigDecimal("maxLoanAmt");
+		
+		if (bdEntitlementAmount == null)
+			bdEntitlementAmount = getLoanMaxAmount(loanApplicationId);
 		
 		bdEntitlementAmount = bdEntitlementAmount.setScale(2, RoundingMode.FLOOR);
 		bdLoanAmt = bdLoanAmt.setScale(2, RoundingMode.FLOOR);
@@ -3191,5 +3252,64 @@ public class LoanUtilities {
 		}
 		return loanProduct;
 	}
+	
+	public static void reduceLoanRepaymentInSourceWithType(
+			Long sourceLoanApplicationId, BigDecimal principalAmount,
+			BigDecimal interestAmount, BigDecimal insuranceAmount,
+			BigDecimal amount, Map<String, String> userLogin, String acctgTransId, String repaymentType) {
+		GenericValue loanApplication = LoanUtilities.getLoanApplicationEntity(sourceLoanApplicationId);
+		GenericValue loanRepayment = null; 
+		//String partyId = (String) userLogin.get("partyId");
+		String userLoginId = (String) userLogin.get("userLoginId");
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		Long loanRepaymentId = delegator.getNextSeqIdLong("LoanRepayment", 1);
+		Long loanApplicationId = sourceLoanApplicationId;
+		BigDecimal bdLoanAmt = loanApplication.getBigDecimal("loanAmt");
+		//LoanRepayments.getT
+		BigDecimal totalLoanDue = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
+		BigDecimal totalInterestDue = LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString());
+		BigDecimal totalInsuranceDue = LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString());
+		BigDecimal totalPrincipalDue = LoanRepayments.getTotalPrincipaByLoanDue(loanApplicationId.toString());
+		
+		if (interestAmount == null)
+			interestAmount = BigDecimal.ZERO;
+		
+		if (insuranceAmount == null)
+			insuranceAmount = BigDecimal.ZERO;
+		
+		if (insuranceAmount == null)
+			insuranceAmount = BigDecimal.ZERO;
+
+		if (principalAmount == null)
+			principalAmount = BigDecimal.ZERO;
+		
+		BigDecimal loanInterest = interestAmount.multiply(new BigDecimal(-1));
+		BigDecimal loanInsurance = insuranceAmount.multiply(new BigDecimal(-1));
+		BigDecimal loanPrincipal = principalAmount.multiply(new BigDecimal(-1));
+		BigDecimal transactionAmount = amount.multiply(new BigDecimal(-1));
+				
+		loanRepayment = delegator.makeValue("LoanRepayment", UtilMisc.toMap(
+				"loanRepaymentId", loanRepaymentId, "isActive", "Y",
+				"createdBy", userLoginId, "partyId", loanApplication.getLong("partyId"), "loanApplicationId",
+				loanApplication.getLong("loanApplicationId"),
+
+				"loanNo", loanApplication.getString("loanNo"),
+				"loanAmt", bdLoanAmt,
+
+				"totalLoanDue", totalLoanDue, "totalInterestDue",
+				totalInterestDue, "totalInsuranceDue", totalInsuranceDue,
+				"totalPrincipalDue", totalPrincipalDue, "interestAmount",
+				loanInterest, "insuranceAmount", loanInsurance,
+				"principalAmount", loanPrincipal, "transactionAmount",
+				transactionAmount, "acctgTransId", acctgTransId, "repaymentType", repaymentType));
+		try {
+			delegator.createOrStore(loanRepayment);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		
+	}
+
 
 }

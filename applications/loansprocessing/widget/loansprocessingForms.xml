@@ -619,7 +619,8 @@
         		<field-map field-name="loanApplicationId" from-field="theApplicationId"/>
         	</entity-one>
 
-        	<set field="maxLoanAmt" value="${loanApplication.maxLoanAmt}" type="BigDecimal"/>
+        	<!-- set field="maxLoanAmt" value="${loanApplication.maxLoanAmt}" type="BigDecimal"/ -->
+        	<set field="maxLoanAmt" value="${bsh:org.ofbiz.accountholdertransactions.LoanUtilities.getLoanMaxAmount(theApplicationId);}" type="BigDecimal"/>
         	<set field="theappliedAmt" value="${loanApplication.appliedAmt}" type="BigDecimal"/>
 			<set field="recommendedAmt" value="${bsh:org.ofbiz.accountholdertransactions.LoanUtilities.getRecommendedAmount(maxLoanAmt, theappliedAmt);}"/>
 			<set field="appraisedAmt" from-field="recommendedAmt"/>
