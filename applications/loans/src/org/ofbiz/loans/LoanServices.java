@@ -388,7 +388,7 @@ public class LoanServices {
 		return json;
 	}
 
-	private static BigDecimal getNetSalaryIsSetAmount(Long partyId) {
+	public static BigDecimal getNetSalaryIsSetAmount(Long partyId) {
 		List<GenericValue> memberNetSalaryELI = null; // =
 		EntityConditionList<EntityExpr> memberNetSalaryConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
@@ -459,7 +459,7 @@ public class LoanServices {
 		return bdTotal;
 	}
 
-	private static BigDecimal calculateMaximumAmount(Long partyId,
+	public static BigDecimal calculateMaximumAmount(Long partyId,
 			Long accountProductId, BigDecimal savingsMultiplier,
 			BigDecimal bdTotalSavings) {
 		// TODO Auto-generated method stub
@@ -572,7 +572,7 @@ public class LoanServices {
 		return loanApplication;
 	}
 
-	private static BigDecimal totalSavings(String memberId,
+	public static BigDecimal totalSavings(String memberId,
 			String loanProductId, Delegator delegator) {
 		// Get the multiplier account - the account being used to get the
 		// maximum loan as defined in the

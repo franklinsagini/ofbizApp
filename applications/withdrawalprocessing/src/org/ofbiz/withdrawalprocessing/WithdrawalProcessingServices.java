@@ -364,60 +364,223 @@ public class WithdrawalProcessingServices {
 	 *         Offset Disbursed Loans With Member Deposits
 	 * **/
 	public static String offsetDisbursedLoansWithMemberDeposits(Long partyId,
-			Map<String, String> userLogin) {
+			Map<String, String> userLogin, Long memberWithdrawalId) {
 		
 		List<String> defaultedLoansList = LoansProcessingServices.getDefaultedLoanApplicationList(partyId);
 		if ((defaultedLoansList != null) && (defaultedLoansList.size() > 0)){
 			return "The member has "+defaultedLoansList.size()+" defaulted loan(s), cannot therefore withdraw from the society !";
 		}
 		
+		String memberAccountIdString = LoanUtilities.getMemberAccountIdGivenMemberAndAccountCode(partyId, AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
+
+		if (memberAccountIdString == null){
+			return "Member must have a savings account where his/her balance will be posted";
+		}
 		
+		//Replace guarantors for members disbursed loans
+		List<String> loansGuaranteedList = LoansProcessingServices.getLoansGuaranteedList(partyId);
+		if ((loansGuaranteedList != null) && (loansGuaranteedList.size() > 0))
+			return " Must replace all guarantors before withdrawing a member !";
+		
+		Long entrySequenceId = 0L;
+		String postingType = "";
+
+		String employeeBranchId = AccHolderTransactionServices
+				.getEmployeeBranch(userLogin.get("partyId"));
+		String memberBranchId = LoanUtilities.getMemberBranchId(partyId
+				.toString());
+
+		String acctgTransType = "MEMBER_DEPOSIT";
+		String acctgTransId = AccHolderTransactionServices
+				.createAccountingTransaction(null, acctgTransType, userLogin);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		BigDecimal bdTotalFromExcessPaymentAndCharged = BigDecimal.ZERO;
 		//Check that a member does not have any loan with negative balance 
+		String glAccountId = "";
+		String setupType = "";
 		
 		List<String> listDisbursedLoans = LoansProcessingServices
 				.getLoanApplicationList(partyId);
 		for (String disbursedLoanId : listDisbursedLoans) {
 			//Ensure that each of these loans does not have -ve balance
-			BigDecimal disbursedLoanBalanceAmount = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(Long.valueOf(disbursedLoanId));
 			BigDecimal disbursedLoanTotalInterestAmount = LoanRepayments.getTotalInterestByLoanDue(disbursedLoanId);
-			BigDecimal disbursedLoanTotalInsuranceAmount = LoanRepayments.getTotalInsurancByLoanDue(disbursedLoanId);
-		
-			
-			disbursedLoanBalanceAmount = disbursedLoanBalanceAmount.setScale(2, RoundingMode.FLOOR);
 			disbursedLoanTotalInterestAmount = disbursedLoanTotalInterestAmount.setScale(2, RoundingMode.FLOOR);
+			if (disbursedLoanTotalInterestAmount.compareTo(BigDecimal.ZERO) == -1){
+				//return " One or more loans have an overpayment on Interest, please make sure the loans overpaid or with negative balances and recovered by passing a JV";
+				//Claim interest amount
+				//claimMemberInterest(acctgTransId, acctgTransType, disbursedLoanTotalInterestAmount.abs(), Long.valueOf(disbursedLoanId), userLogin);
+				LoanUtilities.reduceLoanRepaymentInSourceWithType(Long.valueOf(disbursedLoanId), null, disbursedLoanTotalInterestAmount.abs(), null, disbursedLoanTotalInterestAmount.abs(), userLogin, acctgTransId, "OVERRECOVERY");
+
+				//Debit Interest Receivable
+				postingType = "D";
+
+				setupType = "INTERESTPAYMENT";
+				GenericValue accountHolderTransactionSetup = LoanRepayments
+						.getAccountHolderTransactionSetupRecord(setupType, delegator);
+				glAccountId = accountHolderTransactionSetup
+						.getString("memberDepositAccId");
+				
+				entrySequenceId = entrySequenceId + 1;
+				AccHolderTransactionServices.postTransactionEntry(delegator, disbursedLoanTotalInterestAmount.abs(), employeeBranchId, memberBranchId, glAccountId, postingType, acctgTransId, acctgTransType, entrySequenceId.toString());
+
+				
+				//save a negative and add a repayment on loan
+				bdTotalFromExcessPaymentAndCharged = bdTotalFromExcessPaymentAndCharged.add(disbursedLoanTotalInterestAmount.abs());
+			}
+			
+			BigDecimal disbursedLoanTotalInsuranceAmount = LoanRepayments.getTotalInsurancByLoanDue(disbursedLoanId);
 			disbursedLoanTotalInsuranceAmount = disbursedLoanTotalInsuranceAmount.setScale(2, RoundingMode.FLOOR);
+			if (disbursedLoanTotalInsuranceAmount.compareTo(BigDecimal.ZERO) == -1){
+				//return " One or more loans have an overpayment on Insurance, please make sure the loans overpaid or with negative balances and recovered by passing a JV";
+				//Claim insurance amount
+				LoanUtilities.reduceLoanRepaymentInSourceWithType(Long.valueOf(disbursedLoanId), null, null, disbursedLoanTotalInsuranceAmount.abs(), disbursedLoanTotalInsuranceAmount.abs(), userLogin, acctgTransId, "OVERRECOVERY");
+			
+				//Debit insurance receivable
+				postingType = "D";
 
-			if (disbursedLoanBalanceAmount.compareTo(BigDecimal.ZERO) == -1)
-				return " One or more loans have an overpayment on principal, please make sure the loans overpaid or with negative balances and recovered by passing a JV";
+				setupType = "INSURANCEPAYMENT";
+				GenericValue accountHolderTransactionSetup = LoanRepayments
+						.getAccountHolderTransactionSetupRecord(setupType, delegator);
+				glAccountId = accountHolderTransactionSetup
+						.getString("memberDepositAccId");
+				
+				entrySequenceId = entrySequenceId + 1;
+				AccHolderTransactionServices.postTransactionEntry(delegator, disbursedLoanTotalInsuranceAmount.abs(), employeeBranchId, memberBranchId, glAccountId, postingType, acctgTransId, acctgTransType, entrySequenceId.toString());
 
-			if (disbursedLoanTotalInterestAmount.compareTo(BigDecimal.ZERO) == -1)
-				return " One or more loans have an overpayment on Interest, please make sure the loans overpaid or with negative balances and recovered by passing a JV";
+				
+				//save a negative and add a repayment on loan
+				bdTotalFromExcessPaymentAndCharged = bdTotalFromExcessPaymentAndCharged.add(disbursedLoanTotalInsuranceAmount.abs());
+			}
+			
+			
+			BigDecimal disbursedLoanBalanceAmount = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(Long.valueOf(disbursedLoanId));
+			disbursedLoanBalanceAmount = disbursedLoanBalanceAmount.setScale(2, RoundingMode.FLOOR);
 
-			if (disbursedLoanTotalInsuranceAmount.compareTo(BigDecimal.ZERO) == -1)
-				return " One or more loans have an overpayment on Insurance, please make sure the loans overpaid or with negative balances and recovered by passing a JV";
+			if (disbursedLoanBalanceAmount.compareTo(BigDecimal.ZERO) == -1){
+				//return " One or more loans have an overpayment on principal, please make sure the loans overpaid or with negative balances and recovered by passing a JV";
+				//Claim excess payment
+				LoanUtilities.reduceLoanRepaymentInSourceWithType(Long.valueOf(disbursedLoanId), disbursedLoanBalanceAmount.abs(), null, null, disbursedLoanBalanceAmount.abs(), userLogin, acctgTransId, "OVERRECOVERY");
+				//Save negative
+			
+				//Debit Loan to members
+				postingType = "D";
+
+				setupType = "PRINCIPALPAYMENT";
+				GenericValue accountHolderTransactionSetup = LoanRepayments
+						.getAccountHolderTransactionSetupRecord(setupType, delegator);
+				glAccountId = accountHolderTransactionSetup
+						.getString("memberDepositAccId");
+				
+				entrySequenceId = entrySequenceId + 1;
+				AccHolderTransactionServices.postTransactionEntry(delegator, disbursedLoanBalanceAmount.abs(), employeeBranchId, memberBranchId, glAccountId, postingType, acctgTransId, acctgTransType, entrySequenceId.toString());
+
+				
+				bdTotalFromExcessPaymentAndCharged = bdTotalFromExcessPaymentAndCharged.add(disbursedLoanBalanceAmount.abs());
+			}
+
 
 		}
 		
 		List<String> listClearedLoans = LoansProcessingServices.getLoanApplicationListClearedLoans(partyId);
 		for (String clearedLoanId : listClearedLoans) {
-			BigDecimal clearedLoanBalanceAmount = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(Long.valueOf(clearedLoanId));
 			BigDecimal clearedLoanTotalInterestAmount = LoanRepayments.getTotalInterestByLoanDue(clearedLoanId);
-			BigDecimal clearedLoanTotalInsuranceAmount = LoanRepayments.getTotalInsurancByLoanDue(clearedLoanId);
-
-			clearedLoanBalanceAmount = clearedLoanBalanceAmount.setScale(2, RoundingMode.FLOOR);
 			clearedLoanTotalInterestAmount = clearedLoanTotalInterestAmount.setScale(2, RoundingMode.FLOOR);
-			clearedLoanTotalInsuranceAmount = clearedLoanTotalInsuranceAmount.setScale(2, RoundingMode.FLOOR);
-
-			if (clearedLoanBalanceAmount.compareTo(BigDecimal.ZERO) == -1)
-				return " One or more loans have an overpayment on principal, please make sure the loans overpaid or with negative balances and recovered by passing a JV";
-
 			if (clearedLoanTotalInterestAmount.compareTo(BigDecimal.ZERO) == -1)
-				return " One or more loans have an overpayment on Interest, please make sure the loans overpaid or with negative balances and recovered by passing a JV";
+			{
+				//Claim interest amount
+				LoanUtilities.reduceLoanRepaymentInSourceWithType(Long.valueOf(clearedLoanId), null, clearedLoanTotalInterestAmount.abs(), null, clearedLoanTotalInterestAmount.abs(), userLogin, acctgTransId, "OVERRECOVERY");
 
+				//Debit interest receivable
+				postingType = "D";
+
+				setupType = "INTERESTPAYMENT";
+				GenericValue accountHolderTransactionSetup = LoanRepayments
+						.getAccountHolderTransactionSetupRecord(setupType, delegator);
+				glAccountId = accountHolderTransactionSetup
+						.getString("memberDepositAccId");
+				
+				entrySequenceId = entrySequenceId + 1;
+				AccHolderTransactionServices.postTransactionEntry(delegator, clearedLoanTotalInterestAmount.abs(), employeeBranchId, memberBranchId, glAccountId, postingType, acctgTransId, acctgTransType, entrySequenceId.toString());
+
+				
+				bdTotalFromExcessPaymentAndCharged = bdTotalFromExcessPaymentAndCharged.add(clearedLoanTotalInterestAmount.abs());
+				
+			}
+				//return " One or more loans have an overpayment on Interest, please make sure the loans overpaid or with negative balances and recovered by passing a JV";
+			
+			BigDecimal clearedLoanTotalInsuranceAmount = LoanRepayments.getTotalInsurancByLoanDue(clearedLoanId);
+			clearedLoanTotalInsuranceAmount = clearedLoanTotalInsuranceAmount.setScale(2, RoundingMode.FLOOR);
 			if (clearedLoanTotalInsuranceAmount.compareTo(BigDecimal.ZERO) == -1)
-				return " One or more loans have an overpayment on Insurance, please make sure the loans overpaid or with negative balances and recovered by passing a JV";
+			{
+				//Claim insurance Amount
+				LoanUtilities.reduceLoanRepaymentInSourceWithType(Long.valueOf(clearedLoanId), null, null, clearedLoanTotalInsuranceAmount.abs(), clearedLoanTotalInsuranceAmount.abs(), userLogin, acctgTransId, "OVERRECOVERY");
+				
+				//Debit insurance receivable
+				postingType = "D";
+
+				setupType = "INSURANCEPAYMENT";
+				GenericValue accountHolderTransactionSetup = LoanRepayments
+						.getAccountHolderTransactionSetupRecord(setupType, delegator);
+				glAccountId = accountHolderTransactionSetup
+						.getString("memberDepositAccId");
+				
+				entrySequenceId = entrySequenceId + 1;
+				AccHolderTransactionServices.postTransactionEntry(delegator, clearedLoanTotalInsuranceAmount.abs(), employeeBranchId, memberBranchId, glAccountId, postingType, acctgTransId, acctgTransType, entrySequenceId.toString());
+
+				
+				bdTotalFromExcessPaymentAndCharged = bdTotalFromExcessPaymentAndCharged.add(clearedLoanTotalInsuranceAmount.abs());
+			
+			}
+				//return " One or more loans have an overpayment on Insurance, please make sure the loans overpaid or with negative balances and recovered by passing a JV";
+
+			BigDecimal clearedLoanBalanceAmount = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(Long.valueOf(clearedLoanId));
+			clearedLoanBalanceAmount = clearedLoanBalanceAmount.setScale(2, RoundingMode.FLOOR);
+			if (clearedLoanBalanceAmount.compareTo(BigDecimal.ZERO) == -1)
+			{
+				//Claim Loan Balance
+				LoanUtilities.reduceLoanRepaymentInSourceWithType(Long.valueOf(clearedLoanId), clearedLoanBalanceAmount.abs(), null, null, clearedLoanBalanceAmount.abs(), userLogin, acctgTransId, "OVERRECOVERY");
+			
+				//Debit Loan to Members
+				postingType = "D";
+
+				setupType = "PRINCIPALPAYMENT";
+				GenericValue accountHolderTransactionSetup = LoanRepayments
+						.getAccountHolderTransactionSetupRecord(setupType, delegator);
+				glAccountId = accountHolderTransactionSetup
+						.getString("memberDepositAccId");
+				
+				entrySequenceId = entrySequenceId + 1;
+				AccHolderTransactionServices.postTransactionEntry(delegator, clearedLoanBalanceAmount.abs(), employeeBranchId, memberBranchId, glAccountId, postingType, acctgTransId, acctgTransType, entrySequenceId.toString());
+
+				
+				bdTotalFromExcessPaymentAndCharged = bdTotalFromExcessPaymentAndCharged.add(clearedLoanBalanceAmount.abs());
+
+			}
+				//return " One or more loans have an overpayment on principal, please make sure the loans overpaid or with negative balances and recovered by passing a JV";
 			
 		}
+		
+		//Save the excess to savings
+		//bdTotalFromExcessPaymentAndCharged
+		log.info("//////////////////////// Posting the voucher");
+		Long memberAccountId = Long.valueOf(memberAccountIdString);
+		String transactionType = "OVERRECOVERY";
+		//AccHolderTransactionServices.memberAccountJournalVoucher(amount, memberAccountId, userLogin, transactionType, genericValue.getLong("generalglHeaderId"));
+		AccHolderTransactionServices.memberAccountJournalVoucher(bdTotalFromExcessPaymentAndCharged, memberAccountId, userLogin, transactionType, null, acctgTransId);
+
+		//post the credit over recovery
+		if (bdTotalFromExcessPaymentAndCharged.compareTo(BigDecimal.ZERO) > 0) {
+			entrySequenceId = entrySequenceId + 1;
+			postingType = "C";
+			glAccountId = LoanUtilities
+					.getSavingsAccountglAccountId();
+			AccHolderTransactionServices.postTransactionEntry(delegator,
+					bdTotalFromExcessPaymentAndCharged, employeeBranchId, memberBranchId,
+					glAccountId, postingType, acctgTransId,
+					acctgTransType, entrySequenceId.toString());
+			}
+
 		
 		BigDecimal bdMemberDepositsBalanceNow = getMemberDepositBalance(partyId.toString());
 		if (((listDisbursedLoans == null) || (listDisbursedLoans.size() < 1)) && (bdMemberDepositsBalanceNow.compareTo(BigDecimal.ZERO) < 1))
@@ -445,10 +608,7 @@ public class WithdrawalProcessingServices {
 					+ " while your share balance is "
 					+ bdShareCapitalBalance;
 		
-		//Replace guarantors for members disbursed loans
-		List<String> loansGuaranteedList = LoansProcessingServices.getLoansGuaranteedList(partyId);
-		if ((loansGuaranteedList != null) && (loansGuaranteedList.size() > 0))
-			return " Must replace all guarantors before withdrawing a member !";
+
 		
 		// Get Member Withdrawal Commission
 		GenericValue memberWithdrawalCommission = LoanUtilities
@@ -512,18 +672,7 @@ public class WithdrawalProcessingServices {
 					+ bdTotalOffset;
 		}
 
-		Long entrySequenceId = 0L;
-		String postingType = "";
 
-		String employeeBranchId = AccHolderTransactionServices
-				.getEmployeeBranch(userLogin.get("partyId"));
-		String memberBranchId = LoanUtilities.getMemberBranchId(partyId
-				.toString());
-
-		String acctgTransType = "MEMBER_DEPOSIT";
-		String acctgTransId = AccHolderTransactionServices
-				.createAccountingTransaction(null, acctgTransType, userLogin);
-		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		/***
 		 * Do GL Posting from here
 		 * */
@@ -636,11 +785,11 @@ public class WithdrawalProcessingServices {
 
 		// Debit Member Deposit Account with the total balance
 		// bdMemberDepositBalance
-		String memberAccountId = LoanUtilities
+		memberAccountId = Long.valueOf(LoanUtilities
 				.getMemberAccountIdGivenMemberAndAccountCode(partyId,
-						AccHolderTransactionServices.MEMBER_DEPOSIT_CODE);
+						AccHolderTransactionServices.MEMBER_DEPOSIT_CODE));
 		AccHolderTransactionServices.cashDepositVersion4(
-				bdMemberDepositBalance, Long.valueOf(memberAccountId),
+				bdMemberDepositBalance, memberAccountId,
 				userLogin, "MEMBERWITHDRAWAL", acctgTransId);
 
 		// Credit Savings Account with the total remaining
@@ -654,9 +803,50 @@ public class WithdrawalProcessingServices {
 					bdBalanceToSavings, Long.valueOf(savingsMemberAccountId),
 					userLogin, "FROMMEMBERWITHDRAWAL", acctgTransId);
 		}
+		
+		//Now approve member
+		GenericValue member = LoanUtilities.getEntityValue("Member", "partyId", partyId);
+		member.set("memberStatusId", LoanUtilities.getMemberStatusId("WITHDRAWN"));
+		try {
+			delegator.createOrStore(member);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//Create member withdrawal log
+		GenericValue withdrawalLog = null;
+		Long withdrawalLogId = delegator.getNextSeqIdLong("WithdrawalLog");
+		withdrawalLog = delegator.makeValue("WithdrawalLog", UtilMisc.toMap(
+				"withdrawalLogId", withdrawalLogId, "isActive", "Y",
+				"createdBy", userLogin.get("userLoginId"),
+				"withdrawalstatus", "APPROVED",
+				"memberWithdrawalId", memberWithdrawalId
 
+				
+				));
+		
+		try {
+			delegator.createOrStore(withdrawalLog);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//Update the Withdrawal with transaction ID
+		GenericValue withdrawal = LoanUtilities.getEntityValue("MemberWithdrawal", "memberWithdrawalId", memberWithdrawalId);
+		withdrawal.set("acctgTransId", acctgTransId);
+		withdrawal.set("withdrawalstatus", "APPROVED");
+		try {
+			delegator.createOrStore(withdrawal);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//, "acctgTransId", acctgTransId
 		return "success";
 	}
+
 
 	private static void localLoanRepay(String loanApplicationId,
 			Map<String, String> userLogin, String acctgTransId) {
