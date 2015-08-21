@@ -37,8 +37,7 @@ under the License.
             <fo:table-column column-width="50pt"/>
             <fo:table-column column-width="80pt"/>
          <fo:table-column column-width="70pt"/>
-            <fo:table-column column-width="50pt"/>
-            <fo:table-column column-width="50pt"/>
+            <fo:table-column column-width="100pt"/>
             <fo:table-column column-width="70pt"/>
             <fo:table-column column-width="50pt"/>
             <fo:table-column column-width="50pt"/>
@@ -64,15 +63,12 @@ under the License.
                      <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="left">Department</fo:block>
                     </fo:table-cell>
-                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Position</fo:block>
-                    </fo:table-cell>
   
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="left">Type</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Duration</fo:block>
+                        <fo:block text-align="left">No. of days Taken</fo:block>
                     </fo:table-cell>
                     
                      <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
@@ -141,9 +137,6 @@ under the License.
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${deptStaff.departmentName?if_exists}</fo:block>
-                        </fo:table-cell>
-                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${postStaff.emplPositionType?if_exists}</fo:block>
                         </fo:table-cell>
                         
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
