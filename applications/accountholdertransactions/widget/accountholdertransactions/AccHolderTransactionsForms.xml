@@ -1266,13 +1266,12 @@ under the License.
 
 	<form name="FindMember" type="single" target="main" default-entity-name="Member">
         <actions>
-        	<set field="statusName" value="ACTIVE"/>
-	   		<set field="memberStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/>
+
 	        	<entity-condition entity-name="PartyGroup" list="partyGroups">
         		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
         	</entity-condition>
 
-        	<entity-condition entity-name="MemberStatus" list="statusList"></entity-condition>
+        	<!-- entity-condition entity-name="MemberStatus" list="statusList"></entity-condition -->
         </actions>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
@@ -1296,17 +1295,23 @@ under the License.
         		</entity-options>
         	</drop-down>
         </field -->
-        <field name="memberStatusId" title="Status">
-			<hidden value="${memberStatusId}"/>
-			<!-- drop-down allow-empty="true">
+        <field name="memberStatusId" title="Member Status">
+			<drop-down allow-empty="true">
+				<entity-options description="${name}" entity-name="MemberStatus">
+				
+				</entity-options>
+			</drop-down>
+			
+		</field>
+		
+		<!-- drop-down allow-empty="true">
 				<entity-options description="${name}" entity-name="MemberStatus"
 					key-field-name="memberStatusId">
 					<entity-order-by field-name="name" />
 				</entity-options>
 			</drop-down -->
-		</field>
 
-        	<field name="mobileNumber" title="Mobile" position="1"><text-find/></field>
+        <field name="mobileNumber" title="Mobile" position="1"><text-find/></field>
         <field name="stationId" title="Station">
             <drop-down allow-empty="true" current-description="">
                 <entity-options description="${name}" key-field-name="stationId" entity-name="Station">
@@ -1328,6 +1333,13 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 
         <actions>
+        	        	<set field="activestatusName" value="ACTIVE"/>
+	   		<set field="activememberStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(activestatusName);}"/>
+
+
+        	<set field="withdrawnMember" value="WITHDRAWN"/>
+	   		<set field="withdrawnMemberStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(withdrawnMember);}"/>
+        	
 			<!-- entity-condition entity-name="Member" list="membersList"></entity-condition -->
         	<entity-condition entity-name="PartyGroup" list="partyGroups">
         		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
@@ -1342,13 +1354,17 @@ under the License.
                 <field-map field-name="orderBy" from-field="parameters.sortField"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
-
+				
             </service>
 
 
         </actions>
-          <field name="Member">
+          <field name="Member" use-when="(memberStatusId==${activememberStatusId}) || (memberStatusId==${withdrawnMemberStatusId})">
         	<hyperlink target="cashWithdrawal?partyId=${partyId}" description="Transactions for ${firstName} ${middleName} ${lastName}"></hyperlink>
+        </field>
+        
+        <field name="Member" use-when="(memberStatusId!=${activememberStatusId}) &amp;&amp; (memberStatusId!=${withdrawnMemberStatusId})">
+        	<display description="Member is not active , should be activated first or status resolved!"></display>
         </field>
         <field name="idNumber" title="ID Number"><display also-hidden="false"></display></field>
 

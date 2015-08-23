@@ -670,6 +670,13 @@
 		<field name="firstName"><text-find/></field>
 		<field name="lastName"><text-find/></field>
 		<field name="status"><hidden value="ISSUED"/></field>
+		
+		<!-- display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity -->
+		<field name="actionBy" title="Requested By">
+			<drop-down allow-empty="true">
+				<entity-options description="${firstName}  ${lastName}" entity-name="Person" key-field-name="partyId" ></entity-options>
+			</drop-down>
+		</field>
         <field name="noConditionFind"><hidden value="Y"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>

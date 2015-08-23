@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="main">
+        <section>
+            <actions>
+                <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
+            </actions>
+            <widgets>
+                <decorator-screen name="LoanManagementReportsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+        <!-- loanlistingbydatereport -->
+    <screen name="loanlistingbydatereport">
+        <section>
+            <actions>
+                <set field="headerItem" value="loanlistingbydatereport" />
+                <set field="tabButtonItem" value="loanlistingbydatereport" />
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <!-- include-menu name="MemberReportsTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/ -->
+                        <!-- container style="lefthalf">
+                            <screenlet title="Member Listing Report">
+                                <include-form name="memeberListingForm" location="component://party/widget/partymgr/MemberReportForms.xml"/>
+                            </screenlet>
+                        </container -->
+                        <!-- style="righthalf" -->
+                        <container>
+                            <screenlet title="Loans Listing">
+                                <include-form name="loanlistingbydatereportForm" location="component://loanmanagementreports/widget/LoanManagementReportsForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+       <screen name="loanlistingreportexcel">
+        <section>
+           <actions>
+                <set field="viewSize" value="999999"/>
+                <!-- script location="component://party/webapp/partymgr/WEB-INF/actions/reports/loanDetails.groovy"/ -->
+               <script location="component://loanmanagementreports/webapp/loanmanagementreports/WEB-INF/actions/reports/loanlistingbydatereport.groovy"/>
+           </actions>
+           <widgets>
+               <!-- decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                   <decorator-section name="body">
+                        <platform-specific>
+                            
+                            <xsl-fo><html-template location="component://loanreports/webapp/loanreports/reports/loansummaryReport.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen -->
+                <include-form name="loanReportsExport" location="component://loanmanagementreports/widget/LoanManagementReportsForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- stationChequeReceivedReport -->
+     <screen name="stationChequeReceivedReport">
+        <section>
+            <actions>
+                <set field="headerItem" value="stationChequeReceivedReport" />
+                <set field="tabButtonItem" value="stationChequeReceivedReport" />
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <!-- include-menu name="MemberReportsTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/ -->
+                        <!-- container style="lefthalf">
+                            <screenlet title="Member Listing Report">
+                                <include-form name="memeberListingForm" location="component://party/widget/partymgr/MemberReportForms.xml"/>
+                            </screenlet>
+                        </container -->
+                        <!-- style="righthalf" -->
+                        <container>
+                            <screenlet title="Station By Cheque Report">
+                                <include-form name="stationChequeReceivedReportForm" location="component://loanmanagementreports/widget/LoanManagementReportsForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+  
+
+<!-- stationChequeReceivedReportPDF -->
+	 <screen name="stationChequeReceivedReportPDF">
+        <section>
+         <actions>
+                <set field="viewSize" value="99999"/>
+                <!-- script location="component://party/webapp/partymgr/WEB-INF/actions/reports/loanDetails.groovy"/ -->
+                <script location="component://loanmanagementreports/webapp/loanmanagementreports/WEB-INF/actions/reports/chequesReceivedReport.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <!-- xsl-fo><html-template location="component://party/webapp/partymgr/member/reports/loanDetails.fo.ftl"/></xsl-fo -->
+                            <xsl-fo><html-template location="component://loanmanagementreports/webapp/loanmanagementreports/reports/chequesReceivedReport.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+</screens>

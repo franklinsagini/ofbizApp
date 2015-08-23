@@ -388,7 +388,7 @@ public class LoanServices {
 		return json;
 	}
 
-	private static BigDecimal getNetSalaryIsSetAmount(Long partyId) {
+	public static BigDecimal getNetSalaryIsSetAmount(Long partyId) {
 		List<GenericValue> memberNetSalaryELI = null; // =
 		EntityConditionList<EntityExpr> memberNetSalaryConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
@@ -459,7 +459,7 @@ public class LoanServices {
 		return bdTotal;
 	}
 
-	private static BigDecimal calculateMaximumAmount(Long partyId,
+	public static BigDecimal calculateMaximumAmount(Long partyId,
 			Long accountProductId, BigDecimal savingsMultiplier,
 			BigDecimal bdTotalSavings) {
 		// TODO Auto-generated method stub
@@ -572,7 +572,7 @@ public class LoanServices {
 		return loanApplication;
 	}
 
-	private static BigDecimal totalSavings(String memberId,
+	public static BigDecimal totalSavings(String memberId,
 			String loanProductId, Delegator delegator) {
 		// Get the multiplier account - the account being used to get the
 		// maximum loan as defined in the
@@ -2032,15 +2032,15 @@ public class LoanServices {
 				//Add Interest and insurance if they are -ve
 				
 				//TODO need some clarification on calculating the total paid amount
-				if ((genericValue.getBigDecimal("interestAmount") != null) && (genericValue.getBigDecimal("interestAmount").compareTo(BigDecimal.ZERO) == -1)){
-					bdTotalRepayment = bdTotalRepayment.add(genericValue
-							.getBigDecimal("interestAmount"));
-				}
-				
-				if ((genericValue.getBigDecimal("insuranceAmount") != null) && (genericValue.getBigDecimal("insuranceAmount").compareTo(BigDecimal.ZERO) == -1)){
-					bdTotalRepayment = bdTotalRepayment.add(genericValue
-							.getBigDecimal("insuranceAmount"));
-				}
+//				if ((genericValue.getBigDecimal("interestAmount") != null) && (genericValue.getBigDecimal("interestAmount").compareTo(BigDecimal.ZERO) == -1)){
+//					bdTotalRepayment = bdTotalRepayment.add(genericValue
+//							.getBigDecimal("interestAmount"));
+//				}
+//				
+//				if ((genericValue.getBigDecimal("insuranceAmount") != null) && (genericValue.getBigDecimal("insuranceAmount").compareTo(BigDecimal.ZERO) == -1)){
+//					bdTotalRepayment = bdTotalRepayment.add(genericValue
+//							.getBigDecimal("insuranceAmount"));
+//				}
 			}
 		}
 
@@ -2600,7 +2600,22 @@ public class LoanServices {
 				.getLong("loanProductId"));
 		Long accountProductId = loanProduct.getLong("accountProductId");
 		BigDecimal bdMaximumLoanAmt  = null;
-		if (loanProduct.getBigDecimal("multipleOfSavingsAmt") != null){
+		
+		BigDecimal bdNetSalaryAmount = null;
+		
+		if (loanProduct.getString("percentageOfMemberNetSalary").equals("Yes")){
+			log.info(" LLLLLLLLLLLLLLL Percentage of Net Salary !!!!!!!!! ");
+			bdNetSalaryAmount = getNetSalaryIsSetAmount(Long.valueOf(partyId));
+			bdMaximumLoanAmt = BigDecimal.ZERO;
+			if (bdNetSalaryAmount != null){
+				log.info(" LLLLLLLLLLLLLLL Has Net Amount !!!!!!!!! ");
+				bdMaximumLoanAmt = bdNetSalaryAmount.multiply(loanProduct.getBigDecimal("percentageOfMemberNetSalaryAmt")).divide(new BigDecimal(ONEHUNDRED), 4, RoundingMode.HALF_UP);
+			} else{
+				log.info(" LLLLLLLLLLLLLLL DOES NOT HAVE Net Amount !!!!!!!!! ");
+			}
+			
+			
+		} else if (loanProduct.getBigDecimal("multipleOfSavingsAmt") != null){
 			bdMaximumLoanAmt = calculateMaximumAmount(
 				loanApplication.getLong("partyId"), accountProductId,
 				loanProduct.getBigDecimal("multipleOfSavingsAmt"),
@@ -3317,8 +3332,17 @@ public class LoanServices {
 		
 		if ((bdTotalRepaidAmt == null) || (loanDeductionAmt == null) || (bdTotalRepaidAmt.compareTo(loanDeductionAmt) == -1))
 		{
+			
+			BigDecimal bdInterestAccrued = LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString());
+			BigDecimal bdInterestExpectedPerMonth = LoanRepayments.getInterestOnSchedule(loanApplicationId);
+			
+			BigDecimal interestAmt = bdInterestAccrued.subtract(bdInterestExpectedPerMonth);
+			
+			if (interestAmt.compareTo(BigDecimal.ZERO) < 1)
+				return false;
+			
 			return true;
-		}
+		} 
 		
 		return false;
 	}
