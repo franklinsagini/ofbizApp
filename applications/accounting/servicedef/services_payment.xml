@@ -37,6 +37,54 @@ under the License.
         <override name="amount" optional="false"/>
     </service>
 
+    <service name="createMultiPayment" engine="simple" default-entity-name="Payment"
+        location="component://accounting/script/org/ofbiz/accounting/payment/PaymentServices.xml" invoke="createMultiPayment" auth="true">
+        <description>Create a Payment.  If a paymentMethodId is supplied, paymentMethodTypeId is gotten from paymentMethod.  Otherwise, it must be supplied.  If no
+        paymentMethodTypeId and no paymentMethodId is supplied, then an error will be returned. </description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <override name="paymentTypeId" optional="false"/>
+        <override name="partyIdFrom" optional="false"/>
+        <override name="partyIdTo" optional="false"/>
+        <override name="amount" optional="false"/>
+    </service>
+
+    <service name="ConfirmMultiplePayment" engine="java" default-entity-name="Payment"
+        location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="confirmMultiPayment" auth="true">
+        <description>Create a Payment.  If a paymentMethodId is supplied, paymentMethodTypeId is gotten from paymentMethod.  Otherwise, it must be supplied.  If no
+        paymentMethodTypeId and no paymentMethodId is supplied, then an error will be returned. </description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <override name="paymentTypeId" optional="false"/>
+        <override name="partyIdFrom" optional="false"/>
+        <override name="partyIdTo" optional="false"/>
+        <override name="amount" optional="false"/>
+    </service>
+
+    <service name="addDebitAccountPayment" engine="java" default-entity-name="MultiPaymentLines"
+        location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="addDebitAccountPayment" auth="true">
+        <description>Create a MultiPaymentLines.</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <override name="amount" optional="false"/>
+    </service>
+
+    <service name="updateDebitAccountPayment" engine="java" default-entity-name="MultiPaymentLines"
+        location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="updateDebitAccountPayment" auth="true">
+        <description>Create a MultiPaymentLines.</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+    </service>
+
+    <service name="removeDebitAccountPayment" default-entity-name="MultiPaymentLines" engine="java"
+        location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="removeDebitAccountPayment">
+        <description>Delete a paymentApplication record.</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="INOUT" include="nonpk" optional="true"/>
+        <attribute name="paymentId" type="String" mode="OUT" optional="false"/>
+    </service>
+
+
     <service name="updatePayment" engine="simple" default-entity-name="Payment"
         location="component://accounting/script/org/ofbiz/accounting/payment/PaymentServices.xml" invoke="updatePayment" auth="true">
         <description>Update a Payment</description>
@@ -141,9 +189,9 @@ under the License.
         <attribute name="partyIdFrom" type="String" mode="IN" optional="true"/>
         <attribute name="invoicePaymentInfoList" type="List" mode="OUT" optional="true"/>
     </service>
-    <service name="voidPayment" engine="simple" 
+    <service name="voidPayment" engine="simple"
             location="component://accounting/script/org/ofbiz/accounting/payment/PaymentServices.xml" invoke="voidPayment" auth="true">
-        <description>Sets payment status to PMNT_VOID, removes all PaymentApplications, changes related invoice statuses to 
+        <description>Sets payment status to PMNT_VOID, removes all PaymentApplications, changes related invoice statuses to
             INVOICE_READY if status is INVOICE_PAID, and reverses related AcctgTrans by calling copyAcctgTransAndEntries service</description>
         <attribute name="paymentId" mode="IN" optional="false" type="String"/>
         <attribute name="finAccountTransId" type="String" mode="OUT" optional="true"/>
@@ -218,13 +266,13 @@ under the License.
         <attribute name="paymentGroupId" type="String" mode="IN" optional="false"/>
         <attribute name="glReconciliationId" type="String" mode="OUT" optional="true"/>
     </service>
-    
+
     <service name="checkAndCreateBatchForValidPayments" engine="simple"
             location="component://accounting/script/org/ofbiz/accounting/payment/PaymentServices.xml" invoke="checkAndCreateBatchForValidPayments" auth="true">
         <description>Check the valid(unbatched) payment and create batch for same</description>
         <implements service="createPaymentGroupAndMember"/>
     </service>
-    
+
     <service name="massChangePaymentStatus" engine="simple"
             location="component://accounting/script/org/ofbiz/accounting/payment/PaymentServices.xml" invoke="massChangePaymentStatus" auth="true">
         <description>Set status of Payments in bulk.</description>

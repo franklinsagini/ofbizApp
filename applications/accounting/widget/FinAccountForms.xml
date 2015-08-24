@@ -83,7 +83,94 @@ under the License.
                 <parameter param-name="finAccountId"/>
             </hyperlink>
         </field>
+        <field name="BankReconLink" title=" " widget-style="buttontext">
+            <hyperlink target="BankRecon" description="Reconciliation" also-hidden="false">
+                <parameter param-name="finAccountId"/>
+            </hyperlink>
+        </field>
     </form>
+    <form name="FindBankReconHeader" target="BankRecon" title="" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+        <auto-fields-entity entity-name="BankReconHeader" default-field-type="find"/>
+        <field name="searchOptions_collapsed"><hidden value="true"/></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="NewBankRecon" target="createReconHeader" title="" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="finAccountId" >
+            <hidden/>
+        </field>
+        <field name="reconDate">
+            <date-time/>
+        </field>
+        <field name="bankBalance" title="Bank Statement Balance">
+            <text/>
+        </field>
+        <field name="submitButton" title="Create" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="ListBankReconHeader" type="list" list-name="listIt" paginate-target="BankRecon"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="BankReconHeader">
+                <condition-expr field-name="finAccountId" from-field="finAccountId"/>
+                <order-by field-name="reconDate DESC"/>
+            </entity-condition>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="BankReconHeader"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="finAccountId"><hidden/></field>
+        <field name="headerId"><display/></field>
+        <field name="description" title="Name"><display/></field>
+        <field name="partyId" title="Created By"> <display/></field>
+        <field name="reconDate"><display/></field>
+        <field name="statusName"><display/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="detailsLink" title=" " widget-style="buttontext">
+            <hyperlink target="bankReconTrans" description="Details" also-hidden="false">
+                <parameter param-name="finAccountId"/>
+                <parameter param-name="reconDate"/>
+                <parameter param-name="headerId"/>
+            </hyperlink>
+        </field>
+    </form>
+
+    <form name="BankReconciliationHeader" type="single" target="" default-map-name="bankReconHeader">
+        <field name="cashBookBalance" position="1"><display/></field>
+        <field name="bankBalance" position="2"><display/></field>
+        <field name="unreceiptedBankings" position="1"><display/></field>
+        <field name="uncreditedBankings" position="2"><display/></field>
+        <field name="unidentifiedDebits" position="1"><display/></field>
+        <field name="unpresentedCheques" position="2"><display/></field>
+        <field name="adjustedCashBookBalance" position="1"><display/></field>
+        <field name="adjustedBankBalance" position="2"><display/></field>
+    </form>
+
+    <form name="ListBankReconTrans" type="multi" use-row-submit="true" title="Selected Monument"
+        list-name="listBankReconTransList"  separate-columns="true" odd-row-style="alternate-row"
+        default-table-style="basic-table hover-bar" paginate-target="bankReconTrans" target="reconcileBankTrans">
+
+        <field name="finAccountTransId"><display/></field>
+        <field name="reconDate"><hidden/></field>
+        <field name="finAccountId"><hidden/></field>
+        <field name="headerId"><hidden/></field>
+        <field name="transactionDate"><date-time /></field>
+        <field name="finAccountTransTypeId" title="Type"><display /></field>
+        <field name="comments" title="Details" ><display /></field>
+        <field name="amount" widget-style="tabletextright"><display /></field>
+        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
+       <field name="submitButton" title="Reconcile Selected Transaction(s)" widget-style="smallSubmit"><submit/></field>
+       <!-- <field name="submitButton" title="Confirm Reconciliation" widget-style="smallSubmit"><submit/></field> -->
+    </form>
+
+
 
     <form name="EditFinAccount" type="single" target="updateFinAccount" default-map-name="finAccount"
         header-row-style="header-row" default-table-style="basic-table">
