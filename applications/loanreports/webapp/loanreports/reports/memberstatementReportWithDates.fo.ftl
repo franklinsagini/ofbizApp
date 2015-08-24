@@ -305,7 +305,7 @@ under the License.
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right">
                                 <fo:block  font-size="12pt" font-weight="italics" font-style="italic" color="green">
-                                	${statement.availableBalace?string(",##0.00")} 
+                                	${statement.availableBalace?string(",##0.0000")} 
                                </fo:block>
                             </fo:table-cell>
                         </fo:table-row>
