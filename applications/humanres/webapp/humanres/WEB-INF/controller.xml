@@ -4201,6 +4201,29 @@
 	<response name="success" type="view" value="lostItems"></response>
 	<response name="error" type="view" value="lostItems"></response>
 	</request-map>
+	
+	<request-map uri="separationApplicationProcessing">
+	<security https="true" auth="true"/>
+	 <event type="service" invoke="SeparationModule"></event>
+	<response name="success" type="view" value="separationApplication"></response>
+	<response name="error" type="view" value="separationApplication"></response>
+	</request-map>
+
+<!-- 	
+	<request-map uri="separationApplicationProcessing">
+	<security https="true" auth="true"/>
+	 <event type="java" path="org.ofbiz.humanres.Separation" invoke="SeparationModule"></event>
+	<response name="success" type="view" value="separationApplicationProcessing"></response>
+	<response name="error" type="view" value="separationApplicationProcessing"></response>
+	</request-map>
+	 -->
+	
+	<request-map uri="monthlyLeave">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="monthlyLeavePDF" />
+	</request-map>
+	
+	
 
 	<view-map name="staffSeparatedReportPDF" type="screenfop"
 		page="component://humanres/widget/ReportScreens.xml#staffSeparatedReportPDF"
@@ -4903,5 +4926,13 @@
 		content-type="application/pdf" encoding="none" />
     <view-map name="staffBranch" type="screenfop"
 		page="component://humanres/widget/ReportScreens.xml#staffBranchPDF"
+		content-type="application/pdf" encoding="none" />	
+	<view-map name="separationApplicationProcessing" type="screen"
+		page="component://humanres/widget/EmployeeScreens.xml#separationApplicationProcessing" />	
+			
+	<view-map name="monthlyLeavePDF" type="screenfop"
+		page="component://humanres/widget/ReportScreens.xml#monthlyLeavePDF"
 		content-type="application/pdf" encoding="none" />		
+			
+			
 </site-conf>

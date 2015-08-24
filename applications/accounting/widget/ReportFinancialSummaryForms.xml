@@ -716,7 +716,7 @@ under the License.
 
     <form name="TrialBalanceSummarySync" type="single" header-row-style="header-row" target="TrialBalanceSummarySync" default-table-style="basic-table">
         <field name="organizationPartyId"><hidden/></field>
-        <!-- <field name="thruDate" title="Trial Balance As At"><date-time/></field> -->
+        <field name="thruDate" title="Trial Balance As At"><date-time/></field>
 <!--         <field name="customTimePeriodId" required-field="true">
             <drop-down>
                 <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
@@ -726,7 +726,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field> -->
-        <field name="submitButton" title="Sync Trial Balance" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Run Trial Balance" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
 
@@ -750,6 +750,18 @@ under the License.
 
         <!-- <field name="endingBalance" title="${uiLabelMap.AccountingEndingBalance}" widget-style="tabletextright"><display description="${endingBalance}" type="currency" currency="${currencyUomId}"/></field> -->
     </form>
+    <form name="NewTrialBalanceReport" type="list" list-name="accountBalances"
+          odd-row-style="alternate-row" default-table-style="basic-table hover-bar" >
+        <field name="accountCode">
+            <hyperlink target="FindAcctgTransEntries" description="${accountCode}">
+                <parameter param-name="glAccountId"/>
+                <parameter param-name="organizationPartyId"/>
+            </hyperlink>
+        </field>
+        <field name="accountName" title-area-style="tableheadwide"><display description="${accountName}"/></field>
+        <field name="endingBalanceDebit" title-area-style="group-label"  title="${uiLabelMap.AccountingDebitFlag}" widget-area-style="align-text"><display description="${endingBalanceDebit}" /></field>
+        <field name="endingBalanceCredit" title="${uiLabelMap.AccountingCreditFlag}" widget-area-style="align-text"><display description="${endingBalanceCredit}" /></field>
+     </form>
 
     <form name="TrialBalanceCSV" type="list" title="List Accounting Transactions" list-name="accountBalances" paginate="false">
         <field name="accountCode"><display/></field>

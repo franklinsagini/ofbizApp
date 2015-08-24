@@ -78,6 +78,7 @@ under the License.
                                             <link target="newPayment" text="${uiLabelMap.CommonCreateNew} ${uiLabelMap.AccountingPayment}" style="buttontext create"/>
                                             <link target="FindSalesInvoicesByDueDate" text="${uiLabelMap.AccountingFindSalesInvoicesByDueDate}" style="buttontext search"/>
                                             <link target="FindPurchaseInvoicesByDueDate" text="${uiLabelMap.AccountingFindPurchaseInvoicesByDueDate}" style="buttontext search"/>
+                                            <link target="MultiplePayment" text="Multi Accounts Payment" style="buttontext search"/>
                                         </container>
                                     </decorator-section>
                                     <decorator-section name="search-options">
@@ -87,6 +88,44 @@ under the License.
                                         <include-form name="ListPayments"  location="component://accounting/widget/PaymentForms.xml"/>
                                     </decorator-section>
                                 </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="DebitLines">
+        <section>
+            <actions>
+                <set field="headerItem" value="filesReturn" />
+                <set field="tabButtonItem" value="find" />
+                <set field="titleProperty" value="PageTitleFindInvoice" />
+                <set field="paymentId" from-field="parameters.paymentId"/>
+                <entity-one entity-name="MultiPayment" value-field="multiPayment"/>
+               <set field="debitAmount" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getMultiplePaymentDebitAmount(multiPayment)}"/>
+               <set field="totalLines" type="Integer" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getTotalNumberOfDebitLines(multiPayment)}"/>
+               <set field="creditAmount" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getMultiplePaymentCreditAmount(multiPayment)}"/>
+                <entity-and entity-name="MultiPaymentLines" list="listMultiPaymentLines">
+                    <field-map field-name="paymentId"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="Non-Member Payments Multi Payments Header">
+                                    <include-form name="MultiPaymentHeader" location="component://accounting/widget/PaymentForms.xml"/>
+                                </screenlet>
+                                <screenlet title="Non-Member Payments Multi Payments Debit Lines">
+                                    <include-form name="ListDebitLines" location="component://accounting/widget/PaymentForms.xml"/>
+                                     <container><label style="h3" text="Total Credit Amount: ${creditAmount}  Total Debit Amount: ${debitAmount}  Total Debit Lines: ${totalLines}"></label></container>
+                                </screenlet>
+                                <screenlet title="Add Debit Lines">
+                                    <include-form name="AddDebitLines" location="component://accounting/widget/PaymentForms.xml"/>
+                                </screenlet>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -128,6 +167,113 @@ under the License.
                                 </screenlet>
                                 <screenlet title="Non-Member Transactions:- Receipts">
                                     <include-form name="NewPaymentIn" location="component://accounting/widget/PaymentForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="MultiplePayment">
+        <section>
+            <actions>
+                <set field="tabButtonItem" value="BankRecon"/>
+                <set field="titleProperty" value="PageTitleFindFinAccountReconciliations"/>
+                <set field="tabButtonItem2" value="Find"/>
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="KES"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <container style="button-bar">
+                                    <link target="NewMultiplePayment" text="New Multiple Payment" style="buttontext create">
+                                    </link>
+                                </container>
+                                <screenlet id="EditFinAccountPanel" collapsible="true">
+                                   <include-form name="ListMultiplePaymentHeader" location="component://accounting/widget/PaymentForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+    <screen name="NewMultiplePayment">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditPayment"/>
+                <set field="headerItem" value="payments"/>
+                <set field="tabButtonItem" value="editPayment"/>
+                <set field="paymentId" from-field="parameters.paymentId"/>
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="Non-Member Multi Payments">
+                                    <include-form name="NewMultiPaymentOut" location="component://accounting/widget/PaymentForms.xml"/>
+                                </screenlet>
+<!--                                 <screenlet title="Non-Member Transactions:- Receipts">
+                                    <include-form name="NewPaymentIn" location="component://accounting/widget/PaymentForms.xml"/>
+                                </screenlet> -->
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditMultiPayment">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditPayment"/>
+                <set field="tabButtonItem" value="editPayment"/>
+                <set field="paymentId" from-field="parameters.paymentId"/>
+                <entity-one entity-name="Payment" value-field="payment">
+                    <field-map field-name="paymentId" from-field="parameters.paymentId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPaymentDecorator" location="${parameters.paymentDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="Non-Member Multi Payments">
+                                    <include-form name="EditMultiPayment" location="component://accounting/widget/PaymentForms.xml"/>
+                                </screenlet>
+                                <screenlet title="Non-Member Transactions:- Receipts">
+                                    <!-- <include-form name="MultiPaymentLines" location="component://accounting/widget/PaymentForms.xml"/> -->
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditPayment">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditPayment"/>
+                <set field="tabButtonItem" value="editPayment"/>
+                <set field="paymentId" from-field="parameters.paymentId"/>
+                <entity-one entity-name="Payment" value-field="payment">
+                    <field-map field-name="paymentId" from-field="parameters.paymentId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPaymentDecorator" location="${parameters.paymentDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.AccountingInvoiceHeaderDetailedInformation}">
+                                    <include-form name="EditPayment" location="component://accounting/widget/PaymentForms.xml"/>
                                 </screenlet>
                             </widgets>
                         </section>

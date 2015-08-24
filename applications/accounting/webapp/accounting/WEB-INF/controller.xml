@@ -559,6 +559,18 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="newPayment"/>
     </request-map>
+    <request-map uri="MultiplePayment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="MultiplePayment"/>
+    </request-map>
+    <request-map uri="debitLines">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="DebitLines"/>
+    </request-map>
+    <request-map uri="NewMultiplePayment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewMultiplePayment"/>
+    </request-map>
     <request-map uri="editPayment">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="editPayment"/>
@@ -568,6 +580,52 @@ under the License.
         <event type="service" invoke="createPaymentAndFinAccountTrans"/>
         <response name="success" type="view" value="editPayment"/>
         <response name="error" type="view" value="newPayment"/>
+    </request-map>
+    <request-map uri="createMultiPayment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createMultiPayment"/>
+        <response name="success" type="view" value="MultiplePayment"/>
+        <response name="error" type="view" value="NewMultiplePayment"/>
+    </request-map>
+    <request-map uri="ConfirmMultiplePayment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="ConfirmMultiplePayment"/>
+        <response name="success" type="request-redirect" value="paymentOverview">
+            <redirect-parameter name="paymentId"/>
+        </response>
+        <response name="error" type="request-redirect" value="debitLines">
+            <redirect-parameter name="paymentId"/>
+        </response>
+    </request-map>
+    <request-map uri="addDebitAccountPayment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="addDebitAccountPayment"/>
+        <response name="success" type="request-redirect" value="debitLines">
+            <redirect-parameter name="paymentId"/>
+        </response>
+        <response name="error" type="request-redirect" value="debitLines">
+            <redirect-parameter name="paymentId"/>
+        </response>
+    </request-map>
+    <request-map uri="updateDebitAccountPayment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateDebitAccountPayment"/>
+        <response name="success" type="request-redirect" value="debitLines">
+            <redirect-parameter name="paymentId"/>
+        </response>
+        <response name="error" type="request-redirect" value="debitLines">
+            <redirect-parameter name="paymentId"/>
+        </response>
+    </request-map>
+    <request-map uri="removeDebitAccountPayment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeDebitAccountPayment"/>
+        <response name="success" type="request-redirect" value="debitLines">
+            <redirect-parameter name="paymentId"/>
+        </response>
+        <response name="error" type="request-redirect" value="debitLines">
+            <redirect-parameter name="paymentId"/>
+        </response>
     </request-map>
     <request-map uri="updatePayment">
         <security https="true" auth="true"/>
@@ -2455,6 +2513,29 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditFinAccount"/>
     </request-map>
+    <request-map uri="BankRecon">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BankRecon"/>
+    </request-map>
+    <request-map uri="bankReconTrans">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BankReconTrans"/>
+    </request-map>
+    <request-map uri="reconcileBankTrans">
+        <security https="true" auth="true" />
+        <event type="service-multi" invoke="reconcileBankTrans" />
+        <response name="success" type="request-redirect" value="bankReconTrans" >
+            <redirect-parameter name="finAccountId"/>
+            <redirect-parameter name="reconDate"/>
+            <redirect-parameter name="finAccountTransId"/>
+            <redirect-parameter name="headerId"/>
+        </response>
+        <response name="error" type="view" value="BankReconTrans" />
+    </request-map>
+    <request-map uri="newBankRecon">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="newBankRecon"/>
+    </request-map>
     <request-map uri="createFinAccount">
         <security https="true" auth="true"/>
         <event type="service" invoke="createFinAccount"/>
@@ -2482,6 +2563,12 @@ under the License.
         <event type="service" invoke="pullBankTrans"/>
         <response name="success" type="view" value="FinAccountMain"/>
         <response name="error" type="view" value="FinAccountMain"/>
+    </request-map>
+    <request-map uri="createReconHeader">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createReconHeader"/>
+        <response name="success" type="view" value="BankRecon"/>
+        <response name="error" type="view" value="BankRecon"/>
     </request-map>
     <request-map uri="FindDepositSlips">
         <security https="true" auth="true"/>
@@ -2923,13 +3010,17 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="TrialBalance"/>
     </request-map>
+    <request-map uri="NewTrialBalance">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewTrialBalance"/>
+    </request-map>
     <request-map uri="TrialBalanceSummary">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="TrialBalanceSummary"/>
     </request-map>
     <request-map uri="TrialBalanceSummarySync">
         <security https="true" auth="true"/>
-        <event type="service" invoke="computeGlAccountBalanceForTrialBalance"/>
+        <event type="service" invoke="runTrialBalance"/>
         <response name="success" type="view" value="TrialBalanceSummary"/>
          <response name="error" type="view" value="TrialBalanceSummary"/>
     </request-map>
@@ -3411,6 +3502,10 @@ under the License.
     <view-map name="findPayments" type="screen" page="component://accounting/widget/PaymentScreens.xml#FindPayments"/>
     <view-map name="paymentOverview" type="screen" page="component://accounting/widget/PaymentScreens.xml#PaymentOverview"/>
     <view-map name="newPayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#NewPayment"/>
+    <view-map name="MultiplePayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#MultiplePayment"/>
+    <view-map name="DebitLines" type="screen" page="component://accounting/widget/PaymentScreens.xml#DebitLines"/>
+    <view-map name="NewMultiplePayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#NewMultiplePayment"/>
+    <view-map name="EditMultiPayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#EditMultiPayment"/>
     <view-map name="editPayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#EditPayment"/>
     <view-map name="editPaymentApplications" type="screen" page="component://accounting/widget/PaymentScreens.xml#EditPaymentApplications"/>
     <view-map name="ManualTransaction" type="screen" page="component://accounting/widget/PaymentScreens.xml#ManualTransaction"/>
@@ -3475,6 +3570,9 @@ under the License.
     -->
 
     <view-map name="EditFinAccount" type="screen" page="component://accounting/widget/FinAccountScreens.xml#EditFinAccount"/>
+    <view-map name="BankRecon" type="screen" page="component://accounting/widget/FinAccountScreens.xml#BankRecon"/>
+    <view-map name="BankReconTrans" type="screen" page="component://accounting/widget/FinAccountScreens.xml#BankReconTrans"/>
+    <view-map name="newBankRecon" type="screen" page="component://accounting/widget/FinAccountScreens.xml#newBankRecon"/>
     <view-map name="EditFinAccountRoles" type="screen" page="component://accounting/widget/FinAccountScreens.xml#EditFinAccountRoles"/>
     <view-map name="EditFinAccountTrans" type="screen" page="component://accounting/widget/FinAccountScreens.xml#EditFinAccountTrans"/>
     <view-map name="EditFinAccountAuths" type="screen" page="component://accounting/widget/FinAccountScreens.xml#EditFinAccountAuths"/>
@@ -3681,6 +3779,7 @@ under the License.
  <view-map name="FinancialPositionPDF" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#FinancialPositionPDF" content-type="application/pdf" encoding="none"/>
 
     <view-map name="TrialBalance" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TrialBalance"/>
+    <view-map name="NewTrialBalance" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#NewTrialBalance"/>
     <view-map name="TrialBalanceSummary" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TrialBalanceSummary"/>
     <view-map name="TrialBalanceSearchResultsPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TrialBalanceSearchResultsPdf" content-type="application/pdf" encoding="none"/>
     <view-map name="TrialBalanceSearchResultsCsv" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TrialBalanceSearchResultsCsv" content-type="text/csv" encoding="none"/>
