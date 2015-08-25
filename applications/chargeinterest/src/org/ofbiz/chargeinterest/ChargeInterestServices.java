@@ -200,6 +200,30 @@ public class ChargeInterestServices {
 	private static ExpectTotal processCurrentStation(String currentStationId,
 			String employerCode, String monthYear,
 			Map<String, String> userLogin, Long stationMonthInterestManagementId) {
+		
+		Calendar cal = Calendar.getInstance();
+		
+		Long year = Long.valueOf(monthYear.substring((monthYear.length() - 4), monthYear.length()));
+		Long month = Long.valueOf(monthYear.substring(0, monthYear.length() - 4));
+		System.out.println(" The year "+year);
+		System.out.println(" The Month "+month);
+	    
+	    cal.set(Calendar.MONTH, month.intValue() - 1);
+	    cal.set(Calendar.DATE, 16);
+	    
+	    cal.set(Calendar.YEAR, year.intValue());
+	    
+	    
+	    cal.set(Calendar.HOUR, 0);
+	    cal.set(Calendar.MINUTE, 0);
+	    cal.set(Calendar.SECOND, 0);
+	    cal.set(Calendar.MILLISECOND, 0);
+	    
+	    Timestamp interestChargeDate = new Timestamp(cal.getTimeInMillis());
+
+	    // now convert GregorianCalendar object to Timestamp object
+	   // return new Timestamp(cal.getTimeInMillis());
+	  //  System.out.println(" The time will be  llll "+new Timestamp(cal.getTimeInMillis()));
 
 		// Get all the loans for this station
 		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
@@ -208,7 +232,10 @@ public class ChargeInterestServices {
 						Long.valueOf(currentStationId)),
 
 				EntityCondition.makeCondition("loanStatusId",
-						EntityOperator.EQUALS, 6L)
+						EntityOperator.EQUALS, 6L),
+						
+				EntityCondition.makeCondition("disbursementDate",
+								EntityOperator.LESS_THAN, interestChargeDate)		
 
 				), EntityOperator.AND);
 
@@ -535,6 +562,58 @@ public class ChargeInterestServices {
 				accountId, postingType, acctgTransId, acctgTransType,
 				entrySequenceId, userLogin);
 		return sequence;
+	}
+	
+	
+	public static synchronized Boolean stationAlreadyCharged(Long month, Long year, String stationId){
+		GenericValue station = LoanUtilities.getEntityValue("Station", "stationId", stationId);
+		String employerCode = station.getString("employerCode");
+		List<String> stationIds = LoanUtilities.getStationIds(employerCode);
+		
+		//Check that none of these station ids is in the StationMonthInterestManagment
+		Boolean alreadyCharged = false;
+		for (String id : stationIds) {
+			if ( alreadyCharged(month, year, id)){
+				alreadyCharged = true;
+			} 
+		}
+		
+		return alreadyCharged;
+	}
+
+	private static Boolean alreadyCharged(Long month, Long year, String id) {
+		EntityConditionList<EntityExpr> stationMonthInterestManagementConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition
+						.makeCondition("month",
+								EntityOperator.EQUALS,
+								month),
+								
+								EntityCondition
+								.makeCondition("year",
+										EntityOperator.EQUALS,
+										year),
+										
+								EntityCondition
+										.makeCondition("stationId",
+												EntityOperator.EQUALS,
+												id)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> stationMonthInterestManagementELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			stationMonthInterestManagementELI = delegator.findList("StationMonthInterestManagement",
+					stationMonthInterestManagementConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		if ((stationMonthInterestManagementELI != null) && (stationMonthInterestManagementELI.size() > 0))
+			return true;
+		
+		return false;
 	}
 
 }

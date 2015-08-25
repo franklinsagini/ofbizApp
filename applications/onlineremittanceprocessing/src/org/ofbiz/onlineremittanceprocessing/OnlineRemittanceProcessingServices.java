@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -1010,6 +1011,27 @@ public class OnlineRemittanceProcessingServices {
 	 * */
 	private static void processStationMembers(String currentStationId,
 			Long pushMonthYearStationId) {
+		GenericValue pushMonthYearStation = LoanUtilities.getEntityValue("PushMonthYearStation", "pushMonthYearStationId", pushMonthYearStationId);
+		//disbursementDate
+		Calendar cal = Calendar.getInstance();
+		
+		Long year = pushMonthYearStation.getLong("year");//Long.valueOf(monthYear.substring((monthYear.length() - 4), monthYear.length()));
+		Long month = pushMonthYearStation.getLong("month");//Long.valueOf(monthYear.substring(0, monthYear.length() - 4));
+		System.out.println(" The year "+year);
+		System.out.println(" The Month "+month);
+	    
+	    cal.set(Calendar.MONTH, month.intValue() - 1);
+	    cal.set(Calendar.DATE, 16);
+	    
+	    cal.set(Calendar.YEAR, year.intValue());
+	    
+	    
+	    cal.set(Calendar.HOUR, 0);
+	    cal.set(Calendar.MINUTE, 0);
+	    cal.set(Calendar.SECOND, 0);
+	    cal.set(Calendar.MILLISECOND, 0);
+	    
+	    Timestamp interestChargeDate = new Timestamp(cal.getTimeInMillis());
 		
 		//Get all the members belonging to this station
 		EntityConditionList<EntityExpr> memberConditions = EntityCondition
@@ -1043,9 +1065,11 @@ public class OnlineRemittanceProcessingServices {
 		//Add Loan Applications
 		for (GenericValue member : memberELI) {
 			//Get Disbursed Loans for this member
-			List<Long> loanApplications = LoansProcessingServices.getDisbursedLoanApplicationList(member.getLong("partyId"));
+			List<Long> loanApplications = LoansProcessingServices.getDisbursedLoanApplicationListBeforeInterestChargeDate(member.getLong("partyId"), interestChargeDate);
 			
 			for (Long loanApplicationId : loanApplications) {
+				
+				//Only add if loan disbursement is less than 16th of the month
 				RemittanceServices.addLoanExpectation(loanApplicationId, pushMonthYearStationId);
 			}
 		}
