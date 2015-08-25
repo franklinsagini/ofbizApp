@@ -73,21 +73,21 @@ under the License.
                 <parameter param-name="partyId" from-field="ownerPartyId"/>
             </hyperlink>
         </field> -->
-        <field name="deleteLink" title=" " widget-style="buttontext">
+<!--         <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="deleteFinAccount" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="finAccountId"/>
             </hyperlink>
-        </field>
+        </field> -->
         <field name="pullTransLink" title=" " widget-style="buttontext">
             <hyperlink target="PullBankTrans" description="Pull Transactions" also-hidden="false">
                 <parameter param-name="finAccountId"/>
             </hyperlink>
         </field>
-        <field name="BankReconLink" title=" " widget-style="buttontext">
+<!--         <field name="BankReconLink" title=" " widget-style="buttontext">
             <hyperlink target="BankRecon" description="Reconciliation" also-hidden="false">
                 <parameter param-name="finAccountId"/>
             </hyperlink>
-        </field>
+        </field> -->
     </form>
     <form name="FindBankReconHeader" target="BankRecon" title="" type="single"
         header-row-style="header-row" default-table-style="basic-table">
@@ -145,10 +145,6 @@ under the License.
     <form name="BankReconciliationHeader" type="single" target="" default-map-name="bankReconHeader">
         <field name="cashBookBalance" position="1"><display/></field>
         <field name="bankBalance" position="2"><display/></field>
-        <field name="unreceiptedBankings" position="1"><display/></field>
-        <field name="uncreditedBankings" position="2"><display/></field>
-        <field name="unidentifiedDebits" position="1"><display/></field>
-        <field name="unpresentedCheques" position="2"><display/></field>
         <field name="adjustedCashBookBalance" position="1"><display/></field>
         <field name="adjustedBankBalance" position="2"><display/></field>
     </form>
@@ -156,12 +152,9 @@ under the License.
     <form name="ListBankReconTrans" type="multi" use-row-submit="true" title="Selected Monument"
         list-name="listBankReconTransList"  separate-columns="true" odd-row-style="alternate-row"
         default-table-style="basic-table hover-bar" paginate-target="bankReconTrans" target="reconcileBankTrans">
-
         <field name="finAccountTransId"><display/></field>
         <field name="reconDate"><hidden/></field>
-        <field name="finAccountId"><hidden/></field>
-        <field name="headerId"><hidden/></field>
-        <field name="transactionDate"><date-time /></field>
+        <field name="transactionDate"><display /></field>
         <field name="finAccountTransTypeId" title="Type"><display /></field>
         <field name="comments" title="Details" ><display /></field>
         <field name="amount" widget-style="tabletextright"><display /></field>
