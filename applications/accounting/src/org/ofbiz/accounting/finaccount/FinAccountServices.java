@@ -273,12 +273,6 @@ public class FinAccountServices {
 			bankReconHeader.put("partyId", userLogin.getString("userLoginId"));
 			bankReconHeader.put("cashBookBalance", cashBookBalance);
 			bankReconHeader.put("bankBalance", BigDecimal.ZERO);
-			bankReconHeader.put("unreceiptedBankings", BigDecimal.ZERO);
-			bankReconHeader.put("uncreditedBankings", BigDecimal.ZERO);
-			bankReconHeader.put("unidentifiedDebits", BigDecimal.ZERO);
-			bankReconHeader.put("adjustedCashBookBalance", BigDecimal.ZERO);
-			bankReconHeader.put("bankBalance", bankBalance);
-			bankReconHeader.put("unpresentedCheques", BigDecimal.ZERO);
 			bankReconHeader.put("adjustedBankBalance", BigDecimal.ZERO);
 			try {
 				bankReconHeader.create();
@@ -304,24 +298,7 @@ public class FinAccountServices {
 					totalUncreditedBankings = totalUncreditedBankings.add(transaction.getBigDecimal("amount"));
 					System.out.println("############################## totalUnpresentedCheques: "+totalUncreditedBankings);
 				}
-
-				// update the header with the above totals
-				GenericValue reconHeaderUpdate = null;
-				try {
-					reconHeaderUpdate = delegator.findOne("BankReconHeader", UtilMisc.toMap("headerId", headerId), false);
-				} catch (GenericEntityException e2) {
-					e2.printStackTrace();
-				}
-				reconHeaderUpdate.set("unpresentedCheques", totalUnpresentedCheques);
-				reconHeaderUpdate.set("uncreditedBankings", totalUncreditedBankings);
-
-				try {
-					reconHeaderUpdate.store();
-				} catch (GenericEntityException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
+				
 				// save to BankReconLines
 				GenericValue bankReconLines = delegator.makeValue("BankReconLines");
 				String reconLineId = delegator.getNextSeqId("BankReconLines");
