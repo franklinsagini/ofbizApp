@@ -26,6 +26,10 @@ use(TimeCategory) {
 	lastDate = startDate  + duration.toInteger().month;
 }
 
+startDate = org.ofbiz.loans.LoanServices.getProcessingDate(lloanApplicationId);
+lastDate = org.ofbiz.loans.LoanServices.getLoanRepaymentEndDate(lloanApplicationId);
+
+
 context.startDate = startDate;
 context.lastDate = lastDate;
 

@@ -1057,7 +1057,7 @@ public class LoanServices {
 		return repaymentStartDate;
 	}
 
-	private static Timestamp getProcessingDate(Delegator delegator, String loanApplicationId) {
+	public static Timestamp getProcessingDate(Delegator delegator, String loanApplicationId) {
 		
 		Long loanApplicationIdLong = Long.valueOf(loanApplicationId);
 		
@@ -1097,6 +1097,7 @@ public class LoanServices {
 			
 			DateTime startOfNextMonth = startOfTheMonth.plusMonths(1)
 					.dayOfMonth().withMinimumValue().withTimeAtStartOfDay();
+			startOfNextMonth = startOfNextMonth.minusDays(1);
 			repaymentDate = new Timestamp(startOfNextMonth.toLocalDate()
 					.toDate().getTime());
 		} else {
@@ -1105,12 +1106,98 @@ public class LoanServices {
 					.withMinimumValue().toDateTime().withTimeAtStartOfDay();
 			DateTime startOfNextMonth = startOfTheMonth.plusMonths(2)
 					.dayOfMonth().withMinimumValue().withTimeAtStartOfDay();
+			startOfNextMonth = startOfNextMonth.minusDays(1);
 			repaymentDate = new Timestamp(startOfNextMonth.toLocalDate()
 					.toDate().getTime());
 		}
 
 		return repaymentDate;
 
+	}
+	
+	
+	public static Timestamp getProcessingDate(Long loanApplicationId) {
+		
+		Long loanApplicationIdLong = Long.valueOf(loanApplicationId);
+		
+		GenericValue loanApplicationEntity = LoanUtilities.getLoanApplicationEntity(loanApplicationIdLong);
+		
+		List<GenericValue> salaryProcessingDateELI = null; // =
+		Long processingDay = 0l;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			salaryProcessingDateELI = delegator.findList(
+					"SalaryProcessingDate", null, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		for (GenericValue genericValue : salaryProcessingDateELI) {
+			processingDay = genericValue.getLong("processingDay");
+		}
+
+		log.info("##### Salary Processing Day is ######## " + processingDay);
+
+		Timestamp currentDate = new Timestamp(Calendar.getInstance()
+				.getTimeInMillis());
+		Timestamp repaymentDate = loanApplicationEntity.getTimestamp("disbursementDate");
+		;
+		LocalDateTime localDateCurrent = new LocalDateTime(
+				currentDate.getTime());
+		LocalDateTime localDateRepaymentDate = new LocalDateTime(
+				repaymentDate.getTime());
+
+		if (localDateRepaymentDate.getDayOfMonth() < processingDay.intValue()) {
+			// Repayment Date is Beginning of Next Month
+			localDateRepaymentDate = localDateRepaymentDate.plusMonths(1);
+			
+			localDateRepaymentDate = localDateRepaymentDate.dayOfMonth().withMinimumValue();
+			
+			localDateRepaymentDate = localDateRepaymentDate.minusDays(1);
+			// localDateRepaymentDate = localDateRepaymentDate.getD
+			// DateMidnight firstDay = new DateMidnight().withDayOfMonth(1);
+//			DateTime startOfTheMonth = localDateRepaymentDate.dayOfMonth()
+//					.withMinimumValue().toDateTime().withTimeAtStartOfDay();
+//			
+//			DateTime startOfNextMonth = startOfTheMonth.plusMonths(1)
+//					.dayOfMonth().withMinimumValue(); //.withTimeAtStartOfDay()
+//			startOfNextMonth = startOfNextMonth.minusDays(1);
+			repaymentDate = new Timestamp(localDateRepaymentDate.toDate().getTime());
+		} else {
+			// from 15th and beyond then start paying two months later
+//			DateTime startOfTheMonth =localDateRepaymentDate.dayOfMonth()
+//					.withMinimumValue().toDateTime().withTimeAtStartOfDay();
+//			DateTime startOfNextMonth = startOfTheMonth.plusMonths(2)
+//					.dayOfMonth().withMinimumValue(); //.withTimeAtStartOfDay()
+//			startOfNextMonth = startOfNextMonth.minusDays(1);
+			
+			
+			localDateRepaymentDate = localDateRepaymentDate.plusMonths(2);
+			
+			localDateRepaymentDate = localDateRepaymentDate.dayOfMonth().withMinimumValue();
+			
+			localDateRepaymentDate = localDateRepaymentDate.minusDays(1);
+			
+			repaymentDate = new Timestamp(localDateRepaymentDate.toDate().getTime());
+		}
+
+		return repaymentDate;
+
+	}
+	
+	public static Timestamp getLoanRepaymentEndDate(Long loanApplicationId) {
+		Timestamp startDate = getProcessingDate(loanApplicationId);
+		
+		LocalDateTime localDateRepaymentStartDate = new LocalDateTime(
+				startDate.getTime());
+		
+		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
+
+		//duration = loanApplication.repaymentPeriod;
+		Long duration = loanApplication.getLong("repaymentPeriod");
+		
+		LocalDateTime endDate = localDateRepaymentStartDate.plusMonths(duration.intValue());
+		return new Timestamp(endDate.toDate().getTime());
 	}
 
 	/**
