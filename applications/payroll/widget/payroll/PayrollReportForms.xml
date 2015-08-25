@@ -256,6 +256,23 @@ under the License.
             <submit button-type="button"/>
         </field>
     </form>
+    
+    <!-- payrollTotalsByAnalysis -->
+    <form name="payrollTotalsByAnalysis" type="single" target="payrollTotalsByAnalysisPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="payrollPeriodId" title="Period" required-field="true" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+            <drop-down allow-empty="true">
+                <entity-options description="${name}" entity-name="PayrollPeriod" key-field-name="payrollPeriodId">
+                    <!--entity-constraint name="status" operator="equals" value="Closed"/-->
+                    <!-- entity-constraint name="status" operator="equals" value="Closed"/ -->
+                    <entity-order-by field-name="-payrollPeriodId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
 
     <form name="PayrollCodeSummaryCSV" type="single" target="payrollCodeSummary.csv" title="" header-row-style="header-row"
         default-table-style="basic-table">
