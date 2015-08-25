@@ -984,14 +984,17 @@ public class FinAccountServices {
 						sb.append(" ");
 						sb.append(phoneNo);
 					}
+					if(accountTransaction.getString("chequeNo")!= null){
+						sb.append(" ");
+						sb.append("ChequeNo:");
+						sb.append(accountTransaction.getString("chequeNo"));
+					}
 					sb.append(" ");
 					sb.append(member.getString("firstName"));
 					sb.append(" ");
 					sb.append(member.getString("middleName"));
 					sb.append(" ");
 					sb.append(member.getString("lastName"));
-
-					System.out.println("############################### END OF STRING BUFFER ################################################");
 
 				}
 			}
