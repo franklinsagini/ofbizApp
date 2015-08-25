@@ -44,7 +44,27 @@ under the License.
   <!-- ========================================================= -->
   <!-- org.ofbiz.accounting.imprest -->
   <!-- ========================================================= -->
-
+<entity entity-name="BankReconHeader"
+            package-name="org.ofbiz.accounting.ledger"
+            title="Bank Reconciliation Header">
+      <field name="headerId" type="id-ne" enable-audit-log="true"></field>
+      <field name="reconDate" type="date-time"></field>
+      <field name="description" type="description" enable-audit-log="true"></field>
+      <field name="partyId" type="id" enable-audit-log="true"></field>
+      <field name="statusName" type="description"></field>
+      <field name="finAccountId" type="id-ne"></field>
+      <field name="cashBookBalance" type="currency-amount"></field>
+      <field name="bankBalance" type="currency-amount"></field>
+      <field name="adjustedCashBookBalance" type="currency-amount"></field>
+      <field name="adjustedBankBalance" type="currency-amount"></field>
+      <prim-key field="headerId"/>
+      <relation type="one" fk-name="FINACCT_RECON_HED" rel-entity-name="FinAccount">
+        <key-map field-name="finAccountId"/>
+      </relation>
+      <index name="UNI_DESC" unique="true">
+        <index-field name="description"/>
+      </index>
+</entity>
     <entity entity-name="MultiPayment"
             package-name="org.ofbiz.accounting.payment"
             title="Payment Entity">
@@ -121,31 +141,6 @@ under the License.
       <field name="debitCreditFlag" type="indicator" enable-audit-log="true"></field>
       <prim-key field="generatedId"/>
       <prim-key field="acctgTransId"/>
-</entity>
-<entity entity-name="BankReconHeader"
-            package-name="org.ofbiz.accounting.ledger"
-            title="Bank Reconciliation Header">
-      <field name="headerId" type="id-ne" enable-audit-log="true"></field>
-      <field name="reconDate" type="date-time"></field>
-      <field name="description" type="description" enable-audit-log="true"></field>
-      <field name="partyId" type="id" enable-audit-log="true"></field>
-      <field name="statusName" type="description"></field>
-      <field name="finAccountId" type="id-ne"></field>
-      <field name="cashBookBalance" type="currency-amount"></field>
-      <field name="unreceiptedBankings" type="currency-amount"></field>
-      <field name="unidentifiedDebits" type="currency-amount"></field>
-      <field name="adjustedCashBookBalance" type="currency-amount"></field>
-      <field name="bankBalance" type="currency-amount"></field>
-      <field name="uncreditedBankings" type="currency-amount"></field>
-      <field name="unpresentedCheques" type="currency-amount"></field>
-      <field name="adjustedBankBalance" type="currency-amount"></field>
-      <prim-key field="headerId"/>
-      <relation type="one" fk-name="FINACCT_RECON_HED" rel-entity-name="FinAccount">
-        <key-map field-name="finAccountId"/>
-      </relation>
-      <index name="UNI_DESC" unique="true">
-        <index-field name="description"/>
-      </index>
 </entity>
 <entity entity-name="BankReconLines"
             package-name="org.ofbiz.accounting.ledger"
