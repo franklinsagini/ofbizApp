@@ -1682,12 +1682,37 @@ public class OnlineRemittanceProcessingServices {
 	private static void processStationMembersForHeadOffice(String currentStationId,
 			Long headOfficeMonthYearId) {
 		
+		GenericValue headOfficeMonthYear = LoanUtilities.getEntityValue("HeadOfficeMonthYear", "headOfficeMonthYearId", headOfficeMonthYearId);
+		//disbursementDate
+		Calendar cal = Calendar.getInstance();
+		
+		Long year = headOfficeMonthYear.getLong("year");//Long.valueOf(monthYear.substring((monthYear.length() - 4), monthYear.length()));
+		Long month = headOfficeMonthYear.getLong("month");//Long.valueOf(monthYear.substring(0, monthYear.length() - 4));
+		System.out.println(" The year "+year);
+		System.out.println(" The Month "+month);
+	    
+	    cal.set(Calendar.MONTH, month.intValue() - 1);
+	    cal.set(Calendar.DATE, 16);
+	    
+	    cal.set(Calendar.YEAR, year.intValue());
+	    
+	    
+	    cal.set(Calendar.HOUR, 0);
+	    cal.set(Calendar.MINUTE, 0);
+	    cal.set(Calendar.SECOND, 0);
+	    cal.set(Calendar.MILLISECOND, 0);
+	    
+	    Timestamp interestChargeDate = new Timestamp(cal.getTimeInMillis());
+		
 		//Get all the members belonging to this station
 		EntityConditionList<EntityExpr> memberConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"stationId", EntityOperator.EQUALS,
 						Long.valueOf(currentStationId.trim())),
-						EntityCondition.makeCondition("memberStatusId", EntityOperator.EQUALS , LoanUtilities.getMemberStatusId("ACTIVE"))
+						//EntityCondition.makeCondition("memberStatusId", EntityOperator.EQUALS , LoanUtilities.getMemberStatusId("ACTIVE"))
+						EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("DEAD")),
+						
+						EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("CLOSED"))	
 
 				), EntityOperator.AND);
 //		EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("DEAD")),
@@ -1715,8 +1740,8 @@ public class OnlineRemittanceProcessingServices {
 		//Add Loan Applications
 		for (GenericValue member : memberELI) {
 			//Get Disbursed Loans for this member
-			List<Long> loanApplications = LoansProcessingServices.getDisbursedLoanApplicationList(member.getLong("partyId"));
-			
+			//List<Long> loanApplications = LoansProcessingServices.getDisbursedLoanApplicationList(member.getLong("partyId"));
+			List<Long> loanApplications = LoansProcessingServices.getDisbursedLoanApplicationListBeforeInterestChargeDate(member.getLong("partyId"), interestChargeDate);
 			for (Long loanApplicationId : loanApplications) {
 				addLoanExpectationHeadOffice(loanApplicationId, headOfficeMonthYearId);
 			}
@@ -2018,16 +2043,60 @@ public class OnlineRemittanceProcessingServices {
 		if (accountProduct.getString("code").equals(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE)) {
 			// Calculate Contribution based on graduated scale this is for
 			// Member Deposits
-			bdContributingAmt = LoansProcessingServices
-					.getLoanCurrentContributionAmount(member.getLong("partyId"));
+			
+			//If member has taken a loan after april 1st then use this new method
+			//GenericValue pushMonthYearStation = LoanUtilities.getEntityValue("PushMonthYearStation", "pushMonthYearStationId", pushMonthYearStationId);
+			//disbursementDate
+			Calendar cal = Calendar.getInstance();
+			
+			Long year = RemittanceServices.LOANFORMULAYEAR;//Long.valueOf(monthYear.substring((monthYear.length() - 4), monthYear.length()));
+			Long themonth = RemittanceServices.LOANFORMULAMONTH;//Long.valueOf(monthYear.substring(0, monthYear.length() - 4));
+			
+			System.out.println(" The year "+year);
+			System.out.println(" The Month "+themonth);
+		    
+		    cal.set(Calendar.MONTH, themonth.intValue() - 1);
+		    cal.set(Calendar.DATE, 1);
+		    
+		    cal.set(Calendar.YEAR, year.intValue());
+		    
+		    
+		    cal.set(Calendar.HOUR, 0);
+		    cal.set(Calendar.MINUTE, 0);
+		    cal.set(Calendar.SECOND, 0);
+		    cal.set(Calendar.MILLISECOND, 0);
+		    
+		    Timestamp loanFormularChangeDate = new Timestamp(cal.getTimeInMillis());
+		    
+		    List<Long> loanApplicationIdsAfterChange = LoansProcessingServices.getDisbursedLoanApplicationListAfterFormularChange(member.getLong("partyId"), loanFormularChangeDate);
+ 
+		    if ((loanApplicationIdsAfterChange != null) && (loanApplicationIdsAfterChange.size() > 0)){
+				bdContributingAmt = LoansProcessingServices
+						.getLoanCurrentContributionAmount(member.getLong("partyId"));
+	
+				BigDecimal bdSpecifiedAmount = memberAccount
+						.getBigDecimal("contributingAmount");
+	
+				if ((bdSpecifiedAmount != null)
+						&& (bdSpecifiedAmount.compareTo(bdContributingAmt) == 1)) {
+					bdContributingAmt = bdSpecifiedAmount;
+				}
+		    } 
+			//Else use old graduated scale
+		    else{
+		    	BigDecimal bdAmount = LoansProcessingServices.getTotalDisbursedLoans(member.getLong("partyId"));
+		    	bdContributingAmt = LoansProcessingServices.getGruaduatedScaleContributionOld(bdAmount);
+						
+	
+				BigDecimal bdSpecifiedAmount = memberAccount
+						.getBigDecimal("contributingAmount");
+	
+				if ((bdSpecifiedAmount != null)
+						&& (bdSpecifiedAmount.compareTo(bdContributingAmt) == 1)) {
+					bdContributingAmt = bdSpecifiedAmount;
+				}
+		    }
 
-			BigDecimal bdSpecifiedAmount = memberAccount
-					.getBigDecimal("contributingAmount");
-
-			if ((bdSpecifiedAmount != null)
-					&& (bdSpecifiedAmount.compareTo(bdContributingAmt) == 1)) {
-				bdContributingAmt = bdSpecifiedAmount;
-			}
 			
 			codevalue = "D101";
 
