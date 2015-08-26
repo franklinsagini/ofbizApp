@@ -295,9 +295,14 @@
 		separate-columns="true" odd-row-style="alternate-row"
 		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="loanApplication" target="updateLoanApplication">
 		<actions>
-			<entity-and entity-name="LoanApplication" >
+			<entity-condition entity-name="LoanApplication">
+				<condition-list combine="or">
+					<condition-expr field-name="parentLoanApplicationId" operator="equals" from-field="loanApplicationId"/>
+				</condition-list>
+			</entity-condition>
+			<!-- entity-and entity-name="LoanApplication" >
 				<field-map field-name="parentLoanApplicationId"  from-field="loanApplicationId"/>
-			</entity-and>		
+			</entity-and -->		
 		</actions>
 		<field name="loanApplicationId">
 			<hidden value="${parameters.loanApplicationId}"/>
@@ -355,6 +360,171 @@
 		 <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
 		
 	</form>
+	
+	<!-- listAllGuarantorLoans -->
+	    	<form name="listAllGuarantorLoans" type="list" list-name="listIt"
+		paginate-target="theloanslisting" default-entity-name="LoanApplication"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="loanApplication" target="updateLoanApplication">
+		<actions>
+			<entity-condition entity-name="GuarantorListing">
+				<condition-list combine="and">
+					<condition-expr field-name="partyId" operator="equals" from-field="partyId"/>
+					<condition-expr field-name="loanStatusId" operator="equals" value="6"/>
+				</condition-list>
+			</entity-condition>
+			<!-- entity-and entity-name="LoanApplication" >
+				<field-map field-name="parentLoanApplicationId"  from-field="loanApplicationId"/>
+			</entity-and -->		
+		</actions>
+		<field name="loanApplicationId">
+			<hidden value="${parameters.loanApplicationId}"/>
+		</field>
+		<field name="loanNo">
+			<display also-hidden="false" />
+		</field>
+		<field name="guarantorId" title="Member">
+			<display-entity description="${firstName} ${middleName} ${lastName}"
+				entity-name="Member" also-hidden="false" key-field-name="partyId"></display-entity>
+			
+		</field>
+		
+		<field name="loanProductId" title="Product">
+			<display-entity description="${name} ${code}"
+				entity-name="LoanProduct" also-hidden="false"></display-entity>
+			
+		</field>
+		
+		<field name="loanAmt" title="Disbursed Amount">
+			<display also-hidden="false" />
+		</field>
+		
+		<field name="loanBalance" title="Loan Balance">
+			<display also-hidden="false" default-value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);}" />
+		</field>
+		
+		<field name="interestRatePM" title="Interest Rate(P.M)">
+			<text></text>
+		</field>
+		<field name="repaymentPeriod" title="Repayment Period">
+			<text></text>
+		</field>
+	
+		<field name="loanStatusId" title="Status">
+			<display-entity entity-name="LoanStatus" description="${name}" key-field-name="loanStatusId"></display-entity>
+		</field>
+
+		<field name="createdStamp" title="Created">
+			<display type="date-time" />
+		</field>
+		
+		<field name="createdBy" title="Created By">
+			<display />
+		</field>
+
+		
+		<field name="loanLogs" title="Logs" widget-style="buttontext">
+			<hyperlink target="loanLogs" description="Logs"
+				also-hidden="false">
+				<parameter param-name="loanApplicationId" />
+			</hyperlink>
+		</field>
+		
+		 <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+		
+	</form>
+	
+		<!-- NewPushMonthYearStation -->
+		<form name="NewLoanStatusLog" type="single" target="createLoanStatusLog"
+        focus-field-name="loanStatusId" header-row-style="header-row" default-table-style="basic-table" default-map-name="pushMonthYearStationContext">
+        	<field name="loanStatusLogId">
+        		<hidden/>
+        	</field>
+        
+          <field name="loanStatusId" title="Loan Status" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<drop-down allow-empty="true" >
+       			<entity-options description="${name}" entity-name="LoanStatus">
+       				<entity-order-by field-name="name"/>
+       			</entity-options>
+       		</drop-down>
+        </field>
+        
+        
+        
+         <field name="dateAttached" title="Date Attached" >
+       		<date-time type="date"/>
+        </field>
+        
+        <field name="memberDepositsAtAttachment" title="Deposits At Attachment" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<text size="25"></text>
+        </field>
+        
+        
+        
+         <field name="balanceAtAttachment" title="Balance At Attachment" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<text size="25"></text>
+        </field>
+        
+        <field name="interestDueAtAttachment" title="Interest Due At Attachment" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<text size="25"></text>
+        </field>
+        
+        <field name="insuranceDueAtAttachment" title="Insurance Due At Attachment" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<text size="25"></text>
+        </field>
+        
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+       <form name="loanLogs" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateLoanStatusLog" paginate-target="loanLogs"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="LoanStatusLog">
+            	<condition-expr field-name="loanApplicationId" operator="equals" from-field="loanApplicationId"/>
+            	<order-by field-name="-loanStatusLogId"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateReviewLoan"/>
+        <!-- field name="skillTypeId">
+            <display-entity entity-name="SkillType" description="${description}"/>
+        </field -->
+         <field name="createdBy"><display also-hidden="false"></display> </field>
+        <field name="loanStatusId" title="Status">
+        	<display-entity entity-name="LoanStatus" description="${name}" key-field-name="loanStatusId"></display-entity>
+        </field>
+         <field name="comment"><display also-hidden="false"></display> </field>
+        <field name="createdStamp"><display also-hidden="false" type="date-time"></display> </field>
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteReviewLoan" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="loanStatusLogId"/>
+            </hyperlink>
+        </field -->
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+                 <field name="dateAttached" title="Date Attached" >
+       		<date-time type="date"/>
+        </field>
+        
+        <field name="memberDepositsAtAttachment" title="Deposits At Attachment" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<text size="25"></text>
+        </field>
+        
+        
+        
+         <field name="balanceAtAttachment" title="Balance At Attachment" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<text size="25"></text>
+        </field>
+        
+        <field name="interestDueAtAttachment" title="Interest Due At Attachment" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<text size="25"></text>
+        </field>
+        
+        <field name="insuranceDueAtAttachment" title="Insurance Due At Attachment" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<text size="25"></text>
+        </field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
     
 
 </forms>
