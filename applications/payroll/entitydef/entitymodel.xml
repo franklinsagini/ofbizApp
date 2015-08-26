@@ -660,4 +660,193 @@ under the License.
          
 	</entity>
 	
+	<!-- PURE Hardcoding, I promise to come back and fix this , Odonya -->
+	<!-- Earnings -->
+	  <view-entity entity-name="EarningsTotalsReport" package-name="org.ofbiz.payroll"
+    	title="Earnings Totals Report">
+    	<member-entity entity-alias="SPE" entity-name="StaffPayrollElements" />
+    	<member-entity entity-alias="PE" entity-name="PayrollElement" />
+    	<member-entity entity-alias="SP" entity-name="StaffPayroll" />
+    	
+    	<alias entity-alias="SPE" name="payrollElementId" group-by="true" ></alias>	
+		<alias entity-alias="SPE" name="amount" function="sum" ></alias>
+    	<alias entity-alias="PE" field="name"  name="name" group-by="true"></alias>  
+    	<alias entity-alias="SP" field="payrollPeriodId"  name="payrollPeriodId" group-by="true"></alias>    
+        
+		
+		<view-link entity-alias="SPE" rel-entity-alias="PE">
+            <key-map field-name="payrollElementId" />
+        </view-link>
+        
+        <view-link entity-alias="SPE" rel-entity-alias="SP">
+            <key-map field-name="staffPayrollId" />
+        </view-link>
+         
+        <entity-condition>
+        <condition-list combine="and">
+        	<!--condition-expr entity-alias="SP" field-name="closed" operator="equals" value="Y"/-->
+        	<condition-expr entity-alias="SPE" field-name="amount" operator="greater" value="0"/>
+	        <condition-list combine="or">
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="BASICPAY"/>
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="10010"/>
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="10047"/>
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="10044"/>
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="10052"/>
+	        </condition-list>
+        </condition-list>
+        	<order-by  field-name="-amount"/>
+        </entity-condition>
+     </view-entity>
+     
+	<!-- Deductions -->
+	<view-entity entity-name="DeductionsTotalsReport" package-name="org.ofbiz.payroll"
+    	title="Deductions Totals Report">
+    	<member-entity entity-alias="SPE" entity-name="StaffPayrollElements" />
+    	<member-entity entity-alias="PE" entity-name="PayrollElement" />
+    	<member-entity entity-alias="SP" entity-name="StaffPayroll" />
+    	
+    	<alias entity-alias="SPE" name="payrollElementId" group-by="true" ></alias>	
+		<alias entity-alias="SPE" name="amount" function="sum" ></alias>
+    	<alias entity-alias="PE" field="name"  name="name" group-by="true"></alias>  
+    	<alias entity-alias="SP" field="payrollPeriodId"  name="payrollPeriodId" group-by="true"></alias>    
+        
+		
+		<view-link entity-alias="SPE" rel-entity-alias="PE">
+            <key-map field-name="payrollElementId" />
+        </view-link>
+        
+        <view-link entity-alias="SPE" rel-entity-alias="SP">
+            <key-map field-name="staffPayrollId" />
+        </view-link>
+         
+        <entity-condition>
+        <condition-list combine="and">
+        	<!--condition-expr entity-alias="SP" field-name="closed" operator="equals" value="Y"/-->
+        	<condition-expr entity-alias="SPE" field-name="amount" operator="greater" value="0"/>
+	        <condition-list combine="or">
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="10057"/>
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="10059"/>
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="10055"/>
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="10054"/>
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="10053"/>
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="10056"/>
+	        	
+	        	
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="NSSF"/>
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="NHIF"/>
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="10066"/>
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="10058"/>
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="10067"/>
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="10056"/>
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="PENSION"/>
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="10062"/>
+	        	
+	        </condition-list>
+        </condition-list>
+        
+        </entity-condition>
+     </view-entity>
+     
+	<!-- PAYE -->
+	<view-entity entity-name="PayeTotalsReport" package-name="org.ofbiz.payroll"
+    	title="Paye Totals Report">
+    	<member-entity entity-alias="SPE" entity-name="StaffPayrollElements" />
+    	<member-entity entity-alias="PE" entity-name="PayrollElement" />
+    	<member-entity entity-alias="SP" entity-name="StaffPayroll" />
+    	
+    	<alias entity-alias="SPE" name="payrollElementId" group-by="true" ></alias>	
+		<alias entity-alias="SPE" name="amount" function="sum" ></alias>
+    	<alias entity-alias="PE" field="name"  name="name" group-by="true"></alias>  
+    	<alias entity-alias="SP" field="payrollPeriodId"  name="payrollPeriodId" group-by="true"></alias>    
+        
+		
+		<view-link entity-alias="SPE" rel-entity-alias="PE">
+            <key-map field-name="payrollElementId" />
+        </view-link>
+        
+        <view-link entity-alias="SPE" rel-entity-alias="SP">
+            <key-map field-name="staffPayrollId" />
+        </view-link>
+         
+        <entity-condition>
+        <condition-list combine="and">
+        	<!--condition-expr entity-alias="SP" field-name="closed" operator="equals" value="Y"/-->
+        	<condition-expr entity-alias="SPE" field-name="amount" operator="greater" value="0"/>
+	        <condition-list combine="or">
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="TAXABLEINCOME"/>
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="NSSF"/>
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="PENSION"/>
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="PAYE"/>
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="MPR"/>
+	        </condition-list>
+        </condition-list>
+        
+        </entity-condition>
+     </view-entity>
+     
+     <!-- GROSSPAY -->
+     	<view-entity entity-name="GrossTotalsReport" package-name="org.ofbiz.payroll"
+    	title="Gross Totals Report">
+    	<member-entity entity-alias="SPE" entity-name="StaffPayrollElements" />
+    	<member-entity entity-alias="PE" entity-name="PayrollElement" />
+    	<member-entity entity-alias="SP" entity-name="StaffPayroll" />
+    	
+    	<alias entity-alias="SPE" name="payrollElementId" group-by="true" ></alias>	
+		<alias entity-alias="SPE" name="amount" function="sum" ></alias>
+    	<alias entity-alias="PE" field="name"  name="name" group-by="true"></alias>  
+    	<alias entity-alias="SP" field="payrollPeriodId"  name="payrollPeriodId" group-by="true"></alias>    
+        
+		
+		<view-link entity-alias="SPE" rel-entity-alias="PE">
+            <key-map field-name="payrollElementId" />
+        </view-link>
+        
+        <view-link entity-alias="SPE" rel-entity-alias="SP">
+            <key-map field-name="staffPayrollId" />
+        </view-link>
+         
+        <entity-condition>
+        <condition-list combine="and">
+        	<!--condition-expr entity-alias="SP" field-name="closed" operator="equals" value="Y"/-->
+        	<condition-expr entity-alias="SPE" field-name="amount" operator="greater" value="0"/>
+	        <condition-list combine="or">
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="GROSSPAY"/>
+	        </condition-list>
+        </condition-list>
+        
+        </entity-condition>
+     </view-entity>
+     
+     <!-- PAYE Only -->
+	 <view-entity entity-name="PayeOnlyTotalsReport" package-name="org.ofbiz.payroll"
+    	title="Gross Totals Report">
+    	<member-entity entity-alias="SPE" entity-name="StaffPayrollElements" />
+    	<member-entity entity-alias="PE" entity-name="PayrollElement" />
+    	<member-entity entity-alias="SP" entity-name="StaffPayroll" />
+    	
+    	<alias entity-alias="SPE" name="payrollElementId" group-by="true" ></alias>	
+		<alias entity-alias="SPE" name="amount" function="sum" ></alias>
+    	<alias entity-alias="PE" field="name"  name="name" group-by="true"></alias>  
+    	<alias entity-alias="SP" field="payrollPeriodId"  name="payrollPeriodId" group-by="true"></alias>    
+        
+		
+		<view-link entity-alias="SPE" rel-entity-alias="PE">
+            <key-map field-name="payrollElementId" />
+        </view-link>
+        
+        <view-link entity-alias="SPE" rel-entity-alias="SP">
+            <key-map field-name="staffPayrollId" />
+        </view-link>
+         
+        <entity-condition>
+        <condition-list combine="and">
+        	<!--condition-expr entity-alias="SP" field-name="closed" operator="equals" value="Y"/-->
+        	<condition-expr entity-alias="SPE" field-name="amount" operator="greater" value="0"/>
+	        <condition-list combine="or">
+	        	<condition-expr entity-alias="SPE" field-name="payrollElementId" operator="equals" value="PAYE"/>
+	        </condition-list>
+        </condition-list>
+        
+        </entity-condition>
+     </view-entity>
 </entitymodel>

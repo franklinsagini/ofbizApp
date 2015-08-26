@@ -31,7 +31,38 @@ under the License.
         
         <set field="newEntity.isActive" value="Y"/>
 	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
-        <create-value value-field="newEntity"/>
+	    <set field="month" from-field="newEntity.month" type="Long"/>
+	    <set field="year" from-field="newEntity.year" type="Long"/>
+	    <set field="stationId" from-field="newEntity.stationId" type="String"/>
+	    
+	    <!-- if already saved then dont save -->
+	    <set field="alreadyCharged" value="${bsh:org.ofbiz.chargeinterest.ChargeInterestServices.stationAlreadyCharged(month, year,  stationId);}"></set>
+	    
+	    <if> 
+            <condition> 
+                   <!-- if-compare-field to-field="successstatus" operator="equals" field="alreadyCharged"></if-compare-field -->
+                   <if-compare operator="equals" value="true" field="alreadyCharged"></if-compare>
+            </condition> 
+            <then> 
+                <add-error> 
+                    <!-- fail-property resource="OnlineRemittanceProcessingUiLabels.xml"  
+                        property="pushError" / --> 
+                        <fail-message message="Station already added for interest charging and may have been charged already !"/>
+                </add-error> 
+                <check-errors /> 
+            </then> 
+             
+            <else>
+            	<!-- call-simple-method method-name="saveTreasuryTransfer" scope="inline"></call-simple-method>
+        		<set field="repayLoan" value="${bsh:org.ofbiz.treasurymanagement.TreasuryAccounting.postTreasuryTransfer(newEntity, userLogin);}" type="String"/ -->
+
+                <property-to-field resource="ChargeInterestUiLabels.xml" 
+            	property="Successfully added station for interest charging, press generate interest to charge" field="successMessage" /> 
+            	 <create-value value-field="newEntity"/>
+            </else> 
+        </if>
+	    
+       
     </simple-method>
     
      <simple-method method-name="updateStationMonthInterestManagement" short-description="Update StationMonthInterestManagement">
