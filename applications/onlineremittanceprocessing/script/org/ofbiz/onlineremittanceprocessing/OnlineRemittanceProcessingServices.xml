@@ -45,6 +45,41 @@ under the License.
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     
+    <!-- ExpectedPaymentReceived -->
+    <simple-method method-name="createExpectedPaymentReceived" short-description="Create ExpectedPaymentReceived">
+        <make-value entity-name="ExpectedPaymentReceived" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set field="entityName" value="ExpectedPaymentReceived"></set>
+        <set field="newEntity.expectedPaymentReceivedId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateExpectedPaymentReceived" short-description="Update ExpectedPaymentReceived">
+        <entity-one entity-name="ExpectedPaymentReceived" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteExpectedPaymentReceived" short-description="Delete ExpectedPaymentReceived">
+        <entity-one entity-name="ExpectedPaymentReceived" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    
+   <simple-method method-name="removeExpectedPaymentReceived" short-description="Delete removeExpectedPaymentReceived">
+        <entity-one entity-name="ExpectedPaymentReceived" value-field="lookedUpValue"/>
+        
+        <!--  pushMonthYearStationId -->
+        
+        <property-to-field resource="OnlineRemittanceProcessingUiLabels.xml" 
+            	property="Successfully removed" field="successMessage" /> 
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
     <!-- PushMonthYear -->
     <simple-method method-name="createPushMonthYear" short-description="Create PushMonthYear">
         <make-value entity-name="PushMonthYear" value-field="newEntity"/>

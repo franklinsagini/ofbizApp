@@ -806,7 +806,7 @@ public class WithdrawalProcessingServices {
 		
 		//Now approve member
 		GenericValue member = LoanUtilities.getEntityValue("Member", "partyId", partyId);
-		member.set("memberStatusId", LoanUtilities.getMemberStatusId("WITHDRAWN"));
+		member.set("memberStatusId", LoanUtilities.getMemberStatusId("CLOSED"));
 		try {
 			delegator.createOrStore(member);
 		} catch (GenericEntityException e) {
