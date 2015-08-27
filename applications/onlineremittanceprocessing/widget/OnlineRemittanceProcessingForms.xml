@@ -1101,6 +1101,147 @@
 			<display />
 		</field>
 	</form>
+	
+	<!-- New  -->
+	<!-- NewExpectedPaymentReceived -->
+	<form name="NewExpectedPaymentReceived" type="single" target="createExpectedPaymentReceived"
+        focus-field-name="stationNumber" header-row-style="header-row" default-table-style="basic-table" default-map-name="expectedPaymentReceivedContext">
+        <actions>
+        	<set field="month" value="${month}${year}"/>
+        </actions>
+          <!-- field name="stationId" title="Station" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<drop-down allow-empty="true" >
+       			<entity-options description="${name} - ${stationNumber}" entity-name="Station">
+       				<entity-order-by field-name="name"/>
+       			</entity-options>
+       		</drop-down>
+        </field>
+        
+        <field name="month" title="Month" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<drop-down allow-empty="true" >
+       			<option key="1" description="1"/>
+       			<option key="2" description="2"/>
+       			<option key="3" description="3"/>
+       			<option key="4" description="4"/>
+       			<option key="5" description="5"/>
+       			<option key="6" description="6"/>
+       			<option key="7" description="7"/>
+       			<option key="8" description="8"/>
+       			<option key="9" description="9"/>
+       			<option key="10" description="10"/>
+       			<option key="11" description="11"/>
+       			<option key="12" description="12"/>
+       		</drop-down>
+        </field -->
+        <field name="pushMonthYearStationId">
+        	<hidden value="${pushMonthYearStationId}"/>
+        </field>
+         <field name="stationNumber" title="Station Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<text size="25" default-value="${station.stationNumber}"></text>
+        </field>
+        <field name="stationName" title="Station Name" position="2" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<text size="25" default-value="${station.name}"></text>
+        </field>
+        <field name="remitanceCode" title="Remitance Code" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<text size="25"></text>
+        </field>
+        <field name="payrollNo" title="Payroll Number"  position="2"  tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<text size="25"></text>
+        </field>
+        <field name="employeeNumber" title="Employee Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<text size="25"></text>
+        </field>
+        <field name="memberNumber" title="Member Number"  position="2"  tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<text size="25"></text>
+        </field>
+        <field name="month" title="Month" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<text size="25"></text>
+        </field>
+        <field name="loanNo" title="Loan No"  position="2"  tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<text size="25" default-value="0"></text>
+        </field>
+        <field name="employerNo" title="Employer No" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<text size="25" default-value="${employerCode}"></text>
+        </field>
+        <field name="amount" title="Amount"  position="2"  tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<text size="25"></text>
+        </field>
+        <field name="remitanceDescription"  title="Remitance Description" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<text size="25"></text>
+        </field>
+        <field name="employeeName" title="Employee Name"  position="2"  tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+       		<text size="25"></text>
+        </field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    
+    
+   <form name="listExpectedPaymentReceivedBreakdownRemovable" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateExpectedPaymentReceived" paginate-target="addRemoveRemittance"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        <!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
+            <entity-condition entity-name="ExpectedPaymentReceived">
+
+            	<condition-list combine="and">
+            		<condition-expr field-name="pushMonthYearStationId" operator="equals" from-field="pushMonthYearStationId"/>
+            		<!-- condition-expr field-name="month" operator="equals" from-field="parameters.month"/ -->
+            	</condition-list>
+            	<order-by field-name="remitanceCode"/>
+
+
+            </entity-condition>
+
+            <!-- service service-name="performFind" result-map="result" result-map-list="listIt">
+
+            	<field-map field-name="inputFields" from-field="expectedPaymentBreakdownCtx"/>
+                
+                <field-map field-name="entityName" value="ExpectedPaymentSent"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+
+            </service -->
+            <!-- field-map field-name="inputFields" from-field="stationExpectationCtx"/ -->
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateExpectedPaymentReceived"/ -->
+
+		<field name="stationNumber" title="Station No"><display also-hidden="false"></display></field>
+		<field name="stationName" title="Station Name"><display also-hidden="false"></display></field>
+		<field name="remitanceCode" title="Remitance Code"><display also-hidden="false"></display></field>
+		<field name="payrollNo" title="Payroll No"><display also-hidden="false"></display></field>
+
+		<field name="employeeNumber" title="Employee No"><display also-hidden="false"></display></field>
+		<field name="memberNumber" title="Member No"><display also-hidden="false"></display></field>
+
+		<field name="month" title="Month"><display also-hidden="false"></display></field>
+        <field name="loanNo" title="Loan No"><display also-hidden="false"></display></field>
+        <field name="employerNo" title="Employer No"><display also-hidden="false"></display></field>
+
+
+        <field name="amount" title="Amount"><display also-hidden="false"></display></field>
+        <field name="remitanceDescription" title="Remitance Description"><display also-hidden="false"></display></field>
+
+        <field name="employeeName" title="Employee Name"><display also-hidden="false"></display></field>
+        <field name="createdStamp" title="Remittance Date"><display also-hidden="false" type="date-time"></display></field>
+
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteChequeSetup" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="chequeSetupId"/>
+            </hyperlink>
+        </field -->
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+        
+        <field name="removeExpectedPaymentReceived" title="Remove Expected Payment Received"
+			widget-style="buttontext">
+			<hyperlink target="removeExpectedPaymentReceived" description="Remove Expected Payment Received"
+				also-hidden="false">
+				<parameter param-name="expectedPaymentReceivedId" />
+				<parameter param-name="pushMonthYearStationId"/>
+			</hyperlink>
+		</field>
+    </form>
     
 
 </forms>
