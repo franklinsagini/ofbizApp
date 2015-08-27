@@ -543,11 +543,15 @@ public class RemittanceServices {
 			if (memberAccount.getBigDecimal("contributingAmount") != null) {
 				bdContributingAmt = memberAccount
 						.getBigDecimal("contributingAmount");
-			} else {
-				bdContributingAmt = accountProduct
-						.getBigDecimal("minSavingsAmt");
-			}
+			} 
+			
+//			else {
+//				bdContributingAmt = accountProduct
+//						.getBigDecimal("minSavingsAmt");
+//			}
 		}
+		
+		if (bdContributingAmt.compareTo(BigDecimal.ZERO) == 1){
 		Long expectedPaymentSentId = delegator.getNextSeqIdLong("ExpectedPaymentSent");
 		expectedPaymentSent = delegator.makeValue("ExpectedPaymentSent",
 				UtilMisc.toMap("expectedPaymentSentId", expectedPaymentSentId, "isActive", "Y", "branchId",
@@ -569,6 +573,7 @@ public class RemittanceServices {
 			delegator.createOrStore(expectedPaymentSent);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
+		}
 		}
 
 		try {
