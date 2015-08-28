@@ -53,6 +53,9 @@ public class RemittanceServices {
 	public static String MEMBER_DEPOSIT_CODE = "901";
 	public static String SHARE_CAPITAL_CODE = "902";
 	public static String FOSA_SAVINGS_CODE = "999";
+	
+	public static Long LOANFORMULAYEAR = 2015L;
+	public static Long LOANFORMULAMONTH = 4L;
 	public static Long countActions;
 
 	public static HttpSession session;
@@ -483,26 +486,72 @@ public class RemittanceServices {
 		if (accountProduct.getString("code").equals(MEMBER_DEPOSIT_CODE)) {
 			// Calculate Contribution based on graduated scale this is for
 			// Member Deposits
-			bdContributingAmt = LoansProcessingServices
-					.getLoanCurrentContributionAmount(member.getLong("partyId"));
-
-			BigDecimal bdSpecifiedAmount = memberAccount
-					.getBigDecimal("contributingAmount");
-
-			if ((bdSpecifiedAmount != null)
-					&& (bdSpecifiedAmount.compareTo(bdContributingAmt) == 1)) {
-				bdContributingAmt = bdSpecifiedAmount;
-			}
+			
+			//If member has taken a loan after april 1st then use this new method
+			//GenericValue pushMonthYearStation = LoanUtilities.getEntityValue("PushMonthYearStation", "pushMonthYearStationId", pushMonthYearStationId);
+			//disbursementDate
+			Calendar cal = Calendar.getInstance();
+			
+			Long year = LOANFORMULAYEAR;//Long.valueOf(monthYear.substring((monthYear.length() - 4), monthYear.length()));
+			Long themonth = LOANFORMULAMONTH;//Long.valueOf(monthYear.substring(0, monthYear.length() - 4));
+			System.out.println(" The year "+year);
+			System.out.println(" The Month "+themonth);
+		    
+		    cal.set(Calendar.MONTH, themonth.intValue() - 1);
+		    cal.set(Calendar.DATE, 1);
+		    
+		    cal.set(Calendar.YEAR, year.intValue());
+		    
+		    
+		    cal.set(Calendar.HOUR, 0);
+		    cal.set(Calendar.MINUTE, 0);
+		    cal.set(Calendar.SECOND, 0);
+		    cal.set(Calendar.MILLISECOND, 0);
+		    
+		    Timestamp loanFormularChangeDate = new Timestamp(cal.getTimeInMillis());
+		    
+		    List<Long> loanApplicationIdsAfterChange = LoansProcessingServices.getDisbursedLoanApplicationListAfterFormularChange(member.getLong("partyId"), loanFormularChangeDate);
+ 
+		    if ((loanApplicationIdsAfterChange != null) && (loanApplicationIdsAfterChange.size() > 0)){
+				bdContributingAmt = LoansProcessingServices
+						.getLoanCurrentContributionAmount(member.getLong("partyId"));
+	
+				BigDecimal bdSpecifiedAmount = memberAccount
+						.getBigDecimal("contributingAmount");
+	
+				if ((bdSpecifiedAmount != null)
+						&& (bdSpecifiedAmount.compareTo(bdContributingAmt) == 1)) {
+					bdContributingAmt = bdSpecifiedAmount;
+				}
+		    } 
+			//Else use old graduated scale
+		    else{
+		    	BigDecimal bdAmount = LoansProcessingServices.getTotalDisbursedLoans(member.getLong("partyId"));
+		    	bdContributingAmt = LoansProcessingServices.getGruaduatedScaleContributionOld(bdAmount);
+						
+	
+				BigDecimal bdSpecifiedAmount = memberAccount
+						.getBigDecimal("contributingAmount");
+	
+				if ((bdSpecifiedAmount != null)
+						&& (bdSpecifiedAmount.compareTo(bdContributingAmt) == 1)) {
+					bdContributingAmt = bdSpecifiedAmount;
+				}
+		    }
 
 		} else {
 			if (memberAccount.getBigDecimal("contributingAmount") != null) {
 				bdContributingAmt = memberAccount
 						.getBigDecimal("contributingAmount");
-			} else {
-				bdContributingAmt = accountProduct
-						.getBigDecimal("minSavingsAmt");
-			}
+			} 
+			
+//			else {
+//				bdContributingAmt = accountProduct
+//						.getBigDecimal("minSavingsAmt");
+//			}
 		}
+		
+		if (bdContributingAmt.compareTo(BigDecimal.ZERO) == 1){
 		Long expectedPaymentSentId = delegator.getNextSeqIdLong("ExpectedPaymentSent");
 		expectedPaymentSent = delegator.makeValue("ExpectedPaymentSent",
 				UtilMisc.toMap("expectedPaymentSentId", expectedPaymentSentId, "isActive", "Y", "branchId",
@@ -524,6 +573,7 @@ public class RemittanceServices {
 			delegator.createOrStore(expectedPaymentSent);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
+		}
 		}
 
 		try {

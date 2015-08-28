@@ -221,7 +221,7 @@ transfersOutTotalList.eachWithIndex { transferOutItem, outIndex ->
 		treasuryTransaction =  new TreasuryTransaction();
 		
 		treasuryTransaction.memberAccountNo = org.ofbiz.accountholdertransactions.LoanUtilities.getMemberAccountNumber(depositsItem.memberAccountId)
-		treasuryTransaction.description = org.ofbiz.accountholdertransactions.LoanUtilities.getMemberAccountName(depositsItem.memberAccountId)+" (Cash Withdrawal)"
+		treasuryTransaction.description = org.ofbiz.accountholdertransactions.LoanUtilities.getMemberAccountName(depositsItem.memberAccountId)+" (Cash Withdrawal (Reversal))"
 		treasuryTransaction.transactionAmount = depositsItem.transactionAmount
 		treasuryTransaction.increaseDecrease = "I"
 		treasuryTransaction.transactionDateTime = depositsItem.createdStamp
@@ -257,7 +257,7 @@ transfersOutTotalList.eachWithIndex { transferOutItem, outIndex ->
 		treasuryTransaction =  new TreasuryTransaction();
 		
 		treasuryTransaction.memberAccountNo = org.ofbiz.accountholdertransactions.LoanUtilities.getMemberAccountNumber(depositsItem.memberAccountId)
-		treasuryTransaction.description = org.ofbiz.accountholdertransactions.LoanUtilities.getMemberAccountName(depositsItem.memberAccountId)+" (Cash Withdrawal)"
+		treasuryTransaction.description = org.ofbiz.accountholdertransactions.LoanUtilities.getMemberAccountName(depositsItem.memberAccountId)+" (Cash Deposit (Reversal))"
 		treasuryTransaction.transactionAmount = depositsItem.transactionAmount
 		treasuryTransaction.increaseDecrease = "D"
 		treasuryTransaction.transactionDateTime = depositsItem.createdStamp

@@ -83,8 +83,19 @@
                 	<field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
                 </entity-one>
                 
+                <set field="partyId" from-field="applicationContext.partyId" type="Long"/>
+                
+                
                 <entity-one value-field="product" entity-name="LoanProduct">
                 	<field-map field-name="loanProductId" from-field="applicationContext.loanProductId"/>
+                </entity-one>
+                
+                 <entity-one value-field="member" entity-name="Member">
+                	<field-map field-name="partyId" from-field="partyId"/>
+                </entity-one>
+                
+                 <entity-one value-field="loanStatus" entity-name="LoanStatus">
+                	<field-map field-name="loanStatusId" from-field="applicationContext.loanStatusId"/>
                 </entity-one>
                 
             <!-- entity-condition entity-name="Member" list="membersList">
@@ -112,7 +123,21 @@
 										<label style="h3"> Loan No : ${applicationContext.loanNo} </label>
 
 									</container>
+									
+									<container>
+										<label style="h3"> Loan Amount : ${applicationContext.loanAmt} </label>
 
+									</container>
+
+									<container>
+										<label style="h3"> Member : ${member.firstName} ${member.middleName} ${member.lastName} </label>
+
+									</container>
+									
+									<container>
+										<label style="h3"> Loan Status : ${loanStatus.name} </label>
+
+									</container>
 
 								</screenlet>
 
@@ -142,6 +167,11 @@
                         			<include-form name="listGuarantorLoans" location="component://transfertoguarantors/widget/TransferToGuarantorsForms.xml"/>
                         		</screenlet>
                         		
+                        		
+                        		<!-- screenlet title="All Loans for Guarantors of this Loan (Match)">
+                        			<include-form name="listAllGuarantorLoans" location="component://transfertoguarantors/widget/TransferToGuarantorsForms.xml"/>
+                        		</screenlet -->
+                        		
                         	</widgets>
                         </section>
                     </decorator-section>
@@ -168,7 +198,17 @@
                 <set field="partyId" from-field="loanApplication.partyId"/>
                 
                 <set field="memberNumber" from-field="loanApplication.memberNumber"/>
+                <entity-one value-field="product" entity-name="LoanProduct">
+                	<field-map field-name="loanProductId" from-field="loanApplication.loanProductId"/>
+                </entity-one>
                 
+                <entity-one entity-name="Member" value-field="member">
+                     <field-map field-name="partyId" from-field="partyId"/>
+                </entity-one>
+                
+                <entity-one value-field="loanStatus" entity-name="LoanStatus">
+                	<field-map field-name="loanStatusId" from-field="loanApplication.loanStatusId"/>
+                </entity-one>
                  
             </actions>
             <widgets>
@@ -180,8 +220,33 @@
                                 <not><if-empty field="loanApplication"/></not>
                             </condition>
                             <widgets>
+                            
+                                                    		<screenlet>
+									<container>
+										<label style="h3">Loan Type : ${product.name} (${product.code})</label>
+									</container>
+									
+									<container>
+										<label style="h3"> Loan No : ${loanApplication.loanNo} </label>
+
+									</container>
+
+										<container>
+										<label style="h3"> Member : ${member.firstName} ${member.middleName} ${member.lastName} </label>
+
+									</container>
+									
+									<container>
+										<label style="h3"> Loan Status : ${loanStatus.name} </label>
+
+									</container>
+								</screenlet>
+                            
+                            <screenlet title="Logs">
+                                            	<include-form name="NewLoanStatusLog" location="component://transfertoguarantors/widget/TransferToGuarantorsForms.xml"/>
+                                 </screenlet>
                                <screenlet title="Logs">
-                                            	<include-form name="loanLogs" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
+                                            	<include-form name="loanLogs" location="component://transfertoguarantors/widget/TransferToGuarantorsForms.xml"/>
                                  </screenlet>
                                
                             </widgets>

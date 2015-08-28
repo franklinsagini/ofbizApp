@@ -1171,8 +1171,19 @@
 			</hyperlink>
 		</field -->
 		
-		<!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit 
-			button-type="button"/></field -->
+		<field name="parentLoanApplicationId" title="Parent Loans">
+			<!-- display-entity entity-name="LoanApplication" description="${loanNo}" key-field-name="loanApplicationId">
+				
+			</display-entity -->
+			<drop-down allow-empty="true">
+				<entity-options description="${loanNo}" entity-name="GuarantorListing" key-field-name="loanApplicationId">
+					<entity-constraint name="partyId" operator="equals" value="${partyId}"/>
+				</entity-options>
+			</drop-down>
+		</field>
+		
+		<field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit 
+			button-type="button"/></field>
 	</form>
 	
 	<!-- findListLoanApplicationsTrimed -->

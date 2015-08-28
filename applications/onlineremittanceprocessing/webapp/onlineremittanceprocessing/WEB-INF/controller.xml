@@ -378,6 +378,14 @@
 		</response>
 	</request-map>
 	
+	<!-- addRemoveRemittance -->
+	<request-map uri="addRemoveRemittance">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="addRemoveRemittance">
+			<redirect-parameter name="pushMonthYearStationId" from="pushMonthYearStationId"/>
+		</response>
+	</request-map>
+	
 	<!-- from showGeneratedExpectation -->
 	<!-- showShareCapitalBackofficeLoans -->
 	<request-map uri="showShareCapitalBackofficeLoans">
@@ -498,7 +506,47 @@
 		<response name="success" type="request-redirect" value="passingFosa"></response>
 		<response name="error" type="view" value="passingFosa" />
 	</request-map>
+	
+	<!-- createExpectedPaymentReceived -->
+	<request-map uri="createExpectedPaymentReceived">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createExpectedPaymentReceived" />
+		<response name="success" type="request-redirect" value="addRemoveRemittance">
+			<redirect-parameter name="pushMonthYearStationId"/>
+		</response>
+		<response name="error" type="view" value="addRemoveRemittance" />
+	</request-map>
 
+	<request-map uri="updateExpectedPaymentReceived">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateExpectedPaymentReceived" />
+		<response name="success" type="request-redirect" value="addRemoveRemittance">
+			<redirect-parameter name="pushMonthYearStationId"/>
+		</response>
+		<response name="error" type="view" value="addRemoveRemittance" />
+	</request-map>
+	
+	<request-map uri="deleteExpectedPaymentReceived">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteExpectedPaymentReceived" />
+		<response name="success" type="request-redirect" value="addRemoveRemittance">
+			<redirect-parameter name="pushMonthYearStationId"/>
+		</response>
+		<response name="error" type="view" value="addRemoveRemittance" />
+	</request-map>
+	
+	
+	
+	<request-map uri="removeExpectedPaymentReceived">
+		<security https="true" auth="true" />
+		<event type="service" invoke="removeExpectedPaymentReceived" />
+		<response name="success" type="request-redirect" value="addRemoveRemittance">
+			<!-- redirect-parameter name="expectedPaymentReceivedId"/ -->
+			<redirect-parameter name="pushMonthYearStationId"/>
+		</response>
+		<response name="error" type="view" value="addRemoveRemittance" />
+	</request-map>
+	
 	<!-- View Mappings -->
 	<view-map name="main" type="screen"
 		page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#main" />
@@ -523,10 +571,15 @@
 		<view-map name="showGeneratedExpectation" type="screen"
 		page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#showGeneratedExpectation" />
 
-<!-- showReceivedRemittance -->
-		<view-map name="showReceivedRemittance" type="screen"
+	<!-- showReceivedRemittance -->
+	<view-map name="showReceivedRemittance" type="screen"
 		page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#showReceivedRemittance" />
 
+	<!-- addRemoveRemittance -->
+	<view-map name="addRemoveRemittance" type="screen"
+		page="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingScreens.xml#addRemoveRemittance" />
+	
+	
 	<!-- 
 		showStationPushStatus
 	showStationPullStatus

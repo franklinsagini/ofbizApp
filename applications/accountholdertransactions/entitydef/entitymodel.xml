@@ -670,7 +670,12 @@ under the License.
         <field name="dateProcessed" type="date-time"   enable-audit-log="true"></field>
 		<field name="totalAmount" type="fixed-point"   enable-audit-log="true"></field>
 		
+		<field name="acctgTransId" type="id"   enable-audit-log="true"></field>
+		
        <field name="expectationType" type="name"   enable-audit-log="true"></field> <!-- SHARES, LOAN, ACCOUNT -->
+       
+       <field name="newAddition" type="id"   enable-audit-log="true"></field>
+       <field name="deletedBy" type="id"   enable-audit-log="true"></field>
         <!-- prim-key field="remitanceCode"/>
         <prim-key field="payrollNo"/>
         <prim-key field="month"/ -->
@@ -679,6 +684,55 @@ under the License.
         
     </entity>
     
+    <!-- ExpectedPaymentReceivedDeleted -->
+         <entity entity-name="ExpectedPaymentReceivedDeleted"  package-name="org.ofbiz.accountholdertransactions" title="ExpectedPaymentReceived Entity">
+       
+       <field name="pushMonthYearStationId" type="id-vlong-int" enable-audit-log="true"></field>
+       
+       <field name="expectedPaymentReceivedDeletedId" type="id-vlong-int" enable-audit-log="true"></field>
+       <field name="expectedPaymentReceivedId" type="id-vlong-int" enable-audit-log="true"></field>
+        <field name="isActive" type="indicator"   enable-audit-log="true"></field>
+        <field name="isReceived" type="indicator"   enable-audit-log="true"></field>
+		<field name="createdBy" type="name"   enable-audit-log="true"></field>
+		<field name="updatedBy" type="name"   enable-audit-log="true"></field>
+		<field name="branchId" type="name"   enable-audit-log="true"></field>
+		<field name="remitanceCode" type="name"   enable-audit-log="true"></field>
+		<field name="stationNumber" type="name"   enable-audit-log="true"></field>
+		<field name="stationName" type="name"   enable-audit-log="true"></field>
+		<field name="payrollNo" type="name"   enable-audit-log="true"></field>
+		<field name="employerCode" type="id"   enable-audit-log="true"></field>
+		<field name="employerName" type="name"   enable-audit-log="true"></field>
+		<field name="employeeNumber" type="name"   enable-audit-log="true"></field>
+		<field name="memberNumber" type="name"   enable-audit-log="true"></field>
+		
+        <field name="month" type="name"   enable-audit-log="true"></field>
+        <field name="loanNo" type="name"   enable-audit-log="true"></field>
+        <field name="employerNo" type="name"   enable-audit-log="true"></field>
+        
+        <field name="amount" type="fixed-point"   enable-audit-log="true"></field>
+        <field name="remitanceDescription" type="name"   enable-audit-log="true"></field>
+        
+        <field name="employeeName" type="name"   enable-audit-log="true"></field>
+        <field name="status" type="name"   enable-audit-log="true"></field>
+        <field name="generatedDate" type="date-time"   enable-audit-log="true"></field>
+        
+        <field name="processed" type="indicator"   enable-audit-log="true"></field>
+        <field name="dateProcessed" type="date-time"   enable-audit-log="true"></field>
+		<field name="totalAmount" type="fixed-point"   enable-audit-log="true"></field>
+		
+		<field name="acctgTransId" type="id"   enable-audit-log="true"></field>
+		
+       <field name="expectationType" type="name"   enable-audit-log="true"></field> <!-- SHARES, LOAN, ACCOUNT -->
+       
+       <field name="newAddition" type="id"   enable-audit-log="true"></field>
+       <field name="deletedBy" type="id"   enable-audit-log="true"></field>
+        <!-- prim-key field="remitanceCode"/>
+        <prim-key field="payrollNo"/>
+        <prim-key field="month"/ -->
+        
+        <prim-key field="expectedPaymentReceivedDeletedId"/>
+        
+    </entity>
      <entity entity-name="CodesSetup" package-name="org.ofbiz.accountholdertransactions" title="CodesSetup Entity">
         <field name="isActive" type="indicator"   enable-audit-log="true"></field>
         <field name="createdBy" type="id"   enable-audit-log="true"></field>
@@ -868,19 +922,32 @@ under the License.
     
     </view-entity -->
     
-      <view-entity entity-name="ExpectedPaymentReceivedAll" package-name="org.ofbiz.accountholdertransactions">
+      <!-- view-entity entity-name="ExpectedPaymentReceivedAll" package-name="org.ofbiz.accountholdertransactions">
     	<member-entity entity-alias="PR" entity-name="ExpectedPaymentReceived"></member-entity>
+    	<alias entity-alias="PR" name="employerCode" field="employerCode"  col-alias="employerCode" group-by="true"/>
+    	<alias entity-alias="PR" name="employerName" field="employerName" col-alias="employerName" group-by="true"/>
+    	<alias entity-alias="PR" name="month" 		 field="month"        col-alias="month" group-by="true" />
+    	
+    </view-entity -->
+    
+    <view-entity entity-name="ExpectedPaymentReceivedAll" package-name="org.ofbiz.accountholdertransactions">
+    	<member-entity entity-alias="PR" entity-name="ExpectedPaymentReceived"></member-entity>
+    	<member-entity entity-alias="ST" entity-name="Station"></member-entity>
     	<!-- member-entity entity-alias="TR" entity-name="Treasury"></member-entity>
     	<alias entity-alias="TT" name="sourceTreasury" group-by="true"></alias>
     	<alias entity-alias="TR" name="name" group-by="true"/ --> 
-    	<alias entity-alias="PR" name="employerCode" field="employerCode"  col-alias="employerCode"/>
-    	<alias entity-alias="PR" name="employerName" field="employerName" col-alias="employerName"/>
-    	<alias entity-alias="PR" name="month" 		 field="month"        col-alias="month" />
+    	<alias entity-alias="PR" name="employerCode" group-by="true"/>
+    	<alias entity-alias="PR" name="employerName"  group-by="true"/>
+    	<alias entity-alias="PR" name="month" 		 group-by="true" />
+    	<alias entity-alias="PR" name="amount" function="count" />
     	
     	<!-- alias entity-alias="PR" name="totalAmount" field="totalAmount" col-alias="totalAmount" function="count"/ -->
     	<!-- entity-condition>
     		<condition-expr field-name="loanNo" operator="equals" value="0"/>
     	</entity-condition -->
+    	<view-link rel-entity-alias="PR" entity-alias="ST">
+    		<key-map field-name="employerCode"/>
+    	</view-link>
     </view-entity>
     
 </entitymodel>

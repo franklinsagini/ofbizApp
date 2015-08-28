@@ -58,6 +58,18 @@ public class MemberValidation {
 			businessMemberCount = businessMemberCount + 1;
 			
 			payrollNumber = BUSINESSPREFIX+StringUtils.leftPad(String.valueOf(businessMemberCount), COUNTDIGITS, "0");
+			
+			//If payroll number exists then increment businessMemberCount
+			Boolean payrollNumberExist = false;
+			payrollNumberExist = thePayrollNumberExist(payrollNumber);
+			while(payrollNumberExist){
+				//update businessMemberCount
+				
+				businessMemberCount = businessMemberCount + 1;
+				payrollNumber = BUSINESSPREFIX+StringUtils.leftPad(String.valueOf(businessMemberCount), COUNTDIGITS, "0");
+				payrollNumberExist = thePayrollNumberExist(payrollNumber);
+			}
+			
 			result.put("payrollNumber", payrollNumber);
 			System.out.println(" TTTTTTTTTTTTTPPPPPPPPPPPPP "+payrollNumber);
 		}else{
@@ -127,6 +139,26 @@ public class MemberValidation {
 		}
 
 		return json;
+	}
+
+	private static Boolean thePayrollNumberExist(String payrollNumber) {
+		
+		//Get the count of member of type Business
+		
+		List<GenericValue> memberELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			memberELI = delegator.findList("Member",
+					EntityCondition.makeCondition("payrollNumber",
+							payrollNumber.trim()), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		if ((memberELI != null) && (memberELI.size() > 0))
+			return true;
+		
+		return false;
 	}
 
 	private static String getEmployeeNumberState(String employeeNumber, String stationId) {

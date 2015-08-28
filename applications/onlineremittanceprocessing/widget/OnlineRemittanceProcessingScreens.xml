@@ -677,7 +677,142 @@
 				</decorator-screen>
 			</widgets>
 		</section>
-	</screen>	
+	</screen>
+	
+	<!-- addRemoveRemittance -->
+	<screen name="addRemoveRemittance">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Received Remittance" />
+				<set field="headerItem" value="pushMonthYearStation" />
+				<set field="tabButtonItem" value="pushMonthYearStation" />
+
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="createExpectedPaymentSent" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+				<set field="expectedPaymentBreakdownCtx" from-field="parameters" />
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
+					property="KEN" default="KEN"/ -->
+				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+				<set field="pushMonthYearStationId" from-field="parameters.pushMonthYearStationId" type="Long"/>
+				
+				<entity-one value-field="pushMonthYearStation" entity-name="PushMonthYearStation">
+					<field-map field-name="pushMonthYearStationId" from-field="pushMonthYearStationId"/>
+				</entity-one>
+				<entity-one value-field="station" entity-name="Station">
+					<field-map field-name="stationId" from-field="pushMonthYearStation.stationId"/>
+				</entity-one>
+				<set field="employerCode" from-field="station.employerCode"></set>
+				
+				<set field="employerName"
+					value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.getEmployerName(employerCode);}"
+					type="String" />
+				<set field="month" from-field="pushMonthYearStation.month" type="PlainString" />
+				<set field="year" from-field="pushMonthYearStation.year" type="PlainString" />
+				<set field="totalExpected" global="true"
+					value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.getTotalExpected(employerCode, month, pushMonthYearStationId);}"
+					type="BigDecimal" />
+				<set field="totalRemitted" global="true"
+					value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.getTotalRemitted(employerCode, month, pushMonthYearStationId);}"
+					type="BigDecimal" />
+				<set field="totalChequeAmount" global="true"
+					value="${bsh:org.ofbiz.accountholdertransactions.RemittanceServices.getTotalRemittedChequeAmountAvailable(employerCode, month, year, pushMonthYearStationId);}"
+					type="BigDecimal" />
+
+				<entity-one entity-name="ExpectedPaymentSent"
+					value-field="expectedPaymentSentContext" />
+					
+
+			</actions>
+			<widgets>
+				<decorator-screen name="OnlineRemittanceProcessingCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<!-- include-menu
+							location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsMenus.xml"
+							name="expectedPaymentsTabBar" / -->
+						<!-- section> <condition> <if-has-permission permission="ACCOUNTHOLDER"
+							action="_CREATE"/> </condition> <widgets> <screenlet title="Expected Payment">
+							<include-form name="NewExpectedPayment" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+							</screenlet> </widgets> <fail-widgets> <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+							</fail-widgets> </section -->
+						<section>
+							<widgets>
+								<screenlet>
+									<section>
+
+										<widgets>
+
+											<container style="button-bar">
+												<label style="h3">Received Remittance from ${employerName}
+													for ${month}${year} </label>
+												<!-- parameter param-name="loanApplicationId"/ -->
+												<!-- link
+													target="expectedPaymentBreakdownpdf.pdf?month=${month}&amp;employerCode=${employerCode}"
+													text="Print Expected Payment Breakdown" style="buttontext">
+													
+													<image url-mode="raw"
+														src="${iconsLocation}/page_white_acrobat.png" />
+												</link>
+
+												<link
+													target="expectedPaymentBreakdowncsv.csv?month=${month}&amp;employerCode=${employerCode}"
+													text="Generate Expected Payment Breakdown CSV" style="buttontext">
+													<image url-mode="raw" src="${iconsLocation}/page_excel.png" />
+
+												</link -->
+											</container>
+										</widgets>
+
+									</section>
+								</screenlet>
+							</widgets>
+						</section>
+
+						<section name="Received Remittance Breakdown">
+							<widgets>
+								<!--screenlet title="Find Expected Payment Sent">
+									<include-form name="FindExpectedPaymentSent"
+										location="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingForms.xml" />
+								</screenlet -->
+								
+								
+								<screenlet title="Add Expected">
+									<include-form name="NewExpectedPaymentReceived"
+										location="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingForms.xml" />
+								</screenlet>
+								
+								<screenlet title="Expected Payment Breakdown">
+									<include-form name="listExpectedPaymentReceivedBreakdownRemovable"
+										location="component://onlineremittanceprocessing/widget/OnlineRemittanceProcessingForms.xml" />
+								</screenlet>
+
+
+																<screenlet>
+									<!-- include-form name="listExpectedPaymentReceivedBreakdownTotals"
+										location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/ -->
+									<section>
+										<widgets>
+											<container style="button-bar">
+												<label style="h3">Total Expected : Kshs. ${totalExpected}
+												</label>
+												<label style="h3">Total Received (Schedule) : Kshs.
+													${totalRemitted} </label>
+												<label style="h3">Total Received (Cheque Amount) : Kshs.
+													${totalChequeAmount} </label>
+
+
+											</container>
+										</widgets>
+									</section>
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
 
 	<screen name="expectedRemittanceExport">
 		<section>

@@ -1044,6 +1044,121 @@ public class LoansProcessingServices {
 	}
 	
 	
+	public static List<Long> getDisbursedLoanApplicationListBeforeInterestChargeDate(Long partyId, Timestamp interestChargeDate) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> loanApplicationELI = new ArrayList<GenericValue>();
+		
+		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
+				.makeCondition(
+						UtilMisc.toList(EntityCondition.makeCondition(
+								"partyId", EntityOperator.EQUALS,
+								partyId),
+								
+								EntityCondition.makeCondition(
+										"loanStatusId", EntityOperator.EQUALS,
+										6L),
+										
+								EntityCondition.makeCondition(
+												"disbursementDate", EntityOperator.LESS_THAN,
+												interestChargeDate)
+								
+								
+								), EntityOperator.AND);
+		
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					loanApplicationConditions, null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		List<Long> listApplicationIds = new ArrayList<Long>();
+		for (GenericValue genericValue : loanApplicationELI) {
+			listApplicationIds.add(genericValue.getLong("loanApplicationId"));
+		}
+
+		return listApplicationIds;
+	}
+	
+	
+	public static List<Long> getDisbursedLoanApplicationListAfterFormularChange(Long partyId, Timestamp formularChangeDate) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> loanApplicationELI = new ArrayList<GenericValue>();
+		
+		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
+				.makeCondition(
+						UtilMisc.toList(EntityCondition.makeCondition(
+								"partyId", EntityOperator.EQUALS,
+								partyId),
+								
+								EntityCondition.makeCondition(
+										"loanStatusId", EntityOperator.EQUALS,
+										6L),
+										
+								EntityCondition.makeCondition(
+												"disbursementDate", EntityOperator.GREATER_THAN_EQUAL_TO,
+												formularChangeDate)
+								
+								
+								), EntityOperator.AND);
+		
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					loanApplicationConditions, null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		List<Long> listApplicationIds = new ArrayList<Long>();
+		for (GenericValue genericValue : loanApplicationELI) {
+			listApplicationIds.add(genericValue.getLong("loanApplicationId"));
+		}
+
+		return listApplicationIds;
+	}
+	
+	
+	/****
+	 * Get disbursed loans list
+	 * */
+	public static BigDecimal getTotalDisbursedLoans(Long partyId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> loanApplicationELI = new ArrayList<GenericValue>();
+		
+		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
+				.makeCondition(
+						UtilMisc.toList(EntityCondition.makeCondition(
+								"partyId", EntityOperator.EQUALS,
+								partyId),
+								
+								EntityCondition.makeCondition(
+										"loanStatusId", EntityOperator.EQUALS,
+										6L)
+								
+								
+								), EntityOperator.AND);
+		
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					loanApplicationConditions, null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		//List<Long> listApplicationIds = new ArrayList<Long>();
+		BigDecimal bdAmountTotal = BigDecimal.ZERO;
+		for (GenericValue genericValue : loanApplicationELI) {
+			//listApplicationIds.add(genericValue.getLong("loanApplicationId"));
+			bdAmountTotal = bdAmountTotal.add(genericValue.getBigDecimal("loanAmt"));
+		}
+
+		return bdAmountTotal;
+	}
+	
+	
 	
 	public static List<String> getDefaultedLoanApplicationList(Long partyId) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
