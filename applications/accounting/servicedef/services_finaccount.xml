@@ -163,14 +163,38 @@ under the License.
         <attribute type="BigDecimal" mode="IN" name="bankBalance" optional="true"/>
      </service>
 
+    <service name="createUnidentifiedUpresented" engine="java" default-entity-name="FinAccountTrans"
+            location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="createUnidentifiedUpresented">
+        <description>Pulls all transactions of type cheque from account transaction</description>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <auto-attributes mode="INOUT" optional="true" include="pk"/>
+        <attribute type="String" mode="INOUT" name="headerId" optional="false"/>
+        <attribute type="String" mode="IN" name="description" optional="false"/>
+     </service>
+
+    <service name="saveReconciliation" engine="java" default-entity-name="BankReconHeader"
+            location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="saveReconciliation">
+        <description>Pulls all transactions of type cheque from account transaction</description>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute type="String" mode="INOUT" name="headerId" optional="false"/>
+     </service>
+
     <service name="reconcileBankTrans" engine="java" default-entity-name="BankReconLines"
             location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="reconcileBankTrans">
         <description>Pulls all transactions of type cheque from account transaction</description>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        <attribute type="String" mode="INOUT" name="finAccountId" optional="true"/>
-        <attribute type="String" mode="INOUT" name="finAccountTransId" optional="true"/>
-        <attribute type="String" mode="INOUT" name="reconDate" optional="true"/>
-        <attribute type="String" mode="INOUT" name="headerId" optional="true"/>
+        <attribute type="String" mode="INOUT" name="finAccountTransId" optional="false"/>
+        <attribute type="String" mode="INOUT" name="headerId" optional="false"/>
+        <attribute type="String" mode="INOUT" name="reconLineId" optional="false"/>
+     </service>
+
+    <service name="unreconcileBankTrans" engine="java" default-entity-name="BankReconLines"
+            location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="unreconcileBankTrans">
+        <description>Pulls all transactions of type cheque from account transaction</description>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute type="String" mode="INOUT" name="finAccountTransId" optional="false"/>
+        <attribute type="String" mode="INOUT" name="headerId" optional="false"/>
+        <attribute type="String" mode="INOUT" name="reconLineId" optional="false"/>
      </service>
 
     <!-- financial account transactions -->

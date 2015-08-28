@@ -174,9 +174,9 @@ under the License.
                                     </link>
                                 </container>
                                 <label style="h1" text="${uiLabelMap.AccountingEditFinAccount}"></label>
-                                <screenlet id="FindBankReconHeader" collapsible="true" >
+<!--                                 <screenlet id="FindBankReconHeader" collapsible="true" >
                                     <include-form name="FindBankReconHeader" location="component://accounting/widget/FinAccountForms.xml"/>
-                                </screenlet>
+                                </screenlet> -->
                                 <screenlet id="ListBankReconHeader" collapsible="true">
                                    <include-form name="ListBankReconHeader" location="component://accounting/widget/FinAccountForms.xml"/>
                                 </screenlet>
@@ -191,26 +191,33 @@ under the License.
     <screen name="BankReconTrans">
         <section>
             <actions>
-                <set field="headerItem" value="filesReturn" />
-                <set field="tabButtonItem" value="find" />
                 <set field="titleProperty" value="PageTitleFindInvoice" />
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
                 <set field="reconDate" from-field="parameters.reconDate"/>
                 <set field="headerId" from-field="parameters.headerId"/>
                 <entity-one entity-name="BankReconHeader" value-field="bankReconHeader"/>
-                <entity-and entity-name="BankReconLines" list="listBankReconTransList">
-                    <field-map field-name="headerId"/>
-                </entity-and>
-                <entity-condition entity-name="BankReconLinesAndFinAccountTrans" list="listBankReconTransList">
+
+                 <entity-condition entity-name="BankReconLines" list="bankReconLinesAndFinAccountTrans">
                     <condition-list combine="and">
-                        <condition-expr field-name="headerId" from-field="headerId"/>
-                        <condition-expr field-name="isReconcilled" operator="not-equals" value="Y"/>
+                        <condition-expr field-name="headerId" from-field="parameters.headerId" />
+                        <condition-expr field-name="isReconciledItem" value="N" ignore-if-empty="true"/>
+                        <condition-expr field-name="isUnidentifiedDebits" value="N" ignore-if-empty="true"/>
+                        <condition-expr field-name="isUnreceiptedBankings" value="N" ignore-if-empty="true"/>
                     </condition-list>
-                    <order-by field-name="transactionDate DESC"/>
+                     <order-by field-name="transactionDate DESC"/>
                 </entity-condition>
+                <set field="cashBookBalance" from-field="bankReconHeader.cashBookBalance"/>
+                <set field="bankBalance" from-field="bankReconHeader.bankBalance"/>
+                <set field="statusName" from-field="bankReconHeader.statusName" />
+                <set field="unreceiptedBankings" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getUnreceiptedBankings(delegator,headerId)}"/>
+                <set field="uncreditedBankings" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getUncreditedBankings(delegator,headerId)}"/>
+                <set field="unidentifiedDebits" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getUnidentifiedDebits(delegator,headerId)}"/>
+                <set field="unpresentedCheques" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getUnpresentedCheques(delegator,headerId)}"/>
+                <set field="adjustedBankBalance" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getAdjustedBankBalance(delegator,headerId)}"/>
+                <set field="adjustedCashBookBalance" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getAdjustedCashBookBalance(delegator,headerId)}"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -220,12 +227,190 @@ under the License.
                                 <screenlet title="Reconciliation Header">
                                     <include-form name="BankReconciliationHeader" location="component://accounting/widget/FinAccountForms.xml" />
                                 </screenlet>
+                                <container style="leftclear">
+                                    <link target="reconciledItems" text="View Reconciled Items" style="buttontext">
+                                        <parameter param-name="headerId"/>
+                                    </link>
+                                    <link target="UnidentifiedUnpresented" text="Unidentified Debits/Unpresented Cheques" style="buttontext">
+                                        <parameter param-name="headerId"/>
+                                    </link>
+                                    <link use-when="&quot;CAPTURED&quot;.equals(&quot;${statusName}&quot;)" target="saveReconciliation" text="Save Reconciliation" style="buttontext">
+                                        <parameter param-name="headerId"/>
+                                    </link>
+                                </container>
                             </widgets>
                         </section>
                         <section name="search-results">
                             <widgets>
                                 <screenlet title="Bank Reconciliation Transactions">
                                     <include-form name="ListBankReconTrans" location="component://accounting/widget/FinAccountForms.xml" />
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="UnidentifiedUnpresented">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleFindInvoice" />
+                <set field="finAccountId" from-field="parameters.finAccountId"/>
+                <set field="reconDate" from-field="parameters.reconDate"/>
+                <set field="headerId" from-field="parameters.headerId"/>
+                <entity-one entity-name="BankReconHeader" value-field="bankReconHeader"/>
+                <entity-condition entity-name="BankReconLines" list="bankReconLinesAndFinAccountTrans">
+                    <condition-list combine="and">
+                        <condition-expr field-name="headerId" from-field="parameters.headerId" />
+                        <condition-expr field-name="isReconciledItem" value="N"/>
+                        <condition-list combine="or">
+                            <condition-expr field-name="isUnreceiptedBankings" value="Y"/>
+                            <condition-expr field-name="isUnidentifiedDebits" value="Y"/>
+                        </condition-list>
+                    </condition-list>
+                    <order-by field-name="transactionDate DESC"/>
+                </entity-condition>
+                <set field="cashBookBalance" from-field="bankReconHeader.cashBookBalance"/>
+                <set field="bankBalance" from-field="bankReconHeader.bankBalance"/>
+                <set field="unreceiptedBankings" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getUnreceiptedBankings(delegator,headerId)}"/>
+                <set field="uncreditedBankings" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getUncreditedBankings(delegator,headerId)}"/>
+                <set field="unidentifiedDebits" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getUnidentifiedDebits(delegator,headerId)}"/>
+                <set field="unpresentedCheques" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getUnpresentedCheques(delegator,headerId)}"/>
+                <set field="adjustedBankBalance" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getAdjustedBankBalance(delegator,headerId)}"/>
+                <set field="adjustedCashBookBalance" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getAdjustedCashBookBalance(delegator,headerId)}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <container style="leftclear">
+                                    <label style="h1" text="Bank Reconciliation" />
+                                </container>
+                                <screenlet title="Reconciliation Header">
+                                    <include-form name="BankReconciliationHeader" location="component://accounting/widget/FinAccountForms.xml" />
+                                </screenlet>
+                                <link target="bankReconTrans" text="Back to Recon" style="buttontext">
+                                    <parameter param-name="headerId"/>
+                                </link>
+                                <link target="newUnidentifiedUpresented" text="New Unidentified Debits/Unpresented Cheques" style="buttontext">
+                                    <parameter param-name="headerId"/>
+                                </link>
+                            </widgets>
+                        </section>
+                        <section name="search-results">
+                            <widgets>
+                                <screenlet title="Bank Reconciliation Transactions">
+                                    <include-form name="ListBankReconTrans" location="component://accounting/widget/FinAccountForms.xml" />
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+
+    <screen name="ReconciledItems">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleFindInvoice" />
+                <set field="finAccountId" from-field="parameters.finAccountId"/>
+                <set field="reconDate" from-field="parameters.reconDate"/>
+                <set field="headerId" from-field="parameters.headerId"/>
+                <entity-one entity-name="BankReconHeader" value-field="bankReconHeader"/>
+                 <entity-condition entity-name="BankReconLines" list="bankReconLinesAndFinAccountTrans">
+                    <condition-list combine="and">
+                        <condition-expr field-name="headerId" from-field="parameters.headerId" />
+                        <condition-expr field-name="isReconciledItem" value="Y" ignore-if-empty="true"/>
+                    </condition-list>
+                     <order-by field-name="transactionDate DESC"/>
+                </entity-condition>
+                <set field="cashBookBalance" from-field="bankReconHeader.cashBookBalance"/>
+                <set field="bankBalance" from-field="bankReconHeader.bankBalance"/>
+                <set field="unreceiptedBankings" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getUnreceiptedBankings(delegator,headerId)}"/>
+                <set field="uncreditedBankings" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getUncreditedBankings(delegator,headerId)}"/>
+                <set field="unidentifiedDebits" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getUnidentifiedDebits(delegator,headerId)}"/>
+                <set field="unpresentedCheques" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getUnpresentedCheques(delegator,headerId)}"/>
+                <set field="adjustedBankBalance" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getAdjustedBankBalance(delegator,headerId)}"/>
+                <set field="adjustedCashBookBalance" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getAdjustedCashBookBalance(delegator,headerId)}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <container style="leftclear">
+                                    <label style="h1" text="Bank Reconciliation" />
+                                </container>
+                                <screenlet title="Reconciliation Header">
+                                    <include-form name="BankReconciliationHeader" location="component://accounting/widget/FinAccountForms.xml" />
+                                </screenlet>
+                            <link target="bankReconTrans" text="Back to Recon" style="buttontext">
+                                <parameter param-name="headerId"/>
+                            </link>
+                            </widgets>
+                        </section>
+                        <section name="search-results">
+                            <widgets>
+                                <screenlet title="Bank Reconciliation Transactions">
+                                    <include-form name="ListBReconciledItems" location="component://accounting/widget/FinAccountForms.xml" />
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+   <screen name="ReconciledItems">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleFindInvoice" />
+                <set field="finAccountId" from-field="parameters.finAccountId"/>
+                <set field="reconDate" from-field="parameters.reconDate"/>
+                <set field="headerId" from-field="parameters.headerId"/>
+                <entity-one entity-name="BankReconHeader" value-field="bankReconHeader"/>
+                 <entity-condition entity-name="BankReconLines" list="bankReconLinesAndFinAccountTrans">
+                    <condition-list combine="and">
+                        <condition-expr field-name="headerId" from-field="parameters.headerId" />
+                        <condition-expr field-name="isReconciledItem" value="Y" ignore-if-empty="true"/>
+                    </condition-list>
+                     <order-by field-name="transactionDate DESC"/>
+                </entity-condition>
+                <set field="cashBookBalance" from-field="bankReconHeader.cashBookBalance"/>
+                <set field="bankBalance" from-field="bankReconHeader.bankBalance"/>
+                <set field="unreceiptedBankings" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getUnreceiptedBankings(delegator,headerId)}"/>
+                <set field="uncreditedBankings" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getUncreditedBankings(delegator,headerId)}"/>
+                <set field="unidentifiedDebits" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getUnidentifiedDebits(delegator,headerId)}"/>
+                <set field="unpresentedCheques" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getUnpresentedCheques(delegator,headerId)}"/>
+                <set field="adjustedBankBalance" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getAdjustedBankBalance(delegator,headerId)}"/>
+                <set field="adjustedCashBookBalance" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getAdjustedCashBookBalance(delegator,headerId)}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <container style="leftclear">
+                                    <label style="h1" text="Bank Reconciliation" />
+                                </container>
+                                <screenlet title="Reconciliation Header">
+                                    <include-form name="BankReconciliationHeader" location="component://accounting/widget/FinAccountForms.xml" />
+                                </screenlet>
+                            <link target="bankReconTrans" text="Back to Recon" style="buttontext">
+                                <parameter param-name="headerId"/>
+                            </link>
+                            </widgets>
+                        </section>
+                        <section name="search-results">
+                            <widgets>
+                                <screenlet title="Bank Reconciliation Transactions">
+                                    <include-form name="ListBReconciledItems" location="component://accounting/widget/FinAccountForms.xml" />
                                 </screenlet>
                             </widgets>
                         </section>
@@ -254,6 +439,36 @@ under the License.
                                 <label style="h1" text="${uiLabelMap.AccountingEditFinAccount}"></label>
                                 <screenlet id="EditFinAccountPanel" collapsible="true">
                                     <include-form name="NewBankRecon" location="component://accounting/widget/FinAccountForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+    <screen name="newUnidentifiedUpresented">
+        <section>
+            <actions>
+                <set field="tabButtonItem" value="newUnidentifiedUpresented"/>
+                <set field="titleProperty" value="PageTitleFindFinAccountReconciliations"/>
+                <set field="tabButtonItem2" value="Find"/>
+                <set field="isUncreditedBankings" value="N"/>
+                <set field="isUnpresentedCheques" value="N"/>
+                <set field="isReconciledItem" value="N"/>
+                <set field="tabButtonItem2" value="Find"/>
+                <set field="headerId" from-field="parameters.headerId" />
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="KES"/>
+                <entity-one entity-name="FinAccount" value-field="finAccount"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <label style="h1" text="${uiLabelMap.AccountingEditFinAccount}"></label>
+                                <screenlet id="EditFinAccountPanel" collapsible="true">
+                                    <include-form name="newUnidentifiedUpresented" location="component://accounting/widget/FinAccountForms.xml"/>
                                 </screenlet>
                             </widgets>
                         </section>
