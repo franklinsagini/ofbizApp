@@ -25,6 +25,8 @@ import org.ofbiz.loansprocessing.LoansProcessingServices;
  * */
 public class TransferToGuarantorsServices {
 	
+	public static String DEFAULTERLOANCODE = "D330";
+	
 	/****
 	 * @author Japheth Odonya @when Jun 19, 2015 12:51:03 PM
 	 * */
@@ -89,7 +91,14 @@ public class TransferToGuarantorsServices {
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
+		String acctgTransType = "LOAN_RECEIVABLE";
 		
+		GenericValue loanRepayment = delegator.makeValidValue("LoanRepayment", UtilMisc.toMap(
+				
+				"partyId", loanApplication.getLong("partyId")));
+
+		String acctgTransId = LoanRepayments.createAccountingTransaction(loanRepayment,
+				acctgTransType, userLogin, delegator);
 		Long disbursedLoanStatusId = LoanServices.getLoanStatusId("DISBURSED");
 		
 		if (loanApplication.getLong("loanStatusId") != disbursedLoanStatusId)
@@ -134,9 +143,6 @@ public class TransferToGuarantorsServices {
 			
 			bdLoanTransferBalance = bdLoanTransferBalance.subtract(bdProportionForThisLoan);
 			
-			GenericValue loanRepayment = null;
-			String acctgTransType = "LOAN_RECEIVABLE";
-			
 			//BigDecimal totalLoanDue 
 			BigDecimal totalInterestDue = LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString());
 			BigDecimal totalInsuranceDue = LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString());
@@ -164,9 +170,8 @@ public class TransferToGuarantorsServices {
 					"totalPrincipalDue", totalPrincipalDue, "interestAmount",
 					loanInterest, "insuranceAmount", loanInsurance,
 					"principalAmount", loanPrincipal, "transactionAmount",
-					bdProportionForThisLoan, "repaymentMode", "FROMDEPOSITS"));
-			String acctgTransId = LoanRepayments.createAccountingTransaction(loanRepayment,
-					acctgTransType, userLogin, delegator);
+					bdProportionForThisLoan, "repaymentMode", "FROMDEPOSITS", "acctgTransId", acctgTransId));
+			
 			//Repay Loan with the proportion Balance
 			
 			if (bdDepositsBalance.compareTo(BigDecimal.ZERO) > 0){
@@ -260,15 +265,17 @@ public class TransferToGuarantorsServices {
 		BigDecimal loanInsurance = BigDecimal.ZERO;
 		BigDecimal loanInterest = BigDecimal.ZERO;
 		BigDecimal loanPrincipal = BigDecimal.ZERO;
-		loanInsurance = totalInterestDue;
-		loanInterest = totalInsuranceDue;
-		loanPrincipal = totalAmount.subtract(totalInterestDue);
-		loanPrincipal = loanPrincipal.subtract(totalInsuranceDue);
+		loanInsurance = totalInsuranceDue;
+		loanInterest = totalInterestDue;
+		loanPrincipal = totalAmount;
+				
+				//.subtract(totalInterestDue);
+		//loanPrincipal = loanPrincipal.subtract(totalInsuranceDue);
 		
 		BigDecimal totalLoanDue = totalPrincipalDue.add(totalInterestDue).add(totalInsuranceDue) ;
 		Long loanRepaymentId = delegator.getNextSeqIdLong("LoanRepayment", 1);
 		
-		GenericValue loanRepayment = delegator.makeValue("LoanRepayment", UtilMisc.toMap(
+		loanRepayment = delegator.makeValue("LoanRepayment", UtilMisc.toMap(
 				"loanRepaymentId", loanRepaymentId, "isActive", "Y",
 				"createdBy", userLogin.get("userLoginId"), "partyId", partyId, "loanApplicationId",
 				loanApplicationId,
@@ -281,7 +288,7 @@ public class TransferToGuarantorsServices {
 				"totalPrincipalDue", totalPrincipalDue, "interestAmount",
 				loanInterest, "insuranceAmount", loanInsurance,
 				"principalAmount", loanPrincipal, "transactionAmount",
-				bdLoanTransferBalance, "repaymentMode", "ATTACHED"));
+				bdLoanTransferBalance, "repaymentMode", "ATTACHED", "acctgTransId", acctgTransId));
 		
 		try {
 			delegator.createOrStore(loanRepayment);
@@ -293,12 +300,16 @@ public class TransferToGuarantorsServices {
 		// Create New Loans and Attach them to the Guarantors
 		//Distribute the new Transfer balance to Guarantors
 
-		BigDecimal bdGuarantorLoanAmount = bdLoanTransferBalance.divide(new BigDecimal(
+//		BigDecimal bdGuarantorLoanAmount = bdLoanTransferBalance.divide(new BigDecimal(
+//				noOfGuarantors), 6, RoundingMode.HALF_UP);
+		
+		
+		BigDecimal bdGuarantorLoanAmount = totalLoanDue.divide(new BigDecimal(
 				noOfGuarantors), 6, RoundingMode.HALF_UP);
 
 		for (GenericValue loanGuarantor : loanGuarantorELI) {
 			createGuarantorLoans(bdGuarantorLoanAmount, loanGuarantor,
-					loanApplication, userLoginId);
+					loanApplication, userLoginId, acctgTransId);
 		}
 
 		try {
@@ -313,7 +324,7 @@ public class TransferToGuarantorsServices {
 
 	private static void createGuarantorLoans(BigDecimal bdGuarantorLoanAmount,
 			GenericValue loanGuarantor, GenericValue loanApplication,
-			String userLoginId) {
+			String userLoginId, String acctgTransId) {
 		// TODO Auto-generated method stub
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		Long loanStatusId = LoanServices.getLoanStatusId("DISBURSED");
@@ -323,6 +334,8 @@ public class TransferToGuarantorsServices {
 
 		//Long defaulterLoanProductId = LoanUtilities.getLoanProductGivenCode(
 		//		LoansProcessingServices.DEFAULTER_LOAN_CODE).getLong("loanProductId");
+		
+		Long defaulterLoanProductId = LoanUtilities.getLoanProductGivenCode(DEFAULTERLOANCODE).getLong("loanProductId");
 
 		newLoanApplication = delegator.makeValue("LoanApplication", UtilMisc
 				.toMap("loanApplicationId", loanApplicationId,
@@ -332,7 +345,7 @@ public class TransferToGuarantorsServices {
 						userLoginId, "isActive", "Y", "partyId",
 						loanGuarantor.getLong("guarantorId"),
 
-						"loanProductId", loanApplication.getLong("loanProductId"),
+						"loanProductId", defaulterLoanProductId,
 						"interestRatePM",
 						loanApplication.getBigDecimal("interestRatePM")
 
@@ -347,12 +360,15 @@ public class TransferToGuarantorsServices {
 						loanApplication.getString("deductionType"),
 
 						"originalLoanProductId",
+						
 						loanApplication.getLong("loanProductId"),
 						
 						"disbursementDate", new Timestamp(Calendar.getInstance().getTimeInMillis()),
 
 						"accountProductId",
-						loanApplication.getLong("accountProductId")
+						loanApplication.getLong("loanProductId"),
+						
+						"acctgTransId", acctgTransId
 
 				));
 		try {
