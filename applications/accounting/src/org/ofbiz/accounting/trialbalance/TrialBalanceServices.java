@@ -84,7 +84,7 @@ public class TrialBalanceServices {
 		return result;
 	}
 
-	private static BigDecimal getAcctgTransEntrySum(Delegator delegator, String organizationPartyId, String glAccountId, String debitCreditFlag, Timestamp transactionDate) {
+	public static BigDecimal getAcctgTransEntrySum(Delegator delegator, String organizationPartyId, String glAccountId, String debitCreditFlag, Timestamp transactionDate) {
 		BigDecimal amount = null;
 		List<GenericValue> acctgTransEntrySums = null;
 		EntityConditionList<EntityExpr> acctgTransEntrySumsCond = EntityCondition.makeCondition(UtilMisc.toList(

@@ -2517,9 +2517,25 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="BankRecon"/>
     </request-map>
+    <request-map uri="UnidentifiedUnpresented">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="UnidentifiedUnpresented"/>
+    </request-map>
     <request-map uri="bankReconTrans">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="BankReconTrans"/>
+    </request-map>
+    <request-map uri="reconciledItems">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ReconciledItems"/>
+    </request-map>
+    <request-map uri="createUnidentifiedUpresented">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createUnidentifiedUpresented"/>
+        <response name="success" type="request-redirect" value="UnidentifiedUnpresented" >
+            <redirect-parameter name="headerId"/>
+        </response>
+        <response name="error" type="view" value="UnidentifiedUnpresented"/>
     </request-map>
     <request-map uri="reconcileBankTrans">
         <security https="true" auth="true" />
@@ -2532,9 +2548,35 @@ under the License.
         </response>
         <response name="error" type="view" value="BankReconTrans" />
     </request-map>
+    <request-map uri="saveReconciliation">
+        <security https="true" auth="true" />
+        <event type="service" invoke="saveReconciliation" />
+        <response name="success" type="request-redirect" value="bankReconTrans" >
+            <redirect-parameter name="finAccountId"/>
+            <redirect-parameter name="reconDate"/>
+            <redirect-parameter name="finAccountTransId"/>
+            <redirect-parameter name="headerId"/>
+        </response>
+        <response name="error" type="view" value="BankReconTrans" />
+    </request-map>
+    <request-map uri="unreconcileBankTrans">
+        <security https="true" auth="true" />
+        <event type="service-multi" invoke="unreconcileBankTrans" />
+        <response name="success" type="request-redirect" value="reconciledItems" >
+            <redirect-parameter name="finAccountId"/>
+            <redirect-parameter name="reconDate"/>
+            <redirect-parameter name="finAccountTransId"/>
+            <redirect-parameter name="headerId"/>
+        </response>
+        <response name="error" type="view" value="ReconciledItems" />
+    </request-map>
     <request-map uri="newBankRecon">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="newBankRecon"/>
+    </request-map>
+    <request-map uri="newUnidentifiedUpresented">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="newUnidentifiedUpresented"/>
     </request-map>
     <request-map uri="createFinAccount">
         <security https="true" auth="true"/>
@@ -2568,6 +2610,9 @@ under the License.
         <security https="true" auth="true"/>
         <event type="service" invoke="createReconHeader"/>
         <response name="success" type="view" value="BankRecon"/>
+        <response name="success" type="request-redirect" value="BankRecon" >
+            <redirect-parameter name="finAccountId"/>
+        </response>
         <response name="error" type="view" value="BankRecon"/>
     </request-map>
     <request-map uri="FindDepositSlips">
@@ -3571,8 +3616,11 @@ under the License.
 
     <view-map name="EditFinAccount" type="screen" page="component://accounting/widget/FinAccountScreens.xml#EditFinAccount"/>
     <view-map name="BankRecon" type="screen" page="component://accounting/widget/FinAccountScreens.xml#BankRecon"/>
+    <view-map name="UnidentifiedUnpresented" type="screen" page="component://accounting/widget/FinAccountScreens.xml#UnidentifiedUnpresented"/>
     <view-map name="BankReconTrans" type="screen" page="component://accounting/widget/FinAccountScreens.xml#BankReconTrans"/>
+    <view-map name="ReconciledItems" type="screen" page="component://accounting/widget/FinAccountScreens.xml#ReconciledItems"/>
     <view-map name="newBankRecon" type="screen" page="component://accounting/widget/FinAccountScreens.xml#newBankRecon"/>
+    <view-map name="newUnidentifiedUpresented" type="screen" page="component://accounting/widget/FinAccountScreens.xml#newUnidentifiedUpresented"/>
     <view-map name="EditFinAccountRoles" type="screen" page="component://accounting/widget/FinAccountScreens.xml#EditFinAccountRoles"/>
     <view-map name="EditFinAccountTrans" type="screen" page="component://accounting/widget/FinAccountScreens.xml#EditFinAccountTrans"/>
     <view-map name="EditFinAccountAuths" type="screen" page="component://accounting/widget/FinAccountScreens.xml#EditFinAccountAuths"/>
