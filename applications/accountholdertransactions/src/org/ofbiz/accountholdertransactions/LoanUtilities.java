@@ -284,7 +284,7 @@ public class LoanUtilities {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
 			loanProductELI = delegator.findList("LoanProduct",
-					EntityCondition.makeCondition("code", code), null, null,
+					EntityCondition.makeCondition("code", code.trim()), null, null,
 					null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
