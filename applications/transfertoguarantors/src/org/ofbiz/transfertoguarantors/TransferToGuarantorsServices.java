@@ -84,6 +84,11 @@ public class TransferToGuarantorsServices {
 	 * */
 	public static String transferToGuarantors(Long loanApplicationId,
 			Map<String, String> userLogin) {
+		
+		String postingType;
+		String entrySequenceId;
+		GenericValue accountHolderTransactionSetup;
+		
 		String userLoginId = userLogin.get("userLoginId");
 		Long sequence = 0L;
 		GenericValue loanApplication = null;
@@ -306,6 +311,25 @@ public class TransferToGuarantorsServices {
 		}
 		
 		//Credit Loan to Members with total principal
+		postingType = "C";
+		sequence = sequence + 1;
+		entrySequenceId = sequence.toString();
+		
+
+		accountHolderTransactionSetup = LoanRepayments.getAccountHolderTransactionSetupRecord(
+				"PRINCIPALPAYMENT", delegator);
+		
+		String accountId = accountHolderTransactionSetup
+				.getString("memberDepositAccId");
+		// createAccountingEntry(loanExpectation, acctgTransId, accountId,
+		// postingType, delegator);
+
+		if (loanPrincipal.compareTo(BigDecimal.ZERO) == 1) {
+			LoanRepayments.postTransactionEntry(delegator, loanPrincipal, partyId.toString(), accountId, postingType, acctgTransId, acctgTransType, entrySequenceId, userLogin);
+			//postTransactionEntry(delegator, loanPrincipal, partyId,
+			//		accountId, postingType, acctgTransId, acctgTransType,
+			//		entrySequenceId, userLogin);
+		}
 		
 		//Debit Loan to Members for each disbursement
 		
@@ -321,8 +345,8 @@ public class TransferToGuarantorsServices {
 				noOfGuarantors), 6, RoundingMode.HALF_UP);
 
 		for (GenericValue loanGuarantor : loanGuarantorELI) {
-			createGuarantorLoans(bdGuarantorLoanAmount, loanGuarantor,
-					loanApplication, userLoginId, acctgTransId);
+			sequence = createGuarantorLoans(bdGuarantorLoanAmount, loanGuarantor,
+					loanApplication, userLogin, acctgTransId, sequence, acctgTransType);
 		}
 
 		try {
@@ -335,15 +359,22 @@ public class TransferToGuarantorsServices {
 		return "success";
 	}
 
-	private static void createGuarantorLoans(BigDecimal bdGuarantorLoanAmount,
+	private static Long createGuarantorLoans(BigDecimal bdGuarantorLoanAmount,
 			GenericValue loanGuarantor, GenericValue loanApplication,
-			String userLoginId, String acctgTransId) {
+			Map<String, String> userLogin, String acctgTransId, Long sequence, String acctgTransType) {
+		
 		// TODO Auto-generated method stub
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		Long loanStatusId = LoanServices.getLoanStatusId("DISBURSED");
 		Long loanApplicationId = delegator.getNextSeqIdLong("LoanApplication",
 				1);
 		GenericValue newLoanApplication;
+		
+		String postingType;
+		String entrySequenceId;
+		
+
+		GenericValue accountHolderTransactionSetup;
 		
 		try {
 			TransactionUtil.begin();
@@ -363,7 +394,7 @@ public class TransferToGuarantorsServices {
 						"parentLoanApplicationId",
 						loanApplication.getLong("loanApplicationId"), "loanNo",
 						String.valueOf(loanApplicationId), "createdBy",
-						userLoginId, "isActive", "Y", "partyId",
+						userLogin.get("userLoginId"), "isActive", "Y", "partyId",
 						loanGuarantor.getLong("guarantorId"),
 
 						"loanProductId", defaulterLoanProductId,
@@ -404,12 +435,32 @@ public class TransferToGuarantorsServices {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		postingType = "D";
+		sequence = sequence + 1;
+		entrySequenceId = sequence.toString();
+		
+
+		accountHolderTransactionSetup = LoanRepayments.getAccountHolderTransactionSetupRecord(
+				"PRINCIPALPAYMENT", delegator);
+		
+		String accountId = accountHolderTransactionSetup
+				.getString("memberDepositAccId");
+		// createAccountingEntry(loanExpectation, acctgTransId, accountId,
+		// postingType, delegator);
+
+		if (bdGuarantorLoanAmount.compareTo(BigDecimal.ZERO) == 1) {
+			LoanRepayments.postTransactionEntry(delegator, bdGuarantorLoanAmount, loanGuarantor.getLong("guarantorId").toString(), accountId, postingType, acctgTransId, acctgTransType, entrySequenceId, userLogin);
+			//postTransactionEntry(delegator, loanPrincipal, partyId,
+			//		accountId, postingType, acctgTransId, acctgTransType,
+			//		entrySequenceId, userLogin);
+		}
 		//Create log - attached from defaulter
 		Long loanStatusLogId = delegator.getNextSeqIdLong("LoanStatusLog", 1);
 		GenericValue loanStatusLog = delegator.makeValue("LoanStatusLog", UtilMisc.toMap(
 				"loanStatusLogId", loanStatusLogId, "loanApplicationId",
 				Long.valueOf(loanApplicationId), "loanStatusId", loanStatusId,
-				"createdBy", userLoginId, "comment", "Loan attached from defaulter"
+				"createdBy", userLogin.get("userLoginId"), "comment", "Loan attached from defaulter"
 				
 						
 				));
@@ -418,6 +469,8 @@ public class TransferToGuarantorsServices {
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
+		
+		return sequence;
 
 	}
 
