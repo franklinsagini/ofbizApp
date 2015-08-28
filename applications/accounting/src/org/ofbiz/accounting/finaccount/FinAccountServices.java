@@ -256,7 +256,7 @@ public class FinAccountServices {
 		Timestamp reconDate = (Timestamp) context.get("reconDate");
 		BigDecimal bankBalance = (BigDecimal) context.get("bankBalance");
 		
-		System.out.println("############################# BANK BALANCE: "+bankBalance);
+
 		
 		GenericValue finAccount = null;
 		GenericValue acctgTrans = null;
@@ -267,14 +267,17 @@ public class FinAccountServices {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		String glAccountId = finAccount.getString("glAccountId");
+		if (finAccount==null) {
+			return ServiceUtil.returnError("PROBLEMS IN RETRIEVEING BANK ACCOUNT DETAILS");
+		}
+		String glAccountId = finAccount.getString("postToGlAccountId");
 		String organizationPartyId = finAccount.getString("organizationPartyId");
 		Timestamp fromDate = acctgTrans.getTimestamp("postedDate");
 		
 		
 		// TODO We need to get cash book balance here
-		BigDecimal cashBookBalance = getCashBookBalance(delegator,reconDate, organizationPartyId, glAccountId,fromDate);
-
+		BigDecimal cashBookBalance = getOrganizationCashBookBalance(delegator, reconDate, organizationPartyId, glAccountId, fromDate);
+		System.out.println("############################################## CASH BOOK BALANCE RETRIEVED: "+cashBookBalance);
 		BigDecimal totalUnpresentedCheques = BigDecimal.ZERO;
 		BigDecimal totalUncreditedBankings = BigDecimal.ZERO;
 
@@ -350,29 +353,23 @@ public class FinAccountServices {
 
 	}
 	
-	private static BigDecimal getCashBookBalance(Delegator delegator, Timestamp reconDate, String organizationPartyId, String glAccountId, Timestamp fromDate) {
-		BigDecimal totalDebitsToOpeningDate = TrialBalanceServices.getAcctgTransEntrySum(delegator, organizationPartyId, glAccountId, "D", fromDate);
-		BigDecimal totalDebitsToEndingDate = TrialBalanceServices.getAcctgTransEntrySum(delegator, organizationPartyId, glAccountId, "D", reconDate);
-		BigDecimal totalCreditsToOpeningDate = TrialBalanceServices.getAcctgTransEntrySum(delegator, organizationPartyId, glAccountId, "C", fromDate);
-		BigDecimal totalCreditsToEndingDate = TrialBalanceServices.getAcctgTransEntrySum(delegator, organizationPartyId, glAccountId, "C", reconDate);
+	private static BigDecimal getOrganizationCashBookBalance(Delegator delegator, Timestamp reconDate, String organizationPartyId, String glAccountId, Timestamp fromDate) {
+		String debitFlag = "D";
+		String creditFlag = "C";
+		BigDecimal cashBookBalance = BigDecimal.ZERO;
+		if (glAccountId == null) {
+			return (BigDecimal) ServiceUtil.returnError("COULD NOT GET THE GL ACCOUNT FOR THIS CASH BOOK");
+			
+		}else if (organizationPartyId == null) {
+			return (BigDecimal) ServiceUtil.returnError("MANAGED BY IS NOT SET FOR THIS BANK ACCOUNT");
+		}
+		BigDecimal totalDebits = getTotalDebitsForAccount(delegator, fromDate, reconDate, glAccountId, debitFlag,organizationPartyId);
+		BigDecimal totalCredits = getTotalDebitsForAccount(delegator, fromDate, reconDate, glAccountId, creditFlag,organizationPartyId);
 		
-		if (totalDebitsToOpeningDate == null) {
-			totalDebitsToOpeningDate = BigDecimal.ZERO;
-		}
-		if (totalDebitsToEndingDate == null) {
-			totalDebitsToEndingDate = BigDecimal.ZERO;
-		}
-		if (totalCreditsToOpeningDate == null) {
-			totalCreditsToOpeningDate = BigDecimal.ZERO;
-		}
-		if (totalCreditsToEndingDate == null) {
-			totalCreditsToEndingDate = BigDecimal.ZERO;
-		}
-
-		
+		System.out.println("############################################## totalDebits RETRIEVED: "+ totalDebits +" For glAccountId: "+glAccountId);
+		System.out.println("############################################## totalCredits RETRIEVED: "+ totalCredits +" For glAccountId: "+glAccountId);
 		Boolean isDebit = null;
 		GenericValue glAccount = null;
-
 		try {
 			glAccount = delegator.findOne("GlAccount", UtilMisc.toMap("glAccountId", glAccountId), false);
 			isDebit = UtilAccounting.isDebitAccount(glAccount);
@@ -380,16 +377,51 @@ public class FinAccountServices {
 			e.printStackTrace();
 		}
 		
-		BigDecimal endingBalanceCredit = BigDecimal.ZERO;
-		BigDecimal endingBalanceDebit = BigDecimal.ZERO;
-		if (isDebit) {
-			return endingBalanceDebit = totalDebitsToEndingDate.subtract(totalCreditsToEndingDate);
+		if(isDebit){
+			cashBookBalance = totalDebits.subtract(totalCredits);
 		}else {
-			return endingBalanceCredit = totalCreditsToEndingDate.subtract(totalDebitsToEndingDate);
+			cashBookBalance = totalCredits.subtract(totalDebits);
+		}
+		return cashBookBalance;
+	}
+	
+	private static BigDecimal getTotalDebitsForAccount(Delegator delegator, Timestamp fromDate, Timestamp reconDate, String glAccountId, String debitCreditFlag, String organizationPartyId) {
+		System.out.println("################################ GETTING ACCOUNT BALANCE USING: ");
+		System.out.println("################################ GETTING ACCOUNT BALANCE USING fromDate: "+fromDate);
+		System.out.println("################################ GETTING ACCOUNT BALANCE USING reconDate: "+reconDate);
+		System.out.println("################################ GETTING ACCOUNT BALANCE USING glAccountId: "+glAccountId);
+		System.out.println("################################ GETTING ACCOUNT BALANCE USING debitCreditFlag: "+debitCreditFlag);
+		System.out.println("################################ GETTING ACCOUNT BALANCE USING organizationPartyId: "+organizationPartyId);
+		
+		
+		
+		BigDecimal accountBalance = BigDecimal.ZERO;
+		List<GenericValue> acctgTransEntry = null;
+		EntityConditionList<EntityExpr> acctgTransEntrySumsCond = EntityCondition.makeCondition(UtilMisc.toList(
+				EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, organizationPartyId),
+				EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, glAccountId),
+				EntityCondition.makeCondition("debitCreditFlag", EntityOperator.EQUALS, debitCreditFlag),
+				EntityCondition.makeCondition("createdStamp", EntityOperator.LESS_THAN_EQUAL_TO, reconDate),
+				EntityCondition.makeCondition("createdStamp", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate)
+				), EntityOperator.AND);
+		
+		try {
+			acctgTransEntry = delegator.findList("AcctgTransEntry", acctgTransEntrySumsCond, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		System.out.println("############################################## Number of Trans RETRIEVED: "+ acctgTransEntry.size() +" For glAccountId: "+glAccountId);
+		for (GenericValue entry : acctgTransEntry) {
+			System.out.println("#################################### accountBalance "+accountBalance);
+			System.out.println("#################################### AMOUNT "+entry.getBigDecimal("amount"));
+			
+			accountBalance = accountBalance.add(entry.getBigDecimal("amount"));
+			System.out.println("#################################### TOTAL AMOUNT "+entry.getBigDecimal("amount"));
 		}
 		
-		
+		return accountBalance;
 	}
+
 
 	public static Map<String, Object> createUnidentifiedUpresented(DispatchContext dctx, Map<String, Object> context) {
 		
