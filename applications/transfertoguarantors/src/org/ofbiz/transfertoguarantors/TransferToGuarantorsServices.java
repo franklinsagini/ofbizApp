@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
 import org.ofbiz.accountholdertransactions.LoanRepayments;
 import org.ofbiz.accountholdertransactions.LoanUtilities;
@@ -16,6 +17,8 @@ import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.transaction.GenericTransactionException;
+import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.loans.LoanServices;
 import org.ofbiz.loansprocessing.LoansProcessingServices;
 
@@ -24,6 +27,9 @@ import org.ofbiz.loansprocessing.LoansProcessingServices;
  *  org.ofbiz.transfertoguarantors.TransferToGuarantorsServices.transferToGuarantors
  * */
 public class TransferToGuarantorsServices {
+	
+	private static Logger log = Logger
+			.getLogger(TransferToGuarantorsServices.class);
 	
 	public static String DEFAULTERLOANCODE = "D330";
 	
@@ -267,7 +273,9 @@ public class TransferToGuarantorsServices {
 		BigDecimal loanPrincipal = BigDecimal.ZERO;
 		loanInsurance = totalInsuranceDue;
 		loanInterest = totalInterestDue;
-		loanPrincipal = totalAmount;
+		loanPrincipal = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
+		bdLoanTransferBalance = loanPrincipal.add(loanInsurance).add(loanInterest);		
+				//totalAmount;
 				
 				//.subtract(totalInterestDue);
 		//loanPrincipal = loanPrincipal.subtract(totalInsuranceDue);
@@ -296,6 +304,11 @@ public class TransferToGuarantorsServices {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		
+		//Credit Loan to Members with total principal
+		
+		//Debit Loan to Members for each disbursement
+		
 
 		// Create New Loans and Attach them to the Guarantors
 		//Distribute the new Transfer balance to Guarantors
@@ -304,7 +317,7 @@ public class TransferToGuarantorsServices {
 //				noOfGuarantors), 6, RoundingMode.HALF_UP);
 		
 		
-		BigDecimal bdGuarantorLoanAmount = totalLoanDue.divide(new BigDecimal(
+		BigDecimal bdGuarantorLoanAmount = bdLoanTransferBalance.divide(new BigDecimal(
 				noOfGuarantors), 6, RoundingMode.HALF_UP);
 
 		for (GenericValue loanGuarantor : loanGuarantorELI) {
@@ -331,12 +344,20 @@ public class TransferToGuarantorsServices {
 		Long loanApplicationId = delegator.getNextSeqIdLong("LoanApplication",
 				1);
 		GenericValue newLoanApplication;
+		
+		try {
+			TransactionUtil.begin();
+		} catch (GenericTransactionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		//Long defaulterLoanProductId = LoanUtilities.getLoanProductGivenCode(
 		//		LoansProcessingServices.DEFAULTER_LOAN_CODE).getLong("loanProductId");
 		
 		Long defaulterLoanProductId = LoanUtilities.getLoanProductGivenCode(DEFAULTERLOANCODE).getLong("loanProductId");
 
+		log.info(" $$$$$$ Loan Product "+defaulterLoanProductId);
 		newLoanApplication = delegator.makeValue("LoanApplication", UtilMisc
 				.toMap("loanApplicationId", loanApplicationId,
 						"parentLoanApplicationId",
@@ -366,7 +387,7 @@ public class TransferToGuarantorsServices {
 						"disbursementDate", new Timestamp(Calendar.getInstance().getTimeInMillis()),
 
 						"accountProductId",
-						loanApplication.getLong("loanProductId"),
+						loanApplication.getLong("accountProductId"),
 						
 						"acctgTransId", acctgTransId
 
@@ -377,6 +398,12 @@ public class TransferToGuarantorsServices {
 			e2.printStackTrace();
 		}
 		
+		try {
+			TransactionUtil.commit();
+		} catch (GenericTransactionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		//Create log - attached from defaulter
 		Long loanStatusLogId = delegator.getNextSeqIdLong("LoanStatusLog", 1);
 		GenericValue loanStatusLog = delegator.makeValue("LoanStatusLog", UtilMisc.toMap(
