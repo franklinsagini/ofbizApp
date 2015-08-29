@@ -99,7 +99,18 @@ public class MSaccoServices {
 			e2.printStackTrace();
 		}
 		
-		//msaccoApplicationELI.subList(fromIndex, toIndex);
+		int maxSize = 10;
+		
+		if ((msaccoApplicationELI != null) && (msaccoApplicationELI.size() > 0)){
+			if (msaccoApplicationELI.size() < 10){
+				maxSize = msaccoApplicationELI.size();
+			}
+		}
+		
+		
+		if ((msaccoApplicationELI != null) && (msaccoApplicationELI.size() > 0)){
+			msaccoApplicationELI = msaccoApplicationELI.subList(0, maxSize);
+		}
 
 		// GenericValue msaccoApplication = null;
 		Application application = null;
