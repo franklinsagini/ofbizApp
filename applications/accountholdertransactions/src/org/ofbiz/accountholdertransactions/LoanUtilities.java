@@ -29,7 +29,7 @@ import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.loans.LoanServices;
 import org.ofbiz.loansprocessing.LoansProcessingServices;
-
+//org.ofbiz.accountholdertransactions.LoanUtilities.getBranchId(employerCode)
 public class LoanUtilities {
 
 	public static Logger log = Logger.getLogger(LoanUtilities.class);
