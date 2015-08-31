@@ -2352,7 +2352,9 @@ public class OnlineRemittanceProcessingServices {
 			remitanceCode = loanProduct.getString("code") + "C";
 			remitanceDescription = loanProduct.getString("name") + " INSURANCE";
 			expectationType = "INSURANCE";
-			BigDecimal bdInsuranceDue = LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString());
+			BigDecimal bdInsuranceDue = LoanRepayments.getInsuranceOnSchedule(loanApplicationId);
+					
+					//LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString());
 			
 			if (bdInsuranceDue.compareTo(BigDecimal.ZERO) < 1)
 			{
