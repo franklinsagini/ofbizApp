@@ -3981,6 +3981,20 @@ public class LoanRepayments {
 		// getTotalCashWithdrawalToday
 		return sequence.toString();
 	}
+
+	public static BigDecimal getInsuranceOnSchedule(Long loanApplicationId) {
+		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
+		
+		
+		BigDecimal bdTheLoanBalance = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
+		BigDecimal bdInsuranceRate = AmortizationServices
+				.getInsuranceRate(loanApplication);
+		BigDecimal bdInsuranceAccrued = bdInsuranceRate.multiply(
+				bdTheLoanBalance.setScale(6, RoundingMode.HALF_UP)).divide(
+				new BigDecimal(100), 6, RoundingMode.HALF_UP);
+		
+		return bdInsuranceAccrued;
+	}
 	
 
 }
