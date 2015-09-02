@@ -1067,7 +1067,8 @@
 				<set field="titleProperty" value="leave" />
 				<set field="headerItem" value="Leave" />
 				<set field="tabButtonItem" value="leaveRecord" />
-
+				
+               <!--  <entity-one value-field="emplLeaveMap" entity-name="EmplLeave"></entity-one> -->
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -1094,6 +1095,51 @@
 
                               <screenlet title="Leave Records">
                                      <include-form location="component://humanres/widget/forms/EmplLeaveForms.xml" name="ListLeaveRecord"/>                              
+                              </screenlet>
+
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+
+<screen name="leaveStaff">
+		<section>
+			<actions>
+				<set field="titleProperty" value="leave" />
+				<set field="headerItem" value="Leave" />
+				<set field="tabButtonItem" value="leaveStaff"/>
+				
+               <!--  <entity-one value-field="emplLeaveMap" entity-name="EmplLeave"></entity-one> -->
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+				<decorator-section name="pre-body">
+						<include-menu name="EmplLeaveTabBar"
+							location="component://humanres/widget/HumanresMenus.xml" />
+					</decorator-section>
+					<decorator-section name="body">
+						<section>
+						<condition>
+                                <if-has-permission permission="HUMANRES"
+									action="_VIEW" />
+                            </condition>
+							<widgets>
+
+
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+							<screenlet title="New Staff">
+							<include-form location="component://humanres/widget/forms/EmplLeaveForms.xml" name="LeaveStaffForm"/>
+							</screenlet>
+
+                              <screenlet title="Leave Staff">
+                                     <include-form location="component://humanres/widget/forms/EmplLeaveForms.xml" name="listLeaveStaffForm"/>                              
                               </screenlet>
 
 							</widgets>

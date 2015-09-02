@@ -2602,6 +2602,36 @@
 		<auto-attributes mode="IN" include="pk" optional="false" />
 	</service>
 
+     <!-- Emmmergency Contacts -->
+<service name="createStaffEmmergencyContacts" engine="simple"
+		default-entity-name="EmmergencyContacts"
+		location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml"
+		invoke="createStaffEmmergencyContacts" auth="true">
+		<description>New Next Of Kin Details</description>
+		<!-- permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+		<auto-attributes mode="IN" include="pk" optional="true" />
+		<auto-attributes mode="IN" include="nonpk" optional="true" />
+	</service>
+
+	<service name="updateStaffEmmergencyContacts" engine="simple"
+		default-entity-name="EmmergencyContacts"
+		location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml"
+		invoke="updateStaffEmmergencyContacts" auth="true">
+		<description>Update Next Of Kin Details</description>
+		<!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
+		<auto-attributes mode="IN" include="pk" optional="false" />
+		<auto-attributes mode="IN" include="nonpk" optional="true" />
+	</service>
+
+	<service name="deleteStaffEmmergencyContacts" engine="simple"
+		default-entity-name="EmmergencyContacts"
+		location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml"
+		invoke="deleteStaffEmmergencyContacts" auth="true">
+		<description>Delete Next Of Kin Details</description>
+		<!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
+		<auto-attributes mode="IN" include="pk" optional="false" />
+	</service>
+
 	<!-- Retirement Age -->
 	<service name="createRetirementAge" engine="simple"
 		default-entity-name="RetirementAge"
@@ -3426,5 +3456,79 @@
 		<auto-attributes mode="IN" include="pk" optional="false" />
 		<auto-attributes mode="IN" include="nonpk" optional="true" />
 	</service>
+	
+	<service name="createEmployeeLostItems" engine="simple"  default-entity-name="EmployeeLostItems"
+	location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" auth="true" invoke="createEmployeeLostItems">
+	<description>Save Employee Lost Items Details</description>
+	<auto-attributes mode="IN" include="pk" optional="true"></auto-attributes>
+	<auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
+	</service>
+	
+	<service name="updateEmployeeLostItems" engine="simple"  default-entity-name="EmployeeLostItems"
+	location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" auth="true" invoke="updateEmployeeLostItems">
+	<description>Update</description>
+	<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
+	<auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
+	</service>
+	
+	<service name="deleteEmployeeLostItems" engine="simple"  default-entity-name="EmployeeLostItems"
+	location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" auth="true" invoke="deleteEmployeeLostItems">
+	<description>delete</description>
+	<auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
+	</service>
+
+    <service name="separationDetailCalculation" engine="simple" location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" auth="true"
+     default-entity-name="SeparationApplication" invoke="separationDetailCalculation">
+    <description>Separation Module Service</description>
+     <auto-attributes mode="IN" include="pk" optional="true" />
+		<auto-attributes mode="IN" include="nonpk" optional="true" />
+    </service>
+    
+ 
+  <service name="createseparationApplicationTypes" engine="simple" location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml"
+  auth="true" default-entity-name="SeparationTypes" invoke="createseparationApplicationTypes">
+  <description>Method to create separation Application Types</description>
+  <auto-attributes mode="IN" include="pk" optional="true"></auto-attributes>
+  <auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
+  </service>
+
+ <service name="updateSeparationApplicationTypes" engine="simple" location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml"
+  auth="true" default-entity-name="SeparationTypes" invoke="updateSeparationApplicationTypes">
+  <description>Method to create separation Application Types</description>
+  <auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
+  <auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
+  </service>
+
+<service name="deleteSeparationApplicationTypes" engine="simple" location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml"
+  auth="true" default-entity-name="SeparationTypes" invoke="deleteSeparationApplicationTypes">
+  <description>Method to create separation Application Types</description>
+  <auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
+  </service>
+
+ <service name="undoLink" engine="simple" location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml"
+  auth="true" default-entity-name="separationDetailCalculation" invoke="undoLink">
+  <description>Method to create separation Application Types</description>
+  <auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
+  <auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
+  </service>
+  
+  
+  <service name="createLeaveStaff" engine="simple" default-entity-name="LeaveStaff"
+	location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" 
+	invoke="createLeaveStaff" auth="true">
+		<description>Create File Request header record</description>
+		<auto-attributes include="pk" mode="IN" optional="true" />
+		<auto-attributes include="nonpk" mode="IN" optional="true" />
+	</service>
+
+
+	<service name="deleteLeaveStaff" engine="simple"	default-entity-name="LeaveStaff"
+		location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" 
+		invoke="deleteLeaveStaff" auth="true">
+		<description>remove file type</description>
+		<auto-attributes mode="IN" include="pk" optional="true" />
+		<auto-attributes mode="IN" include="nonpk" optional="true" />
+	</service>
+  
 
 </services>
