@@ -1040,8 +1040,9 @@ public class OnlineRemittanceProcessingServices {
 						Long.valueOf(currentStationId.trim())),
 						
 					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("DEAD")),
+					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("WITHDRAWN")),
 					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("CLOSED"))
-
+					
 				), EntityOperator.AND);
 		
 		
@@ -1711,7 +1712,7 @@ public class OnlineRemittanceProcessingServices {
 						Long.valueOf(currentStationId.trim())),
 						//EntityCondition.makeCondition("memberStatusId", EntityOperator.EQUALS , LoanUtilities.getMemberStatusId("ACTIVE"))
 						EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("DEAD")),
-						
+						EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("WITHDRAWN")),
 						EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("CLOSED"))	
 
 				), EntityOperator.AND);
@@ -1761,7 +1762,7 @@ public class OnlineRemittanceProcessingServices {
 						Long.valueOf(currentStationId.trim())),
 						
 					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("DEAD")),
-					
+					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("WITHDRAWN")),
 					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("CLOSED"))	
 
 				), EntityOperator.AND);
