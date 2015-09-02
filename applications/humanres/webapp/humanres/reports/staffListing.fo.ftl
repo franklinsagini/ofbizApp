@@ -33,10 +33,10 @@ under the License.
             <fo:table table-layout="fixed" width="100%">
                 <fo:table-column column-width="20pt"/>
                 <fo:table-column column-width="50pt"/>
+                <fo:table-column column-width="130pt"/>
                 <fo:table-column column-width="90pt"/>
                 <fo:table-column column-width="90pt"/>
-                <fo:table-column column-width="70pt"/>
-                <fo:table-column column-width="90pt"/>
+                
                 <fo:table-column column-width="60pt"/>
                <#-- <fo:table-column column-width="60pt"/>  -->
                 <fo:table-column column-width="70pt"/>
@@ -59,9 +59,7 @@ under the License.
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                             <fo:block>Department</fo:block>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                            <fo:block>Designation</fo:block>
-                        </fo:table-cell>
+                      
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                             <fo:block>Grade</fo:block>
                         </fo:table-cell>
@@ -133,13 +131,6 @@ under the License.
                                 </#if>
                             </fo:table-cell>
                             
-                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                               <#if jopPerson?has_content> 
-                                <fo:block>${jopPerson.emplPositionType?if_exists}</fo:block>
-                               <#else>
-                               <fo:block></fo:block>
-                                </#if>
-                            </fo:table-cell>
                             
                              <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                <#if gradePerson?has_content> 
@@ -186,11 +177,11 @@ under the License.
             <fo:table table-layout="fixed" width="100%">
                 <fo:table-column column-width="20pt"/>
                 <fo:table-column column-width="50pt"/>
-                <fo:table-column column-width="90pt"/>
+                <fo:table-column column-width="140pt"/>
                 <fo:table-column column-width="90pt"/>
                 <fo:table-column column-width="70pt"/>
+              
                 <fo:table-column column-width="90pt"/>
-                <fo:table-column column-width="60pt"/>
                <#-- <fo:table-column column-width="60pt"/>  -->
                 <fo:table-column column-width="70pt"/>
                 <fo:table-header>
@@ -211,9 +202,7 @@ under the License.
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                             <fo:block>Department</fo:block>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                            <fo:block>Designation</fo:block>
-                        </fo:table-cell>
+
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                             <fo:block>Grade</fo:block>
                         </fo:table-cell>
@@ -288,14 +277,6 @@ under the License.
                                 <fo:block> ${deptPersonR.departmentName?if_exists}</fo:block>
                                <#else>
                                <fo:block> </fo:block>
-                                </#if>
-                            </fo:table-cell>
-                            
-                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                               <#if jopPersonR?has_content> 
-                                <fo:block>${jopPersonR.emplPositionType?if_exists}</fo:block>
-                               <#else>
-                               <fo:block></fo:block>
                                 </#if>
                             </fo:table-cell>
                             

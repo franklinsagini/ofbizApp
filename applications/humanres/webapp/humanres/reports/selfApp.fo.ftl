@@ -39,9 +39,9 @@ under the License.
             <fo:table-column column-width="70pt"/>
             <fo:table-column column-width="100pt"/>
             <fo:table-column column-width="70pt"/>
-            <fo:table-column column-width="70pt"/>
-            <fo:table-column column-width="70pt"/>
-           <fo:table-column column-width="50pt"/>
+            <fo:table-column column-width="90pt"/>
+            <fo:table-column column-width="100pt"/>
+          
             
             
             <fo:table-header>
@@ -68,9 +68,7 @@ under the License.
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="left">Appraisser Name</fo:block>
                     </fo:table-cell>
-                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Date/Time Submitted</fo:block>
-                    </fo:table-cell>
+                    
                 </fo:table-row>
             </fo:table-header>
             <fo:table-body>
@@ -153,7 +151,7 @@ under the License.
                             <#if postStaff?has_content>
                                 <fo:block>${postStaff.emplPositionType? if_exists}</fo:block>
                             <#else>
-                                <fo:block>Not Defined</fo:block>
+                                <fo:block>  </fo:block>
                             </#if>
                         </fo:table-cell>
                         
@@ -161,17 +159,10 @@ under the License.
                             <#if staffAppraisser?has_content>
                                 <fo:block>${staffAppraisser.firstName?if_exists}  ${staffAppraisser.lastName?if_exists}</fo:block>
                             <#else>
-                                <fo:block>Not Defined</fo:block>
+                                <fo:block>  </fo:block>
                             </#if>
                         </fo:table-cell>
-                       
-                       <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if activity.partyId?has_content>
-                                <fo:block>${activity.lastUpdatedTxStamp?if_exists}</fo:block>
-                            <#else>
-                                <fo:block></fo:block>
-                            </#if>
-                        </fo:table-cell>
+ 
                        
                      </fo:table-row>
                   </#list>
