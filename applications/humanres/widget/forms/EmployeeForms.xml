@@ -913,11 +913,11 @@
         </drop-down>
         </field>
         <field name="dob" title="Date of Birth"><date-time type="date"></date-time></field>
-         <field name="bloodGroupId" title="Blood Group">        	
+        <!--  <field name="bloodGroupId" title="Blood Group">        	
        	 <drop-down allow-empty="true">
        	 	<list-options list-name="bloodGroupList" key-name="bloodGroupId" description="${bloodGroup}"/>
        	 </drop-down>
-        </field>
+        </field> -->
        <!--  <field name="partyIdentificationTypeId" title="Identification Type">        	
        	 <drop-down allow-empty="false">
        	 	<list-options list-name="partyIDList" key-name="partyIdentificationTypeId" description="${description}"/>
@@ -960,11 +960,11 @@
         </drop-down>
         </field>
         <field name="dob" title="Date of Birth"><date-time type="date"/></field> 
-         <field name="bloodGroupId" title="Blood Group">        	
+         <!-- <field name="bloodGroupId" title="Blood Group">        	
        	 <drop-down allow-empty="true">
        	 	<list-options list-name="bloodGroupList" key-name="bloodGroupId" description="${bloodGroup}"/>
        	 </drop-down>
-        </field>
+        </field> -->
        <!--  <field name="partyIdentificationTypeId" title="Identification Type">        	
        	 <drop-down allow-empty="false">
        	 	<list-options list-name="partyIDList" key-name="partyIdentificationTypeId" description="${description}"/>
@@ -1040,7 +1040,7 @@
         <field name="emailAddress" title="Email Address"><text size="30" maxlength="60"/></field>
         <field name="postalAddress" title="Postal Address"><text size="30" maxlength="60"/></field>
         <field name="homeAddress" title="Residential Address"><text size="30" maxlength="60"/></field>
-       
+        <field name="percentageOfShares" ><text size="30" maxlength="60"/></field>
         
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
         </form>
@@ -1084,6 +1084,7 @@
         </field> -->
         <field name="idno" title="Identification Number"><text size="30" maxlength="60"/></field>
         <field name="phoneNo" title="Phone Number"><text size="30" maxlength="60"/></field>
+        <field name="percentageOfShares" title="Shares Percentage"><text size="30" maxlength="60"/></field>
        <!--  <field name="emailAddress" title="Email Address"><text size="30" maxlength="60"/></field>
         <field name="postalAddress" title="Postal Address"><text size="30" maxlength="60"/></field>
         <field name="homeAddress" title="Residential Address"><text size="30" maxlength="60"/></field> -->
@@ -1453,9 +1454,9 @@
         <field name="partyId" title="Employee" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
         	<lookup target-form-name="LookupEmployee"/>
         </field>
-        <field name="separationTypeId" title="Separation Type" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+        <field name="separationTypesId" title="Separation Type" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
         	<drop-down allow-empty="true">
-        		<entity-options description="${name}" entity-name="SeparationType" key-field-name="separationTypeId"></entity-options>
+        		<entity-options description="${separationName}" entity-name="SeparationTypes" key-field-name="separationTypesId"></entity-options>
         	</drop-down>
         </field>
         <field name="reason" title="Reason For Separation" widget-style="Type The Reason" ><textarea/></field>
@@ -1478,29 +1479,36 @@
         <field name="partyId" title="Employee">
         	<display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName} (${employeeNumber})"></display-entity>
         </field>
-        <field name="separationTypeId" title="Separation Type">
+        <field name="separationTypesId" title="Separation Type">
            <drop-down>
-            <entity-options description="${name}" entity-name="SeparationType"></entity-options>
+            <entity-options description="${separationName}" entity-name="SeparationTypes"></entity-options>
         	<!-- <display-entity entity-name="SeparationType" key-field-name="separationTypeId" description="${name}"></display-entity> -->
            </drop-down>
         </field>
         <field name="reason" title="Reason For Separation"><text/></field>
         <field name="effectiveDate" title="Effective Date"><date-time type="date"/></field>
         <field name="status" title="Status"><display /></field>
-        <field name="updateLink" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="updateLink" title="Update" widget-style="smallSubmit" use-when="${(status=='Not Separated') &amp;&amp; (processStatus =='NOT PROCESSED') }"><submit button-type="button"/></field>
         
       <!--  <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
            <hyperlink target="deleteSeparationApplication" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete record?">
                <parameter param-name="separationApplicationId"/>
            </hyperlink>
        </field> -->
-       <field name="separateEmployee" title="Separate Employee" widget-style="buttontext" use-when="${status=='Not Separated'}">
+       <field name="processStatus" title="Process State"><display></display></field>
+       <field name="processSeparation" title="Process Separation" widget-style="buttontext" use-when="${(status=='Not Separated') &amp;&amp; (processStatus =='NOT PROCESSED') }">
+       <hyperlink target="separationApplicationProcessing" also-hidden="false" description="Process Separation">
+       <parameter param-name="separationApplicationId"/>
+       </hyperlink>
+       </field>
+       
+      <!--  <field name="separateEmployee" title="Separate Employee" widget-style="buttontext" use-when="${status=='Not Separated'}">
            <hyperlink target="separateEmployee" description="Separate Employee" also-hidden="false" request-confirmation="true" confirmation-message="Are you sure of separating this staff?">
                <parameter param-name="partyId"/>
            </hyperlink>
-       </field>
+       </field> -->
        
-        <field name="cancelSeparation" title="Cancel Separation" widget-style="buttontext" use-when="${status=='Not Separated'}">
+        <field name="cancelSeparation" title="Cancel Separation" widget-style="buttontext" use-when="${(status=='Not Separated') &amp;&amp; (processStatus =='NOT PROCESSED') }">
            <hyperlink target="calcelSeparation" description="Calcel Separation" also-hidden="false" request-confirmation="true" confirmation-message="Are you sure cancelling Separation of this staff?">
                <parameter param-name="separationApplicationId"/>
            </hyperlink>
@@ -1632,6 +1640,207 @@
 		 <field name="submitButton" title="Save Changes"><submit button-type="button"/></field>
 	</form>
     
+     <form name="addLostItems" type="single" target="createEmployeeLostItems"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="lostItemId"><hidden/></field>
+        <field name="partyId" title="Employee" required-field="true"><lookup target-form-name="LookupEmployee"></lookup></field>
+       <field name="itemName" required-field="true"><text/></field>
+        <field name="itemDescription" required-field="true"><text/></field>
+        <field name="amountOfItem" required-field="true"><text></text></field>
+        <field name="date" required-field="true"><date-time type="date"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit" ><submit button-type="button"/></field>
+   </form>
+    
+     <form name="listEmployeeLostItems" target="updateEmployeeLostItems" title="" list-name="listIt" type="list" paginate-target="employeeLostItems"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        <entity-condition entity-name="EmployeeLostItems"></entity-condition>
+        </actions>
+        <field name="lostItemId"><hidden/></field>
+        <field name="partyId" title="Employee"><display-entity entity-name="Person" description="${firstName} ${lastName}"></display-entity></field>
+        <field name="itemName" title="Lost Item"><display/></field>
+        <field name="itemDescription"><display/></field>
+        <field name="amountOfItem" title="Amount of An Item"><display></display></field>
+        <field name="date" title="Lost Date"><display></display></field>
+        <field name="updateButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+        <hyperlink target="deleteEmployeeLostItems" description="${uiLabelMap.CommonDelete}"  also-hidden="false" request-confirmation="true" confirmation-message="Do you want to Delete?">
+        <parameter param-name="lostItemId"/>
+        </hyperlink>
+        </field>
+    </form>
+    
+    <!-- Separation Application Types (ADD) -->
+    
+    <form name="separationApplicationProcessing" target="" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" paginate-target="separationApplicationTypes"
+       odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        <entity-condition entity-name="SeparationDetail">
+       
+        </entity-condition>
+        </actions>
+    <field name="separationDetailId"><hidden/></field>
+    <field name="separationApplicationId"><hidden/></field>
+    <field name="partyId"><display-entity entity-name="Person" description="${firstName}  ${lastName}"></display-entity></field>
+    <field name="separationTypesId"><display-entity entity-name="SeparationTypes" description="${separationName}"></display-entity></field>
+    
+    <field name="salary"><display/></field>
+    <field name="leaveAllowance"><display></display></field>
+     <field name="goldenHandShake"><display></display></field>
+    <field name="transportAllowance"><display></display></field>
+    <field name="servicePay"><display></display></field>
+    <field name="total"><display></display></field>
+    <field name="PAYE"><display></display></field>
+    <field name="lienOfNotice"><display></display></field>
+    <field name="staffLoans"><display></display></field>
+    <field name="lostItemAmount"><display></display></field>
+    <field name="noticePeriod"><display></display></field>
+    <field name="dayLeftSaccoActivities"><display></display></field>
+    <field name="amountPayableToChai"><display></display></field>
+    <field name="status" title="Process Status"><display></display></field>
+    <field name="forwardStatus"><display></display></field>
+    <field name="separateEmployee" title="Separate Employee" widget-style="buttontext" use-when="${status=='Not Separated'}">
+           <hyperlink target="separateEmployee" description="Separate Employee" also-hidden="false" request-confirmation="true" confirmation-message="Are you sure of separating this staff?">
+               <parameter param-name="partyId"/>
+           </hyperlink> 
+       </field> 
+<!--     <field name="undoLink" title="Undo" widget-style="smallSubmit">
+    <hyperlink target="undoLink" also-hidden="false" description="Undo Process" request-confirmation="true" confirmation-message="Do you want to Undo?">
+    <parameter param-name="separationDetailId"/>
+    </hyperlink>
+    </field>   -->
+    <field name="submitButton" title="Forward" widget-style="smallSubmit" use-when="${forwardStatus=='NOT FORWARDED'}"><submit button-type="button"/></field>
+   
+    <field name="printButton" title="Print" widget-style="buttontext">
+    <hyperlink target="printSeparationDetail" also-hidden="false" description="Print Detail">
+    <parameter param-name="separationDetailId"/>
+    </hyperlink>
+    </field>
+    </form>
+    
+    <form name="separationApplicationTypes" target="createseparationApplicationTypes" type="single" header-row-style="header-row" default-table-style="basic-table">
+     <field name="separationTypesId"><hidden/></field>
+     <field name="separationName" required-field="true"><text/></field>
+     <field name="noticePeriod"  title="Notice Period(Days)" tooltip="Numeric Only" required-field="true"><text/></field>
+     <field name="goldenHandShake" tooltip="Numeric Only"><text/></field>
+     <field name="transportAllowance" tooltip="Numeric Only"><text/></field>
+     <field name="servicePay" tooltip="YES if Requires service Pay">
+     <drop-down allow-empty="true">
+     <option key="YES" description="YES"/>
+     <option key="NO" description="NO"/>
+     </drop-down></field>
+     <field name="yearsWorked" title="Years Multiple" tooltip="Numeric Only if Service Pay is YES else 0" ><text default-value="0"/></field>
+     <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <!--Separation Application types Display  -->
+     <form name="listSeparationApplicationTypes" target="updateSeparationApplicationTypes" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" paginate-target="separationApplicationTypes"
+       odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        <entity-condition entity-name="SeparationTypes"></entity-condition>
+        </actions>
+    <field name="separationTypesId"><hidden/></field>
+    <field name="separationName"><text/></field>
+    <field name="noticePeriod"><text/></field>
+    <field name="goldenHandShake"><text/></field>
+    <field name="transportAllowance" title="Transport Allowance"><text/></field>
+    <field name="servicePay" title="Service Pay"><drop-down>
+        <option key="YES" description="YES"/>
+        <option key="NO" description="NO"/>
+    </drop-down></field>
+    <field name="yearsWorked" title="Years(Multiple)"><text/></field>
+    <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>  
+    <field name="deleteSeparationApplicationTypes" title="Delete" widget-style="buttontext">
+    <hyperlink target="deleteSeparationApplicationTypes" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="false" confirmation-message="DO you want to Delete Record?">
+    <parameter param-name="separationTypesId"/>
+    </hyperlink>
+    </field> 
+    
+    </form>
+    
+    
+    
+    
+    
+    
+    <form name="EmmergencyContacts" type="single" target="createStaffEmmergencyContacts"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="emmergencyContactContext">
+        <actions>
+        	<entity-condition entity-name="Person" list="personList"></entity-condition>
+        	<set field="partyId" from-field="partyId"/>
+
+        	<entity-condition entity-name="FamilyRelations" list="relationshipList"></entity-condition>
+        	<set field="familyRelationsId" from-field="familyRelationsId"/>
+
+        	<entity-condition entity-name="PartyIdentificationType" list="partyIDList"></entity-condition>
+        	<!-- <set field="partyIdentificationTypeId" from-field="partyIdentificationTypeId"/> -->
+        	
+        	<entity-condition entity-name="Geo" list="countryGeoList"></entity-condition>
+        	<set field="geoId" from-field="geoId"/>
+       
+        </actions>        
+        
+        <field name="emmergencyContactId"><hidden/></field>
+        
+         <field name="partyId"><hidden value="${partyId}"/></field>
+        <field name="fullname" title="Emmergency Contact Name"><text size="30" maxlength="60"/></field>
+        <field name="familyRelationsId" title="Relationship">        	
+       	 <drop-down allow-empty="true">
+       	 	<list-options list-name="relationshipList" key-name="familyRelationsId" description="${relationship}"/>
+       	 </drop-down>
+        </field>
+        <field name="gender" title="Gender">
+        <drop-down allow-empty="false"> 
+        	<option key="M" description="Male"/>
+        	<option key="F" description="Female"/>
+        </drop-down>
+        </field>
+        <field name="dob" title="Date of Birth"><date-time type="date"></date-time></field>
+        <field name="idno" title="ID Number"><text size="30" maxlength="60"/></field>
+        <field name="phoneNo" title="Mobile Phone Number"><text size="30" maxlength="60"/></field>
+        <field name="emailAddress" title="Email Address"><text size="30" maxlength="60"/></field>
+        <field name="postalAddress" title="Postal Address"><text size="30" maxlength="60"/></field>
+        <field name="homeAddress" title="Residential Address"><text size="30" maxlength="60"/></field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        </form>
+        
+        <form name="listEmmergencyContacts" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateStaffEmmergencyContacts" paginate-target="emmergencyContacts"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="EmmergencyContacts"> 
+            <condition-expr field-name="partyId" from-field="partyId"/>
+                <order-by field-name="emmergencyContactId"/>
+            </entity-condition>
+        	<entity-condition entity-name="FamilyRelations" list="relationshipList"></entity-condition>
+        	<entity-condition entity-name="PartyIdentificationType" list="partyIDList"></entity-condition>
+        	<entity-condition entity-name="Geo" list="countryGeoList"></entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateStaffEmmergencyContacts"/>
+        
+		<field name="emmergencyContactId"><hidden/></field>
+		
+        <field name="fullname" title="Full Name"><text size="30" maxlength="60"/></field>
+        <field name="familyRelationsId" title="Relationship">        	
+       	 <drop-down allow-empty="false">
+       	 	<list-options list-name="relationshipList" key-name="familyRelationsId" description="${relationship}"/>
+       	 </drop-down>
+        </field>
+        <field name="gender" title="Gender">
+        <drop-down allow-empty="false"> 
+        	<option key="M" description="Male"/>
+        	<option key="F" description="Female"/>
+        </drop-down>
+        </field> 
+        <field name="idno" title="Identification Number"><text size="30" maxlength="60"/></field>
+        <field name="phoneNo" title="Phone Number"><text size="30" maxlength="60"/></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteStaffEmmergencyContacts" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete ${fullname} from EmmercyContatcs?">
+                <parameter param-name="emmergencyContactId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+    </form>
     
     
 </forms>

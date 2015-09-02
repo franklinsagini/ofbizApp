@@ -11,7 +11,7 @@ if (branchId && departmentId) {
     context.branchName = branch.groupName
      
      department = delegator.findOne('department',['departmentId': parameters.departmentId], false)
-     context.deptName=department.departmentName
+     context.deptName = department.departmentName
      
     staff.eachWithIndex { staffItem, index ->
     countrr=countrr + 1

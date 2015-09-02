@@ -3244,6 +3244,14 @@
 			<redirect-parameter name="partyId" />
 		</response>
 	</request-map>
+	
+	<request-map uri="emmergencyContacts">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="emmergencyContacts"
+			save-home-view="true">
+			<redirect-parameter name="partyId" />
+		</response>
+	</request-map>
 
 	<!-- Create Dependant Details -->
 	<request-map uri="createStaffNextOfKin">
@@ -3275,6 +3283,39 @@
 		</response>
 		<response name="error" type="view" value="nextofkin" />
 	</request-map>
+
+
+
+<request-map uri="createStaffEmmergencyContacts">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createStaffEmmergencyContacts" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect" value="emmergencyContacts">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="view" value="emmergencyContacts" />
+	</request-map>
+
+	<request-map uri="updateStaffEmmergencyContacts">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateStaffEmmergencyContacts" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect" value="emmergencyContacts">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="view" value="emmergencyContacts" />
+	</request-map>
+
+	<request-map uri="deleteStaffEmmergencyContacts">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteStaffEmmergencyContacts" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect" value="emmergencyContacts">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="view" value="emmergencyContacts" />
+	</request-map>
+
 
 	<request-map uri="StaffReportOptions">
 		<security https="true" auth="true" />
@@ -4204,25 +4245,111 @@
 	
 	<request-map uri="separationApplicationProcessing">
 	<security https="true" auth="true"/>
-	 <event type="service" invoke="SeparationModule"></event>
+	 <event type="service" invoke="separationDetailCalculation"></event>
 	<response name="success" type="view" value="separationApplication"></response>
 	<response name="error" type="view" value="separationApplication"></response>
 	</request-map>
-
-<!-- 	
-	<request-map uri="separationApplicationProcessing">
+	
+	<request-map uri="separationApplicationTypes">
 	<security https="true" auth="true"/>
-	 <event type="java" path="org.ofbiz.humanres.Separation" invoke="SeparationModule"></event>
-	<response name="success" type="view" value="separationApplicationProcessing"></response>
-	<response name="error" type="view" value="separationApplicationProcessing"></response>
+	<response name="success" type="view" value="separationApplicationTypes"></response>
+	<response name="error" type="view" value="separationApplicationTypes"></response>
 	</request-map>
-	 -->
+	
+	<request-map uri="createseparationApplicationTypes">
+	<security https="true" auth="true"/>
+	<event type="service" invoke="createseparationApplicationTypes"></event>
+	<response name="success" type="view" value="separationApplicationTypes"></response>
+	<response name="error" type="view" value="separationApplicationTypes"></response>
+	</request-map>
+
+  <request-map uri="updateSeparationApplicationTypes">
+  <security https="true" auth="true"/>
+  <event type="service" invoke="updateSeparationApplicationTypes"></event>
+   <response name="success" type="view" value="separationApplicationTypes"></response>
+   <response name="error" type="view" value="separationApplicationTypes"></response>
+  </request-map>
+
+ <request-map uri="deleteSeparationApplicationTypes">
+  <security https="true" auth="true"/>
+  <event type="service" invoke="deleteSeparationApplicationTypes"></event>
+   <response name="success" type="view" value="separationApplicationTypes"></response>
+   <response name="error" type="view" value="separationApplicationTypes"></response>
+  </request-map>
+
+	
+	<request-map uri="separationApplicationList">
+		<security https="true" auth="true"/>
+		<response name="success" type="view" value="separationApplicationProcessing"></response>
+		<response name="error" type="view" value="separationApplicationProcessing"></response>
+	</request-map>
+	
 	
 	<request-map uri="monthlyLeave">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="monthlyLeavePDF" />
 	</request-map>
 	
+  <request-map uri="undoLink">
+	   <security https="true" auth="true"/>
+	   <event type="service" invoke="undoLink"></event>
+	   <response name="success" type="view" value="separationApplicationProcessing"></response>
+	   <response name="error" type="view" value="separationApplicationProcessing"></response>
+  </request-map>
+	
+   <request-map uri="selfAppraisalReportPDF">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="selfAppraisalReportPDF" />
+	</request-map>
+	
+	<request-map uri="harmonizedAppraisalReportPDF">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="harmonizedAppraisalReportPDF" />
+	</request-map>
+	
+	<request-map uri="submittedAppraisalReportPDF">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="submittedAppraisalReportPDF" />
+	</request-map>
+	
+	<request-map uri="leaveStaff">
+	<security https="true" auth="true"/>
+	<response name="success" type="view" value="leaveStaff"></response>
+	<response name="error" type="view" value="leaveStaff"></response>
+	</request-map>
+	
+	
+	<request-map uri="createLeaveStaff">
+		<security https="true" auth="true" />
+		<event type="service" path="" invoke="createLeaveStaff" />
+		<response name="success" type="request-redirect-noparam" value="leaveStaff"/>
+		<response name="error" type="request-redirect-noparam" value="leaveStaff"/>
+	</request-map>
+
+	<request-map uri="deleteLeaveStaff">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteLeaveStaff" />
+		<response name="success" type="request-redirect-noparam" value="leaveStaff"/>
+		<response name="error" type="request-redirect-noparam" value="leaveStaff" />
+	</request-map>
+	
+	<request-map uri="printSeparationDetail">
+	<security https="true" auth="true"/>
+	<response name="success" type="view" value="printSeparationDetail" />
+	<response name="error" type="view" value="printSeparationDetail" />
+	</request-map>
+	
+	<view-map name="selfAppraisalReportPDF" type="screenfop"
+		page="component://humanres/widget/ReportScreens.xml#selfAppraisalReportPDF"
+		content-type="application/pdf" encoding="none" />
+		
+    <view-map name="harmonizedAppraisalReportPDF" type="screenfop"
+		page="component://humanres/widget/ReportScreens.xml#harmonizedAppraisalReportPDF"
+		content-type="application/pdf" encoding="none" />
+		
+   <view-map name="submittedAppraisalReportPDF" type="screenfop"
+		page="component://humanres/widget/ReportScreens.xml#submittedAppraisalReportPDF"
+		content-type="application/pdf" encoding="none" />				
 	
 
 	<view-map name="staffSeparatedReportPDF" type="screenfop"
@@ -4721,7 +4848,8 @@
 		page="component://humanres/widget/EmployeeScreens.xml#NewNextOfKinDetails" />
 	<view-map name="findProbationEmployees" type="screen"
 		page="component://humanres/widget/EmployeeScreens.xml#employeesOnProbation" />
-
+    <view-map name="emmergencyContacts" type="screen"
+		page="component://humanres/widget/EmployeeScreens.xml#emmergencyContacts" />
 
 	<view-map name="station" type="screen"
 		page="component://payroll/widget/payroll/PayrollScreens.xml#NewStation" />
@@ -4916,6 +5044,9 @@
 
 	<view-map name="leaveRecord" type="screen"
 		page="component://humanres/widget/EmplLeaveScreens.xml#leaveRecord" />
+		
+	<view-map name="leaveStaff" type="screen"
+		page="component://humanres/widget/EmplLeaveScreens.xml#leaveStaff" />
 
 	<view-map name="lostItems" type="screen"
 		page="component://humanres/widget/EmployeeScreens.xml#lostItems" />
@@ -4928,11 +5059,16 @@
 		page="component://humanres/widget/ReportScreens.xml#staffBranchPDF"
 		content-type="application/pdf" encoding="none" />	
 	<view-map name="separationApplicationProcessing" type="screen"
-		page="component://humanres/widget/EmployeeScreens.xml#separationApplicationProcessing" />	
+		page="component://humanres/widget/EmployeeScreens.xml#separationApplicationList" />	
 			
 	<view-map name="monthlyLeavePDF" type="screenfop"
 		page="component://humanres/widget/ReportScreens.xml#monthlyLeavePDF"
 		content-type="application/pdf" encoding="none" />		
+	<view-map name="separationApplicationTypes" type="screen"
+		page="component://humanres/widget/EmployeeScreens.xml#SeparationApplicationTypes" />
 			
+    	<view-map name="printSeparationDetail" type="screenfop"
+		page="component://humanres/widget/ReportScreens.xml#printSeparationDetail"
+		content-type="application/pdf" encoding="none" />			
 			
 </site-conf>
