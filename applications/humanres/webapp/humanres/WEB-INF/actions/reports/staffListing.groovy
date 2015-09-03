@@ -5,7 +5,7 @@ staffTypeUpper = staffType.toUpperCase();
 
 
 if (staffType) {
-    staff = delegator.findByAnd("EmployeeRoleView", [isManagement : staffType, isSeparated : "N" ], null, false);
+    staff = delegator.findByAnd("Person", [isManagement : staffType, isSeparated : "N" ], null, false);
      
     staff.eachWithIndex { staffItem, index ->
     
@@ -16,7 +16,7 @@ if (staffType) {
    return
 }
 
-employeeList = delegator.findByAnd("EmployeeRoleView", [isSeparated : "N" ],  null, false);
+employeeList = delegator.findByAnd("Person", [isSeparated : "N" ],  null, false);
 
 
 employeeList.eachWithIndex { staffItem, index ->
