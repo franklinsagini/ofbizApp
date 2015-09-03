@@ -16,7 +16,11 @@
     	<alias entity-alias="ES" name="payrollNo" group-by="true"></alias>
     	<alias entity-alias="ES" name="employerCode" group-by="true"/> 
     	<alias entity-alias="ES" name="month" group-by="true" />
-    	<alias entity-alias="ES" name="amount" function="sum"/> 
+    	<alias entity-alias="ES" name="amount" function="sum"/>
+    	
+    	<entity-condition>
+    		<condition-expr entity-alias="ES" field-name="expectationType" operator="not-equals" value="BALANCE"/>
+    	</entity-condition>
     </view-entity>
     
     <view-entity entity-name="ExpectationReceivedSummary" package-name="org.ofbiz.remittancereports">
@@ -34,6 +38,10 @@
     	<alias entity-alias="ES" name="employerCode" group-by="true"/> 
     	<alias entity-alias="ES" name="month" group-by="true" />
     	<alias entity-alias="ES" name="amount" function="sum"/> 
+    	
+    	<entity-condition>
+    		<condition-expr entity-alias="ES" field-name="expectationType" operator="not-equals" value="BALANCE"/>
+    	</entity-condition>
     </view-entity>
     
     <view-entity entity-name="ExpectationStationTotalReceivedSummary" package-name="org.ofbiz.remittancereports">

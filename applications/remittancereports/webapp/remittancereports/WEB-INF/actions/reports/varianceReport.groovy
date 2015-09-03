@@ -41,6 +41,8 @@ context.month = month
 
 expectationList.eachWithIndex { expectItem, index ->
 	
+	
+	//if (!remitanceCode.equals(balanceRemitanceCode)){
 	expectedReceived = new ExpectReceive();
 	expectedReceived.payrollNo = expectItem.payrollNo
 	
@@ -84,6 +86,7 @@ expectationList.eachWithIndex { expectItem, index ->
 	
 	
 	varianceList << expectedReceived
+	//}
 }
 
 context.varianceList = varianceList;
