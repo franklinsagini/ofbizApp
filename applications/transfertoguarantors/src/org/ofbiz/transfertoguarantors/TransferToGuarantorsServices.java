@@ -102,6 +102,40 @@ public class TransferToGuarantorsServices {
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
+		
+		
+		//Check if the loan is already defaulted (transferred)
+		if (loanApplication == null)
+			return "Could not find the loan application, please try again .... ";
+		
+		if (loanApplication.getLong("loanStatusId") == null)
+			return "The loan application does not have status , please contact ICT to fix that ";
+		
+		if (loanApplication.getLong("loanStatusId").equals(LoanUtilities.getMemberStatusId("DEFAULTED")))
+			return "Cannot transfer a defaulted Loan, it must have already transferred";
+		
+		//Check if a loan is not disbursed
+		if (!loanApplication.getLong("loanStatusId").equals(LoanUtilities.getMemberStatusId("DISBURSED")))
+			return "We can only transfer running loans (in the DISBURSED status), please verify that this is a running loan";
+		
+		
+		//The loan must not have negative Interest, negative insurance or negative principal balance
+		BigDecimal bdInsuranceBalance = LoanRepayments.getTotalInsurancByLoanDue(loanApplication.getLong("loanApplicationId").toString());
+		bdInsuranceBalance = bdInsuranceBalance.setScale(2, RoundingMode.FLOOR);
+		if (bdInsuranceBalance.compareTo(BigDecimal.ZERO) == -1)
+			return " The loan has -VE insurance balance which will mean the insurance was over charged or loan was over paid - please resolve that , that is part of data cleanup";
+		
+		BigDecimal bdInterestBalance = LoanRepayments.getTotalInterestByLoanDue(loanApplication.getLong("loanApplicationId").toString());
+		bdInterestBalance = bdInterestBalance.setScale(2, RoundingMode.FLOOR);
+		if (bdInterestBalance.compareTo(BigDecimal.ZERO) == -1)
+			return " The loan has -VE interest balance which will mean the interest was over charged or loan was over paid - please resolve that , that is part of data cleanup";
+
+		
+		BigDecimal bdPrincipalBalance = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
+		bdPrincipalBalance = bdPrincipalBalance.setScale(2, RoundingMode.FLOOR);
+		if (bdPrincipalBalance.compareTo(BigDecimal.ZERO) == -1)
+			return " The loan has -VE loan balance which will mean the loan was over paid - please resolve that , that is part of data cleanup";
+
 		String acctgTransType = "LOAN_RECEIVABLE";
 		
 		GenericValue loanRepayment = delegator.makeValidValue("LoanRepayment", UtilMisc.toMap(
