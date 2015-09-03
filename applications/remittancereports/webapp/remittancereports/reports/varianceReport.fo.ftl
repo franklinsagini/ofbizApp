@@ -188,7 +188,16 @@ under the License.
                                </fo:block>
                             </fo:table-cell>
                             
-                                   <#assign totalExpected = totalExpected+expectedReceived.expected>
+                             
+                           <#-- >assign balanceRemitanceCode =  Static["org.ofbiz.accountholdertransactions.LoanUtilities"].getLoanBalanceRemittanceCode(loanNo)>
+                           <#assign remitanceCode = expectedReceived.remitanceCode >
+                            
+                            <#if (balanceRemitanceCode != remitanceCode) >
+                            	 
+                             
+                            </#if -->
+                              
+                            <#assign totalExpected = totalExpected+expectedReceived.expected>
                             <#assign totalReceived = totalReceived+expectedReceived.received>
                             <#assign totalVariance = totalVariance+expectedReceived.variance>
                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
