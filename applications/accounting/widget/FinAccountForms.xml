@@ -193,10 +193,31 @@ under the License.
         <field name="headerId"><hidden/></field>
         <field name="reconLineId"><hidden/></field>
         <field name="reconDate"><hidden/></field>
-        <field name="finAccountTransId"><display/></field>
+        <field name="finAccountTransId" ><hidden/></field>
+        <field name="description" title="Narration" ><display /></field>
+        <field name="finAccountTransTypeId" title="Transaction Type">
+            <display-entity entity-name="FinAccountTransType" key-field-name="finAccountTransTypeId" description="${description}"/>
+        </field>
         <field name="transactionDate"><display /></field>
-        <field name="finAccountTransTypeId" title="Type"><display /></field>
-        <field name="description" title="Details" ><display /></field>
+        <field name="amount" widget-style="tabletextright"><display /></field>
+        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
+       <field name="submitButton" use-when="&quot;CAPTURED&quot;.equals(&quot;${statusName}&quot;)" title="Reconcile Selected Transaction(s)" widget-style="smallSubmit"><submit/></field>
+       <!-- <field name="submitButton" title="Confirm Reconciliation" widget-style="smallSubmit"><submit/></field> -->
+    </form>
+
+    <form name="ListUnidentifiedUnpresented" type="multi" use-row-submit="true" title="Selected Monument"
+        list-name="bankReconLinesAndFinAccountTrans"  separate-columns="true" odd-row-style="alternate-row"
+        default-table-style="basic-table hover-bar" paginate-target="UnidentifiedUnpresented" target="reconcileBankTrans">
+
+        <field name="headerId"><hidden/></field>
+        <field name="reconLineId"><hidden/></field>
+        <field name="reconDate"><hidden/></field>
+        <field name="finAccountTransId" ><hidden/></field>
+        <field name="description" title="Narration" ><display /></field>
+        <field name="finAccountTransTypeId" title="Transaction Type">
+            <display-entity entity-name="FinAccountTransType" key-field-name="finAccountTransTypeId" description="${description}"/>
+        </field>
+        <field name="transactionDate"><display /></field>
         <field name="amount" widget-style="tabletextright"><display /></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
        <field name="submitButton" use-when="&quot;CAPTURED&quot;.equals(&quot;${statusName}&quot;)" title="Reconcile Selected Transaction(s)" widget-style="smallSubmit"><submit/></field>
@@ -209,10 +230,12 @@ under the License.
         <field name="headerId"><hidden/></field>
         <field name="reconLineId"><hidden/></field>
         <field name="reconDate"><hidden/></field>
-        <field name="finAccountTransId"><display/></field>
+        <field name="finAccountTransId" ><hidden/></field>
+        <field name="description" title="Narration" ><display /></field>
+        <field name="finAccountTransTypeId" title="Transaction Type">
+            <display-entity entity-name="FinAccountTransType" key-field-name="finAccountTransTypeId" description="${description}"/>
+        </field>
         <field name="transactionDate"><display /></field>
-        <field name="finAccountTransTypeId" title="Type"><display /></field>
-        <field name="description" title="Details" ><display /></field>
         <field name="amount" widget-style="tabletextright"><display /></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
        <field name="submitButton" use-when="&quot;CAPTURED&quot;.equals(&quot;${statusName}&quot;)" title="Return Selected Transaction(s) to Recon" widget-style="smallSubmit"><submit/></field>

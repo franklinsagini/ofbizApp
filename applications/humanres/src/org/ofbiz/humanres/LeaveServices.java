@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.sql.Array;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -1229,6 +1231,8 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		GenericValue leaveLogs = null; 
 		GenericValue ForwaedTo = null; 
 		GenericValue LeaveTypeELI = null; 
+		List<GenericValue> leaveStaffELI = null;
+	
 
 		try {
 			
@@ -1287,6 +1291,7 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 			GenericValue emailRecord_handover = null;
 			GenericValue emailRecord_applicant = null; 
 			GenericValue staff = null;
+			GenericValue leaveStaffMail = null;
 
 			try {
 				staff = delegator.findOne("Person",
@@ -1321,7 +1326,32 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 				fname2 = ForwaedTo.getString("firstName");
 				sname2 = ForwaedTo.getString("lastName");
 				String fullName2 = " "+fname2+" "+sname2;
+			
+				String leaveStaffId= null;
+				List<String> someList = new ArrayList<String>();
 				
+				try{
+		    	
+		    	leaveStaffELI= delegator.findList("LeaveStaff", EntityCondition.makeCondition("partyId", EntityOperator.NOT_EQUAL,null), null, null, null, false);
+		    	
+		    }catch(GenericEntityException e){
+		    	e.printStackTrace();
+		    }
+		    for (GenericValue genericValue : leaveStaffELI) {
+		    	leaveStaffId = genericValue.getString("partyId");
+		    	someList.add(leaveStaffId);
+		    	for(Iterator<String> i = someList.iterator(); i.hasNext();  ){
+		    		 leaveStaffMail = delegator.makeValue("StaffScheduledMail", "msgId", delegator.getNextSeqId("StaffScheduledMail"), 
+		 					"partyId", leaveStaffId,
+		 		            "subject", "NOTIFICATION : LEAVE APPROVAL ", 
+		 		            "body", "Leave application of ["+fname+" "+sname+"] Payroll:-["+payroll+"] has been Approved.Duration of leave is :"+leaveDuration+" days, It starts on :"+leaveStart+" and end on :"+leaveStop,
+		 		            "sendStatus", "NOTSEND");
+		    	 }  
+		    	
+		     	}
+		    
+		   
+					    	
 			emailRecord_handover = delegator.makeValue("StaffScheduledMail", "msgId", delegator.getNextSeqId("StaffScheduledMail"), 
 					"partyId", email_To_StaffHandedOver,
 		            "subject", "RESPONSIBILITIES HANDOVER", 
@@ -1340,6 +1370,7 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		            "action", "Approved By "+fullName2,
 		            "actionBy", user);
 			
+			toBeStored.add(leaveStaffMail);
 			toBeStored.add(leavesELI);
 			toBeStored.add(leaveLogs);
 			toBeStored.add(emailRecord_handover);

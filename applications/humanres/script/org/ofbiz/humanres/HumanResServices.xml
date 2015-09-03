@@ -4233,6 +4233,39 @@
 			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 	
+	<!--Emmergency Contacts  -->
+		<simple-method method-name="createStaffEmmergencyContacts"
+		short-description="Add Emmergency Details">
+		<make-value entity-name="EmmergencyContacts" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
+		<sequenced-id sequence-name="EmmergencyContacts" field="emmergencyContactId" />
+		<now-timestamp field="newEntity.createdDate" />
+		<set from-field="emmergencyContactId" field="newEntity.emmergencyContactId" />
+		<!-- set field="entity.loanStatus" value="DRAFT"/ -->
+		<!-- set field="productType" value="Loan"/ -->
+		<create-value value-field="newEntity" />
+		<property-to-field resource="HumanResUiLabels"
+			property="CreateSuccess" field="successMessage" />
+	</simple-method>
+	<simple-method method-name="updateStaffEmmergencyContacts"
+		short-description="Update Emmergency Contacts">
+		<entity-one entity-name="EmmergencyContacts" value-field="lookedUpValue" />
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" />
+	</simple-method>
+
+	<simple-method method-name="deleteStaffEmmergencyContacts"
+		short-description="Delete Emmergency Contacts Details">
+		<entity-one entity-name="EmmergencyContacts" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
+	</simple-method>
+	
 	 <!-- Bank Details Starts Here -->
 	<simple-method method-name="createBankDetails" short-description="Add Bank Details">
         <make-value entity-name="BankDetails" value-field="newEntity"/>
@@ -4453,7 +4486,10 @@
         <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
         <sequenced-id sequence-name="SeparationApplication" field="separationApplicationId"/>
         <now-timestamp field="newEntity.createdDate"/>
+        <now-date-to-env field="dateCreated"/>
         <set from-field="separationApplicationId" field="newEntity.separationApplicationId"/>
+        <set field="newEntity.createdDate" from-field="dateCreated"/>
+        <set field="newEntity.processStatus" value="NOT PROCESSED"/>
         <!--  set field="entity.loanStatus" value="DRAFT"/ -->
         <!-- set field="productType" value="Loan"/ -->
         <create-value value-field="newEntity"/>
@@ -4461,9 +4497,7 @@
 			property="CreateSuccess" field="successMessage" />
     </simple-method>
     <simple-method method-name="updateSeparationApplication" short-description="Update Separation Application">
-        <entity-one entity-name="SeparationApplication" value-field="lookedUpValue"/>
-        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        <store-value value-field="lookedUpValue"/>
+        
         <property-to-field resource="HumanResUiLabels"
 			property="UpdateSuccess" field="successMessage" />
     </simple-method>
@@ -4991,6 +5025,277 @@
 	<remove-value value-field="lookedUpValue"/>
 	<property-to-field resource="HumanResUiLabels" property="Record Successfully Deleted" field="successMessage"/>
 	</simple-method>
+	
+	<!--SEPARATION MODULE  -->
+	
+	<simple-method method-name="SeparationModule" short-description="Calculate And Save to The Database">
+	<make-value value-field="newEntity" entity-name="EmplSeparationProcessing"/>
+	<set-pk-fields value-field="newEntity" map="parameters"/>
+	<set-nonpk-fields value-field="newEntity" map="parameters"/>
+	<now-timestamp field="today"/>
+	
+	<entity-one value-field="FromseparationApplication" entity-name="SeparationApplication">
+	<field-map field-name="separationApplicationId" value="${newEntity.separationApplicationId}"/>
+	</entity-one>
+	
+	<entity-one value-field="personEmp" entity-name="Person">
+	<field-map field-name="partyId" value="${newEntity.partyId}"/>
+	</entity-one>
+	
+	<set field="appointmentDate" value="personEmp.appointmentdate"/>
+	
+	<set field="theCreatedDate" value="${FromseparationApplication.createdDate}"/>
+	<set field="newEntity.partyId" value="${FromseparationApplication.partyId}"/>
+	<set field="effectivedate" value="${FromseparationApplication.effectiveDate}"/>
+	
+	<set field="party" from-field="newEntity.partyId"/>
+	<set field="thecreatedDDate" from-field="theCreatedDate"/>
+	<set field="DispEffective" from-field="effectivedate"/>
+	
+	<set field="leaveBal" value="${bsh:org.ofbiz.humanres.Separation.getLeaveBalances(party)}"/>
+	<set field="leaveBalDisp" from-field="leaveBal"/>
+	
+    <set field="diffDays" value="${bsh:org.ofbiz.humanres.Separation.calculateTheCalendarDaysBetweenDates(thecreatedDDate,DispEffective)}"/>
+    <set field="DistDatsDiff"/>
+    
+    <set field="dateFormat1" value="yyyy-MM-dd"/>
+    <set field="dateFormat2" value="yyyy-MM-dd"/>
+    <set field="yearCreated" from-field="theCreatedDate" type="String"/>
+    <set field="yearseparate" from-field="effectivedate" type="String"/>
+    
+    <set field="basicSalary" value="${bsh:org.ofbiz.humanres.Separation.employeeBasicSalaryKsh(party)}"/> 
+    <set field="empLoans" value="${bsh:org.ofbiz.humanres.Separation.employeeLoans(party)}"/>
+    <set field="leaveAllowance" value="${bsh:org.ofbiz.humanres.Separation.AmountDueToLeave(diffDays,leaveBalDisp,basicSalary)}"/> 
+	<set field="newEntity.allowanceByLeave" from-field="leaveAllowance" type="String"/>
+	<set field="yearsWorkedd" value="${bsh:org.ofbiz.humanres.Separation.getNumberOfYearsBetweenWK(yearCreated,dateFormat1,yearseparate,dateFormat2)}"/>
+	
+	<log message="#######PARTY############### ${party} ############" level="info"/>
+	<log message="#######CREATED DATE######## ${thecreatedDDate} ############" level="info"/>
+	<log message="####EFFECTIVE  DATE######## ${DispEffective} ############" level="info"/>
+	<log message="####DAYS DIFFERENCE######## ${diffDays} ############" level="info"/>
+	<log message="##BASIC SALARY############# ${basicSalary} ############" level="info"/>
+	<log message="##EMPL LOANS############# ${empLoans} ############" level="info"/>
+	<log message="##LEAVE ALLOWANCE#### ${leaveAllowance} ############" level="info"/>
+	<log message="##Years Worked#### ${yearsWorkedd} ############" level="info"/>
+	
+	 <set field="lostAmount" value="${bsh:org.ofbiz.humanres.Separation.EmployeeLostItemsAmount(party)}"/>
+	<set field="totalAmount" from-field="lostAmount" /> 
+	
+
+	<log message="##############LEAVE BALANCE####### ${leaveBalDisp} ############" level="info"/>
+	
+	<log message="##############TOTAL LOST####### ${totalAmount} ############" level="info"/>
+	<sequenced-id sequence-name="EmplSeparationProcessing" field="emplSeparationProcessingId" />
+	<set field="newEntity.emplSeparationProcessingId" from="emplSeparationProcessingId"/>
+	
+	<create-value value-field="newEntity"/>
+	<property-to-field resource="HumanResUiLabels" property="Saved" field="successMessage"/>
+	
+	</simple-method>
+	
+	
+	<!-- SEPARATION DETAIL CALCULATION -->
+	
+	
+	
+	
+	<simple-method method-name="separationDetailCalculation">
+	<make-value value-field="newEntity" entity-name="SeparationDetail"/>
+	<set-pk-fields value-field="newEntity" map="parameters"/>
+	<set-nonpk-fields value-field="newEntity" map="parameters"/>
+	<now-date-to-env field="dayLeft"/> 
+	
+	<entity-one value-field="FromseparationApplication" entity-name="SeparationApplication">
+	<field-map field-name="separationApplicationId" value="${newEntity.separationApplicationId}"/>
+	</entity-one>
+	
+	<entity-one value-field="FromSeparationType" entity-name="SeparationTypes">
+	<field-map field-name="separationTypesId" value="${newEntity.separationTypesId}"/>
+	</entity-one>
+	
+	<entity-one value-field="FromTypesOfSeparation" entity-name="SeparationTypes">
+	<field-map field-name="separationTypesId" value="${newEntity.separationApplicationId}"/>
+	</entity-one>
+	
+	<entity-one value-field="person" entity-name="Person">
+	<field-map field-name="partyId" value="${newEntity.partyId}"/>
+	</entity-one>
+	<set field="appointmentDate" value="${person.appointmentdate}" />
+	
+	
+	<set field="noticePeriod" value="${FromTypesOfSeparation.noticePeriod}"/>
+	<set field="goldenHandShake" value="${FromTypesOfSeparation.goldenHandShake}"/>
+	<set field="transportAllowance" value="${FromTypesOfSeparation.transportAllowance}"/>
+	<set field="servicePay" value="${FromTypesOfSeparation.servicePay}"/>
+	<set field="yearWorkedMultiple" value="${FromTypesOfSeparation.yearsWorked}"/>
+	
+	<set field="createdDate" value="${FromseparationApplication.createdDate}"/>
+	<set field="effectiveDate" value="${FromseparationApplication.effectiveDate}"/>
+	<set field="party" value="${FromseparationApplication.partyId}"/>
+	<set field="separationTypeId" value="${FromseparationApplication.separationTypesId}"/>
+	<set field="separationApplicationId" value="${FromseparationApplication.separationApplicationId}"/>
+	
+	<set field="theCreatedDate" from-field="createdDate"/>
+	<set field="theEffectiveDate" from-field="effectiveDate"/>
+	
+	<set field="appointmentDATE" value="${bsh:org.ofbiz.humanres.Separation.getAppointmentDate(party)}"/>
+	<set field="appointmentdate" from-field="appointmentDATE" type="date"/>
+	
+	<set field="dateFormat1" value="yyyy-MM-dd"/>
+    <set field="dateFormat2" value="yyyy-MM-dd"/>
+    <set field="yearCreated" from-field="appointmentDATE" type="String"/>
+    <set field="yearseparate" from-field="effectiveDate" type="String"/>
+	
+	
+	<set field="noticeP" value="${bsh:org.ofbiz.humanres.Separation.getNoticePeriod(separationTypeId)}"/>
+	<set field="golden" value="${bsh:org.ofbiz.humanres.Separation.getGoldenHandShake(separationTypeId)}"/>
+	<set field="transportAll" value="${bsh:org.ofbiz.humanres.Separation.transportAllowance(separationTypeId)}"/>
+	<set field="noticePreiod" from-field="noticeP" type="String"/>
+	
+	<set field="daysDifference" value="${bsh:org.ofbiz.humanres.Separation.calculateTheCalendarDaysBetweenDates(theCreatedDate,theEffectiveDate)}"/>
+	<set field="leaveBalance" value="${bsh:org.ofbiz.humanres.Separation.getLeaveBalances(party)}"/>
+	<set field="employeeBasicSalary" value="${bsh:org.ofbiz.humanres.Separation.employeeBasicSalaryKsh(party)}"/>
+	<set field="employeeLoans" value="${bsh:org.ofbiz.humanres.Separation.employeeLoans(party)}"/>
+	<set field="yearsWorked" value="${bsh:org.ofbiz.humanres.Separation.getNumberOfYearsBetweenWK(yearCreated,dateFormat1,yearseparate,dateFormat2)}"/>
+    <set field="servicePaidEmpl" value="${bsh:org.ofbiz.humanres.Separation.servicePayAmount(separationTypeId,employeeBasicSalary,yearsWorked)}"/> 
+	<set field="lostAmount" value="${bsh:org.ofbiz.humanres.Separation.EmployeeLostItemsAmount(party)}"/>
+	<set field="leaveAllowance" value="${bsh:org.ofbiz.humanres.Separation.leaveAllowanceAmount(separationTypeId,daysDifference,leaveBalance,employeeBasicSalary)}"/>
+	<set field="grossTotal" value="${bsh:org.ofbiz.humanres.Separation.grossTotal(employeeBasicSalary,leaveAllowance,servicePaidEmpl,transportAll,golden)}"/>
+    <set field="payeAmt" value="${bsh:org.ofbiz.humanres.Separation.amountPAYE(grossTotal)}"/>
+    <set field="amtAfterPaye" value="${bsh:org.ofbiz.humanres.Separation.totalNetAmount(grossTotal,payeAmt)}"/> 
+    <set field="finalAmount" value="${bsh:org.ofbiz.humanres.Separation.finalTotal(amtAfterPaye,lostAmount,employeeLoans)}"/> 
+ 
+    
+    <log message="###GROSS***#####${grossTotal}" level="info"/>
+    <log message="###PAYE#####${payeAmt}" level="info"/>
+    <log message="###AFTER PAYE#####${amtAfterPaye}" level="info"/>
+     <log message="###FINAL AMOUNT #####${finalAmount}" level="info"/>
+	<log message="###SEPARATION_ID***#####${separationTypeId}" level="info"/>
+	<log message="###PARTY_ID***########${party}" level="info"/>
+	<log message="#NOTICE_PERIOD***#######${noticePreiod}" level="info"/>
+	<log message="#GOLDEN_HANDSHAKE***####${golden}" level="info"/>
+	<log message="#TRANSPORT_ALLOWANCE***#${transportAll}" level="info"/>
+	<log message="##SERVICE_PAY***########${servicePaidEmpl}" level="info"/>
+	<log message="##YEARS_WORKED***#######${yearsWorked}" level="info"/>
+	<log message="##CREATED_DATE***#######${createdDate}" level="info"/>
+	<log message="##EFFECTIVE_DATE***####${effectiveDate}" level="info"/>
+	<log message="##DAYS_DIFFERENCE**####${daysDifference}" level="info"/>
+	<log message="##LEAVE_BALANCE***####${leaveBalance}" level="info"/>
+	<log message="##LEAVE_ALLOWANCE***####${leaveAllowance}" level="info"/>
+	<log message="##EMP_SALARY***########${employeeBasicSalary}" level="info"/>
+	<log message="##EMP_LOANS***########${employeeLoans}" level="info"/>
+	<log message="##APPOINTMENT_DATE**###${appointmentDATE}" level="info"/>
+	
+	<set field="newEntity.separationApplicationId"  from-field="separationApplicationId"/>
+	<set field="newEntity.separationTypesId" from-field="separationTypeId"/>
+	<set field="newEntity.partyId" from-field="party"/>
+	<set field="newEntity.salary" from-field="employeeBasicSalary"/>
+	<set field="newEntity.leaveAllowance" from-field="leaveAllowance"/>
+	<set field="newEntity.total" from-field="grossTotal"/>
+	<!-- <set field="newEntity.lienToNotice"/> -->
+	<set field="newEntity.PAYE" from-field="payeAmt"/>
+    <set field="newEntity.staffLoans" from-field="employeeLoans"/> 
+    <set field="newEntity.lostItemAmount" from-field="lostAmount"/>
+    
+	<!-- <set field="newEntity.chaiSaccoLoans" from-field=""/> -->
+	<set field="newEntity.amountPayableToChai" from-field="finalAmount"/>
+	<set field="newEntity.goldenHandShake" from-field="golden"/>
+    <set field="newEntity.transportAllowance" from-field="transportAll"/>
+    <set field="newEntity.servicePay" from-field="servicePaidEmpl"/>
+    <set field="newEntity.noticePeriod" from-field="daysDifference" type="Long"/>
+   <!--  <set field="newEntity.appointmentDate" from="appointmentdate"/> -->
+    <set field="newEntity.dayLeftSaccoActivities" from-field="dayLeft"/> 
+    <set field="newEntity.status" value="Processed"/>
+    <set field="newEntity.forwardStatus" value="NOT FORWARDED"/>
+    	
+    <sequenced-id sequence-name="SeparationDetail" field="separationDetailId"/>
+    <set field="newEntity.separationDetailId" from-field="separationDetailId"/>
+    <create-value value-field="newEntity"/>
+    
+     <entity-one entity-name="SeparationApplication" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <set field="lookedUpValue.processStatus" value="PROCESSED"/>
+        <store-value value-field="lookedUpValue"/> 	
+    
+    <property-to-field resource="HumanResUiLabels" property="Successfully Processed" field="successMessage"/>
+    	
+	</simple-method>
+	
+	
+	
+	<simple-method method-name="undoLink">
+	 <entity-one entity-name="SeparationDetail" value-field="lookedUpValue"/>
+     <remove-value value-field="lookedUpValue"/> 	
+    <property-to-field resource="HumanResUiLabels" property="Process Successfully Undone" field="successMessage"/>
+	</simple-method>
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- Save Separation Types -->
+	
+	<simple-method method-name="createseparationApplicationTypes">
+	<make-value value-field="newEntity" entity-name="SeparationTypes"/>
+	<set-pk-fields value-field="newEntity" map="parameters"/>
+	<set-nonpk-fields value-field="newEntity" map="parameters"/>
+	<sequenced-id sequence-name="SeparationTypes" field="separationTypesId"/>
+	<set field="newEntity.separationTypesId" from="separationTypesId"/>
+	<create-value value-field="newEntity"/>
+	<property-to-field resource="HumanResUiLabels" property="Separation Type Successfully Saved" field="successMessage"/>
+	</simple-method>
+	
+	<simple-method method-name="updateSeparationApplicationTypes">
+	<entity-one value-field="lookedUpValue" entity-name="SeparationTypes"></entity-one>
+	<set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+	<store-value value-field="lookedUpValue"/>
+	<property-to-field resource="HumanResUiLabels" property="Successfully Updated" field="successMessage"/>
+	</simple-method>
+	
+	<simple-method method-name="deleteSeparationApplicationTypes">
+	<entity-one value-field="lookedUpValue" entity-name="SeparationTypes"></entity-one>
+	<remove-value value-field="lookedUpValue"/>
+	<property-to-field resource="HumanResUiLabels" property="Record Deleted" field="successMessage"/>
+	</simple-method>
+	
+	
+	
+	<simple-method method-name="createLeaveStaff" short-description="Create Leave Staff">
+		<make-value entity-name="LeaveStaff" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+		<sequenced-id sequence-name="LeaveStaff" field="staffId" />
+		<set from-field="staffId" field="newEntity.staffId" />
+
+		<entity-one value-field="bran" entity-name="Person">
+			<field-map field-name="partyId" from-field="newEntity.partyId"/>
+			</entity-one>
+
+		<set from-field="bran.branchId" field="newEntity.branchId" />
+
+	   <create-value value-field="newEntity" />
+      <property-to-field resource="HumanResUiLabels"
+	  property="CreateSuccess" field="successMessage" />
+
+			</simple-method>
+			
+			<simple-method method-name="deleteLeaveStaff"
+		short-description="Remove A Leave Staff">
+		<set field="staffId" from-field="parameters.staffId" />
+		<entity-one entity-name="LeaveStaff" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
+	</simple-method>
+	
+	
+	
+	
+	
 	</simple-methods>
+	
 	
 	

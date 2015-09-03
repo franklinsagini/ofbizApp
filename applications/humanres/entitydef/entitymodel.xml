@@ -2018,6 +2018,7 @@ under the License.
         <field name="postalAddress" type="name" enable-audit-log="true"></field>
         <field name="homeAddress" type="name" enable-audit-log="true"></field>
         <field name="geoId" type="id" enable-audit-log="true"></field>
+        <field name="percentageOfShares" type="id" enable-audit-log="true"></field>
         <prim-key field="staffnokId"/>
         <relation type="one" fk-name="nok_identification" rel-entity-name="PartyIdentificationType">
             <key-map field-name="partyIdentificationTypeId"/>
@@ -2047,14 +2048,16 @@ under the License.
         <entity entity-name="SeparationApplication" package-name="org.ofbiz.humanres.employment" title="Separation Application">
         <field name="separationApplicationId" type="id-ne" enable-audit-log="true"><description>primary sequenced ID</description></field>
         <field name="partyId" type="id" enable-audit-log="true"></field>
-        <field name="separationTypeId" type="id" enable-audit-log="true"></field>
+        <field name="separationTypesId" type="id" enable-audit-log="true"></field>
         <field name="effectiveDate" type="id" enable-audit-log="true"></field>
         <field name="reason" type="description" enable-audit-log="true"></field>
         <field name="separated" type="indicator" enable-audit-log="true"></field>
         <field name="status" type="name" enable-audit-log="true"></field>
+        <field name="processStatus" type="id-ne"></field>
+        <field name="createdDate" type="date" enable-audit-log="true"></field>
         <prim-key field="separationApplicationId"/>
-         <relation type="one" fk-name="SEP_TYPE" rel-entity-name="SeparationType">
-            <key-map field-name="separationTypeId"/>
+         <relation type="one" fk-name="SEP_TYPE" rel-entity-name="SeparationTypes">
+            <key-map field-name="separationTypesId"/>
         </relation>
         </entity>
 
@@ -2426,7 +2429,100 @@ under the License.
        <prim-key field="leaveWorkFlowStaffMappingId"/>
     </entity>
 	
-	
+	<entity entity-name="EmployeeLostItems" package-name="org.ofbiz.humanres.employment" title="Entity to save Employee Lost Items And Charges">
+	<field name="lostItemId" type="id-ne" enable-audit-log="true"></field>
+	<field name="partyId" type="id-ne" enable-audit-log="true"></field>
+	<field name="itemName" type="name" enable-audit-log="true"></field>
+	<field name="itemDescription" type="description" enable-audit-log="true"></field>
+	<field name="amountOfItem" type="currency-amount" enable-audit-log="true"></field>
+	<field name="date" type="date" enable-audit-log="true"></field>
+	<prim-key field="lostItemId"/>
+	</entity>
+    
+    <entity entity-name="EmplSeparationProcessing" package-name="org.ofbiz.humanres.employment">
+    <field name="emplSeparationProcessingId" type="id-ne" enable-audit-log="true"><description>primary sequenced ID</description></field>
+    <field name="separationApplicationId" type="id-ne"></field>
+    <field name="partyId" type="id-ne" enable-audit-log="true"></field>
+    <field name="allowanceByLeave" type="id-ne" enable-audit-log="true"></field>
+    <field name="totalAmountLost" type="id-ne" enable-audit-log="true"></field>
+    <field name="totalPaid" type="id-ne" enable-audit-log="true"></field>
+    <prim-key field="emplSeparationProcessingId"/>
+    </entity>
+    
+    <entity entity-name="SeparationTypes" package-name="org.ofbiz.humanres.employment">
+    <field name="separationTypesId" type="id-ne"></field>
+    <field name="separationName" type="description"></field>
+    <field name="noticePeriod" type="numeric"></field>
+    <field name="goldenHandShake" type="currency-amount"></field>
+    <field name="transportAllowance" type="currency-amount"></field>
+    <field name="servicePay" type="name"></field>
+    <field name="yearsWorked" type="numeric"></field>
+    <prim-key field="separationTypesId"/>
+    </entity>
+    
+    <entity entity-name="SeparationDetail" package-name="org.ofbiz.humanres.employment">
+    <field name="separationDetailId" type="id-ne"></field>
+    <field name="separationApplicationId" type="id-ne"></field>
+    <field name="separationTypesId" type="id-ne"></field>
+    <field name="partyId" type="id-ne"></field>
+    <field name="salary" type="currency-amount"></field>
+    <field name="leaveAllowance" type="currency-amount"></field>
+    <field name="total" type="currency-amount"></field>
+    <field name="lienOfNotice" type="currency-amount"></field> 
+    <field name="PAYE" type="currency-amount"></field>
+    <field name="chaiSaccoLoans" type="currency-amount"></field>
+    <field name="staffLoans" type="currency-amount"></field>
+    <field name="lostItemAmount" type="currency-amount"></field>
+    <field name="goldenHandShake" type="currency-amount"></field>
+    <field name="transportAllowance" type="currency-amount"></field>
+    <field name="servicePay" type="currency-amount"></field>
+    <field name="noticePeriod" type="numeric"></field>
+    <field name="appointmentDate" type="date"></field>
+    <field name="dayLeftSaccoActivities" type="date"></field>
+    <field name="amountPayableToChai" type="currency-amount"></field>
+    <field name="status" type="id-ne"></field> 
+    <field name="forwardStatus" type="id-ne"></field>
+    <prim-key field="separationDetailId"/>
+    </entity>
+    
+     <entity entity-name="LeaveStaff" package-name="org.ofbiz.humanres"
+		title="Leave Staff">
+		<field name="staffId" type="id-ne" enable-audit-log="true"></field>
+		<field name="partyId" type="name" enable-audit-log="true"></field>
+		<field name="branchId" type="name" enable-audit-log="true"></field>
+		<prim-key field="staffId"/>
+	</entity>
+    
+    
+     <entity entity-name="EmmergencyContacts" package-name="org.ofbiz.humanres.employment" title="Emmergency Contacts">
+        <field name="emmergencyContactId" type="id-ne" enable-audit-log="true"><description>primary sequenced ID</description></field>
+        <field name="partyId" type="id" enable-audit-log="true"></field>
+        <field name="familyRelationsId" type="id" enable-audit-log="true"></field>
+        <field name="partyIdentificationTypeId" type="id" enable-audit-log="true"></field>
+        <field name="fullname" type="name" enable-audit-log="true"></field>
+        <field name="gender" type="name" enable-audit-log="true"></field>
+        <field name="idno" type="name" enable-audit-log="true"></field>
+        <field name="dob" type="date" enable-audit-log="true"></field>
+        <field name="phoneNo" type="name" enable-audit-log="true"></field>
+        <field name="emailAddress" type="name" enable-audit-log="true"></field>
+        <field name="postalAddress" type="name" enable-audit-log="true"></field>
+        <field name="homeAddress" type="name" enable-audit-log="true"></field>
+        <field name="geoId" type="id" enable-audit-log="true"></field>
+        
+        <prim-key field="emmergencyContactId"/>
+        <relation type="one" fk-name="nok_identification" rel-entity-name="PartyIdentificationType">
+            <key-map field-name="partyIdentificationTypeId"/>
+        </relation>
+        <relation type="one" fk-name="nok_relationship" rel-entity-name="FamilyRelations">
+            <key-map field-name="familyRelationsId"/>
+        </relation>
+        <relation type="one" fk-name="nok_party" rel-entity-name="Party">
+            <key-map field-name="partyId"/>
+        </relation>
+        <relation type="one" fk-name="POST_ADDR_CGEO" title="Country" rel-entity-name="Geo">
+        <key-map field-name="geoId"/>
+      </relation>
+        </entity>
     
     
 </entitymodel>

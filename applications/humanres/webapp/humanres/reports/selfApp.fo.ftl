@@ -24,7 +24,7 @@ under the License.
         CHAI SACCO
     </fo:block>
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
-       Staff On Leave/Off Duty  [${fromToDate}] ---> [${thruToDate}] 
+      ${quarterSearchU}  LIST OF STAFF WHO HAVE SUBMITTED THEIR SELF APPRAISAL AS AT     ${now }
        <fo:block> <hr/> </fo:block>
     </fo:block>
     <fo:block><fo:leader/></fo:block>
@@ -33,21 +33,20 @@ under the License.
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
-            <fo:table-column column-width="20pt"/>
-            <fo:table-column column-width="50pt"/>
-            <fo:table-column column-width="80pt"/>
+           <fo:table-column column-width="30pt"/>
+            <fo:table-column column-width="60pt"/>
+            <fo:table-column column-width="70pt"/>
             <fo:table-column column-width="70pt"/>
             <fo:table-column column-width="100pt"/>
             <fo:table-column column-width="70pt"/>
-            <fo:table-column column-width="50pt"/>
-            <fo:table-column column-width="50pt"/>
-            <fo:table-column column-width="50pt"/>
-
+            <fo:table-column column-width="90pt"/>
+            <fo:table-column column-width="100pt"/>
+          
             
             
             <fo:table-header>
-                <fo:table-row font-weight="bold">
-                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+              <fo:table-row font-weight="bold">
+                   <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="left">S/No.</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
@@ -63,55 +62,60 @@ under the License.
                      <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="left">Department</fo:block>
                     </fo:table-cell>
-  
-                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Type</fo:block>
-                    </fo:table-cell>
-                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">No. of days Taken</fo:block>
-                    </fo:table-cell>
-                    
                      <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Start Date</fo:block>
+                        <fo:block text-align="left">Designation</fo:block>
                     </fo:table-cell>
-                    
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">End Date</fo:block>
+                        <fo:block text-align="left">Appraisser Name</fo:block>
                     </fo:table-cell>
-                    
-                    
-                    
-                  
                     
                 </fo:table-row>
             </fo:table-header>
             <fo:table-body>
                      
-                     <#assign count=0>
+                                  
+                  <#assign count=0>
                   <#list activities as activity>
-                    <#if activity.partyId?has_content>
+                  <#if activity.partyId?has_content>
                         <#assign staff = delegator.findOne("Person", {"partyId" : activity.partyId}, false)/>   
                         <#assign staffBranch = staff.branchId/>
                         <#assign staffDept=staff.departmentId/>
                         <#assign staffposition= staff.emplPositionTypeId/>
+                              <#if staffDept?has_content>
+                                <#assign deptStaff = delegator.findOne("department", {"departmentId" : staffDept}, false)/>
+                                   <#else>
+                               </#if>
+                        
+                               <#if staffBranch?has_content>
+                                     <#assign branch = delegator.findOne("PartyGroup", {"partyId" : staffBranch}, false)/>
+                                   <#else>
+                               </#if>
+                               
+                               <#if staffposition?has_content>
+                                      <#assign postStaff = delegator.findOne("EmplPositionType", {"emplPositionTypeId" : staffposition}, false)/>
+                                   <#else>
+                               </#if>
+                               
+                               <#if staffBranch?has_content>
+                                     <#assign branch = delegator.findOne("PartyGroup", {"partyId" : staffBranch}, false)/>
+                                   <#else>
+                               </#if>
+                    </#if>
+                    
+                    <#if activity.hod?has_content>
+                        <#assign staffAppraisser = delegator.findOne("Person", {"partyId" : activity.hod}, false)/>   
+                    </#if>
+                    
+                    <#if activity.time?has_content>
+                        <#assign timeUpdate = delegator.findOne("PerfPartyReview", {"partyId" : activity.partyId}, false)/>  
+                             <#if timeUpdate?has_content>
+                                    <#assign revId = timeUpdate.reviewId/>
+                                    <#assign timeUpd = delegator.findOne("PerfPartyReview", {"reviewId" : revId}, false)/>
+                              <#else>
+                               </#if>
                     </#if>
                     
                     
-                     <#if activity.partyId?has_content>
-                        <#assign branch = delegator.findOne("PartyGroup", {"partyId" : staffBranch}, false)/>
-                    </#if>
-                     <#if activity.partyId?has_content>
-                        <#assign deptStaff = delegator.findOne("department", {"departmentId" : staffDept}, false)/>
-                    </#if>
-                     <#if activity.partyId?has_content>
-                        <#assign postStaff = delegator.findOne("EmplPositionType", {"emplPositionTypeId" : staffposition}, false)/>
-                    </#if>
-                    
-                    
-                    
-                     <#if activity.leaveTypeId?has_content>
-                        <#assign leaveType = delegator.findOne("EmplLeaveType", {"leaveTypeId" : activity.leaveTypeId}, false)/>
-                    </#if>
                      <fo:table-row>
                      <#assign count = count + 1>
                       <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
@@ -126,7 +130,7 @@ under the License.
                         </fo:table-cell>
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <#if staff?has_content>
-                                <fo:block>${staff.firstName?if_exists} ${staff.lastName?if_exists}</fo:block>
+                                <fo:block>${staff.firstName? if_exists} ${staff.lastName?if_exists}</fo:block>
                             <#else>
                                 <fo:block>Not Defined</fo:block>
                             </#if>
@@ -136,28 +140,29 @@ under the License.
                             <fo:block>${branch.groupName?if_exists}</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                        <#if deptStaff?has_content >
                             <fo:block>${deptStaff.departmentName?if_exists}</fo:block>
+                         <#else>
+                            <fo:block></fo:block>
+                          </#if>
+                        </fo:table-cell>
+                        
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <#if postStaff?has_content>
+                                <fo:block>${postStaff.emplPositionType? if_exists}</fo:block>
+                            <#else>
+                                <fo:block>  </fo:block>
+                            </#if>
                         </fo:table-cell>
                         
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <#if leaveType?has_content>
-                                <fo:block>${leaveType.description?if_exists}</fo:block>
+                            <#if staffAppraisser?has_content>
+                                <fo:block>${staffAppraisser.firstName?if_exists}  ${staffAppraisser.lastName?if_exists}</fo:block>
                             <#else>
-                                <fo:block>Not Defined</fo:block>
+                                <fo:block>  </fo:block>
                             </#if>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.leaveDuration?if_exists}</fo:block>
-                        </fo:table-cell>
-                        
-                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.fromDate?if_exists}</fo:block>
-                        </fo:table-cell>
-                        
-                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${activity.thruDate?if_exists}</fo:block>
-                        </fo:table-cell>
-
+ 
                        
                      </fo:table-row>
                   </#list>
@@ -171,7 +176,7 @@ under the License.
     </fo:block>
   </#if>
     <#else>
-        <fo:block text-align="center">No Employees Found With that ID</fo:block>
+        <fo:block text-align="center">Nothing To Show </fo:block>
     </#if>
 </#escape>
 
