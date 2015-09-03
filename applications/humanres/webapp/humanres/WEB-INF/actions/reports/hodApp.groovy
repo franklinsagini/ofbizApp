@@ -32,7 +32,8 @@ ecl = EntityCondition.makeCondition([
                                 EntityOperator.AND);
  osisFindOptions = new EntityFindOptions();
  osisOrder = ["partyId"];	
- osisFields = ["partyId", "quarter", "stage", "hod", "lastUpdatedTxStamp"] as Set;
+ osisFields = ["partyId", "quarter", "stage", "hod"] as Set;
+ 
  osisFindOptions.setDistinct(true);
 orderPaymentPreferences = delegator.findList("PerfPartyReview", ecl, osisFields, osisOrder, osisFindOptions, false);
 context.activities = orderPaymentPreferences
