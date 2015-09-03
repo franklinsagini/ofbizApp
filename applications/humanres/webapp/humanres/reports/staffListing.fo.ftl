@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#escape x as x?xml>
-<#if staff?has_content>
+
  <#if staff?has_content>
         <#-- REPORT TITLE -->
         <fo:block font-size="18pt" font-weight="bold" text-align="center">
@@ -32,7 +32,7 @@ under the License.
         <fo:block space-after.optimum="10pt" font-size="10pt">
             <fo:table table-layout="fixed" width="100%">
                 <fo:table-column column-width="20pt"/>
-                <fo:table-column column-width="50pt"/>
+                <fo:table-column column-width="70pt"/>
                 <fo:table-column column-width="130pt"/>
                 <fo:table-column column-width="90pt"/>
                 <fo:table-column column-width="90pt"/>
@@ -82,9 +82,7 @@ under the License.
                                 <#assign deptSearch = branchPerson.departmentId/>
                                 <#assign jopPositionSearch = branchPerson.emplPositionTypeId/>
                                 <#assign payGradeSearch = branchPerson.payGradeId/>
-                                <#assign religionSearch = branchPerson.religionId/>
-                                
-                             </#if>
+                             
                              <#if brachSearch?has_content>
                                 <#assign  branchP = delegator.findOne("PartyGroup", {"partyId": brachSearch},false) />
                              </#if>
@@ -100,11 +98,7 @@ under the License.
                               <#if payGradeSearch?has_content>
                                 <#assign  gradePerson = delegator.findOne("PayGrade", {"payGradeId": payGradeSearch},false) />
                              </#if>
-                             
-                              <#if religionSearch?has_content>
-                                <#assign  religionPerson = delegator.findOne("Religion", {"religionId": religionSearch},false) />
-                             </#if>
-                            
+                          </#if>
                         <fo:table-row>
                         <#assign count = count + 1>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
@@ -136,7 +130,7 @@ under the License.
                                <#if gradePerson?has_content> 
                                 <fo:block>${gradePerson.payGradeName?if_exists}</fo:block>
                                <#else>
-                               <fo:block></fo:block>
+                               <fo:block> </fo:block>
                                 </#if>
                             </fo:table-cell>
                             
@@ -147,8 +141,8 @@ under the License.
                                 <fo:block>${employe.appointmentdate?if_exists}</fo:block>
                             </fo:table-cell>
                             
-                            
                         </fo:table-row>
+                        
                     </#list>
                 </fo:table-body>
             </fo:table>
@@ -158,11 +152,7 @@ under the License.
         <fo:block text-align="center">NO DATA FOUND</fo:block>
     </#if>
 
-
-
-
-<#else>
-         <#if employeeList?has_content>
+        <#if employeeList?has_content>
         <#-- REPORT TITLE -->
         <fo:block font-size="18pt" font-weight="bold" text-align="center">
             CHAI SACCO
@@ -176,11 +166,10 @@ under the License.
         <fo:block space-after.optimum="10pt" font-size="10pt">
             <fo:table table-layout="fixed" width="100%">
                 <fo:table-column column-width="20pt"/>
-                <fo:table-column column-width="50pt"/>
+                <fo:table-column column-width="70pt"/>
                 <fo:table-column column-width="140pt"/>
                 <fo:table-column column-width="90pt"/>
                 <fo:table-column column-width="70pt"/>
-              
                 <fo:table-column column-width="90pt"/>
                <#-- <fo:table-column column-width="60pt"/>  -->
                 <fo:table-column column-width="70pt"/>
@@ -224,7 +213,6 @@ under the License.
                                 <#assign deptSearchR = branchPersonR.departmentId/>
                                 <#assign jopPositionSearchR = branchPersonR.emplPositionTypeId/>
                                 <#assign payGradeSearchR = branchPersonR.payGradeId/>
-                                <#assign religionSearchR = branchPersonR.religionId/>
                                 
 		                             <#if brachSearchR?has_content>
 		                                 <#assign  branchPR = delegator.findOne("PartyGroup", {"partyId": brachSearchR},false) />
@@ -245,11 +233,7 @@ under the License.
 		                                <#assign  gradePersonR = delegator.findOne("PayGrade", {"payGradeId": payGradeSearchR},false) />
 		                                <#else>
 		                             </#if>
-		                             
-		                              <#if religionSearch?has_content>
-		                                <#assign  religionPersonR = delegator.findOne("Religion", {"religionId": religionSearchR},false) />
-		                                <#else>
-		                             </#if>
+		                            
                              </#if>
                              
                              
@@ -284,7 +268,7 @@ under the License.
                                <#if gradePersonR?has_content> 
                                 <fo:block>${gradePersonR.payGradeName?if_exists}</fo:block>
                                <#else>
-                               <fo:block></fo:block>
+                               <fo:block>NOT DEFINED</fo:block>
                                 </#if>
                             </fo:table-cell>
                             
@@ -305,9 +289,6 @@ under the License.
     <#else>
         <fo:block text-align="center">NO DATA FOUND</fo:block>
     </#if>
-</#if>
-
-
 
 
    
