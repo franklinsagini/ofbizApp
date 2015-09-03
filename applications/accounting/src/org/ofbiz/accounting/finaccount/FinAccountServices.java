@@ -280,6 +280,8 @@ public class FinAccountServices {
 		System.out.println("############################################## CASH BOOK BALANCE RETRIEVED: "+cashBookBalance);
 		BigDecimal totalUnpresentedCheques = BigDecimal.ZERO;
 		BigDecimal totalUncreditedBankings = BigDecimal.ZERO;
+		BigDecimal totalUnreceiptedBankings = BigDecimal.ZERO;
+		BigDecimal totalUnidentifiedDebits = BigDecimal.ZERO;
 
 		String headerId = delegator.getNextSeqId("BankReconHeader");
 
@@ -317,12 +319,32 @@ public class FinAccountServices {
 				if (transaction.getString("finAccountTransTypeId").equals("WITHDRAWAL")) {
 					System.out.println("############################# WE ARE INSIDE "+transaction.getString("finAccountTransTypeId"));
 					bankReconLines.put("isUnpresentedCheques", "Y");
+					bankReconLines.put("isUncreditedBankings", "N");
+					bankReconLines.put("isUnidentifiedDebits", "N");
+					bankReconLines.put("isUnreceiptedBankings", "N");
 					totalUnpresentedCheques = totalUnpresentedCheques.add(transaction.getBigDecimal("amount"));
 				} else if (transaction.getString("finAccountTransTypeId").equals("DEPOSIT")) {
 					System.out.println("############################# WE ARE INSIDE "+transaction.getString("finAccountTransTypeId"));
 					// get total uncredited bankings deposits
 					totalUncreditedBankings = totalUncreditedBankings.add(transaction.getBigDecimal("amount"));
 					bankReconLines.put("isUncreditedBankings", "Y");
+					bankReconLines.put("isUnidentifiedDebits", "N");
+					bankReconLines.put("isUnreceiptedBankings", "N");
+					bankReconLines.put("isUnpresentedCheques", "N");
+				} else if(transaction.getString("finAccountTransTypeId").equals("UD")){
+					System.out.println("############################# WE ARE INSIDE "+transaction.getString("finAccountTransTypeId"));
+					totalUnidentifiedDebits = totalUnidentifiedDebits.add(transaction.getBigDecimal("amount"));
+					bankReconLines.put("isUnidentifiedDebits", "Y");
+					bankReconLines.put("isUnpresentedCheques", "N");
+					bankReconLines.put("isUncreditedBankings", "N");
+					bankReconLines.put("isUnreceiptedBankings", "N");
+				}else if(transaction.getString("finAccountTransTypeId").equals("UB")){
+					System.out.println("############################# WE ARE INSIDE "+transaction.getString("finAccountTransTypeId"));
+					totalUnreceiptedBankings = totalUnreceiptedBankings.add(transaction.getBigDecimal("amount"));
+					bankReconLines.put("isUnreceiptedBankings", "Y");
+					bankReconLines.put("isUnidentifiedDebits", "N");
+					bankReconLines.put("isUnpresentedCheques", "N");
+					bankReconLines.put("isUncreditedBankings", "N");
 				}
 				
 				// save to BankReconLines
@@ -335,8 +357,6 @@ public class FinAccountServices {
 				bankReconLines.put("amount", transaction.getBigDecimal("amount"));
 				bankReconLines.put("description", transaction.getString("comments"));
 				bankReconLines.put("isReconciledItem", "N");
-				bankReconLines.put("isUnidentifiedDebits", "N");
-				bankReconLines.put("isUnreceiptedBankings", "N");
 				
 				
 				try {
