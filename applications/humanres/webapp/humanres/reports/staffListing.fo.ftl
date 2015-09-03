@@ -207,35 +207,7 @@ under the License.
                 <fo:table-body>
                 <#assign count=0>
                     <#list employeeList as employee>
-                    <#if employee.partyId?has_content>
-                                <#assign branchPersonR = delegator.findOne("Person", {"partyId": employee.partyId},false) />
-                                <#assign brachSearchR = branchPersonR.branchId/>
-                                <#assign deptSearchR = branchPersonR.departmentId/>
-                                <#assign jopPositionSearchR = branchPersonR.emplPositionTypeId/>
-                                <#assign payGradeSearchR = branchPersonR.payGradeId/>
-                                
-		                             <#if brachSearchR?has_content>
-		                                 <#assign  branchPR = delegator.findOne("PartyGroup", {"partyId": brachSearchR},false) />
-		                                 <#else>
-		                              </#if>
-		                            
-		                             <#if deptSearchR?has_content>
-		                                <#assign  deptPersonR = delegator.findOne("department", {"departmentId": deptSearchR},false) />
-		                                <#else>
-		                             </#if>
-		                             
-		                              <#if jopPositionSearchR?has_content>
-		                                <#assign  jopPersonR = delegator.findOne("EmplPositionType", {"emplPositionTypeId": jopPositionSearchR},false) />
-		                                <#else>
-		                             </#if>
-		                             
-		                              <#if payGradeSearchR?has_content>
-		                                <#assign  gradePersonR = delegator.findOne("PayGrade", {"payGradeId": payGradeSearchR},false) />
-		                                <#else>
-		                             </#if>
-		                            
-                             </#if>
-                             
+                          
                              
                             
                         <fo:table-row>
@@ -250,25 +222,28 @@ under the License.
                                 <fo:block>${employee.firstName?if_exists}  ${employee.lastName?if_exists}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <#if branchPR?has_content>
-                                <fo:block>${branchPR.groupName? if_exists}</fo:block>
+                                <#if employee.branchId?has_content>
+                                 <#assign branch = delegator.findOne("PartyGroup", {"partyId",employee.branchId },false) /> 
+                                <fo:block>${branch.groupName?if_exists}</fo:block>
                                 <#else>
                                  <fo:block>Not Defined</fo:block>
                                 </#if>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                               <#if deptPersonR?has_content> 
-                                <fo:block> ${deptPersonR.departmentName?if_exists}</fo:block>
+                               <#if employee.departmentId?has_content> 
+                                   <#assign department = delegator.findOne("department", {"departmentId",employee.departmentId },false) /> 
+                                <fo:block> ${department.departmentName?if_exists}</fo:block>
                                <#else>
                                <fo:block> </fo:block>
                                 </#if>
                             </fo:table-cell>
                             
                              <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                               <#if gradePersonR?has_content> 
-                                <fo:block>${gradePersonR.payGradeName?if_exists}</fo:block>
+                               <#if employee.payGradeId?has_content>
+                               <#assign payGrade = delegator.findOne("PayGrade", {"payGradeId",employee.payGradeId },false) /> 
+                                <fo:block>${payGrade.payGradeName?if_exists}</fo:block>
                                <#else>
-                               <fo:block>NOT DEFINED</fo:block>
+                               <fo:block></fo:block>
                                 </#if>
                             </fo:table-cell>
                             
@@ -278,7 +253,6 @@ under the License.
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>${employee.appointmentdate?if_exists}</fo:block>
                             </fo:table-cell>
-                            
                             
                         </fo:table-row>
                     </#list>
