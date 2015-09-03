@@ -1040,8 +1040,9 @@ public class OnlineRemittanceProcessingServices {
 						Long.valueOf(currentStationId.trim())),
 						
 					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("DEAD")),
+					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("WITHDRAWN")),
 					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("CLOSED"))
-
+					
 				), EntityOperator.AND);
 		
 		
@@ -1711,7 +1712,7 @@ public class OnlineRemittanceProcessingServices {
 						Long.valueOf(currentStationId.trim())),
 						//EntityCondition.makeCondition("memberStatusId", EntityOperator.EQUALS , LoanUtilities.getMemberStatusId("ACTIVE"))
 						EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("DEAD")),
-						
+						EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("WITHDRAWN")),
 						EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("CLOSED"))	
 
 				), EntityOperator.AND);
@@ -1761,7 +1762,7 @@ public class OnlineRemittanceProcessingServices {
 						Long.valueOf(currentStationId.trim())),
 						
 					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("DEAD")),
-					
+					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("WITHDRAWN")),
 					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("CLOSED"))	
 
 				), EntityOperator.AND);
@@ -2352,7 +2353,9 @@ public class OnlineRemittanceProcessingServices {
 			remitanceCode = loanProduct.getString("code") + "C";
 			remitanceDescription = loanProduct.getString("name") + " INSURANCE";
 			expectationType = "INSURANCE";
-			BigDecimal bdInsuranceDue = LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString());
+			BigDecimal bdInsuranceDue = LoanRepayments.getInsuranceOnSchedule(loanApplicationId);
+					
+					//LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString());
 			
 			if (bdInsuranceDue.compareTo(BigDecimal.ZERO) < 1)
 			{

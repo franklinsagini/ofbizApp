@@ -98,6 +98,19 @@ public class MSaccoServices {
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
+		
+		int maxSize = 10;
+		
+		if ((msaccoApplicationELI != null) && (msaccoApplicationELI.size() > 0)){
+			if (msaccoApplicationELI.size() < 10){
+				maxSize = msaccoApplicationELI.size();
+			}
+		}
+		
+		
+		if ((msaccoApplicationELI != null) && (msaccoApplicationELI.size() > 0)){
+			msaccoApplicationELI = msaccoApplicationELI.subList(0, maxSize);
+		}
 
 		// GenericValue msaccoApplication = null;
 		Application application = null;
@@ -115,7 +128,23 @@ public class MSaccoServices {
 			listApplication.add(application);
 		}
 		
-		addServiceLog("", "Query Registration", null, null);
+		for (GenericValue msaccoapp : msaccoApplicationELI) {
+			addServiceLog(msaccoapp.getString("mobilePhoneNumber"), "Query Registration", null, null);
+			
+			//sent
+			msaccoapp.set("sent", "Y");
+			
+			try {
+				delegator.createOrStore(msaccoapp);
+			} catch (GenericEntityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		addServiceLog("", "Registration Call", null, null);
+		
+		
 
 		Gson gson = new Gson();
 		String json = gson.toJson(listApplication);

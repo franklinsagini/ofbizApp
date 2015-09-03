@@ -33,6 +33,7 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.loans.AmortizationServices;
 import org.ofbiz.loans.LoanServices;
 //import org.ofbiz.loans.LoanServices;
 import org.ofbiz.loansprocessing.LoansProcessingServices;
@@ -4026,11 +4027,22 @@ public class RemittanceServices {
 			remitanceCode = loanProduct.getString("code") + "B";
 			remitanceDescription = loanProduct.getString("name") + " INTEREST";
 			expectationType = "INTEREST";
-			BigDecimal bdInterestDue = LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString());
+//			BigDecimal bdInterestDue = LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString());
+//			if (bdInterestDue.compareTo(BigDecimal.ZERO) < 1)
+//			{
+//				bdInterestDue = BigDecimal.ZERO;
+//			}
+			
+			BigDecimal bdInterestDue = LoanRepayments.getInterestOnSchedule(loanApplicationId);
+			
+			//	LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString());
+				
+				//LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString());
 			if (bdInterestDue.compareTo(BigDecimal.ZERO) < 1)
 			{
 				bdInterestDue = BigDecimal.ZERO;
 			}
+			
 			expectedPaymentSentId = delegator.getNextSeqIdLong("ExpectedPaymentSent");
 			expectedPaymentSent = delegator.makeValue("ExpectedPaymentSent",
 					UtilMisc.toMap("expectedPaymentSentId", expectedPaymentSentId, "isActive", "Y", "branchId",
@@ -4062,12 +4074,18 @@ public class RemittanceServices {
 			remitanceCode = loanProduct.getString("code") + "C";
 			remitanceDescription = loanProduct.getString("name") + " INSURANCE";
 			expectationType = "INSURANCE";
-			BigDecimal bdInsuranceDue = LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString());
+			BigDecimal bdInsuranceDue = LoanRepayments.getInsuranceOnSchedule(loanApplicationId);
+					
+					//LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString());
 			
 			if (bdInsuranceDue.compareTo(BigDecimal.ZERO) < 1)
 			{
 				bdInsuranceDue = BigDecimal.ZERO;
 			}
+			
+
+			
+			
 			expectedPaymentSentId = delegator.getNextSeqIdLong("ExpectedPaymentSent");
 			expectedPaymentSent = delegator.makeValue("ExpectedPaymentSent",
 					UtilMisc.toMap("expectedPaymentSentId", expectedPaymentSentId, "isActive", "Y", "branchId",

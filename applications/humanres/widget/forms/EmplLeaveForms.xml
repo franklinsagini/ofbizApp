@@ -333,7 +333,7 @@
 					key-field-name="leaveTypeId" entity-name="EmplLeaveType" />
 			</drop-down>
 		</field>
-		<field name="emplLeaveReasonTypeId" title="${uiLabelMap.HumanResLeaveReasonType}"><display-entity entity-name="EmplLeaveReasonType" description="${reason}" />
+		<field name="emplLeaveReasonTypeId" title="${uiLabelMap.HumanResLeaveReasonType}">
 			<drop-down allow-empty="true">
 				<entity-options description="${reason}"
 					key-field-name="emplLeaveReasonTypeId" entity-name="EmplLeaveReasonType"  />
@@ -514,9 +514,8 @@
 		<field name="thruDate" tooltip="${uiLabelMap.CommonRequired}" required-field="true">
 			<date-time type="date" />
 		</field>	
-			<field name="resumptionDate" tooltip="${uiLabelMap.CommonRequired}"><hidden>
-			<date-time type="date"/>
-			</hidden>
+		<field name="resumptionDate" tooltip="${uiLabelMap.CommonRequired}"><hidden/>
+		
 		</field>		
 		<field name="handedOverTo" tooltip="${uiLabelMap.CommonRequired}" required-field="true">
 				<drop-down allow-empty="true">
@@ -1195,7 +1194,7 @@
 			<display />
 		</field>
 		
-		<field name="ByPassApprover" title="" widget-style="smallSubmit" use-when="${(approvalStatus != 'Approved')&amp;&amp; (approvalStatus != 'Rejected')&amp;&amp; (responsibleEmployee != ${userLogin.partyId})}">
+		<field name="ByPassApprover" title="" widget-style="smallSubmit" use-when="${(approvalStatus != 'Approved') &amp;&amp; (applicationStatus !='NEW')&amp;&amp; (approvalStatus != 'Rejected')&amp;&amp; (responsibleEmployee != ${userLogin.partyId})}">
 			
 			<hyperlink target="byPassLeaveApprover" description="By Pass" also-hidden="false" request-confirmation="true" confirmation-message="Are you sure of By Passing this Staff?">
 			    <parameter param-name="leaveId" />
@@ -1270,8 +1269,56 @@
 		<field name="annualAvailableLeaveDays" title="Total Leave Balance">
 			<display />
 		</field>
-		
-		
     </form>
+	
+	
+	<form name="LeaveStaffForm" type="single"
+		target="createLeaveStaff" focus-field-name="name" header-row-style="header-row"
+		default-table-style="basic-table" default-map-name="perfReviewsDefContext">
+		<actions>
+		</actions>
+
+         <field name="staffId"><hidden /></field>
+		<field name="partyId" title="Select Staff">
+			<lookup target-form-name="LookupEmployee"></lookup>
+		</field>
+
+		<field name="submitButton" title="${uiLabelMap.CommonSave}"
+			widget-style="smallSubmit">
+			<submit button-type="button" />
+		</field>
+	</form>
+	
+	
+	<form name="listLeaveStaffForm" type="list" list-name="listIt"
+		use-row-submit="true" title="" separate-columns="true"
+		paginate-target="leaveStaff" target=""
+		default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="LeaveStaff">
+			<order-by field-name="staffId"/>
+			</entity-condition>
+		</actions>
+		<field name="staffId">
+			<hidden />
+		</field>
+		<field name="partyId" title="Staff">
+			<display-entity entity-name="Person" description="${firstName} ${lastName}"/>
+		</field>
+		<field name="branchId" title="Staff Branch">
+			<display-entity entity-name="PartyGroup" description="${groupName}" key-field-name="partyId"/>
+		</field>
+
+		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"
+			widget-style="buttontext">
+			<hyperlink target="deleteLeaveStaff" description="${uiLabelMap.CommonDelete}"
+				also-hidden="false" request-confirmation="true"
+				confirmation-message="Remove Staff?">
+				<parameter param-name="staffId" />
+			</hyperlink>
+		</field>
+
+
+	</form>
 	
 </forms>
