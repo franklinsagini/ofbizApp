@@ -240,7 +240,7 @@ def memberStatementList = []
 theDisburseLoanStatusId = 6.toLong();
 theClearedLoanStatusId = 7.toLong();
 defaultedLoanStatusId = 10030.toLong();
-attachmentReversalId = 10015.toLong();
+attachmentReversalId = 10016.toLong();
 
 allDisbursedLoansList = null;
 allClearedLoansList = null;
