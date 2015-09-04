@@ -622,14 +622,16 @@ public class TransferToGuarantorsServices {
 		addLoanReattachmentLog(LoanUtilities.getLoanStatusId("DISBURSED"), parentLoanApplicationId, userLogin, "Loan Reattached");
 		
 		
-		//Repay each guarantor loan with the the total amount 
-		for (GenericValue genericValue : attacheLoansList) {
-			reverseIndividualGuarantorLoan(genericValue.getLong("loanApplicationId"), acctgTransId, userLogin);
-		}
+
 		
 		//Return amount paid to member savings account
 		for (GenericValue genericValue : attacheLoansList) {
 			returnAmountPaidByGuarantor(genericValue.getLong("loanApplicationId"), acctgTransId, userLogin);
+		}
+		
+		//Repay each guarantor loan with the the total amount 
+		for (GenericValue genericValue : attacheLoansList) {
+			reverseIndividualGuarantorLoan(genericValue.getLong("loanApplicationId"), acctgTransId, userLogin);
 		}
 
 		
