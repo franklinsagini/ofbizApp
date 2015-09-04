@@ -240,20 +240,22 @@ def memberStatementList = []
 theDisburseLoanStatusId = 6.toLong();
 theClearedLoanStatusId = 7.toLong();
 defaultedLoanStatusId = 10030.toLong();
+attachmentReversalId = 10015.toLong();
 
 allDisbursedLoansList = null;
 allClearedLoansList = null;
 allDefaultedLoansList = null;
 allLoansList = null;
+allReversalList = null;
 //loanApplicationId
 if (((accountProductId == null) || (accountProductId.equals(""))) && ((loanApplicationId == null) || (loanApplicationId.equals("")))){
 	allDisbursedLoansList = delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: theDisburseLoanStatusId], null, false);
 	allClearedLoansList = delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: theClearedLoanStatusId], null, false);
 	allDefaultedLoansList = delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: defaultedLoanStatusId], null, false);
-	
+	allReversalList  = delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: attachmentReversalId], null, false);
 	allLoansList = allDisbursedLoansList;
 
-	allLoansList = allLoansList + allClearedLoansList + allDefaultedLoansList;
+	allLoansList = allLoansList + allClearedLoansList + allDefaultedLoansList + allReversalList;
 }
 
 if ((loanApplicationId != null) && (!loanApplicationId.equals(""))){
@@ -261,9 +263,9 @@ if ((loanApplicationId != null) && (!loanApplicationId.equals(""))){
 
 	allDisbursedLoansList = delegator.findByAnd("LoanApplication",  [partyId : lpartyId,  loanApplicationId: loanApplicationIdLong], null, false);
 	//allClearedLoansList = delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanApplicationId: loanApplicationIdLong], null, false);
-	allDefaultedLoansList = delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: defaultedLoanStatusId], null, false);
+	//allDefaultedLoansList = delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: defaultedLoanStatusId], null, false);
 	
-	allLoansList = allDisbursedLoansList + allDefaultedLoansList;
+	allLoansList = allDisbursedLoansList; // + allDefaultedLoansList;
 
 	//	allLoansList = allLoansList + allClearedLoansList;
 

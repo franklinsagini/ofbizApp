@@ -1075,7 +1075,7 @@
 
 	<!-- Find Loan Application List -->
 	<form name="findListLoanApplications" type="list" list-name="listIt"
-		paginate-target="FindLoanApplication" default-entity-name="LoanApplication"
+		paginate-target="FindLoanApplication"  target="updateLoanApplicationParent" default-entity-name="LoanApplication"
 		separate-columns="true" odd-row-style="alternate-row"
 		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 		<actions>
@@ -1177,11 +1177,13 @@
 			</display-entity -->
 			<drop-down allow-empty="true">
 				<entity-options description="${loanNo}" entity-name="GuarantorListing" key-field-name="loanApplicationId">
-					<entity-constraint name="partyId" operator="equals" value="${partyId}"/>
+					<entity-constraint name="guarantorId" operator="equals" value="${partyId}"/>
 				</entity-options>
 			</drop-down>
 		</field>
-		
+		<field name="loanApplicationId">
+			<hidden value="${loanApplicationId}"/>
+		</field>
 		<field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit 
 			button-type="button"/></field>
 	</form>

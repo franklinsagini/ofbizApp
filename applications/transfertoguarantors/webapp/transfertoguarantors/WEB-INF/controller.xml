@@ -62,6 +62,15 @@
 		<response name="error" type="view" value="viewapplicationprofile" />
 	</request-map>
 	
+	<request-map uri="reverseLoanAttachmentToDefaulterProcessing">
+		 <security https="true" auth="true" />
+             <event type="service" invoke="reverseLoanAttachmentToDefaulterProcessing" />
+             <response name="success" type="request-redirect" value="viewapplicationprofile">
+             	<redirect-parameter name="loanApplicationId"/>
+             </response>
+		<response name="error" type="view" value="viewapplicationprofile" />
+	</request-map>
+	
 	
 	<request-map uri="updateLoanApplication">
 		<security https="true" auth="true" />

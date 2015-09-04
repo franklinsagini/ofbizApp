@@ -1412,7 +1412,7 @@ public class LoanRepayments {
 		return totalInterestDue;
 	}
 
-	private static BigDecimal getTotalExpectedInterestAmount(
+	public static BigDecimal getTotalExpectedInterestAmount(
 			String loanApplicationId) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		List<GenericValue> loanExpectationELI = new ArrayList<GenericValue>();
@@ -1504,7 +1504,7 @@ public class LoanRepayments {
 		return totalInsuranceDue;
 	}
 
-	private static BigDecimal getTotalInsuranceByLoanExpected(
+	public static BigDecimal getTotalInsuranceByLoanExpected(
 			String loanApplicationId) {
 
 		BigDecimal bdTotalInsuranceExpected = BigDecimal.ZERO;

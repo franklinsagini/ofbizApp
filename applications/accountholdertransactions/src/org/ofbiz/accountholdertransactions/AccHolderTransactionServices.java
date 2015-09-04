@@ -2324,7 +2324,7 @@ public class AccHolderTransactionServices {
 	 * Adding acctgTransId to createTransaction
 	 * 
 	 * **/
-	private static void createTransaction(GenericValue loanApplication,
+	public static void createTransaction(GenericValue loanApplication,
 			String transactionType, Map<String, String> userLogin,
 			String memberAccountId, BigDecimal transactionAmount,
 			String productChargeId, String accountTransactionParentId,
@@ -2421,6 +2421,10 @@ public class AccHolderTransactionServices {
 							.equals("DEPOSITFROMREMITTANCE")))
 					|| ((transactionType != null) && (transactionType
 							.equals("OVERRECOVERY")))
+							
+					|| ((transactionType != null) && (transactionType
+							.equals("ATTACHMENTREVERSAL")))
+							
 
 					|| ((transactionType != null) && (transactionType
 							.equals("MEMBERACCOUNTJVINC")))) {
@@ -6516,7 +6520,7 @@ public class AccHolderTransactionServices {
 		return acctgTransId;
 	}
 
-	private static GenericValue createAccountTransactionParent(
+	public static GenericValue createAccountTransactionParent(
 			Long memberAccountId, Map<String, String> userLogin) {
 		GenericValue transactionParent;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
