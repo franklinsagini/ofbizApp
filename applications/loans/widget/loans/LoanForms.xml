@@ -2039,13 +2039,17 @@ under the License.
         <actions>
         	<entity-condition entity-name="LoanStatus" list="loanStatusList">
         	</entity-condition>
-        	<set field="fromStatus" value="${loanApplication.applicationStatus}"/>
+        	
+        	<entity-one value-field="loan" entity-name="LoanApplication">
+        		<field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/>
+        	</entity-one>
+        	<set field="fromStatusId" value="${loan.loanStatusId}"/>
         </actions>
         <field name="loanStatusChangeId"><hidden/></field>
         
        <field name="loanApplicationId"><hidden value="${loanApplicationId}"/></field>
         
-      <field name="fromStatus" title="From" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+      <!-- field name="fromStatus" title="From" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
         
       <field name="toStatus" title="To" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
             <drop-down allow-empty="true" current-description="">
@@ -2053,7 +2057,21 @@ under the License.
                     <entity-order-by field-name="name"/>
                 </entity-options>
             </drop-down>
+        </field -->
+        
+        <field name="fromStatusId" title="From" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+        	<display-entity entity-name="LoanStatus" description="${name}" key-field-name="loanStatusId" ></display-entity>
         </field>
+        
+      <field name="toStatusId" title="To" tooltip="${uiLabelMap.CommonRequired}" widget-style="required">
+            <drop-down allow-empty="true" current-description="">
+                <entity-options description="${name}" key-field-name="loanStatusId" entity-name="LoanStatus">
+                    <entity-order-by field-name="name"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        
+        <field name="comment" title="Comment" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><textarea/></field>
         
  		               
         <field name="change" title="Change" widget-style="buttontext" > <submit/> </field>
@@ -2064,15 +2082,24 @@ under the License.
         <actions>
         	<entity-condition entity-name="LoanStatusChange">
         		<condition-expr field-name="loanApplicationId" operator="equals" from-field="loanApplicationId"/>
+        		
+        		<order-by field-name="-createdStamp"/>
         	</entity-condition>
         </actions>
-        <auto-fields-service default-field-type="hidden" service-name="updateLoanStatusChange"/>
         <field name="loanStatusChangeId"><hidden/></field>
         
         <field name="loanApplicationId"><hidden/></field>
-		<field name="fromStatus" title="From"><display></display></field>
-		<field name="toStatus" title="To"><display></display></field>
+		  <field name="fromStatusId" title="From" >
+        	<display-entity entity-name="LoanStatus" description="${name}" key-field-name="loanStatusId" ></display-entity>
+        </field>
         
+      <field name="toStatusId" title="To" >
+            <display-entity entity-name="LoanStatus" description="${name}" key-field-name="loanStatusId" ></display-entity>
+        </field>
+        
+        <field name="comment" title="Comment">
+        	<display></display>
+        </field>
 
         <field name="changedBy" title="Changed By"><display></display></field>
         <field name="createdStamp" title="On"><display type="date-time"></display></field>
@@ -2322,7 +2349,65 @@ under the License.
         <field name="createdStamp" title="On"><display type="date-time"></display></field>
     </form>
     
-    <form name="FindLoan" type="single" target="FindLoanApplication"
+    <form name="FindLoan" type="single" target="loanapplicationslist"
+		default-entity-name="LoanApplication" default-map-name="loanApplicationCtx">
+
+		<!-- form name="FindLoanApplication" type="single" target="FindLoanApplication" 
+			default-entity-name="LoanApplication" -->
+		<field name="noConditionFind">
+			<hidden value="Y" /><!-- if this isn't there then with all fields 
+				empty no query will be done -->
+		</field>
+		<field name="loanNo" title="Loan No.">
+			<text-find />
+		</field>
+		<!-- field name="partyId" title="Member">
+			<drop-down allow-empty="true" current-description="">
+				<entity-options description="${firstName} ${middleName} ${lastName} - ${memberNumber}"
+					key-field-name="partyId" entity-name="Member">
+					
+					<entity-constraint name="memberStatusId" operator="equals" value="1"/>
+					<entity-order-by field-name="firstName" />
+				</entity-options>
+			</drop-down>
+		</field -->
+		<field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
+
+		<field name="loanProductId" title="Loan Type">
+			<drop-down allow-empty="true" current-description="">
+				<entity-options description="${name} ${code}"
+					key-field-name="loanProductId" entity-name="LoanProduct">
+					<entity-order-by field-name="name" />
+				</entity-options>
+			</drop-down>
+		</field>
+		
+		<field name="loanStatusId" title="Status">
+			<drop-down allow-empty="true">
+				<entity-options description="${name}" entity-name="LoanStatus" key-field-name="loanStatusId"></entity-options>
+			</drop-down>
+		</field>
+		<!--  field name="applicationStatus" title="Status">
+			<text-find />
+		</field -->
+		<field name="loanAmt" title="Amount">
+			<text-find></text-find>
+		</field>
+		<field name="percentInterestPerMonthAmt" title="Interest Per Month">
+			<text-find />
+		</field>
+		<field name="repaymentPeriod" title="Repayment Period">
+			<text-find />
+		</field>
+
+		<field name="searchButton" title="${uiLabelMap.CommonFind}"
+			widget-style="smallSubmit">
+			<submit button-type="button" image-location="/images/icons/magnifier.png" />
+		</field>
+	</form>
+	
+	<!-- FindLoanApplication -->
+	    <form name="FindLoanApplication" type="single" target="FindLoanApplication"
 		default-entity-name="LoanApplication" default-map-name="loanApplicationCtx">
 
 		<!-- form name="FindLoanApplication" type="single" target="FindLoanApplication" 

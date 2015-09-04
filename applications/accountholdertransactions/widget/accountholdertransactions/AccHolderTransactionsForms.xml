@@ -1637,8 +1637,8 @@ under the License.
         <field name="drawer" title="Drawer" ><display also-hidden="false"/></field>
         <field name="chequeNo" title="Cheque No" ><display also-hidden="false"/></field>
 
-        <field name="manuallyClearCheque" title="Manually Clear Cheque" >
-        	<hyperlink target="manuallyClearCheque" description="Manually Clear Cheque" also-hidden="false"  request-confirmation="true" confirmation-message="Are you sure you want to clear this Cheque Manually?" image-location="${iconsLocation}/add.png">
+        <field name="manuallyClearCheque" title="Manually Clear Cheque">
+        	<hyperlink target="manuallyClearCheque" description="Manually Clear Cheque" also-hidden="false"  >
                 <parameter param-name="accountTransactionId"/>
             </hyperlink>
         </field>
@@ -1891,7 +1891,7 @@ under the License.
         		<order-by field-name="name"/>
         	</entity-condition>
 
-        	<entity-condition entity-name="MonthStationCount" list="monthStationList"></entity-condition>
+        	<entity-condition entity-name="MonthStationReceivedCount" list="monthStationList"></entity-condition>
         </actions>
         <field name="stationAccountTransactionId"><hidden/></field>
         <field name="partyId"><hidden/></field>
@@ -2359,7 +2359,7 @@ under the License.
     	<form name="FindStation" type="single" target="expectedPaymentStations" default-entity-name="StationExpectation">
         <actions>
 
-        	<entity-condition entity-name="MonthStationCount" list="monthStationList"></entity-condition>
+        	<entity-condition entity-name="MonthStationReceivedCount" list="monthStationList"></entity-condition>
         </actions>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
@@ -2398,7 +2398,7 @@ under the License.
       <form name="FindExpectedPaymentSent" type="single" target="expectedPaymentBreakdown" default-entity-name="ExpectedPaymentSent">
         <actions>
 
-        	<entity-condition entity-name="MonthStationCount" list="monthStationList"></entity-condition>
+        	<entity-condition entity-name="MonthStationReceivedCount" list="monthStationList"></entity-condition>
         	<set field="month" from-field="parameters.month"/>
         	<set field="employerCode" from-field="parameters.employerCode"/>
         </actions>
@@ -2408,7 +2408,7 @@ under the License.
         <field name="month" title="Month">
 
         	<drop-down allow-empty="true">
-        		<entity-options description="${month}"  entity-name="MonthStationCount">
+        		<entity-options description="${month}"  entity-name="MonthStationReceivedCount">
         			<entity-order-by field-name="-month"/>
 
         		</entity-options>
@@ -2438,7 +2438,7 @@ under the License.
      <form name="FindExpectedPaymentReceived" type="single" target="receivedPaymentBreakdown" default-entity-name="ExpectedPaymentReceived">
         <actions>
 
-        	<entity-condition entity-name="MonthStationCount" list="monthStationList"></entity-condition>
+        	<entity-condition entity-name="MonthStationReceivedCount" list="monthStationList"></entity-condition>
         	<set field="month" from-field="parameters.month"/>
         	<set field="employerCode" from-field="parameters.employerCode"/>
         </actions>
@@ -2448,7 +2448,7 @@ under the License.
         <field name="month" title="Month">
 
         	<drop-down allow-empty="true">
-        		<entity-options description="${month}"  entity-name="MonthStationCount">
+        		<entity-options description="${month}"  entity-name="MonthStationReceivedCount">
         			<entity-order-by field-name="-month"/>
 
         		</entity-options>
@@ -2517,14 +2517,14 @@ under the License.
      <form name="FindStationMonth" type="single" target="missingMemberLog" default-entity-name="MissingMemberLog">
         <actions>
 
-        	<entity-condition entity-name="MonthStationCount" list="monthStationList"></entity-condition>
+        	<entity-condition entity-name="MonthStationReceivedCount" list="monthStationList"></entity-condition>
         </actions>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
 
         <field name="month" title="Month">
         	<drop-down allow-empty="true">
-        		<entity-options description="${month}"  entity-name="MonthStationCount">
+        		<entity-options description="${month}"  entity-name="MonthStationReceivedCount">
         			<entity-order-by field-name="-month"/>
         		</entity-options>
         	</drop-down>
