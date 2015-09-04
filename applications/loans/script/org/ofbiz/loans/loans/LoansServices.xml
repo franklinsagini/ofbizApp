@@ -844,7 +844,7 @@ under the License.
 			<entity-one entity-name="LoanApplication" value-field="loanApplication">
 				<field-map field-name="loanApplicationId" value="${newEntity.loanApplicationId}"></field-map>
 			</entity-one>
-			<set field="loanApplication.applicationStatus" value="${newEntity.toStatus}"></set>
+			<set field="loanApplication.loanStatusId" value="${newEntity.toStatusId}"></set>
 			<store-value value-field="loanApplication"></store-value>
 			
     </simple-method>
@@ -852,11 +852,31 @@ under the License.
     	<make-value entity-name="LoanStatusChange" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        <sequenced-id sequence-name="LoanStatusChange" field="loanStatusChangeId"/>
-        <set from-field="loanStatusChangeId" field="newEntity.loanStatusChangeId"/>
+        
+        <set field="entityName" value="LoanStatusChange"></set>
+        <set field="newEntity.loanStatusChangeId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        
+        
         <set field="newEntity.isActive" value="Y"/>
 	    <set field="newEntity.changedBy" from-field="userLogin.userLoginId"/>
         <create-value value-field="newEntity"/>
+        
+        <!-- Add Loan Status Log -->
+        <make-value entity-name="LoanStatusLog" value-field="newEntityLog"/>
+        <set-pk-fields map="parameters" value-field="newEntityLog"/>
+        <set-nonpk-fields map="parameters" value-field="newEntityLog"/>
+        
+        <set field="entityName" value="LoanStatusLog"></set>
+        <set field="newEntityLog.loanStatusLogId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        
+        
+        <set field="newEntityLog.loanStatusId" value="${newEntity.toStatusId}"/>
+        <set field="newEntityLog.comment" value="${newEntity.comment}"/>
+        
+        <set field="newEntityLog.isActive" value="Y"/>
+	    <set field="newEntityLog.createdBy" from-field="userLogin.userLoginId"/>
+	    <set field="newEntityLog.loanApplicationId" value="${newEntity.loanApplicationId}"/>
+        <create-value value-field="newEntityLog"/>
     </simple-method>
     
      <simple-method method-name="updateLoanStatusChange" short-description="Update LoanStatusChange">
