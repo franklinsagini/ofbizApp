@@ -33,13 +33,13 @@ under the License.
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
             <fo:table-column column-width="20pt"/>
-             <fo:table-column column-width="80pt"/>
+             <fo:table-column column-width="65pt"/>
+            <fo:table-column column-width="80pt"/>
             <fo:table-column column-width="100pt"/>
-            <fo:table-column column-width="40pt"/>
             <fo:table-column column-width="70pt"/>
             <fo:table-column column-width="100pt"/>
-             <fo:table-column column-width="90pt"/>
-              <fo:table-column column-width="90pt"/>
+             <fo:table-column column-width="70pt"/>
+              <fo:table-column column-width="70pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
@@ -52,7 +52,7 @@ under the License.
                         <fo:block>Staff Name</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block>Gender</fo:block>
+                        <fo:block>Designation</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block>Branch</fo:block>
@@ -88,9 +88,16 @@ under the License.
                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${dep.firstName?if_exists} ${dep.lastName?if_exists}</fo:block>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${dep.gender?if_exists}</fo:block>
-                        </fo:table-cell>
+                        
+                       <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                               <#if dep.emplPositionTypeId?has_content> 
+                                   <#assign position = delegator.findOne("EmplPositionType", {"emplPositionTypeId",dep.emplPositionTypeId },false) /> 
+                                <fo:block> ${position.emplPositionType?if_exists}</fo:block>
+                               <#else>
+                               <fo:block> </fo:block>
+                                </#if>
+                            </fo:table-cell>
+                       
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${branch.groupName?if_exists}</fo:block>
                         </fo:table-cell>
