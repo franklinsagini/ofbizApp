@@ -1,29 +1,47 @@
 
-branchId = parameters.branchId
-departmentId=parameters.departmentId
-countrr=0
-countrrr2=0
+staffType = parameters.branchId
+dept = parameters.departmentId
 
-if (branchId && departmentId) {
-    staff = delegator.findByAnd("Person", [branchId : branchId, departmentId : parameters.departmentId , isSeparated : "N" ], null, false);
-    
-    branch = delegator.findOne('PartyGroup', ['partyId':branchId], false)
-    context.branchName = branch.groupName
-     
-     department = delegator.findOne('department',['departmentId': parameters.departmentId], false)
-     context.deptName = department.departmentName
+staffTypeUpper = staffType.toUpperCase();
+
+  branchName = delegator.findOne("PartyGroup",[partyId : parameters.branchId], false);  
+  context.branchName = branchName;
+  
+ 
+if (staffType) {
+    staff = delegator.findByAnd("Person", [branchId : staffType, isSeparated : "N" ], null, false);
      
     staff.eachWithIndex { staffItem, index ->
-    countrr=countrr + 1
+      
      }
-	
+
+   context.staffTypeUpper = staffTypeUpper;
+   context.staffTypeUpper = staffTypeUpper;
    context.staff = staff;
-   context.countrr = countrr;
    return
+    
+    }
+ 
+ if (staffType && dept) {
+  employeeList = delegator.findByAnd("Person", [branchId : staffType, departmentId : dept , isSeparated : "N" ],  null, false);
+  employeeList.eachWithIndex { staffItem, index ->
+  deptN= delegator.findOne("department",[departmentId : parameters.departmentId], false);
+  deptName = deptN.departmentName
+  deptNameUpper = deptName.toUpperCase();
+  context.deptNameUpper = deptNameUpper;
+   
+     }
+     
+ context.staffTypeUpper = staffTypeUpper;
+ context.staffTypeUpper = staffTypeUpper;
+ context.employeeList = employeeList;
+
 }
 
 
 
 
 
-// if you want to have values from here on the attached FTL ensure you append them to the context
+
+
+

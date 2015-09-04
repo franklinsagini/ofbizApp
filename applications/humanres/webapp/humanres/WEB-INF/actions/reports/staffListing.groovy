@@ -3,7 +3,6 @@ staffType = parameters.isManagement
 
 staffTypeUpper = staffType.toUpperCase();
 
-
 if (staffType) {
     staff = delegator.findByAnd("Person", [isManagement : staffType, isSeparated : "N" ], null, false);
      
@@ -18,13 +17,12 @@ if (staffType) {
 
 employeeList = delegator.findByAnd("Person", [isSeparated : "N" ],  null, false);
 
-
 employeeList.eachWithIndex { staffItem, index ->
    
      }
 
  context.staffTypeUpper = staffTypeUpper;
-context.employeeList = employeeList;
+ context.employeeList = employeeList;
 
 
 
