@@ -135,6 +135,15 @@
 									</container>
 									
 									<container>
+										<label style="h3"> Payroll Number : ${member.payrollNumber} </label>
+
+									</container>
+									
+									<container>
+										<label style="h3"> Member Number : ${member.memberNumber} </label>
+
+									</container>
+									<container>
 										<label style="h3"> Loan Status : ${loanStatus.name} </label>
 
 									</container>
@@ -160,6 +169,28 @@
 										</widgets>
 									</section>
 								</screenlet>
+								
+								
+								<!-- Reverse Loan (return to the defaulter) -->
+								<screenlet>
+									<section>
+										<widgets>
+
+											<container style="button-bar">
+												<link target="reverseLoanAttachmentToDefaulterProcessing"
+													text="Reverse Loan Attachment (Return Loan to Defaulter)" style="buttontext">
+													<!-- parameter param-name="loanApplicationId"/ -->
+													<parameter param-name="loanApplicationId" from-field="loanApplicationId" />
+													<image url-mode="raw" src="${iconsLocation}/add.png" />
+												</link>
+											</container>
+
+
+
+										</widgets>
+									</section>
+								</screenlet>
+								
                         		<screenlet title="Guarantors">
                         			<include-form name="myGuaranteedLoans" location="component://transfertoguarantors/widget/TransferToGuarantorsForms.xml"/>
                         		</screenlet>
