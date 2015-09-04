@@ -32,7 +32,7 @@ under the License.
         <fo:block space-after.optimum="10pt" font-size="10pt">
             <fo:table table-layout="fixed" width="100%">
             
-                 <fo:table-column column-width="20pt"/>
+                <fo:table-column column-width="20pt"/>
                 <fo:table-column column-width="60pt"/>
                 <fo:table-column column-width="110pt"/>
                 <fo:table-column column-width="90pt"/>
