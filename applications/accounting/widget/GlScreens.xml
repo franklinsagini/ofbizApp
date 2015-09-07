@@ -473,6 +473,12 @@ under the License.
                             <widgets>
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="search-results">
+                                    <link text="Export to Excel" style="buttontext" target="RetriveTransactionEntries.csv">
+                                        <parameter param-name="fromDate"/>
+                                        <parameter param-name="thruDate"/>
+                                        <parameter param-name="glAccountId"/>
+                                        <parameter param-name="organizationPartyId"/>
+                                    </link>
                                         <include-form name="ListTransactionEntries"  location="component://accounting/widget/GlForms.xml"/>
                                     </decorator-section>
                                 </decorator-screen>
@@ -485,6 +491,26 @@ under the License.
     </screen>
 
 
+    <screen name="RetriveTransactionEntriesCSV">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Transactions Entries"/>
+                <set field="tabButtonItem" value="TransactionEntries"/>
+                <set field="labelTitleProperty" value="Transactions Entries"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
+                <set field="glAccountId" from-field="parameters.glAccountId" global="true"/>
+                <set field="thruDate" from-field="parameters.thruDate" type="Timestamp" default-value="${nowTimestamp}"/>
+                <set field="fromDate" from-field="parameters.fromDate" type="Timestamp"/>
+                <set field="isPosted" value="Y" />
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/gl/retrieveTransactions.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <include-form name="RetriveTransactionEntriesCSV" location="component://accounting/widget/GlForms.xml"/>
+                </container>
+            </widgets>
+        </section>
+    </screen>
 
 
     <screen name="CreateAcctgTransAndEntries">
