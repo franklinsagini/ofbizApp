@@ -906,8 +906,8 @@ under the License.
 
   <form name="staffListEmploymentTerms" type="single" target="employmentTermsPDF" title=""
         header-row-style="header-row" default-table-style="basic-table">
-		 <field name="employmentTerms" title="Terms Of Employment" tooltip="Select employment Type">
-            <drop-down allow-empty="false">
+		 <field name="employmentTerms" title="Terms Of Employment" tooltip="Select employment Type" required-field="true">
+            <drop-down allow-empty="true">
                 <option key="permanent" description="Permanent"/>
                 <option key="intern" description="Intern"/>
                 <option key="contract" description="Contract"/>
@@ -930,16 +930,16 @@ under the License.
         </actions>
         <field name="roleTypeIdFrom"><hidden value="INTERNAL_ORGANIZATIO"/></field>
         <field name="roleTypeIdTo"><hidden value="EMPLOYEE"/></field>       
-        <field name="branchId" title="Branch">
-            <drop-down allow-empty="false" no-current-selected-key="${userLogin.partyId}" >
+        <field name="branchId" title="Branch" required-field="true">
+            <drop-down allow-empty="true" no-current-selected-key="${userLogin.partyId}" >
                 <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
             </drop-down>
         </field>
-        <field name="departmentId" title="Department" >
+        <!-- <field name="departmentId" title="Department" >
             <drop-down allow-empty="false" >
                <entity-options description="${departmentName}" entity-name="department" key-field-name="departmentId"></entity-options>
             </drop-down>
-        </field> 
+        </field>  -->
         <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
             <submit button-type="button"/>
             

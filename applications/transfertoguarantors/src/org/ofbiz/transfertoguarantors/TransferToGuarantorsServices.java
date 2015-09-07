@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.joda.time.LocalDate;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
 import org.ofbiz.accountholdertransactions.LoanRepayments;
 import org.ofbiz.accountholdertransactions.LoanUtilities;
@@ -111,11 +112,11 @@ public class TransferToGuarantorsServices {
 		if (loanApplication.getLong("loanStatusId") == null)
 			return "The loan application does not have status , please contact ICT to fix that ";
 		
-		if (loanApplication.getLong("loanStatusId").equals(LoanUtilities.getMemberStatusId("DEFAULTED")))
+		if (loanApplication.getLong("loanStatusId").equals(LoanUtilities.getLoanStatusId("DEFAULTED")))
 			return "Cannot transfer a defaulted Loan, it must have already transferred";
 		
 		//Check if a loan is not disbursed
-		if (!loanApplication.getLong("loanStatusId").equals(LoanUtilities.getMemberStatusId("DISBURSED")))
+		if (!loanApplication.getLong("loanStatusId").equals(LoanUtilities.getLoanStatusId("DISBURSED")))
 			return "We can only transfer running loans (in the DISBURSED status), please verify that this is a running loan";
 		
 		
@@ -539,6 +540,478 @@ public class TransferToGuarantorsServices {
 		if (loanApplication == null)
 			return BigDecimal.ZERO;
 		return loanApplication.getBigDecimal("loanAmt");
+	}
+	
+	
+	//reverseLoanAttachmentToDefaulterProcessing
+	public static String reverseLoanAttachmentToDefaulterProcessing(Long loanApplicationId,
+			Map<String, String> userLogin) {
+		
+		//The loan must be defaulted first
+		String postingType;
+		String entrySequenceId;
+		GenericValue accountHolderTransactionSetup;
+		
+		String userLoginId = userLogin.get("userLoginId");
+		Long sequence = 0L;
+		GenericValue loanApplication = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		try {
+			loanApplication = delegator.findOne(
+					"LoanApplication",
+					UtilMisc.toMap("loanApplicationId",
+							Long.valueOf(loanApplicationId)), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		
+		//Check if the loan is already defaulted (transferred)
+		if (loanApplication == null)
+			return "Could not find the loan application, please try again .... ";
+		
+		if (loanApplication.getLong("loanStatusId") == null)
+			return "The loan application does not have status , please contact ICT to fix that ";
+		
+		//if (loanApplication.getLong("loanStatusId").equals(LoanUtilities.getMemberStatusId("DEFAULTED")))
+		//	return "Cannot transfer a defaulted Loan, it must have already transferred";
+		//DEFAULTED
+		//DEFAULTED
+		log.info(" Loan Status --- "+loanApplication.getLong("loanStatusId"));
+		log.info(" Defaulted status ID --- "+LoanUtilities.getLoanStatusId("DEFAULTED"));
+		//Check if a loan is not disbursed
+		if (!loanApplication.getLong("loanStatusId").equals(LoanUtilities.getLoanStatusId("DEFAULTED")))
+			return "We can only reverse DEFAULTED and attached loans, please verify that this is a defaulted loan";
+
+		Long parentLoanApplicationId = loanApplication.getLong("loanApplicationId");
+		//Get all disbursed loans whose parent is this loan
+		List<GenericValue> attacheLoansList = getAttachedLoansList(parentLoanApplicationId);
+		
+		if ((attacheLoansList == null) || (attacheLoansList.size() < 1))
+			return " The system cannot find loans associated with this Defaulted loan, you need to have them mapped to the parent loan - please contact ICT";
+			
+		
+		BigDecimal bdTotalAmountAttached = getTotalAttachedAmount(parentLoanApplicationId);
+		
+		BigDecimal bdTotalInterestChargedOnGuarantors = getTotalTotalInterestChargesOnGuarantors(parentLoanApplicationId);
+		BigDecimal bdTotalInsuranceChargedOnGuarantors = getTotalInsuranceChargedOnGuarantors(parentLoanApplicationId);
+		
+		
+		//Reset the loan Balance for the defaulted Loan
+		//Set the Loan Balance to the total loan attached
+		String acctgTransId = "";
+		
+		setNewLoanBalance(bdTotalAmountAttached, parentLoanApplicationId, userLogin, acctgTransId);
+		
+		//Set the Interest due to the total interest charged
+		setNewLoanInterest(bdTotalInterestChargedOnGuarantors, parentLoanApplicationId, userLogin, acctgTransId);
+		//set the Insurance due to the total insurance charged
+		setNewLoanInsurance(bdTotalInsuranceChargedOnGuarantors, parentLoanApplicationId, userLogin, acctgTransId);
+		
+		//Set loan status to Disbursed 
+		loanApplication.set("loanStatusId", LoanUtilities.getLoanStatusId("DISBURSED"));
+		try {
+			delegator.createOrStore(loanApplication);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//Add Log
+		addLoanReattachmentLog(LoanUtilities.getLoanStatusId("DISBURSED"), parentLoanApplicationId, userLogin, "Loan Reattached");
+		
+		
+
+		
+		//Return amount paid to member savings account
+		for (GenericValue genericValue : attacheLoansList) {
+			returnAmountPaidByGuarantor(genericValue.getLong("loanApplicationId"), acctgTransId, userLogin);
+		}
+		
+		//Repay each guarantor loan with the the total amount 
+		for (GenericValue genericValue : attacheLoansList) {
+			reverseIndividualGuarantorLoan(genericValue.getLong("loanApplicationId"), acctgTransId, userLogin);
+		}
+
+		
+		
+		return "success";
+	}
+
+	private static void returnAmountPaidByGuarantor(Long loanApplicationId,
+			String acctgTransId, Map<String, String> userLogin) {
+		//Repay each interest amount  repaid with and credit savings account with the amount
+		BigDecimal bdInterestPaid = LoanRepayments.getTotalInterestPaid(loanApplicationId.toString());
+		//Repay each insurance amount  repaid with and credit savings account with the amount
+		BigDecimal bdInsurancePaid = LoanRepayments.getTotalInsurancePaid(loanApplicationId.toString());
+		//Repay each principal amount repaid with and credit savings account with the amount
+		BigDecimal bdPrincipalPaid = LoanRepayments.getTotalPrincipalPaid(loanApplicationId);
+		
+		BigDecimal bdTotalPaid = bdInterestPaid.add(bdInsurancePaid).add(bdPrincipalPaid);
+				//LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
+		
+		//Add the toal to member savings account
+		// Save Parent
+		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
+		Long memberAccountId  = Long.valueOf(LoanUtilities.getMemberAccountIdGivenMemberAndAccountCode(loanApplication.getLong("partyId"), AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE));
+		GenericValue accountTransactionParent = AccHolderTransactionServices.createAccountTransactionParent(memberAccountId, userLogin);
+				
+				//createAccountTransactionParent(
+				//memberAccountId.toString(), userLogin);
+
+		// Set the the Treasury ID
+		// String treasuryId = TreasuryUtility.getTellerId(userLogin);
+		// accountTransaction.set("treasuryId", treasuryId);
+		// addChargesToTransaction(accountTransaction, userLogin,
+		// transactionType);
+		// increaseDecrease
+
+		GenericValue accountTransaction = null;
+		// String acctgTransId = postCashDeposit(memberAccountId, userLogin,
+		// transactionAmount);
+
+		// GenericValue, String, Map<String,String>, String, BigDecimal, String,
+		// String, String
+		// GenericValue, String, Map<String,String>, String, BigDecimal, null,
+		// String
+		String transactionType = "ATTACHMENTREVERSAL";
+		AccHolderTransactionServices.createTransaction(null, transactionType, userLogin,
+				memberAccountId.toString(), bdTotalPaid, null,
+				accountTransactionParent
+						.getString("accountTransactionParentId"), acctgTransId,
+				null, null);
+		
+
+		
+	}
+
+	private static void reverseIndividualGuarantorLoan(Long loanApplicationId,
+			String acctgTransId, Map<String, String> userLogin) {
+		//Repay each interest amount  repaid with and credit savings account with the amount
+		BigDecimal bdInterestDue = LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString());
+		//Repay each insurance amount  repaid with and credit savings account with the amount
+		BigDecimal bdInsuranceDue = LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString());
+		//Repay each principal amount repaid with and credit savings account with the amount
+		BigDecimal bdPrincipalBalance = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
+		
+		BigDecimal loanPrincipal = BigDecimal.ZERO;
+		BigDecimal loanInterest = BigDecimal.ZERO;
+		BigDecimal loanInsurance = BigDecimal.ZERO;
+		
+		GenericValue loanApplication = LoanUtilities.getLoanApplicationEntity(loanApplicationId);
+		
+		// Loan Principal
+		loanPrincipal = bdPrincipalBalance;
+				
+				//LoanRepayments.getTotalPrincipaByLoanDue(String.valueOf(loanApplicationId));
+		// Get This Loan's Interest
+				
+		loanInterest = bdInterestDue;
+		// Get This Loan's Insurance
+		loanInsurance = bdInsuranceDue;
+		// Sum Principal, Interest and Insurance
+
+		BigDecimal transactionAmount = loanPrincipal.add(loanInterest).add(
+				loanInsurance);
+
+		BigDecimal bdLoanAmt = loanApplication.getBigDecimal("loanAmt");
+
+		BigDecimal totalInterestDue = bdInterestDue;
+		
+		BigDecimal totalInsuranceDue = bdInsuranceDue;
+		BigDecimal totalPrincipalDue = bdPrincipalBalance;
+		
+		BigDecimal totalLoanDue = totalInterestDue.add(totalInsuranceDue).add(
+				totalPrincipalDue);
+
+		
+		Long partyId = loanApplication.getLong("partyId");
+		GenericValue loanRepayment = null;
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		Long loanRepaymentId = delegator.getNextSeqIdLong("LoanRepayment", 1);
+		loanRepayment = delegator.makeValue("LoanRepayment", UtilMisc.toMap(
+				"loanRepaymentId", loanRepaymentId, "isActive", "Y",
+				"createdBy", userLogin.get("userLoginId"), "partyId", partyId, "loanApplicationId",
+				loanApplicationId,
+
+				"loanNo", loanApplication.getString("loanNo"),
+				"loanAmt", bdLoanAmt,
+
+				"totalLoanDue", totalLoanDue, "totalInterestDue",
+				totalInterestDue, "totalInsuranceDue", totalInsuranceDue,
+				"totalPrincipalDue", totalPrincipalDue, "interestAmount",
+				loanInterest, "insuranceAmount", loanInsurance,
+				"principalAmount", loanPrincipal, "transactionAmount",
+				transactionAmount, "acctgTransId", acctgTransId, "repaymentType", "REATTACHMENT"));
+		try {
+			delegator.createOrStore(loanRepayment);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}		
+		//set loan to attachment reversal (ATTACHMENTREVERSAL)
+		loanApplication.set("loanStatusId", LoanUtilities.getLoanStatusId("ATTACHMENTREVERSAL"));
+		
+		try {
+			delegator.createOrStore(loanApplication);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		addLoanReattachmentLog(LoanUtilities.getLoanStatusId("ATTACHMENTREVERSAL"), loanApplicationId, userLogin, "Attachment reversal ");
+		
+	}
+
+	private static void addLoanReattachmentLog(Long loanStatusId,
+			Long parentLoanApplicationId, Map<String, String> userLogin, String comment) {
+		GenericValue loanStatusLog;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		Long loanStatusLogId = delegator.getNextSeqIdLong("LoanStatusLog");
+		loanStatusLog = delegator.makeValue("LoanStatusLog", UtilMisc
+				.toMap("loanStatusLogId", loanStatusLogId,
+						
+						"loanApplicationId",
+						parentLoanApplicationId,
+						
+						"isActive", "Y",
+						"createdBy", userLogin.get("userLoginId"), 
+						"updatedBy", null,
+						"loanStatusId", loanStatusId,
+						
+						"comment", comment));
+		try {
+			delegator.createOrStore(loanStatusLog);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	private static void setNewLoanInsurance(
+			BigDecimal bdTotalInsuranceChargedOnGuarantors,
+			Long parentLoanApplicationId, Map<String, String> userLogin,
+			String acctgTransId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		Long loanExpectationId = delegator.getNextSeqIdLong("LoanExpectation",
+				1L);
+		BigDecimal bdInsuranceAccrued = bdTotalInsuranceChargedOnGuarantors.setScale(4, RoundingMode.HALF_UP);
+		
+		
+		GenericValue loanExpectation = null;
+		
+		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", parentLoanApplicationId);
+		Long partyId = loanApplication.getLong("partyId");
+		GenericValue member = LoanUtilities.getEntityValue("Member", "partyId", partyId);
+		String employeeNo = member.getString("memberNumber");
+				
+		String employeeNames = member.getString("firstName") + " "
+						+ member.getString("middleName") + " "
+						+ member.getString("lastName");
+		BigDecimal bdLoanAmt = loanApplication.getBigDecimal("loanAmt");
+		
+		LocalDate localDate = new LocalDate();
+		int year = localDate.getYear();
+		int month = localDate.getMonthOfYear();
+		
+		String monthPadded = String.valueOf(month);//paddString(2, String.valueOf(month));
+		String monthYear = monthPadded+String.valueOf(year);
+		// TODO Auto-generated method stub
+		loanExpectationId = delegator.getNextSeqIdLong("LoanExpectation",
+				1L);
+		bdInsuranceAccrued = bdInsuranceAccrued.setScale(4, RoundingMode.HALF_UP);
+		loanExpectation = delegator.makeValue("LoanExpectation", UtilMisc
+				.toMap("loanExpectationId", loanExpectationId, "loanNo",
+						loanApplication.getString("loanNo"), "loanApplicationId", parentLoanApplicationId,
+						"employeeNo", employeeNo, "repaymentName",
+						"INSURANCE", "employeeNames", employeeNames,
+						"dateAccrued", new Timestamp(Calendar.getInstance()
+								.getTimeInMillis()), "isPaid", "N",
+						"isPosted", "N", "amountDue", bdInsuranceAccrued,
+						"amountAccrued", bdInsuranceAccrued,
+						
+						"month", monthYear,
+						"acctgTransId", acctgTransId,
+						"partyId",
+						partyId, "loanAmt", bdLoanAmt, "expectationClassType", "REATTACHMENT"));
+		
+		try {
+			delegator.createOrStore(loanExpectation);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	private static void setNewLoanInterest(
+			BigDecimal bdTotalInterestChargedOnGuarantors,
+			Long parentLoanApplicationId, Map<String, String> userLogin,
+			String acctgTransId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		Long loanExpectationId = delegator.getNextSeqIdLong("LoanExpectation",
+				1L);
+		BigDecimal bdInterestAccrued = bdTotalInterestChargedOnGuarantors.setScale(4, RoundingMode.HALF_UP);
+		//GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", parentLoanApplicationId);
+		
+		GenericValue loanExpectation = null;
+		
+		
+		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", parentLoanApplicationId);
+		
+		Long partyId = loanApplication.getLong("partyId");
+		GenericValue member = LoanUtilities.getEntityValue("Member", "partyId", partyId);
+		String employeeNo = member.getString("memberNumber");
+				
+		String employeeNames = member.getString("firstName") + " "
+						+ member.getString("middleName") + " "
+						+ member.getString("lastName");
+		BigDecimal bdLoanAmt = loanApplication.getBigDecimal("loanAmt");
+		
+		LocalDate localDate = new LocalDate();
+		int year = localDate.getYear();
+		int month = localDate.getMonthOfYear();
+		
+		String monthPadded = String.valueOf(month);//paddString(2, String.valueOf(month));
+		String monthYear = monthPadded+String.valueOf(year);
+		//acctgTransId
+		loanExpectation = delegator.makeValue("LoanExpectation", UtilMisc
+				.toMap("loanExpectationId", loanExpectationId, "loanNo",
+						loanApplication.getString("loanNo"), "loanApplicationId", parentLoanApplicationId,
+						"employeeNo", employeeNo, "repaymentName",
+						"INTEREST", "employeeNames", employeeNames,
+						"dateAccrued", new Timestamp(Calendar.getInstance()
+								.getTimeInMillis()), "isPaid", "N",
+						"isPosted", "N", "amountDue", bdInterestAccrued,
+						"amountAccrued", bdInterestAccrued,
+						"month", monthYear,
+						"acctgTransId", acctgTransId,
+						"partyId",
+						partyId, "loanAmt", bdLoanAmt, "expectationClassType", "REATTACHMENT"));
+		
+		try {
+			delegator.createOrStore(loanExpectation);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	private static void setNewLoanBalance(BigDecimal bdTotalAmountAttached,
+			Long parentLoanApplicationId, Map<String, String> userLogin,
+			String acctgTransId) {
+		String userLoginId = (String) userLogin.get("userLoginId");
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		Long loanRepaymentId = delegator.getNextSeqIdLong("LoanRepayment", 1);
+		Long loanApplicationId = parentLoanApplicationId;
+		
+		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", parentLoanApplicationId);
+		BigDecimal bdLoanAmt = loanApplication.getBigDecimal("loanAmt");
+		//LoanRepayments.getT
+		BigDecimal totalLoanDue = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
+		BigDecimal totalInterestDue = LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString());
+		BigDecimal totalInsuranceDue = LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString());
+		BigDecimal totalPrincipalDue = LoanRepayments.getTotalPrincipaByLoanDue(loanApplicationId.toString());
+		
+	
+		
+		BigDecimal loanInterest = BigDecimal.ZERO;
+		BigDecimal loanInsurance = BigDecimal.ZERO;
+		BigDecimal loanPrincipal = bdTotalAmountAttached.multiply(new BigDecimal(-1));
+		BigDecimal transactionAmount = bdTotalAmountAttached.multiply(new BigDecimal(-1));
+		
+		GenericValue loanRepayment;
+		loanRepayment = delegator.makeValue("LoanRepayment", UtilMisc.toMap(
+				"loanRepaymentId", loanRepaymentId, "isActive", "Y",
+				"createdBy", userLoginId, "partyId", loanApplication.getLong("partyId"), "loanApplicationId",
+				loanApplication.getLong("loanApplicationId"),
+
+				"loanNo", loanApplication.getString("loanNo"),
+				"loanAmt", bdLoanAmt,
+
+				"totalLoanDue", totalLoanDue, "totalInterestDue",
+				totalInterestDue, "totalInsuranceDue", totalInsuranceDue,
+				"totalPrincipalDue", totalPrincipalDue, "interestAmount",
+				loanInterest, "insuranceAmount", loanInsurance,
+				"principalAmount", loanPrincipal, "transactionAmount",
+				transactionAmount, "acctgTransId", acctgTransId, "repaymentType", "REATTACHMENT"));
+		try {
+			delegator.createOrStore(loanRepayment);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		
+	}
+
+	private static BigDecimal getTotalInsuranceChargedOnGuarantors(
+			Long parentLoanApplicationId) {
+
+		List<GenericValue> listguarantorLoans = getAttachedLoansList(parentLoanApplicationId);
+		BigDecimal bdTotalInsuranceCharged = BigDecimal.ZERO;
+		
+		for (GenericValue genericValue : listguarantorLoans) {
+			bdTotalInsuranceCharged = bdTotalInsuranceCharged.add(LoanRepayments.getTotalInsuranceByLoanExpected(genericValue.getLong("loanApplicationId").toString()));
+		}
+		return bdTotalInsuranceCharged;
+	}
+
+	private static BigDecimal getTotalTotalInterestChargesOnGuarantors(
+			Long parentLoanApplicationId) {
+		
+		List<GenericValue> listguarantorLoans = getAttachedLoansList(parentLoanApplicationId);
+		BigDecimal bdTotalInterestCharged = BigDecimal.ZERO;
+		
+		for (GenericValue genericValue : listguarantorLoans) {
+			bdTotalInterestCharged = bdTotalInterestCharged.add(LoanRepayments.getTotalExpectedInterestAmount(genericValue.getLong("loanApplicationId").toString()));
+		}
+		
+		// TODO Auto-generated method stub
+		return bdTotalInterestCharged;
+	}
+
+	private static BigDecimal getTotalAttachedAmount(
+			Long parentLoanApplicationId) {
+		List<GenericValue> loanApplicationELI = null; 
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					EntityCondition.makeCondition("parentLoanApplicationId",
+							parentLoanApplicationId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		BigDecimal bdTotalAmount = BigDecimal.ZERO;
+		
+		for (GenericValue genericValue : loanApplicationELI) {
+			//Compute the total amount attached
+			if (genericValue.getBigDecimal("loanAmt") != null){
+				bdTotalAmount = bdTotalAmount.add(genericValue.getBigDecimal("loanAmt"));
+			}
+		}
+
+		return bdTotalAmount;
+	}
+
+	private static List<GenericValue> getAttachedLoansList(Long parentLoanApplicationId) {
+		
+		//Get all loans whose parent is parentLoanApplicationId
+		//parentLoanApplicationId
+		List<GenericValue> loanApplicationELI = null; 
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					EntityCondition.makeCondition("parentLoanApplicationId",
+							parentLoanApplicationId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		return loanApplicationELI;
 	}
 
 }

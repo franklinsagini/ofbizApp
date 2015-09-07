@@ -347,6 +347,26 @@ under the License.
         
     </simple-method>
     
+    <!-- updateLoanApplicationParent -->
+    
+        <simple-method method-name="updateLoanApplicationParent" short-description="Update Loan Application Parent">
+        <entity-one entity-name="LoanApplication" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        
+        <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+        	<entity-one value-field="currentApplication" entity-name="LoanApplication">
+        		<field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
+        	</entity-one>
+           <set field="lookedUpValue.updatedBy" from-field="userLogin.userLoginId"/>
+           <set field="lookedUpValue.createdBy" from-field="currentApplication.createdBy"/>
+            
+        
+		<store-value value-field="lookedUpValue"/>
+                <property-to-field resource="LoanUiLabels.xml" 
+            property="Successfully updated Loan " field="successMessage" /> 
+        
+    </simple-method>
+    
     <simple-method method-name="deleteLoanApplication" short-description="Delete Loan Application">
         <entity-one entity-name="LoanApplication" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
