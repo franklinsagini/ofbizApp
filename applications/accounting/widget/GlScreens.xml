@@ -428,8 +428,8 @@ under the License.
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
                 <set field="glAccountId" from-field="parameters.glAccountId" global="true"/>
                 <set field="thruDate" from-field="parameters.thruDate" type="Timestamp" default-value="${nowTimestamp}"/>
+                <set field="fromDate" from-field="parameters.fromDate" type="Timestamp"/>
                 <set field="isPosted" value="Y" />
-                <script location="component://accounting/webapp/accounting/WEB-INF/actions/gl/gl.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyGlDecorator" location="${parameters.partyGlDecoratorLocation}">
@@ -440,6 +440,38 @@ under the License.
                                     <decorator-section name="search-options">
                                         <include-form name="FindTransactionEntries" location="component://accounting/widget/GlForms.xml"/>
                                     </decorator-section>
+<!--                                     <decorator-section name="search-results">
+                                        <include-form name="ListTransactionEntries"  location="component://accounting/widget/GlForms.xml"/>
+                                    </decorator-section> -->
+                                </decorator-screen>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+
+    <screen name="RetriveTransactionEntries">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Transactions Entries"/>
+                <set field="tabButtonItem" value="TransactionEntries"/>
+                <set field="labelTitleProperty" value="Transactions Entries"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
+                <set field="glAccountId" from-field="parameters.glAccountId" global="true"/>
+                <set field="thruDate" from-field="parameters.thruDate" type="Timestamp" default-value="${nowTimestamp}"/>
+                <set field="fromDate" from-field="parameters.fromDate" type="Timestamp"/>
+                <set field="isPosted" value="Y" />
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/gl/retrieveTransactions.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyGlDecorator" location="${parameters.partyGlDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="search-results">
                                         <include-form name="ListTransactionEntries"  location="component://accounting/widget/GlForms.xml"/>
                                     </decorator-section>
@@ -451,7 +483,6 @@ under the License.
             </widgets>
         </section>
     </screen>
-
 
 
 
@@ -841,6 +872,7 @@ under the License.
             <actions>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/gl/gl.groovy"/>
             </actions>
             <widgets>
                 <container>
