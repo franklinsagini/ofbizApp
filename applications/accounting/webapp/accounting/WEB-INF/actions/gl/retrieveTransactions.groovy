@@ -131,9 +131,9 @@ acctgTransEntry.each { entry ->
     debitCreditFlag:entry.debitCreditFlag,
     glAccountTypeId:entry.glAccountTypeId,
     if(entry.debitCreditFlag == "C"){
-        creditAmount:amount:entry.amount,
+        creditAmount:entry.amount,
       }else{
-        debitAmount:amount:entry.amount,
+        debitAmount:entry.amount,
       }
 
     runningBalance:runningBalance
