@@ -102,7 +102,7 @@ debitAmount = null
         }else{
            runningBalance = runningBalance - entry.amount
         }
-        creditAmount = entry.amount,
+        creditAmount = entry.amount
       }
     }
   }else{
@@ -116,7 +116,7 @@ debitAmount = null
           runningBalance = runningBalance + entry.amount
         }
       }
-      creditAmount = entry.amount,
+      creditAmount = entry.amount
     } else {
       if (entry.amount) {
       if(count<1){
