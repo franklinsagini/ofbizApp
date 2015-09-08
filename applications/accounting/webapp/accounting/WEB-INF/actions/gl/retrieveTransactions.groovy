@@ -130,7 +130,12 @@ acctgTransEntry.each { entry ->
     acctgTransId:entry.acctgTransId,
     debitCreditFlag:entry.debitCreditFlag,
     glAccountTypeId:entry.glAccountTypeId,
-    amount:entry.amount,
+    if(entry.debitCreditFlag == "C"){
+        creditAmount:amount:entry.amount,
+      }else{
+        debitAmount:amount:entry.amount,
+      }
+
     runningBalance:runningBalance
   ]
   finalTransList.add(finalTransListBuilder)
