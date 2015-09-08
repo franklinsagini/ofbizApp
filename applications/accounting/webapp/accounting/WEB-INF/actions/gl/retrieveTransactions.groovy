@@ -75,7 +75,8 @@ openingBalacctgTransEntry.each { entry ->
 }
 
 acctgTransEntry.each { entry ->
-
+creditAmount = null
+debitAmount = null
   if(count<1) {
   finalTransListBuilder = [
     glAccountTypeId:"BALANCE BROUGHT FORWARD",
@@ -93,6 +94,7 @@ acctgTransEntry.each { entry ->
           runningBalance = runningBalance + entry.amount
         }
       }
+       debitAmount = entry.amount
     } else {
       if (entry.amount) {
         if(count<1){
@@ -100,7 +102,7 @@ acctgTransEntry.each { entry ->
         }else{
            runningBalance = runningBalance - entry.amount
         }
-
+        creditAmount = entry.amount,
       }
     }
   }else{
@@ -114,6 +116,7 @@ acctgTransEntry.each { entry ->
           runningBalance = runningBalance + entry.amount
         }
       }
+      creditAmount = entry.amount,
     } else {
       if (entry.amount) {
       if(count<1){
@@ -121,6 +124,7 @@ acctgTransEntry.each { entry ->
         }else{
           runningBalance = runningBalance - entry.amount
         }
+        debitAmount = entry.amount
       }
     }
   }
@@ -130,12 +134,8 @@ acctgTransEntry.each { entry ->
     acctgTransId:entry.acctgTransId,
     debitCreditFlag:entry.debitCreditFlag,
     glAccountTypeId:entry.glAccountTypeId,
-    if(entry.debitCreditFlag == "C"){
-        creditAmount:entry.amount,
-      }else{
-        debitAmount:entry.amount,
-      }
-
+    creditAmount:creditAmount,
+    debitAmount:debitAmount,
     runningBalance:runningBalance
   ]
   finalTransList.add(finalTransListBuilder)
