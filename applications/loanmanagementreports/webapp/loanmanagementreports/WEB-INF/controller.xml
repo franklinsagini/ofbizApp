@@ -27,6 +27,20 @@
     <response name="success" type="view" value="loanlistingbydatereport" save-home-view="true" />
   </request-map>
   
+  <!-- loanlistingbydatereport -->
+  
+    <request-map uri="appliedLoansByLoanType"><security https="true" auth="true"/><response name="success" type="view" value="appliedLoansByLoanType"/></request-map>
+    <request-map uri="appliedLoansByLoanType">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="appliedLoansByLoanType" save-home-view="true" />
+  </request-map>
+  
+  <request-map uri="appliedLoansByStation"><security https="true" auth="true"/><response name="success" type="view" value="appliedLoansByStation"/></request-map>
+    <request-map uri="appliedLoansByStation">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="appliedLoansByStation" save-home-view="true" />
+  </request-map>
+  
   <request-map uri="loanlistingreportexcel.csv">
     <security https="true" auth="true" />
     <response name="success" type="view" value="loanlistingreportexcel" save-home-view="true" />
@@ -44,16 +58,39 @@
     <response name="success" type="view" value="stationChequeReceivedReportPDF" save-home-view="true" />
   </request-map>
   
+  <!-- By Loan Type -->
+    <request-map uri="appliedLoansByLoanTypepdf">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="appliedLoansByLoanTypepdf" save-home-view="true" />
+  </request-map>
+  
+  <!-- By Station -->
+    <request-map uri="appliedLoansByStationpdf">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="appliedLoansByStationpdf" save-home-view="true" />
+  </request-map>
+  
   <request-map uri="LookupActiveMember"><security https="true" auth="true"/><response name="success" type="view" value="LookupActiveMember"/></request-map>
   
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://loanmanagementreports/widget/LoanManagementReportsScreens.xml#main"/>
     
     <view-map name="loanlistingbydatereport" type="screen" page="component://loanmanagementreports/widget/LoanManagementReportsScreens.xml#loanlistingbydatereport"/>
+
+    <view-map name="appliedLoansByLoanType" type="screen" page="component://loanmanagementreports/widget/LoanManagementReportsScreens.xml#appliedLoansByLoanType"/>
+    <view-map name="appliedLoansByStation" type="screen" page="component://loanmanagementreports/widget/LoanManagementReportsScreens.xml#appliedLoansByStation"/>
+
+
     <view-map name="loanlistingreportexcel" type="screencsv" page="component://loanmanagementreports/widget/LoanManagementReportsScreens.xml#loanlistingreportexcel" content-type="text/csv" encoding="none"/>
     <view-map name="LookupActiveMember" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember"/>
     
     
     <view-map name="stationChequeReceivedReport" type="screen" page="component://loanmanagementreports/widget/LoanManagementReportsScreens.xml#stationChequeReceivedReport"/>
     <view-map name="stationChequeReceivedReportPDF" type="screenfop" page="component://loanmanagementreports/widget/LoanManagementReportsScreens.xml#stationChequeReceivedReportPDF" content-type="application/pdf" encoding="none"/>
+
+
+    <view-map name="appliedLoansByLoanTypepdf" type="screenfop" page="component://loanmanagementreports/widget/LoanManagementReportsScreens.xml#appliedLoansByLoanTypepdf" content-type="application/pdf" encoding="none"/>
+    <view-map name="appliedLoansByStationpdf" type="screenfop" page="component://loanmanagementreports/widget/LoanManagementReportsScreens.xml#appliedLoansByStationpdf" content-type="application/pdf" encoding="none"/>
+
+
 </site-conf>
