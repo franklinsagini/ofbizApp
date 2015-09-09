@@ -347,6 +347,15 @@ under the License.
         <attribute name="endingBalanceDebit" type="BigDecimal" mode="OUT" optional="true"/>
     </service>
 
+    <service name="retriveTransactionEntries" engine="java"
+             location="org.ofbiz.accounting.trialbalance.TrialBalanceServices" invoke="retriveTransactionEntries" auth="true">
+        <description>Compute the total debits, total credits, opening, ending balances of an account in a financial period</description>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="glAccountId" type="String" mode="IN" optional="false"/>
+    </service>
+
     <service name="runTrialBalance" engine="java"
             location="org.ofbiz.accounting.trialbalance.TrialBalanceServices" invoke="runTrialBalance" auth="true">
         <description>Compute the total debits, total credits, opening, ending balances of an account in a financial period</description>
