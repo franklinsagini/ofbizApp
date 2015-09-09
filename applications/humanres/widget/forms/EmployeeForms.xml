@@ -1783,8 +1783,8 @@
         <field name="emmergencyContactId"><hidden/></field>
         
          <field name="partyId"><hidden value="${partyId}"/></field>
-        <field name="fullname" title="Emmergency Contact Name"><text size="30" maxlength="60"/></field>
-        <field name="familyRelationsId" title="Relationship">        	
+        <field name="fullname" title="Emergency Contact Name" required-field="true"><text size="30" maxlength="60"/></field>
+        <field name="familyRelationsId" title="Relationship" required-field="true">        	
        	 <drop-down allow-empty="true">
        	 	<list-options list-name="relationshipList" key-name="familyRelationsId" description="${relationship}"/>
        	 </drop-down>
@@ -1834,6 +1834,9 @@
         </field> 
         <field name="idno" title="Identification Number"><text size="30" maxlength="60"/></field>
         <field name="phoneNo" title="Phone Number"><text size="30" maxlength="60"/></field>
+         <field name="lastUpdatedStamp" title="Last Updated"><display></display></field>
+          <field name="createdStamp" title="Date Created "><display></display></field>
+        
         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
             <hyperlink target="deleteStaffEmmergencyContacts" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete ${fullname} from EmmercyContatcs?">
                 <parameter param-name="emmergencyContactId"/>

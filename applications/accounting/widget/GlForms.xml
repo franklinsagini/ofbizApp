@@ -344,25 +344,15 @@ under the License.
     </form>
 
 
-    <form name="FindTransactionEntries" type="single" target="FindTransactionEntries"
+    <form name="FindTransactionEntries" type="single" target="RetriveTransactionEntries"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="organizationPartyId"><hidden/></field>
-        <field name="acctgTransId" title="${uiLabelMap.FormFieldTitle_acctgTransId}" entity-name="AcctgTrans">
-            <text size="20"/>
-        </field>
         <field name="glAccountId">
             <drop-down allow-empty="true">
-                <entity-options entity-name="GlAccountOrganizationAndClass" description="${accountCode} - ${accountName} [${glAccountId}]">
+                <entity-options entity-name="GlAccountOrganizationAndClass" description="${accountName} - ${accountCode} - [${glAccountId}]">
                     <entity-constraint name="organizationPartyId" operator="equals" env-name="organizationPartyId"/>
-                    <entity-order-by field-name="accountCode"/>
-                </entity-options>
-            </drop-down>
-        </field>
-        <field name="acctgTransTypeId" title="${uiLabelMap.AccountingTransactionType}">
-            <drop-down allow-empty="true">
-                <entity-options entity-name="AcctgTransType" description="${description}">
-                    <entity-order-by field-name="acctgTransTypeId"/>
+                    <entity-order-by field-name="accountName"/>
                 </entity-options>
             </drop-down>
         </field>
@@ -371,29 +361,33 @@ under the License.
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
-    <form name="ListTransactionEntries" type="list" separate-columns="true" default-entity-name="AcctgTransEntry" list-name="listIt" paginate-target="FindTransactionEntries" paginate="true"
+    <form name="ListTransactionEntries" type="list" separate-columns="true" default-entity-name="AcctgTransEntry" list-name="transactionsList" paginate-target="RetriveTransactionEntries" paginate="true"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <actions>
-            <service service-name="performFind" result-map="result" result-map-list="listIt">
-                <field-map field-name="inputFields" from-field="parameters"/>
-                <field-map field-name="entityName" value="AcctgTransEntry"/>
-                <field-map field-name="orderBy" value="createdTxStamp DESC"/>
-                <field-map field-name="viewIndex" from-field="viewIndex"/>
-                <field-map field-name="viewSize" from-field="viewSize"/>
-            </service>
-        </actions>
-        <field name="acctgTransId" widget-style="buttontext">
+        <field name="createdTxStamp" title="Transaction Date" ><display/></field>
+        <field name="glAccountTypeId" title="Description" ><display/></field>
+        <field name="acctgTransId" title="Transaction #" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${acctgTransId}" target="EditAcctgTrans">
                 <parameter param-name="acctgTransId"/>
                 <parameter param-name="organizationPartyId"/>
             </hyperlink>
         </field>
-        <field name="createdTxStamp"><display/></field>
-        <field name="glAccountId" title="Gl Account">
+<!--         <field name="glAccountId" title="Gl Account">
             <display-entity entity-name="GlAccount" description="${accountCode} ${accountName}"/>
+        </field> -->
+        <field name="debitCreditFlag" title="Transaction Type"><display/></field>
+        <field name="debitAmount"><display /></field>
+        <field name="creditAmount"><display /></field>
+        <field name="runningBalance"><display /></field>
+    </form>
+    <form name="RetriveTransactionEntriesCSV" type="list" list-name="transactionsList" >
+        <field name="createdTxStamp" title="Transaction Date" ><display/></field>
+        <field name="glAccountTypeId" title="Description" ><display/></field>
+        <field name="acctgTransId" title="Transaction #" widget-style="buttontext"><display/>
         </field>
-        <field name="debitCreditFlag"><display/></field>
-        <field name="amount"><display /></field>
+        <field name="debitCreditFlag" title="Transaction Type"><display/></field>
+        <field name="debitAmount"><display /></field>
+        <field name="creditAmount"><display /></field>
+        <field name="runningBalance"><display /></field>
     </form>
 
 
