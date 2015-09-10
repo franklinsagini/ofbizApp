@@ -3758,6 +3758,33 @@ under the License.
     		</entity-condition>
         </view-link>
     </view-entity>
+    
+    
+    <view-entity entity-name="IntroducingMemberSummary" package-name="org.ofbiz.party.party"
+    	title="Introducing Members Summary">
+
+    	<member-entity entity-alias="M" entity-name="Member"></member-entity>
+    	<member-entity entity-alias="MRec" entity-name="Member"></member-entity>
+    	
+    	<alias entity-alias="M" name="partyId" group-by="true"></alias>
+    	<alias entity-alias="M" name="firstName" group-by="true"></alias>
+    	<alias entity-alias="M" name="middleName" group-by="true"></alias>
+    	<alias entity-alias="M" name="lastName" group-by="true"></alias>
+    	
+    	<alias entity-alias="M" name="payrollNumber" group-by="true"/> 
+    	<alias entity-alias="M" name="memberNumber" group-by="true"/> 
+    	<alias entity-alias="M" name="idNumber" group-by="true"/> 
+    	
+    	<alias entity-alias="M" name="introducingMember" function="count-distinct"/> 
+    	
+    	
+        <!-- entity-condition>
+        	<condition-expr entity-alias="AT" field-name="increaseDecrease" operator="equals" value="I"/>
+        </entity-condition -->
+        <view-link rel-entity-alias="M" entity-alias="MRec">
+        	<key-map field-name="partyId" rel-field-name="introducingMember"/>
+        </view-link>
+    </view-entity>
 
 
 </entitymodel>
