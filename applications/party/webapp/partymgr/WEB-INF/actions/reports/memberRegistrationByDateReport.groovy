@@ -48,6 +48,8 @@ startDate = parameters.startDate
 endDate = parameters.endDate
 memberStatusId = parameters.memberStatusId
 branchId = parameters.branchId
+stationId = parameters.stationId
+introducingMember = parameters.introducingMember
 
 print " -------- Start Date"
 println startDate
@@ -74,18 +76,72 @@ if ((endDate?.trim())){
 print "formatted Date"
 //println dateStartDate
 //println dateEndDate
-
+//introducingMember
 
 println "RRRRRRRRRRRRRR EAL DATES !!!!!!!!!!!!!"
 println startDate
 println endDate
+
+if ((introducingMember) && (introducingMember != null)){
+	introducingMemberLong = introducingMember.toLong()
+}
+
+
+if ((stationId) && (stationId != null)){
+	stationIdLong = stationId.toLong()
+}
 
 
 exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder()
 //(startDate == null) || (endDate == null) || 
 if (!(sqlEndDate)){
 	expr = null;
-} 
+	
+	
+	if ((branchId) && (memberStatusId)){
+		expr = exprBldr.AND() {
+			//GREATER_THAN_EQUAL_TO(joinDate: sqlStartDate)
+			//LESS_THAN_EQUAL_TO(joinDate: sqlEndDate)
+			EQUALS(memberStatusId: memberStatusId.toLong())
+			EQUALS(branchId: branchId)
+		}
+	}
+	
+	if ((branchId) && (!memberStatusId)){
+		expr = exprBldr.AND() {
+			//GREATER_THAN_EQUAL_TO(joinDate: sqlStartDate)
+			//LESS_THAN_EQUAL_TO(joinDate: sqlEndDate)
+			EQUALS(branchId: branchId)
+		}
+	}
+	
+	
+	if ((!branchId) && (memberStatusId)){
+		expr = exprBldr.AND() {
+			//GREATER_THAN_EQUAL_TO(joinDate: sqlStartDate)
+			//LESS_THAN_EQUAL_TO(joinDate: sqlEndDate)
+			EQUALS(memberStatusId: memberStatusId.toLong())
+		}
+	}
+	
+	
+	if (introducingMember){
+		expr = exprBldr.AND() {
+			//GREATER_THAN_EQUAL_TO(joinDate: sqlStartDate)
+			//LESS_THAN_EQUAL_TO(joinDate: sqlEndDate)
+			EQUALS(introducingMember: introducingMemberLong)
+	}
+	}
+		
+	if (stationId){
+		expr = exprBldr.AND() {
+			//GREATER_THAN_EQUAL_TO(joinDate: sqlStartDate)
+			//LESS_THAN_EQUAL_TO(joinDate: sqlEndDate)
+			EQUALS(stationId: stationIdLong)
+	}
+	} 
+}		
+
 // if (memberStatusId)
 else if ((!memberStatusId) && (!branchId)){
 	expr = exprBldr.AND() {
@@ -132,6 +188,33 @@ else if (memberStatusId)
 
 
 }
+
+if ((stationId) && (sqlEndDate)){
+		expr = exprBldr.AND() {
+			GREATER_THAN_EQUAL_TO(joinDate: sqlStartDate)
+			LESS_THAN_EQUAL_TO(joinDate: sqlEndDate)
+			EQUALS(stationId: stationIdLong)
+		}
+}
+
+if ((stationId) && (sqlEndDate) && (introducingMember)){
+		expr = exprBldr.AND() {
+			GREATER_THAN_EQUAL_TO(joinDate: sqlStartDate)
+			LESS_THAN_EQUAL_TO(joinDate: sqlEndDate)
+			EQUALS(introducingMember: introducingMemberLong)
+			EQUALS(stationId: stationIdLong)
+			
+	}
+	
+}
+	
+	if ((!stationId) && (sqlEndDate) && (introducingMember)){
+			expr = exprBldr.AND() {
+				GREATER_THAN_EQUAL_TO(joinDate: sqlStartDate)
+				LESS_THAN_EQUAL_TO(joinDate: sqlEndDate)
+				EQUALS(introducingMember: introducingMemberLong)
+			}
+	}
 
 EntityFindOptions findOptions = new EntityFindOptions();
 //findOptions.setMaxRows(100);

@@ -72,6 +72,17 @@
 	</request-map>
 
 
+ <request-map uri="accountContribution"><security https="true" auth="true"/><response name="success" type="view" value="accountContribution"/></request-map>
+    <request-map uri="accountContribution">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="accountContribution" save-home-view="true" />
+  </request-map>
+  
+    <request-map uri="accountContributionExcel.csv">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="accountContributionExcel" save-home-view="true" />
+  </request-map>
+
 
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://accountreports/widget/accountreportsScreens.xml#main"/>
@@ -87,4 +98,9 @@
 
     <view-map name="accountsAudit" type="screen" page="component://accountreports/widget/accountreportsScreens.xml#accountsAudit"/>
     <view-map name="accountsEntriesAudit" type="screen" page="component://accountreports/widget/accountreportsScreens.xml#accountsEntriesAudit"/>
+    
+    <view-map name="accountContribution" type="screen" page="component://accountreports/widget/accountreportsScreens.xml#accountContribution"/>
+
+	<view-map name="accountContributionExcel" type="screencsv" page="component://accountreports/widget/accountreportsScreens.xml#accountContributionExcel" content-type="text/csv" encoding="none"/>
+    
 </site-conf>

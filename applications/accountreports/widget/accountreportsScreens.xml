@@ -211,4 +211,54 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	<!-- accountContribution -->
+	    <screen name="accountContribution">
+        <section>
+            <actions>
+                <set field="headerItem" value="accountContribution" />
+                <set field="tabButtonItem" value="accountContribution" />
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <!-- include-menu name="MemberReportsTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/ -->
+                        <!-- container style="lefthalf">
+                            <screenlet title="Member Listing Report">
+                                <include-form name="memeberListingForm" location="component://party/widget/partymgr/MemberReportForms.xml"/>
+                            </screenlet>
+                        </container -->
+                        <!-- style="righthalf" -->
+                        <container>
+                            <screenlet title="Account Contribution">
+                                <include-form name="accountContributionForm" location="component://accountreports/widget/accountreportsForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+       <screen name="accountContributionExcel">
+        <section>
+           <actions>
+                <set field="viewSize" value="999999"/>
+                <!-- script location="component://party/webapp/partymgr/WEB-INF/actions/reports/loanDetails.groovy"/ -->
+               <script location="component://accountreports/webapp/accountreports/WEB-INF/actions/reports/accountContributionExcel.groovy"/>
+           </actions>
+           <widgets>
+               <!-- decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                   <decorator-section name="body">
+                        <platform-specific>
+                            
+                            <xsl-fo><html-template location="component://loanreports/webapp/loanreports/reports/loansummaryReport.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen -->
+                <include-form name="accountContributionExport" location="component://accountreports/widget/accountreportsForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
 </screens>
