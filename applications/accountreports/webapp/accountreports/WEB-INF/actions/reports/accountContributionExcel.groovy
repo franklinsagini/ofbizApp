@@ -23,6 +23,18 @@ if ((accountProductId) && (accountProductId != null)){
 	accountProductIdLong = accountProductId.toLong()
 }
 
+
+
+if ((stationId) && (stationId != null)){
+	stationIdLong = stationId.toLong()
+}
+
+
+
+if ((employmentTypeId) && (employmentTypeId != null)){
+	employmentTypeIdLong = employmentTypeId.toLong()
+}
+
 print " -------- Start Date"
 println startDate
 
@@ -55,6 +67,7 @@ println startDate
 println endDate
 
 
+
 exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder()
 //(startDate == null) || (endDate == null) ||
 if (!(sqlEndDate)){
@@ -74,11 +87,95 @@ else if ((!accountProductId)){
 	startDateTimestamp = new Timestamp(sqlStartDate.getTime());
 	endDateTimestamp = new Timestamp(sqlEndDate.getTime());
 	if (accountProductId){
+		
+		if (branchId){
 		expr = exprBldr.AND() {
 			GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
 			LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
 			EQUALS(accountProductId: accountProductIdLong)
+			EQUALS(branchId: branchId)
+			
 		}
+		} else{
+		
+		expr = exprBldr.AND() {
+			GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
+			LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
+			EQUALS(accountProductId: accountProductIdLong)
+			
+		}
+		
+		}
+		
+		//for station
+		if (stationId){
+			
+			station = delegator.findOne("Station", [stationId : stationId.toString()], false);
+			
+			expr = exprBldr.AND() {
+				GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
+				LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
+				EQUALS(accountProductId: accountProductIdLong)
+				EQUALS(employerCode: station.employerCode)
+				
+			}
+			} 
+		
+		if ((employmentTypeId) && (branchId)){
+			expr = exprBldr.AND() {
+				GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
+				LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
+				EQUALS(accountProductId: accountProductIdLong)
+				EQUALS(branchId: branchId)
+				EQUALS(employmentTypeId: employmentTypeIdLong)
+				
+			}
+		}
+		
+		
+		if ((employmentTypeId) && (!branchId)){
+			expr = exprBldr.AND() {
+				GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
+				LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
+				EQUALS(accountProductId: accountProductIdLong)
+				EQUALS(employmentTypeId: employmentTypeIdLong)
+				
+			}
+		}
+		
+		
+		if ((employmentTypeId) && (stationId)){
+			station = delegator.findOne("Station", [stationId : stationId.toString()], false);
+			expr = exprBldr.AND() {
+				GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
+				LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
+				EQUALS(accountProductId: accountProductIdLong)
+				EQUALS(employmentTypeId: employmentTypeIdLong)
+				EQUALS(employerCode: station.employerCode)
+			}
+		}
+		
+		if ((employmentTypeId) && (!stationId) && (!branchId)){
+			expr = exprBldr.AND() {
+				GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
+				LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
+				EQUALS(accountProductId: accountProductIdLong)
+				EQUALS(employmentTypeId: employmentTypeIdLong)
+			}
+		}
+		
+		
+		if ((!employmentTypeId) && (stationId) && (!branchId)){
+			station = delegator.findOne("Station", [stationId : stationId.toString()], false);
+			expr = exprBldr.AND() {
+				GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
+				LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
+				EQUALS(accountProductId: accountProductIdLong)
+				EQUALS(employerCode: station.employerCode)
+			}
+		}
+		
+		
 
 	} else{
 	startDateTimestamp = new Timestamp(sqlStartDate.getTime());
