@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 
@@ -1328,29 +1329,44 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 				String fullName2 = " "+fname2+" "+sname2;
 			
 				String leaveStaffId= null;
-				List<String> someList = new ArrayList<String>();
 				
-				try{
+		try{
 		    	
-		    	leaveStaffELI= delegator.findList("LeaveStaff", EntityCondition.makeCondition("partyId", EntityOperator.NOT_EQUAL,null), null, null, null, false);
-		    	
+		    leaveStaffELI= delegator.findList("LeaveStaff", EntityCondition.makeCondition("partyId", EntityOperator.NOT_EQUAL,null), null, null, null, false);
+		    
 		    }catch(GenericEntityException e){
 		    	e.printStackTrace();
 		    }
+			System.out.println("##########: SIZE: "+leaveStaffELI.size());
 		    for (GenericValue genericValue : leaveStaffELI) {
-		    	leaveStaffId = genericValue.getString("partyId");
-		    	someList.add(leaveStaffId);
-		    	for(Iterator<String> i = someList.iterator(); i.hasNext();  ){
-		    		 leaveStaffMail = delegator.makeValue("StaffScheduledMail", "msgId", delegator.getNextSeqId("StaffScheduledMail"), 
-		 					"partyId", leaveStaffId,
-		 		            "subject", "NOTIFICATION : LEAVE APPROVAL ", 
-		 		            "body", "Leave application of ["+fname+" "+sname+"] Payroll:-["+payroll+"] has been Approved.Duration of leave is :"+leaveDuration+" days, It starts on :"+leaveStart+" and end on :"+leaveStop,
-		 		            "sendStatus", "NOTSEND");
-		    	 }  
 		    	
-		     	}
+		    	leaveStaffId = genericValue.getString("partyId");
+		    	System.out.println("TRYING TO SEND EMAIL FOR PARTY ID: "+leaveStaffId);
+//		    	 leaveStaffMail = delegator.makeValue("StaffScheduledMail", "msgId", delegator.getNextSeqId("StaffScheduledMail"), 
+//				 			"partyId", leaveStaffId,
+//				 		    "subject", "NOTIFICATION : LEAVE APPROVAL ", 
+//				 		    "body", "Leave application of ["+fname+" "+sname+"] Payroll:-["+payroll+"] has been Approved.Duration of leave is :"+leaveDuration+" days, It starts on :"+leaveStart+" and end on :"+leaveStop,
+//				 		    "sendStatus", "NOTSEND");
+		    	String body = "Leave application of ["+fname+" "+sname+"] Payroll:-["+payroll+"] has been Approved.Duration of leave is :"+leaveDuration+" days, It starts on :"+leaveStart+" and end on :"+leaveStop;
+		 		GenericValue leaveStaffMailGV = delegator.makeValue("StaffScheduledMail");
+		 		String msgId = delegator.getNextSeqId("StaffScheduledMail");
+		 		leaveStaffMailGV.put("msgId", msgId);
+		 		leaveStaffMailGV.put("partyId", leaveStaffId);
+		 		leaveStaffMailGV.put("subject", "LEAVE NOTIFICATION");
+		 		leaveStaffMailGV.put("body", body);
+		 		leaveStaffMailGV.put("sendStatus", "NOTSEND");
+				try {
+					leaveStaffMailGV.create();
+					System.out.println("EMAIL SENT FOR PARTY ID: "+leaveStaffId);
+				} catch (GenericEntityException e) {
+					System.out.println("EMAIL NOT SENT FOR PARTY ID: "+leaveStaffId);
+					e.printStackTrace();
+				}	 
+		    	 
+		    	 
+		    }
+		       
 		    
-		   
 					    	
 			emailRecord_handover = delegator.makeValue("StaffScheduledMail", "msgId", delegator.getNextSeqId("StaffScheduledMail"), 
 					"partyId", email_To_StaffHandedOver,
@@ -1370,11 +1386,13 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		            "action", "Approved By "+fullName2,
 		            "actionBy", user);
 			
-			toBeStored.add(leaveStaffMail);
 			toBeStored.add(leavesELI);
 			toBeStored.add(leaveLogs);
 			toBeStored.add(emailRecord_handover);
 			toBeStored.add(emailRecord_applicant);
+			
+			System.out.println("### THE ABOVE PART WAS EXECUTED #####");
+			
 		} else if(isThemLast.equalsIgnoreCase("NO")){
 			
 			EntityConditionList<EntityExpr> workflowNextStaffConditions = EntityCondition.makeCondition(UtilMisc.toList(
@@ -1663,6 +1681,8 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		GenericValue ForwaedTo = null; 
 		GenericValue LeaveTypeELI = null; 
         String goToNextResponsibleStaff=null;
+        List<GenericValue> leaveStaffELI = null;
+        
 		try {
 			
 			leavesELI = delegator.findOne("EmplLeave",
@@ -1756,7 +1776,42 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 				fname2 = ForwaedTo.getString("firstName");
 				sname2 = ForwaedTo.getString("lastName");
 				String fullName2 = " "+fname2+" "+sname2;
-				
+				String leaveStaffId= null;
+				//
+				try{
+			    	
+				    leaveStaffELI= delegator.findList("LeaveStaff", EntityCondition.makeCondition("partyId", EntityOperator.NOT_EQUAL,null), null, null, null, false);
+				    
+				    }catch(GenericEntityException e){
+				    	e.printStackTrace();
+				    }
+					System.out.println("##########: SIZE: "+leaveStaffELI.size());
+				    for (GenericValue genericValue : leaveStaffELI) {
+				    	
+				    	leaveStaffId = genericValue.getString("partyId");
+				    	System.out.println("TRYING TO SEND EMAIL FOR PARTY ID: "+leaveStaffId);
+
+				    	String body = "Leave application of ["+fname+" "+sname+"] Payroll:-["+payroll+"] has been Approved.Duration of leave is :"+leaveDuration+" days, It starts on :"+leaveStart+" and end on :"+leaveStop;
+				 		GenericValue leaveStaffMailGV = delegator.makeValue("StaffScheduledMail");
+				 		String msgId = delegator.getNextSeqId("StaffScheduledMail");
+				 		leaveStaffMailGV.put("msgId", msgId);
+				 		leaveStaffMailGV.put("partyId", leaveStaffId);
+				 		leaveStaffMailGV.put("subject", "LEAVE NOTIFICATION");
+				 		leaveStaffMailGV.put("body", body);
+				 		leaveStaffMailGV.put("sendStatus", "NOTSEND");
+						try {
+							leaveStaffMailGV.create();
+							System.out.println("EMAIL SENT FOR PARTY ID: "+leaveStaffId);
+						} catch (GenericEntityException e) {
+							System.out.println("EMAIL NOT SENT FOR PARTY ID: "+leaveStaffId);
+							e.printStackTrace();
+						}	 
+				    	 
+				    	 
+				    }
+				       
+				//
+	
 			emailRecord_handover = delegator.makeValue("StaffScheduledMail", "msgId", delegator.getNextSeqId("StaffScheduledMail"), 
 					"partyId", email_To_StaffHandedOver,
 		            "subject", "RESPONSIBILITIES HANDOVER", 
