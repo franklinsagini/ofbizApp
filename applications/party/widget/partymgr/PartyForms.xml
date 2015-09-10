@@ -3559,7 +3559,28 @@ Gender
         			<entity-constraint name="isBranch" operator="equals" value="Y"/>
         		</entity-options>
         	</drop-down>
-        </field>       
+        </field>  
+        
+        <field name="stationId" title="Station">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name} - ${stationNumber}" entity-name="Station" key-field-name="stationId"></entity-options>
+        	</drop-down>
+        </field>
+        
+         <field name="employmentTypeId" title="Employment Type">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name}" entity-name="EmploymentType" key-field-name="employmentTypeId"></entity-options>
+        	</drop-down>
+        </field>  
+        
+        <!-- IntroducingMemberSummary --> 
+        <field name="introducingMember" title="Introducing Member">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${firstName} ${middleName} ${lastName}" entity-name="IntroducingMemberSummary" key-field-name="partyId">
+        			<entity-order-by field-name="firstName"/>
+        		</entity-options>
+        	</drop-down>
+        </field>  
         
         <field name="submitButton" title="Download Excel" widget-style="smallSubmit">
             <submit button-type="button"/>
