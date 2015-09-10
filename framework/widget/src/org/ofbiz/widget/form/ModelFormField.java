@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Licensed to the Apache Software Foundation (ASF) under one
+F * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
  * regarding copyright ownership.  The ASF licenses this file
@@ -2582,6 +2582,8 @@ public class ModelFormField {
 
 			if (!this.entityName.equals("MemberStatus")
 					&& !this.entityName.equals("MemberAccount")
+					&& !this.entityName.equals("EmploymentType")
+					
 					&& !this.entityName.equals("LoanGuarantor")
 					&& !this.entityName.equals("Member")
 					&& !this.entityName.equals("LoanApplication")
