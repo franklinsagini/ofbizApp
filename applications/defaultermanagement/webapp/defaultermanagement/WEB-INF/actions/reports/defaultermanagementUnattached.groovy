@@ -150,7 +150,7 @@ employerList.eachWithIndex { stationEmployerItem, index ->
 		
 		//expectedReceived.variance = expectedReceived.expected - expectedReceived.received;
 		
-		if ((timeDefaulted == null) || (timeDefaulted >= 3)){
+		if ((timeDefaulted != null) && (timeDefaulted > 3)){
 			
 			timeDefaulted = timeDefaulted - 3;
 			defaultedLoan.timeDifference = timeDefaulted;
