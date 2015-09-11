@@ -2253,7 +2253,11 @@ public class LoanUtilities {
 
 		GenericValue loanApplication = getLoanApplicationEntityGivenLoanNo(loanNo);
 
-		Timestamp fromDate = loanApplication.getTimestamp("lastRepaymentDate");
+		Timestamp fromDate = getLoanLastPaymentDate(loanApplication.getLong("loanApplicationId"), loanApplication.getTimestamp("lastRepaymentDate"));
+				
+				//loanApplication.getTimestamp("lastRepaymentDate");
+		
+		//getLoanLastPaymentDat
 		Timestamp toDate = new Timestamp(Calendar.getInstance()
 				.getTimeInMillis());
 
@@ -3309,6 +3313,47 @@ public class LoanUtilities {
 		}
 
 		
+	}
+	
+	public static Timestamp getLoanLastPaymentDate(Long loanApplicationId, Timestamp lastPaymentDate){
+		
+		Timestamp lastPaid = lastPaymentDate;
+		
+		//Get last payment date in LoanRepayment
+		EntityConditionList<EntityExpr> loanRepaymentConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanApplicationId", EntityOperator.EQUALS,
+						loanApplicationId),
+
+				EntityCondition.makeCondition("principalAmount", EntityOperator.GREATER_THAN,
+						BigDecimal.ZERO)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> loanRepaymentELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		List<String> orderList = new ArrayList<String>();
+		orderList.add("-createdStamp");
+		
+		try {
+			loanRepaymentELI = delegator.findList("LoanRepayment",
+					loanRepaymentConditions, null, orderList, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+//		for (GenericValue genericValue : loanApplicationELI) {
+//			loanApplicationIds.add(genericValue.getLong("loanApplicationId"));
+//		}
+		
+		if ((loanRepaymentELI != null) && (loanRepaymentELI.size() > 0))
+		{
+			lastPaid = loanRepaymentELI.get(0).getTimestamp("createdStamp");
+		}
+		
+		return lastPaid;
 	}
 
 

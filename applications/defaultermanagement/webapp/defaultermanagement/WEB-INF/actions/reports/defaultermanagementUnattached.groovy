@@ -117,7 +117,9 @@ employerList.eachWithIndex { stationEmployerItem, index ->
 		defaultedLoan.loanBalance = loanBalance
 		
 		defaultedLoan.disbursementDate = defaultedItem.disbursementDate
-		defaultedLoan.lastPaid = defaultedItem.lastRepaymentDate
+		defaultedLoan.lastPaid = org.ofbiz.accountholdertransactions.LoanUtilities.getLoanLastPaymentDate(defaultedItem.loanApplicationId, defaultedItem.lastRepaymentDate);
+		
+		//defaultedItem.lastRepaymentDate
 		defaultedLoan.payrollNo = defaultedItem.payrollNumber
 		
 		memberName = defaultedItem.firstName + ' '+defaultedItem.middleName+' '+defaultedItem.lastName;
