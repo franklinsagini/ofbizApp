@@ -483,7 +483,7 @@ public class ATMServices {
 					new Timestamp(Calendar.getInstance().getTimeInMillis()));
 		}
 
-		addServiceLog(cardNumber, "BALANCE", transaction.getStatus());
+		addServiceLog(cardNumber, "POSWITHDRAWAL", transaction.getStatus());
 		Gson gson = new Gson();
 		String json = gson.toJson(transaction);
 
