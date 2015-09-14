@@ -1324,12 +1324,11 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 			String fname2 = null;
 			String sname2 = null;
 			
-				fname2 = ForwaedTo.getString("firstName");
-				sname2 = ForwaedTo.getString("lastName");
-				String fullName2 = " "+fname2+" "+sname2;
-			
-				String leaveStaffId= null;
-				
+		    fname2 = ForwaedTo.getString("firstName");
+		    sname2 = ForwaedTo.getString("lastName");
+		    String fullName2 = " "+fname2+" "+sname2;
+			String leaveStaffId= null;
+		
 		try{
 		    	
 		    leaveStaffELI= delegator.findList("LeaveStaff", EntityCondition.makeCondition("partyId", EntityOperator.NOT_EQUAL,null), null, null, null, false);
@@ -1342,11 +1341,6 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		    	
 		    	leaveStaffId = genericValue.getString("partyId");
 		    	System.out.println("TRYING TO SEND EMAIL FOR PARTY ID: "+leaveStaffId);
-//		    	 leaveStaffMail = delegator.makeValue("StaffScheduledMail", "msgId", delegator.getNextSeqId("StaffScheduledMail"), 
-//				 			"partyId", leaveStaffId,
-//				 		    "subject", "NOTIFICATION : LEAVE APPROVAL ", 
-//				 		    "body", "Leave application of ["+fname+" "+sname+"] Payroll:-["+payroll+"] has been Approved.Duration of leave is :"+leaveDuration+" days, It starts on :"+leaveStart+" and end on :"+leaveStop,
-//				 		    "sendStatus", "NOTSEND");
 		    	String body = "Leave application of ["+fname+" "+sname+"] Payroll:-["+payroll+"] has been Approved.Duration of leave is :"+leaveDuration+" days, It starts on :"+leaveStart+" and end on :"+leaveStop;
 		 		GenericValue leaveStaffMailGV = delegator.makeValue("StaffScheduledMail");
 		 		String msgId = delegator.getNextSeqId("StaffScheduledMail");
@@ -1365,9 +1359,47 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		    	 
 		    	 
 		    }
-		       
+
+		    //////////
 		    
-					    	
+		List <GenericValue> getWorkflowResponsibleStaffMailELI = null;
+		String leaveStaffWorkFlowMailId= null;
+		    
+	    EntityConditionList<EntityExpr> workflowConditionsMail = EntityCondition.makeCondition(UtilMisc.toList(
+					EntityCondition.makeCondition("leaveWorkFlowId", EntityOperator.EQUALS, partyWorkFlow),
+					EntityCondition.makeCondition("isLast", EntityOperator.EQUALS, "NO")),
+					EntityOperator.AND);
+		 
+		try {
+			getWorkflowResponsibleStaffMailELI = delegator.findList("LeaveWorkFlowResponsibleStaff", workflowConditionsMail, null,null, null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+			
+		}
+		System.out.println("#####RESPONSIBLE#####: SIZE: ##########"+getWorkflowResponsibleStaffMailELI.size());
+	    for (GenericValue genericValue : getWorkflowResponsibleStaffMailELI) {
+	    	
+	    	leaveStaffWorkFlowMailId = genericValue.getString("responsibleEmployee");
+	    	System.out.println("TRYING TO SEND EMAIL FOR PARTY ID: "+leaveStaffWorkFlowMailId);
+	    	String body = "Leave application of ["+fname+" "+sname+"] Payroll:-["+payroll+"] has been Approved.Duration of leave is :"+leaveDuration+" days, It starts on :"+leaveStart+" and end on :"+leaveStop;
+	 		GenericValue leaveStaffMailGVResponsibleEmpl = delegator.makeValue("StaffScheduledMail");
+	 		String msgId = delegator.getNextSeqId("StaffScheduledMail");
+	 		leaveStaffMailGVResponsibleEmpl.put("msgId", msgId);
+	 		leaveStaffMailGVResponsibleEmpl.put("partyId", leaveStaffWorkFlowMailId);
+	 		leaveStaffMailGVResponsibleEmpl.put("subject", "LEAVE NOTIFICATION");
+	 		leaveStaffMailGVResponsibleEmpl.put("body", body);
+	 		leaveStaffMailGVResponsibleEmpl.put("sendStatus", "NOTSEND");
+			try {
+				leaveStaffMailGVResponsibleEmpl.create();
+				System.out.println("EMAIL SENT FOR PARTY ID: "+leaveStaffWorkFlowMailId);
+			} catch (GenericEntityException e) {
+				System.out.println("EMAIL NOT SENT FOR PARTY ID: "+leaveStaffWorkFlowMailId);
+				e.printStackTrace();
+			}	 
+	    	 
+	    	 
+	    }
+		    
 			emailRecord_handover = delegator.makeValue("StaffScheduledMail", "msgId", delegator.getNextSeqId("StaffScheduledMail"), 
 					"partyId", email_To_StaffHandedOver,
 		            "subject", "RESPONSIBILITIES HANDOVER", 
@@ -1949,6 +1981,255 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		}
 		return leaveid;
 	}
+	
+	// send mail when rejected 
+	public static String SendRejectionMailToStaff(String theLeaveId, String theUserLoggedInPartyId) {
+		Map<String, Object> result = FastMap.newInstance();
+		List<GenericValue> toBeStored = FastList.newInstance();
+	    // Delegator delegator = (Delegator) request.getAttribute("delegator");
+        // GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+	    // String user = theUserLoggedInPartyId;     //  userLogin.getString("partyId");
+		//Delegator delegator = ctx.getDelegator();
+		//GenericValue userLogin = (GenericValue) context.get("userLogin");
+		//String user = (String) context.get("partyId");
+	   
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		String user = theUserLoggedInPartyId;  
+		String leaveid = theLeaveId;   //(String) request.getParameter("leaveId");
+		List<GenericValue> responsibleUserELI = null;
+		GenericValue staff = null;
+		GenericValue leavesRELI = null;
+		String party = null;
+		String leaveStart = null;
+		String leaveStop = null;
+		String leaveDuration = null;
+		String partyWorkFlow = null;
+		List<GenericValue> getWorkflowELI = null;
+		GenericValue workflowELI = null; 
+		String isLast = null;
+		String comeAfter = null;
+		String isFirst = null;
+		GenericValue workflowResponsibleStaff = null;
+        ///
+		
+		
+		
+		try {
+			
+			leavesRELI = delegator.findOne("EmplLeave",
+							UtilMisc.toMap("leaveId", leaveid), false);
+					
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		if (leavesRELI != null) {
+			party = leavesRELI.getString("partyId");
+			leaveDuration = leavesRELI.getString("leaveDuration");
+			leaveStart = leavesRELI.getString("fromDate");
+			leaveStop = leavesRELI.getString("thruDate");
+		}
+		
+		//get person details
+		try {
+			staff = delegator.findOne("Person",
+					UtilMisc.toMap("partyId", party), false);
+		} catch (GenericEntityException e) {
+			Debug.logWarning(e.getMessage(), null);
+		}
+		
+		String payroll = staff.getString("employeeNumber");
+		String fname = staff.getString("firstName");
+		String sname = staff.getString("lastName");
+				//
+		
+		try {
+			getWorkflowELI = delegator.findList("LeaveWorkFlowStaffMapping",	EntityCondition.makeCondition("partyId", party), null,null, null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+			
+		}
+		
+		if (getWorkflowELI.size() > 0) {
+			workflowELI = getWorkflowELI.get(0);
+			partyWorkFlow = workflowELI.getString("leaveWorkFlowId");
+		}
+        ///
+        EntityConditionList<EntityExpr> workflowConditionsRejectionMail = EntityCondition.makeCondition(UtilMisc.toList(
+				EntityCondition.makeCondition("leaveWorkFlowId", EntityOperator.EQUALS, partyWorkFlow),
+				EntityCondition.makeCondition("responsibleEmployee", EntityOperator.EQUALS, user)),
+					EntityOperator.AND);
+		try{
+			
+			responsibleUserELI = delegator.findList("LeaveWorkFlowResponsibleStaff", workflowConditionsRejectionMail, null, null, null, false);
+			
+		}catch(GenericEntityException ex){
+			ex.printStackTrace();
+		}
+		if (responsibleUserELI.size() > 0) {
+			workflowResponsibleStaff = responsibleUserELI.get(0);
+			isLast = workflowResponsibleStaff.getString("isLast");
+			comeAfter = workflowResponsibleStaff.getString("comeAfter");
+			isFirst =   workflowResponsibleStaff.getString("isFirst");
+		}
+		
+		if (isLast.equalsIgnoreCase("YES")) {
+		    
+		List <GenericValue> getWorkflowResponsibleStaffMailELI = null;
+		String leaveStaffWorkFlowMailId= null;
+		    
+	    EntityConditionList<EntityExpr> workflowConditionsMail = EntityCondition.makeCondition(UtilMisc.toList(
+					EntityCondition.makeCondition("leaveWorkFlowId", EntityOperator.EQUALS, partyWorkFlow),
+					EntityCondition.makeCondition("isLast", EntityOperator.EQUALS, "NO")),
+					EntityOperator.AND);
+		 
+		try {
+			getWorkflowResponsibleStaffMailELI = delegator.findList("LeaveWorkFlowResponsibleStaff", workflowConditionsMail, null,null, null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+			
+		}
+		System.out.println("#####RESPONSIBLE#####: SIZE: ##########"+getWorkflowResponsibleStaffMailELI.size());
+	    for (GenericValue genericValue : getWorkflowResponsibleStaffMailELI) {
+	    	
+	    	leaveStaffWorkFlowMailId = genericValue.getString("responsibleEmployee");
+	    	System.out.println("TRYING TO SEND EMAIL FOR PARTY ID: "+leaveStaffWorkFlowMailId);
+	    	String body = "Leave application of ["+fname+" "+sname+"] Payroll:-["+payroll+"] has been Rejected";
+	 		GenericValue leaveStaffMailGVResponsibleEmpl = delegator.makeValue("StaffScheduledMail");
+	 		String msgId = delegator.getNextSeqId("StaffScheduledMail");
+	 		leaveStaffMailGVResponsibleEmpl.put("msgId", msgId);
+	 		leaveStaffMailGVResponsibleEmpl.put("partyId", leaveStaffWorkFlowMailId);
+	 		leaveStaffMailGVResponsibleEmpl.put("subject", "LEAVE REJECTION NOTIFICATION");
+	 		leaveStaffMailGVResponsibleEmpl.put("body", body);
+	 		leaveStaffMailGVResponsibleEmpl.put("sendStatus", "NOTSEND");
+			try {
+				leaveStaffMailGVResponsibleEmpl.create();
+				System.out.println("EMAIL SENT FOR PARTY ID: "+leaveStaffWorkFlowMailId);
+			} catch (GenericEntityException e) {
+				System.out.println("EMAIL NOT SENT FOR PARTY ID: "+leaveStaffWorkFlowMailId);
+				e.printStackTrace();
+			}	 
+	    	 
+	    }
+	    
+		}//close if is Last
+		else if (isLast.equalsIgnoreCase("NO") && isFirst.equalsIgnoreCase("NO")) {
+			
+	    	String body = "Leave application of ["+fname+" "+sname+"] Payroll:-["+payroll+"] has been Rejected";
+	 		GenericValue leaveStaffMailGVV = delegator.makeValue("StaffScheduledMail");
+	 		String msgId = delegator.getNextSeqId("StaffScheduledMail");
+	 		leaveStaffMailGVV.put("msgId", msgId);
+	 		leaveStaffMailGVV.put("partyId", comeAfter);
+	 		leaveStaffMailGVV.put("subject", "LEAVE REJECTION NOTIFICATION");
+	 		leaveStaffMailGVV.put("body", body);
+	 		leaveStaffMailGVV.put("sendStatus", "NOTSEND");
+			try {
+				leaveStaffMailGVV.create();
+				System.out.println("EMAIL SENT FOR PARTY ID:comeAfter "+comeAfter);
+			} catch (GenericEntityException e) {
+				System.out.println("EMAIL NOT SENT FOR PARTY ID:comeAfter "+comeAfter);
+				e.printStackTrace();
+			}
+		
+			//find the Responsible Employee for Come After
+			 EntityConditionList<EntityExpr> workflowConditionsMailNext = EntityCondition.makeCondition(UtilMisc.toList(
+						EntityCondition.makeCondition("leaveWorkFlowId", EntityOperator.EQUALS, partyWorkFlow),
+						EntityCondition.makeCondition("responsibleEmployee", EntityOperator.EQUALS, comeAfter)),
+						EntityOperator.AND);
+			
+			List<GenericValue> comeAfterResponsibleEmployee = null;
+			String comeAfterPartyId =  null;
+			String isTheLast = null;
+			String isTheFirst = null;
+			
+			
+				try{
+					comeAfterResponsibleEmployee = delegator.findList("LeaveWorkFlowResponsibleStaff",workflowConditionsMailNext,null,null,null, false);
+				}catch(GenericEntityException ex){
+					ex.printStackTrace();
+				}
+				
+				
+				
+			    for (GenericValue genericValue : comeAfterResponsibleEmployee) {
+			    	
+			    	comeAfterPartyId = genericValue.getString("comeAfter");
+			    	isTheLast = genericValue.getString("isLast");
+			    	isTheFirst = genericValue.getString("isFirst");
+			    	
+			    	System.out.println("TRYING TO SEND EMAIL FOR PARTY ID: "+comeAfterPartyId);
+			    	String bbody = "Leave application of ["+fname+" "+sname+"] Payroll:-["+payroll+"] has been Rejected";
+			 		GenericValue leaveStaffMailGVResponsibleEmpl = delegator.makeValue("StaffScheduledMail");
+			 		String mmsgId = delegator.getNextSeqId("StaffScheduledMail");
+			 		leaveStaffMailGVResponsibleEmpl.put("msgId", mmsgId);
+			 		leaveStaffMailGVResponsibleEmpl.put("partyId", comeAfterPartyId);
+			 		leaveStaffMailGVResponsibleEmpl.put("subject", "LEAVE REJECTION NOTIFICATION");
+			 		leaveStaffMailGVResponsibleEmpl.put("body", bbody);
+			 		leaveStaffMailGVResponsibleEmpl.put("sendStatus", "NOTSEND");
+					try {
+						leaveStaffMailGVResponsibleEmpl.create();
+						System.out.println("EMAIL SENT FOR PARTY ID comeAfterPartyId : "+comeAfterPartyId);
+					} catch (GenericEntityException e) {
+						System.out.println("EMAIL NOT SENT FOR PARTY ID: comeAfterPartyId "+comeAfterPartyId);
+						e.printStackTrace();
+					}
+					
+					if(isTheLast.equalsIgnoreCase("NO") && isTheFirst.equalsIgnoreCase("NO")){
+						
+						// if is NOT the Last And Not The First
+						List<GenericValue> comeAfterResponsibleEmployeeM = null;
+						String comeAfterPartyIdM =  null;
+						String isTheLastM = null;
+						String isTheFirstM = null;
+						
+						EntityConditionList<EntityExpr> workflowConditionsMailNextM = EntityCondition.makeCondition(UtilMisc.toList(
+									EntityCondition.makeCondition("leaveWorkFlowId", EntityOperator.EQUALS, partyWorkFlow),
+									EntityCondition.makeCondition("responsibleEmployee", EntityOperator.EQUALS, comeAfterPartyId)),
+									EntityOperator.AND);
+						
+						 try{
+							 comeAfterResponsibleEmployeeM = delegator.findList("LeaveWorkFlowResponsibleStaff",workflowConditionsMailNextM,null,null,null, false);
+							}catch(GenericEntityException ex){
+								ex.printStackTrace();
+							}
+						    for (GenericValue genericValueM : comeAfterResponsibleEmployeeM) {
+
+						    	comeAfterPartyIdM = genericValueM.getString("comeAfter");
+						    	
+						    	System.out.println("TRYING TO SEND EMAIL FOR PARTY ID  comeAfterPartyIdM: "+comeAfterPartyIdM);
+						    	String mbbody = "Leave application of ["+fname+" "+sname+"] Payroll:-["+payroll+"] has been Rejected";
+						 		GenericValue leaveStaffMailGVResponsibleEmplM = delegator.makeValue("StaffScheduledMail");
+						 		String mmsgIdM = delegator.getNextSeqId("StaffScheduledMail");
+						 		leaveStaffMailGVResponsibleEmplM.put("msgId", mmsgIdM);
+						 		leaveStaffMailGVResponsibleEmplM.put("partyId", comeAfterPartyIdM);
+						 		leaveStaffMailGVResponsibleEmplM.put("subject", "LEAVE REJECTION NOTIFICATION");
+						 		leaveStaffMailGVResponsibleEmplM.put("body", mbbody);
+						 		leaveStaffMailGVResponsibleEmplM.put("sendStatus", "NOTSEND");
+								try {
+									leaveStaffMailGVResponsibleEmplM.create();
+									System.out.println("EMAIL SENT FOR PARTY ID comeAfterPartyIdMMMM : "+comeAfterPartyIdM);
+								} catch (GenericEntityException e) {
+									System.out.println("EMAIL NOT SENT FOR PARTY ID: comeAfterPartyIdMMMMM "+comeAfterPartyIdM);
+									e.printStackTrace();
+								}
+						    	
+						    }
+					}  //close if
+			    	
+			    }    //end for
+			
+			
+			
+			//end finding the come after
+		
+			
+		} // if last equals NO
+		
+		return leaveid;
+	}
+	
+	
 	
 	
 }

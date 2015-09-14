@@ -114,6 +114,9 @@ under the License.
                         <screenlet title="Staff Per Branch">
                         <include-form location="component://humanres/widget/ReportForms.xml" name="staffBranch"/>
                         </screenlet>
+                        <screenlet title="Run Staff List as at Certain Date">
+                        <include-form location="component://humanres/widget/ReportForms.xml" name="staffListAsAtCertainDate"/>
+                        </screenlet>
                         	</widgets>
                         </section>
 	                    </decorator-section>
@@ -2335,6 +2338,27 @@ under the License.
                     <decorator-section name="body">
                         <platform-specific>
                             <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/monthlyLeavePDF.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="staffListAsAtCertainDatePDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffListAsAtCertainDatePDF.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffListAsAtCertainDatePDF.fo.ftl"/></xsl-fo>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>

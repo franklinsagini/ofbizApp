@@ -238,4 +238,83 @@
 
         <field name="transactionAmount" title="Amount"><display/></field>
      </form>
+     
+     <!-- memberTransactionsCreditExport -->
+    <form name="memberTransactionsCreditExport" list-name="creditsList"  target="" title="" 
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+      <field name="accountNo" title="Account No"><display/></field>
+      
+       <field name="firstName" title="First Name"><display/></field>
+        <field name="middleName" title="Middle Name"><display/></field>
+        <field name="lastName" title="Last Name"><display/></field>
+
+         <field name="payrollNumber" title="Payroll Number"><display/></field>
+         <field name="memberNumber" title="Member No"><display/></field>
+         <field name="idNumber" title="ID No"><display/></field>
+         
+          <field name="transactionType" title="Description"><display/></field>
+
+        <field name="stationId" title="Station"><display-entity entity-name="Station" description="${name}"></display-entity></field>
+        <field name="branchId" title="Branch"><display-entity entity-name="PartyGroup" description="${groupName}" key-field-name="partyId"></display-entity></field>
+       <field name="memberStatusId" title="Member Status"><display-entity entity-name="MemberStatus" description="${name}" key-field-name="memberStatusId"></display-entity></field>
+       <field name="employmentTypeId" title="Employment Type"><display-entity entity-name="EmploymentType" description="${name}"></display-entity></field>
+		<field name="acctgTransId" title="Transaction Number"><display/></field>
+        <field name="createdStamp" title="Date Contributed"><display type="date-time"/></field>
+
+        <field name="transactionAmount" title="Amount"><display/></field>
+     </form>
+     
+     <!-- memberTransactionsDebitExport -->
+         <form name="memberTransactionsDebitExport" list-name="debitsList"  target="" title="" 
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+      <field name="accountNo" title="Account No"><display/></field>
+      
+       <field name="firstName" title="First Name"><display/></field>
+        <field name="middleName" title="Middle Name"><display/></field>
+        <field name="lastName" title="Last Name"><display/></field>
+
+         <field name="payrollNumber" title="Payroll Number"><display/></field>
+         <field name="memberNumber" title="Member No"><display/></field>
+         <field name="idNumber" title="ID No"><display/></field>
+         
+          <field name="transactionType" title="Description"><display/></field>
+
+        <field name="stationId" title="Station"><display-entity entity-name="Station" description="${name}"></display-entity></field>
+        <field name="branchId" title="Branch"><display-entity entity-name="PartyGroup" description="${groupName}" key-field-name="partyId"></display-entity></field>
+       <field name="memberStatusId" title="Member Status"><display-entity entity-name="MemberStatus" description="${name}" key-field-name="memberStatusId"></display-entity></field>
+       <field name="employmentTypeId" title="Employment Type"><display-entity entity-name="EmploymentType" description="${name}"></display-entity></field>
+		
+		<field name="acctgTransId" title="Transaction Number"><display/></field>
+        <field name="createdStamp" title="Date Contributed"><display type="date-time"/></field>
+
+        <field name="transactionAmount" title="Amount"><display/></field>
+     </form>
+     
+     
+     <!-- Member Transaction -->
+     <form name="memberTransactionsReportForm" type="single" target="memberTransactionsReportExcel.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+		<actions>
+			<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+
+		</actions>
+		
+        <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
+        
+        <field name="startDate" title="From" >
+        	<date-time type="timestamp"/>
+        </field>
+        
+        <field name="endDate" title="To" position="2">
+        	<date-time type="timestamp"/>
+        </field>
+        
+        <field name="submitButton" title="Generate Excel" widget-style="smallSubmit">
+            <submit button-type="button" />
+        </field>
+    </form>
 </forms>

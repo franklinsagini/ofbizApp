@@ -166,7 +166,7 @@ public class MSaccoServices {
 			// Process for NONE
 		} else if (type.equalsIgnoreCase(QUERY_TYPE_ACCOUNTS)) {
 			// process for ACCOUNTS
-			queryAccount.setListBalances(addAccountBalances(phoneNumber));
+			queryAccount.setListBalances(addAccountBalancesNoCharging(phoneNumber));
 			addServiceLog(phoneNumber, "Query Accounts", null, null);
 		} else if (type.equalsIgnoreCase(QUERY_TYPE_ACCOUNT_BALANCES)) {
 			// process for BALANCES
@@ -809,6 +809,58 @@ public class MSaccoServices {
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	
+	//Query Accounts, no charging
+	private List<Account> addAccountBalancesNoCharging(String phoneNumber) {
+		// String partyId
+		// MSaccoManagementServices.getMSaccoAccount(phoneNumber)
+		// MSaccoManagementServices.getMemberAccountId(phoneNumber)
+		// AccHolderTransactionServices.getM
+		Long memberAccountId = null;
+		memberAccountId = MSaccoManagementServices
+				.getMemberAccountId(phoneNumber);
+		List<Account> listAccount = new ArrayList<Account>();
+		Account account = new Account();
+		account.setTelephoneNo(phoneNumber);
+		account.setQuery_type("accounts");
+		
+		List<Long> listMemberAccountId = new ArrayList<Long>();
+		//AccHolderTransactionServices.
+
+		if (memberAccountId != null) {
+			//Post MSacco Enquiry Charge
+			
+			listMemberAccountId = AccHolderTransactionServices.getMemberAccountIdsWithdrawable(AccHolderTransactionServices
+					.getMemberAccount(memberAccountId).getLong("partyId"));
+			
+			for (Long currentMemberAccountId : listMemberAccountId) {
+				
+				
+				account = new Account();
+				account.setTelephoneNo(phoneNumber);
+				account.setQuery_type("accounts");
+				
+				GenericValue memberAccount = AccHolderTransactionServices
+						.getMemberAccount(currentMemberAccountId);
+
+				account.setAccountNo(memberAccount.getString("accountNo"));
+				account.setAccountName(memberAccount.getString("accountName"));
+				account.setAccountType(AccHolderTransactionServices.getAccountProductName(currentMemberAccountId));
+				String memberAccountIdString = currentMemberAccountId.toString();
+				memberAccountIdString = memberAccountIdString.replaceFirst(",", "");
+				account.setAccountBalance(AccHolderTransactionServices
+						.getTotalBalanceNow(memberAccountIdString).doubleValue());
+				listAccount.add(account);
+				
+			}
+			
+		}
+
+		
+		return listAccount;
+
 	}
 
 }
