@@ -1007,6 +1007,198 @@ public class FinAccountServices {
 
 		return totalDebitLines;
 	}
+	
+	public static Map<String, Object> reverseTransaction(DispatchContext dctx, Map<String, Object> context){
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		String paymentId = (String) context.get("paymentId");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		
+		//get payment using paymentId
+		GenericValue payment = null;
+		try {
+			payment = delegator.findOne("Payment", UtilMisc.toMap("paymentId", paymentId), false);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		EntityConditionList<EntityExpr> cond = null;
+		cond = EntityCondition.makeCondition(UtilMisc.toList(
+				EntityCondition.makeCondition("paymentId", EntityOperator.EQUALS, paymentId)
+				));
+		List<GenericValue> acctgTransEntryItems = null;
+		try {
+			acctgTransEntryItems = delegator.findList("AcctgTransAndEntries", cond, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		//get financial transaction affected
+		GenericValue finAccountTrans = null;
+		try {
+			finAccountTrans = delegator.findOne("FinAccountTrans", UtilMisc.toMap("finAccountTransId", payment.getString("finAccountTransId")), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		//CREATE PAYMENT HEADER FOR THE REVERSED
+		String reversedPaymentId = createPaymentHeaderForReversed(delegator, payment);
+		
+		//REVERSE ACCT TRANS
+		//CREATE THE NEGATING ACCTG TRANS
+		Boolean isAcctgTransSuccess = createReverseGlTransactions(delegator, reversedPaymentId, acctgTransEntryItems);
+		
+		//REVERSE Financial Account Transaction
+		//CREATE THE NEGATING FIN ACCOUNT TRANS ID
+		Boolean isFinancialAccountTransactionSuccess = createReverseBankTrans(delegator, reversedPaymentId, finAccountTrans);
+		
+		
+		
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		result.put("paymentId", reversedPaymentId);
+		return result;
+	}
+
+	private static Boolean createReverseBankTrans(Delegator delegator, String reversedPaymentId, GenericValue finAccountTrans) {
+		Boolean isSuccess = false;
+		
+		GenericValue oldFinAccountTrans = finAccountTrans;
+		GenericValue newFinAccountTrans = null;
+		
+		newFinAccountTrans = delegator.makeValue("FinAccountTrans");
+		String finAccountTransId = delegator.getNextSeqId("FinAccountTrans");
+		
+		
+		String finAccountTransTypeId = null;
+		if (oldFinAccountTrans.getString("finAccountTransTypeId").equals("WITHDRAWAL")) {
+			finAccountTransTypeId = "DEPOSIT";
+		}else if (oldFinAccountTrans.getString("finAccountTransTypeId").equals("DEPOSIT")) {
+			finAccountTransTypeId = "WITHDRAWAL";
+		}
+		newFinAccountTrans.put("finAccountTransId", finAccountTransId);
+		newFinAccountTrans.put("finAccountTransTypeId", finAccountTransTypeId);
+		newFinAccountTrans.put("finAccountId", oldFinAccountTrans.getString("finAccountId"));
+		newFinAccountTrans.put("comments", "REVERSE: "+oldFinAccountTrans.getString("comments"));
+		newFinAccountTrans.put("transactionDate", UtilDateTime.nowTimestamp());
+		newFinAccountTrans.put("amount", oldFinAccountTrans.getBigDecimal("amount"));
+		newFinAccountTrans.put("paymentId", reversedPaymentId);
+		newFinAccountTrans.put("statusId", "FINACT_TRNS_CREATED");
+		newFinAccountTrans.put("toggle", "N");
+		newFinAccountTrans.put("isReconcilled", "N");
+		try {
+			newFinAccountTrans.create();
+			isSuccess = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		return isSuccess;
+	}
+
+	private static Boolean createReverseGlTransactions(Delegator delegator, String reversedPaymentId, List<GenericValue> acctgTransEntryItems) {
+		Boolean isSuccess = false;
+		GenericValue oldAcctgTransEntry = acctgTransEntryItems.get(0);
+		String oldAcctgTransId = oldAcctgTransEntry.getString("acctgTransId");
+		
+		GenericValue oldAcctgTrans = null;
+		String newAcctgTransId = delegator.getNextSeqId("AcctgTrans");
+		try {
+			oldAcctgTrans = delegator.findOne("AcctgTrans", UtilMisc.toMap("acctgTransId", oldAcctgTransId),false);
+		} catch (GenericEntityException e1) {
+			e1.printStackTrace();
+		}
+		GenericValue acctgTrans = null;
+		acctgTrans = delegator.makeValue("AcctgTrans");
+		acctgTrans.put("acctgTransId", newAcctgTransId);
+		acctgTrans.put("acctgTransTypeId", oldAcctgTrans.getString("acctgTransTypeId"));
+		acctgTrans.put("transactionDate", UtilDateTime.nowTimestamp());
+		acctgTrans.put("isPosted", "Y");
+		acctgTrans.put("isApproved", "Y");
+		acctgTrans.put("postedDate", UtilDateTime.nowTimestamp());
+		acctgTrans.put("glFiscalTypeId", "ACTUAL");
+		acctgTrans.put("partyId", oldAcctgTrans.getString("partyId"));
+		acctgTrans.put("roleTypeId", oldAcctgTrans.getString("roleTypeId"));
+		acctgTrans.put("paymentId", reversedPaymentId);
+
+		try {
+			acctgTrans.create();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		for (GenericValue item : acctgTransEntryItems) {
+			
+			GenericValue acctgTransEntry = null;
+			String debitCreditFlag = null;
+			if (item.getString("debitCreditFlag").equals("C")) {
+				debitCreditFlag = "D";
+			}else {
+				debitCreditFlag = "C";
+			}
+			
+			acctgTransEntry = delegator.makeValue("AcctgTransEntry");
+			String acctgTransEntrySeqId = delegator.getNextSeqId("AcctgTransEntry");
+			acctgTransEntry.put("acctgTransId", newAcctgTransId);
+			acctgTransEntry.put("acctgTransEntrySeqId", acctgTransEntrySeqId);
+			acctgTransEntry.put("acctgTransEntryTypeId", item.getString("acctgTransEntryTypeId"));
+			acctgTransEntry.put("organizationPartyId", item.getString("organizationPartyId"));
+			acctgTransEntry.put("amount", item.getBigDecimal("amount"));
+			acctgTransEntry.put("origAmount", item.getBigDecimal("origAmount"));
+			acctgTransEntry.put("currencyUomId", item.getString("currencyUomId"));
+			acctgTransEntry.put("origCurrencyUomId", item.getString("origCurrencyUomId"));
+			acctgTransEntry.put("debitCreditFlag", debitCreditFlag);
+			acctgTransEntry.put("reconcileStatusId", item.getString("reconcileStatusId"));
+			acctgTransEntry.put("partyId", item.getString("partyId"));
+			acctgTransEntry.put("roleTypeId", item.getString("roleTypeId"));
+			acctgTransEntry.put("glAccountId", item.getString("glAccountId"));
+
+			try {
+				acctgTransEntry.create();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
+				
+		isSuccess = true;
+		return isSuccess;
+	}
+
+	private static String createPaymentHeaderForReversed(Delegator delegator, GenericValue payment) {
+		String reversedPaymentId = null;
+		
+		GenericValue confirmedPayment = null;
+
+		if (payment != null) {
+			confirmedPayment = delegator.makeValue("Payment");
+			reversedPaymentId = delegator.getNextSeqId("Payment");
+			confirmedPayment.put("paymentId", reversedPaymentId);
+			confirmedPayment.put("paymentTypeId", payment.getString("paymentTypeId"));
+			confirmedPayment.put("paymentMethodTypeId", payment.getString("paymentMethodTypeId"));
+			confirmedPayment.put("paymentMethodId", payment.getString("paymentMethodId"));
+			confirmedPayment.put("partyIdFrom", payment.getString("partyIdTo"));
+			confirmedPayment.put("partyIdTo", payment.getString("partyIdFrom"));
+			confirmedPayment.put("statusId", "PMNT_CONFIRMED");
+			confirmedPayment.put("effectiveDate", payment.getTimestamp("effectiveDate"));
+			confirmedPayment.put("amount", payment.getBigDecimal("amount"));
+			confirmedPayment.put("comments", "REVERSAL: "+payment.getString("comments"));
+			confirmedPayment.put("currencyUomId", payment.getString("currencyUomId"));
+
+			try {
+				confirmedPayment.create();
+			} catch (Exception e) {
+
+			}
+		}
+
+		
+		
+		return reversedPaymentId;
+	}
 
 	public static Map<String, Object> confirmMultiPayment(DispatchContext dctx, Map<String, Object> context) {
 		Delegator delegator = dctx.getDelegator();
