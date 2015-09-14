@@ -107,8 +107,7 @@
 					type="BigDecimal" />
 					
 				<entity-one entity-name="MemberRemittance" value-field="memberRemittanceContext" />
-				
-				<set field="normalProcessed" value="false"/>
+				<set field="normalProcessed" value="${bsh:org.ofbiz.normalremittanceprocessing.NormalRemittanceProcessingServices.getProcessedStatus(normalRemittanceMonthYearId)}"/>
 			</actions>
 
 			<widgets>
@@ -151,6 +150,37 @@
 
 
 										</widgets>
+									</section>
+								</screenlet>
+								
+								<screenlet>
+									<section>
+										
+										<condition>
+											<if-compare operator="equals" value="false" field="normalProcessed"/>
+										</condition>
+										<widgets>
+											
+											<container style="button-bar" >
+												<label style="h3"> NOT YET PROCESSED </label>
+											</container>
+										</widgets>
+										<fail-widgets></fail-widgets>
+									</section>
+								</screenlet>
+								
+								<screenlet>
+									<section>
+										
+										<condition>
+											<if-compare operator="equals" value="true" field="normalProcessed"/>
+										</condition>
+										<widgets>
+											<container style="button-bar">
+												<label style="h3"> ALREADY PROCESSED</label>
+											</container>
+										</widgets>
+										<fail-widgets></fail-widgets>
 									</section>
 								</screenlet>
 								

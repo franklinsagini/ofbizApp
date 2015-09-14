@@ -1223,6 +1223,9 @@ public class NormalRemittanceProcessingServices {
 	 * */
 	public synchronized static String deleteNormalRemittanceReceived(
 			Long normalRemittanceMonthYearId, Map<String, String> userLogin) {
+		
+		System.out.println(" normalRemittanceMonthYearId :: "+normalRemittanceMonthYearId);
+		System.out.println(" userLogin :: "+userLogin.get("userLoginId"));
 
 		// payrollNumber
 		// memberNames
@@ -1306,64 +1309,10 @@ public class NormalRemittanceProcessingServices {
 		
 		//Add Normal Remittance Header
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		Long normalRemittanceMonthYearDeletedId  = delegator.getNextSeqIdLong("NormalRemittanceMonthYearDeleted");
-		
-//		memberRemittanceId = delegator
-//				.getNextSeqIdLong("MemberRemittance");
 		
 		GenericValue normalRemittanceMonthYear = LoanUtilities.getEntityValue(
 						"NormalRemittanceMonthYear", "normalRemittanceMonthYearId",
 						normalRemittanceMonthYearId);
-		GenericValue normalRemittanceMonthYearDeleted = null;
-		
-		normalRemittanceMonthYearDeleted = delegator.makeValue("NormalRemittanceMonthYearDeleted",
-				UtilMisc.toMap(
-						"normalRemittanceMonthYearDeletedId",
-						normalRemittanceMonthYearDeletedId,
-						"normalRemittanceMonthYearId",
-						normalRemittanceMonthYearId,
-						"isActive",
-						normalRemittanceMonthYear.getString("isActive"),
-						"createdBy",
-						normalRemittanceMonthYear.getString("createdBy"),
-						
-						"deletedBy",
-						userLogin.get("userLoginId"),
-						
-						"deletedDate",
-						new Timestamp(Calendar.getInstance().getTimeInMillis()),
-
-						// "transactionType", "LOANREPAYMENT",
-						"month", normalRemittanceMonthYear.getString("month"),
-						"year", normalRemittanceMonthYear.getString("year"),
-
-						
-						"stationId", normalRemittanceMonthYear.getString("stationId"),
-
-						"remittanceNumber", normalRemittanceMonthYear.getLong("remittanceNumber"),
-						"postingacctgTransId",
-						normalRemittanceMonthYear.getString("postingacctgTransId"),
-
-						"processed", normalRemittanceMonthYear.getString("processed")));
-
-		
-		try {
-			TransactionUtil.begin();
-			delegator.createOrStore(normalRemittanceMonthYearDeleted);
-			TransactionUtil.commit();
-		} catch (GenericEntityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		//listMemberRemittance.add(memberRemittance);
-	//}
-
-//	try {
-//		delegator.storeAll(listMemberRemittance);
-//	} catch (GenericEntityException e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	}
 
 	//Add all the member items
 		List<GenericValue> normalRemittanceMonthYearHasDataELI = null;
@@ -1452,6 +1401,131 @@ public class NormalRemittanceProcessingServices {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public static Boolean getProcessedStatus(
+			Long normalRemittanceMonthYearId) {
+		Boolean processed = false;
+		
+		Boolean hasData = false;
+		List<GenericValue> normalRemittanceMonthYearHasDataELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		EntityConditionList<EntityExpr> normalRemittanceMonthYearHasDataConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"normalRemittanceMonthYearId", EntityOperator.EQUALS,
+						normalRemittanceMonthYearId)), EntityOperator.AND);
+
+		// normalRemittanceMonthYearId
+		try {
+			normalRemittanceMonthYearHasDataELI = delegator.findList(
+					"MemberRemittance",
+					normalRemittanceMonthYearHasDataConditions, null, null,
+					null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		if ((normalRemittanceMonthYearHasDataELI != null)
+				&& (normalRemittanceMonthYearHasDataELI.size() > 0)) {
+			hasData = true;
+		}
+
+		// Check that the station has been processed
+		List<GenericValue> normalRemittanceMonthYearELI = null;
+
+		EntityConditionList<EntityExpr> normalRemittanceMonthYearConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"normalRemittanceMonthYearId", EntityOperator.EQUALS,
+						normalRemittanceMonthYearId),
+				// processed
+						EntityCondition.makeCondition("processed",
+								EntityOperator.EQUALS, "Y")),
+						EntityOperator.AND);
+
+		// normalRemittanceMonthYearId
+		try {
+			normalRemittanceMonthYearELI = delegator.findList(
+					"MemberRemittance", normalRemittanceMonthYearConditions,
+					null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		if ((normalRemittanceMonthYearELI != null)
+				&& (normalRemittanceMonthYearELI.size() > 0)) {
+			processed = true;
+		}
+		
+		if (hasData && processed)
+			return true;
+		else
+			return false;
+	}
+	
+	
+	public static String getProcessedStatusMessage(
+			Long normalRemittanceMonthYearId) {
+		Boolean processed = false;
+		
+		Boolean hasData = false;
+		List<GenericValue> normalRemittanceMonthYearHasDataELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		EntityConditionList<EntityExpr> normalRemittanceMonthYearHasDataConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"normalRemittanceMonthYearId", EntityOperator.EQUALS,
+						normalRemittanceMonthYearId)), EntityOperator.AND);
+
+		// normalRemittanceMonthYearId
+		try {
+			normalRemittanceMonthYearHasDataELI = delegator.findList(
+					"MemberRemittance",
+					normalRemittanceMonthYearHasDataConditions, null, null,
+					null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		if ((normalRemittanceMonthYearHasDataELI != null)
+				&& (normalRemittanceMonthYearHasDataELI.size() > 0)) {
+			hasData = true;
+		}
+
+		// Check that the station has been processed
+		List<GenericValue> normalRemittanceMonthYearELI = null;
+
+		EntityConditionList<EntityExpr> normalRemittanceMonthYearConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"normalRemittanceMonthYearId", EntityOperator.EQUALS,
+						normalRemittanceMonthYearId),
+				// processed
+						EntityCondition.makeCondition("processed",
+								EntityOperator.EQUALS, "Y")),
+						EntityOperator.AND);
+
+		// normalRemittanceMonthYearId
+		try {
+			normalRemittanceMonthYearELI = delegator.findList(
+					"MemberRemittance", normalRemittanceMonthYearConditions,
+					null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		if ((normalRemittanceMonthYearELI != null)
+				&& (normalRemittanceMonthYearELI.size() > 0)) {
+			processed = true;
+		}
+		
+		if (hasData && processed)
+			return "PROCESSED";
+		else
+			return "NOT PROCESSED";
 	}
 
 }
