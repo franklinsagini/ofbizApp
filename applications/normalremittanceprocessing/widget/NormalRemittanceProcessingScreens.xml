@@ -107,6 +107,8 @@
 					type="BigDecimal" />
 					
 				<entity-one entity-name="MemberRemittance" value-field="memberRemittanceContext" />
+				
+				<set field="normalProcessed" value="false"/>
 			</actions>
 
 			<widgets>
@@ -151,7 +153,32 @@
 										</widgets>
 									</section>
 								</screenlet>
+								
+								
+								<!-- Delete Remittance -->
+								<screenlet>
+									<section>
+										
+										<condition>
+											<if-compare operator="equals" value="false" field="normalProcessed"/>
+										</condition>
+										<widgets>
+											
+											<container style="button-bar">
+												<link target="deleteNormalRemittanceReceived"
+													text="Delete Remittance Received" style="buttontext">
+													<!-- parameter param-name="loanApplicationId"/ -->
+													<parameter param-name="normalRemittanceMonthYearId" />
+													<image url-mode="raw" src="${iconsLocation}/add.png" />
+												</link>
+											</container>
 
+
+
+										</widgets>
+										<fail-widgets></fail-widgets>
+									</section>
+								</screenlet>
 							</widgets>
 						</section>
 						<section name="Member Remittance">

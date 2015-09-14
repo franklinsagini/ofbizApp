@@ -15,7 +15,7 @@
             </widgets>
         </section>
     </screen>
-    
+
         <!-- loanlistingbydatereport -->
     <screen name="loanlistingbydatereport">
         <section>
@@ -44,7 +44,7 @@
             </widgets>
         </section>
     </screen>
-    
+
        <screen name="loanlistingreportexcel">
         <section>
            <actions>
@@ -56,7 +56,7 @@
                <!-- decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
                    <decorator-section name="body">
                         <platform-specific>
-                            
+
                             <xsl-fo><html-template location="component://loanreports/webapp/loanreports/reports/loansummaryReport.fo.ftl"/></xsl-fo>
                         </platform-specific>
                     </decorator-section>
@@ -65,7 +65,7 @@
             </widgets>
         </section>
     </screen>
-    
+
     <!-- stationChequeReceivedReport -->
      <screen name="stationChequeReceivedReport">
         <section>
@@ -94,7 +94,7 @@
             </widgets>
         </section>
     </screen>
-  
+
 
 <!-- stationChequeReceivedReportPDF -->
 	 <screen name="stationChequeReceivedReportPDF">
@@ -116,14 +116,16 @@
             </widgets>
         </section>
     </screen>
-    
-    
+
+
     <!-- By Loan Type -->
        <screen name="appliedLoansByLoanType">
         <section>
             <actions>
                 <set field="headerItem" value="appliedLoansByLoanType" />
                 <set field="tabButtonItem" value="appliedLoansByLoanType" />
+                <set field="endDate" from-field="parameters.endDate" type="Timestamp"  default-value="${nowTimestamp}"/>
+                <set field="startDate" from-field="parameters.startDate" type="Timestamp" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -174,21 +176,21 @@
             </widgets>
         </section>
     </screen>
-    
+
     <!-- appliedLoansByLoanTypepdf -->
-    	 <screen name="appliedLoansByLoanTypepdf">
+    <screen name="appliedLoansByLoanTypepdf">
         <section>
-         <actions>
+            <actions>
                 <set field="viewSize" value="99999"/>
-                <!-- script location="component://party/webapp/partymgr/WEB-INF/actions/reports/loanDetails.groovy"/ -->
-                <script location="component://loanmanagementreports/webapp/loanmanagementreports/WEB-INF/actions/reports/chequesReceivedReport.groovy"/>
+                <set field="endDate" from-field="parameters.endDate" type="Timestamp"  default-value="${nowTimestamp}"/>
+                <set field="startDate" from-field="parameters.startDate" type="Timestamp" />
+                <script location="component://loanmanagementreports/webapp/loanmanagementreports/WEB-INF/actions/reports/appliedLoansByLoanType.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <platform-specific>
-                            <!-- xsl-fo><html-template location="component://party/webapp/partymgr/member/reports/loanDetails.fo.ftl"/></xsl-fo -->
-                            <xsl-fo><html-template location="component://loanmanagementreports/webapp/loanmanagementreports/reports/chequesReceivedReport.fo.ftl"/></xsl-fo>
+                            <xsl-fo><html-template location="component://loanmanagementreports/webapp/loanmanagementreports/reports/appliedLoansByLoanType.fo.ftl"/></xsl-fo>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>
