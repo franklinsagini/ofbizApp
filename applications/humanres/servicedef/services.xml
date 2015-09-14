@@ -3512,7 +3512,6 @@
   <auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
   </service>
   
-  
   <service name="createLeaveStaff" engine="simple" default-entity-name="LeaveStaff"
 	location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" 
 	invoke="createLeaveStaff" auth="true">
@@ -3520,7 +3519,6 @@
 		<auto-attributes include="pk" mode="IN" optional="true" />
 		<auto-attributes include="nonpk" mode="IN" optional="true" />
 	</service>
-
 
 	<service name="deleteLeaveStaff" engine="simple"	default-entity-name="LeaveStaff"
 		location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" 
@@ -3535,6 +3533,10 @@
   <description>Approve Leave Application</description>		
 </service>
 
-
+<service name="sendRejectionMail" engine="java"
+		location="org.ofbiz.humanres.LeaveServices" invoke="SendRejectionMailToStaff" auth="true">
+		<description>Send Rejection Mail</description>
+		
+	</service>
 
 </services>

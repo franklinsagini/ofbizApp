@@ -3035,7 +3035,10 @@
         <now-timestamp field="nowTimestamp" />
 		<set from-field="nowTimestamp" field="lookedUpValue.dateApprovedRejected"/>
         <store-value value-field="lookedUpValue" />
-			
+		
+	<!-- 	<set field="leaveId" value="${bsh:org.ofbiz.humanres.LeaveServices.SendRejectionMailToStaff(leaveId , userLoginPartyId );}"/> 
+        
+        <log message="#######LEAVE ID REJECTION  ${leaveId}" level="info"/> -->
         
         <make-value value-field="newEntity" entity-name="LeaveStatusLog" />
         <set-pk-fields map="parameters" value-field="newEntity" />
@@ -3046,11 +3049,28 @@
         <set field="newEntity.rejectedBy" value="${userLogin.partyId}"  />
         <set field="newEntity.leaveId" from="lookedUpValue.leaveId" />
         <set field="newEntity.approvalStatus" value="Rejected" />
+        
+        <!-- value used to send mails to staffs on rejection -->
+        <set field="theLeaveId" from-field="newEntity.leaveId"/>
+        <set field="thePartyIdUserLoggedIn" from-field="newEntity.rejectedBy"/>
+        
+        <log message="########The LeaveID ###### ${theLeaveId}#######" level="info"/>
+        <log message="########UserLoggedInParty ID ###### ${thePartyIdUserLoggedIn}#######" level="info"/>
+        
+        <set field="leaveId" value="${bsh:org.ofbiz.humanres.LeaveServices.SendRejectionMailToStaff(theLeaveId,thePartyIdUserLoggedIn);}"/>
+        
+         <log message="########RETURNED LEAVE ID ###### ${leaveId}#######" level="info"/>
+        
+        <!--END OF value used to send mails to staffs on rejection -->
+        
         <create-value value-field="newEntity" />
 			<log message="===== Leave Rejected log stored for ${lookedUpValue.partyId} by ${userLogin.userLoginId} ===" level="info"/>
 			
 			<call-simple-method method-name="rejectEmplLeaveStatusEmailInformation" scope="inline"></call-simple-method>
 			<call-simple-method method-name="createStaffLeaveLogsReject" scope="inline"></call-simple-method>
+			
+			
+			
     </simple-method>
     
      <!--======================= STAFF LEAVE LOGS =================================== -->
