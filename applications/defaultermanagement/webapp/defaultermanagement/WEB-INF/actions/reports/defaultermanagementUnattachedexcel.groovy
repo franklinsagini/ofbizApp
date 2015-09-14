@@ -78,6 +78,7 @@ class ExpectReceive{
 } **/
 
 def listStationDefaulted = [];
+def mylistOfDefaultedLoans = [];
 
 //def member
 
@@ -154,14 +155,18 @@ employerList.eachWithIndex { stationEmployerItem, index ->
 			
 			timeDefaulted = timeDefaulted - 3;
 			defaultedLoan.timeDifference = timeDefaulted;
-			stationDefaultedLoan.listOfDefaultedLoans.add(defaultedLoan);
+			
+			defaultedLoan = [loanNo:defaultedLoan.loanNo, loanType:defaultedLoan.loanType, loanAmt:defaultedLoan.loanAmt, loanBalance:defaultedLoan.loanBalance, disbursementDate:defaultedLoan.disbursementDate,  lastPaid:defaultedLoan.lastPaid, payrollNo:defaultedLoan.payrollNo, name:defaultedLoan.name, memberStatus:defaultedLoan.memberStatus, timeDifference:defaultedLoan.timeDifference, shareAmount:defaultedLoan.shareAmount, termsOfService:defaultedLoan.termsOfService ]
+			
+			mylistOfDefaultedLoans << defaultedLoan
+			//stationDefaultedLoan.listOfDefaultedLoans.add(defaultedLoan);
 		}
 		//varianceList << expectedReceived
 	}
 	 
-	listStationDefaulted << stationDefaultedLoan;
+	//listStationDefaulted << stationDefaultedLoan;
 	
 	
 }
 
-context.listStationDefaulted = listStationDefaulted;
+context.mylistOfDefaultedLoans = mylistOfDefaultedLoans;

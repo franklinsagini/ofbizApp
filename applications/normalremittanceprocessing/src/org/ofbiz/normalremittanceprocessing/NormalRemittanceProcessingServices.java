@@ -1124,5 +1124,25 @@ public class NormalRemittanceProcessingServices {
 
 		return false;
 	}
+	
+	
+	public synchronized static  String deleteRemittanceReceived(
+			Long normalRemittanceMonthYearId, Map<String, String> userLogin) {
+
+		// payrollNumber
+		// memberNames
+		// totalAmount
+		
+
+
+		GenericValue normalRemittanceMonthYear = LoanUtilities.getEntityValue(
+				"NormalRemittanceMonthYear", "normalRemittanceMonthYearId",
+				normalRemittanceMonthYearId);
+		
+		//Log Deletion
+		
+		return "success";
+		
+	}
 
 }

@@ -123,5 +123,131 @@
         	<condition-expr entity-alias="AT" field-name="increaseDecrease" operator="equals" value="I"/>
         </entity-condition>
     </view-entity>
+    
+    <!-- Credits -->
+    	 <view-entity entity-name="AccountContributionCreditAmounts" package-name="org.ofbiz.accountreports">
+    	<member-entity entity-alias="AT" entity-name="AccountTransaction"></member-entity>
+    	<member-entity entity-alias="MA" entity-name="MemberAccount"></member-entity>
+    	<member-entity entity-alias="AP" entity-name="AccountProduct"></member-entity>
+    	<member-entity entity-alias="M" entity-name="Member"></member-entity>
+    	<member-entity entity-alias="S" entity-name="Station"></member-entity>
+    	
+    	<alias entity-alias="M" name="firstName" group-by="true"></alias>
+    	<alias entity-alias="M" name="middleName" group-by="true"></alias>
+    	<alias entity-alias="M" name="lastName" group-by="true"></alias>
+    	
+    	<alias entity-alias="M" name="payrollNumber" group-by="true"/> 
+    	<alias entity-alias="M" name="memberNumber" group-by="true"/> 
+    	<alias entity-alias="M" name="idNumber" group-by="true"/> 
+    	
+    	<alias entity-alias="M" name="stationId" group-by="true"/> 
+    	<alias entity-alias="M" name="branchId" group-by="true"/> 
+    	<alias entity-alias="M" name="employmentTypeId"  group-by="true"/>
+    	<alias entity-alias="M" name="memberStatusId" group-by="true"/>
+    	 
+    	
+    	<alias entity-alias="S" name="employerCode" group-by="true"/> 
+    	
+    	<alias entity-alias="AP" name="accountProductId" group-by="true" />
+    	<alias entity-alias="MA" name="accountNo" group-by="true" />
+    	<alias entity-alias="MA" name="accountName" group-by="true" />
+    	
+    	
+    	<alias entity-alias="AT" name="acctgTransId" group-by="true" />
+    	<alias entity-alias="AT" name="partyId" group-by="true" />
+    	<alias entity-alias="AT" name="transactionType" group-by="true" />
+    	<alias entity-alias="AT" name="createdStamp" group-by="true" />
+    	<alias entity-alias="AT" name="increaseDecrease" group-by="true" />
+    	
+    	<alias entity-alias="AT" name="transactionAmount" function="sum"/> 
+    	
+    	<view-link entity-alias="AT" rel-entity-alias="MA"> 
+            <key-map field-name="memberAccountId" rel-field-name="memberAccountId"/> 
+        </view-link> 
+        
+        <view-link entity-alias="MA" rel-entity-alias="AP"> 
+            <key-map field-name="accountProductId" rel-field-name="accountProductId"/> 
+        </view-link>
+        
+        <view-link entity-alias="MA" rel-entity-alias="M"> 
+            <key-map field-name="partyId" rel-field-name="partyId"/> 
+        </view-link>
+        
+        <view-link entity-alias="M" rel-entity-alias="S"> 
+            <key-map field-name="stationId" rel-field-name="stationId"/> 
+        </view-link>
+        
+        <entity-condition>
+        	<condition-list combine="and">
+        		<condition-expr entity-alias="AT" field-name="increaseDecrease" operator="equals" value="I"/>
+        		<condition-expr entity-alias="AT" field-name="transactionType" operator="not-equals" value="LOANCASHPAY"/>
+        		<condition-expr entity-alias="AT" field-name="transactionType" operator="not-equals" value="LOANCHEQUEPAY"/>
+        	</condition-list>
+        	
+        </entity-condition>
+    </view-entity>
+    
+    <!-- Debits -->
+   	<view-entity entity-name="AccountContributionDebitAmounts" package-name="org.ofbiz.accountreports">
+    	<member-entity entity-alias="AT" entity-name="AccountTransaction"></member-entity>
+    	<member-entity entity-alias="MA" entity-name="MemberAccount"></member-entity>
+    	<member-entity entity-alias="AP" entity-name="AccountProduct"></member-entity>
+    	<member-entity entity-alias="M" entity-name="Member"></member-entity>
+    	<member-entity entity-alias="S" entity-name="Station"></member-entity>
+    	
+    	<alias entity-alias="M" name="firstName" group-by="true"></alias>
+    	<alias entity-alias="M" name="middleName" group-by="true"></alias>
+    	<alias entity-alias="M" name="lastName" group-by="true"></alias>
+    	
+    	<alias entity-alias="M" name="payrollNumber" group-by="true"/> 
+    	<alias entity-alias="M" name="memberNumber" group-by="true"/> 
+    	<alias entity-alias="M" name="idNumber" group-by="true"/> 
+    	
+    	<alias entity-alias="M" name="stationId" group-by="true"/> 
+    	<alias entity-alias="M" name="branchId" group-by="true"/> 
+    	<alias entity-alias="M" name="employmentTypeId"  group-by="true"/>
+    	<alias entity-alias="M" name="memberStatusId" group-by="true"/>
+    	 
+    	
+    	<alias entity-alias="S" name="employerCode" group-by="true"/> 
+    	
+    	<alias entity-alias="AP" name="accountProductId" group-by="true" />
+    	<alias entity-alias="MA" name="accountNo" group-by="true" />
+    	<alias entity-alias="MA" name="accountName" group-by="true" />
+    	<alias entity-alias="AT" name="partyId" group-by="true" />
+    	
+    	<alias entity-alias="AT" name="acctgTransId" group-by="true" />
+    	<alias entity-alias="AT" name="transactionType" group-by="true" />
+    	<alias entity-alias="AT" name="createdStamp" group-by="true" />
+    	<alias entity-alias="AT" name="increaseDecrease" group-by="true" />
+    	
+    	<alias entity-alias="AT" name="transactionAmount" function="sum"/> 
+    	
+    	<view-link entity-alias="AT" rel-entity-alias="MA"> 
+            <key-map field-name="memberAccountId" rel-field-name="memberAccountId"/> 
+        </view-link> 
+        
+        <view-link entity-alias="MA" rel-entity-alias="AP"> 
+            <key-map field-name="accountProductId" rel-field-name="accountProductId"/> 
+        </view-link>
+        
+        <view-link entity-alias="MA" rel-entity-alias="M"> 
+            <key-map field-name="partyId" rel-field-name="partyId"/> 
+        </view-link>
+        
+        <view-link entity-alias="M" rel-entity-alias="S"> 
+            <key-map field-name="stationId" rel-field-name="stationId"/> 
+        </view-link>
+        
+                <entity-condition>
+        	<condition-list combine="and">
+        		<condition-expr entity-alias="AT" field-name="increaseDecrease" operator="equals" value="D"/>
+        		<condition-expr entity-alias="AT" field-name="transactionType" operator="not-equals" value="LOANCASHPAY"/>
+        		<condition-expr entity-alias="AT" field-name="transactionType" operator="not-equals" value="LOANCHEQUEPAY"/>
+        	</condition-list>
+        	
+        </entity-condition>
+
+    </view-entity>
 
 </entitymodel>
