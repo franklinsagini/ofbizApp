@@ -89,7 +89,16 @@
              	<redirect-parameter name="normalRemittanceMonthYearId"/>
              </response>
      </request-map>
-        
+     
+     <!-- deleteNormalRemittanceReceived -->
+     <request-map uri="deleteNormalRemittanceReceived">
+             <security https="true" auth="true" />
+             <event type="service" invoke="deleteNormalRemittanceReceived">
+             </event>
+             <response name="success" type="request-redirect" value="memberRemittance">
+             	<redirect-parameter name="normalRemittanceMonthYearId"/>
+             </response>
+     </request-map>
 
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://normalremittanceprocessing/widget/NormalRemittanceProcessingScreens.xml#remittanceMonth"/>
