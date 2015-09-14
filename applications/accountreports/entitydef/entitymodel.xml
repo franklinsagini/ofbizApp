@@ -152,6 +152,8 @@
     	<alias entity-alias="MA" name="accountNo" group-by="true" />
     	<alias entity-alias="MA" name="accountName" group-by="true" />
     	
+    	
+    	<alias entity-alias="AT" name="acctgTransId" group-by="true" />
     	<alias entity-alias="AT" name="partyId" group-by="true" />
     	<alias entity-alias="AT" name="transactionType" group-by="true" />
     	<alias entity-alias="AT" name="createdStamp" group-by="true" />
@@ -176,7 +178,12 @@
         </view-link>
         
         <entity-condition>
-        	<condition-expr entity-alias="AT" field-name="increaseDecrease" operator="equals" value="I"/>
+        	<condition-list combine="and">
+        		<condition-expr entity-alias="AT" field-name="increaseDecrease" operator="equals" value="I"/>
+        		<condition-expr entity-alias="AT" field-name="transactionType" operator="not-equals" value="LOANCASHPAY"/>
+        		<condition-expr entity-alias="AT" field-name="transactionType" operator="not-equals" value="LOANCHEQUEPAY"/>
+        	</condition-list>
+        	
         </entity-condition>
     </view-entity>
     
@@ -209,6 +216,7 @@
     	<alias entity-alias="MA" name="accountName" group-by="true" />
     	<alias entity-alias="AT" name="partyId" group-by="true" />
     	
+    	<alias entity-alias="AT" name="acctgTransId" group-by="true" />
     	<alias entity-alias="AT" name="transactionType" group-by="true" />
     	<alias entity-alias="AT" name="createdStamp" group-by="true" />
     	<alias entity-alias="AT" name="increaseDecrease" group-by="true" />
@@ -231,9 +239,15 @@
             <key-map field-name="stationId" rel-field-name="stationId"/> 
         </view-link>
         
-        <entity-condition>
-        	<condition-expr entity-alias="AT" field-name="increaseDecrease" operator="equals" value="D"/>
+                <entity-condition>
+        	<condition-list combine="and">
+        		<condition-expr entity-alias="AT" field-name="increaseDecrease" operator="equals" value="D"/>
+        		<condition-expr entity-alias="AT" field-name="transactionType" operator="not-equals" value="LOANCASHPAY"/>
+        		<condition-expr entity-alias="AT" field-name="transactionType" operator="not-equals" value="LOANCHEQUEPAY"/>
+        	</condition-list>
+        	
         </entity-condition>
+
     </view-entity>
 
 </entitymodel>
