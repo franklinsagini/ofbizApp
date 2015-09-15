@@ -3885,5 +3885,91 @@ public class LoanServices {
 		
 		return "success";
 	}
+	
+	
+	/***
+	 * Total Loans Repaid By Data
+	 * 
+	 * */
+
+	public static BigDecimal getLoansRepaidByLoanApplicationIdByDate(
+			Long loanApplicationId, Timestamp endDate) {
+		BigDecimal bdTotalRepaid = BigDecimal.ZERO;
+
+		// Get total repayments opening repayments
+		BigDecimal bdOpeningRepayment = getTotalOpeningRepaymentsByLoanApplicationId(loanApplicationId);
+
+		// get total repayments from repayments table
+		BigDecimal bdTotalRepayment = getTotalRepaymentFromRunningRepaymentsByLoanApplicationIdByDate(loanApplicationId, endDate);
+
+		// sum up the repayments
+		bdTotalRepaid = bdOpeningRepayment.add(bdTotalRepayment);
+		return bdTotalRepaid;
+	}
+	
+	/****
+	 * 
+	 * Get Total Repayment from Running Repayments By Loan Application ID
+	 * */
+	private static BigDecimal getTotalRepaymentFromRunningRepaymentsByLoanApplicationIdByDate(
+			Long loanApplicationId, Timestamp endDate) {
+
+		// Get the disbursed loans for this member
+		List<Long> loanApplicationIdList = getDisbursedLoansIdsByLoanApplicationId(loanApplicationId);
+
+		// get the repayments for the disbursed loans
+		BigDecimal bdDisbursedLoansRunningRepaymentTotal = getDisbursedLoansRunningRepayment(loanApplicationIdList, endDate);
+
+		// TODO Auto-generated method stub
+		return bdDisbursedLoansRunningRepaymentTotal;
+	}
+	
+	private static BigDecimal getDisbursedLoansRunningRepayment(
+			List<Long> loanApplicationIdList, Timestamp endDate) {
+
+		BigDecimal bdRepaymentTotal = BigDecimal.ZERO;
+
+		for (Long loanApplicationId : loanApplicationIdList) {
+			bdRepaymentTotal = bdRepaymentTotal
+					.add(getRepaymentTotalForLoanApplication(loanApplicationId, endDate));
+		}
+
+		return bdRepaymentTotal;
+	}
+	
+	private static BigDecimal getRepaymentTotalForLoanApplication(
+			Long loanApplicationId, Timestamp endDate) {
+		List<GenericValue> loanRepaymentELI = null; // =
+		EntityConditionList<EntityExpr> loanRepaymentConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanApplicationId", EntityOperator.EQUALS,
+						loanApplicationId),
+						
+						EntityCondition.makeCondition(
+								"createdStamp", EntityOperator.LESS_THAN_EQUAL_TO,
+								endDate)
+						
+						
+						), EntityOperator.AND);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanRepaymentELI = delegator.findList("LoanRepayment",
+					loanRepaymentConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		BigDecimal bdTotalRepayment = BigDecimal.ZERO;
+		for (GenericValue genericValue : loanRepaymentELI) {
+
+			if (genericValue.getBigDecimal("principalAmount") != null) {
+				bdTotalRepayment = bdTotalRepayment.add(genericValue
+						.getBigDecimal("principalAmount"));
+
+			}
+		}
+
+		return bdTotalRepayment;
+	}
+
 
 }
