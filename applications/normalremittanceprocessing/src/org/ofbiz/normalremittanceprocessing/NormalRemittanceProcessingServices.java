@@ -6,7 +6,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -131,7 +133,7 @@ public class NormalRemittanceProcessingServices {
 								"isActive",
 								"Y",
 								"createdBy",
-								"admin",
+								normalRemittanceMonthYear.getString("createdBy"),
 								// "transactionType", "LOANREPAYMENT",
 								"month", month.toString(), "year", year
 										.toString(),
@@ -251,14 +253,12 @@ public class NormalRemittanceProcessingServices {
 	/***
 	 * @author Japheth Odonya
 	 * */
-	public synchronized static  String processNormalRemittanceReceived(
+	public synchronized static String processNormalRemittanceReceived(
 			Long normalRemittanceMonthYearId, Map<String, String> userLogin) {
 
 		// payrollNumber
 		// memberNames
 		// totalAmount
-		
-
 
 		GenericValue normalRemittanceMonthYear = LoanUtilities.getEntityValue(
 				"NormalRemittanceMonthYear", "normalRemittanceMonthYearId",
@@ -270,122 +270,151 @@ public class NormalRemittanceProcessingServices {
 
 		Long month = normalRemittanceMonthYear.getLong("month");
 		Long year = normalRemittanceMonthYear.getLong("year");
-		
-		
 
 		GenericValue station = LoanUtilities
 				.getStation(normalRemittanceMonthYear.getString("stationId"));
 		String employerCode = station.getString("employerCode");
-		
-		List<GenericValue> listMemberRemittanceList = getMemberRemittance(month.toString(), year.toString(), employerCode, normalRemittanceMonthYearId);
-		
-		if ((listMemberRemittanceList == null) || (listMemberRemittanceList.size() < 1))
-		{
+
+		List<GenericValue> listMemberRemittanceList = getMemberRemittance(
+				month.toString(), year.toString(), employerCode,
+				normalRemittanceMonthYearId);
+
+		if ((listMemberRemittanceList == null)
+				|| (listMemberRemittanceList.size() < 1)) {
 			return "No records to process, station may have been processed already !";
 		}
-		
-		
-		//Check for missing accounts
-		
+
+		// Check for missing accounts
+
 		Boolean failed = false;
 		// Clear the missing log - delete everything from it
-		//clearMissingMember(month, employerCode);
+		// clearMissingMember(month, employerCode);
 		String payrollNo = "";
 		Long count = 0L;
 		List<GenericValue> listMissingMemberLogELI = new ArrayList<GenericValue>();
-		List<GenericValue> receivedPayrollELI = getMemberRemittance(month.toString(), year.toString(), employerCode, normalRemittanceMonthYearId);
-		
+		List<GenericValue> receivedPayrollELI = getMemberRemittance(
+				month.toString(), year.toString(), employerCode,
+				normalRemittanceMonthYearId);
+
 		for (GenericValue genericValue : receivedPayrollELI) {
 			payrollNo = genericValue.getString("payrollNumber");
 			log.info(++count
 					+ "FFFFFFFFFFFF Checking Member Deposit!!!!!!!!!!!!!! for "
 					+ payrollNo);
-			if ((!hasAccount(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE, payrollNo.trim())) && (genericValue.getBigDecimal("memberDepositsAmount").compareTo(BigDecimal.ZERO) > 0)) {
+			if ((!hasAccount(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE,
+					payrollNo.trim()))
+					&& (genericValue.getBigDecimal("memberDepositsAmount")
+							.compareTo(BigDecimal.ZERO) > 0)) {
 				failed = true;
 
 				// Add the member to the missing log
 				log.info("AAAAAAAAAAAAAAAA Adding a member!!!!!!!!!!!!!! for "
 						+ payrollNo);
-				RemittanceServices.addMissingMemberLog(userLogin, payrollNo, month.toString(), employerCode,
-						AccHolderTransactionServices.MEMBER_DEPOSIT_CODE, null, null);
-				return payrollNo+"("+genericValue.getString("memberNames")+") Missing Member Deposit Account !";
+				RemittanceServices.addMissingMemberLog(userLogin, payrollNo,
+						month.toString(), employerCode,
+						AccHolderTransactionServices.MEMBER_DEPOSIT_CODE, null,
+						null);
+				return payrollNo + "(" + genericValue.getString("memberNames")
+						+ ") Missing Member Deposit Account !";
 			}
 
 		}
-		
+
 		for (GenericValue genericValue : receivedPayrollELI) {
 			payrollNo = genericValue.getString("payrollNumber");
 			log.info(++count
 					+ "FFFFFFFFFFFF Checking Share Capital!!!!!!!!!!!!!! for "
 					+ payrollNo);
-			if ((!hasAccount(AccHolderTransactionServices.SHARE_CAPITAL_CODE, payrollNo.trim())) && (genericValue.getBigDecimal("shareCapitalAmount").compareTo(BigDecimal.ZERO) > 0)) {
+			if ((!hasAccount(AccHolderTransactionServices.SHARE_CAPITAL_CODE,
+					payrollNo.trim()))
+					&& (genericValue.getBigDecimal("shareCapitalAmount")
+							.compareTo(BigDecimal.ZERO) > 0)) {
 				failed = true;
 
 				// Add the member to the missing log
 				log.info("AAAAAAAAAAAAAAAA Adding a member!!!!!!!!!!!!!! for "
 						+ payrollNo);
-				RemittanceServices.addMissingMemberLog(userLogin, payrollNo, month.toString(), employerCode,
-						AccHolderTransactionServices.SHARE_CAPITAL_CODE, null, null);
-				return payrollNo+"("+genericValue.getString("memberNames")+") Missing Share capital Account !";
+				RemittanceServices.addMissingMemberLog(userLogin, payrollNo,
+						month.toString(), employerCode,
+						AccHolderTransactionServices.SHARE_CAPITAL_CODE, null,
+						null);
+				return payrollNo + "(" + genericValue.getString("memberNames")
+						+ ") Missing Share capital Account !";
 			}
 
 		}
-		
+
 		for (GenericValue genericValue : receivedPayrollELI) {
 			payrollNo = genericValue.getString("payrollNumber");
 			log.info(++count
 					+ "FFFFFFFFFFFF Checking Fosa Savings!!!!!!!!!!!!!! for "
 					+ payrollNo);
-			if ((!hasAccount(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE, payrollNo.trim())) && (genericValue.getBigDecimal("fosaContributionsAmount").compareTo(BigDecimal.ZERO) > 0)) {
+			if ((!hasAccount(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE,
+					payrollNo.trim()))
+					&& (genericValue.getBigDecimal("fosaContributionsAmount")
+							.compareTo(BigDecimal.ZERO) > 0)) {
 				failed = true;
 
 				// Add the member to the missing log
 				log.info("AAAAAAAAAAAAAAAA Adding a member!!!!!!!!!!!!!! for "
 						+ payrollNo);
-				RemittanceServices.addMissingMemberLog(userLogin, payrollNo, month.toString(), employerCode,
-						AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE, null, null);
-				return payrollNo+"("+genericValue.getString("memberNames")+") Missing Fosa savings Account !";
+				RemittanceServices.addMissingMemberLog(userLogin, payrollNo,
+						month.toString(), employerCode,
+						AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE,
+						null, null);
+				return payrollNo + "(" + genericValue.getString("memberNames")
+						+ ") Missing Fosa savings Account !";
 			}
 
 		}
-		
+
 		for (GenericValue genericValue : receivedPayrollELI) {
 			payrollNo = genericValue.getString("payrollNumber");
 			log.info(++count
 					+ "FFFFFFFFFFFF Checking Junior Savings!!!!!!!!!!!!!! for "
 					+ payrollNo);
-			if ((!hasAccount(AccHolderTransactionServices.JUNIOR_ACCOUNT_CODE, payrollNo.trim())) && (genericValue.getBigDecimal("juniorAmount").compareTo(BigDecimal.ZERO) > 0)) {
+			if ((!hasAccount(AccHolderTransactionServices.JUNIOR_ACCOUNT_CODE,
+					payrollNo.trim()))
+					&& (genericValue.getBigDecimal("juniorAmount").compareTo(
+							BigDecimal.ZERO) > 0)) {
 				failed = true;
 
 				// Add the member to the missing log
 				log.info("AAAAAAAAAAAAAAAA Adding a member!!!!!!!!!!!!!! for "
 						+ payrollNo);
-				RemittanceServices.addMissingMemberLog(userLogin, payrollNo, month.toString(), employerCode,
-						AccHolderTransactionServices.JUNIOR_ACCOUNT_CODE, null, null);
-				return payrollNo+"("+genericValue.getString("memberNames")+") Missing Junior Account !";
+				RemittanceServices.addMissingMemberLog(userLogin, payrollNo,
+						month.toString(), employerCode,
+						AccHolderTransactionServices.JUNIOR_ACCOUNT_CODE, null,
+						null);
+				return payrollNo + "(" + genericValue.getString("memberNames")
+						+ ") Missing Junior Account !";
 			}
 
 		}
-		
-		
+
 		for (GenericValue genericValue : receivedPayrollELI) {
 			payrollNo = genericValue.getString("payrollNumber");
 			log.info(++count
 					+ "FFFFFFFFFFFF Checking Holiday Savings!!!!!!!!!!!!!! for "
 					+ payrollNo);
-			if ((!hasAccount(AccHolderTransactionServices.HOLIDAY_ACCOUNT_CODE, payrollNo.trim())) && (genericValue.getBigDecimal("holidayAmount").compareTo(BigDecimal.ZERO) > 0)) {
+			if ((!hasAccount(AccHolderTransactionServices.HOLIDAY_ACCOUNT_CODE,
+					payrollNo.trim()))
+					&& (genericValue.getBigDecimal("holidayAmount").compareTo(
+							BigDecimal.ZERO) > 0)) {
 				failed = true;
 
 				// Add the member to the missing log
 				log.info("AAAAAAAAAAAAAAAA Adding a member!!!!!!!!!!!!!! for "
 						+ payrollNo);
-				RemittanceServices.addMissingMemberLog(userLogin, payrollNo, month.toString(), employerCode,
-						AccHolderTransactionServices.HOLIDAY_ACCOUNT_CODE, null, null);
-				return payrollNo+"("+genericValue.getString("memberNames")+") Missing Holiday Account !";
+				RemittanceServices.addMissingMemberLog(userLogin, payrollNo,
+						month.toString(), employerCode,
+						AccHolderTransactionServices.HOLIDAY_ACCOUNT_CODE,
+						null, null);
+				return payrollNo + "(" + genericValue.getString("memberNames")
+						+ ") Missing Holiday Account !";
 			}
 
 		}
-
 
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		if (failed) {
@@ -409,9 +438,8 @@ public class NormalRemittanceProcessingServices {
 			}
 			return "failed";
 		}
-		
-		//End checking
-		
+
+		// End checking
 
 		BigDecimal bdTotalChequeAmount = RemittanceServices
 				.getTotalRemittedChequeAmountAvailable(employerCode,
@@ -422,7 +450,7 @@ public class NormalRemittanceProcessingServices {
 		if (bdNormalRemittanceAmount.compareTo(bdTotalChequeAmount) != 0) {
 			return " Total Remittance must be equal to the cheque received !";
 		}
-		
+
 		String branchId = AccHolderTransactionServices
 				.getEmployeeBranch((String) userLogin.get("partyId"));
 
@@ -436,11 +464,17 @@ public class NormalRemittanceProcessingServices {
 		BigDecimal bdMemberDepositsAmount = BigDecimal.ZERO;
 		bdMemberDepositsAmount = getTotalAmounts(normalRemittanceMonthYearId,
 				"memberDepositsAmount");
-		processMemberAccountDeposit(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE, normalRemittanceMonthYearId, userLogin, month.toString(),
-				year.toString(), employerCode.toString(), "memberDepositsAmount",  acctgTransId);
-		
+		processMemberAccountDeposit(
+				AccHolderTransactionServices.MEMBER_DEPOSIT_CODE,
+				normalRemittanceMonthYearId, userLogin, month.toString(),
+				year.toString(), employerCode.toString(),
+				"memberDepositsAmount", acctgTransId);
+
 		entrySequence = entrySequence + 1;
-		String memberDepositAccountId = LoanUtilities.getAccountProductGivenCodeId(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE).getString("glAccountId");
+		String memberDepositAccountId = LoanUtilities
+				.getAccountProductGivenCodeId(
+						AccHolderTransactionServices.MEMBER_DEPOSIT_CODE)
+				.getString("glAccountId");
 		AccHolderTransactionServices.createAccountPostingEntry(
 				bdMemberDepositsAmount, acctgTransId, "C",
 				memberDepositAccountId, entrySequence.toString(), branchId);
@@ -450,26 +484,35 @@ public class NormalRemittanceProcessingServices {
 		BigDecimal bdShareCapitalAmount = BigDecimal.ZERO;
 		bdShareCapitalAmount = getTotalAmounts(normalRemittanceMonthYearId,
 				"shareCapitalAmount");
-		processMemberAccountDeposit(AccHolderTransactionServices.SHARE_CAPITAL_CODE, normalRemittanceMonthYearId, userLogin, month.toString(),
-				year.toString(), employerCode.toString(), "shareCapitalAmount",  acctgTransId);
-
+		processMemberAccountDeposit(
+				AccHolderTransactionServices.SHARE_CAPITAL_CODE,
+				normalRemittanceMonthYearId, userLogin, month.toString(),
+				year.toString(), employerCode.toString(), "shareCapitalAmount",
+				acctgTransId);
 
 		entrySequence = entrySequence + 1;
-		String shareCapitalAccountId = LoanUtilities.getAccountProductGivenCodeId(AccHolderTransactionServices.SHARE_CAPITAL_CODE).getString("glAccountId");
+		String shareCapitalAccountId = LoanUtilities
+				.getAccountProductGivenCodeId(
+						AccHolderTransactionServices.SHARE_CAPITAL_CODE)
+				.getString("glAccountId");
 		AccHolderTransactionServices.createAccountPostingEntry(
-				bdShareCapitalAmount, acctgTransId, "C",
-				shareCapitalAccountId, entrySequence.toString(), branchId);
+				bdShareCapitalAmount, acctgTransId, "C", shareCapitalAccountId,
+				entrySequence.toString(), branchId);
 
 		// **Process loansInterestInsuranceAmount
 		// Cr Member Loans
 		// Cr Interest Receivable
 		// Cr Insurance Receivable
-		 
-		LoanBalanceItem loanBalanceItem = doProcessingLoanOnlyDeductions(userLogin, month.toString(), year.toString(), employerCode, normalRemittanceMonthYearId, acctgTransId, entrySequence);
-		BigDecimal bdTotalPrincipalAmount = loanBalanceItem.getPrincipalAmount();
+
+		LoanBalanceItem loanBalanceItem = doProcessingLoanOnlyDeductions(
+				userLogin, month.toString(), year.toString(), employerCode,
+				normalRemittanceMonthYearId, acctgTransId, entrySequence);
+		BigDecimal bdTotalPrincipalAmount = loanBalanceItem
+				.getPrincipalAmount();
 		BigDecimal bdTotalInterestAmount = loanBalanceItem.getInterestAmount();
-		BigDecimal bdTotalInsuranceAmount = loanBalanceItem.getInsuranceAmount();
-		
+		BigDecimal bdTotalInsuranceAmount = loanBalanceItem
+				.getInsuranceAmount();
+
 		entrySequence = Long.valueOf(loanBalanceItem.getSequence());
 
 		// **Process fosaContributionsAmount
@@ -477,44 +520,59 @@ public class NormalRemittanceProcessingServices {
 		BigDecimal bdFosaContributionsAmount = BigDecimal.ZERO;
 		bdFosaContributionsAmount = getTotalAmounts(
 				normalRemittanceMonthYearId, "fosaContributionsAmount");
-		processMemberAccountDeposit(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE, normalRemittanceMonthYearId, userLogin, month.toString(),
-				year.toString(), employerCode.toString(), "fosaContributionsAmount",  acctgTransId);
+		processMemberAccountDeposit(
+				AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE,
+				normalRemittanceMonthYearId, userLogin, month.toString(),
+				year.toString(), employerCode.toString(),
+				"fosaContributionsAmount", acctgTransId);
 
-		bdFosaContributionsAmount = bdFosaContributionsAmount.add(loanBalanceItem.getFosaSavingAmount());
+		bdFosaContributionsAmount = bdFosaContributionsAmount
+				.add(loanBalanceItem.getFosaSavingAmount());
 		entrySequence = entrySequence + 1;
-		String fosaAccountId = LoanUtilities.getAccountProductGivenCodeId(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE).getString("glAccountId");
+		String fosaAccountId = LoanUtilities.getAccountProductGivenCodeId(
+				AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE).getString(
+				"glAccountId");
 		AccHolderTransactionServices.createAccountPostingEntry(
-				bdFosaContributionsAmount, acctgTransId, "C",
-				fosaAccountId, entrySequence.toString(), branchId);
+				bdFosaContributionsAmount, acctgTransId, "C", fosaAccountId,
+				entrySequence.toString(), branchId);
 
-		
 		// **Process juniorAmount
 		// Cr Junior
 		BigDecimal bdJuniorAmount = BigDecimal.ZERO;
 		bdJuniorAmount = getTotalAmounts(normalRemittanceMonthYearId,
 				"juniorAmount");
-		processMemberAccountDeposit(AccHolderTransactionServices.JUNIOR_ACCOUNT_CODE, normalRemittanceMonthYearId, userLogin, month.toString(),
-				year.toString(), employerCode.toString(), "juniorAmount",  acctgTransId);
-		
+		processMemberAccountDeposit(
+				AccHolderTransactionServices.JUNIOR_ACCOUNT_CODE,
+				normalRemittanceMonthYearId, userLogin, month.toString(),
+				year.toString(), employerCode.toString(), "juniorAmount",
+				acctgTransId);
+
 		entrySequence = entrySequence + 1;
-		String juniorAccountId = LoanUtilities.getAccountProductGivenCodeId(AccHolderTransactionServices.JUNIOR_ACCOUNT_CODE).getString("glAccountId");
-		AccHolderTransactionServices.createAccountPostingEntry(
-				bdJuniorAmount, acctgTransId, "C",
-				juniorAccountId, entrySequence.toString(), branchId);
+		String juniorAccountId = LoanUtilities.getAccountProductGivenCodeId(
+				AccHolderTransactionServices.JUNIOR_ACCOUNT_CODE).getString(
+				"glAccountId");
+		AccHolderTransactionServices.createAccountPostingEntry(bdJuniorAmount,
+				acctgTransId, "C", juniorAccountId, entrySequence.toString(),
+				branchId);
 
 		// **Process holidayAmount
 		// Cr Holiday
 		BigDecimal bdHolidayAmount = BigDecimal.ZERO;
 		bdHolidayAmount = getTotalAmounts(normalRemittanceMonthYearId,
 				"holidayAmount");
-		processMemberAccountDeposit(AccHolderTransactionServices.HOLIDAY_ACCOUNT_CODE, normalRemittanceMonthYearId, userLogin, month.toString(),
-				year.toString(), employerCode.toString(), "holidayAmount",  acctgTransId);
-		
+		processMemberAccountDeposit(
+				AccHolderTransactionServices.HOLIDAY_ACCOUNT_CODE,
+				normalRemittanceMonthYearId, userLogin, month.toString(),
+				year.toString(), employerCode.toString(), "holidayAmount",
+				acctgTransId);
+
 		entrySequence = entrySequence + 1;
-		String holidayAccountId = LoanUtilities.getAccountProductGivenCodeId(AccHolderTransactionServices.JUNIOR_ACCOUNT_CODE).getString("glAccountId");
-		AccHolderTransactionServices.createAccountPostingEntry(
-				bdHolidayAmount, acctgTransId, "C",
-				holidayAccountId, entrySequence.toString(), branchId);
+		String holidayAccountId = LoanUtilities.getAccountProductGivenCodeId(
+				AccHolderTransactionServices.JUNIOR_ACCOUNT_CODE).getString(
+				"glAccountId");
+		AccHolderTransactionServices.createAccountPostingEntry(bdHolidayAmount,
+				acctgTransId, "C", holidayAccountId, entrySequence.toString(),
+				branchId);
 
 		// Dr total to factory Contol/ KTDA
 		BigDecimal bdTotalAmount = BigDecimal.ZERO;
@@ -526,19 +584,20 @@ public class NormalRemittanceProcessingServices {
 
 		String stationDepositAccountId = accountHolderTransactionSetup
 				.getString("memberDepositAccId");
-		AccHolderTransactionServices.createAccountPostingEntry(
-				bdTotalAmount, acctgTransId, "D",
-				stationDepositAccountId, entrySequence.toString(), branchId);
-		
-		
-		//Update all records to processed
-		List<GenericValue> remittanceListForUpdate = getMemberRemittance(month.toString(), year.toString(), employerCode, normalRemittanceMonthYearId);
-		//Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		AccHolderTransactionServices.createAccountPostingEntry(bdTotalAmount,
+				acctgTransId, "D", stationDepositAccountId,
+				entrySequence.toString(), branchId);
+
+		// Update all records to processed
+		List<GenericValue> remittanceListForUpdate = getMemberRemittance(
+				month.toString(), year.toString(), employerCode,
+				normalRemittanceMonthYearId);
+		// Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		for (GenericValue genericValue : remittanceListForUpdate) {
-			
-			//set processed yes and save
-			//EntityCondition.makeCondition("processed",
-			//EntityOperator.EQUALS, "N")),
+
+			// set processed yes and save
+			// EntityCondition.makeCondition("processed",
+			// EntityOperator.EQUALS, "N")),
 			genericValue.set("processed", "Y");
 			try {
 				delegator.createOrStore(genericValue);
@@ -547,8 +606,8 @@ public class NormalRemittanceProcessingServices {
 				e.printStackTrace();
 			}
 		}
-		
-		//Update normalRemittanceMonthYearId
+
+		// Update normalRemittanceMonthYearId
 		normalRemittanceMonthYear.set("postingacctgTransId", acctgTransId);
 		try {
 			delegator.createOrStore(normalRemittanceMonthYear);
@@ -556,33 +615,35 @@ public class NormalRemittanceProcessingServices {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return "success";
 	}
 
 	private static void processMemberAccountDeposit(String accountProductCode,
-			Long normalRemittanceMonthYearId, Map<String, String> userLogin, String month,
-			String year, String employerCode, String fieldName, String acctgTransId) {
-		
-		//For each member remittance if amount is greater than zero deposit
+			Long normalRemittanceMonthYearId, Map<String, String> userLogin,
+			String month, String year, String employerCode, String fieldName,
+			String acctgTransId) {
+
+		// For each member remittance if amount is greater than zero deposit
 		List<GenericValue> listMemberRemittance = getMemberRemittance(month,
 				year, employerCode, normalRemittanceMonthYearId);
 		Long memberAccountId = null;
-		
+
 		for (GenericValue genericValue : listMemberRemittance) {
-			
-			if (genericValue.getBigDecimal(fieldName).compareTo(BigDecimal.ZERO) > 0){
-			memberAccountId = LoanUtilities.getAccountProductMemberAccountId(genericValue.getString("payrollNumber"), accountProductCode);
-			AccHolderTransactionServices.memberTransactionDeposit(
-					genericValue.getBigDecimal(fieldName),
-					memberAccountId, userLogin,
-			"DEPOSITFROMREMITTANCE", null, null,
-			acctgTransId, null, null);
+
+			if (genericValue.getBigDecimal(fieldName)
+					.compareTo(BigDecimal.ZERO) > 0) {
+				memberAccountId = LoanUtilities
+						.getAccountProductMemberAccountId(
+								genericValue.getString("payrollNumber"),
+								accountProductCode);
+				AccHolderTransactionServices.memberTransactionDeposit(
+						genericValue.getBigDecimal(fieldName), memberAccountId,
+						userLogin, "DEPOSITFROMREMITTANCE", null, null,
+						acctgTransId, null, null);
 			}
 		}
-		
 
-		
 	}
 
 	private static BigDecimal getTotalAmounts(Long normalRemittanceMonthYearId,
@@ -659,7 +720,7 @@ public class NormalRemittanceProcessingServices {
 				year, employerCode, normalRemittanceMonthYearId);
 
 		LoanBalanceItem loanBalanceItem = new LoanBalanceItem();
-		
+
 		loanBalanceItem.setFosaSavingAmount(BigDecimal.ZERO);
 
 		BigDecimal bdTotalPrincipalPaid = BigDecimal.ZERO;
@@ -696,7 +757,7 @@ public class NormalRemittanceProcessingServices {
 				payrollNumber = genericValue.getString("payrollNumber");
 
 				// ####### Deduct the total Loan Deductions
-				
+
 				List<Long> listLoanApplicationIds = LoanServices
 						.getDisbursedLoansIds(member.getLong("partyId"));
 				BigDecimal bdMemberTotalLoanExpectedAmt = BigDecimal.ZERO;
@@ -862,17 +923,12 @@ public class NormalRemittanceProcessingServices {
 
 						if (bdLoanAmount.compareTo(BigDecimal.ZERO) > 0) {
 
-							BigDecimal bdLoanBalance = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
-
-							
-
-							
+							BigDecimal bdLoanBalance = LoansProcessingServices
+									.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
 
 							BigDecimal interestAmount = BigDecimal.ZERO;
 							BigDecimal insuranceAmount = BigDecimal.ZERO;
 							BigDecimal principalAmount = BigDecimal.ZERO;
-
-							
 
 							if (bdLoanAmount.compareTo(BigDecimal.ZERO) > 0) {
 
@@ -880,20 +936,27 @@ public class NormalRemittanceProcessingServices {
 									principalAmount = bdLoanBalance;
 									bdLoanAmount = bdLoanAmount
 											.subtract(bdLoanBalance);
-									
-								//Mark loan as cleared
-									
-//									Long loanStatusId = LoanUtilities.getLoanStatusId("CLEARED");
-//									GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
-//									loanApplication.set("loanStatusId", loanStatusId);
-//									try {
-//										delegator.createOrStore(loanApplication);
-//									} catch (GenericEntityException e) {
-//										// TODO Auto-generated catch block
-//										e.printStackTrace();
-//									}
-									
-									LoanRepayments.clearLoan(loanApplicationId, userLogin, " Cleared From Remittance Processing");
+
+									// Mark loan as cleared
+
+									// Long loanStatusId =
+									// LoanUtilities.getLoanStatusId("CLEARED");
+									// GenericValue loanApplication =
+									// LoanUtilities.getEntityValue("LoanApplication",
+									// "loanApplicationId", loanApplicationId);
+									// loanApplication.set("loanStatusId",
+									// loanStatusId);
+									// try {
+									// delegator.createOrStore(loanApplication);
+									// } catch (GenericEntityException e) {
+									// // TODO Auto-generated catch block
+									// e.printStackTrace();
+									// }
+
+									LoanRepayments
+											.clearLoan(loanApplicationId,
+													userLogin,
+													" Cleared From Remittance Processing");
 								} else {
 									principalAmount = bdLoanAmount;
 									bdLoanAmount = BigDecimal.ZERO;
@@ -909,26 +972,33 @@ public class NormalRemittanceProcessingServices {
 
 							loanRepaymentId = delegator
 									.getNextSeqIdLong("LoanRepayment");
-							loanRepayment = delegator.makeValue("LoanRepayment",
-									UtilMisc.toMap("loanRepaymentId",
+							loanRepayment = delegator.makeValue(
+									"LoanRepayment", UtilMisc.toMap(
+											"loanRepaymentId",
 											loanRepaymentId,
 											"isActive",
 											"Y",
 											"createdBy",
 											"admin",
-											// "transactionType", "LOANREPAYMENT",
-											"loanApplicationId", loanApplicationId,
-											"partyId", member.getLong("partyId"),
+											// "transactionType",
+											// "LOANREPAYMENT",
+											"loanApplicationId",
+											loanApplicationId, "partyId",
+											member.getLong("partyId"),
 
-											"transactionAmount", bdLoanExpectedAmt,
+											"transactionAmount",
+											bdLoanExpectedAmt,
 
 											"totalLoanDue", BigDecimal.ZERO,
 
-											"totalInterestDue", BigDecimal.ZERO,
+											"totalInterestDue",
+											BigDecimal.ZERO,
 
-											"totalInsuranceDue", BigDecimal.ZERO,
+											"totalInsuranceDue",
+											BigDecimal.ZERO,
 
-											"totalPrincipalDue", BigDecimal.ZERO,
+											"totalPrincipalDue",
+											BigDecimal.ZERO,
 
 											"interestAmount", interestAmount,
 											"insuranceAmount", insuranceAmount,
@@ -950,27 +1020,35 @@ public class NormalRemittanceProcessingServices {
 
 					}
 				}
-				
-				if (bdLoanAmount.compareTo(BigDecimal.ZERO) > 0){
+
+				if (bdLoanAmount.compareTo(BigDecimal.ZERO) > 0) {
 					// Deposit Excess to Savings Account
-					//GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
-					String thememberAccountId = LoanUtilities.getMemberAccountIdGivenMemberAndAccountCode(member.getLong("partyId"), AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
-					AccHolderTransactionServices.cashDepositFromStationProcessing(bdLoanAmount, Long.valueOf(thememberAccountId), userLogin, "DEPOSITFROMEXCESS", acctgTransId);
-					
-					loanBalanceItem.setFosaSavingAmount(loanBalanceItem.getFosaSavingAmount().add(bdLoanAmount));
-					//bdTotalPrincipalPaid = bdTotalPrincipalPaid.add(bdLoanAmount);
+					// GenericValue loanApplication =
+					// LoanUtilities.getEntityValue("LoanApplication",
+					// "loanApplicationId", loanApplicationId);
+					String thememberAccountId = LoanUtilities
+							.getMemberAccountIdGivenMemberAndAccountCode(
+									member.getLong("partyId"),
+									AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
+					AccHolderTransactionServices
+							.cashDepositFromStationProcessing(bdLoanAmount,
+									Long.valueOf(thememberAccountId),
+									userLogin, "DEPOSITFROMEXCESS",
+									acctgTransId);
+
+					loanBalanceItem.setFosaSavingAmount(loanBalanceItem
+							.getFosaSavingAmount().add(bdLoanAmount));
+					// bdTotalPrincipalPaid =
+					// bdTotalPrincipalPaid.add(bdLoanAmount);
 				}
-				
 
 			}
-			
-			
+
 		}
-		
+
 		loanBalanceItem.setPrincipalAmount(bdTotalPrincipalPaid);
 		loanBalanceItem.setInsuranceAmount(bdTotalInsurancePaid);
 		loanBalanceItem.setInterestAmount(bdTotalInterestPaid);
-
 
 		// Post Total Net Salary in GL bdTotalSalaryPosted
 
@@ -990,27 +1068,25 @@ public class NormalRemittanceProcessingServices {
 		String savingsAccountGLAccountId = LoanUtilities
 				.getGLAccountIDForAccountProduct(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
 
-
-
 		String branchId = AccHolderTransactionServices
 				.getEmployeeBranch((String) userLogin.get("partyId"));
 		// ------------------------
 		// Debit Leaf Base with the total
-//		AccHolderTransactionServices.createAccountPostingEntry(
-//				bdTotalSalaryPosted, acctgTransId, "D",
-//				stationDepositAccountId, entrySequence.toString(), branchId);
+		// AccHolderTransactionServices.createAccountPostingEntry(
+		// bdTotalSalaryPosted, acctgTransId, "D",
+		// stationDepositAccountId, entrySequence.toString(), branchId);
 
 		// Credit Member Deposits with (total net - (total charge + total excise
 		// duty))
 
 		// Post the Loan Repayments
 		// DR the savings withdrawable savingsAccountGLAccountId
-//		BigDecimal bdTotalLoanAmountPaid = bdTotalPrincipalPaid.add(
-//				bdTotalInterestPaid).add(bdTotalInsurancePaid);
-//		entrySequence = entrySequence + 1;
-//		AccHolderTransactionServices.createAccountPostingEntry(
-//				bdTotalLoanAmountPaid, acctgTransId, "D",
-//				savingsAccountGLAccountId, entrySequence.toString(), branchId);
+		// BigDecimal bdTotalLoanAmountPaid = bdTotalPrincipalPaid.add(
+		// bdTotalInterestPaid).add(bdTotalInsurancePaid);
+		// entrySequence = entrySequence + 1;
+		// AccHolderTransactionServices.createAccountPostingEntry(
+		// bdTotalLoanAmountPaid, acctgTransId, "D",
+		// savingsAccountGLAccountId, entrySequence.toString(), branchId);
 
 		// Principal Payment
 		// CR Loan Receivable bdTotalPrincipalPaid
@@ -1107,7 +1183,7 @@ public class NormalRemittanceProcessingServices {
 
 		return normalRemittanceMonthYearELI;
 	}
-	
+
 	private static boolean hasAccount(String accountCode, String payrollNo) {
 		// TODO Check of a member , given payroll number has an account of the
 		// product given
@@ -1124,25 +1200,332 @@ public class NormalRemittanceProcessingServices {
 
 		return false;
 	}
-	
-	
-	public synchronized static  String deleteRemittanceReceived(
+
+	public synchronized static String deleteRemittanceReceived(
 			Long normalRemittanceMonthYearId, Map<String, String> userLogin) {
 
 		// payrollNumber
 		// memberNames
 		// totalAmount
-		
-
 
 		GenericValue normalRemittanceMonthYear = LoanUtilities.getEntityValue(
 				"NormalRemittanceMonthYear", "normalRemittanceMonthYearId",
 				normalRemittanceMonthYearId);
-		
-		//Log Deletion
-		
+
+		// Log Deletion
+
 		return "success";
+
+	}
+
+	/***
+	 * processNormalRemittanceReceived deleteNormalRemittanceReceived
+	 * */
+	public synchronized static String deleteNormalRemittanceReceived(
+			Long normalRemittanceMonthYearId, Map<String, String> userLogin) {
 		
+		System.out.println(" normalRemittanceMonthYearId :: "+normalRemittanceMonthYearId);
+		System.out.println(" userLogin :: "+userLogin.get("userLoginId"));
+
+		// payrollNumber
+		// memberNames
+		// totalAmount
+
+		//		GenericValue normalRemittanceMonthYear = LoanUtilities.getEntityValue(
+		//				"NormalRemittanceMonthYear", "normalRemittanceMonthYearId",
+		//				normalRemittanceMonthYearId);
+
+		// Check that the Normal Remittance has data
+		List<GenericValue> normalRemittanceMonthYearHasDataELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		EntityConditionList<EntityExpr> normalRemittanceMonthYearHasDataConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"normalRemittanceMonthYearId", EntityOperator.EQUALS,
+						normalRemittanceMonthYearId)), EntityOperator.AND);
+
+		// normalRemittanceMonthYearId
+		try {
+			normalRemittanceMonthYearHasDataELI = delegator.findList(
+					"MemberRemittance",
+					normalRemittanceMonthYearHasDataConditions, null, null,
+					null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		if ((normalRemittanceMonthYearHasDataELI == null)
+				|| (normalRemittanceMonthYearHasDataELI.size() < 1)) {
+			return " The remittance does not have any data to be deleted !";
+		}
+
+		// Check that the station has been processed
+		List<GenericValue> normalRemittanceMonthYearELI = null;
+
+		EntityConditionList<EntityExpr> normalRemittanceMonthYearConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"normalRemittanceMonthYearId", EntityOperator.EQUALS,
+						normalRemittanceMonthYearId),
+				// processed
+						EntityCondition.makeCondition("processed",
+								EntityOperator.EQUALS, "Y")),
+						EntityOperator.AND);
+
+		// normalRemittanceMonthYearId
+		try {
+			normalRemittanceMonthYearELI = delegator.findList(
+					"MemberRemittance", normalRemittanceMonthYearConditions,
+					null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		if ((normalRemittanceMonthYearELI != null)
+				&& (normalRemittanceMonthYearELI.size() > 0)) {
+			return "The uploaded remittance must have been processed and cannot therefore be deleted !!!";
+		}
+		
+		//Keep a backup of all the MemberRemittanceRecords
+		backupMemberRemittanceRecords(normalRemittanceMonthYearId, userLogin);
+		
+
+		try {
+			delegator.removeByCondition("MemberRemittance", EntityCondition
+					.makeCondition("normalRemittanceMonthYearId", EntityOperator.EQUALS,
+							normalRemittanceMonthYearId));
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return "success";
+	}
+
+	private static void backupMemberRemittanceRecords(
+			Long normalRemittanceMonthYearId, Map<String, String> userLogin) {
+		// TODO Auto-generated method stub
+		
+		//Add Normal Remittance Header
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		GenericValue normalRemittanceMonthYear = LoanUtilities.getEntityValue(
+						"NormalRemittanceMonthYear", "normalRemittanceMonthYearId",
+						normalRemittanceMonthYearId);
+
+	//Add all the member items
+		List<GenericValue> normalRemittanceMonthYearHasDataELI = null;
+		EntityConditionList<EntityExpr> normalRemittanceMonthYearHasDataConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"normalRemittanceMonthYearId", EntityOperator.EQUALS,
+						normalRemittanceMonthYearId)), EntityOperator.AND);
+
+		// normalRemittanceMonthYearId
+		try {
+			normalRemittanceMonthYearHasDataELI = delegator.findList(
+					"MemberRemittance",
+					normalRemittanceMonthYearHasDataConditions, null, null,
+					null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		
+		GenericValue memberRemittanceDeleted = null;
+		Long memberRemittanceDeletedId = null;
+		
+		List<GenericValue> listMemberRemittanceDeleted = new ArrayList<GenericValue>();
+		
+		for (GenericValue genericValue : normalRemittanceMonthYearHasDataELI) {
+			
+			//Add the MemberRemittance to delete log
+			memberRemittanceDeletedId = delegator
+			.getNextSeqIdLong("MemberRemittanceDeleted");
+	
+			
+	
+			memberRemittanceDeleted = delegator.makeValue("MemberRemittanceDeleted",
+			UtilMisc.toMap(
+					"memberRemittanceDeletedId",
+					memberRemittanceDeletedId,
+					"memberRemittanceId",
+					genericValue.getLong("memberRemittanceId"),
+					
+					"normalRemittanceMonthYearId",
+					genericValue.getLong("normalRemittanceMonthYearId"),
+					
+					"isActive",
+					genericValue.getString("isActive"),
+					"createdBy",
+					genericValue.getString("createdBy"),
+					
+					
+					"deletedBy",
+					userLogin.get("userLoginId"),
+					
+					"deletedDate",
+					new Timestamp(Calendar.getInstance().getTimeInMillis()),
+					
+					// "transactionType", "LOANREPAYMENT",
+					"month", genericValue.getString("month"),
+					"year", genericValue.getString("year"),
+
+					"employerCode", genericValue.getString("employerCode"),
+
+					"payrollNumber", genericValue.getString("payrollNumber"),
+					"memberNames", genericValue.getString("memberNames"),
+					"memberDepositsAmount", genericValue.getBigDecimal("memberDepositsAmount"),
+
+					"shareCapitalAmount", genericValue.getBigDecimal("shareCapitalAmount"),
+					"loansInterestInsuranceAmount", genericValue.getBigDecimal("loansInterestInsuranceAmount"),
+					"fosaContributionsAmount", genericValue.getBigDecimal("fosaContributionsAmount"),
+					"juniorAmount",	genericValue.getBigDecimal("juniorAmount"),
+					"holidayAmount", genericValue.getBigDecimal("holidayAmount"),
+
+					"totalAmount",
+					genericValue.getBigDecimal("totalAmount"),
+
+					"processed", genericValue.getString("processed")));
+
+	
+	
+					listMemberRemittanceDeleted.add(memberRemittanceDeleted);
+		}
+		
+		try {
+			delegator.storeAll(listMemberRemittanceDeleted);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public static Boolean getProcessedStatus(
+			Long normalRemittanceMonthYearId) {
+		Boolean processed = false;
+		
+		Boolean hasData = false;
+		List<GenericValue> normalRemittanceMonthYearHasDataELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		EntityConditionList<EntityExpr> normalRemittanceMonthYearHasDataConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"normalRemittanceMonthYearId", EntityOperator.EQUALS,
+						normalRemittanceMonthYearId)), EntityOperator.AND);
+
+		// normalRemittanceMonthYearId
+		try {
+			normalRemittanceMonthYearHasDataELI = delegator.findList(
+					"MemberRemittance",
+					normalRemittanceMonthYearHasDataConditions, null, null,
+					null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		if ((normalRemittanceMonthYearHasDataELI != null)
+				&& (normalRemittanceMonthYearHasDataELI.size() > 0)) {
+			hasData = true;
+		}
+
+		// Check that the station has been processed
+		List<GenericValue> normalRemittanceMonthYearELI = null;
+
+		EntityConditionList<EntityExpr> normalRemittanceMonthYearConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"normalRemittanceMonthYearId", EntityOperator.EQUALS,
+						normalRemittanceMonthYearId),
+				// processed
+						EntityCondition.makeCondition("processed",
+								EntityOperator.EQUALS, "Y")),
+						EntityOperator.AND);
+
+		// normalRemittanceMonthYearId
+		try {
+			normalRemittanceMonthYearELI = delegator.findList(
+					"MemberRemittance", normalRemittanceMonthYearConditions,
+					null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		if ((normalRemittanceMonthYearELI != null)
+				&& (normalRemittanceMonthYearELI.size() > 0)) {
+			processed = true;
+		}
+		
+		if (hasData && processed)
+			return true;
+		else
+			return false;
+	}
+	
+	
+	public static String getProcessedStatusMessage(
+			Long normalRemittanceMonthYearId) {
+		Boolean processed = false;
+		
+		Boolean hasData = false;
+		List<GenericValue> normalRemittanceMonthYearHasDataELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		EntityConditionList<EntityExpr> normalRemittanceMonthYearHasDataConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"normalRemittanceMonthYearId", EntityOperator.EQUALS,
+						normalRemittanceMonthYearId)), EntityOperator.AND);
+
+		// normalRemittanceMonthYearId
+		try {
+			normalRemittanceMonthYearHasDataELI = delegator.findList(
+					"MemberRemittance",
+					normalRemittanceMonthYearHasDataConditions, null, null,
+					null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		if ((normalRemittanceMonthYearHasDataELI != null)
+				&& (normalRemittanceMonthYearHasDataELI.size() > 0)) {
+			hasData = true;
+		}
+
+		// Check that the station has been processed
+		List<GenericValue> normalRemittanceMonthYearELI = null;
+
+		EntityConditionList<EntityExpr> normalRemittanceMonthYearConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"normalRemittanceMonthYearId", EntityOperator.EQUALS,
+						normalRemittanceMonthYearId),
+				// processed
+						EntityCondition.makeCondition("processed",
+								EntityOperator.EQUALS, "Y")),
+						EntityOperator.AND);
+
+		// normalRemittanceMonthYearId
+		try {
+			normalRemittanceMonthYearELI = delegator.findList(
+					"MemberRemittance", normalRemittanceMonthYearConditions,
+					null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		if ((normalRemittanceMonthYearELI != null)
+				&& (normalRemittanceMonthYearELI.size() > 0)) {
+			processed = true;
+		}
+		
+		if (hasData && processed)
+			return "PROCESSED";
+		else
+			return "NOT PROCESSED";
 	}
 
 }
