@@ -744,7 +744,7 @@ public class TransferToGuarantorsServices {
 				"totalPrincipalDue", totalPrincipalDue, "interestAmount",
 				loanInterest, "insuranceAmount", loanInsurance,
 				"principalAmount", loanPrincipal, "transactionAmount",
-				transactionAmount, "acctgTransId", acctgTransId, "repaymentType", "REATTACHMENT"));
+				transactionAmount, "acctgTransId", acctgTransId, "repaymentType", "REATTACHMENT", "repaymentMode", "REATTACHMENT"));
 		try {
 			delegator.createOrStore(loanRepayment);
 		} catch (GenericEntityException e) {
@@ -937,7 +937,7 @@ public class TransferToGuarantorsServices {
 				"totalPrincipalDue", totalPrincipalDue, "interestAmount",
 				loanInterest, "insuranceAmount", loanInsurance,
 				"principalAmount", loanPrincipal, "transactionAmount",
-				transactionAmount, "acctgTransId", acctgTransId, "repaymentType", "REATTACHMENT"));
+				transactionAmount, "acctgTransId", acctgTransId, "repaymentType", "REATTACHMENT", "repaymentMode", "REATTACHMENT"));
 		try {
 			delegator.createOrStore(loanRepayment);
 		} catch (GenericEntityException e) {
