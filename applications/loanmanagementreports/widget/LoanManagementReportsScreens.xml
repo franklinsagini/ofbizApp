@@ -142,22 +142,17 @@
         </section>
     </screen>
     <!-- By Station -->
-       <screen name="appliedLoansByStation">
+    <screen name="appliedLoansByStation">
         <section>
             <actions>
                 <set field="headerItem" value="appliedLoansByStation" />
                 <set field="tabButtonItem" value="appliedLoansByStation" />
+                <set field="endDate" from-field="parameters.endDate" type="Timestamp"  default-value="${nowTimestamp}"/>
+                <set field="startDate" from-field="parameters.startDate" type="Timestamp" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <!-- include-menu name="MemberReportsTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/ -->
-                        <!-- container style="lefthalf">
-                            <screenlet title="Member Listing Report">
-                                <include-form name="memeberListingForm" location="component://party/widget/partymgr/MemberReportForms.xml"/>
-                            </screenlet>
-                        </container -->
-                        <!-- style="righthalf" -->
                         <container>
                             <screenlet title="Loans Listing">
                                 <include-form name="appliedLoansByStationForm" location="component://loanmanagementreports/widget/LoanManagementReportsForms.xml"/>
@@ -190,4 +185,26 @@
             </widgets>
         </section>
     </screen>
+
+    <!-- appliedLoansByStationpdf -->
+    <screen name="appliedLoansByStationpdf">
+        <section>
+            <actions>
+                <set field="viewSize" value="99999"/>
+                <set field="endDate" from-field="parameters.endDate" type="Timestamp"  default-value="${nowTimestamp}"/>
+                <set field="startDate" from-field="parameters.startDate" type="Timestamp" />
+                <script location="component://loanmanagementreports/webapp/loanmanagementreports/WEB-INF/actions/reports/appliedLoansByStation.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://loanmanagementreports/webapp/loanmanagementreports/reports/appliedLoansByStation.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
 </screens>
