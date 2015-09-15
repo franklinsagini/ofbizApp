@@ -141,7 +141,7 @@ public class LoanAccounting {
 				bdTotalCharge = bdTotalCharge.add(org.ofbiz.loans.LoanServices.getLoanClearingCharge(clearedLoanApplicationId, bdTotal));
 				log.info("3CCCCCCCCCCCC Charge Computed in iteration "+bdTotalCharge);
 				
-				saveLoanRepaymentClearance(clearedLoanApplicationId, bdTotalLoanBalanceAmount, bdInterestAmount, bdTotalInsuranceAmount, acctgTransId);
+				saveLoanRepaymentClearance(clearedLoanApplicationId, bdTotalLoanBalanceAmount, bdInterestAmount, bdTotalInsuranceAmount, acctgTransId, userLogin);
 			}
 			
 			//AccHolderTransactionServices.memberTransactionDeposit(bdTotalLoanCost, memberAccountId, userLogin, "LOANCLEARANCE", accountTransactionParentId, null);
@@ -956,7 +956,7 @@ public class LoanAccounting {
 
 	}
 	
-	public static void saveLoanRepaymentClearance(Long loanApplicationId, BigDecimal bdTotalLoanBalanceAmount, BigDecimal bdInterestAmount, BigDecimal bdTotalInsuranceAmount, String acctgTransId) {
+	public static void saveLoanRepaymentClearance(Long loanApplicationId, BigDecimal bdTotalLoanBalanceAmount, BigDecimal bdInterestAmount, BigDecimal bdTotalInsuranceAmount, String acctgTransId, Map<String, String> userLogin) {
 		BigDecimal loanPrincipal = BigDecimal.ZERO;
 		BigDecimal loanInterest = BigDecimal.ZERO;
 		BigDecimal loanInsurance = BigDecimal.ZERO;
@@ -993,7 +993,7 @@ public class LoanAccounting {
 		Long loanRepaymentId = delegator.getNextSeqIdLong("LoanRepayment", 1);
 		loanRepayment = delegator.makeValue("LoanRepayment", UtilMisc.toMap(
 				"loanRepaymentId", loanRepaymentId, "isActive", "Y",
-				"createdBy", "admin", "partyId", partyId, "loanApplicationId",
+				"createdBy", userLogin.get("userLoginId"), "partyId", partyId, "loanApplicationId",
 				loanApplicationId,
 
 				"loanNo", loanApplication.getString("loanNo"),
@@ -1004,7 +1004,7 @@ public class LoanAccounting {
 				"totalPrincipalDue", totalPrincipalDue, "interestAmount",
 				loanInterest, "insuranceAmount", loanInsurance,
 				"principalAmount", loanPrincipal, "transactionAmount",
-				transactionAmount, "acctgTransId", acctgTransId));
+				transactionAmount, "acctgTransId", acctgTransId, "repaymentMode", "LOANCLEARANCE"));
 		try {
 			delegator.createOrStore(loanRepayment);
 		} catch (GenericEntityException e) {
