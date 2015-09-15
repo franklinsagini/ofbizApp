@@ -604,6 +604,23 @@ public class LoanUtilities {
 		return bdRecommendeAmt;
 	}
 	
+	
+	public static BigDecimal sumTotalAmount(BigDecimal principalAmount,
+			BigDecimal interestAmount, BigDecimal insuranceAmount ) {
+		
+		if (principalAmount == null)
+			principalAmount = BigDecimal.ZERO;
+
+		if (interestAmount == null)
+			interestAmount = BigDecimal.ZERO;
+
+		if (insuranceAmount == null)
+			insuranceAmount = BigDecimal.ZERO;
+
+		BigDecimal bdTotalAmount = principalAmount.add(interestAmount).add(insuranceAmount);
+		return bdTotalAmount;
+	}
+	
 	public static BigDecimal getLoanMaxAmount(Long loanApplicationId) {
 		GenericValue loanApplication = getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
 		BigDecimal maxLoanAmt = loanApplication.getBigDecimal("maxLoanAmt");
