@@ -898,7 +898,7 @@ public class NormalRemittanceProcessingServices {
 										"insuranceAmount", insuranceAmount,
 										"principalAmount", principalAmount,
 										"repaymentMode", "REMITTANCE",
-
+										"month", month+year,
 										"acctgTransId", acctgTransId
 
 								));
