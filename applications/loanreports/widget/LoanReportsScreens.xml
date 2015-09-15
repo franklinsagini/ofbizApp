@@ -453,6 +453,52 @@
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>    
+    </screen> 
+    
+    
+    <!-- Loan Balances as AT -->   
+	   <!-- loanbalancesasat -->
+    <screen name="loanbalancesasat">
+        <section>
+            <actions>
+                <set field="headerItem" value="loanbalancesasat" />
+                <set field="tabButtonItem" value="loanbalancesasat" />
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
 
+                        <container>
+                            <screenlet title="Loan Balances as AT">
+                                <include-form name="loanbalancesasatForm" location="component://loanreports/widget/LoanReportsForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+       <screen name="loanbalancesasatexcel">
+        <section>
+           <actions>
+                <set field="viewSize" value="999999"/>
+                <!-- script location="component://party/webapp/partymgr/WEB-INF/actions/reports/loanDetails.groovy"/ -->
+               <script location="component://loanreports/webapp/loanreports/WEB-INF/actions/reports/loanbalancesasat.groovy"/>
+           </actions>
+           <widgets>
+               <!-- decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                   <decorator-section name="body">
+                        <platform-specific>
+                            
+                            <xsl-fo><html-template location="component://loanreports/webapp/loanreports/reports/loansummaryReport.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen -->
+                <include-form name="loanbalancesasatExport" location="component://loanreports/widget/LoanReportsForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+	
 </screens>
