@@ -81,7 +81,6 @@ accountTransList.each { objTrans ->
       transactionType:objTrans.transactionType,
       transactionAmount:objTrans.transactionAmount,
       runningBalance:runningBalance
-
     ]
 
     finalTransList.add(finalTransListBuilder);
