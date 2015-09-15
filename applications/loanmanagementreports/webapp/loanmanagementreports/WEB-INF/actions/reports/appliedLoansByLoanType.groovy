@@ -19,9 +19,6 @@ println "####################### START DATE: "+ startDate
 println "####################### END DATE: "+ endDate
 
 
-//get all loan types
-loanTypes = delegator.findList('LoanProduct', null, null,null,null,false)
-
 //acctgTransEntry = delegator.findList('AcctgTransEntry', EntityCondition.makeCondition(summaryCondition, EntityOperator.AND), null, ["createdTxStamp"], null, false)
 
 
@@ -33,5 +30,14 @@ loanApps = delegator.findList('LoanApplication',  EntityCondition.makeCondition(
 context.loanApps = loanApps
 //No Loan Product Selected
 if (!loanProductId) {
+//get all loan types
+loanTypes = delegator.findList('LoanProduct', null, null,null,null,false)
+context.loanTypes = loanTypes
+}else{
+//get all loan types
+loanProductIdL = loanProductId.toLong()
+loanTypeCondition = [];
+loanTypeCondition.add(EntityCondition.makeCondition("loanProductId", EntityOperator.EQUALS, loanProductIdL));
+loanTypes = delegator.findList('LoanProduct', EntityCondition.makeCondition(loanTypeCondition, EntityOperator.AND), null,null,null,false)
 context.loanTypes = loanTypes
 }
