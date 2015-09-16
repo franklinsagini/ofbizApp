@@ -1033,6 +1033,34 @@ public class LoanRepayments {
 			log.error("Could post an entry");
 		}
 	}
+	
+	
+	public static void postTransactionEntry(Delegator delegator,
+			BigDecimal bdLoanAmount, String partyId,
+			String loanReceivableAccount, String postingType,
+			String acctgTransId, String acctgTransType, String entrySequenceId,
+			Map<String, String> userLogin, String branchId) {
+		GenericValue acctgTransEntry;
+
+		acctgTransEntry = delegator.makeValidValue("AcctgTransEntry", UtilMisc
+				.toMap("acctgTransId", acctgTransId, "acctgTransEntrySeqId",
+						entrySequenceId, "partyId", partyId, "glAccountTypeId",
+						acctgTransType, "glAccountId", loanReceivableAccount,
+
+						"organizationPartyId", branchId, "amount",
+						bdLoanAmount, "currencyUomId", "KES", "origAmount",
+						bdLoanAmount, "origCurrencyUomId", "KES",
+						"debitCreditFlag", postingType, "reconcileStatusId",
+						"AES_NOT_RECONCILED"));
+
+		try {
+			delegator.createOrStore(acctgTransEntry);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("Could post an entry");
+		}
+	}
+
 
 	/***
 	 * @author Japheth Odonya @when Jun 4, 2015 12:14:36 PM

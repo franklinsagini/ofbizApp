@@ -105,4 +105,32 @@ under the License.
         
     </simple-method>
     
+    
+    <!-- processChargeInterestAllStations -->
+    <simple-method method-name="processChargeInterestAllStations" short-description="Charge Interest on ALl Stations">
+        <set field="chargestatus" value="${bsh:org.ofbiz.chargeinterest.ChargeInterestServices.processChargeInterestAllStations();}"></set>
+        <!-- store-value value-field="lookedUpValue"/ -->
+        
+        <log message="NNNNNNNNNNNNNNN Charging All Station Interest" level="info"/>
+		<if>
+			 <condition> 
+			 		<if-compare operator="equals" value="success" field="chargestatus"></if-compare>
+            </condition> 
+            <then> 
+						 <property-to-field resource="ChargeInterestUiLabels.xml" 
+            				property="Successfully generated interest" field="successMessage" />
+                
+            </then>
+		
+		<else>
+			<add-error> 
+                    <fail-message message="${chargestatus}"/>
+                </add-error> 
+                <check-errors /> 
+		
+        </else>
+        </if>
+        
+    </simple-method>
+    
 </simple-methods>

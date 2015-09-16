@@ -64,6 +64,16 @@
 		</response>
 	</request-map>
 	
+	<!-- processChargeInterestAllStations -->
+		<request-map uri="processChargeInterestAllStations">
+		<security https="true" auth="true" />
+		<event type="service" invoke="processChargeInterestAllStations" />
+		<response name="success" type="request-redirect" value="chargeInterestAllStations">
+		</response>
+		<response name="error" type="view" value="chargeInterestAllStations">
+		</response>
+	</request-map>
+	
 	<request-map uri="showInterestGenerated">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="showInterestGenerated"
@@ -72,13 +82,22 @@
 			</response>
 	</request-map>
 	
+	<!-- chargeInterestAllStations -->
+	<request-map uri="chargeInterestAllStations">
+      <security https="true" auth="true" />
+      <response name="success" type="view" value="chargeInterestAllStations">
+      </response>
+    </request-map>
+	
 	<view-map name="showInterestGenerated" type="screen"
 		page="component://chargeinterest/widget/ChargeInterestScreens.xml#showInterestGenerated" />
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://chargeinterest/widget/ChargeInterestScreens.xml#main"/>
     
     	<!-- pushMonthYearStation -->
-			<view-map name="stationInterestManagement" type="screen"
+		<view-map name="stationInterestManagement" type="screen"
 		page="component://chargeinterest/widget/ChargeInterestScreens.xml#stationInterestManagement" />
+		<view-map name="chargeInterestAllStations" type="screen"
+		page="component://chargeinterest/widget/ChargeInterestScreens.xml#chargeInterestAllStations" />
     
 </site-conf>
