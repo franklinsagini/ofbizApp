@@ -2152,7 +2152,8 @@ public class OnlineRemittanceProcessingServices {
 		//
 		
 		//Case of Deposits or Share Capital
-		
+		if (bdContributingAmt.compareTo(BigDecimal.ZERO) == 1){ //Contributing amount must be greater than ZERO
+			
 		if ((accountProduct.getString("code").equals(AccHolderTransactionServices.SHARE_CAPITAL_CODE)) || (accountProduct.getString("code").equals(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE))){
 			GenericValue shareCapitalBackofficeLoans = null;
 			Long shareCapitalBackofficeLoansId = delegator.getNextSeqIdLong("ShareCapitalBackofficeLoans");
@@ -2220,6 +2221,8 @@ public class OnlineRemittanceProcessingServices {
 				e.printStackTrace();
 			}
 		}
+		
+	}
 
 		try {
 			TransactionUtil.commit();
