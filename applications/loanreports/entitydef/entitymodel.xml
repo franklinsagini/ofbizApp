@@ -66,4 +66,80 @@
 		
 		<prim-key field="loanNo"/>
 	</entity>
+	
+	
+	<!-- Loan Repayments -->
+	<view-entity entity-name="LoanRepaymentAmounts" package-name="org.ofbiz.accountreports">
+    	<member-entity entity-alias="LR" entity-name="LoanRepayment"></member-entity>
+    	<member-entity entity-alias="LA" entity-name="LoanApplication"></member-entity>
+    	<member-entity entity-alias="LP" entity-name="LoanProduct"></member-entity>
+    	<member-entity entity-alias="M" entity-name="Member"></member-entity>
+    	<member-entity entity-alias="S" entity-name="Station"></member-entity>
+    	
+    	<alias entity-alias="M" name="firstName" group-by="true"></alias>
+    	<alias entity-alias="M" name="middleName" group-by="true"></alias>
+    	<alias entity-alias="M" name="lastName" group-by="true"></alias>
+    	
+    	<alias entity-alias="M" name="payrollNumber" group-by="true"/> 
+    	<alias entity-alias="M" name="memberNumber" group-by="true"/> 
+    	<alias entity-alias="M" name="idNumber" group-by="true"/> 
+    	
+    	<alias entity-alias="M" name="stationId" group-by="true"/> 
+    	<alias entity-alias="M" name="branchId" group-by="true"/> 
+    	<alias entity-alias="M" name="employmentTypeId"  group-by="true"/>
+    	<alias entity-alias="M" name="memberStatusId" group-by="true"/>
+    	 
+    	
+    	<alias entity-alias="S" name="employerCode" group-by="true"/> 
+    	
+    	<alias entity-alias="LP" name="loanProductId" group-by="true" />
+    	
+    	<alias entity-alias="LP" name="name" group-by="true" />
+    	<alias entity-alias="LP" name="code" group-by="true" />
+    	
+    	<alias entity-alias="LA" name="loanNo" group-by="true" />
+    	
+    	
+    	<alias entity-alias="LR" name="createdStamp" group-by="true" />
+    	
+    	<!-- alias entity-alias="LR" name="transactionAmount" function="sum"/ --> 
+    	<alias entity-alias="LR" name="principalAmount" function="sum" /> 
+    	<alias entity-alias="LR" name="interestAmount"   group-by="true"></alias> 
+    	
+    	<alias entity-alias="LR" name="loanRepaymentId"   group-by="true"></alias> 
+    	<alias entity-alias="LR" name="insuranceAmount" group-by="true" />
+    	
+    	
+    	<alias entity-alias="LR" name="repaymentMode" group-by="true" />
+    	
+    	<alias  entity-alias="LR" name="" ></alias>
+    	
+    	
+    	<alias entity-alias="LR" name="acctgTransId" group-by="true" /> 
+    	
+    	<view-link entity-alias="LR" rel-entity-alias="LA"> 
+            <key-map field-name="loanApplicationId" rel-field-name="loanApplicationId"/> 
+        </view-link> 
+        
+        <view-link entity-alias="LA" rel-entity-alias="LP"> 
+            <key-map field-name="loanProductId" rel-field-name="loanProductId"/> 
+        </view-link>
+        
+        <view-link entity-alias="LA" rel-entity-alias="M"> 
+            <key-map field-name="partyId" rel-field-name="partyId"/> 
+        </view-link>
+        
+        <view-link entity-alias="M" rel-entity-alias="S"> 
+            <key-map field-name="stationId" rel-field-name="stationId"/> 
+        </view-link>
+        
+        <entity-condition>
+        	<condition-list combine="and">
+        		<condition-expr entity-alias="LR" field-name="transactionAmount" operator="greater" value="0"/>
+        		<condition-expr entity-alias="LR" field-name="repaymentMode" operator="not-equals" value="LOANCLEARANCE"/>
+        		<condition-expr entity-alias="LR" field-name="repaymentMode" operator="not-equals" value="ATTACHED"/>
+        	</condition-list>
+        </entity-condition>
+    </view-entity>
+	
 </entitymodel>

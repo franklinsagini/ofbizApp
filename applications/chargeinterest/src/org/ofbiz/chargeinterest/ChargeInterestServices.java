@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -75,8 +76,10 @@ public class ChargeInterestServices {
 		// Post Insurance end Interest Accrued
 
 		// update the expectation with transaction id
-		String branchId = AccHolderTransactionServices
-				.getEmployeeBranch(userLogin.get("partyId"));
+		String branchId = station.getString("branchId");
+				
+				//AccHolderTransactionServices
+				//.getEmployeeBranch(userLogin.get("partyId"));
 		String acctgTransType = "INTEREST_RECEIVABLE";
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		GenericValue loanExpectation = delegator.makeValidValue(
@@ -108,6 +111,39 @@ public class ChargeInterestServices {
 		// stationMonthInterestManagementId
 		updateChargesWithTransactionId(stationMonthInterestManagementId,
 				acctgTransId);
+		
+		
+		//Log station in Charged Interest Log
+		Long stationInterestChargeLogId = delegator.getNextSeqIdLong("StationInterestChargeLog");
+		GenericValue stationInterestChargeLog = delegator.makeValidValue(
+				"StationInterestChargeLog", UtilMisc.toMap(
+						"stationInterestChargeLogId",
+						stationInterestChargeLogId,
+
+						"createdBy", userLogin.get("userLoginId"),
+
+						"month", month,
+
+						"year", year,
+
+						"stationId", stationId,
+
+						"employerCode", employerCode,
+
+						"employerName", LoanUtilities.getStation(stationId)
+								.getString("employerName"),
+
+						"chargedNotCharged", "CHARGED"
+
+				));
+		
+		try {
+			delegator.createOrStore(stationInterestChargeLog);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		return "success";
 	}
 
@@ -135,12 +171,18 @@ public class ChargeInterestServices {
 
 		return false;
 	}
-	
-	private static boolean alreadyChargedForMonth(Long stationMonthInterestManagementId) {
-		
-		GenericValue stationMonthInterestManagement = LoanUtilities.getEntityValue("StationMonthInterestManagement", "stationMonthInterestManagementId", stationMonthInterestManagementId);
-		String monthYear = stationMonthInterestManagement.getLong("month").toString()+stationMonthInterestManagement.getLong("year").toString();
-		
+
+	private static boolean alreadyChargedForMonth(
+			Long stationMonthInterestManagementId) {
+
+		GenericValue stationMonthInterestManagement = LoanUtilities
+				.getEntityValue("StationMonthInterestManagement",
+						"stationMonthInterestManagementId",
+						stationMonthInterestManagementId);
+		String monthYear = stationMonthInterestManagement.getLong("month")
+				.toString()
+				+ stationMonthInterestManagement.getLong("year").toString();
+
 		EntityConditionList<EntityExpr> expectationConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition
 						.makeCondition("stationMonthInterestManagementId",
@@ -194,36 +236,51 @@ public class ChargeInterestServices {
 				e.printStackTrace();
 			}
 		}
-
+		
+		
+		//update Station Month Interest Management postingacctgTransId
+		
+		GenericValue stationMonthInterestManagement = LoanUtilities.getEntityValue("StationMonthInterestManagement", "stationMonthInterestManagementId", stationMonthInterestManagementId);
+		stationMonthInterestManagement.set("postingacctgTransId", acctgTransId);
+		try {
+			delegator.createOrStore(stationMonthInterestManagement);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 	}
 
 	private static ExpectTotal processCurrentStation(String currentStationId,
 			String employerCode, String monthYear,
 			Map<String, String> userLogin, Long stationMonthInterestManagementId) {
-		
-		Calendar cal = Calendar.getInstance();
-		
-		Long year = Long.valueOf(monthYear.substring((monthYear.length() - 4), monthYear.length()));
-		Long month = Long.valueOf(monthYear.substring(0, monthYear.length() - 4));
-		System.out.println(" The year "+year);
-		System.out.println(" The Month "+month);
-	    
-	    cal.set(Calendar.MONTH, month.intValue() - 1);
-	    cal.set(Calendar.DATE, 16);
-	    
-	    cal.set(Calendar.YEAR, year.intValue());
-	    
-	    
-	    cal.set(Calendar.HOUR, 0);
-	    cal.set(Calendar.MINUTE, 0);
-	    cal.set(Calendar.SECOND, 0);
-	    cal.set(Calendar.MILLISECOND, 0);
-	    
-	    Timestamp interestChargeDate = new Timestamp(cal.getTimeInMillis());
 
-	    // now convert GregorianCalendar object to Timestamp object
-	   // return new Timestamp(cal.getTimeInMillis());
-	  //  System.out.println(" The time will be  llll "+new Timestamp(cal.getTimeInMillis()));
+		Calendar cal = Calendar.getInstance();
+
+		Long year = Long.valueOf(monthYear.substring((monthYear.length() - 4),
+				monthYear.length()));
+		Long month = Long
+				.valueOf(monthYear.substring(0, monthYear.length() - 4));
+		System.out.println(" The year " + year);
+		System.out.println(" The Month " + month);
+
+		cal.set(Calendar.MONTH, month.intValue() - 1);
+		cal.set(Calendar.DATE, 16);
+
+		cal.set(Calendar.YEAR, year.intValue());
+
+		cal.set(Calendar.HOUR, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+
+		Timestamp interestChargeDate = new Timestamp(cal.getTimeInMillis());
+
+		// now convert GregorianCalendar object to Timestamp object
+		// return new Timestamp(cal.getTimeInMillis());
+		// System.out.println(" The time will be  llll "+new
+		// Timestamp(cal.getTimeInMillis()));
 
 		// Get all the loans for this station
 		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
@@ -233,9 +290,9 @@ public class ChargeInterestServices {
 
 				EntityCondition.makeCondition("loanStatusId",
 						EntityOperator.EQUALS, 6L),
-						
+
 				EntityCondition.makeCondition("disbursementDate",
-								EntityOperator.LESS_THAN, interestChargeDate)		
+						EntityOperator.LESS_THAN, interestChargeDate)
 
 				), EntityOperator.AND);
 
@@ -497,7 +554,7 @@ public class ChargeInterestServices {
 				+ partyId);
 		LoanRepayments.postTransactionEntry(delegator, amount, partyId,
 				accountId, postingType, acctgTransId, acctgTransType,
-				entrySequenceId, userLogin);
+				entrySequenceId, userLogin, branchId);
 
 		// Post a Credit Entry to accountId
 		postingType = "C";
@@ -509,7 +566,7 @@ public class ChargeInterestServices {
 		// postingType, delegator);
 		LoanRepayments.postTransactionEntry(delegator, amount, partyId,
 				accountId, postingType, acctgTransId, acctgTransType,
-				entrySequenceId, userLogin);
+				entrySequenceId, userLogin, branchId);
 		// log.info("### Transaction ID## "+acctgTransId);
 		// Creates a record in AcctgTransEntry for Member Deposit Account
 		// createMemberDepositEntry(loanExpectation, acctgTransId, userLogin,
@@ -548,7 +605,7 @@ public class ChargeInterestServices {
 				+ partyId);
 		LoanRepayments.postTransactionEntry(delegator, amount, partyId,
 				accountId, postingType, acctgTransId, acctgTransType,
-				entrySequenceId, userLogin);
+				entrySequenceId, userLogin, branchId);
 
 		// Post a Credit Entry to accountId
 		postingType = "C";
@@ -560,60 +617,167 @@ public class ChargeInterestServices {
 		// postingType, delegator);
 		LoanRepayments.postTransactionEntry(delegator, amount, partyId,
 				accountId, postingType, acctgTransId, acctgTransType,
-				entrySequenceId, userLogin);
+				entrySequenceId, userLogin, branchId);
 		return sequence;
 	}
-	
-	
-	public static synchronized Boolean stationAlreadyCharged(Long month, Long year, String stationId){
-		GenericValue station = LoanUtilities.getEntityValue("Station", "stationId", stationId);
+
+	public static synchronized Boolean stationAlreadyCharged(Long month,
+			Long year, String stationId) {
+		GenericValue station = LoanUtilities.getEntityValue("Station",
+				"stationId", stationId);
 		String employerCode = station.getString("employerCode");
 		List<String> stationIds = LoanUtilities.getStationIds(employerCode);
-		
-		//Check that none of these station ids is in the StationMonthInterestManagment
+
+		// Check that none of these station ids is in the
+		// StationMonthInterestManagment
 		Boolean alreadyCharged = false;
 		for (String id : stationIds) {
-			if ( alreadyCharged(month, year, id)){
+			if (alreadyCharged(month, year, id)) {
 				alreadyCharged = true;
-			} 
+			}
 		}
-		
+
 		return alreadyCharged;
 	}
 
 	private static Boolean alreadyCharged(Long month, Long year, String id) {
 		EntityConditionList<EntityExpr> stationMonthInterestManagementConditions = EntityCondition
-				.makeCondition(UtilMisc.toList(EntityCondition
-						.makeCondition("month",
-								EntityOperator.EQUALS,
-								month),
-								
-								EntityCondition
-								.makeCondition("year",
-										EntityOperator.EQUALS,
-										year),
-										
-								EntityCondition
-										.makeCondition("stationId",
-												EntityOperator.EQUALS,
-												id)
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"month", EntityOperator.EQUALS, month),
+
+				EntityCondition.makeCondition("year", EntityOperator.EQUALS,
+						year),
+
+				EntityCondition.makeCondition("stationId",
+						EntityOperator.EQUALS, id)
 
 				), EntityOperator.AND);
 
 		List<GenericValue> stationMonthInterestManagementELI = new ArrayList<GenericValue>();
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
-			stationMonthInterestManagementELI = delegator.findList("StationMonthInterestManagement",
-					stationMonthInterestManagementConditions, null, null, null, false);
+			stationMonthInterestManagementELI = delegator.findList(
+					"StationMonthInterestManagement",
+					stationMonthInterestManagementConditions, null, null, null,
+					false);
 
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
 
-		if ((stationMonthInterestManagementELI != null) && (stationMonthInterestManagementELI.size() > 0))
+		if ((stationMonthInterestManagementELI != null)
+				&& (stationMonthInterestManagementELI.size() > 0))
 			return true;
-		
+
 		return false;
+	}
+
+	public static synchronized String processChargeInterestAllStations() {
+
+		// Get all the stations
+
+		List<GenericValue> employerListELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			employerListELI = delegator.findList("EmployerCodeListing", null,
+					null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		int count = 0;
+		GenericValue station = null;
+		Calendar calCurrent = Calendar.getInstance();
+
+		Long month = new Long(calCurrent.get(calCurrent.MONTH)) + 1;
+		Long year = new Long(calCurrent.get(calCurrent.YEAR));
+
+		System.out.println("MMMMMMMMMM The month is --- " + month);
+		System.out.println("YYYYYYYYYY The year is --- " + year);
+
+		String employerCode = "";
+		String stationId = "";
+		Boolean allCharged = true;
+		
+		Map<String, String> userLogin = new HashMap<String, String>();
+		userLogin.put("userLoginId", "system");
+
+		for (GenericValue genericValue : employerListELI) {
+			count = count + 1;
+
+			employerCode = genericValue.getString("employerCode");
+			stationId = LoanUtilities.getStationId(employerCode);
+			System.out.println(count + " ############ Code " + employerCode
+					+ " Name " + LoanUtilities.getStationName(employerCode));
+
+			// Check if station has been charged
+			station = LoanUtilities.getStation(stationId);
+
+			if (alreadyCharged(month, year, station.getString("stationId"))) {
+				System.out.println(" YYYYYYYYY Has been charged already");
+
+			} else {
+				System.out.println(" NNNNNNNNN Not been charged");
+				allCharged = false;
+				// Create the StationMonthInterestManagement record and charge
+
+				Long stationMonthInterestManagementId = addMonthInterestManagement(
+						month, year, employerCode, stationId);
+				
+				
+				chargeStationInterest(stationMonthInterestManagementId, userLogin);
+				
+
+			}
+		}
+
+		if (allCharged)
+			return "All stations are already charged ";
+
+		return "success";
+	}
+
+	private static Long addMonthInterestManagement(Long month,
+			Long year, String employerCode, String stationId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		Long stationMonthInterestManagementId = delegator
+				.getNextSeqIdLong("StationMonthInterestManagement");
+
+		GenericValue stationMonthInterestManagement = delegator.makeValidValue(
+				"StationMonthInterestManagement", UtilMisc.toMap(
+						"stationMonthInterestManagementId",
+						stationMonthInterestManagementId,
+
+						"isActive", "Y",
+
+						"createdBy", "system",
+
+						"month", month,
+
+						"year", year,
+
+						"stationId", stationId,
+
+						"employerCode", employerCode,
+
+						"employerName", LoanUtilities.getStation(stationId)
+								.getString("employerName"),
+
+						"Onlinecode", LoanUtilities.getStation(stationId)
+								.getString("Onlinecode")
+
+				));
+
+		try {
+			delegator.createOrStore(stationMonthInterestManagement);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return stationMonthInterestManagementId;
 	}
 
 }

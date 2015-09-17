@@ -234,4 +234,175 @@
         </field>
     </form>
     
+    <!-- loanbalancesasat -->
+    <form name="loanbalancesasatForm" type="single" target="loanbalancesasatexcel.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+		<actions>
+			<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+
+		</actions>
+		<field name="endDate" title="To" position="2"  widget-style="required" required-field="true">
+        	<date-time type="timestamp" clock="12"/>
+        </field>
+        
+        <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
+        <field name="stationId" title="Station">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name} - ${stationNumber}" key-field-name="stationId" entity-name="Station">
+        			<entity-order-by field-name="name"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        
+        <field name="branchId" title="Branch">
+            <drop-down allow-empty="true" >
+                <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
+            </drop-down>
+        </field>
+        
+        <field name="loanProductId" title="Loan Type">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${code} - ${name}" entity-name="LoanProduct" key-field-name="loanProductId"></entity-options>
+        	</drop-down>
+        </field>
+        <field name="submitButton" title="Generate Excel" widget-style="smallSubmit">
+            <submit button-type="button" />
+        </field>
+    </form>
+    
+    <form name="loanbalancesasatExport" list-name="combinedList" target="" title="" 
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="loanNo" title="Loan No."><display/></field>
+        <field name="names" title="Member"><display/></field>
+        
+         <field name="payrollNumber" title="Payroll Number"><display/></field>
+         <field name="memberNumber" title="Member No"><display/></field>
+         <field name="idNumber" title="ID No"><display/></field>
+        
+        <field name="disbursementDate" title="Date Disbursed"><display/></field>
+        <field name="loanBalance" title="Loan Balance"><display/></field>
+        <field name="interestAccrued" title="Interest Accrued"><display/></field>
+        <field name="insuranceAccrued" title="Insurance Accrued"><display/></field>
+        
+        <field name="loanStatus" title="Loan Status"><display/></field>
+        
+        <field name="productname" title="Product Name"><display/></field>
+        
+        <field name="maxRepaymentPeriod" title="Maximum Repayment Period"><display/></field>
+        <field name="repaymentPeriod" title="Repayment Period"><display/></field>
+
+		<field name="interestRatePM" title="Interest Rate P.M"><display/></field>        
+        
+        <field name="loanAmt" title="Disbursed Amount"><display/></field>
+        <field name="stationName" title="Station"><display/></field>
+        
+    </form>
+    
+      <!-- loanrepaymentsbetweendatesForm -->
+     <form name="loanrepaymentsbetweendatesForm" type="single" target="loanrepaymentsbetweendatesexcel.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+		<actions>
+			<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+
+		</actions>
+		
+        <!-- field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field -->
+        
+        <field name="startDate" title="From"  widget-style="required" required-field="true">
+        	<date-time type="timestamp"/>
+        </field>
+        
+        <field name="endDate" title="To" position="2"  widget-style="required" required-field="true">
+        	<date-time type="timestamp"/>
+        </field>
+        
+        <!-- field name="stationId" title="Station">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name} - ${stationNumber}" key-field-name="stationId" entity-name="Station">
+        			<entity-order-by field-name="name"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        
+        <field name="branchId" title="Branch">
+            <drop-down allow-empty="true" >
+                <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
+            </drop-down>
+        </field -->
+        
+        <field name="loanProductId" title="Loan Type">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${code} - ${name}" entity-name="LoanProduct" key-field-name="loanProductId"></entity-options>
+        	</drop-down>
+        </field>
+        
+        <field name="branchId" title="Branch">
+            <drop-down allow-empty="true" >
+                <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
+            </drop-down>
+        </field>
+        
+         <field name="stationId" title="Station">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name} - ${stationNumber}" entity-name="Station" key-field-name="stationId"></entity-options>
+        	</drop-down>
+        </field>
+        
+         <field name="employmentTypeId" title="Employment Type">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name}" entity-name="EmploymentType" key-field-name="employmentTypeId"></entity-options>
+        	</drop-down>
+        </field>
+        
+         <!-- field name="loanStatusId" title="Loan Status">
+        	<drop-down allow-empty="true">
+        		<entity-options description=" ${name}" entity-name="LoanStatus" key-field-name="loanStatusId"></entity-options>
+        	</drop-down>
+        </field -->
+        
+        <field name="submitButton" title="Generate Excel" widget-style="smallSubmit">
+            <submit button-type="button" />
+        </field>
+    </form>
+    
+    <form name="loanrepaymentsbetweendatesExport" list-name="combinedList"  target="" title="" 
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false">
+         <field name="loanRepaymentId">
+         	<hidden/>
+         </field> 
+       <field name="firstName" title="First Name"><display/></field>
+        <field name="middleName" title="Middle Name"><display/></field>
+        <field name="lastName" title="Last Name"><display/></field>
+
+         <field name="payrollNumber" title="Payroll Number"><display/></field>
+         <field name="memberNumber" title="Member No"><display/></field>
+         <field name="idNumber" title="ID No"><display/></field>
+
+        <field name="stationId" title="Station"><display-entity entity-name="Station" description="${name}"></display-entity></field>
+        <field name="branchId" title="Branch"><display-entity entity-name="PartyGroup" description="${groupName}" key-field-name="partyId"></display-entity></field>
+       <field name="memberStatusId" title="Member Status"><display-entity entity-name="MemberStatus" description="${name}" key-field-name="memberStatusId"></display-entity></field>
+       <field name="employmentTypeId" title="Employment Type"><display-entity entity-name="EmploymentType" description="${name}"></display-entity></field>
+
+        <field name="loanNo" title="Loan No"><display/></field>
+        <field name="name" title="Product Name"><display/></field>
+		<field name="code" title="Product Code"><display/></field>
+		
+		<field name="repaymentMode" title="Repayment Mode"><display/></field>
+		
+        <field name="createdStamp" title="Date Contributed"><display type="date-time"/></field>
+
+        <field name="principalAmount" title="Principal"><display default-value="0" type="accounting-number" /></field>
+        <field name="interestAmount" title="Interest"><display default-value="0" type="accounting-number"/></field>
+        <field name="insuranceAmount" title="Insurance"><display default-value="0" type="accounting-number"/></field>
+        
+        <field name="transactionAmount"  title="Total Amount"><display default-value="${bsh:org.ofbiz.accountholdertransactions.LoanUtilities.sumTotalAmount(loanRepaymentId);}" type="currency"></display ></field>
+     </form>
+      
+    
 </forms>

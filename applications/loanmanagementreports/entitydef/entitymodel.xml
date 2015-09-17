@@ -8,7 +8,42 @@
     <description>None</description>
     <copyright></copyright>
     <version></version>
-    
+
     <!-- loans applied by loan type -->
+
+    <view-entity entity-name="LoansByStations"
+        package-name="org.ofbiz.loanmanagementreports"
+        title="LoanApplication Member and Station">
+        <description>LoanApplication Member and Station</description>
+        <member-entity entity-alias="LA" entity-name="LoanApplication"></member-entity>
+        <member-entity entity-alias="M" entity-name="Member"></member-entity>
+        <member-entity entity-alias="S" entity-name="Station"></member-entity>
+        <alias entity-alias="LA" name="loanApplicationId" />
+        <alias entity-alias="LA" name="loanNo" />
+        <alias entity-alias="LA" name="loanProductId"/>
+        <alias entity-alias="LA" name="repaymentPeriod" />
+        <alias entity-alias="LA" name="appliedAmt" />
+        <alias entity-alias="LA" name="loanStatusId" />
+        <alias entity-alias="LA" name="loanDuration" />
+        <alias entity-alias="LA" name="createdStamp" />
+        <alias entity-alias="M" name="partyId" />
+        <alias entity-alias="M" name="firstName" />
+        <alias entity-alias="M" name="lastName" />
+        <alias entity-alias="M" name="memberNumber" />
+        <alias entity-alias="S" name="stationId" />
+        <alias entity-alias="S" name="stationNumber" />
+        <alias entity-alias="S" name="name" />
+        <alias entity-alias="S" name="employerName" />
+
+        <view-link entity-alias="LA" rel-entity-alias="M">
+            <key-map field-name="partyId"/>
+        </view-link>
+        <view-link entity-alias="M" rel-entity-alias="S">
+            <key-map field-name="stationId"/>
+        </view-link>
+    </view-entity>
+
+
+
 
 </entitymodel>

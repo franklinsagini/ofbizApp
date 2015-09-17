@@ -167,14 +167,17 @@
         <field name="startDate" title="From"  widget-style="required" required-field="true">
             <date-time type="date-time"/>
         </field>
-
         <field name="endDate" title="To" position="2"  widget-style="required" required-field="true">
             <date-time type="date-time"/>
         </field>
-
         <field name="loanProductId" title="Loan Type">
             <drop-down allow-empty="true">
                 <entity-options description="${code} - ${name}" entity-name="LoanProduct" key-field-name="loanProductId"></entity-options>
+            </drop-down>
+        </field>
+        <field name="loanStatusId" title="Loan Status">
+            <drop-down allow-empty="true">
+                <entity-options description="${name}" entity-name="LoanStatus" key-field-name="loanStatusId"></entity-options>
             </drop-down>
         </field>
         <field name="submitButton" title="Show" widget-style="smallSubmit">
@@ -183,53 +186,24 @@
     </form>
 
      <!-- appliedLoansByStation -->
-           <form name="appliedLoansByStationForm" type="single" target="appliedLoansByStationpdf" title="" header-row-style="header-row"
+    <form name="appliedLoansByStationForm" type="single" target="appliedLoansByStationpdf" title="" header-row-style="header-row"
         default-table-style="basic-table">
 		<actions>
 			<entity-condition entity-name="PartyGroup" list="partyGroups">
         		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
         	</entity-condition>
-
 		</actions>
-
-        <!-- field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field -->
-
         <field name="startDate" title="From"  widget-style="required" required-field="true">
-        	<date-time type="date"/>
-
-
+        	<date-time type="date-time"/>
         </field>
-
         <field name="endDate" title="To" position="2"  widget-style="required" required-field="true">
-        	<date-time type="date"/>
+        	<date-time type="date-time"/>
         </field>
-
-        <!-- field name="stationId" title="Station">
-        	<drop-down allow-empty="true">
-        		<entity-options description="${name} - ${stationNumber}" key-field-name="stationId" entity-name="Station">
-        			<entity-order-by field-name="name"/>
-        		</entity-options>
-        	</drop-down>
-        </field>
-
-        <field name="branchId" title="Branch">
-            <drop-down allow-empty="true" >
-                <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
-            </drop-down>
-        </field -->
-
         <field name="stationId" title="Station">
         	<drop-down allow-empty="true">
         		<entity-options description="${name} - ${stationNumber} - Employer Code - (${employerCode})" entity-name="Station" key-field-name="stationId"></entity-options>
         	</drop-down>
         </field>
-
-         <!-- field name="loanStatusId" title="Loan Status">
-        	<drop-down allow-empty="true">
-        		<entity-options description=" ${name}" entity-name="LoanStatus" key-field-name="loanStatusId"></entity-options>
-        	</drop-down>
-        </field -->
-
         <field name="submitButton" title="Show" widget-style="smallSubmit">
             <submit button-type="button" />
         </field>

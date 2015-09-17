@@ -78,6 +78,11 @@
 				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
 
 				<!-- entity-one entity-name="AccountHolderTransactionSetup" value-field="accountHolderTransactionSetupContext"/ -->
+				
+				<entity-one value-field="stationMonthInterestManagement" entity-name="StationMonthInterestManagement">
+					<field-map field-name="stationMonthInterestManagementId" from-field="stationMonthInterestManagementId"/>
+				</entity-one>
+				<set field="interestYear" value="${stationMonthInterestManagement.year}" type="PlainString" />
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator"
@@ -90,8 +95,8 @@
 										location="component://chargeinterest/widget/ChargeInterestForms.xml" />
 								</screenlet -->
 									<container style="button-bar">
-												<label style="h3">Interest Charged for ${employerName}
-													for ${month} </label>
+												<label style="h3">Interest Charged for ${stationMonthInterestManagement.employerName}
+													for ${stationMonthInterestManagement.month}/${interestYear} </label>
 
 												
 											</container>
@@ -112,6 +117,68 @@
 							</fail-widgets>
 						</section>
 
+						
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	
+	<!-- Charge Interest Overrall -->
+		<screen name="chargeInterestAllStations">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Charge All Stations" />
+				<set field="headerItem" value="chargeInterestAllStations" />
+				
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="chargeInterestAllStations" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+					property="KEN" default="KEN"/ -->
+				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+			</actions>
+
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+
+					<decorator-section name="body">
+						<!-- FULL -->
+						<section>
+						
+							<widgets>
+								
+								<screenlet>
+									<section>
+										<condition>
+											<if-compare operator="equals" value="admin" field="userLogin.userLoginId"/>
+										</condition>
+										<widgets>
+
+											<container style="button-bar">
+												<link target="processChargeInterestAllStations"
+													text="Charge Interest all stations" style="buttontext">
+													<image url-mode="raw" src="${iconsLocation}/add.png" />
+												</link>
+											</container>
+
+
+
+										</widgets>
+										<fail-widgets>
+											<container style="button-bar">
+												<label style="h3">Not allowed to charge interest</label>
+
+												
+											</container>
+										</fail-widgets>
+									</section>
+								</screenlet>
+
+							</widgets>
+						</section>
 						
 					</decorator-section>
 				</decorator-screen>

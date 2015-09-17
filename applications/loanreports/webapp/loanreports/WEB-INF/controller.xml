@@ -123,7 +123,30 @@
 		<response name="success" type="none">
     </response>
     </request-map>
+    
+    
+    <!-- Loan Balances as at a date -->
+    <request-map uri="loanbalancesasat">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="loanbalancesasat" save-home-view="true" />
+  </request-map>
   
+  <request-map uri="loanbalancesasatexcel.csv">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="loanbalancesasatexcel" save-home-view="true" />
+  </request-map>
+  
+  <!-- loanrepaymentsbetweendates -->
+  <request-map uri="loanrepaymentsbetweendates">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="loanrepaymentsbetweendates" save-home-view="true" />
+  </request-map>
+  
+  <request-map uri="loanrepaymentsbetweendatesexcel.csv">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="loanrepaymentsbetweendatesexcel" save-home-view="true" />
+  </request-map>
+ 
 
 	<request-map uri="LookupActiveMember"><security https="true" auth="true"/><response name="success" type="view" value="LookupActiveMember"/></request-map>
     <!-- View Mappings -->
@@ -158,5 +181,12 @@
     <view-map name="statementOfDepositReturns" type="screen" page="component://loanreports/widget/LoanReportsScreens.xml#statementOfDepositReturns"/>
     <view-map name="statementOfDepositReturnsPDF" type="screenfop" page="component://loanreports/widget/LoanReportsScreens.xml#statementOfDepositReturnsPDF" content-type="application/pdf" encoding="none"/>
 
+	<!-- Loan Balances as AT -->
+	<view-map name="loanbalancesasat" type="screen" page="component://loanreports/widget/LoanReportsScreens.xml#loanbalancesasat"/>
+    <view-map name="loanbalancesasatexcel" type="screencsv" page="component://loanreports/widget/LoanReportsScreens.xml#loanbalancesasatexcel" content-type="text/csv" encoding="none"/>
+	
+	<!-- loanrepaymentsbetweendates -->
+	<view-map name="loanrepaymentsbetweendates" type="screen" page="component://loanreports/widget/LoanReportsScreens.xml#loanrepaymentsbetweendates"/>
+    <view-map name="loanrepaymentsbetweendatesexcel" type="screencsv" page="component://loanreports/widget/LoanReportsScreens.xml#loanrepaymentsbetweendatesexcel" content-type="text/csv" encoding="none"/>
 	
 </site-conf>

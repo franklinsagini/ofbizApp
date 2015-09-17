@@ -3,7 +3,7 @@
 
         <#-- REPORT TITLE -->
         <fo:block font-size="11pt" text-align="center"  font-weight="bold" >
-            APPLIED LOANS BY LOAN TYPE
+            APPLIED LOANS BY STATIONS
         </fo:block>
         <fo:block><fo:leader/></fo:block>
         <#-- BANK Details -->
@@ -16,14 +16,15 @@
 
     <#-- REPORT BODY -->
 
-    <#if loanTypes?has_content>
-        <#list loanTypes as loanType>
+    <#if stations?has_content>
+        <#list stations as station>
+
             <fo:block font-size="10pt" font-weight="bold">
-                ${loanType.code} - ${loanType.name} - ${loanType.loanProductId}
+                ${station.stationNumber} - ${station.name}
             </fo:block>
 
-                    <fo:block space-after.optimum="10pt" font-size="9pt">
-                    <fo:table table-layout="fixed" width="100%" font-size="9pt" >
+           <fo:block space-after.optimum="10pt" font-size="9pt">
+                <fo:table table-layout="fixed" width="100%" font-size="9pt" >
                     <fo:table-column column-number="1" column-width="proportional-column-width(10)"/>
                     <fo:table-column column-number="2" column-width="proportional-column-width(22)"/>
                     <fo:table-column column-number="3" column-width="proportional-column-width(10)"/>
@@ -70,14 +71,11 @@
                     </fo:table-body>
                 </fo:table>
             </fo:block>
-            <#assign count=0 />
-            <#assign totalAmt=0.00 />
 
             <#if loanApps?has_content>
                 <#list loanApps as loanApp>
-
-                    <#if loanApp.loanProductId == loanType.loanProductId >
-                        <fo:block space-after.optimum="10pt" font-size="9pt">
+                    <#if loanApp.stationId == station.stationId >
+ <fo:block space-after.optimum="10pt" font-size="9pt">
                         <fo:table table-layout="fixed" width="100%" font-size="9pt" >
                             <fo:table-column column-number="1" column-width="proportional-column-width(10)"/>
                             <fo:table-column column-number="2" column-width="proportional-column-width(22)"/>
@@ -128,19 +126,9 @@
                             </fo:table-body>
                         </fo:table>
                         </fo:block>
-                        <#assign count = count + 1 />
-                        <#assign totalAmt = totalAmt + loanApp.appliedAmt />
                     </#if>
                 </#list>
             </#if>
-
-             <fo:block font-weight="bold">${loanType.name} Summary</fo:block>
-             <fo:block>TOTAL No: ${count}</fo:block>
-             <fo:block>TOTAL AMOUNT APPLIED: ${totalAmt}</fo:block>
-             <fo:block><fo:leader/></fo:block>
-             <fo:block><fo:leader/></fo:block>
-             <fo:block><fo:leader/></fo:block>
-             <fo:block><fo:leader/></fo:block>
 
         </#list>
     </#if>
@@ -148,7 +136,6 @@
 
     <#else>
         <fo:block text-align="center">NO LOANS FOUND BETWEEN THE SUPPLIED DATES</fo:block>
-
     </#if>
 
 </#escape>

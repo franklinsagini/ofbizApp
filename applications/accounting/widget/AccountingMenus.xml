@@ -587,6 +587,23 @@ http://www.apache.org/licenses/LICENSE-2.0
                 <parameter param-name="paymentId" from-field="payment.paymentId"/>
             </link>
         </menu-item>
+        <menu-item name="ReverseTransaction" title="Reverse Transaction">
+            <condition>
+                <and>
+                    <not>
+                        <if-empty field="payment.paymentId"/>
+                    </not>
+                        <if-compare field="isDisbursement" operator="equals" value="true"/>
+                    <or>
+                        <if-compare field="payment.statusId" operator="equals" value="PMNT_SENT"/>
+                        <if-compare field="payment.statusId" operator="equals" value="PMNT_CONFIRMED"/>
+                    </or>
+                </and>
+            </condition>
+            <link target="ReverseNonTransaction" request-confirmation="true" confirmation-message="Are You Sure you want to reverse this payment number ${payment.paymentId}?">
+                <parameter param-name="paymentId" from-field="payment.paymentId"/>
+            </link>
+        </menu-item>
         <menu-item name="CashReceiptVoucher" title="Print Receipt Voucher">
             <condition>
                 <and>
