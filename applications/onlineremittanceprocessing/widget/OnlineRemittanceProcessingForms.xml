@@ -1079,19 +1079,18 @@
 		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="stationProductCodeMap">
 		<actions>
             <entity-condition entity-name="PassingFosa">
-            	<order-by field-name="-passingFosaId"/>
+            	<order-by field-name="-createdStamp"/>
             </entity-condition>
         </actions>
 		<field name="passingFosaId"><hidden/></field>
 		
-		<field name="onlineShareCapitalCode" title="Online Share Capital Code">
+		<field name="payrollNumber" title="Payroll Number">
 			<display></display>
 		</field>
 		
-		<field name="systemShareCapitalCode" title="System Share Capital Code">
+		<!-- field name="captureDate" title="Date Captured">
 			<display></display>
-		</field>
-		
+		</field -->
 		
 		<field name="createdStamp" title="Created">
 			<display type="date-time" />
@@ -1100,6 +1099,12 @@
 		<field name="createdBy" title="Created By">
 			<display />
 		</field>
+		
+		 <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deletePassingFosa" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="passingFosaId"/>
+            </hyperlink>
+        </field>
 	</form>
 	
 	<!-- New  -->
