@@ -747,8 +747,14 @@ under the License.
                                 <include-form name="scheduledLeavesFormCSV" location="component://humanres/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
-                        <screenlet title="Monthly Leave Reports"></screenlet>
-                         <include-form name="monthlyLeave" location="component://humanres/widget/ReportForms.xml"/>
+                        <screenlet title="Monthly Leave Reports">
+                          <include-form name="monthlyLeave" location="component://humanres/widget/ReportForms.xml"/>
+                        </screenlet>
+                        
+                        <screenlet title="Leave Report As At Certain Date">
+                         <include-form name="leaveAtCertainDate" location="component://humanres/widget/ReportForms.xml"/>
+                        </screenlet>
+                        
                         	</widgets>
                         </section>
                     </decorator-section>
@@ -875,7 +881,9 @@ under the License.
                                 <include-form name="staffQualificationsFormCSV" location="component://humanres/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
-
+                            <screenlet title="Staff Posting As At Certain Date">
+                               <include-form name="staffPostingsPerDate" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
                         	</widgets>
                         </section>
                     		
@@ -2345,6 +2353,28 @@ under the License.
         </section>
     </screen>
     
+    <!-- Leave staff as at certain date -->
+    <screen name="leaveAtCertainDatePDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/leaveAtCertainDatePDF.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/leaveAtCertainDatePDF.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="staffListAsAtCertainDatePDF">
         <section>
             <actions>
@@ -2450,5 +2480,40 @@ under the License.
             </widgets>
         </section>
     </screen>
+
+<!-- Employee Postings As at Certain Date -->
+ <screen name="postingDetailsPerDatepdf">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Posting Details"/>
+                <set field="headerItem" value="postingDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="postingDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <set field="dateCompare" from-field="parameters.fromDate"/>
+
+<!--                  <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/postingDetailsPerDatepdf.groovy"/>
+ -->
+                <entity-condition entity-name="EmploymentAndPerson" list="postingList">
+                	<condition-list>
+                	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+                	<condition-expr field-name="fromDate" operator="less-equals" from-field="dateCompare"/>
+                	</condition-list>
+                </entity-condition>
+                
+           </actions>
+            <widgets>
+            	<decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+            		<decorator-section name="body">
+            			<platform-specific>
+                    		<xsl-fo><html-template location="component://humanres/webapp/humanres/reports/postingDetailsPerDatepdf.fo.ftl"/></xsl-fo>
+               			 </platform-specific>
+            		</decorator-section>
+            	</decorator-screen>
+                
+            </widgets>
+        </section>
+    </screen>
+    
 
 </screens>

@@ -2,6 +2,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.accounting.ledger.GeneralLedgerServices;
 
 if (!glAccountId) {
   return;
@@ -18,11 +19,12 @@ if (!fromDate) {
   fromDate = transFromDate.transactionDate
 }
 
-
+description = null;
 println "############################################## thruDate: "+thruDate
 println "############################################## fromDate: "+fromDate
 println "############################################## glAccountId: "+glAccountId
 println "############################################## organizationPartyId: "+organizationPartyId
+println "############################################## DESCRIPTION: "+description
 finalTransList = []
 finalTransListBuilder = []
 runningBalance = 0
@@ -75,11 +77,18 @@ openingBalacctgTransEntry.each { entry ->
 }
 
 acctgTransEntry.each { entry ->
+org.ofbiz.entity.GenericValue entryGV = entry
+if (entryGV != null) {
+  description = GeneralLedgerServices.getGlNarration(delegator, entryGV);
+}else{
+  description = "TRANSACTION NOT IN AcctgTransEntry"
+}
+
 creditAmount = null
 debitAmount = null
   if(count<1) {
   finalTransListBuilder = [
-    glAccountTypeId:"BALANCE BROUGHT FORWARD",
+    description:"BALANCE BROUGHT FORWARD",
     runningBalance:openingBalance
   ]
   finalTransList.add(finalTransListBuilder)
@@ -133,7 +142,7 @@ debitAmount = null
     createdTxStamp:entry.createdTxStamp,
     acctgTransId:entry.acctgTransId,
     debitCreditFlag:entry.debitCreditFlag,
-    glAccountTypeId:entry.glAccountTypeId,
+    description:description,
     creditAmount:creditAmount,
     debitAmount:debitAmount,
     runningBalance:runningBalance
