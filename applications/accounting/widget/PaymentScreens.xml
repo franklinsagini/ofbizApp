@@ -106,9 +106,9 @@ under the License.
                 <entity-one entity-name="MultiPayment" value-field="multiPayment"/>
                <set field="debitAmount" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getMultiplePaymentDebitAmount(multiPayment)}"/>
                <set field="totalLines" type="Integer" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getTotalNumberOfDebitLines(multiPayment)}"/>
-               <set field="creditAmount" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getMultiplePaymentCreditAmount(multiPayment)}"/>
+               <set field="creditAmount" from-field="multiPayment.amount"/>
                 <entity-and entity-name="MultiPaymentLines" list="listMultiPaymentLines">
-                    <field-map field-name="paymentId"/>
+                    <field-map field-name="paymentId" from-field="paymentId" />
                 </entity-and>
             </actions>
             <widgets>
