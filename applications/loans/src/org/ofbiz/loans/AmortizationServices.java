@@ -288,6 +288,11 @@ public class AmortizationServices {
 		BigDecimal bdOnePlusInterestPowerPeriodMinusOne = onePlusInterestPowerPeriodMinusOne(
 				interestRatePM, repaymentPeriod);
 
+		//This is for loans where interest is zero
+		if (bdOnePlusInterestPowerPeriodMinusOne.compareTo(BigDecimal.ZERO) == 0){
+			bdOnePlusInterestPowerPeriodMinusOne = new BigDecimal(1);
+		}
+		
 		// paymentAmount = interestByPrincipal timesOnePlusInterestPowerPeriod
 		// divideOnePlusInterestMinusOne
 		bdPaymentAmount = bdInterestByPrincipal.multiply(
