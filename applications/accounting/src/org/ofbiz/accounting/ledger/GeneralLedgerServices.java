@@ -155,6 +155,42 @@ public class GeneralLedgerServices {
 			sb.append(member.getString("middleName"));
 			sb.append(" ");
 			sb.append(member.getString("lastName"));
+			EntityConditionList<EntityExpr> msaccoApplCond = EntityCondition.makeCondition(UtilMisc.toList(
+					EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, accountTransaction.getLong("partyId"))
+					));
+			if(accountTransaction.getString("transactionType").equals("MSACCOWITHDRAWAL")){
+				
+				try {
+					mSaccoApplication = delegator.findList("MSaccoApplication", msaccoApplCond, null, null, null, false);
+				} catch (GenericEntityException e) {
+					e.printStackTrace();
+				}
+				
+				String phoneNo = null;
+				for (GenericValue phone : mSaccoApplication) {
+					phoneNo = phone.getString("mobilePhoneNumber");
+				}
+				sb.append(" ");
+				sb.append("Phone:");
+				sb.append(" ");
+				sb.append(phoneNo);
+			}
+			if(accountTransaction.getString("transactionType").equals("ATMWITHDRAWAL") || accountTransaction.getString("transactionType").equals("POSWITHDRAWAL") || accountTransaction.getString("transactionType").equals("VISAWITHDRAWAL")){
+				try {
+					cardApplication = delegator.findList("CardApplication", msaccoApplCond, null, null, null, false);
+				} catch (GenericEntityException e) {
+					e.printStackTrace();
+				}
+				
+				String cardNo = null;
+				for (GenericValue card : cardApplication) {
+					cardNo = card.getString("cardNumber");
+				}
+				sb.append(" ");
+				sb.append("Card No:");
+				sb.append(" ");
+				sb.append(cardNo);
+			}
 
 		}else if (payment!=null) {
 			sb.append(payment.getString("comments"));
@@ -232,8 +268,16 @@ public class GeneralLedgerServices {
 					sb.append(partyNameView.getString("lastName"));
 				}
 			}
-		}
 
+		}
+		
+		if(sb.length()<1){
+			if (acctgTransEntry.getString("glAccountTypeId")!=null) {
+				sb.append(acctgTransEntry.getString("glAccountTypeId"));
+			}
+			
+		}
+		
 		return sb.toString();
 	}
 }
