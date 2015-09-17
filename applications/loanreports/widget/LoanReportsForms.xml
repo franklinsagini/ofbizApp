@@ -372,7 +372,10 @@
     
     <form name="loanrepaymentsbetweendatesExport" list-name="combinedList"  target="" title="" 
          type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
-         default-table-style="basic-table hover-bar" paginate="false"> 
+         default-table-style="basic-table hover-bar" paginate="false">
+         <field name="loanRepaymentId">
+         	<hidden/>
+         </field> 
        <field name="firstName" title="First Name"><display/></field>
         <field name="middleName" title="Middle Name"><display/></field>
         <field name="lastName" title="Last Name"><display/></field>
@@ -389,13 +392,16 @@
         <field name="loanNo" title="Loan No"><display/></field>
         <field name="name" title="Product Name"><display/></field>
 		<field name="code" title="Product Code"><display/></field>
-        
+		
+		<field name="repaymentMode" title="Repayment Mode"><display/></field>
+		
         <field name="createdStamp" title="Date Contributed"><display type="date-time"/></field>
 
-        <field name="principalAmount" title="Principal"><display/></field>
-        <field name="interestAmount" title="Interest"><display/></field>
-        <field name="insuranceAmount" title="Insurance"><display/></field>
-        <field name="transactionAmount" title="Total Amount"><display/></field>
+        <field name="principalAmount" title="Principal"><display default-value="0" type="accounting-number" /></field>
+        <field name="interestAmount" title="Interest"><display default-value="0" type="accounting-number"/></field>
+        <field name="insuranceAmount" title="Insurance"><display default-value="0" type="accounting-number"/></field>
+        
+        <field name="transactionAmount"  title="Total Amount"><display default-value="${bsh:org.ofbiz.accountholdertransactions.LoanUtilities.sumTotalAmount(loanRepaymentId);}" type="currency"></display ></field>
      </form>
       
     

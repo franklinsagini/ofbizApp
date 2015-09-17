@@ -1114,7 +1114,8 @@ public class SalaryProcessingServices {
 								"interestAmount", interestAmount,
 								"insuranceAmount", insuranceAmount,
 								"principalAmount", principalAmount,
-
+								"repaymentMode", "SALARYPROCESSING",
+								"month", month+year,
 								"acctgTransId", acctgTransId
 
 						));
@@ -2384,7 +2385,8 @@ public class SalaryProcessingServices {
 								"interestAmount", interestAmount,
 								"insuranceAmount", insuranceAmount,
 								"principalAmount", principalAmount,
-
+								"repaymentMode", "SALARYPROCESSING",
+								"month", month+year,
 								"acctgTransId", acctgTransId
 
 						));

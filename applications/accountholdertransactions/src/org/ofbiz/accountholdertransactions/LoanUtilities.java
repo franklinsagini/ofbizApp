@@ -604,6 +604,44 @@ public class LoanUtilities {
 		return bdRecommendeAmt;
 	}
 	
+	
+	public static BigDecimal sumTotalAmount(BigDecimal principalAmount,
+			BigDecimal interestAmount, BigDecimal insuranceAmount ) {
+		
+		if (principalAmount == null)
+			principalAmount = BigDecimal.ZERO;
+
+		if (interestAmount == null)
+			interestAmount = BigDecimal.ZERO;
+
+		if (insuranceAmount == null)
+			insuranceAmount = BigDecimal.ZERO;
+
+		BigDecimal bdTotalAmount = principalAmount.add(interestAmount).add(insuranceAmount);
+		return bdTotalAmount;
+	}
+	
+	
+	public static BigDecimal sumTotalAmount(Long loanRepaymentId ) {
+		GenericValue loanRepayment = getEntityValue("LoanRepayment", "loanRepaymentId", loanRepaymentId);
+		
+		BigDecimal principalAmount = BigDecimal.ZERO;
+		BigDecimal interestAmount = BigDecimal.ZERO;
+		BigDecimal insuranceAmount  = BigDecimal.ZERO;
+		
+		if (loanRepayment.getBigDecimal("principalAmount") != null)
+			principalAmount = loanRepayment.getBigDecimal("principalAmount");
+
+		if (loanRepayment.getBigDecimal("interestAmount") != null)
+			interestAmount = loanRepayment.getBigDecimal("interestAmount");
+
+		if (loanRepayment.getBigDecimal("insuranceAmount") != null)
+			insuranceAmount = loanRepayment.getBigDecimal("insuranceAmount");
+
+		BigDecimal bdTotalAmount = principalAmount.add(interestAmount).add(insuranceAmount);
+		return bdTotalAmount;
+	}
+	
 	public static BigDecimal getLoanMaxAmount(Long loanApplicationId) {
 		GenericValue loanApplication = getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
 		BigDecimal maxLoanAmt = loanApplication.getBigDecimal("maxLoanAmt");
