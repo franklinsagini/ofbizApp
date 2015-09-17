@@ -3670,6 +3670,13 @@
 		<response name="success" type="view" value="postingDetails"
 			save-home-view="true" />
 	</request-map>
+	
+	<request-map uri="postingDetailsPerDate">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="postingDetailsPerDate"
+			save-home-view="true" />
+	</request-map>
+	
 	<request-map uri="postingDetailscsv">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="postingDetailscsv"
@@ -3681,6 +3688,11 @@
 			save-home-view="true" />
 	</request-map>
 
+    <request-map uri="postingDetailsPerDatepdf">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="postingDetailsPerDatepdf"
+			save-home-view="true" />
+	</request-map>
 
 	<request-map uri="postingByEmployeecsv">
 		<security https="true" auth="true" />
@@ -4288,6 +4300,11 @@
 	<request-map uri="monthlyLeave">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="monthlyLeavePDF" />
+	</request-map>
+	
+	<request-map uri="leaveAtCertainDate">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="leaveAtCertainDatePDF" />
 	</request-map>
 	
 	<request-map uri="staffListAsAtCertainDatePDF">
@@ -4979,11 +4996,19 @@
 	<!-- =================POSTING DETAILS================================== -->
 	<view-map name="postingDetails" type="screen"
 		page="component://humanres/widget/ReportScreens.xml#PostingDetails" />
+		
+	<view-map name="postingDetailsPerDate" type="screen"
+		page="component://humanres/widget/ReportScreens.xml#PostingDetailsPerDate" />	
+		
 	<view-map name="postingDetailscsv" type="screencsv"
 		content-type="text/csv"
 		page="component://humanres/widget/ReportScreens.xml#PostingDetailscsv" />
 	<view-map name="postingDetailspdf" type="screenfop"
 		page="component://humanres/widget/ReportScreens.xml#PostingDetailspdf"
+		content-type="application/pdf" encoding="none" />
+
+     <view-map name="postingDetailsPerDatepdf" type="screenfop"
+		page="component://humanres/widget/ReportScreens.xml#postingDetailsPerDatepdf"
 		content-type="application/pdf" encoding="none" />
 
 	<view-map name="postingByEmployeecsv" type="screencsv"
@@ -5068,6 +5093,10 @@
 			
 	<view-map name="monthlyLeavePDF" type="screenfop"
 		page="component://humanres/widget/ReportScreens.xml#monthlyLeavePDF"
+		content-type="application/pdf" encoding="none" />	
+		
+	<view-map name="leaveAtCertainDatePDF" type="screenfop"
+		page="component://humanres/widget/ReportScreens.xml#leaveAtCertainDatePDF"
 		content-type="application/pdf" encoding="none" />	
 		
 	<view-map name="staffListAsAtCertainDatePDF" type="screenfop"
