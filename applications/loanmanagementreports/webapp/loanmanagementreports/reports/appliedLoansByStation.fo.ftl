@@ -72,10 +72,10 @@
                 </fo:table>
             </fo:block>
 
-            <#if finalTransList?has_content>
-                <#list finalTransList as loanApp>
+            <#if loanApps?has_content>
+                <#list loanApps as loanApp>
                     <#if loanApp.stationId == station.stationId >
-                    <fo:block space-after.optimum="10pt" font-size="9pt">
+ <fo:block space-after.optimum="10pt" font-size="9pt">
                         <fo:table table-layout="fixed" width="100%" font-size="9pt" >
                             <fo:table-column column-number="1" column-width="proportional-column-width(10)"/>
                             <fo:table-column column-number="2" column-width="proportional-column-width(22)"/>
