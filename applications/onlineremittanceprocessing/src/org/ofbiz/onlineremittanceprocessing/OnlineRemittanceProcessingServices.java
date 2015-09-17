@@ -1039,9 +1039,10 @@ public class OnlineRemittanceProcessingServices {
 						"stationId", EntityOperator.EQUALS,
 						Long.valueOf(currentStationId.trim())),
 						
-					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("DEAD")),
-					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("WITHDRAWN")),
-					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("CLOSED"))
+						EntityCondition.makeCondition("memberStatusId", EntityOperator.EQUALS , LoanUtilities.getMemberStatusId("ACTIVE"))
+						//					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("DEAD")),
+//					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("WITHDRAWN")),
+//					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("CLOSED"))
 					
 				), EntityOperator.AND);
 		
@@ -1710,10 +1711,10 @@ public class OnlineRemittanceProcessingServices {
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"stationId", EntityOperator.EQUALS,
 						Long.valueOf(currentStationId.trim())),
-						//EntityCondition.makeCondition("memberStatusId", EntityOperator.EQUALS , LoanUtilities.getMemberStatusId("ACTIVE"))
-						EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("DEAD")),
-						EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("WITHDRAWN")),
-						EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("CLOSED"))	
+						EntityCondition.makeCondition("memberStatusId", EntityOperator.EQUALS , LoanUtilities.getMemberStatusId("ACTIVE"))
+//						EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("DEAD")),
+//						EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("WITHDRAWN")),
+//						EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("CLOSED"))	
 
 				), EntityOperator.AND);
 //		EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("DEAD")),
@@ -1760,10 +1761,11 @@ public class OnlineRemittanceProcessingServices {
 				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
 						"stationId", EntityOperator.EQUALS,
 						Long.valueOf(currentStationId.trim())),
+						EntityCondition.makeCondition("memberStatusId", EntityOperator.EQUALS , LoanUtilities.getMemberStatusId("ACTIVE"))
 						
-					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("DEAD")),
-					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("WITHDRAWN")),
-					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("CLOSED"))	
+//					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("DEAD")),
+//					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("WITHDRAWN")),
+//					EntityCondition.makeCondition("memberStatusId", EntityOperator.NOT_EQUAL , LoanUtilities.getMemberStatusId("CLOSED"))	
 
 				), EntityOperator.AND);
 		
@@ -2564,6 +2566,61 @@ public class OnlineRemittanceProcessingServices {
 		String month = headOfficeMonthYear.getLong("month").toString()+headOfficeMonthYear.getLong("year").toString();
 		
 		return month;
+	}
+	
+	
+	public static String deleteAllGeneratedShareLoans(Map<String, String> userLogin, Long headOfficeMonthYearId){
+		log.info("DDDD Deleting data !!");
+		log.info("HHHHHHHHH Head Office Month Year ID !!"+headOfficeMonthYearId);
+		
+		// Get pushMonthYearStation
+		
+		//GenericValue headOfficeMonthYear = LoanUtilities.getEntityValue("HeadOfficeMonthYear", "headOfficeMonthYearId", headOfficeMonthYearId);
+		//Delete 
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		//ShareCapitalBackofficeLoans
+
+		try {
+			delegator.removeByCondition("ShareCapitalBackofficeLoans", EntityCondition
+					.makeCondition("headOfficeMonthYearId", EntityOperator.EQUALS,
+							headOfficeMonthYearId));
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//FosaJuniorHoliday
+		try {
+			delegator.removeByCondition("FosaJuniorHoliday", EntityCondition
+					.makeCondition("headOfficeMonthYearId", EntityOperator.EQUALS,
+							headOfficeMonthYearId));
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//AccumulatedDepositShareCapital
+		try {
+			delegator.removeByCondition("AccumulatedDepositShareCapital", EntityCondition
+					.makeCondition("headOfficeMonthYearId", EntityOperator.EQUALS,
+							headOfficeMonthYearId));
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//FosaLoans
+		try {
+			delegator.removeByCondition("FosaLoans", EntityCondition
+					.makeCondition("headOfficeMonthYearId", EntityOperator.EQUALS,
+							headOfficeMonthYearId));
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return "success";
 	}
 
 	
