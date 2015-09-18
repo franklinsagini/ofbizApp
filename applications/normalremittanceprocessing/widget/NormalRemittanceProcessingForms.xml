@@ -127,6 +127,75 @@
         <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
     </form>
     
+    
+    <!-- DividendYear -->
+        <form name="DividendYear" type="single" target="createDividendYear"
+	focus-field-name="year" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="dividendYearContext">
+        <actions>
+        	<set field="currentYear" value="${bsh:org.ofbiz.accountholdertransactions.LoanUtilities.getCurrentYear();}"/>
+        	<set field="currentMonth" value="${bsh:org.ofbiz.accountholdertransactions.LoanUtilities.getCurrentMonth();}"/>
+        </actions>
+       
+        <field name="dividendYearId"><hidden/></field>
+		
+		
+      
+         <field name="year" title="Year"><text default-value="${currentYear}"></text></field>
+        
+        
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- listDividendYear -->
+    <form name="listDividendYear" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateNormalRemittanceMonthYear" paginate-target="remittanceMonth"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+       <actions>
+               <entity-condition entity-name="DividendYear">
+               <order-by field-name="createdStamp DESC"/>
+               </entity-condition>
+           	    <!-- service service-name="performFind" result-map="result" result-map-list="listIt">
+	                <field-map field-name="inputFields" from-field="parameters"/>
+	                <field-map field-name="entityName" value="NormalRemittanceMonthYear"/>
+	                <field-map field-name="viewIndex" from-field="viewIndex"/>
+	                <field-map field-name="viewSize" from-field="viewSize"/>
+                </service -->
+        </actions>		 
+        <auto-fields-service default-field-type="hidden" service-name="updateNormalRemittanceMonthYear"/>
+		
+		<field name="createdBy" title="Processed By"><display></display></field>
+		<!-- field name="procedNotProcessed" title="Processed / Not Processed">
+			<display default-value="${bsh:org.ofbiz.normalremittanceprocessing.NormalRemittanceProcessingServices.getProcessedStatusMessage(normalRemittanceMonthYearId)}"></display>
+		</field -->
+		<field name="createdStamp" title="Time Processed"><display></display></field>
+		
+         <field name="year" title="Year"><display></display></field>
+         
+       
+        <field name="memberDividend" title="Member Dividend" widget-style="buttontext">
+            <hyperlink target="memberDividend" description="Member Dividend" also-hidden="false">
+                <parameter param-name="dividendYearId"/>
+            </hyperlink>
+        </field>
+        
+        
+        <!-- field name="employer" title="Employer/Station" widget-style="buttontext">
+            <hyperlink target="employerSalary" description="Employer/Station" also-hidden="false">
+                <parameter param-name="salaryMonthYearId"/>
+            </hyperlink>
+        </field -->
+        
+        
+        <field name="dividendImport" title="Dividend Import" widget-style="buttontext">
+            <hyperlink target="dividendImport" description="Import Remittance" also-hidden="false">
+                <parameter param-name="dividendYearId"/>
+            </hyperlink>
+        </field>
+               
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+    </form>
+    
+    
     <!-- listMemberRemittance -->
     <form name="listMemberRemittance" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberRemittance" paginate-target="memberRemittance"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
@@ -157,6 +226,81 @@
          <field name="fosaContributionsAmount" title="Fosa Contributions"><display></display> </field>
          <field name="juniorAmount" title="Junior"><display></display> </field>
          <field name="holidayAmount" title="Holiday"><display></display> </field>
+         <field name="totalAmount" title="Total Amount"><display></display> </field>
+       
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteChequeType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="memberSalaryId"/>
+            </hyperlink>
+        </field -->
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+    </form>
+    
+    
+    <!-- listMemberDividend -->
+    <form name="listMemberDividend" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberDividend" paginate-target="memberDividend"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="MemberDividend">
+            	<!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
+            	<!-- condition-list combine="and">
+            		<condition-expr field-name="month" operator="equals" from-field="month"/>
+            		<condition-expr field-name="year" operator="equals" from-field="year"/>
+            		<condition-expr field-name="employerCode" operator="equals" from-field="employerCode"/>
+            		
+            	</condition-list  -->
+            	<condition-expr field-name="dividendYearId" operator="equals" from-field="dividendYearId"/>
+            </entity-condition>
+        </actions>
+        <field name="memberDividendId"><hidden/></field>
+        <field name="dividendYearId"><hidden/></field>
+		
+		
+        <field name="year" title="Year"><display></display> </field>
+         
+         
+         <field name="idNumber" title="ID No."><display></display> </field>
+         <field name="payrollNumber" title="Payroll No."><display></display> </field>
+         
+         <field name="memberNames" title="Name."><display default-value="${bsh:org.ofbiz.accountholdertransactions.LoanUtilities.getMemberName(payrollNumber);}"></display></field>
+         
+         <field name="totalAmount" title="Total Amount"><display></display> </field>
+       
+        <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteChequeType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="memberSalaryId"/>
+            </hyperlink>
+        </field -->
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+    </form>
+    
+    <!-- MemberDividendMissing -->
+        <form name="listMemberDividendMissing" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMemberDividend" paginate-target="memberDividend"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="MemberDividendMissing">
+            	<!-- condition-expr field-name="active" operator="equals" value="Y"/ -->
+            	<!-- condition-list combine="and">
+            		<condition-expr field-name="month" operator="equals" from-field="month"/>
+            		<condition-expr field-name="year" operator="equals" from-field="year"/>
+            		<condition-expr field-name="employerCode" operator="equals" from-field="employerCode"/>
+            		
+            	</condition-list  -->
+            	<condition-expr field-name="dividendYearId" operator="equals" from-field="dividendYearId"/>
+            </entity-condition>
+        </actions>
+        <field name="memberDividendMissingId"><hidden/></field>
+        <field name="dividendYearId"><hidden/></field>
+		
+		
+        <field name="year" title="Year"><display></display> </field>
+         
+         
+         <field name="idNumber" title="ID No."><display></display> </field>
+         <field name="payrollNumber" title="Payroll No."><display></display> </field>
+         
+         <field name="memberNames" title="Name."><display default-value="${bsh:org.ofbiz.accountholdertransactions.LoanUtilities.getMemberName(payrollNumber);}"></display></field>
+         
          <field name="totalAmount" title="Total Amount"><display></display> </field>
        
         <!-- field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
