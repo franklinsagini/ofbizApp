@@ -161,6 +161,33 @@
         default-table-style="basic-table">
         <actions>
             <entity-condition entity-name="PartyGroup" list="partyGroups">
+                <condition-expr field-name="isBranch" operator="equals" value="Y"/>
+            </entity-condition>
+        </actions>
+        <field name="startDate" title="From"  widget-style="required" required-field="true">
+            <date-time type="date-time"/>
+        </field>
+        <field name="endDate" title="To" position="2"  widget-style="required" required-field="true">
+            <date-time type="date-time"/>
+        </field>
+        <field name="loanProductId" title="Loan Type">
+            <drop-down allow-empty="true">
+                <entity-options description="${code} - ${name}" entity-name="LoanProduct" key-field-name="loanProductId"></entity-options>
+            </drop-down>
+        </field>
+        <field name="loanStatusId" title="Loan Status">
+            <drop-down allow-empty="true">
+                <entity-options description="${name}" entity-name="LoanStatus" key-field-name="loanStatusId"></entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="Generate PDF" widget-style="smallSubmit">
+            <submit button-type="button" />
+        </field>
+    </form>
+    <form name="appliedLoansByLoanTypeFormExcel" type="single" target="appliedLoansByLoanType.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <actions>
+            <entity-condition entity-name="PartyGroup" list="partyGroups">
             	<condition-expr field-name="isBranch" operator="equals" value="Y"/>
             </entity-condition>
         </actions>
@@ -180,10 +207,26 @@
                 <entity-options description="${name}" entity-name="LoanStatus" key-field-name="loanStatusId"></entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="Show" widget-style="smallSubmit">
+        <field name="submitButton" title="Generate Excel" widget-style="smallSubmit">
             <submit button-type="button" />
         </field>
     </form>
+
+
+    <form name="appliedLoansByLoanTypeCsv" type="list" list-name="loanApps"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="firstName" title="First Name"><display/></field>
+        <field name="lastName" title="Last Name"><display/></field>
+        <field name="loanNo" title="Loan No."><display/></field>
+        <field name="loanProductId" title="Product Name">
+            <display-entity entity-name="LoanProduct" key-field-name="loanProductId" description="${name}"/>
+        </field>
+        <field name="loanAmt" title="Disbursed Amount"><display/></field>
+        <field name="loanStatusId" title="Loan Status">
+            <display-entity entity-name="LoanStatus" key-field-name="loanStatusId" description="${name}"/>
+        </field>
+    </form>
+
 
      <!-- appliedLoansByStation -->
     <form name="appliedLoansByStationForm" type="single" target="appliedLoansByStationpdf" title="" header-row-style="header-row"
