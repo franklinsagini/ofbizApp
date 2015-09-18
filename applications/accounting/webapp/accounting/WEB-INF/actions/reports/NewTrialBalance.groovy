@@ -32,57 +32,65 @@ parties.each { party ->
 context.partyNameList = partyNameList;
 finalTransList = []
 finalTransListBuilder = []
-runningDebitBalance = 0
-runningCreditBalance = 0
+postedDebitsTotal = 0
+postedCreditsTotal = 0
 summaryCondition = [];
 summaryCondition.add(EntityCondition.makeCondition("ateTransactionDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 
 if (organizationPartyId) {
+  System.out.println("USING OrganizationPartyId " + organizationPartyId + " AS PART OF THE CONDITIONS")
   summaryCondition.add(EntityCondition.makeCondition("ateOrganizationPartyId", EntityOperator.EQUALS, organizationPartyId));
 }
 
 tBViewData = delegator.findList('TBViewData',  EntityCondition.makeCondition(summaryCondition, EntityOperator.AND), null,["gaoGlAccountId"],null,false)
+glAccounts = delegator.findList('GlAccount',  null, null,["glAccountId"],null,false)
 
-
-tBViewData.each { obj ->
-  GenericValue account = delegator.findOne("GlAccount", UtilMisc.toMap("glAccountId", obj.gaoGlAccountId), true);
-  isDebit = org.ofbiz.accounting.util.UtilAccounting.isDebitAccount(account);
+glAccounts.each { glAccount ->
+  accountBalance = 0
+  isDebit = org.ofbiz.accounting.util.UtilAccounting.isDebitAccount(glAccount);
   endingBalanceCredit = 0
   endingBalanceDebit = 0
+  tBViewData.each { obj ->
 
-  if (isDebit) {
-    System.out.println("THIS IS A DEBIT BALANCE ACCOUNT")
+    if (obj.gaoGlAccountId == glAccount.glAccountId) {
+      if (isDebit) {
+        System.out.println("THIS IS A DEBIT BALANCE ACCOUNT")
+        if (obj.atDebitCreditFlag == "D") {
+          postedDebitsTotal = postedDebitsTotal + obj.ateAmount
+          accountBalance = accountBalance + obj.ateAmount
 
-    if (obj.atDebitCreditFlag == "D") {
-      System.out.println(endingBalanceDebit + " + " + obj.ateAmount)
-      endingBalanceDebit = endingBalanceDebit + obj.ateAmount
-    }else{
-      System.out.println(endingBalanceDebit + " - " + obj.ateAmount)
-       endingBalanceDebit = endingBalanceDebit - obj.ateAmount
-    }
-
-  }else{
-    System.out.println("THIS IS A CREDIT BALANCE ACCOUNT")
-    if (obj.atDebitCreditFlag == "C") {
-      System.out.println(endingBalanceCredit + " + " + obj.ateAmount)
-      endingBalanceCredit = endingBalanceCredit + obj.ateAmount
-    }else{
-      System.out.println(endingBalanceCredit + " - " + obj.ateAmount)
-       endingBalanceCredit = endingBalanceCredit - obj.ateAmount
+        }else{
+          postedCreditsTotal = postedCreditsTotal + obj.ateAmount
+          accountBalance = accountBalance - obj.ateAmount
+        }
+        endingBalanceDebit = accountBalance
+      }else{
+        System.out.println("THIS IS A CREDIT BALANCE ACCOUNT")
+        if (obj.atDebitCreditFlag == "C") {
+          postedCreditsTotal = postedCreditsTotal + obj.ateAmount
+          accountBalance = accountBalance + obj.ateAmount
+        }else{
+          postedDebitsTotal = postedDebitsTotal + obj.ateAmount
+          accountBalance = accountBalance - obj.ateAmount
+        }
+        endingBalanceCredit = accountBalance
+      }
     }
   }
-
-
-
-  finalTransListBuilder = [
-    accountCode:account.accountCode,
-    accountName:account.accountName,
+  if (endingBalanceCredit != 0 || endingBalanceDebit != 0) {
+finalTransListBuilder = [
+    accountCode:glAccount.accountCode,
+    accountName:glAccount.accountName,
     endingBalanceCredit:endingBalanceCredit,
     endingBalanceDebit:endingBalanceDebit,
   ]
   finalTransList.add(finalTransListBuilder)
+  }
 
 }
 
+
 context.accountBalances = finalTransList
+context.postedDebitsTotal = postedDebitsTotal
+context.postedCreditsTotal = postedCreditsTotal
 
