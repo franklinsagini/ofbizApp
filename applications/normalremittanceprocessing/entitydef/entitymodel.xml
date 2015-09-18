@@ -100,5 +100,60 @@
 		<field name="processed" type="indicator"></field>
 		<prim-key field="memberRemittanceDeletedId"/>
 	</entity>
+	
+	<!-- DividendYear -->
+	 <entity entity-name="DividendYear" package-name="org.ofbiz.normalremittanceprocessing"
+		title="Dividend Year Entity">
+		<field name="dividendYearId" type="id-vlong-int"></field>
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="id"></field>
+		<field name="updatedBy" type="name"></field>
+		<field name="month" type="id-int"></field>
+		<field name="year" type="id-int"></field>
+		<field name="stationId" type="id"></field>
+		<field name="processed" type="indicator"></field>
+		<field name="postingacctgTransId" type="id"   enable-audit-log="true"></field>
+		<prim-key field="dividendYearId"/>
+	</entity>
+	
+	<entity entity-name="MemberDividend" package-name="org.ofbiz.normalremittanceprocessing"
+		title="MemberDividend Entity">
+		
+		<field name="memberDividendId" type="id-vlong-int"></field>
+		
+		<field name="dividendYearId" type="id-vlong-int"></field>
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="id"></field>
+		<field name="year" type="id"></field>
+		
+		<field name="idNumber" type="id"></field>
+		<field name="payrollNumber" type="id"></field>
+		<field name="memberNames" type="name"></field>
+
+		<field name="totalAmount" type="fixed-point"></field>
+		<field name="processed" type="indicator"></field>
+		<prim-key field="memberDividendId"/>
+	</entity>
+	
+	<!-- Missing ID Numbers -->
+	<entity entity-name="MemberDividendMissing" package-name="org.ofbiz.normalremittanceprocessing"
+		title="MemberDividendMissing Entity">
+		
+		<field name="memberDividendMissingId" type="id-vlong-int"></field>
+		
+		<field name="dividendYearId" type="id-vlong-int"></field>
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="id"></field>
+		<field name="year" type="id"></field>
+		
+		<field name="idNumber" type="id"></field>
+		<field name="payrollNumber" type="id"></field>
+		<field name="memberNames" type="name"></field>
+		
+
+		<field name="totalAmount" type="fixed-point"></field>
+		<field name="processed" type="indicator"></field>
+		<prim-key field="memberDividendMissingId"/>
+	</entity>
 
 </entitymodel>
