@@ -35,6 +35,22 @@
       </response>
     </request-map>
     
+    <!-- dividendYear -->
+    <request-map uri="dividendYear"><security https="true" auth="true"/><response name="success" type="view" value="dividendYear"/></request-map>
+    <!-- dividendImport -->
+     <request-map uri="dividendImport">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="dividendImport" />
+      </request-map>
+    
+    <!-- memberDividend -->
+    <request-map uri="memberDividend">
+      <security https="true" auth="true" />
+      <response name="success" type="view" value="memberDividend">
+         <redirect-parameter name="dividendYearId" />
+      </response>
+    </request-map>
+    
     <!-- NormalRemittanceMonthYear -->
     
      <request-map uri="createNormalRemittanceMonthYear">
@@ -80,6 +96,50 @@
                         value="memberRemittance"></response>
         </request-map>
         
+        <!-- DividendYear -->
+        <request-map uri="createDividendYear">
+                <security https="true" auth="true" />
+                <event type="service" invoke="createDividendYear" />
+                <response name="success" type="request-redirect"
+                        value="dividendYear"></response>
+        </request-map>
+                <request-map uri="updateDividendYear">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateDividendYear" />
+                <response name="success" type="request-redirect"
+                        value="dividendYear"></response>
+                <response name="error" type="view" value="dividendYear" />
+        </request-map>
+
+        <request-map uri="deleteDividendYear">
+                <security https="true" auth="true" />
+                <event type="service" invoke="deleteDividendYear" />
+                <response name="success" type="request-redirect"
+                        value="dividendYear"></response>
+        </request-map>
+        
+        <!-- MemberDividend -->
+        <request-map uri="createMemberDividend">
+                <security https="true" auth="true" />
+                <event type="service" invoke="createMemberDividend" />
+                <response name="success" type="request-redirect"
+                        value="memberDividend"></response>
+        </request-map>
+                <request-map uri="updateMemberDividend">
+                <security https="true" auth="true" />
+                <event type="service" invoke="updateMemberDividend" />
+                <response name="success" type="request-redirect"
+                        value="memberDividend"></response>
+                <response name="error" type="view" value="memberDividend" />
+        </request-map>
+
+        <request-map uri="deleteMemberDividend">
+                <security https="true" auth="true" />
+                <event type="service" invoke="deleteMemberDividend" />
+                <response name="success" type="request-redirect"
+                        value="memberDividend"></response>
+        </request-map>
+        
         <!-- processNormalRemittanceReceived -->
         <request-map uri="processNormalRemittanceReceived">
              <security https="true" auth="true" />
@@ -99,12 +159,30 @@
              	<redirect-parameter name="normalRemittanceMonthYearId"/>
              </response>
      </request-map>
+     
+     <!-- deleteMemberDividend -->
+          <request-map uri="deleteMemberDividendProcess">
+             <security https="true" auth="true" />
+             <event type="service" invoke="deleteMemberDividendProcess">
+             </event>
+             <response name="success" type="request-redirect" value="memberDividend">
+             	<redirect-parameter name="dividendYearId"/>
+             </response>
+     </request-map>
 
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://normalremittanceprocessing/widget/NormalRemittanceProcessingScreens.xml#remittanceMonth"/>
     <view-map name="remittanceMonth" type="screen" page="component://normalremittanceprocessing/widget/NormalRemittanceProcessingScreens.xml#remittanceMonth"/>
     
+    <!-- dividendYear -->
+    <view-map name="dividendYear" type="screen" page="component://normalremittanceprocessing/widget/NormalRemittanceProcessingScreens.xml#dividendYear"/>
+    
     <view-map name="memberRemittance" type="screen" page="component://normalremittanceprocessing/widget/NormalRemittanceProcessingScreens.xml#memberRemittance"/>
 	<view-map name="remittanceImport" type="screen" page="component://normalremittanceprocessing/widget/NormalRemittanceProcessingScreens.xml#remittanceImport"/>
     
+    <!-- dividendImport -->
+	<view-map name="dividendImport" type="screen" page="component://normalremittanceprocessing/widget/NormalRemittanceProcessingScreens.xml#dividendImport"/>
+    <!-- memberDividend -->
+    <view-map name="memberDividend" type="screen" page="component://normalremittanceprocessing/widget/NormalRemittanceProcessingScreens.xml#memberDividend"/>
+
 </site-conf>
