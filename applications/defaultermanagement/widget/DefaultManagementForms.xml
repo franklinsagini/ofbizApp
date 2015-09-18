@@ -101,5 +101,66 @@
             <submit button-type="button"/>
         </field>
     </form>
+    
+    <!-- defaultermanagementUnattachedByDateExcelForm -->
+     <form name="defaultermanagementUnattachedByDateExcelForm" type="single" target="defaultermanagementUnattachedByDateExcel.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+			<actions>
+			<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+
+		</actions>
+		
+       <field name="endDate" title="As AT" widget-style="required" required-field="true">
+        	<date-time type="timestamp"/>
+        </field>
+        
+        <field name="branchId" title="Branch">
+            <drop-down allow-empty="true" >
+                <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
+            </drop-down>
+        </field>
+        <!-- field name="partyId" title="Member" widget-style="required" required-field="true"><lookup target-form-name="LookupActiveMember"/></field -->
+
+       
+        <field name="stationId" title="Station / Employer">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name} - ${stationNumber} - ${employerCode}" entity-name="Station">
+        			<entity-order-by field-name="name"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    <!-- defaultermanagementUnattachedByDateExport -->
+         <form name="defaultermanagementUnattachedByDateExport" list-name="mylistOfDefaultedLoans"  target="" title="" 
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+       <field name="loanNo" title="Loan No"><display/></field>
+        <field name="loanType" title="Loan Type"><display/></field>
+        <field name="loanAmt" title="Loan Amount"><display/></field>
+
+         <field name="loanBalance" title="Loan Balance"><display/></field>
+         <field name="disbursementDate" title="Disbursement Date"><display/></field>
+         <field name="lastPaid" title="Last Paid"><display/></field>
+         
+          <field name="payrollNo" title="Payroll Number"><display/></field>
+           <field name="name" title="Member Name"><display/></field>
+            <field name="memberStatus" title="Member Status"><display/></field>
+             <field name="timeDifference" title="Months since Default (Months)"><display/></field>
+              <field name="shareAmount" title="Share Amount"><display/></field>
+               <field name="termsOfService" title="Terms of Service"><display/></field>
+               
+               <field name="mobileNumber" title="Mobile Number"><display/></field>
+               <field name="stationId" title="Member Station">
+               <display-entity entity-name="Station" description="${name} - ${stationNumber}"></display-entity>
+               </field>
+               <field name="branchId" title="Branch"><display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}"/></field>
+
+     </form>
 
 </forms>

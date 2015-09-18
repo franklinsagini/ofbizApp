@@ -544,6 +544,35 @@ under the License.
         
     </simple-method>
     
+    <!-- deleteAllGeneratedShareLoans -->
+    <simple-method method-name="deleteAllGeneratedShareLoans" short-description="Delete all generated backoffice loans">
+         <set field="headOfficeMonthYearId" from-field="parameters.headOfficeMonthYearId" type="Long"/>
+        <set field="generateStatus" value="${bsh:org.ofbiz.onlineremittanceprocessing.OnlineRemittanceProcessingServices.deleteAllGeneratedShareLoans(userLogin, headOfficeMonthYearId);}"></set>
+        <!-- store-value value-field="lookedUpValue"/ -->
+        
+        <log message="NNNNNNNNNNNNNNN Pulling" level="info"/>
+    	<log message="${headOfficeMonthYearId}" level="info"/>
+		<if>
+			 <condition> 
+			 		<if-compare operator="equals" value="success" field="generateStatus"></if-compare>
+            </condition> 
+            <then> 
+						 <property-to-field resource="OnlineRemittanceProcessingUiLabels.xml" 
+            				property="Successfully Deleted" field="successMessage" />
+                
+            </then>
+		
+		<else>
+			<add-error> 
+                    <fail-message message="${generateStatus}"/>
+                </add-error> 
+                <check-errors /> 
+		
+        </else>
+        </if>
+        
+    </simple-method>
+    
     <!-- generateAccumulatedDepositsAndShareCapital -->
         <simple-method method-name="generateAccumulatedDepositsAndShareCapital" short-description="generate Accumulated Deposits and Share Capital">
          <set field="headOfficeMonthYearId" from-field="parameters.headOfficeMonthYearId" type="Long"/>
@@ -626,6 +655,33 @@ under the License.
         </else>
         </if>
         
+    </simple-method>
+    
+    <!-- PassingFosa -->
+    <simple-method method-name="createPassingFosa" short-description="Create PassingFosa">
+        <make-value entity-name="PassingFosa" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set field="entityName" value="PassingFosa"></set>
+        <set field="newEntity.passingFosaId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+        <!-- Create Push (PassingFosaItem) and Pull (PullMonthYearItem) year Items -->
+        <set field="passingFosaId" value="${newEntity.passingFosaId}" type="Long"/>
+        <!-- set field="status" value="${bsh:org.ofbiz.onlineremittanceprocessing.OnlineRemittanceProcessingServices.createPushAndPullStationItems(passingFosaId, userLogin);}"></set -->
+    </simple-method>
+    
+     <simple-method method-name="updatePassingFosa" short-description="Update PassingFosa">
+        <entity-one entity-name="PassingFosa" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deletePassingFosa" short-description="Delete PassingFosa">
+        <entity-one entity-name="PassingFosa" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
     </simple-method>
     
 </simple-methods>
