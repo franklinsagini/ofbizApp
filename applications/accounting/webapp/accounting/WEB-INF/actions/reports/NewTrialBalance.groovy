@@ -16,10 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import org.ofbiz.entity.condition.EntityCondition
-import org.ofbiz.entity.condition.EntityOperator
 import org.ofbiz.party.party.PartyHelper;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.accounting.ledger.GeneralLedgerServices;
 
 fromDate = thruDate - 365
 partyNameList = [];
@@ -28,111 +30,59 @@ parties.each { party ->
     partyNameList.add(partyName);
 }
 context.partyNameList = partyNameList;
+finalTransList = []
+finalTransListBuilder = []
+runningDebitBalance = 0
+runningCreditBalance = 0
+summaryCondition = [];
+summaryCondition.add(EntityCondition.makeCondition("ateTransactionDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 
-if (thruDate) {
-    customTimePeriod = delegator.findOne('CustomTimePeriod', [customTimePeriodId:parameters.customTimePeriodId], true)
-    exprList = [];
-    exprList.add(EntityCondition.makeCondition('organizationPartyId', EntityOperator.IN, partyIds))
-   // exprList.add(EntityCondition.makeCondition('fromDate', EntityOperator.LESS_THAN, customTimePeriod.getDate('thruDate').toTimestamp()))
-   // exprList.add(EntityCondition.makeCondition(EntityCondition.makeCondition('thruDate', EntityOperator.GREATER_THAN_EQUAL_TO, customTimePeriod.getDate('fromDate').toTimestamp()), EntityOperator.OR, EntityCondition.makeCondition('thruDate', EntityOperator.EQUALS, null)))
-    List organizationGlAccounts = delegator.findList('GlAccountOrganizationAndClass', EntityCondition.makeCondition(exprList, EntityOperator.AND), null, ['accountCode'], null, false)
+if (organizationPartyId) {
+  summaryCondition.add(EntityCondition.makeCondition("ateOrganizationPartyId", EntityOperator.EQUALS, organizationPartyId));
+}
 
-    accountBalances = []
-    postedDebitsTotal = 0
-    postedCreditsTotal = 0
-
-    oldglAccountId = ""
-    oldAccountBalance = [:]
-    oldAccountBalance = null
-    lastAccountBalance = [:]
-
-    def creditsAmt = 0
-    def debitsAmt = 0
-
-    organizationGlAccounts.each { organizationGlAccount ->
-    accountBalance = [:]
-        //accountBalance = dispatcher.runSync('computeGlAccountBalanceForTimePeriod', [organizationPartyId: organizationGlAccount.organizationPartyId, customTimePeriodId: customTimePeriod.customTimePeriodId, glAccountId: organizationGlAccount.glAccountId, userLogin: userLogin]);
-        //accountBalance = dispatcher.runSync('computeGlAccountBalanceForTrialBalance', [organizationPartyId: organizationGlAccount.organizationPartyId, thruDate : thruDate, fromDate: fromDate,  glAccountId: organizationGlAccount.glAccountId, userLogin: userLogin]);
-        accountBalance = dispatcher.runSync('newComputeGlAccountBalanceForTrialBalance', [organizationPartyId: organizationGlAccount.organizationPartyId, thruDate : thruDate, fromDate: fromDate,  glAccountId: organizationGlAccount.glAccountId, userLogin: userLogin]);
-        if (accountBalance.postedDebits != 0 || accountBalance.postedCredits != 0) {
-
-            accountBalance.glAccountId = organizationGlAccount.glAccountId
-            accountBalance.accountCode = organizationGlAccount.accountCode
-            accountBalance.accountName = organizationGlAccount.accountName
-            postedDebitsTotal = postedDebitsTotal + accountBalance.postedDebits
-            postedCreditsTotal = postedCreditsTotal + accountBalance.postedCredits
-
-      if (oldAccountBalance == null){
-        oldAccountBalance = accountBalance
-
-        //creditsAmt = accountBalance.endingBalanceCredit
-        //debitsAmt = accountBalance.endingBalanceDebit
-      }
-
-      //if ()
-      lastAccountBalance = accountBalance
-      //creditsAmt = creditsAmt + accountBalance.postedCredits
-      //debitsAmt = debitsAmt + accountBalance.postedDebits
-
-      if ((!oldAccountBalance.glAccountId.equals(accountBalance.glAccountId)) ){
-
-        //if ()
-        //accountBalance.postedCredits = 0
-
-        oldAccountBalance.put('endingBalanceCredit', creditsAmt)
-
-        //oldAccountBalance.putAt(postedCredits, creditsAmt)
-
-        oldAccountBalance.put('endingBalanceDebit', debitsAmt)
-
-        //oldAccountBalance.putAt(postedDebits, debitsAmt)
-        accountBalances.add(oldAccountBalance);
-
-        creditsAmt = accountBalance.endingBalanceCredit
-        debitsAmt = accountBalance.endingBalanceDebit
-        oldAccountBalance = accountBalance
-      } else {
-
-        //if (!isEmpty){
-        //creditsAmt = creditsAmt + oldAccountBalance.postedCredits
-        //debitsAmt = debitsAmt + oldAccountBalance.postedDebits
+tBViewData = delegator.findList('TBViewData',  EntityCondition.makeCondition(summaryCondition, EntityOperator.AND), null,["gaoGlAccountId"],null,false)
 
 
-        if (accountBalance.endingBalanceCredit != null){
+tBViewData.each { obj ->
+  GenericValue account = delegator.findOne("GlAccount", UtilMisc.toMap("glAccountId", obj.gaoGlAccountId), true);
+  isDebit = org.ofbiz.accounting.util.UtilAccounting.isDebitAccount(account);
+  endingBalanceCredit = 0
+  endingBalanceDebit = 0
 
-          if (creditsAmt == null){
-            creditsAmt = 0
-          }
-          creditsAmt = creditsAmt + accountBalance.endingBalanceCredit
-        }
-        //endingBalanceDebit
-        //endingBalanceDebit
-        if (accountBalance.endingBalanceDebit != null){
+  if (isDebit) {
+    System.out.println("THIS IS A DEBIT BALANCE ACCOUNT")
 
-          if (debitsAmt == null){
-            debitsAmt = 0
-          }
-          debitsAmt = debitsAmt + accountBalance.endingBalanceDebit
-        }
-
-
-         //oldAccountBalance.postedCredits = creditsAmt;
-         //oldAccountBalance.postedDebits = debitsAmt
-        //}
-      }
-
-
-        }
-
+    if (obj.atDebitCreditFlag == "D") {
+      System.out.println(endingBalanceDebit + " + " + obj.ateAmount)
+      endingBalanceDebit = endingBalanceDebit + obj.ateAmount
+    }else{
+      System.out.println(endingBalanceDebit + " - " + obj.ateAmount)
+       endingBalanceDebit = endingBalanceDebit - obj.ateAmount
     }
 
-  lastAccountBalance.endingBalanceCredit = creditsAmt
-  lastAccountBalance.endingBalanceDebit = debitsAmt
+  }else{
+    System.out.println("THIS IS A CREDIT BALANCE ACCOUNT")
+    if (obj.atDebitCreditFlag == "C") {
+      System.out.println(endingBalanceCredit + " + " + obj.ateAmount)
+      endingBalanceCredit = endingBalanceCredit + obj.ateAmount
+    }else{
+      System.out.println(endingBalanceCredit + " - " + obj.ateAmount)
+       endingBalanceCredit = endingBalanceCredit - obj.ateAmount
+    }
+  }
 
-  accountBalances.add(lastAccountBalance)
-    context.postedDebitsTotal = postedDebitsTotal
-    context.postedCreditsTotal = postedCreditsTotal
-    context.accountBalances = accountBalances
 
+
+  finalTransListBuilder = [
+    accountCode:account.accountCode,
+    accountName:account.accountName,
+    endingBalanceCredit:endingBalanceCredit,
+    endingBalanceDebit:endingBalanceDebit,
+  ]
+  finalTransList.add(finalTransListBuilder)
 
 }
+
+context.accountBalances = finalTransList
+
