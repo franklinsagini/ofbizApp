@@ -121,7 +121,7 @@ under the License.
     </fo:block>
   </#if>
     <#else>
-        <fo:block text-align="center">No Employees Found With that ID</fo:block>
+        <fo:block text-align="center">Nothing Found</fo:block>
     </#if>
 </#escape>
 
