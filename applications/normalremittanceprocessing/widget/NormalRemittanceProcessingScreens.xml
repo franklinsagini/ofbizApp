@@ -494,7 +494,7 @@
 										<widgets>
 
 											<container style="button-bar">
-												<link target="deleteMemberDividendProcess"
+												<link target="processRemoveMemberDividend"
 													text="Delete Member Dividend" style="buttontext">
 													<!-- parameter param-name="loanApplicationId"/ -->
 													<parameter param-name="dividendYearId" from-field="dividendYearId"/>
@@ -538,6 +538,55 @@
 									<container style="button-bar">
 										<label style="h3" text="${totalInAccount}" />
 									</container>
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<!-- dividendSourceAccount -->
+	<screen name="dividendSourceAccount">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Dividend Source Account" />
+				<set field="headerItem" value="dividendSourceAccount" />
+
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="createDividendYear" />
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+					property="KEN" default="KEN"/ -->
+				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+
+				<entity-one entity-name="DividendSourceAccount" value-field="dividendSourceAccountContext" />
+			</actions>
+			<widgets>
+				<decorator-screen name="NormalRemittanceProcessingCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+
+					<decorator-section name="body">
+
+						<section>
+							<!-- condition> <if-has-permission permission="ACCOUNTHOLDER" action="_CREATE"/> 
+								</condition -->
+							<widgets>
+								<screenlet title="Dividend Source Account">
+									<include-form name="DividendSourceAccount"
+										location="component://normalremittanceprocessing/widget/NormalRemittanceProcessingForms.xml" />
+								</screenlet>
+							</widgets>
+							<!-- fail-widgets> <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label> 
+								</fail-widgets -->
+						</section>
+                        
+						<section name="search-results">
+							<widgets>
+								<screenlet title="Dividend Source Account List">
+									<include-form name="listDividendSourceAccount"
+										location="component://normalremittanceprocessing/widget/NormalRemittanceProcessingForms.xml" />
 								</screenlet>
 							</widgets>
 						</section>

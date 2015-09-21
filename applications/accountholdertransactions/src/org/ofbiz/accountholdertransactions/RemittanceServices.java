@@ -1782,7 +1782,12 @@ public class RemittanceServices {
 			}
 
 		}
-
+		
+		String employerName = "";
+		
+		if (station != null)
+			employerName = station.getString("employerName");
+			
 		missingMemberLog = delegator.makeValue("MissingMemberLog", UtilMisc
 				.toMap("missingMemberLogId", missingMemberLogId, "isActive",
 						"Y", "createdBy", userLogin.get("userLoginId"),
@@ -1790,7 +1795,7 @@ public class RemittanceServices {
 
 						"payrollNumber", payrollNo,
 
-						"employerName", station.getString("employerName"),
+						"employerName", employerName,
 
 						"names", names,
 

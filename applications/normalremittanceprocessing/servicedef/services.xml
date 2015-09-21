@@ -118,13 +118,46 @@
     </service>
     
     
-    <!-- deleteMemberDividend -->
-    <service name="deleteMemberDividendprocess" engine="simple" default-entity-name="NormalRemittanceMonthYear"
-             location="component://normalremittanceprocessing/script/org/ofbiz/normalremittanceprocessing/NormalRemittanceProcessingServices.xml" invoke="deleteMemberDividendprocess" auth="true">
-        <description>deleteMemberDividend</description>
+    <!-- processRemoveMemberDividend -->
+    <service name="processRemoveMemberDividend" engine="simple" default-entity-name="DividendYear"
+             location="component://normalremittanceprocessing/script/org/ofbiz/normalremittanceprocessing/NormalRemittanceProcessingServices.xml" invoke="processRemoveMemberDividend" auth="true">
+        <description>processRemoveMemberDividend</description>
         <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    
+    <!-- processMemberDividends -->
+        <service name="processMemberDividends" engine="simple" default-entity-name="DividendYear"
+             location="component://normalremittanceprocessing/script/org/ofbiz/normalremittanceprocessing/NormalRemittanceProcessingServices.xml" invoke="processMemberDividends" auth="true">
+        <description>processMemberDividends</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+    
+    <!-- DividendSourceAccount -->
+    <service name="createDividendSourceAccount" engine="simple" default-entity-name="DividendSourceAccount"
+             location="component://normalremittanceprocessing/script/org/ofbiz/normalremittanceprocessing/NormalRemittanceProcessingServices.xml" invoke="createDividendSourceAccount" auth="true">
+        <description>Create DividendSourceAccount</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="updateDividendSourceAccount" engine="simple" default-entity-name="DividendSourceAccount"
+             location="component://normalremittanceprocessing/script/org/ofbiz/normalremittanceprocessing/NormalRemittanceProcessingServices.xml" invoke="updateDividendSourceAccount" auth="true">
+        <description>Update DividendSourceAccount</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+	
+	<service name="deleteDividendSourceAccount" engine="simple" default-entity-name="DividendSourceAccount"
+             location="component://normalremittanceprocessing/script/org/ofbiz/normalremittanceprocessing/NormalRemittanceProcessingServices.xml" invoke="deleteDividendSourceAccount" auth="true">
+        <description>Delete DividendSourceAccount</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
     
     
