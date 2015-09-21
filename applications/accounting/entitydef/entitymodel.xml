@@ -4763,6 +4763,83 @@ under the License.
         </view-link>
     </view-entity>
 
+<view-entity entity-name="TBViewData"
+        package-name="org.ofbiz.accounting.ledger"
+        title="GlAccountOrganization, AcctgTransEntry, and AccTrans View Entity Group-By organizationPartyId, glAccountId, debitCreditFlag">
+        <member-entity entity-alias="GAO" entity-name="GlAccount"/>
+        <member-entity entity-alias="ATE" entity-name="AcctgTransEntry"/>
+        <member-entity entity-alias="ATR" entity-name="AcctgTrans"/>
+        <alias entity-alias="GAO" name="gaoGlAccountId" field="glAccountId" group-by="true"/>
+        <alias entity-alias="ATE" name="ateOrganizationPartyId" field="organizationPartyId" group-by="true"/>
+        <alias entity-alias="ATE" name="atDebitCreditFlag" field="debitCreditFlag" group-by="true"/>
+        <alias entity-alias="ATE" name="ateAmount" field="amount" function="sum"/>
+        <alias entity-alias="ATR" name="ateTransactionDate" field="transactionDate" group-by="true"/>
+        <view-link entity-alias="GAO" rel-entity-alias="ATE">
+            <key-map field-name="glAccountId"/>
+        </view-link>
+        <view-link entity-alias="ATE" rel-entity-alias="ATR">
+            <key-map field-name="acctgTransId"/>
+        </view-link>
+</view-entity>
+
+<!--     <view-entity entity-name="TBViewData"
+        package-name="org.ofbiz.accounting.ledger"
+        title="GlAccountOrganization, AcctgTransEntry, and AccTrans View Entity Group-By organizationPartyId, glAccountId, debitCreditFlag">
+        <member-entity entity-alias="GAO" entity-name="GlAccountOrganization"/>
+        <member-entity entity-alias="ATE" entity-name="AcctgTransEntry"/>
+        <member-entity entity-alias="ATR" entity-name="AcctgTrans"/>
+        <alias entity-alias="GAO" name="glAccountId" field="amount" group-by="true"/>
+        <alias entity-alias="GAO" name="organizationglAccountId" field="organizationPartyId" group-by="true"/>
+        <alias entity-alias="ATE" name="debitCreditFlag" field="amount" group-by="true"/>
+        <alias entity-alias="ATE" name="debitCreditFlag" field="amount" group-by="true"/>
+        <alias entity-alias="ATR" name="isPosted" field="amount" group-by="true"/>
+        <alias entity-alias="ATR" name="transactionDate" field="amount" group-by="true"/>
+        <alias entity-alias="ATE" name="acctgTransId" field="amount" group-by="true"/>
+        <alias entity-alias="ATE" name="organizationPartyId" field="amount" group-by="true"/>
+        <alias entity-alias="ATE" name="totalAmount" field="amount" function="sum"/>
+        <alias entity-alias="GAO" name="fromDate" field="amount" group-by="true"/>
+        <alias entity-alias="GAO" name="thruDate" field="amount" group-by="true"/>
+        <view-link entity-alias="GAO" rel-entity-alias="ATE">
+            <key-map field-name="glAccountId" rel-field-name/>
+            <key-map field-name="organizationPartyId"/>
+        </view-link>
+        <view-link entity-alias="ATE" rel-entity-alias="ATR">
+            <key-map field-name="acctgTransId"/>
+        </view-link>
+        <relation type="one" rel-entity-name="AcctgTransEntry">
+          <key-map field-name="glAccountId" />
+           <key-map field-name="organizationPartyId"/>
+        </relation>
+        <relation type="one" rel-entity-name="GlAccountOrganization">
+          <key-map field-name="glAccountId" />
+           <key-map field-name="organizationPartyId"/>
+        </relation>
+    </view-entity> -->
+<!--
+    <view-entity title="Sample View Entity"
+            copyright="Copyright (c) 2001 John Doe Enterprises"
+            author="John Doe" version="1.0"
+            package-name="org.ofbiz.commonapp.sample"
+            entity-name="SampleViewEntity">
+      <member-entity entity-alias="SE" entity-name="SampleEntity" />
+      <member-entity entity-alias="OSE" entity-name="OtherSampleEntity" />
+      <alias entity-alias="SE" name="primaryKeyFieldOne" />
+      <alias entity-alias="SE" name="primaryKeyFieldTwo" />
+      <alias entity-alias="SE" name="fieldOne" />
+      <alias entity-alias="SE" name="fieldTwo" />
+      <alias entity-alias="OSE" name="primaryKeyOne" />
+      <alias entity-alias="OSE" name="otherFieldOne" field="fieldOne" />
+      <view-link entity-alias="SE" rel-entity-alias="OSE">
+        <key-map field-name="foreignKeyOne" rel-field-name="primaryKeyOne" />
+      </view-link>
+      <relation type="one" rel-entity-name="OtherSampleEntity">
+        <key-map field-name="primaryKeyOne" />
+      </relation>
+      <relation type="many" title="AllOne" rel-entity-name="SampleEntity">
+        <key-map field-name="primaryKeyFieldOne" />
+      </relation>
+    </view-entity> -->
+
   <entity entity-name="RateType" package-name="org.ofbiz.accounting.rate"
     title="Rate Type Entity" default-resource-name="AccountingEntityLabels">
     <field name="rateTypeId" type="id-ne"></field>

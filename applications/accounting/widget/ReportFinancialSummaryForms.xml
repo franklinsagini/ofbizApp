@@ -699,7 +699,7 @@ under the License.
         <field name="value" widget-style="tabletextright"><display description="${accountingQuantitySum * unitCost}" currency="${currencyUomId}" type="currency"/></field>
     </form>
 
-    <form name="TrialBalanceFinancialTimePeriodSelection" type="single" header-row-style="header-row" target="TrialBalance" default-table-style="basic-table">
+    <form name="TrialBalanceFinancialTimePeriodSelection" type="single" header-row-style="header-row" target="TrialBalanceRunned" default-table-style="basic-table">
         <field name="organizationPartyId"><hidden/></field>
         <field name="thruDate" title="Trial Balance As At"><date-time/></field>
 <!--         <field name="customTimePeriodId" required-field="true">
@@ -713,6 +713,22 @@ under the License.
         </field> -->
         <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+
+    <form name="NewTrialBalanceFinancialTimePeriodSelection" type="single" header-row-style="header-row" target="NewTrialBalance" default-table-style="basic-table">
+        <field name="organizationPartyId"><hidden/></field>
+        <field name="thruDate" title="Trial Balance As At"><date-time/></field>
+<!--         <field name="customTimePeriodId" required-field="true">
+            <drop-down>
+                <entity-options entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="${periodName}: ${fromDate} - ${thruDate}" filter-by-date="false">
+                    <entity-constraint name="periodTypeId" operator="like" value="FISCAL_%"/>
+                    <entity-order-by field-name="-thruDate"/>
+                    <entity-order-by field-name="periodNum"/>
+                </entity-options>
+            </drop-down>
+        </field> -->
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
 
     <form name="TrialBalanceSummarySync" type="single" header-row-style="header-row" target="TrialBalanceSummarySync" default-table-style="basic-table">
         <field name="organizationPartyId"><hidden/></field>
