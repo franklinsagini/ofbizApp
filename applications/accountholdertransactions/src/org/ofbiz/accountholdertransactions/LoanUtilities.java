@@ -1473,6 +1473,10 @@ public class LoanUtilities {
 	}
 
 	public static GenericValue getStation(String stationId) {
+		
+		if ((stationId == null) || (stationId.equals("")))
+			return null;
+		
 		GenericValue station = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
@@ -2049,6 +2053,37 @@ public class LoanUtilities {
 			memberELI = delegator
 					.findList("Member", EntityCondition.makeCondition(
 							"memberNumber", memberNumber), null, null, null,
+							false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		GenericValue member = null;
+
+		for (GenericValue genericValue : memberELI) {
+			member = genericValue;
+		}
+
+		return member;
+	}
+	
+	
+	/***
+	 * Get Member given idNumber
+	 * 
+	 * */
+	public static GenericValue getMemberGivenIdNumber(String idNumber) {
+		// TODO Auto-generated method stub
+		// employeeNumber
+
+		List<GenericValue> memberELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		idNumber = idNumber.trim();
+		try {
+			memberELI = delegator
+					.findList("Member", EntityCondition.makeCondition(
+							"idNumber", idNumber), null, null, null,
 							false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();

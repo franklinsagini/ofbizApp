@@ -1527,5 +1527,324 @@ public class NormalRemittanceProcessingServices {
 		else
 			return "NOT PROCESSED";
 	}
+	
+	
+	/****
+	 * Process the Divided File
+	 * 
+	 * */
+	public static void processDividendCSV(String csvPath,
+			String dividendYearId) {
+
+		log.info(" GGGGGGGGGGGGGGGGGGG ");
+		log.info(" CSV Path (absolute is ) :::  " + csvPath);
+		log.info(" dividendYearId is :::  ) "
+				+ dividendYearId);
+
+		/***
+		 * Create MemberDividend
+		 * 
+		 * 
+		 * <field name="memberDividendId" type="id-vlong-int"></field>
+		
+		<field name="dividendYearId" type="id-vlong-int"></field>
+		<field name="isActive" type="indicator"></field>
+		<field name="createdBy" type="id"></field>
+		<field name="year" type="id"></field>
+		
+		<field name="idNumber" type="id"></field>
+		<field name="payrollNumber" type="id"></field>
+		<field name="memberNames" type="name"></field>
+		
+
+		<field name="totalAmount" type="fixed-point"></field>
+		<field name="processed" type="indicator"></field>
+		 * 
+		 * */
+
+		// String month = "";
+		// String year = "";
+		// String employerCode = "";
+		Long dividendYearIdLong = Long
+				.valueOf(dividendYearId);
+		// Need month, year and employerCode
+
+		// Find the SalaryMonthYear
+		GenericValue dividendYear = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			dividendYear = delegator.findOne(
+					"DividendYear", UtilMisc.toMap(
+							"dividendYearId",
+							dividendYearIdLong), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		Long year = dividendYear.getLong("year");
+
+		
+		//String employerCode = station.getString("employerCode");
+
+		BufferedReader br = null;
+		String line = "";
+		String csvSplitBy = ",";
+
+		Long memberDividendId;
+		GenericValue memberDividend;
+		
+		
+		
+		Long memberDividendMissingId;
+		GenericValue memberDividendMissing;
+
+		List<GenericValue> listMemberDividend = new ArrayList<GenericValue>();
+		
+		List<GenericValue> listMemberDividendMissing = new ArrayList<GenericValue>();
+
+		// Add the records to Member Salaries
+		int count = 0;
+		BigDecimal totalAmount = BigDecimal.ZERO;
+		try {
+			br = new BufferedReader(new FileReader(csvPath));
+			// HCS002 0,James Ndungu 1,2000 2,1500 3,7000 4,1200 5,1000 6,3000
+			// 7,120000 8
+
+			/***
+			 * 
+			 * 0 payrollNumber 1 memberNames 2 memberDepositsAmount 3
+			 * shareCapitalAmount 4 loansInterestInsuranceAmount 5
+			 * fosaContributionsAmount 6 juniorAmount 7 holidayAmount 8
+			 * totalAmount
+			 * 
+			 * */
+			
+			GenericValue member = null;
+
+			while ((line = br.readLine()) != null) {
+
+				String[] remittance = line.split(csvSplitBy);
+				count++;
+
+				System.out.println(" Count " + count + " ID No "
+						+ remittance[0] + " Amount " + remittance[2]);
+				// totalAmount = new BigDecimal(remittance[1]);
+				memberDividendId = delegator
+						.getNextSeqIdLong("MemberDividend");
+				
+				String idNumber = remittance[0].trim();
+				member = LoanUtilities.getMemberGivenIdNumber(idNumber);
+				
+				if (member == null ){
+					log.info(" MMMMMMMMMMMMM Missing ID Number --- "+idNumber);
+					
+					//Add to missing
+					memberDividendMissingId = delegator
+							.getNextSeqIdLong("MemberDividendMissing");
+					
+					memberDividendMissing = delegator.makeValue("MemberDividendMissing",
+							UtilMisc.toMap(
+									"memberDividendMissingId",
+									memberDividendMissingId,
+									"dividendYearId",
+									dividendYearIdLong,
+									"isActive",
+									"Y",
+									"createdBy",
+									dividendYear.getString("createdBy"),
+									// "transactionType", "LOANREPAYMENT",
+									
+									"year", year
+											.toString(),
+
+									"idNumber", remittance[0].trim(),
+									"memberNames", remittance[1].trim(),
+									"totalAmount", new BigDecimal(
+											remittance[2].trim()),
+
+									
+									"processed", "N"));
+
+					listMemberDividendMissing.add(memberDividendMissing);
+				}
+				
+				if (member != null){
+				
+				String payrollNumber = member.getString("payrollNumber");
+				memberDividend = delegator.makeValue("MemberDividend",
+						UtilMisc.toMap(
+								"memberDividendId",
+								memberDividendId,
+								"dividendYearId",
+								dividendYearIdLong,
+								"isActive",
+								"Y",
+								"createdBy",
+								dividendYear.getString("createdBy"),
+								// "transactionType", "LOANREPAYMENT",
+								
+								"year", year
+										.toString(),
+
+								"idNumber", remittance[0].trim(),
+								"payrollNumber", payrollNumber,
+								"memberNames", LoanUtilities.getMemberName(payrollNumber),
+								"totalAmount", new BigDecimal(
+										remittance[2].trim()),
+
+								
+								"processed", "N"));
+
+				listMemberDividend.add(memberDividend);
+				
+				}
+			}
+
+			try {
+				delegator.storeAll(listMemberDividend);
+			} catch (GenericEntityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			try {
+				delegator.storeAll(listMemberDividendMissing);
+			} catch (GenericEntityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+
+	}
+	
+	
+	/****
+	 * Delete Dividend Imported
+	 * 
+	 * */
+	public synchronized static String removeAllMemberDividend(
+			Long dividendYearId, Map<String, String> userLogin) {
+		
+		System.out.println(" dividendYearId :: "+dividendYearId);
+		System.out.println(" userLogin :: "+userLogin.get("userLoginId"));
+
+		Delegator delegator =  DelegatorFactoryImpl.getDelegator(null);
+		
+
+		try {
+			delegator.removeByCondition("MemberDividendMissing", EntityCondition
+					.makeCondition("dividendYearId", EntityOperator.EQUALS,
+							dividendYearId));
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+
+		try {
+			delegator.removeByCondition("MemberDividend", EntityCondition
+					.makeCondition("dividendYearId", EntityOperator.EQUALS,
+							dividendYearId));
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return "success";
+	}
+	
+	//processMemberDividends
+	
+	public synchronized static String processMemberDividends(
+			Long dividendYearId, Map<String, String> userLogin) {
+		
+		System.out.println(" dividendYearId :: "+dividendYearId);
+		System.out.println(" userLogin :: "+userLogin.get("userLoginId"));
+
+		Delegator delegator =  DelegatorFactoryImpl.getDelegator(null);
+		
+		GenericValue dividendYear = LoanUtilities.getEntityValue("DividendYear", "dividendYearId", dividendYearId);
+		
+
+		System.out.println(" AAAAAAAAAAA Processing Dividends now");
+		
+		//Each member must have a savings account
+		List<GenericValue> listDividendYearELI = null;
+		EntityConditionList<EntityExpr> memberDividendConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"dividendYearId", EntityOperator.EQUALS, dividendYearId),
+						
+						EntityCondition.makeCondition(
+								"processed", EntityOperator.EQUALS, "N")
+						),
+
+				EntityOperator.AND);
+		try {
+			listDividendYearELI = delegator.findList("MemberDividend",
+					memberDividendConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+//		for (GenericValue genericValue : listDividendYearELI) {
+//			
+//			//Check that all members have savings account
+//			
+//		}
+		
+		Boolean failed = false;
+		// Clear the missing log - delete everything from it
+		RemittanceServices.clearMissingMember(dividendYear.getLong("year").toString(), "DIVIDEND");
+		String payrollNo = "";
+		Long count = 0L;
+		for (GenericValue genericValue : listDividendYearELI) {
+			payrollNo = genericValue.getString("payrollNumber");
+			log.info(++count
+					+ "FFFFFFFFFFFF Checking FOSA Savings!!!!!!!!!!!!!! for "
+					+ payrollNo);
+			if (!hasAccount(RemittanceServices.FOSA_SAVINGS_CODE, payrollNo.trim())) {
+				failed = true;
+
+				// Add the member to the missing log
+				log.info("AAAAAAAAAAAAAAAA Adding a member!!!!!!!!!!!!!! for "
+						+ payrollNo);
+				
+				RemittanceServices.addMissingMemberLog(userLogin, payrollNo, dividendYear.getLong("year").toString(), "DIVIDEND",
+						RemittanceServices.FOSA_SAVINGS_CODE, null, null);
+			}
+
+		}
+
+		if (failed) {
+			
+			return "There are members without savings accounts , please check in the Missing Member logs with employer code as DIVIDEND ";
+		}
+
+		
+		//Debit the account
+		
+		System.out.println(" Clear, will now post to the members accounts");
+		
+		//Credit each of the members with the amount
+		
+
+		return "success";
+	}
 
 }

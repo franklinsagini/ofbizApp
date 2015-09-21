@@ -141,6 +141,33 @@
             </widgets>
         </section>
     </screen>
+
+    <!-- By Loan Type -->
+    <screen name="appliedLoansByLoanTypeExcel">
+        <section>
+            <actions>
+                <set field="headerItem" value="appliedLoansByLoanTypeExcel" />
+                <set field="tabButtonItem" value="appliedLoansByLoanTypeExcel" />
+                <set field="endDate" from-field="parameters.endDate" type="Timestamp"  default-value="${nowTimestamp}"/>
+                <set field="startDate" from-field="parameters.startDate" type="Timestamp" />
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container>
+                            <screenlet title="Applied Loans By Loan Type">
+                                <include-form name="appliedLoansByLoanTypeFormExcel" location="component://loanmanagementreports/widget/LoanManagementReportsForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+
+
     <!-- By Station -->
     <screen name="appliedLoansByStation">
         <section>
@@ -165,6 +192,22 @@
         </section>
     </screen>
 
+    <screen name="appliedLoansByLoanTypeCsv">
+        <section>
+            <actions>
+                <set field="viewSize" value="99999"/>
+                <set field="endDate" from-field="parameters.endDate" type="Timestamp"  default-value="${nowTimestamp}"/>
+                <set field="startDate" from-field="parameters.startDate" type="Timestamp" />
+                <script location="component://loanmanagementreports/webapp/loanmanagementreports/WEB-INF/actions/reports/appliedLoansByLoanTypeCsv.groovy"/>
+            </actions>
+            <widgets>
+                <label style="h3" text="LOAN REPORT"/>
+                <include-form name="appliedLoansByLoanTypeCsv" location="component://loanmanagementreports/widget/LoanManagementReportsForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+
     <!-- appliedLoansByLoanTypepdf -->
     <screen name="appliedLoansByLoanTypepdf">
         <section>
@@ -185,6 +228,8 @@
             </widgets>
         </section>
     </screen>
+
+
 
     <!-- appliedLoansByStationpdf -->
     <screen name="appliedLoansByStationpdf">

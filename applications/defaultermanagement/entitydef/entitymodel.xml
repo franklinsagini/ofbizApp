@@ -97,6 +97,8 @@
     	<alias entity-alias="LAPP" name="loanAmt"></alias>
     	<alias entity-alias="LAPP" name="disbursementDate"></alias>
     	<alias entity-alias="LAPP" name="lastRepaymentDate"></alias>
+    	<alias entity-alias="LAPP" name="createdStamp"></alias>
+    	
     	
     	<alias entity-alias="M" name="partyId"></alias>
     	<alias entity-alias="M" name="payrollNumber"></alias>
@@ -104,6 +106,10 @@
     	<alias entity-alias="M" name="firstName"></alias>
     	<alias entity-alias="M" name="middleName"></alias>
     	<alias entity-alias="M" name="lastName"></alias>
+    	
+    	<alias entity-alias="M" name="branchId"></alias>
+    	<alias entity-alias="M" name="mobileNumber"></alias>
+    	
     	
     	<alias entity-alias="MS" name="memberStatusId"></alias>
     	<alias entity-alias="MS" name="name" col-alias="memberStatusName"></alias>
@@ -178,7 +184,7 @@
     	</view-link>
     </view-entity> 
     
-        <view-entity entity-name="DisbursedLoansStationEmployer" package-name="org.ofbiz.defaultermanagement">
+    <view-entity entity-name="DisbursedLoansStationEmployer" package-name="org.ofbiz.defaultermanagement">
     	<member-entity entity-alias="LAPP" entity-name="LoanApplication"></member-entity>
     	<member-entity entity-alias="M" entity-name="Member"></member-entity>
     	<member-entity entity-alias="S" entity-name="Station"></member-entity>
@@ -199,5 +205,30 @@
     	<view-link  entity-alias="M" rel-entity-alias="S">
     		<key-map field-name="stationId" rel-field-name="stationId"/>
     	</view-link>
-    </view-entity>  
+    </view-entity> 
+    
+    <!-- With Branch ID -->
+        <view-entity entity-name="DisbursedLoansStationEmployerBranch" package-name="org.ofbiz.defaultermanagement">
+    	<member-entity entity-alias="LAPP" entity-name="LoanApplication"></member-entity>
+    	<member-entity entity-alias="M" entity-name="Member"></member-entity>
+    	<member-entity entity-alias="S" entity-name="Station"></member-entity>
+    	
+    	<alias entity-alias="M" name="branchId" group-by="true"></alias>
+    	<alias entity-alias="S" name="employerCode" group-by="true"></alias>
+    	<alias entity-alias="LAPP" name="loanNo" function="count" col-alias="loanCount"></alias>
+    	<alias entity-alias="LAPP" name="loanAmt" function="sum" col-alias="loanAmt"></alias>
+    	
+    	<view-link  entity-alias="LAPP" rel-entity-alias="M">
+    		<key-map field-name="partyId" rel-field-name="partyId"/>
+    		<entity-condition>
+    			<condition-expr entity-alias="LAPP" field-name="loanStatusId" operator="equals" value="6"/>
+    		</entity-condition>
+    		<!-- entity-condition>
+    			<condition-expr entity-alias="T" field-name="treasuryTypeId" operator="equals" rel-entity-alias="TR" rel-field-name="sourceTreasuryType"/>
+    		</entity-condition -->
+    	</view-link>
+    	<view-link  entity-alias="M" rel-entity-alias="S">
+    		<key-map field-name="stationId" rel-field-name="stationId"/>
+    	</view-link>
+    </view-entity> 
 </entitymodel>

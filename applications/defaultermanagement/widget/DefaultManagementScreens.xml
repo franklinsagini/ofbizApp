@@ -239,4 +239,54 @@
             </widgets>
         </section>
     </screen>
+    
+    <!-- defaultermanagementUnattachedByDateExcelForm -->
+         <screen name="defaultermanagementUnattachedByDateExcelForm">
+        <section>
+            <actions>
+                <set field="headerItem" value="defaultermanagementUnattachedByDateExcelForm" />
+                <set field="tabButtonItem" value="defaultermanagementUnattachedByDateExcelForm" />
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+
+                        <container>
+                            <screenlet title="Defaulter Management By Date">
+                                <!--  include-form name="memberstatementreportWithDatesForm" location="component://loanreports/widget/LoanReportsForms.xml"/ -->
+                                <include-form name="defaultermanagementUnattachedByDateExcelForm" location="component://defaultermanagement/widget/DefaultManagementForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- defaultermanagementUnattachedByDateExcel -->
+       <screen name="defaultermanagementUnattachedByDateExcel">
+        <section>
+           <actions>
+                <set field="viewSize" value="999999"/>
+                <!-- script location="component://party/webapp/partymgr/WEB-INF/actions/reports/loanDetails.groovy"/ -->
+               <script location="component://defaultermanagement/webapp/defaultermanagement/WEB-INF/actions/reports/defaultermanagementUnattachedByDate.groovy"/>
+           </actions>
+           <widgets>
+               <!-- decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                   <decorator-section name="body">
+                        <platform-specific>
+                            
+                            <xsl-fo><html-template location="component://loanreports/webapp/loanreports/reports/loansummaryReport.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                    
+                    listStationDefaulted << stationDefaultedLoan
+                </decorator-screen -->
+                
+                			 <include-form name="defaultermanagementUnattachedByDateExport" location="component://defaultermanagement/widget/DefaultManagementForms.xml"/>
+                		
+            </widgets>
+        </section>
+    </screen>
 </screens>

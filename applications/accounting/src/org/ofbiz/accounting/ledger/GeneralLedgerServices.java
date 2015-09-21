@@ -158,7 +158,7 @@ public class GeneralLedgerServices {
 			EntityConditionList<EntityExpr> msaccoApplCond = EntityCondition.makeCondition(UtilMisc.toList(
 					EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, accountTransaction.getLong("partyId"))
 					));
-			if(accountTransaction.getString("transactionType").equals("MSACCOWITHDRAWAL")){
+			if(accountTransaction.getString("transactionType").equals("MSACCOWITHDRAWAL") || accountTransaction.getString("transactionType").equals("MSACCOENQUIRY")){
 				
 				try {
 					mSaccoApplication = delegator.findList("MSaccoApplication", msaccoApplCond, null, null, null, false);
