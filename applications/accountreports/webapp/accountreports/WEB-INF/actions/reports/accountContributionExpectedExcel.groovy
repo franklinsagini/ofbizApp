@@ -78,10 +78,11 @@ else if ((!accountProductId)){
 	startDateTimestamp = new Timestamp(sqlStartDate.getTime());
 	endDateTimestamp = new Timestamp(sqlEndDate.getTime());
 	
-	expr = exprBldr.AND() {
-		GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
-		LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
-	}
+	expr = null;
+//	 = exprBldr.AND() {
+//		GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
+//		LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
+//	}
 }
  else{
 	startDateTimestamp = new Timestamp(sqlStartDate.getTime());
@@ -90,8 +91,8 @@ else if ((!accountProductId)){
 		
 		if (branchId){
 		expr = exprBldr.AND() {
-			GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
-			LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
+//			GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
+//			LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
 			EQUALS(accountProductId: accountProductIdLong)
 			EQUALS(branchId: branchId)
 			
@@ -99,8 +100,8 @@ else if ((!accountProductId)){
 		} else{
 		
 		expr = exprBldr.AND() {
-			GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
-			LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
+//			GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
+//			LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
 			EQUALS(accountProductId: accountProductIdLong)
 			
 		}
@@ -113,8 +114,8 @@ else if ((!accountProductId)){
 			station = delegator.findOne("Station", [stationId : stationId.toString()], false);
 			
 			expr = exprBldr.AND() {
-				GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
-				LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
+//				GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
+//				LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
 				EQUALS(accountProductId: accountProductIdLong)
 				EQUALS(employerCode: station.employerCode)
 				
@@ -123,8 +124,8 @@ else if ((!accountProductId)){
 		
 		if ((employmentTypeId) && (branchId)){
 			expr = exprBldr.AND() {
-				GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
-				LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
+//				GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
+//				LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
 				EQUALS(accountProductId: accountProductIdLong)
 				EQUALS(branchId: branchId)
 				EQUALS(employmentTypeId: employmentTypeIdLong)
@@ -135,8 +136,8 @@ else if ((!accountProductId)){
 		
 		if ((employmentTypeId) && (!branchId)){
 			expr = exprBldr.AND() {
-				GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
-				LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
+//				GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
+//				LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
 				EQUALS(accountProductId: accountProductIdLong)
 				EQUALS(employmentTypeId: employmentTypeIdLong)
 				
@@ -147,8 +148,9 @@ else if ((!accountProductId)){
 		if ((employmentTypeId) && (stationId)){
 			station = delegator.findOne("Station", [stationId : stationId.toString()], false);
 			expr = exprBldr.AND() {
-				GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
-				LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
+//				GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
+//				LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
+
 				EQUALS(accountProductId: accountProductIdLong)
 				EQUALS(employmentTypeId: employmentTypeIdLong)
 				EQUALS(employerCode: station.employerCode)
@@ -157,9 +159,10 @@ else if ((!accountProductId)){
 		
 		if ((employmentTypeId) && (!stationId) && (!branchId)){
 			expr = exprBldr.AND() {
-				GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
-				LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
-				EQUALS(accountProductId: accountProductIdLong)
+//				GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
+//				LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
+
+								EQUALS(accountProductId: accountProductIdLong)
 				EQUALS(employmentTypeId: employmentTypeIdLong)
 			}
 		}
@@ -168,8 +171,10 @@ else if ((!accountProductId)){
 		if ((!employmentTypeId) && (stationId) && (!branchId)){
 			station = delegator.findOne("Station", [stationId : stationId.toString()], false);
 			expr = exprBldr.AND() {
-				GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
-				LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
+				
+//				GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
+//				LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
+				
 				EQUALS(accountProductId: accountProductIdLong)
 				EQUALS(employerCode: station.employerCode)
 			}
@@ -180,10 +185,12 @@ else if ((!accountProductId)){
 	} else{
 	startDateTimestamp = new Timestamp(sqlStartDate.getTime());
 	endDateTimestamp = new Timestamp(sqlEndDate.getTime());
-		expr = exprBldr.AND() {
-			GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
-			LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
-		}
+		expr = null;
+		
+		// = exprBldr.AND() {
+//			GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
+//			LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
+//		}
 	}
 
 
@@ -191,7 +198,7 @@ else if ((!accountProductId)){
 
 EntityFindOptions findOptions = new EntityFindOptions();
 //findOptions.setMaxRows(100);
-myAccountsList = delegator.findList("AccountContributionAmountsExpected", expr, null, ["createdStamp ASC"], findOptions, false)
+myAccountsList = delegator.findList("AccountContributionAmountsExpected", expr, null, null, findOptions, false)
 
 //
 
@@ -251,14 +258,19 @@ def loanItem;
 def mylistExpectedContributions = [];
 
 //Build the my expected contribution list
+
+startDateTimestamp = new Timestamp(sqlStartDate.getTime());
+endDateTimestamp = new Timestamp(sqlEndDate.getTime());
+
 myAccountsList.eachWithIndex { account, index ->
 	partyId = account.partyId;
 	partyIdLong = partyId.toLong();
 	minimumExpectedAmount = org.ofbiz.accountholdertransactions.RemittanceServices.getMinimumExpectedContributingAmount(partyIdLong);
+	//transactionAmount
+	transactionAmount = org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getTotalDepositsExcludeReversed("901", partyIdLong, startDateTimestamp, endDateTimestamp);
+	variance = transactionAmount - minimumExpectedAmount;
 	
-	variance = account.transactionAmount - minimumExpectedAmount;
-	
-	anAccount = [firstName:account.firstName, middleName:account.middleName, lastName:account.lastName, payrollNumber:account.payrollNumber, mobileNumber:account.mobileNumber,  memberNumber:account.memberNumber, idNumber:account.idNumber, stationId:account.stationId, branchId:account.branchId, memberStatusId:account.memberStatusId, employmentTypeId:account.employmentTypeId, accountNo:account.accountNo, accountName:account.accountName, createdStamp:account.createdStamp, transactionAmount:account.transactionAmount, minimumExpectedAmount:minimumExpectedAmount, variance:variance ]
+	anAccount = [firstName:account.firstName, middleName:account.middleName, lastName:account.lastName, payrollNumber:account.payrollNumber, mobileNumber:account.mobileNumber,  memberNumber:account.memberNumber, idNumber:account.idNumber, stationId:account.stationId, branchId:account.branchId, memberStatusId:account.memberStatusId, employmentTypeId:account.employmentTypeId, accountNo:account.accountNo, accountName:account.accountName, transactionAmount:transactionAmount, minimumExpectedAmount:minimumExpectedAmount, variance:variance ]
 	mylistExpectedContributions << anAccount
 }
 
