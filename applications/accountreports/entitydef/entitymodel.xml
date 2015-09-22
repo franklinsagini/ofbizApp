@@ -254,7 +254,7 @@
     <!-- Contributions Expected -->
 
 	 <view-entity entity-name="AccountContributionAmountsExpected" package-name="org.ofbiz.accountreports">
-    	<member-entity entity-alias="AT" entity-name="AccountTransaction"></member-entity>
+    	<!-- member-entity entity-alias="AT" entity-name="AccountTransaction"></member-entity -->
     	<member-entity entity-alias="MA" entity-name="MemberAccount"></member-entity>
     	<member-entity entity-alias="AP" entity-name="AccountProduct"></member-entity>
     	<member-entity entity-alias="M" entity-name="Member"></member-entity>
@@ -284,14 +284,17 @@
     	<alias entity-alias="MA" name="accountName" group-by="true" />
     	
     	
-    	<alias entity-alias="AT" name="createdStamp" group-by="true" />
-    	<alias entity-alias="AT" name="increaseDecrease" group-by="true" />
+    	<!-- alias entity-alias="AT" name="createdStamp" group-by="true" />
+    	<alias entity-alias="AT" name="increaseDecrease" group-by="true" / -->
     	
-    	<alias entity-alias="AT" name="transactionAmount" function="sum"/> 
+    	<!-- alias entity-alias="AT" name="transactionAmount" function="sum"/ --> 
     	
-    	<view-link entity-alias="AT" rel-entity-alias="MA"> 
+    	
+    	<alias entity-alias="MA" name="contributingAmount" function="sum"/> 
+    	
+    	<!-- view-link entity-alias="AT" rel-entity-alias="MA"> 
             <key-map field-name="memberAccountId" rel-field-name="memberAccountId"/> 
-        </view-link> 
+        </view-link --> 
         
         <view-link entity-alias="MA" rel-entity-alias="AP"> 
             <key-map field-name="accountProductId" rel-field-name="accountProductId"/> 
@@ -306,7 +309,12 @@
         </view-link>
         
         <entity-condition>
+        	<!-- condition-list combine="and">
         	<condition-expr entity-alias="AT" field-name="increaseDecrease" operator="equals" value="I"/>
+        	<condition-expr entity-alias="AT" field-name="transactionType" operator="not-equals" value="MEMBERWITHDRAWAL Reversed"/>
+        	</condition-list -->
+        	
+        	<condition-expr entity-alias="MA" field-name="accountProductId" operator="equals" value="10041"/>
         </entity-condition>
     </view-entity>
 </entitymodel>

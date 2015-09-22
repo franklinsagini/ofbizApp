@@ -3676,6 +3676,53 @@ public class AccHolderTransactionServices {
 		}
 		return bdBalance;
 	}
+	
+	
+	//getTotalDepositsExcludeReversed
+	private static BigDecimal calculateTotalIncreaseExcludeReversed(String memberAccountId,
+			Timestamp startdDate, Timestamp endDate, String increaseDecrease) {
+		List<GenericValue> cashDepositELI = null;
+
+		memberAccountId = memberAccountId.replaceAll(",", "");
+		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"memberAccountId", EntityOperator.EQUALS,
+						Long.valueOf(memberAccountId)), EntityCondition
+						.makeCondition("increaseDecrease",
+								EntityOperator.EQUALS, increaseDecrease),
+								
+								
+					   EntityCondition
+									.makeCondition("reverseStatus",
+											EntityOperator.NOT_EQUAL, "REVERSED"),
+						EntityCondition.makeCondition("createdStamp",
+								EntityOperator.GREATER_THAN_EQUAL_TO,
+								startdDate),
+
+						EntityCondition.makeCondition("createdStamp",
+								EntityOperator.LESS_THAN_EQUAL_TO, endDate)),
+						EntityOperator.AND);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			cashDepositELI = delegator.findList("AccountTransaction",
+					transactionConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		BigDecimal bdBalance = BigDecimal.ZERO;
+		BigDecimal bdTransactionAmount = null;
+		log.info("Got  ----------- " + cashDepositELI.size() + " Records !!!");
+		for (GenericValue genericValue : cashDepositELI) {
+			bdTransactionAmount = genericValue
+					.getBigDecimal("transactionAmount");
+			if (bdTransactionAmount != null) {
+				bdBalance = bdBalance.add(bdTransactionAmount);
+			}
+		}
+		return bdBalance;
+	}
 
 	private static BigDecimal calculateTotalChequeDeposits(
 			String memberAccountId, Timestamp balanceDate) {
@@ -7858,6 +7905,19 @@ public class AccHolderTransactionServices {
 		Long memberAccountId = LoanUtilities
 				.getMemberAccountIdFromMemberAccount(memberId, accountProductId);
 		return AccHolderTransactionServices.calculateTotalIncrease(
+				memberAccountId.toString(), startDate, endDate, "I");
+	}
+	
+	
+	public static BigDecimal getTotalDepositsExcludeReversed(String code, Long memberId,
+			Timestamp startDate, Timestamp endDate) {
+		// AccHolderTransactionServices.getTotalBalance(memberAccountId,
+		// balanceDate)
+		Long accountProductId = LoanUtilities
+				.getAccountProductIdGivenCodeId(code);
+		Long memberAccountId = LoanUtilities
+				.getMemberAccountIdFromMemberAccount(memberId, accountProductId);
+		return AccHolderTransactionServices.calculateTotalIncreaseExcludeReversed(
 				memberAccountId.toString(), startDate, endDate, "I");
 	}
 
