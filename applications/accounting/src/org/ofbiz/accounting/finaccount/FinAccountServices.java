@@ -1163,6 +1163,52 @@ public class FinAccountServices {
 		return reversedPaymentId;
 	}
 
+	public static Map<String, Object> resendMsaccoPin(DispatchContext dctx, Map<String, Object> context) {
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Long msaccoApplicationId = (Long) context.get("msaccoApplicationId");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+
+	
+		//Get msaccoApplication using passed id
+		GenericValue msaccoApplication = null;
+		GenericValue msaccoLogs = null;
+		String sent = "N";
+		if (msaccoApplicationId != null) {
+			try {
+				msaccoApplication = delegator.findOne("MSaccoApplication", UtilMisc.toMap("msaccoApplicationId", msaccoApplicationId), false);
+				if (msaccoApplication.getString("sent") != null && msaccoApplication.getString("sent").equals(sent)) {
+					return ServiceUtil.returnError("Seems Like there is already a pending request. Kindly wait for it to be sent");
+				}else{
+					msaccoApplication.set("sent", sent);
+					msaccoApplication.store();
+					//update logs here
+					msaccoLogs = delegator.makeValue("MSaccoLog");
+					Long msaccoLogId = delegator.getNextSeqIdLong("MSaccoLog");
+					msaccoLogs.put("msaccoLogId", msaccoLogId);
+					msaccoLogs.put("isActive", "Y");
+					msaccoLogs.put("isActive", "1");
+					msaccoLogs.put("cardStatusId", msaccoApplication.getLong("cardStatusId"));
+					msaccoLogs.put("msaccoApplicationId", msaccoApplicationId);
+					msaccoLogs.put("comment", "PIN RESEND REQUESTED");
+					msaccoLogs.put("createdBy", userLogin.getString("userLoginId"));
+					msaccoLogs.create();
+				}				
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+				
+		}else{
+			return ServiceUtil.returnError("msaccoApplicationId Missing. Check and Try Again !");
+		}
+		
+		
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		result.put("msaccoApplicationId", msaccoApplicationId);
+		return ServiceUtil.returnSuccess("PIN RESEND REQUEST SENT SUCCESSFULLY");
+		
+	}
+	
 	public static Map<String, Object> confirmMultiPayment(DispatchContext dctx, Map<String, Object> context) {
 		Delegator delegator = dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();

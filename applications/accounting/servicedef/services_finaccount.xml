@@ -153,6 +153,12 @@ under the License.
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <attribute type="String" mode="OUT" name="finAccountId" optional="true"/>
      </service>
+    <service name="resendMsaccoPin" engine="java" default-entity-name="FinAccountTrans"
+            location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="resendMsaccoPin">
+        <description>Pulls all transactions of type cheque from account transaction</description>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute type="Long" mode="IN" name="msaccoApplicationId" optional="false"/>
+     </service>
 
     <service name="createReconHeader" engine="java" default-entity-name="FinAccountTrans"
             location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="createReconHeader">
