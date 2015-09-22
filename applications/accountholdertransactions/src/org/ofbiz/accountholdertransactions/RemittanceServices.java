@@ -45,7 +45,7 @@ import com.google.gson.Gson;
  * @author Japheth Odonya @when Sep 18, 2014 12:39:40 PM
  * 
  *         Remittance Operations
- * 
+ * org.ofbiz.accountholdertransactions.RemittanceServices.getMinimumExpectedContributingAmount(partyId)
  *         RemittanceServices.generateExpectedPaymentStations
  * **/
 public class RemittanceServices {
@@ -1782,7 +1782,12 @@ public class RemittanceServices {
 			}
 
 		}
-
+		
+		String employerName = "";
+		
+		if (station != null)
+			employerName = station.getString("employerName");
+			
 		missingMemberLog = delegator.makeValue("MissingMemberLog", UtilMisc
 				.toMap("missingMemberLogId", missingMemberLogId, "isActive",
 						"Y", "createdBy", userLogin.get("userLoginId"),
@@ -1790,7 +1795,7 @@ public class RemittanceServices {
 
 						"payrollNumber", payrollNo,
 
-						"employerName", station.getString("employerName"),
+						"employerName", employerName,
 
 						"names", names,
 
@@ -4168,6 +4173,61 @@ public class RemittanceServices {
 			e.printStackTrace();
 		}
 
+	}
+	
+	public static BigDecimal getMinimumExpectedContributingAmount(Long partyId){
+		BigDecimal bdContributingAmt = BigDecimal.ZERO;
+		
+		Calendar cal = Calendar.getInstance();
+		
+		Long year = LOANFORMULAYEAR;//Long.valueOf(monthYear.substring((monthYear.length() - 4), monthYear.length()));
+		Long themonth = LOANFORMULAMONTH;//Long.valueOf(monthYear.substring(0, monthYear.length() - 4));
+		System.out.println(" The year "+year);
+		System.out.println(" The Month "+themonth);
+	    
+	    cal.set(Calendar.MONTH, themonth.intValue() - 1);
+	    cal.set(Calendar.DATE, 1);
+	    
+	    cal.set(Calendar.YEAR, year.intValue());
+	    
+	    
+	    cal.set(Calendar.HOUR, 0);
+	    cal.set(Calendar.MINUTE, 0);
+	    cal.set(Calendar.SECOND, 0);
+	    cal.set(Calendar.MILLISECOND, 0);
+	    
+	    Timestamp loanFormularChangeDate = new Timestamp(cal.getTimeInMillis());
+	    
+	    List<Long> loanApplicationIdsAfterChange = LoansProcessingServices.getDisbursedLoanApplicationListAfterFormularChange(partyId, loanFormularChangeDate);
+	    
+	    GenericValue memberAccount = LoanUtilities.getMemberAccount(Long.valueOf(LoanUtilities.getMemberAccountIdGivenMemberAndAccountCode(partyId, AccHolderTransactionServices.MEMBER_DEPOSIT_CODE)));
+	    if ((loanApplicationIdsAfterChange != null) && (loanApplicationIdsAfterChange.size() > 0)){
+			bdContributingAmt = LoansProcessingServices
+					.getLoanCurrentContributionAmount(partyId);
+
+			BigDecimal bdSpecifiedAmount = memberAccount
+					.getBigDecimal("contributingAmount");
+
+			if ((bdSpecifiedAmount != null)
+					&& (bdSpecifiedAmount.compareTo(bdContributingAmt) == 1)) {
+				bdContributingAmt = bdSpecifiedAmount;
+			}
+	    } 
+		//Else use old graduated scale
+	    else{
+	    	BigDecimal bdAmount = LoansProcessingServices.getTotalDisbursedLoans(partyId);
+	    	bdContributingAmt = LoansProcessingServices.getGruaduatedScaleContributionOld(bdAmount);
+					
+
+			BigDecimal bdSpecifiedAmount = memberAccount
+					.getBigDecimal("contributingAmount");
+
+			if ((bdSpecifiedAmount != null)
+					&& (bdSpecifiedAmount.compareTo(bdContributingAmt) == 1)) {
+				bdContributingAmt = bdSpecifiedAmount;
+			}
+	    }
+		return bdContributingAmt;
 	}
 	
 

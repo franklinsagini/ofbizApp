@@ -155,5 +155,27 @@
 		<field name="processed" type="indicator"></field>
 		<prim-key field="memberDividendMissingId"/>
 	</entity>
+	
+	
+	<!-- DividendSourceAccount -->
+	<entity entity-name="DividendSourceAccount" package-name="org.ofbiz.normalremittanceprocessing"
+		title="DividendSourceAccount Entity">
+		<field name="dividendSourceAccountId" type="id-vlong-int" enable-audit-log="true"></field>
+		
+		<field name="isActive" type="indicator" enable-audit-log="true"></field>
+		<field name="createdBy" type="name" enable-audit-log="true"></field>
+		<field name="updatedBy" type="name" enable-audit-log="true"></field>
+		
+		<field name="partyId" type="id-vlong-int" enable-audit-log="true"></field>
+		<field name="memberAccountId" type="id-vlong-int" enable-audit-log="true"></field>
+		
+		<prim-key field="dividendSourceAccountId"/>
+		<relation type="one" fk-name="DividendSourceAccount_Member" rel-entity-name="Member">
+        	<key-map field-name="partyId"/>
+      	</relation>
+      	<relation type="one" fk-name="DividendSourceAccount_MemberAccount" rel-entity-name="MemberAccount">
+        	<key-map field-name="memberAccountId"/>
+      	</relation>
+	</entity>
 
 </entitymodel>

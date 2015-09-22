@@ -1739,7 +1739,7 @@ public class NormalRemittanceProcessingServices {
 	 * Delete Dividend Imported
 	 * 
 	 * */
-	public synchronized static String deleteMemberDividend(
+	public synchronized static String removeAllMemberDividend(
 			Long dividendYearId, Map<String, String> userLogin) {
 		
 		System.out.println(" dividendYearId :: "+dividendYearId);
@@ -1766,6 +1766,83 @@ public class NormalRemittanceProcessingServices {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		return "success";
+	}
+	
+	//processMemberDividends
+	
+	public synchronized static String processMemberDividends(
+			Long dividendYearId, Map<String, String> userLogin) {
+		
+		System.out.println(" dividendYearId :: "+dividendYearId);
+		System.out.println(" userLogin :: "+userLogin.get("userLoginId"));
+
+		Delegator delegator =  DelegatorFactoryImpl.getDelegator(null);
+		
+		GenericValue dividendYear = LoanUtilities.getEntityValue("DividendYear", "dividendYearId", dividendYearId);
+		
+
+		System.out.println(" AAAAAAAAAAA Processing Dividends now");
+		
+		//Each member must have a savings account
+		List<GenericValue> listDividendYearELI = null;
+		EntityConditionList<EntityExpr> memberDividendConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"dividendYearId", EntityOperator.EQUALS, dividendYearId),
+						
+						EntityCondition.makeCondition(
+								"processed", EntityOperator.EQUALS, "N")
+						),
+
+				EntityOperator.AND);
+		try {
+			listDividendYearELI = delegator.findList("MemberDividend",
+					memberDividendConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+//		for (GenericValue genericValue : listDividendYearELI) {
+//			
+//			//Check that all members have savings account
+//			
+//		}
+		
+		Boolean failed = false;
+		// Clear the missing log - delete everything from it
+		RemittanceServices.clearMissingMember(dividendYear.getLong("year").toString(), "DIVIDEND");
+		String payrollNo = "";
+		Long count = 0L;
+		for (GenericValue genericValue : listDividendYearELI) {
+			payrollNo = genericValue.getString("payrollNumber");
+			log.info(++count
+					+ "FFFFFFFFFFFF Checking FOSA Savings!!!!!!!!!!!!!! for "
+					+ payrollNo);
+			if (!hasAccount(RemittanceServices.FOSA_SAVINGS_CODE, payrollNo.trim())) {
+				failed = true;
+
+				// Add the member to the missing log
+				log.info("AAAAAAAAAAAAAAAA Adding a member!!!!!!!!!!!!!! for "
+						+ payrollNo);
+				
+				RemittanceServices.addMissingMemberLog(userLogin, payrollNo, dividendYear.getLong("year").toString(), "DIVIDEND",
+						RemittanceServices.FOSA_SAVINGS_CODE, null, null);
+			}
+
+		}
+
+		if (failed) {
+			
+			return "There are members without savings accounts , please check in the Missing Member logs with employer code as DIVIDEND ";
+		}
+
+		
+		//Debit the account
+		
+		System.out.println(" Clear, will now post to the members accounts");
+		
+		//Credit each of the members with the amount
+		
 
 		return "success";
 	}

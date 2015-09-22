@@ -1473,6 +1473,10 @@ public class LoanUtilities {
 	}
 
 	public static GenericValue getStation(String stationId) {
+		
+		if ((stationId == null) || (stationId.equals("")))
+			return null;
+		
 		GenericValue station = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {

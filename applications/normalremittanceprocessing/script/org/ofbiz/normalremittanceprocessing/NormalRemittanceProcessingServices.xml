@@ -121,7 +121,7 @@ under the License.
     </simple-method>
     
     <!-- DividendYear -->
-        <simple-method method-name="createDividendYear" short-description="Create DividendYear">
+     <simple-method method-name="createDividendYear" short-description="Create DividendYear">
         <make-value entity-name="DividendYear" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
@@ -167,10 +167,10 @@ under the License.
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     
-    <!-- deleteMemberDividend -->
-    <simple-method method-name="deleteMemberDividendprocess" short-description="deleteMemberDividendprocess">
+    <!-- processRemoveMemberDividend -->
+    <simple-method method-name="processRemoveMemberDividend" short-description="processRemoveMemberDividend">
         <set field="dividendYearId" from-field="parameters.dividendYearId" type="Long"/>
-				<set field="processingStatus" value="${bsh:org.ofbiz.normalremittanceprocessing.NormalRemittanceProcessingServices.deleteMemberDividend(dividendYearId, userLogin);}"></set>
+				<set field="processingStatus" value="${bsh:org.ofbiz.normalremittanceprocessing.NormalRemittanceProcessingServices.removeAllMemberDividend(dividendYearId, userLogin);}"></set>
 				<!-- success -->
 				<if>
 					<condition>
@@ -190,6 +190,55 @@ under the License.
 						
 					</else>
 				</if>
+    </simple-method>
+    
+    <!-- processMemberDividends -->
+    <simple-method method-name="processMemberDividends" short-description="processMemberDividends">
+        <set field="dividendYearId" from-field="parameters.dividendYearId" type="Long"/>
+				<set field="processingStatus" value="${bsh:org.ofbiz.normalremittanceprocessing.NormalRemittanceProcessingServices.processMemberDividends(dividendYearId, userLogin);}"></set>
+				<!-- success -->
+				<if>
+					<condition>
+						<if-compare operator="not-equals" value="success" field="processingStatus"></if-compare>
+					</condition>
+					<then>
+						<add-error> 
+		                    <!-- fail-property resource="SalaryProcessingUiLabels.xml"  
+		                        property="pullStationError" / --> 
+		                        <fail-message message="${processingStatus}"/>
+		                </add-error> 
+		                <check-errors /> 
+					</then>
+					<else>
+						 <property-to-field resource="NormalRemittanceProcessingUiLabels.xml" 
+            				property="Successfully processed" field="successMessage" />
+						
+					</else>
+				</if>
+    </simple-method>
+    
+    
+    <!-- DividendSourceAccount -->
+    <simple-method method-name="createDividendSourceAccount" short-description="Create DividendSourceAccount">
+        <make-value entity-name="DividendSourceAccount" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set field="entityName" value="DividendSourceAccount"></set>
+        <set field="newEntity.dividendSourceAccountId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateDividendSourceAccount" short-description="Update DividendSourceAccount">
+        <entity-one entity-name="DividendSourceAccount" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteDividendSourceAccount" short-description="Delete DividendSourceAccount">
+        <entity-one entity-name="DividendSourceAccount" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
     </simple-method>
     
     
