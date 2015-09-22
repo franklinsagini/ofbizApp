@@ -37,9 +37,12 @@ postedCreditsTotal = 0
 summaryCondition = [];
 summaryCondition.add(EntityCondition.makeCondition("ateTransactionDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 
-if (organizationPartyId) {
-  System.out.println("USING OrganizationPartyId " + organizationPartyId + " AS PART OF THE CONDITIONS")
+
+if (organizationPartyId=="Company") {
+  System.out.println("SKIPPING ADDING OF ORGANIZATION CONDITION BECAUSE IT IS: " + organizationPartyId + " HENCE CONSOLIDATED")
+}else{
   summaryCondition.add(EntityCondition.makeCondition("ateOrganizationPartyId", EntityOperator.EQUALS, organizationPartyId));
+  System.out.println("USING OrganizationPartyId " + organizationPartyId + " AS PART OF THE CONDITIONS")
 }
 
 tBViewData = delegator.findList('TBViewData',  EntityCondition.makeCondition(summaryCondition, EntityOperator.AND), null,["gaoGlAccountId"],null,false)
@@ -78,13 +81,13 @@ glAccounts.each { glAccount ->
     }
   }
   if (endingBalanceCredit != 0 || endingBalanceDebit != 0) {
-finalTransListBuilder = [
-    accountCode:glAccount.accountCode,
-    accountName:glAccount.accountName,
-    endingBalanceCredit:endingBalanceCredit,
-    endingBalanceDebit:endingBalanceDebit,
-  ]
-  finalTransList.add(finalTransListBuilder)
+    finalTransListBuilder = [
+        accountCode:glAccount.accountCode,
+        accountName:glAccount.accountName,
+        endingBalanceCredit:endingBalanceCredit,
+        endingBalanceDebit:endingBalanceDebit,
+      ]
+      finalTransList.add(finalTransListBuilder)
   }
 
 }
