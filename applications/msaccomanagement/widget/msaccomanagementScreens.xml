@@ -58,7 +58,7 @@
         </section>
     </screen>
 
-    <screen name="msaccoApplication">
+  <screen name="msaccoApplication">
 		<section>
 			<actions>
 				<set field="titleProperty" value="MSacco Application" />
@@ -66,18 +66,23 @@
 				<set field="headerItem" value="msaccoApplication"/>
 				<set field="labelTitleProperty" value="MSacco Application" />
 				<set field="cancelPage" from-field="parameters.CANCEL_PAGE" default-value="MSaccoApplication" />
-				<set field="createUserLoginURI" value="ProfileCreateUserLogin" />
-				<set field="statusName" value="NEW"/>
+ 		<set field="createUserLoginURI" value="ProfileCreateUserLogin" />
+ 		<set field="statusName" value="NEW"/>
 	   		<set field="cardStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getCardStatusId(statusName);}" type="Long" global="true"/>
+        <set field="msaccoApplicationCtx" from-field="parameters"/>
+        <entity-one entity-name="MSaccoApplication" value-field="mSaccoApplication" />
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
-						<section>
+            <section>
 							<widgets>
-								<screenlet title="MSacco Application">
+								<screenlet title="New MSacco Application">
 									<include-form name="NewMSaccoApplication" location="component://msaccomanagement/widget/msaccomanagementForms.xml" />
 								</screenlet>
+                <screenlet title="Find MSacco Applications">
+                  <include-form name="FindMSaccoApplications" location="component://msaccomanagement/widget/msaccomanagementForms.xml" />
+                </screenlet>
 							</widgets>
 						</section>
 						<section name="search-results">
@@ -93,6 +98,39 @@
 			</widgets>
 		</section>
 	</screen>
+
+<!-- <screen name="FindMSaccoApplications">
+    <section>
+      <actions>
+        <set field="titleProperty" value="MSacco Application" />
+        <set field="tabButtonItem" value="FindMSaccoApplications" />
+        <set field="headerItem" value="FindMSaccoApplications"/>
+        <set field="labelTitleProperty" value="MSacco Application" />
+        <set field="msaccoApplicationCtx" from-field="parameters"/>
+      </actions>
+      <widgets>
+        <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+          <decorator-section name="body">
+            <section>
+              <widgets>
+                <screenlet title="Find MSacco">
+                  <include-form name="FindMSaccoApplications"
+                    location="component://msaccomanagement/widget/msaccomanagementForms.xml" />
+                </screenlet>
+              </widgets>
+            </section>
+            <section name="search-results">
+              <widgets>
+                <screenlet title="MSacco Application List">
+                  <include-form name="listMSaccoApplications" location="component://msaccomanagement/widget/msaccomanagementForms.xml" />
+                </screenlet>
+              </widgets>
+            </section>
+          </decorator-section>
+        </decorator-screen>
+      </widgets>
+    </section>
+  </screen> -->
 
 	<!-- msaccoLogs -->
 	    <screen name="msaccoLogs">
@@ -169,7 +207,6 @@
 					default-value="MSaccoApplication" />
 				<set field="createUserLoginURI" value="ProfileCreateUserLogin" />
 				<set field="msaccoApplicationCtx" from-field="parameters"/>
-
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator"

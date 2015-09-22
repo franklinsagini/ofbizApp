@@ -70,10 +70,7 @@
                 <field-map field-name="orderBy" from-field="parameters.sortField"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
-
             </service>
-
-
         </actions>
         <field name="Transactions">
         	<hyperlink target="cardApplication?partyId=${partyId}" description="Manage Card for ${firstName} ${middleName} ${lastName}"></hyperlink>
@@ -136,56 +133,65 @@
 
     <form name="listMSaccoApplication" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMSaccoApplication" paginate-target="msaccoApplication"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        <actions>
+<!--         <actions>
 
             <entity-condition entity-name="MSaccoApplication">
-            	<order-by field-name="-msaccoApplicationId"/>
+              <order-by field-name="-msaccoApplicationId"/>
             </entity-condition>
-        </actions>
-               <field name="msaccoApplicationId"><hidden/></field>
+        </actions> -->
+              <actions>
+        <service service-name="performFind" result-map="result" result-map-list="listIt">
+        <field-map field-name="inputFields" from-field="parameters"/>
+        <field-map field-name="entityName" value="MSaccoApplication"/>
+        <field-map field-name="viewIndex" from-field="viewIndex"/>
+        <field-map field-name="orderBy" value="-createdStamp"/>
+        <field-map field-name="viewSize" from-field="viewSize"/>
+        </service>
+      </actions>
+             <field name="msaccoApplicationId"><hidden/></field>
         <field name="partyId" title="Member">
-        	<!--drop-down>
-        		< entity-options description="${firstName} ${middleName} ${lastName}" entity-name="Member">
-        			<entity-constraint name="partyId" operator="equals" value="${partyId}"/>
-        		</entity-options>
+          <!--drop-down>
+            < entity-options description="${firstName} ${middleName} ${lastName}" entity-name="Member">
+              <entity-constraint name="partyId" operator="equals" value="${partyId}"/>
+            </entity-options>
 
-        	</drop-down  -->
-        	<display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName}">
+          </drop-down  -->
+          <display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName}">
 
-        	</display-entity>
+          </display-entity>
         </field>
 
         <field name="mobilePhoneNumber" title="Mobile Phone No." widget-style="required" required-field="true">
         <display></display>
         </field>
 
-       	<field name="formNumber" title="Form No." widget-style="required" required-field="true">
-       	<display></display>
+        <field name="formNumber" title="Form No." widget-style="required" required-field="true">
+        <display></display>
 
-       	</field>
+        </field>
 
-       	<field name="cardStatusId" title="Status">
-      		<!-- drop-down>
-      			<entity-options description="${name}" entity-name="CardStatus" key-field-name="cardStatusId"></entity-options>
-      		</drop-down -->
-      		<display-entity entity-name="CardStatus"  description="${name}"></display-entity>
-      	</field>
+        <field name="cardStatusId" title="Status">
+          <!-- drop-down>
+            <entity-options description="${name}" entity-name="CardStatus" key-field-name="cardStatusId"></entity-options>
+          </drop-down -->
+          <display-entity entity-name="CardStatus"  description="${name}"></display-entity>
+        </field>
 
-		<!-- field name="formNo" title="Form Number"  widget-style="required" required-field="true"><text></text></field -->
-		<field name="createdStamp" title="Time Created">
-			<display></display>
-		</field>
+    <!-- field name="formNo" title="Form Number"  widget-style="required" required-field="true"><text></text></field -->
+    <field name="createdStamp" title="Time Created">
+      <display></display>
+    </field>
 
-		 <field name="createdBy" title="Created By">
-			<display></display>
-		</field>
+     <field name="createdBy" title="Created By">
+      <display></display>
+    </field>
 
 
 
     <field name="memberAccountId" title="Member Account"  widget-style="required" required-field="true">
       <!-- drop-down allow-empty="true">
           <entity-options description="${accountNo} - ${accountName}" entity-name="MemberAccount" key-field-name="memberAccountId">
-          	<entity-constraint name="partyId" operator="equals" value="${partyId}"/>
+            <entity-constraint name="partyId" operator="equals" value="${partyId}"/>
           </entity-options>
       </drop-down -->
       <display-entity entity-name="MemberAccount" description="${accountNo} - ${accountName}"></display-entity>
@@ -205,6 +211,61 @@
 
 
         <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+
+    </form>
+    <form name="listMSaccoApplications" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMSaccoApplication" paginate-target="msaccoApplication"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+
+      <actions>
+        <service service-name="performFind" result-map="result" result-map-list="listIt">
+        <field-map field-name="inputFields" from-field="parameters"/>
+        <field-map field-name="entityName" value="mSaccoApplication"/>
+        <field-map field-name="viewIndex" from-field="viewIndex"/>
+        <field-map field-name="orderBy" value="-createdStamp"/>
+        <field-map field-name="viewSize" from-field="viewSize"/>
+        </service>
+      </actions>
+        <field name="msaccoApplicationId"><hidden/></field>
+        <field name="partyId" title="Member">
+        	<display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName}">
+        	</display-entity>
+        </field>
+
+        <field name="mobilePhoneNumber" title="Mobile Phone No." widget-style="required" required-field="true">
+          <display></display>
+        </field>
+
+       	<field name="formNumber" title="Form No." widget-style="required" required-field="true">
+       	  <display></display>
+       	</field>
+
+       	<field name="cardStatusId" title="Status">
+      		<display-entity entity-name="CardStatus"  description="${name}"></display-entity>
+      	</field>
+
+    		<field name="createdStamp" title="Time Created">
+    			<display></display>
+    		</field>
+
+  		 <field name="createdBy" title="Created By">
+  			<display></display>
+  		</field>
+
+    <field name="memberAccountId" title="Member Account"  widget-style="required" required-field="true">
+      <display-entity entity-name="MemberAccount" description="${accountNo} - ${accountName}"></display-entity>
+    </field>
+
+    <field name="resendMsaccoPin" title="Resend Pin" widget-style="buttontext">
+      <hyperlink target="resendMsaccoPin" description="Resend Pin" also-hidden="false">
+        <parameter param-name="msaccoApplicationId" />
+      </hyperlink>
+    </field>
+
+    <field name="msaccoLogs" title="Logs" widget-style="buttontext">
+      <hyperlink target="msaccoLogs" description="M-Sacco Logs" also-hidden="false">
+        <parameter param-name="msaccoApplicationId" />
+      </hyperlink>
+    </field>
 
     </form>
 
@@ -253,6 +314,31 @@
       	<field name="mobilePhoneNumber" title="Mobile Phone"><text-find></text-find></field>
         <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
     </form>
+
+
+
+<!--    <form name="FindMSaccoApplications" target="msaccoApplication" title="" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+        <auto-fields-entity entity-name="MSaccoApplication" default-field-type="find"/>
+        <field name="noConditionFind"><hidden value="Y"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form> -->
+
+      <form name="FindMSaccoApplications" type="single" target="msaccoApplication" header-row-style="header-row" default-table-style="basic-table">
+
+
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+
+        <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
+        <field name="cardStatusId" title="Status">
+          <drop-down allow-empty="true">
+            <entity-options description="${name}" entity-name="CardStatus" key-field-name="cardStatusId"></entity-options>
+          </drop-down>
+        </field>
+        <field name="mobilePhoneNumber" title="Mobile Phone"><text-find></text-find></field>
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
+    </form>
+
 
     <!-- listMSaccoApplicationForActioning -->
         <form name="listMSaccoApplicationForActioning" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateMSaccoApplication" paginate-target="msaccoApproval"
