@@ -8,7 +8,7 @@
                 <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
             </actions>
             <widgets>
-            	
+
                 <decorator-screen name="msaccomanagementCommonDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                     </decorator-section>
@@ -16,7 +16,7 @@
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="FindMember">
         <section>
             <actions>
@@ -29,7 +29,7 @@
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                	
+
                     <decorator-section name="body">
                     	 <include-menu location="component://msaccomanagement/widget/msaccomanagementMenus.xml" name="MSaccoTabBar"/>
                         <section>
@@ -57,7 +57,7 @@
             </widgets>
         </section>
     </screen>
-    
+
     <screen name="msaccoApplication">
 		<section>
 			<actions>
@@ -65,36 +65,25 @@
 				<set field="tabButtonItem" value="msaccoApplication" />
 				<set field="headerItem" value="msaccoApplication"/>
 				<set field="labelTitleProperty" value="MSacco Application" />
-				<set field="cancelPage" from-field="parameters.CANCEL_PAGE"
-					default-value="MSaccoApplication" />
+				<set field="cancelPage" from-field="parameters.CANCEL_PAGE" default-value="MSaccoApplication" />
 				<set field="createUserLoginURI" value="ProfileCreateUserLogin" />
-				
-				
 				<set field="statusName" value="NEW"/>
-	   			<set field="cardStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getCardStatusId(statusName);}" type="Long" global="true"/>
-
+	   		<set field="cardStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getCardStatusId(statusName);}" type="Long" global="true"/>
 			</actions>
 			<widgets>
-				<decorator-screen name="main-decorator"
-					location="${parameters.mainDecoratorLocation}">
+				<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
 					<decorator-section name="body">
 						<section>
 							<widgets>
-								<!-- screenlet>
-									<label style="h3">${member.firstName} ${member.middleName} ${member.lastName}
-								</label>
-								</screenlet -->
 								<screenlet title="MSacco Application">
-									<include-form name="NewMSaccoApplication"
-										location="component://msaccomanagement/widget/msaccomanagementForms.xml" />
+									<include-form name="NewMSaccoApplication" location="component://msaccomanagement/widget/msaccomanagementForms.xml" />
 								</screenlet>
 							</widgets>
 						</section>
 						<section name="search-results">
 							<widgets>
 								<screenlet title="MSacco Application List">
-									<include-form name="listMSaccoApplication"
-										location="component://msaccomanagement/widget/msaccomanagementForms.xml" />
+									<include-form name="listMSaccoApplication" location="component://msaccomanagement/widget/msaccomanagementForms.xml" />
 								</screenlet>
 							</widgets>
 						</section>
@@ -104,7 +93,7 @@
 			</widgets>
 		</section>
 	</screen>
-	
+
 	<!-- msaccoLogs -->
 	    <screen name="msaccoLogs">
 		<section>
@@ -118,10 +107,10 @@
 				<set field="createUserLoginURI" value="ProfileCreateUserLogin" />
 				<set field="msaccoApplicationId" from-field="parameters.msaccoApplicationId"/>
 				<entity-one value-field="msaccoApplication" entity-name="MSaccoApplication"></entity-one>
-				
+
 				<set field="partyId" value="${msaccoApplication.partyId}"/>
 				<entity-one value-field="member" entity-name="Member"></entity-one>
-				
+
 				<set field="memberAccountId" value="${msaccoApplication.memberAccountId}"/>
 				<entity-one value-field="memberAccount" entity-name="MemberAccount"></entity-one>
 			</actions>
@@ -138,23 +127,23 @@
 								<screenlet>
 									<label style="h3">Phone No: ${msaccoApplication.mobilePhoneNumber}</label>
 								</screenlet>
-								
-								
+
+
 								<container>
 										<image src="${member.photourl}" url-mode="content" alt="Member Photo" style="cssImgStandard" />
 										<label>Photo</label>
-										<image src="${member.idfronturl}" url-mode="content" alt="ID Front" style="cssImgStandard" />	
+										<image src="${member.idfronturl}" url-mode="content" alt="ID Front" style="cssImgStandard" />
 										<label>ID Front</label>
 										<image src="${member.idbackurl}" url-mode="content" alt="ID Back" style="cssImgStandard" />
 										<label>ID Back</label>
 										<image src="${member.signatureurl}" url-mode="content" alt="Signatur" style="cssImgStandard" />
 										<label>Signature</label>
 									</container>
-								
+
 								<screenlet>
 									<label style="h3">Account No. : ${memberAccount.accountNo} - ${memberAccount.accountName}</label>
 								</screenlet>
-								
+
 								<screenlet title="MSacco Application Logs">
 									<include-form name="listMSaccoLog"
 										location="component://msaccomanagement/widget/msaccomanagementForms.xml" />
@@ -167,7 +156,7 @@
 			</widgets>
 		</section>
 	</screen>
-	
+
 	<!-- msaccoApproval -->
 	    <screen name="msaccoApproval">
 		<section>
@@ -180,7 +169,7 @@
 					default-value="MSaccoApplication" />
 				<set field="createUserLoginURI" value="ProfileCreateUserLogin" />
 				<set field="msaccoApplicationCtx" from-field="parameters"/>
-				
+
 			</actions>
 			<widgets>
 				<decorator-screen name="main-decorator"
@@ -204,7 +193,7 @@
 									<include-form name="FindMSacco"
 										location="component://msaccomanagement/widget/msaccomanagementForms.xml" />
 								</screenlet>
-								
+
 								<screenlet title="MSacco List">
 									<include-form name="listMSaccoApplicationForActioning"
 										location="component://msaccomanagement/widget/msaccomanagementForms.xml" />
@@ -217,7 +206,7 @@
 			</widgets>
 		</section>
 	</screen>
-	
+
 	<!-- msaccoActivate -->
 		    <screen name="msaccoActivate">
 		<section>
@@ -249,12 +238,12 @@
 						</section>
 						<section name="search-results">
 							<widgets>
-							
+
 								<screenlet title="Find MSacco">
 									<include-form name="FindMSaccoActivate"
 										location="component://msaccomanagement/widget/msaccomanagementForms.xml" />
 								</screenlet>
-								
+
 								<screenlet title="MSacco List">
 									<include-form name="listMSaccoApplicationActivation"
 										location="component://msaccomanagement/widget/msaccomanagementForms.xml" />
@@ -314,7 +303,7 @@
 			</widgets>
 		</section>
 	</screen>
-	
+
 	<!-- msaccoApproveAction  -->
 	    <screen name="msaccoApproveAction">
         <section>
@@ -327,7 +316,7 @@
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
-                
+
                 <entity-one entity-name="MSaccoLog" value-field="msaccoLogContext"/>
                 <entity-one entity-name="MSaccoApplication" value-field="msaccoApplication">
                 	<field-map field-name="msaccoApplicationId" from-field="parameters.msaccoApplicationId"/>
@@ -348,21 +337,21 @@
                             <widgets>
                             	<container>
                                	<container>
-                               			
-                               			
+
+
 										<label style="h3">${member.firstName} ${member.middleName} ${member.lastName} M-Sacco Logs
 										</label>
 									</container>
-									
+
 									<container>
 										<label style="h3">Mobile Number : ${msaccoApplication.mobilePhoneNumber}
 										</label>
 									</container>
-									
+
 									<container>
 										<image src="${member.photourl}" url-mode="content" alt="Member Photo" style="cssImgStandard" />
 										<label>Photo</label>
-										<image src="${member.idfronturl}" url-mode="content" alt="ID Front" style="cssImgStandard" />	
+										<image src="${member.idfronturl}" url-mode="content" alt="ID Front" style="cssImgStandard" />
 										<label>ID Front</label>
 										<image src="${member.idbackurl}" url-mode="content" alt="ID Back" style="cssImgStandard" />
 										<label>ID Back</label>
@@ -373,11 +362,11 @@
                                 <screenlet title="Approve MSacco">
                                     <include-form name="ApproveMSaccoLog" location="component://msaccomanagement/widget/msaccomanagementForms.xml"/>
                                 </screenlet>
-                               
+
                             </widgets>
-                            
+
                         </section>
-                        
+
                         <section name="search-results">
                         	<widgets>
                         		<screenlet title="MSacco Logs">
@@ -390,7 +379,7 @@
             </widgets>
         </section>
     </screen>
-	
+
 	<!-- msaccoActivateAction  -->
 	    <screen name="msaccoActivateAction">
         <section>
@@ -403,7 +392,7 @@
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
-                
+
                 <entity-one entity-name="MSaccoLog" value-field="msaccoLogContext"/>
                 <entity-one entity-name="MSaccoApplication" value-field="msaccoApplication">
                 	<field-map field-name="msaccoApplicationId" from-field="parameters.msaccoApplicationId"/>
@@ -424,8 +413,8 @@
                             <widgets>
                             	<container>
                                	<container>
-                               			
-                               			
+
+
 										<label style="h3">${member.firstName} ${member.middleName} ${member.lastName} M-Sacco Logs
 										</label>
 									</container>
@@ -433,12 +422,12 @@
 										<label style="h3">Mobile Number : ${msaccoApplication.mobilePhoneNumber}
 										</label>
 									</container>
-									
-									
+
+
 									<container>
 										<image src="${member.photourl}" url-mode="content" alt="Member Photo" style="cssImgStandard" />
 										<label>Photo</label>
-										<image src="${member.idfronturl}" url-mode="content" alt="ID Front" style="cssImgStandard" />	
+										<image src="${member.idfronturl}" url-mode="content" alt="ID Front" style="cssImgStandard" />
 										<label>ID Front</label>
 										<image src="${member.idbackurl}" url-mode="content" alt="ID Back" style="cssImgStandard" />
 										<label>ID Back</label>
@@ -449,11 +438,11 @@
                                 <screenlet title="Activate MSacco">
                                     <include-form name="ActivateMSaccoLog" location="component://msaccomanagement/widget/msaccomanagementForms.xml"/>
                                 </screenlet>
-                               
+
                             </widgets>
-                            
+
                         </section>
-                        
+
                         <section name="search-results">
                         	<widgets>
                         		<screenlet title="MSacco Logs">
@@ -478,7 +467,7 @@
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
-                
+
                 <entity-one entity-name="MSaccoLog" value-field="msaccoLogContext"/>
                 <entity-one entity-name="MSaccoApplication" value-field="msaccoApplication">
                 	<field-map field-name="msaccoApplicationId" from-field="parameters.msaccoApplicationId"/>
@@ -499,8 +488,8 @@
                             <widgets>
                             	<container>
                                	<container>
-                               			
-                               			
+
+
 										<label style="h3">${member.firstName} ${member.middleName} ${member.lastName} M-Sacco Logs
 										</label>
 									</container>
@@ -508,11 +497,11 @@
 										<label style="h3">Mobile Number : ${msaccoApplication.mobilePhoneNumber}
 										</label>
 									</container>
-									
+
 									<container>
 										<image src="${member.photourl}" url-mode="content" alt="Member Photo" style="cssImgStandard" />
 										<label>Photo</label>
-										<image src="${member.idfronturl}" url-mode="content" alt="ID Front" style="cssImgStandard" />	
+										<image src="${member.idfronturl}" url-mode="content" alt="ID Front" style="cssImgStandard" />
 										<label>ID Front</label>
 										<image src="${member.idbackurl}" url-mode="content" alt="ID Back" style="cssImgStandard" />
 										<label>ID Back</label>
@@ -523,11 +512,11 @@
                                 <screenlet title="Activate MSacco">
                                     <include-form name="CancelMSaccoLog" location="component://msaccomanagement/widget/msaccomanagementForms.xml"/>
                                 </screenlet>
-                               
+
                             </widgets>
-                            
+
                         </section>
-                        
+
                         <section name="search-results">
                         	<widgets>
                         		<screenlet title="MSacco Logs">
@@ -540,7 +529,7 @@
             </widgets>
         </section>
     </screen>
-    
+
     <!-- msaccoLimit -->
         <screen name="msaccoLimit">
         <section>
@@ -553,9 +542,9 @@
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
                 <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
-                
+
                 <entity-one entity-name="MSaccoLimit" value-field="msaccoLimitContext"/>
-                
+
             </actions>
             <widgets>
                 <decorator-screen name="msaccomanagementCommonDecorator" location="${parameters.mainDecoratorLocation}">
@@ -568,10 +557,10 @@
                                 <screenlet title="MSacco Limit">
                                     <include-form name="NewMSaccoLimit" location="component://msaccomanagement/widget/msaccomanagementForms.xml"/>
                                 </screenlet>
-                               
+
                             </widgets>
                         </section>
-                        
+
                         <section name="search-results">
                         	<widgets>
                         		<screenlet title="Limt">

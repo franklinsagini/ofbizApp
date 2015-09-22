@@ -3693,8 +3693,8 @@ public class AccHolderTransactionServices {
 								
 								
 					   EntityCondition
-									.makeCondition("reverseStatus",
-											EntityOperator.NOT_EQUAL, "REVERSED"),
+									.makeCondition("transactionType",
+											EntityOperator.NOT_LIKE, "revers"),
 						EntityCondition.makeCondition("createdStamp",
 								EntityOperator.GREATER_THAN_EQUAL_TO,
 								startdDate),
