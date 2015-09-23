@@ -22,6 +22,7 @@ expr = exprBldr.AND() {
 			
 			LESS_THAN_EQUAL_TO(appointmentdate: appointmentdateP)
 			EQUALS(employmentStatusEnumId : "15")
+			EQUALS(isSeparated: "N")
 		}
 		
 		
