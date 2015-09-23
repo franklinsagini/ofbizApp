@@ -269,6 +269,8 @@ public class GeneralLedgerServices {
 				}
 			}
 
+		}else if(acctgTransEntry.getString("glAccountTypeId")==null && acctgTrans.getString("description")!=null){
+			sb.append(acctgTrans.getString("description"));
 		}
 		
 		if(sb.length()<1){

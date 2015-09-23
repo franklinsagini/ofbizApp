@@ -1456,6 +1456,7 @@ public class FinAccountServices {
 			confirmedPayment.put("amount", multiplePaymentHeader.getBigDecimal("amount"));
 			confirmedPayment.put("comments", multiplePaymentHeader.getString("comments"));
 			confirmedPayment.put("currencyUomId", multiplePaymentHeader.getString("currencyUomId"));
+			confirmedPayment.put("paymentRefNum", multiplePaymentHeader.getString("paymentRefNum"));
 
 			try {
 				confirmedPayment.create();
