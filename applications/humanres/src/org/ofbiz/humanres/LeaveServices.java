@@ -2230,6 +2230,224 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 	}
 	
 	
+	public static BigDecimal  calculateLeaveBalancesAsAtCertainDate(Date asFromDate){
+		  Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		  List<GenericValue> leaveBalanceELI = null;
+		  BigDecimal availableBal = BigDecimal.ZERO;
+		  BigDecimal accruedBal = BigDecimal.ZERO;
+		  BigDecimal takenLeaves= BigDecimal.ZERO;
+		  BigDecimal forwarded= BigDecimal.ZERO;
+		
+		 //get Year of the As From date
+		  LocalDateTime thatDay = new LocalDateTime(asFromDate);
+		  int theYear = thatDay.getYear();
+		  int theMonth  = thatDay.getMonthOfYear();
+		  log.info("######### AS FROM YEAR#####>>>>#### "+theYear);
+		  log.info("######### AS FROM MONTH MONTH#####>>>>#### "+theMonth); 
+		   
+		  Date today = new Date();
+		  LocalDateTime localDateToday = new LocalDateTime(today);
+		 
+		  int thisYear = localDateToday.getYear();
+		  int thisMonth = localDateToday.getMonthOfYear();
+		
+		  log.info("######## THIS YEAR #####>>>>> "+thisYear);
+
+		  try{
+		        leaveBalanceELI = delegator.findList("LeavesBalanceView", null, null, null, null, false);
+		  }catch(GenericEntityException ex){
+			ex.printStackTrace();
+		  }
+		     for(GenericValue genericValue:leaveBalanceELI ){
+		      	availableBal = genericValue.getBigDecimal("availableLeaveDays");
+		      	accruedBal= genericValue.getBigDecimal("annualaccruedDays");
+		      	takenLeaves = genericValue.getBigDecimal("annualUsedLeaveDays");
+		      	forwarded = genericValue.getBigDecimal("annualCarriedOverDays");
+		     }
+		
+		     
+		return availableBal;
+	
+	}
+	
+	//get accrued Leaved As at certain Date
+	
+	public static BigDecimal getAccruedLeavesAtThisdate(Date thisDate , String partyId){
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String appointmentDateOfEmp = null;
+		LocalDateTime accrueStart  = null;
+		// find appointment date 
+		GenericValue EmpAppintmentDateELI = null;
+		
+		LocalDateTime stCurrentDate = new LocalDateTime(Calendar.getInstance().getTimeInMillis());
+		LocalDateTime firstDayOfYear = stCurrentDate.dayOfYear().withMinimumValue();
+		LocalDateTime thatDay = new LocalDateTime(thisDate);
+		 
+		if(thatDay.isAfter(stCurrentDate)){
+			
+			thatDay = stCurrentDate;
+			
+		}
+		
+		
+		try{
+			EmpAppintmentDateELI = delegator.findOne("Person",UtilMisc.toMap("partyId", partyId), false);
+		   }catch(GenericEntityException ex){
+			ex.printStackTrace();
+		         }
+		         if(EmpAppintmentDateELI.size() > 0 ){
+			         appointmentDateOfEmp = EmpAppintmentDateELI.getString("appointmentdate");
+		          }
+					LocalDateTime theAppointmentDate = new LocalDateTime(appointmentDateOfEmp);
+					
+					
+					if(theAppointmentDate.isAfter(firstDayOfYear)){
+						    accrueStart = theAppointmentDate;
+					 }else{
+						    accrueStart = firstDayOfYear ;
+					 }
+		
+		BigDecimal accrualRate = BigDecimal.ZERO;
+		
+		PeriodType monthDay = PeriodType.months();
+		
+		log.info(" ######## FIRST DAY ########## "+firstDayOfYear.toDate());
+		
+		Period difference = new Period(accrueStart, thatDay, monthDay);
+			int months = difference.getMonths();
+		
+	    GenericValue employeeLeaveType = null;
+			
+	     try {
+		       employeeLeaveType = delegator.findOne("EmplLeaveType",UtilMisc.toMap("leaveTypeId", "ANNUAL_LEAVE"), false);
+		 } catch (GenericEntityException e) {
+				e.printStackTrace();
+		 }
+		 if (accrualRate != null) {
+			   accrualRate = employeeLeaveType.getBigDecimal("accrualRate");
+		}else {
+			   System.out.println("######## Accrual Rate not found #### ");
+		}
+		 
+		 BigDecimal accruedLeaveDays = accrualRate.multiply(new BigDecimal(months));
+		   
+		        if(accruedLeaveDays.compareTo(BigDecimal.ZERO) < 0 ){
+		        	accruedLeaveDays = BigDecimal.ZERO;
+		        }else{
+		        	accruedLeaveDays = accrualRate.multiply(new BigDecimal(months));
+		        }
+		        
+		 return accruedLeaveDays;
+		
+	}
 	
 	
-}
+	public static BigDecimal getTotalUsedDays(Date asThisDate, String PartyId ){
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);  
+		List<GenericValue> getApprovedLeaveSumLeaveELI = null;	
+		Timestamp now = UtilDateTime.nowTimestamp();
+		String financialYear = LeaveServices.getCurrentYear(now);
+		
+		EntityConditionList<EntityExpr> leaveConditionsEmp = EntityCondition
+				.makeCondition(UtilMisc.toList(
+					EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, PartyId),
+					EntityCondition.makeCondition("financialYear",EntityOperator.EQUALS, financialYear),
+					EntityCondition.makeCondition("fromDate",EntityOperator.LESS_THAN_EQUAL_TO, asThisDate),
+					EntityCondition.makeCondition("isDeductedFromAnnual",EntityOperator.EQUALS, "Y"),
+					EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "Approved")),
+					EntityOperator.AND);
+		try {
+			getApprovedLeaveSumLeaveELI = delegator.findList("EmplLeave", leaveConditionsEmp, null, null, null, false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+	    BigDecimal approvedLeaveSum = BigDecimal.ZERO;
+	    BigDecimal usedD =  empAnnualLeaveUsed(PartyId); 
+	    
+	    log.info("################ ANNUAL USED##### #############"+usedD );
+	    
+	    
+		for (GenericValue genericValue : getApprovedLeaveSumLeaveELI) {
+			
+			approvedLeaveSum = approvedLeaveSum.add(genericValue.getBigDecimal("leaveDuration"));
+			
+			log.info("###### APPROVED SUM INS#############"+approvedLeaveSum );
+		}
+		
+		BigDecimal totalPlusUsed = approvedLeaveSum.add(usedD);
+		
+		log.info("################ APPROVED SUM OUTS##### #############"+approvedLeaveSum );
+		log.info("################ TOTAL USED##### #############"+totalPlusUsed );
+		return totalPlusUsed;
+		
+	}
+
+	
+	//get forwareded Leaves of an Employee
+	
+	public static BigDecimal getForwardedLeaves(String partyId){
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		GenericValue forwardedLeaveEmpELI = null;
+       
+		try{
+			forwardedLeaveEmpELI = delegator.findOne("LeavesBalanceView",UtilMisc.toMap("partyId",partyId), false);
+		}catch(GenericEntityException e){
+			e.printStackTrace();
+		}
+		
+		BigDecimal empForwardedLeave = BigDecimal.ZERO;
+		
+		if(forwardedLeaveEmpELI.size() > 0){
+			empForwardedLeave = forwardedLeaveEmpELI.getBigDecimal("LeaveDaysCarriedOver");
+		}
+		
+		return empForwardedLeave;
+		
+	}
+	
+	public static BigDecimal totalLeaveDays(BigDecimal forwarded, BigDecimal acrrued){
+		
+		BigDecimal total = BigDecimal.ZERO;
+		try{
+			
+		     total = forwarded.add(acrrued);
+		
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		log.info("############ TOTAL LEAVE DAYS ########"+total);
+		return total;
+		
+	}
+	
+ public static BigDecimal balanceLeave(BigDecimal total, BigDecimal usedDays){
+	 BigDecimal lBalance = BigDecimal.ZERO;
+	 try{
+		 lBalance = total.subtract(usedDays);
+	 }catch(Exception e){
+		 e.printStackTrace();
+	 }
+	 log.info("############ Leave Balance ########"+lBalance);
+	 return lBalance;
+  
+ }	
+	
+ public static BigDecimal empAnnualLeaveUsed(String partyId){
+	 Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+	 GenericValue annualUsedELI = null;
+	 try{
+		 annualUsedELI = delegator.findOne("EmplLeaveOpeningBalance",UtilMisc.toMap("partyId",partyId), false);
+	 }catch(Exception e){
+		 e.printStackTrace();
+	 }
+	 BigDecimal annualUsedDays = BigDecimal.ZERO;
+	 if(annualUsedELI.size() > 0){
+		 annualUsedDays = annualUsedELI.getBigDecimal("annualLeaveDaysUsed");
+	 }
+	 
+	 return annualUsedDays;
+ }
+ 
+   }  // close  Class 
