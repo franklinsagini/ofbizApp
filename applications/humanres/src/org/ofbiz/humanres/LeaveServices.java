@@ -2363,7 +2363,11 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		}
 		
 	    BigDecimal approvedLeaveSum = BigDecimal.ZERO;
-	
+	    BigDecimal usedD =  empAnnualLeaveUsed(PartyId); 
+	    
+	    log.info("################ ANNUAL USED##### #############"+usedD );
+	    
+	    
 		for (GenericValue genericValue : getApprovedLeaveSumLeaveELI) {
 			
 			approvedLeaveSum = approvedLeaveSum.add(genericValue.getBigDecimal("leaveDuration"));
@@ -2371,9 +2375,11 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 			log.info("###### APPROVED SUM INS#############"+approvedLeaveSum );
 		}
 		
-		log.info("################ APPROVED SUM OUTS##### #############"+approvedLeaveSum );
+		BigDecimal totalPlusUsed = approvedLeaveSum.add(usedD);
 		
-		return approvedLeaveSum;
+		log.info("################ APPROVED SUM OUTS##### #############"+approvedLeaveSum );
+		log.info("################ TOTAL USED##### #############"+totalPlusUsed );
+		return totalPlusUsed;
 		
 	}
 
@@ -2428,4 +2434,20 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
   
  }	
 	
+ public static BigDecimal empAnnualLeaveUsed(String partyId){
+	 Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+	 GenericValue annualUsedELI = null;
+	 try{
+		 annualUsedELI = delegator.findOne("EmplLeaveOpeningBalance",UtilMisc.toMap("partyId",partyId), false);
+	 }catch(Exception e){
+		 e.printStackTrace();
+	 }
+	 BigDecimal annualUsedDays = BigDecimal.ZERO;
+	 if(annualUsedELI.size() > 0){
+		 annualUsedDays = annualUsedELI.getBigDecimal("annualLeaveDaysUsed");
+	 }
+	 
+	 return annualUsedDays;
+ }
+ 
    }  // close  Class 
