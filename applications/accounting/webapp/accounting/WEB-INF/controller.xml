@@ -2544,6 +2544,14 @@ under the License.
         </response>
         <response name="error" type="view" value="UnidentifiedUnpresented"/>
     </request-map>
+    <request-map uri="deleteUnidentifiedUnpresented">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteUnidentifiedUnpresented"/>
+        <response name="success" type="request-redirect" value="UnidentifiedUnpresented" >
+            <redirect-parameter name="headerId"/>
+        </response>
+        <response name="error" type="view" value="UnidentifiedUnpresented"/>
+    </request-map>
     <request-map uri="reconcileBankTrans">
         <security https="true" auth="true" />
         <event type="service-multi" invoke="reconcileBankTrans" />
@@ -3315,6 +3323,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="TrialBalanceSearchResultsCsv"/>
     </request-map>
+    <request-map uri="NewTrialBalanceSearchResultsCsv.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewTrialBalanceSearchResultsCsv"/>
+    </request-map>
     <request-map uri="FindGlAccountReconciliations.csv">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindGlAccountReconciliationsCSV"/>
@@ -3855,6 +3867,7 @@ under the License.
     <view-map name="TrialBalanceSummary" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TrialBalanceSummary"/>
     <view-map name="TrialBalanceSearchResultsPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TrialBalanceSearchResultsPdf" content-type="application/pdf" encoding="none"/>
     <view-map name="TrialBalanceSearchResultsCsv" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#TrialBalanceSearchResultsCsv" content-type="text/csv" encoding="none"/>
+    <view-map name="NewTrialBalanceSearchResultsCsv" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#NewTrialBalanceSearchResultsCsv" content-type="text/csv" encoding="none"/>
     <view-map name="FindGlAccountReconciliationsCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#FindGlAccountReconciliationsCSV" content-type="text/csv" encoding="none"/>
     <view-map name="RetriveTransactionEntriesCSV" type="screencsv" page="component://accounting/widget/GlScreens.xml#RetriveTransactionEntriesCSV" content-type="text/csv" encoding="none"/>
     <view-map name="ExportBankTransCSV" type="screencsv" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#ExportBankTransCSV" content-type="text/csv" encoding="none"/>
