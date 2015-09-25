@@ -26,7 +26,8 @@
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="createStationMonthInterestManagement" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				
+				<set field="stationMonthInterestManagementCtx" from-field="parameters"/>
++       <entity-one entity-name="StationMonthInterestManagement" value-field="stationMonthInterestManagement" />
 				<property-to-field field="defaultCountryGeoId"
 					resource="general" property="KEN" default="KEN" />
 			</actions>
@@ -43,9 +44,16 @@
 								</screenlet>
 							</widgets>
 						</section>
+						<section>
+							<widgets>
+								<screenlet title="Search For Charged Interest">
+									<include-form name="SearchStationMonthInterestManagement" location="component://chargeinterest/widget/ChargeInterestForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
 						<section name="search-results">
 							<widgets>
-								<!-- screenlet> <include-form name="FindLoansForwarded" location="component://loansprocessing/widget/loansprocessingForms.xml"/> 
+								<!-- screenlet> <include-form name="FindLoansForwarded" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
 									</screenlet -->
 								<screenlet title="Charge Interest List">
 									<include-form name="stationInterestManagement"
@@ -60,7 +68,7 @@
 			</widgets>
 		</section>
 	</screen>
-	
+
 	<!-- showInterestGenerated -->
 	<screen name="showInterestGenerated">
 		<section>
@@ -78,7 +86,7 @@
 				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
 
 				<!-- entity-one entity-name="AccountHolderTransactionSetup" value-field="accountHolderTransactionSetupContext"/ -->
-				
+
 				<entity-one value-field="stationMonthInterestManagement" entity-name="StationMonthInterestManagement">
 					<field-map field-name="stationMonthInterestManagementId" from-field="stationMonthInterestManagementId"/>
 				</entity-one>
@@ -98,7 +106,7 @@
 												<label style="h3">Interest Charged for ${stationMonthInterestManagement.employerName}
 													for ${stationMonthInterestManagement.month}/${interestYear} </label>
 
-												
+
 											</container>
 
 								<screenlet title="Charged Interest/Insurance">
@@ -117,25 +125,25 @@
 							</fail-widgets>
 						</section>
 
-						
+
 					</decorator-section>
 				</decorator-screen>
 			</widgets>
 		</section>
 	</screen>
-	
-	
+
+
 	<!-- Charge Interest Overrall -->
 		<screen name="chargeInterestAllStations">
 		<section>
 			<actions>
 				<set field="titleProperty" value="Charge All Stations" />
 				<set field="headerItem" value="chargeInterestAllStations" />
-				
+
 				<set field="displayPassword" value="Y" />
 				<set field="target" value="chargeInterestAllStations" />
 				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
-				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+				<!-- property-to-field field="defaultCountryGeoId" resource="general"
 					property="KEN" default="KEN"/ -->
 				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
 			</actions>
@@ -147,9 +155,9 @@
 					<decorator-section name="body">
 						<!-- FULL -->
 						<section>
-						
+
 							<widgets>
-								
+
 								<screenlet>
 									<section>
 										<condition>
@@ -171,7 +179,7 @@
 											<container style="button-bar">
 												<label style="h3">Not allowed to charge interest</label>
 
-												
+
 											</container>
 										</fail-widgets>
 									</section>
@@ -179,7 +187,7 @@
 
 							</widgets>
 						</section>
-						
+
 					</decorator-section>
 				</decorator-screen>
 			</widgets>
