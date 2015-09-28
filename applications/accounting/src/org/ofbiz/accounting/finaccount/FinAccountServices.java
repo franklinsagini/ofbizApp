@@ -430,7 +430,7 @@ public class FinAccountServices {
 		BigDecimal accountBalance = BigDecimal.ZERO;
 		List<GenericValue> acctgTransEntry = null;
 		EntityConditionList<EntityExpr> acctgTransEntrySumsCond = EntityCondition.makeCondition(UtilMisc.toList(
-				EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, organizationPartyId),
+				
 				EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, glAccountId),
 				EntityCondition.makeCondition("debitCreditFlag", EntityOperator.EQUALS, debitCreditFlag),
 				EntityCondition.makeCondition("createdStamp", EntityOperator.LESS_THAN_EQUAL_TO, reconDate),
