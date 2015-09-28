@@ -330,7 +330,6 @@ public class FinAccountServices {
 								
 				GenericValue bankReconLines = delegator.makeValue("BankReconLines");
 				String reconLineId = delegator.getNextSeqId("BankReconLines");
-				// get total unpresented cheques withdrawals
 				if (transaction.getString("finAccountTransTypeId").equals("WITHDRAWAL")) {
 					System.out.println("############################# WE ARE INSIDE " + transaction.getString("finAccountTransTypeId"));
 					bankReconLines.put("isUnpresentedCheques", "Y");
@@ -375,6 +374,33 @@ public class FinAccountServices {
 
 				try {
 					bankReconLines.create();
+					//Move with any UD or UB. USE FLAG IS ADDED MANUALLY
+					
+					EntityConditionList<EntityExpr> moveConditions = EntityCondition.makeCondition(UtilMisc.toList(
+							EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, null)
+							), EntityOperator.AND);
+					List<GenericValue>moveLines = delegator.findList("BankReconLines", moveConditions, null, null, null, false);
+					
+					if (moveLines!=null) {
+						for (GenericValue moveLine : moveLines) {
+							GenericValue bankMoveReconLine = delegator.makeValue("BankReconLines");
+							String moveLineReconLineId = delegator.getNextSeqId("BankReconLines");
+							bankMoveReconLine.put("isUnpresentedCheques", moveLine.getString("isUnpresentedCheques"));
+							bankMoveReconLine.put("isUncreditedBankings", moveLine.getString("isUncreditedBankings"));
+							bankMoveReconLine.put("isUnidentifiedDebits", moveLine.getString("isUnidentifiedDebits"));
+							bankMoveReconLine.put("isUnreceiptedBankings", moveLine.getString("isUnreceiptedBankings"));
+							bankMoveReconLine.put("reconLineId", moveLineReconLineId);
+							bankMoveReconLine.put("headerId", headerId);
+							bankMoveReconLine.put("finAccountTransId", moveLine.getString("finAccountTransId"));
+							bankMoveReconLine.put("finAccountTransTypeId", moveLine.getString("finAccountTransTypeId"));
+							bankMoveReconLine.put("transactionDate", moveLine.getString("transactionDate"));
+							bankMoveReconLine.put("amount", moveLine.getString("amount"));
+							bankMoveReconLine.put("description", moveLine.getString("description"));
+							bankMoveReconLine.put("isReconciledItem", moveLine.getString("isReconciledItem"));
+							bankMoveReconLine.create();
+						}
+					}
+					
 				} catch (GenericEntityException e) {
 					e.printStackTrace();
 				}
@@ -430,7 +456,6 @@ public class FinAccountServices {
 		BigDecimal accountBalance = BigDecimal.ZERO;
 		List<GenericValue> acctgTransEntry = null;
 		EntityConditionList<EntityExpr> acctgTransEntrySumsCond = EntityCondition.makeCondition(UtilMisc.toList(
-				
 				EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, glAccountId),
 				EntityCondition.makeCondition("debitCreditFlag", EntityOperator.EQUALS, debitCreditFlag),
 				EntityCondition.makeCondition("createdStamp", EntityOperator.LESS_THAN_EQUAL_TO, reconDate),
@@ -548,7 +573,32 @@ public class FinAccountServices {
 		System.out.println("############################################# NUMBER OF TRANSACTIONS FETCHED: " + transactions.size());
 		return transactions;
 	}
+	public static BigDecimal getUncreditedBankings(Delegator delegator, String headerId) {
+		BigDecimal uncreditedBankings = BigDecimal.ZERO;
 
+		GenericValue reconHeader = getReconHeader(delegator, headerId);
+		List<GenericValue> bankReconLines = null;
+		try {
+			bankReconLines = reconHeader.getRelated("BankReconLines", null, null, false);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (bankReconLines != null) {
+			for (GenericValue line : bankReconLines) {
+				if (line.getString("isUncreditedBankings") != null && line.getString("isUncreditedBankings").equals("Y")) {
+					uncreditedBankings = uncreditedBankings.add(getLineAmount(line));
+				}
+			}
+		} else {
+			return (BigDecimal) ServiceUtil.returnError("COULF NOT FETCH BANK RECON LINES");
+		}
+
+		System.out.println("#############################################BANK RECON LINES COUNT: " + bankReconLines.size());
+		System.out.println("#############################################getUncreditedBankings: " + uncreditedBankings);
+		return uncreditedBankings;
+	}
+	
 	public static BigDecimal getUnreceiptedBankings(Delegator delegator, String headerId) {
 		BigDecimal unreceiptedBankings = BigDecimal.ZERO;
 
@@ -594,31 +644,7 @@ public class FinAccountServices {
 		return reconHeader;
 	}
 
-	public static BigDecimal getUncreditedBankings(Delegator delegator, String headerId) {
-		BigDecimal uncreditedBankings = BigDecimal.ZERO;
 
-		GenericValue reconHeader = getReconHeader(delegator, headerId);
-		List<GenericValue> bankReconLines = null;
-		try {
-			bankReconLines = reconHeader.getRelated("BankReconLines", null, null, false);
-		} catch (GenericEntityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		if (bankReconLines != null) {
-			for (GenericValue line : bankReconLines) {
-				if (line.getString("isUncreditedBankings") != null && line.getString("isUncreditedBankings").equals("Y")) {
-					uncreditedBankings = uncreditedBankings.add(getLineAmount(line));
-				}
-			}
-		} else {
-			return (BigDecimal) ServiceUtil.returnError("COULF NOT FETCH BANK RECON LINES");
-		}
-
-		System.out.println("#############################################BANK RECON LINES COUNT: " + bankReconLines.size());
-		System.out.println("#############################################getUncreditedBankings: " + uncreditedBankings);
-		return uncreditedBankings;
-	}
 
 	public static BigDecimal getUnidentifiedDebits(Delegator delegator, String headerId) {
 		BigDecimal unidentifiedDebits = BigDecimal.ZERO;
