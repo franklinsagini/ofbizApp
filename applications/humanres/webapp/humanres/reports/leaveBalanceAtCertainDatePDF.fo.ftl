@@ -236,7 +236,7 @@ under the License.
                 <fo:block font-weight="bold">Balance</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>${balance}</fo:block>
+                <fo:block>${balances}</fo:block>
             </fo:list-item-body>
         </fo:list-item>
     </fo:list-block>
@@ -250,7 +250,7 @@ under the License.
             CHAI SACCO
         </fo:block>
         <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
-            EMPLOYEES ANNUAL LEAVE BALANCE REPORT
+            EMPLOYEES ANNUAL LEAVE BALANCE REPORT AS AT ${sqlFromDate}
         </fo:block>
 
 
@@ -264,22 +264,22 @@ under the License.
                 <fo:table-column column-width="200pt"/>
                 <fo:table-column column-width="60pt"/>
                 <fo:table-column column-width="60pt"/>
-                <fo:table-column column-width="60pt"/>
-                <fo:table-column column-width="60pt"/>
-                <fo:table-column column-width="60pt"/>
+                <fo:table-column column-width="100pt"/>
+                <fo:table-column column-width="100pt"/>
+                <fo:table-column column-width="100pt"/>
                 <fo:table-header>
                     <fo:table-row font-weight="bold">
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                             <fo:block>Employee</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                            <fo:block>Brough Forward</fo:block>
+                            <fo:block>Brought Forward</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                             <fo:block>Accrued</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                            <fo:block>Taken</fo:block>
+                            <fo:block>Taken (Annual plus Offdays)</fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                             <fo:block>Balance</fo:block>
@@ -287,24 +287,26 @@ under the License.
                     </fo:table-row>
                 </fo:table-header>
                 <fo:table-body>
-                    <#list leaveBalances as employee>
+                   
+                    <#list leaveBalancelist as balanceList>
                         <fo:table-row>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>${employee.firstName?if_exists} ${employee.lastName?if_exists}</fo:block>
+                                <fo:block>${balanceList.names}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>${employee.compassionateCarryOverLeaveDays?if_exists}</fo:block>
+                                <fo:block>${balanceList.forwarded}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>${employee.compassionateAllocatedLeaveDays?if_exists}</fo:block>
+                                <fo:block>${balanceList.accrued}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>${employee.compassionateUsedLeaveDays?if_exists}</fo:block>
+                                <fo:block>${balanceList.usedLeave}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>${employee.compassionateAvailableLeaveDays?if_exists}</fo:block>
+                                <fo:block>${balanceList.balances}</fo:block>
                             </fo:table-cell>
                         </fo:table-row>
+                      
                     </#list>
                 </fo:table-body>
             </fo:table>
