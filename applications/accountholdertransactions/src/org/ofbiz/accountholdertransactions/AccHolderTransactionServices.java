@@ -341,9 +341,18 @@ public class AccHolderTransactionServices {
 		}
 
 		BigDecimal bdBalance = BigDecimal.ZERO;
+		BigDecimal bdTrueOpeningBalance = BigDecimal.ZERO;
 		for (GenericValue genericValue : openingBalanceELI) {
-			bdBalance = bdBalance.add(genericValue
-					.getBigDecimal("savingsOpeningBalance"));
+			
+			if (genericValue.getBigDecimal("savingsOpeningBalance") != null)
+			{
+				bdTrueOpeningBalance = genericValue
+						.getBigDecimal("savingsOpeningBalance");
+			} else{
+				bdTrueOpeningBalance = BigDecimal.ZERO;
+			}
+			
+			bdBalance = bdBalance.add(bdTrueOpeningBalance);
 
 		}
 		return bdBalance;

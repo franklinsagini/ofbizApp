@@ -51,6 +51,7 @@ if ((branchId != null) && (branchId != "")){
 
 
 myAccountsList.eachWithIndex { myAccount, index ->
+	
 	memberAccountIdStr = myAccount.memberAccountId.toString();
 	//Book Balance
 	myAccount.minSavingsAmt = org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getBookBalanceNow(memberAccountIdStr);

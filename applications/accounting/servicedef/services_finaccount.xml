@@ -177,6 +177,14 @@ under the License.
         <attribute type="String" mode="INOUT" name="headerId" optional="false"/>
         <attribute type="String" mode="IN" name="description" optional="false"/>
      </service>
+    <service name="deleteUnidentifiedUnpresented" engine="java" default-entity-name="BankReconLines"
+            location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="deleteUnidentifiedUnpresented">
+        <description>Pulls all transactions of type cheque from account transaction</description>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <auto-attributes mode="INOUT" optional="true" include="pk"/>
+        <attribute type="String" mode="INOUT" name="headerId" optional="false"/>
+        <attribute type="String" mode="IN" name="reconLineId" optional="false"/>
+     </service>
 
     <service name="saveReconciliation" engine="java" default-entity-name="BankReconHeader"
             location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="saveReconciliation">
