@@ -393,8 +393,8 @@ public class FinAccountServices {
 							bankMoveReconLine.put("headerId", headerId);
 							bankMoveReconLine.put("finAccountTransId", moveLine.getString("finAccountTransId"));
 							bankMoveReconLine.put("finAccountTransTypeId", moveLine.getString("finAccountTransTypeId"));
-							bankMoveReconLine.put("transactionDate", moveLine.getString("transactionDate"));
-							bankMoveReconLine.put("amount", moveLine.getString("amount"));
+							bankMoveReconLine.put("transactionDate", moveLine.getTimestamp("transactionDate"));
+							bankMoveReconLine.put("amount", moveLine.getBigDecimal("amount"));
 							bankMoveReconLine.put("description", moveLine.getString("description"));
 							bankMoveReconLine.put("isReconciledItem", moveLine.getString("isReconciledItem"));
 							bankMoveReconLine.create();
