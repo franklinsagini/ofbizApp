@@ -2337,6 +2337,8 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		        	accruedLeaveDays = accrualRate.multiply(new BigDecimal(months));
 		        }
 		        
+		        System.out.println("######## Accrual Balance JAC#### "+accruedLeaveDays);
+		        
 		 return accruedLeaveDays;
 		
 	}
@@ -2363,8 +2365,13 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		}
 		
 	    BigDecimal approvedLeaveSum = BigDecimal.ZERO;
-	    BigDecimal usedD =  empAnnualLeaveUsed(PartyId); 
-	    
+	    BigDecimal usedD = BigDecimal.ZERO;
+		    try{
+			    usedD =  empAnnualLeaveUsed(PartyId); 
+			 }catch(Exception e){
+			    e.printStackTrace();
+			   
+			 }
 	    log.info("################ ANNUAL USED##### #############"+usedD );
 	    
 	    
@@ -2445,6 +2452,8 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 	 BigDecimal annualUsedDays = BigDecimal.ZERO;
 	 if(annualUsedELI.size() > 0){
 		 annualUsedDays = annualUsedELI.getBigDecimal("annualLeaveDaysUsed");
+	 }else{
+		 annualUsedDays = BigDecimal.ZERO;
 	 }
 	 
 	 return annualUsedDays;

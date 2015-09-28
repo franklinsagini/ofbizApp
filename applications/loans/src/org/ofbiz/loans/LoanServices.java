@@ -307,8 +307,13 @@ public class LoanServices {
 				// memberId, loanProductId, delegator);
 				BigDecimal bdTotalLoanBalanceThisProduct = getTotalLoansOfThisType(
 						partyId, loanProductId);
+				
+				if (loanProduct.getBigDecimal("maximumAmt") != null){
 				bdMaximumLoanAmt = loanProduct.getBigDecimal("maximumAmt")
 						.subtract(bdTotalLoanBalanceThisProduct);
+				} else{
+					bdMaximumLoanAmt = BigDecimal.ZERO;
+				}
 			}
 
 			// BigDecimal dbTotalPrincipalRepaid = LoanRepayments
