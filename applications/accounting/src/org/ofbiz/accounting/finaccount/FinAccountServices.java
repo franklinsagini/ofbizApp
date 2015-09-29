@@ -376,30 +376,30 @@ public class FinAccountServices {
 					bankReconLines.create();
 					//Move with any UD or UB. USE FLAG IS ADDED MANUALLY
 					
-					EntityConditionList<EntityExpr> moveConditions = EntityCondition.makeCondition(UtilMisc.toList(
-							EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, null)
-							), EntityOperator.AND);
-					List<GenericValue>moveLines = delegator.findList("BankReconLines", moveConditions, null, null, null, false);
-					
-					if (moveLines!=null) {
-						for (GenericValue moveLine : moveLines) {
-							GenericValue bankMoveReconLine = delegator.makeValue("BankReconLines");
-							String moveLineReconLineId = delegator.getNextSeqId("BankReconLines");
-							bankMoveReconLine.put("isUnpresentedCheques", moveLine.getString("isUnpresentedCheques"));
-							bankMoveReconLine.put("isUncreditedBankings", moveLine.getString("isUncreditedBankings"));
-							bankMoveReconLine.put("isUnidentifiedDebits", moveLine.getString("isUnidentifiedDebits"));
-							bankMoveReconLine.put("isUnreceiptedBankings", moveLine.getString("isUnreceiptedBankings"));
-							bankMoveReconLine.put("reconLineId", moveLineReconLineId);
-							bankMoveReconLine.put("headerId", headerId);
-							bankMoveReconLine.put("finAccountTransId", moveLine.getString("finAccountTransId"));
-							bankMoveReconLine.put("finAccountTransTypeId", moveLine.getString("finAccountTransTypeId"));
-							bankMoveReconLine.put("transactionDate", moveLine.getTimestamp("transactionDate"));
-							bankMoveReconLine.put("amount", moveLine.getBigDecimal("amount"));
-							bankMoveReconLine.put("description", moveLine.getString("description"));
-							bankMoveReconLine.put("isReconciledItem", moveLine.getString("isReconciledItem"));
-							bankMoveReconLine.create();
-						}
-					}
+//					EntityConditionList<EntityExpr> moveConditions = EntityCondition.makeCondition(UtilMisc.toList(
+//							EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, null)
+//							), EntityOperator.AND);
+//					List<GenericValue>moveLines = delegator.findList("BankReconLines", moveConditions, null, null, null, false);
+//					
+//					if (moveLines!=null) {
+//						for (GenericValue moveLine : moveLines) {
+//							GenericValue bankMoveReconLine = delegator.makeValue("BankReconLines");
+//							String moveLineReconLineId = delegator.getNextSeqId("BankReconLines");
+//							bankMoveReconLine.put("isUnpresentedCheques", moveLine.getString("isUnpresentedCheques"));
+//							bankMoveReconLine.put("isUncreditedBankings", moveLine.getString("isUncreditedBankings"));
+//							bankMoveReconLine.put("isUnidentifiedDebits", moveLine.getString("isUnidentifiedDebits"));
+//							bankMoveReconLine.put("isUnreceiptedBankings", moveLine.getString("isUnreceiptedBankings"));
+//							bankMoveReconLine.put("reconLineId", moveLineReconLineId);
+//							bankMoveReconLine.put("headerId", headerId);
+//							bankMoveReconLine.put("finAccountTransId", moveLine.getString("finAccountTransId"));
+//							bankMoveReconLine.put("finAccountTransTypeId", moveLine.getString("finAccountTransTypeId"));
+//							bankMoveReconLine.put("transactionDate", moveLine.getTimestamp("transactionDate"));
+//							bankMoveReconLine.put("amount", moveLine.getBigDecimal("amount"));
+//							bankMoveReconLine.put("description", moveLine.getString("description"));
+//							bankMoveReconLine.put("isReconciledItem", moveLine.getString("isReconciledItem"));
+//							bankMoveReconLine.create();
+//						}
+//					}
 					
 				} catch (GenericEntityException e) {
 					e.printStackTrace();
