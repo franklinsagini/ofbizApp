@@ -58,6 +58,9 @@ public class LoanAccounting {
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
+		
+		String memberPartyId = loanApplication.getLong("partyId").toString();
+		String memberBranchId = LoanUtilities.getMemberBranchId(memberPartyId);
 
 		// Creates a record in AcctgTrans
 		String acctgTransType = "LOAN_RECEIVABLE";
@@ -128,8 +131,8 @@ public class LoanAccounting {
 				log.info(" LLLLLLLL Loan Amount to offset AAAAAAAAAA"+bdTotalLoanBalanceAmount);
 				
 				//LoansProcessingServices.get
-				bdTotalLoanCost = bdTotalLoanCost.add(LoanRepayments.getTotalInterestByLoanDue(clearedLoanApplicationId.toString()));
-				bdTotalLoanCost = bdTotalLoanCost.add(LoanRepayments.getTotalInsurancByLoanDue(clearedLoanApplicationId.toString()));
+				//bdTotalLoanCost = bdTotalLoanCost.add(LoanRepayments.getTotalInterestByLoanDue(clearedLoanApplicationId.toString()));
+				//bdTotalLoanCost = bdTotalLoanCost.add(LoanRepayments.getTotalInsurancByLoanDue(clearedLoanApplicationId.toString()));
 			
 				log.info("1CCCCCCCCCCCC Total Loan Balance amount computed "+bdTotalLoanBalanceAmount);
 				//BigDecimal bdTotal = bdTotalLoanBalanceAmount.add(bdInterestAmount).add(bdTotalInsuranceAmount);
@@ -153,6 +156,16 @@ public class LoanAccounting {
 			AccHolderTransactionServices.memberTransactionDeposit(bdTotalCharge, memberAccountId, userLogin, "LOANCLEARANCECHARGES", accountTransactionParentId, null, acctgTransId, null, loanApplicationId);
 			
 			//Post the clearance charges
+			//Debit member deposits
+			acctgTransType = "LOAN_CLEARANCE";
+			String entrySequenceId = "00005";
+			String accountId = LoanUtilities.getMemberDepositAccount(delegator);
+			AccHolderTransactionServices.postTransactionEntryToMemberBranch(delegator, bdTotalCharge, memberPartyId, memberBranchId, accountId, "D", acctgTransId, acctgTransType, entrySequenceId);
+			
+			//Credit loan clearance charges
+			entrySequenceId = "00006";
+			accountId = LoanUtilities.getLoanClearingChargeAccountId();
+			AccHolderTransactionServices.postTransactionEntryToMemberBranch(delegator, bdTotalCharge, memberPartyId, memberBranchId, accountId, "C", acctgTransId, acctgTransType, entrySequenceId);
 			
 		}
 		try {
