@@ -306,6 +306,8 @@ public class FinAccountServices {
 		// now get all transactions for this header
 		List<GenericValue> transactions = null;
 		List<GenericValue> unpresentedUnidentifiedTransactions = null;
+		
+		
 		unpresentedUnidentifiedTransactions = getUnpresentedUnidentifiedForHeader(delegator);
 		if (unpresentedUnidentifiedTransactions != null) {
 			for (GenericValue trans : unpresentedUnidentifiedTransactions) {
@@ -582,11 +584,28 @@ public class FinAccountServices {
 	
 	private static List<GenericValue> getUnpresentedUnidentifiedForHeader(Delegator delegator) {
 		List<GenericValue> unpresentedUnidentifiedTransactions = null;
+		List<GenericValue> reconHeaderList = null;
+		GenericValue reconHeader = null;
+
+
+		EntityConditionList<EntityExpr> headerCond = null;
+		headerCond = EntityCondition.makeCondition(UtilMisc.toList(
+				EntityCondition.makeCondition("isLastRecon", EntityOperator.EQUALS, "Y")
+				));
+		
+		try {
+			reconHeaderList = delegator.findList("BankReconHeader", headerCond, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		reconHeader = reconHeaderList.get(0);
+		
 		EntityConditionList<EntityExpr> cond = null;
 		cond = EntityCondition.makeCondition(UtilMisc.toList(
-				EntityCondition.makeCondition("isManuallyCreated", EntityOperator.EQUALS, "Y")
+				EntityCondition.makeCondition("isManuallyCreated", EntityOperator.EQUALS, "Y"),
+				EntityCondition.makeCondition("headerId", EntityOperator.EQUALS, reconHeader.getString("headerId"))
 				));
-
+		
 		try {
 			unpresentedUnidentifiedTransactions = delegator.findList("BankReconLines", cond, null, null, null, false);
 		} catch (GenericEntityException e) {
@@ -779,9 +798,31 @@ public class FinAccountServices {
 							.toMap("headerId", headerId),
 					locale));
 		}
+		List<GenericValue>reconHeaderList = null;
+		GenericValue reconHeader = null;
+		EntityConditionList<EntityExpr> headerCond = null;
+		headerCond = EntityCondition.makeCondition(UtilMisc.toList(
+				EntityCondition.makeCondition("isLastRecon", EntityOperator.EQUALS, "Y")
+				));
+		
+		try {
+			reconHeaderList = delegator.findList("BankReconHeader", headerCond, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		reconHeader = reconHeaderList.get(0);
+		reconHeader.set("isLastRecon", "N");
+		try {
+			reconHeader.store();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		bankReconHeader.set("statusName", "RECONCILED");
 		bankReconHeader.set("adjustedCashBookBalance", adjustedCashBookBalance);
 		bankReconHeader.set("adjustedBankBalance", adjustedBankBalance);
+		bankReconHeader.set("isLastRecon", "Y");
+		
 		try {
 			bankReconHeader.store();
 			//Update FinAccountTrans statusId to FINACT_TRNS_APPROVED

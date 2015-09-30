@@ -192,6 +192,32 @@
         </section>
     </screen>
 
+
+    <!-- By Station -->
+    <screen name="appliedLoansByStationExcel">
+        <section>
+            <actions>
+                <set field="headerItem" value="appliedLoansByStationExcel" />
+                <set field="tabButtonItem" value="appliedLoansByStationExcel" />
+                <set field="endDate" from-field="parameters.endDate" type="Timestamp"  default-value="${nowTimestamp}"/>
+                <set field="startDate" from-field="parameters.startDate" type="Timestamp" />
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container>
+                            <screenlet title="Loans Listing">
+                                <include-form name="appliedLoansByStationForm" location="component://loanmanagementreports/widget/LoanManagementReportsForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+
     <screen name="appliedLoansByLoanTypeCsv">
         <section>
             <actions>
