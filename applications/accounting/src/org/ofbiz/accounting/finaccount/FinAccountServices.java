@@ -546,9 +546,14 @@ public class FinAccountServices {
 		try {
 			bankReconLines = delegator.findOne("BankReconLines", fields, false);
 			finAccountTrans = delegator.findOne("FinAccountTrans", UtilMisc.toMap("finAccountTransId", bankReconLines.getString("finAccountTransId")), false);
+			
+			System.out.println("############## BANK RECON GENERIC VALUE isManuallyCreated : "+bankReconLines.getString("isManuallyCreated"));
+			
 			if (finAccountTrans != null) {
+				System.out.println("WE ARE HERE BECAUSE WE FOUND FIN ACCOUNT TRANS WITH ID "+bankReconLines.getString("finAccountTransId"));
 				finAccountTrans.set("statusId", "FINACT_TRNS_APPROVED");
-			}else if (bankReconLines.getString("isManuallyCreated")!=null && bankReconLines.getString("isManuallyCreated").equals("Y")) {
+				finAccountTrans.store();
+			}else {
 				//get all bank recons with this finAccountTransId
 				List<GenericValue>reconLines = null;
 				EntityConditionList<EntityExpr> conditions = null;
@@ -560,6 +565,7 @@ public class FinAccountServices {
 					line.set("isManuallyCreated", "N");
 					line.store();
 				}
+			
 			}
 			bankReconLines.remove();
 		} catch (GenericEntityException e) {
