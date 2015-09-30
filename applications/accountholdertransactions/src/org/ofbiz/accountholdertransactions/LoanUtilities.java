@@ -3428,6 +3428,58 @@ public class LoanUtilities {
 		
 		return lastPaid;
 	}
+	
+	/****
+	 * Get the member deposits Account
+	 * */
+	public static String getMemberDepositAccount(Delegator delegator) {
+		GenericValue accountHolderTransactionSetup = null;
+
+		try {
+			accountHolderTransactionSetup = delegator.findOne(
+					"AccountHolderTransactionSetup", UtilMisc.toMap(
+							"accountHolderTransactionSetupId",
+							"LOANDISBURSEMENTACCOUNT"), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("######## Cannot Get Member Deposit Account in Loan Disbursement, make sure there is a rcord in Account Holder Transaction Setup with ID LOANDISBURSEMENTACCOUNT and accounts configured ");
+			return "Cannot Get Loan Disbursement account";
+		}
+
+		String memberDepositAccountId = "";
+		if (accountHolderTransactionSetup != null) {
+			memberDepositAccountId = accountHolderTransactionSetup
+					.getString("memberDepositAccId");
+		} else {
+			log.error("######## Cannot Get Member Deposit Account in Loan Disbursement, make sure there is a rcord in Account Holder Transaction Setup with ID LOANDISBURSEMENTACCOUNT and accounts configured ");
+		}
+		return memberDepositAccountId;
+	}
+
+	public static String getLoanClearingChargeAccountId() {
+		GenericValue accountHolderTransactionSetup = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		try {
+			accountHolderTransactionSetup = delegator.findOne(
+					"AccountHolderTransactionSetup", UtilMisc.toMap(
+							"accountHolderTransactionSetupId",
+							"LOANCLEARANCECHARGE"), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("######## Cannot Get Member Deposit Account in Loan Disbursement, make sure there is a rcord in Account Holder Transaction Setup with ID LOANCLEARANCECHARGE and accounts configured ");
+			return "Cannot Get Loan Clearance charge account";
+		}
+
+		String accountId = "";
+		if (accountHolderTransactionSetup != null) {
+			accountId = accountHolderTransactionSetup
+					.getString("memberDepositAccId");
+		} else {
+			log.error("######## Cannot Get Member Deposit Account in Loan Disbursement, make sure there is a rcord in Account Holder Transaction Setup with ID LOANCLEARANCECHARGE and accounts configured ");
+		}
+		return accountId;
+	}
 
 
 }
