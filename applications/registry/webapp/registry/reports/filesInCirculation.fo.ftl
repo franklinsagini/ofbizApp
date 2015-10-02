@@ -26,6 +26,11 @@ under the License.
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
       FILES IN CIRCULATION 
     </fo:block>
+    
+     <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
+       BETWEEN ${sqlStartDate} AND ${sqlEndDate}
+    </fo:block>
+    
     <fo:block><fo:leader/></fo:block>
 <#if activities?has_content>
     <#-- REPORT BODY -->
