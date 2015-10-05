@@ -39,6 +39,8 @@ under the License.
             <fo:table-column column-width="100pt"/>
             <fo:table-column column-width="100pt"/>
             <fo:table-column column-width="100pt"/>
+            <fo:table-column column-width="100pt"/>
+            <fo:table-column column-width="100pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
@@ -47,8 +49,12 @@ under the License.
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="left">File Carried By</fo:block>
                     </fo:table-cell>
-                   
-                   
+                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block text-align="left">PayRoll No.</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block text-align="left">Member No.</fo:block>
+                    </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="left">Date File Released</fo:block>
                     </fo:table-cell>
@@ -84,6 +90,23 @@ under the License.
                                 <fo:block>Not Defined</fo:block>
                             </#if>
                         </fo:table-cell>
+                       
+                       <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <#if actionBy?has_content>
+                                <fo:block>${member.payrollNumber?if_exists}</fo:block>
+                            <#else>
+                                <fo:block>Not Defined</fo:block>
+                            </#if>
+                        </fo:table-cell>
+                        
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <#if actionBy?has_content>
+                                <fo:block>${member.memberNumber?if_exists}</fo:block>
+                            <#else>
+                                <fo:block>Not Defined</fo:block>
+                            </#if>
+                        </fo:table-cell>
+                       
                        
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${activity.actionDate?if_exists}</fo:block>

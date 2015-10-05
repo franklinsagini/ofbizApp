@@ -6,6 +6,8 @@ semiActiveFileslist = [];
  
  filesInDisposal.eachWithIndex { filesInDisposalItem, index ->
 
+fileBox = filesInDisposalItem.fileBox
+fileBoxCode = filesInDisposalItem.fileBoxCode
  fileOwner = "${filesInDisposalItem.firstName} ${filesInDisposalItem.lastName}";
  memberNumber = filesInDisposalItem.memberNumber;
  payroll = filesInDisposalItem.payrollNumber;
@@ -16,7 +18,7 @@ semiActiveFileslist = [];
  
  
  
- semiActiveFileslist.add([fileOwner :fileOwner, memberNumber :memberNumber, payroll : payroll, since : since]);
+ semiActiveFileslist.add([fileOwner :fileOwner, fileBox :fileBox, fileBoxCode  : fileBoxCode, memberNumber :memberNumber, payroll : payroll, since : since]);
  }
  
  
