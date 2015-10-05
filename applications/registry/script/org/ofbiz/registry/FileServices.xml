@@ -1172,12 +1172,12 @@
 		  <set field="start" from-field="nowTimestamp"/>
 		  <set field="duration" from-field="activity.activityDuration"/>
 
-         <set field="durationUsedTocalculateReturnDate" from-field="activity.activityDuration"/>
-         <set field="returnedDate" value=""/>  
-           
-             
-		 <set field="registryFile.activityDuration" from-field="activity.activityDuration" />
+           <!-- calculate the return issue date -->
          
+         <set field="retunDate" value="${bsh:org.ofbiz.registry.FileServices.calculateIssuedReturnDate(duration);}"/>
+          <log message="#######XML DATE #### ${retunDate}" level="info"/>
+		 <set field="registryFile.activityDuration" from-field="activity.activityDuration" />
+
 		 <set field="registryFile.issueDate" from-field="nowTimestamp" />
 
 		  <set field="registryFile.recieptStatus" value="NOTRECEIVED"/>

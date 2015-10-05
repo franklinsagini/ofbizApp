@@ -6,6 +6,9 @@ filesInArchivelist = [];
  
  filesInDisposal.eachWithIndex { filesInDisposalItem, index ->
 
+fileBox = filesInDisposalItem.fileBox
+fileBoxCode = filesInDisposalItem.fileBoxCode
+
  fileOwner = "${filesInDisposalItem.firstName} ${filesInDisposalItem.lastName}";
  memberNumber = filesInDisposalItem.memberNumber;
  payroll = filesInDisposalItem.payrollNumber;
@@ -16,7 +19,7 @@ filesInArchivelist = [];
  
  
  
- filesInArchivelist.add([fileOwner :fileOwner, memberNumber :memberNumber, payroll : payroll, since : since]);
+ filesInArchivelist.add([fileOwner :fileOwner,fileBox :fileBox, fileBoxCode  : fileBoxCode, memberNumber :memberNumber, payroll : payroll, since : since]);
  }
  
  
