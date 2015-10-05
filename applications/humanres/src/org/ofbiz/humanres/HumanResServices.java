@@ -506,9 +506,28 @@ public class HumanResServices {
 		} catch (ParseException e2) {
 			e2.printStackTrace();
 		}
-		int leaveDuration = new Integer(request.getParameter("leaveDuration"))
-				.intValue();
+		BigDecimal leaveDurationBid = new BigDecimal(request.getParameter("leaveDuration"));
+        
+		if(leaveDurationBid.compareTo(BigDecimal.ONE) < 0 ){
+			LocalDate localDateEndDate = new LocalDate(fromDate.getTime());
+			endDate = fromDate;
+			resumeDate = endDate;
+			
+			log.info("=================================LLLLLLLLL leaveTypeId : "
+					+ leaveTypeId);
+			log.info("======================================LLLLLLLLL FROM : "
+					+ fromDate);
+			log.info("==================================Duration BIGD====TO : "
+					+ leaveDurationBid);
+			log.info("==================================Resumption====TO : "
+					+ resumeDate);
 
+			
+			
+		}
+		else if (leaveDurationBid.compareTo(BigDecimal.ONE) > 0  || leaveDurationBid.equals(BigDecimal.ONE)){
+		int leaveDuration = leaveDurationBid.intValue();
+		
 		Logger log = Logger.getLogger(HumanResServices.class);
 		log.info("=================================LLLLLLLLL leaveTypeId : "
 				+ leaveTypeId);
@@ -516,6 +535,10 @@ public class HumanResServices {
 				+ fromDate);
 		log.info("======================================LLLLLLLLL TO : "
 				+ leaveDuration);
+		log.info("==================================Duration BIGD====TO : "
+				+ leaveDurationBid);
+		log.info("==================================Resumption====TO : "
+				+ resumeDate);
 
 		try {
 
@@ -548,7 +571,8 @@ public class HumanResServices {
 			}
 
 		}
-
+        
+	}
 		LocalDateTime dateFromDate = new LocalDateTime(fromDate.getTime());
 
 		/*
@@ -1512,7 +1536,7 @@ public class HumanResServices {
 
 		return localDateEndDate.toDate();
 	}
-
+	
 	public static String getDateToday(Date confirmDate) {
 		SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
 		LocalDateTime today = new LocalDateTime(Calendar.getInstance()

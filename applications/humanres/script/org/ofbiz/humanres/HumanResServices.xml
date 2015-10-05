@@ -3261,14 +3261,14 @@
 		
 		<set field="leaveType" from-field="newEntity.leaveTypeId"/>
 		<set field="party" value="${userLogin.partyId}"  />
-		<set field="durat" from-field="newEntity.leaveDuration" type="Integer"/>
+		<set field="durat" from-field="newEntity.leaveDuration" type="BigDecimal"/>
 		<set field="thruDate" from-field="newEntity.thruDate"  />
 		<set field="userGender" value="${bsh:org.ofbiz.humanres.LeaveApplicationValidation.getGenderState(leaveType, party);}"/>
 		<set field="notice" value="${bsh:org.ofbiz.humanres.LeaveApplicationValidation.getNoticePeriodState(leaveType, fromDate);}"/>
 		<set field="duration" value="${bsh:org.ofbiz.humanres.LeaveApplicationValidation.getLeaveDurationState(leaveType, durat);}"/>
 		<set field="employementTermsState" value="${bsh:org.ofbiz.humanres.LeaveApplicationValidation.getEmploymentStatusState(party);}"/>
-		<set field="correctDateState" value="${bsh:org.ofbiz.humanres.LeaveApplicationValidation.isLeaveApplicationCorrect(leaveType, fromDate, durat, thruDate);}"/>
-		<set field="valid" value="INVALID"/>
+ 		<set field="correctDateState" value="${bsh:org.ofbiz.humanres.LeaveApplicationValidation.isLeaveApplicationCorrect(leaveType, fromDate, durat, thruDate);}"/>
+ 		<set field="valid" value="INVALID"/>
 		<set field="no" value="NO"/>
 		
 		<log message=">>>>>>>>>>>>>>>>***>>>>>>>DURATION_STATE ${duration}" level="info"/>
@@ -3285,7 +3285,7 @@
 				<check-errors />
 			</then>
 		</if>
-		
+
 		<if>
 			<condition>
 					<if-compare-field field="employementTermsState"
