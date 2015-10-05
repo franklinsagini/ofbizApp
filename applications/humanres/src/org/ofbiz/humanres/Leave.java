@@ -747,7 +747,80 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
 
 	}
 	
+	public static String getAccountNo(long memberAccountId){
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String accountNo = null; 
+		GenericValue accountNumberELI=null;
+		try{
+			accountNumberELI = delegator.findOne("MemberAccount",UtilMisc.toMap("memberAccountId",memberAccountId), false);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		if(accountNumberELI.size() > 0){
+			accountNo = accountNumberELI.getString("accountNo");
+		}
+		
+		log.info("##########ACCOUNT NO ##### "+accountNo);
+		
+		return accountNo;
+	}
 	
+	public static String getAccountName(long memberAccountId){
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String accountName = null; 
+		GenericValue accountNumberELI=null;
+		try{
+			accountNumberELI = delegator.findOne("MemberAccount",UtilMisc.toMap("memberAccountId",memberAccountId), false);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		if(accountNumberELI.size() > 0){
+			accountName = accountNumberELI.getString("accountName");
+		}
+		
+		log.info("##########accountName ##### "+accountName);
+		
+		return accountName;
+	}
 	
+	public static String getMobileNo(long memberPartyId){
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String mobile = null; 
+		GenericValue accountNumberELI=null;
+		try{
+			accountNumberELI = delegator.findOne("Member",UtilMisc.toMap("partyId",memberPartyId), false);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		if(accountNumberELI.size() > 0){
+			mobile = accountNumberELI.getString("mobileNumber");
+		}else if(accountNumberELI.size() == 0){
+			mobile = null;
+		}
+		
+		log.info("########## mobile ##### "+mobile);
+		
+		return mobile;
+	}
+	
+	public static String getMemberNumber(long memberPartyId){
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String memberNo = null; 
+		GenericValue accountNumberELI=null;
+		try{
+			accountNumberELI = delegator.findOne("Member",UtilMisc.toMap("partyId",memberPartyId), false);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		if(accountNumberELI.size() > 0){
+			memberNo = accountNumberELI.getString("memberNumber");
+		}else if(accountNumberELI.size() == 0){
+			memberNo = null;
+		}
+		
+		log.info("########## member No ##### "+memberNo);
+		
+		return memberNo;
+	}
 
 }
