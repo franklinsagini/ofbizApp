@@ -38,6 +38,22 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="main" />
 	</request-map>
+	
+	<request-map uri="accReports">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="accReports" />
+	</request-map>
+	
+	<request-map uri="accountTransactionReport">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="accountTransactionReport" />
+	</request-map>
+	
+	<request-map uri="accountTransactionReportExcel.csv">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="accountTransactionReportExcel" />
+	</request-map>
+	
 	<request-map uri="remittanceByMember">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="remittanceByMember" />
@@ -1050,5 +1066,12 @@
 	<view-map name="LookupActiveMember" type="screen"
 		page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember" />
 	<!-- end of view mappings -->
+
+    <view-map name="accReports" type="screen"
+		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#accReports" />
+
+    <view-map name="accountTransactionReport" type="screenfop" page="component://accountreports/widget/accountreportsScreens.xml#accountTransactionReport" content-type="application/pdf" encoding="none"/>
+
+    <view-map name="accountTransactionReportExcel" type="screencsv" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#accountTransactionReportExcelcsv" content-type="text/csv" encoding="none" />
 
 </site-conf>

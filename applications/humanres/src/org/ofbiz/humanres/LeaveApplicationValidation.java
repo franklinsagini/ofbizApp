@@ -3,6 +3,7 @@ package org.ofbiz.humanres;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,6 +42,9 @@ import org.ofbiz.webapp.event.EventHandlerException;
 
 
 
+
+
+import sun.tools.jar.resources.jar;
 
 import com.google.gson.Gson;
 
@@ -82,7 +86,7 @@ public class LeaveApplicationValidation {
 			result.put("durationState", getLeaveDurationState(leaveTypeId, leaveDuration));
 			result.put("onceAyearState", getLeaveOnceAyearState(partyId, fromDate, leaveTypeId));
 			result.put("employmentStatusState", getEmploymentStatusState(partyId));
-			result.put("correctDateState", isLeaveApplicationCorrect(leaveTypeId, fromDate, leaveDuration, thruDate) );
+			//result.put("correctDateState", isLeaveApplicationCorrect(leaveTypeId, fromDate, leaveDuration, thruDate) );
 	
 		
 
@@ -395,12 +399,18 @@ public class LeaveApplicationValidation {
 
 		}
 		
-		public static String isLeaveApplicationCorrect(String leavetype, Date fromdate, int leaveduration, Date thrudate) {
+		public static String isLeaveApplicationCorrect(String leavetype, Date fromdate, BigDecimal leavedurationBig, Date thrudate) {
 			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 			String isLeaveApplicationCorrect = "";
 			GenericValue getLeaveDayTypeELI=null;
 			String daytype="";
 			int correctDuration;
+			
+			if(leavedurationBig.compareTo(BigDecimal.ONE) < 0 ){
+				 isLeaveApplicationCorrect = "YES";
+			}else if(leavedurationBig.compareTo(BigDecimal.ONE) > 0 ){
+			
+			int leaveduration = leavedurationBig.intValue();
 			
 			try {
 				 
@@ -438,9 +448,23 @@ public class LeaveApplicationValidation {
 
 			}
 
-
+		}
 			return isLeaveApplicationCorrect;
 		}
 		
+		
+		public static String getToday(){
+			
+			Date today= new Date();
+			
+			java.sql.Date date = new java.sql.Date(0);
+			
+			String dateString = date.toString();
+			
+			log.info("###########Date########????######"+dateString);
+			
+			return dateString;
+			
+		}
 
 }

@@ -2742,5 +2742,66 @@ under the License.
     </form>
     
     
+     <form name="accountTransactionReport" type="single" target="accountTransactionReport" default-entity-name="AccountTransaction">
+        <actions>
+         
+          <entity-condition entity-name="AccountProductCharge" >
+            	<condition-list>
+            		<condition-expr field-name="isFixed" operator="equals" value="N"/>
+            	</condition-list>
+            	<order-by field-name="accountProductChargeId"></order-by>
+            </entity-condition>
+        </actions>
+        
+        <field name="asDate" title="Date"><date-time type="date"/></field>
+        <field name="transaction" title="Transaction Type" required-field="true">
+          <drop-down allow-empty="true">
+            <entity-options entity-name="AccountProductCharge" description="${transactionType}" key-field-name="accountProductChargeId" >
+            <entity-constraint name="isFixed" operator="equals" value="N"/>
+            </entity-options>
+          </drop-down>
+        </field>
+        
+       <field name="run" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    
+      <form name="accountTransactionReportExcel" type="single" target="accountTransactionReportExcel.csv" default-entity-name="AccountTransaction">
+        <actions>
+         
+          <entity-condition entity-name="AccountProductCharge" >
+            	<condition-list>
+            		<condition-expr field-name="isFixed" operator="equals" value="N"/>
+            	</condition-list>
+            	<order-by field-name="accountProductChargeId"></order-by>
+            </entity-condition>
+        </actions>
+        
+        <field name="asDate" title="Date"><date-time type="date"/></field>
+        <field name="transaction" title="Transaction Type" required-field="true">
+          <drop-down allow-empty="true">
+            <entity-options entity-name="AccountProductCharge" description="${transactionType}" key-field-name="accountProductChargeId" >
+            <entity-constraint name="isFixed" operator="equals" value="N"/>
+            </entity-options>
+          </drop-down>
+        </field>
+        
+       <field name="run" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    
+    <form name="accountTransactionReportExcelCSV" list-name="transactionals" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="accountNo" title="Account Number"><display/></field>
+        <field name="accountName" title="Account Name"><display/></field>
+        <field name="mobileNumber" title="Mobile Number"><display/></field>
+        <field name="transactionAmount" title="Transaction Amount"><display/></field>
+		<field name="memberNumber" title="Member Number"><display/></field>
+		<field name="createdStamp" title="Date"><display/></field>
+        
+    </form>
+    
+    
 
 </forms>
