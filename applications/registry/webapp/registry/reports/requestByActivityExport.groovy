@@ -46,6 +46,8 @@ fileRequestByActivity = delegator.findList("RegistryFileLogs", expr, null, ["act
  actionBy = delegator.findOne("Person", [partyId : fileRequestByActivityItem.actionBy], false);
  
  fileOwner = "${member.firstName}${member.lastName}";
+ payRollNumber  =  "${member.payrollNumber}";
+ memberNumber  =  "${member.memberNumber}";
  requestedBy = "${actionBy.firstName}${actionBy.lastName}";
  
   timein  = fileRequestByActivityItem.actionDate;
@@ -55,7 +57,8 @@ fileRequestByActivity = delegator.findList("RegistryFileLogs", expr, null, ["act
  
  
  
- fileRequestByActivitylist.add([fileOwner :fileOwner, requestedBy :requestedBy, time : time]);
+ 
+ fileRequestByActivitylist.add([fileOwner :fileOwner,payRollNumber : payRollNumber, memberNumber : memberNumber, requestedBy :requestedBy, time : time]);
  }
  
  
