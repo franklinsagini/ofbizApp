@@ -743,4 +743,24 @@
         <field name="searchButton" title="Run" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
     </form>
     
+      <form name="atmReportByStatusExcel" type="single" target="atmReportByStatusExcel.csv" default-entity-name="CardApplication">
+        <actions>
+	        	<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+        	
+        </actions>
+        
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+
+      	<field name="cardStatusId" title="Card Status">
+      		<drop-down allow-empty="true">
+      			<entity-options description="${name}" entity-name="CardStatus" key-field-name="cardStatusId"></entity-options>
+      		</drop-down>
+      	</field>
+      	
+        <field name="searchButton" title="Run" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
+    </form>
+    
+    
 </forms>
