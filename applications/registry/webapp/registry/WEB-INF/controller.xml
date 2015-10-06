@@ -279,6 +279,11 @@
 		<response name="success" type="view" value="savingFilesForDisposal" />
 	</request-map>
 	
+	<request-map uri="goSaveFileForDispose">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="savingFilesForDispose" />
+	</request-map>
+	
 
 	<request-map uri="addnonMemberOrPersonRecords">
 		<security https="true" auth="true" />
@@ -666,6 +671,12 @@
         <event type="service" invoke="moveToDisposal"/>
         <response name="success" type="request-redirect-noparam" value="archive"/>
     </request-map>
+    
+     <request-map uri="moveToDispose">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="moveToDispose"/>
+        <response name="success" type="request-redirect-noparam" value="archive"/>
+    </request-map>
 
       <!-- ================ ACTIVATE FILE ========================= -->
      <request-map uri="activateFile">
@@ -1013,5 +1024,6 @@
 	<view-map name="savingSemiActiveFiles" type="screen"	page="component://registry/widget/FileScreens.xml#savingSemiActiveFiles" />
 	<view-map name="archivingFiles" type="screen"	page="component://registry/widget/FileScreens.xml#archivingFiles" />
 	<view-map name="savingFilesForDisposal" type="screen"	page="component://registry/widget/FileScreens.xml#savingFilesForDisposal" />
+    <view-map name="savingFilesForDispose" type="screen"	page="component://registry/widget/FileScreens.xml#savingFilesForDispose" />
 
 </site-conf>

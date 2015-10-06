@@ -39,7 +39,9 @@ fileVolumesCreatedByDate = delegator.findList("RegistryFileVolume", expr, null, 
  partylong = party.toLong();
  member = delegator.findOne("Member", [partyId : partylong], false);
  
- fileOwner = "${member.firstName}${member.lastName}";
+ payRollNumber  =  "${member.payrollNumber}";
+ memberNumber  =  "${member.memberNumber}";
+ fileOwner = "${member.firstName}  ${member.lastName}";
  identifier = fileVolumesCreatedByDateItem.volumeIdentifier;
  status = fileVolumesCreatedByDateItem.volumeStatus;
  
@@ -50,7 +52,7 @@ fileVolumesCreatedByDate = delegator.findList("RegistryFileVolume", expr, null, 
  
  
  
- fileVolumesCreatedByDatelist.add([fileOwner :fileOwner, identifier :identifier, status : status, dateCreated : dateCreated]);
+ fileVolumesCreatedByDatelist.add([fileOwner :fileOwner,payRollNumber : payRollNumber, memberNumber : memberNumber, identifier :identifier, status : status, dateCreated : dateCreated]);
  }
  
  
