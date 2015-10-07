@@ -1822,6 +1822,38 @@
 		</section>
 	</screen>
 	
+	
+	
+	 <screen name="savingFilesForDispose">
+		<section>
+			<actions>
+				<set field="headerItem" value="filesRelease" />
+				<set field="tabButtonItem" value="find" />
+				<set field="titleProperty" value="PageTitleFindInvoice" />
+				<set field="findFileCtx" from-field="parameters" />
+				<set field="partyId" from-field="parameters.partyId"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+							<container style="leftclear">
+											<label style="h1"
+												text="Dispose File" />
+										</container>
+								<screenlet title="Dispose A File">
+									<include-form name="disposeFileForm" location="component://registry/widget/FileForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
 	 <!-- ============================================== RELEASE TO ANOTHER PERSON ========================================================== -->
     
     <screen name="releaseFileToAnotherStaff">

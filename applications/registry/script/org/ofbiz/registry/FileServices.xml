@@ -400,6 +400,53 @@
 
         </simple-method>
 
+         <!-- =================================DISPOSE FILE========================= -->
+
+        <simple-method method-name="moveToDispose"
+        short-description="Change staff confirmation date">
+        <entity-one entity-name="RegistryFiles" value-field="lookedUpValue" />
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+
+          <now-timestamp field="nowTimestamp" />
+		<set from-field="nowTimestamp" field="lookedUpValue.DisposalStartDate" />
+
+        <set field="lookedUpValue.stageStatus" value="DISPOSED"/>
+         <set field="lookedUpValue.fileBox" from-field="parameters.fileBox"/>
+        <set field="lookedUpValue.fileBoxCode" from-field="parameters.fileBoxCode"/>
+
+
+		<entity-one entity-name="RegistryFiles" value-field="req">
+		 	<field-map field-name="partyId" from-field="parameters.partyId"/>
+		 </entity-one>
+
+		<set field="inactiveStartDate" from-field="req.ArchiveStartDate"/>
+		<set field="userMove" value="${bsh:org.ofbiz.registry.FileServices.getIsReadyToMoveToDisposalState(inactiveStartDate);}"/>
+		<set field="valid" value="NOT-YET"/>
+		 <if>
+			<condition>
+					<if-compare-field field="userMove"
+						to-field="valid" operator="equals" />
+			</condition>
+			<then>
+				<add-error>
+					<fail-property resource="HumanResUiLabels"
+						property="EarlyMoveError" />
+				</add-error>
+				<check-errors />
+			</then>
+
+			<else>
+			<call-simple-method method-name="saveFileVolumeInAbox" scope="inline"></call-simple-method>
+			<store-value value-field="lookedUpValue" />
+            <property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" />
+			</else>
+		</if>
+
+        </simple-method>
+       
+
+
          <!-- ==============================MOVE FILE TO DECEASED================================== -->
      <simple-method method-name="deceasedMember"
         short-description="Change staff confirmation date">
