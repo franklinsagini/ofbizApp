@@ -24,7 +24,7 @@ under the License.
         CHAI SACCO
     </fo:block>
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
-         CARDS APPLICATION REPORT
+         CARDS APPLICATION REPORT BETWEEN ${startDate} AND ${endDate}
     </fo:block>
     <fo:block><fo:leader/></fo:block>
 
