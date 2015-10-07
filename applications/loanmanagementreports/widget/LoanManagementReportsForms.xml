@@ -188,7 +188,7 @@
         default-table-style="basic-table">
         <actions>
             <entity-condition entity-name="PartyGroup" list="partyGroups">
-            	<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+                <condition-expr field-name="isBranch" operator="equals" value="Y"/>
             </entity-condition>
         </actions>
         <field name="startDate" title="From"  widget-style="required" required-field="true">
@@ -211,6 +211,72 @@
             <submit button-type="button" />
         </field>
     </form>
+    <form name="appliedLoansByStationFormExcel" type="single" target="appliedLoansByStationExcel.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <actions>
+            <entity-condition entity-name="PartyGroup" list="partyGroups">
+                <condition-expr field-name="isBranch" operator="equals" value="Y"/>
+            </entity-condition>
+        </actions>
+        <field name="startDate" title="From"  position="1" widget-style="required" required-field="true">
+            <date-time type="date-time"/>
+        </field>
+        <field name="endDate" title="To" position="2"  widget-style="required" required-field="true">
+            <date-time type="date-time"/>
+        </field>
+        <field name="loanProductId" position="1" title="Loan Type">
+            <drop-down allow-empty="true">
+                <entity-options description="${code} - ${name}" entity-name="LoanProduct" key-field-name="loanProductId"></entity-options>
+            </drop-down>
+        </field>
+        <field name="loanStatusId" position="2" title="Loan Status">
+            <drop-down allow-empty="true">
+                <entity-options description="${name}" entity-name="LoanStatus" key-field-name="loanStatusId"></entity-options>
+            </drop-down>
+        </field>
+        <field name="stationId" position="2" title="Station">
+            <drop-down allow-empty="true">
+                <entity-options description="${name}" entity-name="Station" key-field-name="stationId"></entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="Generate Excel" widget-style="smallSubmit">
+            <submit button-type="button" />
+        </field>
+    </form>
+
+
+    <form name="memberBioDetailsExcel" type="single" target="memberBioDetailsExcel.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <actions>
+            <entity-condition entity-name="PartyGroup" list="partyGroups">
+            	<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+            </entity-condition>
+        </actions>
+        <field name="memberStatusId" title="Member Status" widget-style="required" required-field="true" use-when="partyId!=null">
+            <drop-down allow-empty="true" >
+                <entity-options entity-name="MemberStatus" description="${name}" key-field-name="memberStatusId">
+                    <entity-order-by field-name="name" />
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="employmentTypeId" title="Employment Type" widget-style="required" required-field="true">
+            <drop-down allow-empty="true" >
+                <entity-options entity-name="EmploymentType" description="${name}" key-field-name="employmentTypeId">
+                    <entity-order-by field-name="name" />
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="genderId" title="Gender" widget-style="required" required-field="true">
+            <drop-down allow-empty="true" >
+                <entity-options entity-name="Gender" description="${name}" key-field-name="genderId">
+                    <entity-order-by field-name="name" />
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="Generate Excel" widget-style="smallSubmit">
+            <submit button-type="button" />
+        </field>
+    </form>
 
 
     <form name="appliedLoansByLoanTypeCsv" type="list" list-name="loanApps"
@@ -227,6 +293,44 @@
         <field name="loanStatusId" title="Loan Status">
             <display-entity entity-name="LoanStatus" key-field-name="loanStatusId" description="${name}"/>
         </field>
+    </form>
+
+
+    <form name="appliedLoansByStationExcelCsv" type="list" list-name="loanApps"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="firstName" title="First Name"><display/></field>
+        <field name="lastName" title="Last Name"><display/></field>
+        <field name="name" title="Station"><display/></field>
+        <field name="loanNo" title="Loan No."><display/></field>
+        <field name="loanProductId" title="Product Name">
+            <display-entity entity-name="LoanProduct" key-field-name="loanProductId" description="${name}"/>
+        </field>
+        <field name="loanApplicationId" title="Amount Applied">
+            <display-entity entity-name="LoanProduct" key-field-name="loanProductId" description="${name}"/>
+        </field>
+        <field name="loanAmt" title="Disbursed Amount"><display/></field>
+        <field name="createdStamp" title="Date Applied"><display type="date"/></field>
+        <field name="disbursementDate" title="Date Disbursed"><display type="date"/></field>
+        <field name="loanStatusId" title="Loan Status">
+            <display-entity entity-name="LoanStatus" key-field-name="loanStatusId" description="${name}"/>
+        </field>
+    </form>
+
+
+    <form name="memberBioDetailsExcelCsv" type="list" list-name="loanApps"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="firstName" title="First Name"><display/></field>
+        <field name="lastName" title="Last Name"><display/></field>
+        <field name="genderId" title="Gender">
+            <display-entity entity-name="Gender" key-field-name="genderId" description="${name}"/>
+        </field>
+        <field name="employmentTypeId" title="Employment Type">
+            <display-entity entity-name="EmploymentType" key-field-name="employmentTypeId" description="${name}"/>
+        </field>
+        <field name="memberStatusId" title="Member Status">
+            <display-entity entity-name="MemberStatus" key-field-name="memberStatusId" description="${name}"/>
+        </field>
+
     </form>
 
 

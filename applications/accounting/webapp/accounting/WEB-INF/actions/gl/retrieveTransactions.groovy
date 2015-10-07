@@ -50,8 +50,6 @@ isDebit = org.ofbiz.accounting.util.UtilAccounting.isDebitAccount(account);
 
 openingBalacctgTransEntry.each { entry ->
   if (isDebit) {
-    System.out.println("THIS IS A DEBIT BALANCE ACCOUNT")
-
     if(entry.debitCreditFlag == "D") {
       if (entry.amount) {
       openingBalance = openingBalance + entry.amount
@@ -62,8 +60,6 @@ openingBalacctgTransEntry.each { entry ->
       }
     }
   }else{
-    System.out.println("THIS IS A CREDIT BALANCE ACCOUNT")
-
     if(entry.debitCreditFlag == "C") {
       if (entry.amount) {
       openingBalance = openingBalance + entry.amount
@@ -94,7 +90,6 @@ debitAmount = null
   finalTransList.add(finalTransListBuilder)
   }
   if (isDebit) {
-    System.out.println("THIS IS A DEBIT BALANCE ACCOUNT")
     if(entry.debitCreditFlag == "D") {
       if (entry.amount) {
         if(count<1){
@@ -115,7 +110,6 @@ debitAmount = null
       }
     }
   }else{
-    System.out.println("THIS IS A CREDIT BALANCE ACCOUNT")
 
     if(entry.debitCreditFlag == "C") {
       if (entry.amount) {
