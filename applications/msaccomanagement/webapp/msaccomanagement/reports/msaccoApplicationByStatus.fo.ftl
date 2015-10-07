@@ -24,7 +24,7 @@ under the License.
         CHAI SACCO
     </fo:block>
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
-        ${statusName}  MSACCO APPLICATION REPORT
+        ${statusName}  MSACCO APPLICATION REPORT   BETWEEN ${dateStartDate} AND ${dateEndDate}
     </fo:block>
     <fo:block><fo:leader/></fo:block>
 
@@ -32,12 +32,21 @@ under the License.
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
-            <fo:table-column column-width="120pt"/>
-            <fo:table-column column-width="120pt"/>
-            <fo:table-column column-width="120pt"/>
-            <fo:table-column column-width="120pt"/>
+            <fo:table-column column-width="80pt"/>
+            <fo:table-column column-width="50pt"/>
+            <fo:table-column column-width="80pt"/>
+            <fo:table-column column-width="60pt"/>
+            <fo:table-column column-width="80pt"/>
+            <fo:table-column column-width="140pt"/>
+            <fo:table-column column-width="80pt"/>
             <fo:table-header>
                <fo:table-row font-weight="bold">
+               <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block>PayRoll Number</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block>Member Number</fo:block>
+                    </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block>Member</fo:block>
                     </fo:table-cell>
@@ -50,7 +59,9 @@ under the License.
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block>Account Number</fo:block>
                     </fo:table-cell>
-                    
+                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block>Created Time</fo:block>
+                    </fo:table-cell>
                 </fo:table-row>
             </fo:table-header>
             <fo:table-body>
@@ -65,6 +76,12 @@ under the License.
                         <#assign member = delegator.findOne("Member", {"partyId" : memberPartyId?long}, false)/>
                     </#if>
                      <fo:table-row>
+                      <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${member.payrollNumber?if_exists}</fo:block>
+                        </fo:table-cell>
+                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${member.memberNumber?if_exists}</fo:block>
+                        </fo:table-cell>
                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${member.firstName?if_exists} ${member.lastName?if_exists}</fo:block>
                         </fo:table-cell>
@@ -77,6 +94,10 @@ under the License.
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${accNo.accountNo?if_exists}</fo:block>
                         </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${dep.createdStamp?if_exists}</fo:block>
+                        </fo:table-cell>
+                        
                         
                      </fo:table-row>
                   </#list>
