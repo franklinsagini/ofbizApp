@@ -376,44 +376,47 @@ public class FinAccountServices {
 					}
 
 					if (acctgTransEntries != null) {
-						acctgTransEntry = acctgTransEntries.get(0);
-						// Station Account Transaction
-						EntityConditionList<EntityExpr> stationAccountTransactionCond = EntityCondition.makeCondition(UtilMisc.toList(
-								EntityCondition.makeCondition("transactionAmount", EntityOperator.EQUALS, acctgTransEntry.getBigDecimal("amount")),
-								EntityCondition.makeCondition("acctgTransId", EntityOperator.EQUALS, acctgTransEntry.getString("acctgTransId"))
-								), EntityOperator.AND);
+						if (acctgTransEntries.size()>0) {
+							acctgTransEntry = acctgTransEntries.get(0);
+							// Station Account Transaction
+							EntityConditionList<EntityExpr> stationAccountTransactionCond = EntityCondition.makeCondition(UtilMisc.toList(
+									EntityCondition.makeCondition("transactionAmount", EntityOperator.EQUALS, acctgTransEntry.getBigDecimal("amount")),
+									EntityCondition.makeCondition("acctgTransId", EntityOperator.EQUALS, acctgTransEntry.getString("acctgTransId"))
+									), EntityOperator.AND);
 
-						try {
-							stationAccountTransactions = delegator.findList("StationAccountTransaction", stationAccountTransactionCond, null, null, null, false);
-							if (stationAccountTransactions.size() > 0) {
-								GenericValue stationAccountTransaction = stationAccountTransactions.get(0);
-								if (stationAccountTransaction.getLong("stationId") != null) {
-									try {
-										System.out.println("TRYING TO RETRIVE STATION USING " + stationAccountTransaction.getString("stationId"));
-										station = delegator.findOne("Station", UtilMisc.toMap("stationId", stationAccountTransaction.getString("stationId")), false);
-									} catch (GenericEntityException e) {
-										e.printStackTrace();
-									}
-									sb.append("Station Remitance");
-									sb.append(" ");
-									if (station != null) {
-										sb.append(station.getString("name"));
-									}
-									if (stationAccountTransaction.getString("chequeNumber") != null) {
+							try {
+								stationAccountTransactions = delegator.findList("StationAccountTransaction", stationAccountTransactionCond, null, null, null, false);
+								if (stationAccountTransactions.size() > 0) {
+									GenericValue stationAccountTransaction = stationAccountTransactions.get(0);
+									if (stationAccountTransaction.getLong("stationId") != null) {
+										try {
+											System.out.println("TRYING TO RETRIVE STATION USING " + stationAccountTransaction.getString("stationId"));
+											station = delegator.findOne("Station", UtilMisc.toMap("stationId", stationAccountTransaction.getString("stationId")), false);
+										} catch (GenericEntityException e) {
+											e.printStackTrace();
+										}
+										sb.append("Station Remitance");
 										sb.append(" ");
-										sb.append("ChequeNo: ");
-										sb.append(stationAccountTransaction.getString("chequeNumber"));
+										if (station != null) {
+											sb.append(station.getString("name"));
+										}
+										if (stationAccountTransaction.getString("chequeNumber") != null) {
+											sb.append(" ");
+											sb.append("ChequeNo: ");
+											sb.append(stationAccountTransaction.getString("chequeNumber"));
+										}
+										sb.append(" ");
+										sb.append("Month Year");
+										sb.append(" ");
+										sb.append(stationAccountTransaction.getString("monthyear"));
 									}
-									sb.append(" ");
-									sb.append("Month Year");
-									sb.append(" ");
-									sb.append(stationAccountTransaction.getString("monthyear"));
 								}
-							}
 
-						} catch (GenericEntityException e) {
-							e.printStackTrace();
+							} catch (GenericEntityException e) {
+								e.printStackTrace();
+							}
 						}
+						
 					} else {
 						System.out.println("WE WERE NO LUCKY IN GETTING ACCTRANS ID");
 					}
