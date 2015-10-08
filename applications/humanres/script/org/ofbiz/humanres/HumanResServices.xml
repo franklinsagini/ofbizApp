@@ -3232,8 +3232,14 @@
 		</entity-one>
         
 		<set field="documentName" value="LEAVE"  />
-		<set field="fromDate" from-field="newEntity.fromDate"  />
-		<set field="newEntity.fromDate" from-field="newEntity.fromDate"  />
+		<set field="fromDate" from-field="parameters.fromDate"  />
+		<set field="newEntity.fromDate" from-field="fromDate"  />
+		
+		
+		<log message="########FROM DATE PARAM ${parameters.fromDate}" level="info"/>
+		<log message="########FROM DATE PARAM ENTITY ${newEntity.fromDate}" level="info"/>
+		<log message="########FROM DATE fromDate ${fromDate}" level="info"/>
+		
 		<if-empty field="parameters.workflowDocumentTypeId">
 			<set field="newEntity.workflowDocumentTypeId" 
 			value="${bsh:org.ofbiz.humanres.LeaveServices.getWorkflowDocumentType(documentName);}"/>
@@ -3267,12 +3273,12 @@
 		<set field="notice" value="${bsh:org.ofbiz.humanres.LeaveApplicationValidation.getNoticePeriodState(leaveType, fromDate);}"/>
 		<set field="duration" value="${bsh:org.ofbiz.humanres.LeaveApplicationValidation.getLeaveDurationState(leaveType, durat);}"/>
 		<set field="employementTermsState" value="${bsh:org.ofbiz.humanres.LeaveApplicationValidation.getEmploymentStatusState(party);}"/>
- 		<set field="correctDateState" value="${bsh:org.ofbiz.humanres.LeaveApplicationValidation.isLeaveApplicationCorrect(leaveType, fromDate, durat, thruDate);}"/>
- 		<set field="valid" value="INVALID"/>
+<!--  		<set field="correctDateState" value="${bsh:org.ofbiz.humanres.LeaveApplicationValidation.isLeaveApplicationCorrect(leaveType, fromDate, durat, thruDate);}"/>
+ --> 		<set field="valid" value="INVALID"/>
 		<set field="no" value="NO"/>
 		
 		<log message=">>>>>>>>>>>>>>>>***>>>>>>>DURATION_STATE ${duration}" level="info"/>
-		<if>
+<!-- 		<if>
 			<condition>
 					<if-compare-field field="correctDateState"
 						to-field="no" operator="equals" />
@@ -3284,7 +3290,7 @@
 				</add-error>
 				<check-errors />
 			</then>
-		</if>
+		</if> -->
 
 		<if>
 			<condition>

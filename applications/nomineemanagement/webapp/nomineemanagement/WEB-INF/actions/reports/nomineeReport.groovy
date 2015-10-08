@@ -1,19 +1,62 @@
+import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionBuilder;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.entity.util.EntityFindOptions;
+import java.text.SimpleDateFormat;
+import javolution.util.FastList;
 import org.ofbiz.base.util.UtilMisc;
-
 import org.ofbiz.entity.Delegator;
+
 
 stationId = parameters.stationId
 partyId = parameters.partyId
+
+startDate = parameters.startDate
+endDate = parameters.endDate
+
+action = request.getParameter("action");
+
+print " -------- Start Date"
+println startDate
+
+print " -------- End Date"
+println endDate
+
+java.sql.Date sqlEndDate = null;
+java.sql.Date sqlStartDate = null;
+
+//dateStartDate = Date.parse("yyyy-MM-dd hh:mm:ss", startDate).format("dd/MM/yyyy")
+
+if ((startDate?.trim())){
+	dateStartDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(startDate);
+	sqlStartDate = new java.sql.Date(dateStartDate.getTime());
+}
+//(endDate != null) ||
+if ((endDate?.trim())){
+	dateEndDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(endDate);
+	sqlEndDate = new java.sql.Date(dateEndDate.getTime());
+}
+
+print "formatted Date"
+
+
+    startDateTimestamp = new Timestamp(sqlStartDate.getTime());
+	endDateTimestamp = new Timestamp(sqlEndDate.getTime());
+
+exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder()
+
+
 
 //Get Station Number
 member = null;
 globalEmployerCode = null;
 
 if ((stationId != null) && (!stationId.equals(""))){
-	//member = delegator.findOne("Member", [stationId : stationId], false);
-	//globalEmployerCode = station.employerCode
 	
-	//Get Employers with defaulters
 	memberList = delegator.findByAnd("Member",  [stationId : stationId.toLong()], null, false);
 	
 } else{
@@ -22,22 +65,12 @@ if ((stationId != null) && (!stationId.equals(""))){
 }
 
 if ((partyId != null) && (!partyId.equals(""))){
-	//member = delegator.findOne("Member", [stationId : stationId], false);
-	//globalEmployerCode = station.employerCode
 	
-	//Get Employers with defaulters
 	memberList = delegator.findByAnd("Member",  [partyId : partyId.toLong()], null, false);
 	
 }
 
 
-
-//Station Number
-//stationNumber = station.stationNumber
-
-//employerCode = station.employerCode
-//def defaultLoanStatusId = org.ofbiz.accountholdertransactions.LoanUtilities.getLoanStatusId('DEFAULTED');
-//defaultLoanStatusId = defaultLoanStatusId.toLong();
 class Member{
 	def memberNumber
 	def payrollNumber
@@ -112,7 +145,17 @@ memberList.eachWithIndex { memberItem, index ->
 	//employerCode = stationEmployerItem.employerCode;
 	memberPartyId = memberItem.partyId;
 	memberPartyId = memberPartyId.toLong();
-	memberNomineeList = delegator.findByAnd("MemberNomineeMapped",  [partyId : memberPartyId], null, false);
+	
+	expr = exprBldr.AND() {
+			GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
+			   LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
+			               EQUALS(partyId : memberPartyId)
+			
+		}
+   EntityFindOptions findOptions = new EntityFindOptions();
+	
+	
+	memberNomineeList = delegator.findList("MemberNomineeMapped",  expr, null, ["createdStamp ASC"], findOptions, false);
 		
 	memberNomineeList.eachWithIndex { memberNomineeItem, nomineeIndex ->
 
