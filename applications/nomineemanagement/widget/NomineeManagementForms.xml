@@ -5,10 +5,21 @@
 	<form name="nomineeReportForm" type="single" target="nomineeReportPDF" title="" header-row-style="header-row"
         default-table-style="basic-table">
 
+
+        <field name="startDate" title="From" >
+        	<date-time type="timestamp"/>
+           </field>
+        
+        <field name="endDate" title="To" position="2">
+        	<date-time type="timestamp"/>
+        </field>
+        
+
 		<field name="partyId" title="Member" ><lookup target-form-name="LookupActiveMember"/></field>
 
         <!-- field name="partyId" title="Member" widget-style="required" required-field="true"><lookup target-form-name="LookupActiveMember"/></field -->
         <field name="stationId" title="Station / Employer">
+         
         	<drop-down allow-empty="true">
         		<entity-options description="${name} - ${stationNumber} - ${employerCode}" key-field-name="stationId" entity-name="Station">
         			<entity-order-by field-name="name"/>

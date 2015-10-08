@@ -1741,7 +1741,7 @@ public class FileServices {
 				
 				
 		public static Date  calculateIssuedReturnDate(String theFileDuration){
-		  
+		 
 			int fileDuration = Integer.parseInt(theFileDuration);
 			
 			java.sql.Date date =  new java.sql.Date(0);
