@@ -1740,8 +1740,47 @@ public class FileServices {
 				
 				
 				
+		public static Date  calculateIssuedReturnDate(String theFileDuration){
+		 
+			int fileDuration = Integer.parseInt(theFileDuration);
+			
+			java.sql.Date date =  new java.sql.Date(0);
+			
+			LocalDate localDateEndDate = new LocalDate(date.getTime());
+
+			int count = 1 ;
+			
+			    while (count < fileDuration) {
 				
+				    localDateEndDate = localDateEndDate.plusDays(1);
+
+				   count++;
+		     	}
+   
+			log.info("########DATE TO RETURN THE FILE"+localDateEndDate);
+			return localDateEndDate.toDate();
+			
+			
+			
+		}		
 				
+		
+	  public static String  getactivityName(String reasonId){
+		  Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		  GenericValue activityELI = null;
+		  String activityname = null;
+		  
+		  try{
+			  activityELI =  delegator.findOne("RegistryFileActivity",UtilMisc.toMap("activityId", reasonId), false);
+		  }catch(Exception e){
+			  e.printStackTrace();
+		  }
+		  if(activityELI.size() > 0 ){
+			  activityname = activityELI.getString("activity");
+		  }
+		  return activityname;
+		  
+	  }	
 				
 //				public static String runFileRequestService(HttpServletRequest request, HttpServletResponse response) {
 //					Delegator delegator = DelegatorFactoryImpl.getDelegator(null);

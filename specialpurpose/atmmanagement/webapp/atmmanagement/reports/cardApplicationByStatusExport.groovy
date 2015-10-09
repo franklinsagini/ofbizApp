@@ -10,9 +10,6 @@ import java.text.SimpleDateFormat;
 
 import javolution.util.FastList;
 
-cardStatusId = parameters.cardStatusId
-
-cardStatusIdLong = cardStatusId.toLong();
 
 cardStatusId = parameters.cardStatusId
 
@@ -72,14 +69,30 @@ cardApplications = [];
 		
 EntityFindOptions findOptions = new EntityFindOptions();
 
-
- statusName = org.ofbiz.msaccomanagement.MSaccoManagementServices.getCardStatusId(cardStatusId);
-
-card = delegator.findList("CardApplication", expr, null, ["createdStamp ASC"], findOptions, false);
-
-context.card = card;
+ card = delegator.findList("CardApplication", expr, null, ["createdStamp ASC"], findOptions, false);
+ 
+ card.eachWithIndex { cardItem, index ->
+ 
+ formNo = cardItem.getString("formNumber");
+ cardNo = cardItem.getString("cardNumber");
+ idNo = cardItem.getString("idNumber");
+ fname = cardItem.getString("firstName");
+ lname = cardItem.getString("lastName");
+ 
+ cardStatusId = cardItem.getString("cardStatusId");
+ cardStatus = delegator.findOne("CardStatus", [cardStatusId : cardStatusId.toLong()], false);
+ status = cardStatus.getString("name");
+ 
+ accId = cardItem.getString("memberAccountId");
+ acc = delegator.findOne("MemberAccount", [memberAccountId : accId.toLong()], false);
+ accNo = acc.getString("accountNo");
+ 
+ cardApplications.add([fname :fname, lname :lname, IdNo : idNo, accNo : accNo, formNumber : formNo, cardNo : cardNo, cardStatus : status]);
+ 
+ }
+ 
+context.cardApplications = cardApplications;
 context.startDate = startDate;
 context.endDate = endDate;
-
-
+context.status = status;
 

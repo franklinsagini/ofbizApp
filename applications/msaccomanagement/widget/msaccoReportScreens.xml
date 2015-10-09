@@ -66,6 +66,53 @@ under the License.
         </section>
     </screen>
 
+
+ <screen name="msaccoApplicationByStatusPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://msaccomanagement/webapp/msaccomanagement/reports/msaccoApplicationByStatus.groovy"/>
+              
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://msaccomanagement/webapp/msaccomanagement/reports/msaccoApplicationByStatus.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="msaccoApplicationByStatusCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://msaccomanagement/webapp/msaccomanagement/reports/msaccoApplicationByStatusExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h2" text="MSACCO APPLICATIONS [ ${statusName} ]"/>
+                    <label style="h2" text="DATES BETWEEN ${dateStartDate} AND ${dateEndDate}"/>
+                </container>
+                <include-form name="msaccoApplicationExport" location="component://msaccomanagement/widget/msaccoReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
     <screen name="msaccoReports">
         <section>
             <actions>
@@ -83,6 +130,16 @@ under the License.
                          <container style="righthalf">
                             <screenlet title="Msacco Application Statement(Excel)">
                                 <include-form name="msaccoApplicationExcel" location="component://msaccomanagement/widget/msaccoReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                         <container style="lefthalf">
+                            <screenlet title="Msacco Application Statement By Status (pdf)">
+                                <include-form name="msaccoApplicationByStatus" location="component://msaccomanagement/widget/msaccoReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                         <container style="righthalf">
+                            <screenlet title="Msacco Application Statement  By Status(Excel)">
+                                <include-form name="msaccoApplicationExcelByStatus" location="component://msaccomanagement/widget/msaccoReportForms.xml"/>
                             </screenlet>
                         </container>
                         <container style="clear"/>

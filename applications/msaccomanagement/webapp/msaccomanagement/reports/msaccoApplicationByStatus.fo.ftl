@@ -17,87 +17,88 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#escape x as x?xml>
-    <#if card?has_content>
+    <#if msacco?has_content>
 
     <#-- REPORT TITLE -->
     <fo:block font-size="18pt" font-weight="bold" text-align="center">
         CHAI SACCO
     </fo:block>
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
-         CARDS APPLICATION REPORT BETWEEN ${startDate} AND ${endDate}
+        ${statusName}  MSACCO APPLICATION REPORT   BETWEEN ${dateStartDate} AND ${dateEndDate}
     </fo:block>
     <fo:block><fo:leader/></fo:block>
 
-<#if card?has_content>
+<#if msacco?has_content>
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
-        	<fo:table-column column-width="30pt"/>
-            <fo:table-column column-width="100pt"/>
+            <fo:table-column column-width="80pt"/>
             <fo:table-column column-width="50pt"/>
-            <fo:table-column column-width="100pt"/>
-            <fo:table-column column-width="100pt"/>
-            <fo:table-column column-width="120pt"/>
-            <fo:table-column column-width="100pt"/>
+            <fo:table-column column-width="80pt"/>
+            <fo:table-column column-width="60pt"/>
+            <fo:table-column column-width="80pt"/>
+            <fo:table-column column-width="140pt"/>
+            <fo:table-column column-width="80pt"/>
             <fo:table-header>
                <fo:table-row font-weight="bold">
-               		 <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block></fo:block>
+               <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block>PayRoll Number</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block>Member Number</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block>Member</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Id Number</fo:block>
+                        <fo:block>Id Number</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Account Number</fo:block>
+                        <fo:block>Phone Number</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Form Number</fo:block>
-                    </fo:table-cell>
-                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Card Number</fo:block>
+                        <fo:block>Account Number</fo:block>
                     </fo:table-cell>
                      <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block text-align="left">Card Status</fo:block>
+                        <fo:block>Created Time</fo:block>
                     </fo:table-cell>
-                    
                 </fo:table-row>
             </fo:table-header>
             <fo:table-body>
-					<#assign count = 0>
-                   <#list card as dep>
-                   	<#assign count = count + 1>
+
+                   <#list msacco as dep>
                     <#if dep.memberAccountId?has_content>
                     <#assign memberPartyId = dep.memberAccountId?number /> 
                         <#assign accNo = delegator.findOne("MemberAccount", {"memberAccountId" : memberPartyId?long}, false)/>
                     </#if>
-                       <#if dep.cardStatusId?has_content>
-                        <#assign cardStatus = delegator.findOne("CardStatus", {"cardStatusId" : dep.cardStatusId}, false)/>
+                    <#if dep.partyId?has_content>
+                    <#assign memberPartyId = dep.partyId?number /> 
+                        <#assign member = delegator.findOne("Member", {"partyId" : memberPartyId?long}, false)/>
                     </#if>
                      <fo:table-row>
-                       <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block  text-align="left">${count}</fo:block>
-                        </fo:table-cell>
-                       <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block  text-align="left">${dep.firstName?if_exists} ${dep.lastName?if_exists}</fo:block>
-                        </fo:table-cell>
-                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block  text-align="left">${dep.idNumber?if_exists}</fo:block>
-                        </fo:table-cell>
-                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block  text-align="left">${accNo.accountNo?if_exists}</fo:block>
-                        </fo:table-cell>
-                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block  text-align="left">${dep.formNumber?if_exists}</fo:block>
+                      <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${member.payrollNumber?if_exists}</fo:block>
                         </fo:table-cell>
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block  text-align="left">${dep.cardNumber?if_exists}</fo:block>
+                            <fo:block>${member.memberNumber?if_exists}</fo:block>
                         </fo:table-cell>
-                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block  text-align="left">${cardStatus.name?if_exists}</fo:block>
+                       <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${member.firstName?if_exists} ${member.lastName?if_exists}</fo:block>
                         </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${member.idNumber?if_exists}</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${dep.mobilePhoneNumber?if_exists}</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${accNo.accountNo?if_exists}</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${dep.createdStamp?if_exists}</fo:block>
+                        </fo:table-cell>
+                        
+                        
                      </fo:table-row>
                   </#list>
 
@@ -113,3 +114,4 @@ under the License.
         <fo:block text-align="center">Nothing</fo:block>
     </#if>
 </#escape>
+

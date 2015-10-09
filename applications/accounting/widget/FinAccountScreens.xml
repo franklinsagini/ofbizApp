@@ -196,7 +196,6 @@ under the License.
                 <set field="reconDate" from-field="parameters.reconDate"/>
                 <set field="headerId" from-field="parameters.headerId"/>
                 <entity-one entity-name="BankReconHeader" value-field="bankReconHeader"/>
-
                  <entity-condition entity-name="BankReconLines" list="bankReconLinesAndFinAccountTrans">
                     <condition-list combine="and">
                         <condition-expr field-name="headerId" from-field="parameters.headerId" />
@@ -234,6 +233,9 @@ under the License.
                                     <link target="UnidentifiedUnpresented" text="Unidentified Debits/Unreceipted Cheques" style="buttontext">
                                         <parameter param-name="headerId"/>
                                     </link>
+                                    <link target="exportReconTrans.csv" text="Export Transactions" style="buttontext">
+                                        <parameter param-name="headerId"/>
+                                    </link>
                                     <link use-when="&quot;CAPTURED&quot;.equals(&quot;${statusName}&quot;)" target="saveReconciliation" text="Save Reconciliation" style="buttontext">
                                         <parameter param-name="headerId"/>
                                     </link>
@@ -249,6 +251,60 @@ under the License.
                         </section>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="ReconTransCSV">
+        <section>
+            <actions>
+                 <set field="viewSize" value="99999"/>
+                <set field="finAccountId" from-field="parameters.finAccountId"/>
+                <set field="reconDate" from-field="parameters.reconDate"/>
+                <set field="headerId" from-field="parameters.headerId"/>
+                <entity-one entity-name="BankReconHeader" value-field="bankReconHeader"/>
+                 <entity-condition entity-name="BankReconLines" list="bankReconLinesAndFinAccountTrans">
+                    <condition-list combine="and">
+                        <condition-expr field-name="headerId" from-field="parameters.headerId" />
+                        <condition-expr field-name="isReconciledItem" value="N" ignore-if-empty="true"/>
+                        <condition-expr field-name="isUnidentifiedDebits" value="N" ignore-if-empty="true"/>
+                        <condition-expr field-name="isUnreceiptedBankings" value="N" ignore-if-empty="true"/>
+                    </condition-list>
+                     <order-by field-name="transactionDate DESC"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <container>
+                     <include-form name="ReconTransCSV" location="component://accounting/widget/FinAccountForms.xml" />
+                </container>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="UnidentifiedUpresentedCSV">
+        <section>
+            <actions>
+                 <set field="viewSize" value="99999"/>
+                <set field="finAccountId" from-field="parameters.finAccountId"/>
+                <set field="reconDate" from-field="parameters.reconDate"/>
+                <set field="headerId" from-field="parameters.headerId"/>
+                <entity-one entity-name="BankReconHeader" value-field="bankReconHeader"/>
+                <entity-condition entity-name="BankReconLines" list="bankReconLinesAndFinAccountTrans">
+                    <condition-list combine="and">
+                        <condition-expr field-name="headerId" from-field="parameters.headerId" />
+                        <condition-expr field-name="isReconciledItem" value="N"/>
+                        <condition-list combine="or">
+                            <condition-expr field-name="isUnreceiptedBankings" value="Y"/>
+                            <condition-expr field-name="isUnidentifiedDebits" value="Y"/>
+                        </condition-list>
+                    </condition-list>
+                    <order-by field-name="transactionDate DESC"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <container>
+                     <include-form name="UnidentifiedUpresentedCSV" location="component://accounting/widget/FinAccountForms.xml" />
+                </container>
             </widgets>
         </section>
     </screen>
@@ -295,7 +351,10 @@ under the License.
                                 <link target="bankReconTrans" text="Back to Recon" style="buttontext">
                                     <parameter param-name="headerId"/>
                                 </link>
-                                <link target="newUnidentifiedUpresented" text="New Unidentified Debits/Unpresented Cheques" style="buttontext">
+                                <link target="newUnidentifiedUpresented" text="New Unidentified Debits/Unreceipted Cheques" style="buttontext">
+                                    <parameter param-name="headerId"/>
+                                </link>
+                                <link target="exportUnidentifiedUpresented.csv" text="Export Unidentified Debits/Unreceipted Cheques" style="buttontext">
                                     <parameter param-name="headerId"/>
                                 </link>
                             </widgets>

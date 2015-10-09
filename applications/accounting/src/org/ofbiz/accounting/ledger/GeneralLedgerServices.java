@@ -201,15 +201,16 @@ public class GeneralLedgerServices {
 			GenericValue stationAccountTransaction = stationAccountTransactions.get(0);
 			if(stationAccountTransaction.getLong("stationId")!=null){
 				try {
+					System.out.println("TRYING TO RETRIVE STATION USING "+stationAccountTransaction.getString("stationId"));
 					station = delegator.findOne("Station", UtilMisc.toMap("stationId", stationAccountTransaction.getString("stationId")), false);
 				} catch (GenericEntityException e) {
-					
 					e.printStackTrace();
 				}
-				
 				sb.append("Station Remitance");
 				sb.append(" ");
-				sb.append(station.getString("name"));
+				if (station!=null) {
+					sb.append(station.getString("name"));
+				}
 				if(stationAccountTransaction.getString("chequeNumber")!= null){
 					sb.append(" ");
 					sb.append("ChequeNo: ");

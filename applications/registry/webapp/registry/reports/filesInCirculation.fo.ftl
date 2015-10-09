@@ -28,7 +28,7 @@ under the License.
     </fo:block>
     
      <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
-       BETWEEN ${sqlStartDate} AND ${sqlEndDate}
+     
     </fo:block>
     
     <fo:block><fo:leader/></fo:block>
@@ -36,12 +36,17 @@ under the License.
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
-            <fo:table-column column-width="140pt"/>
-            <fo:table-column column-width="130pt"/>
-            <fo:table-column column-width="130pt"/>
-            <fo:table-column column-width="130pt"/>
+            <fo:table-column column-width="55pt"/>
+            <fo:table-column column-width="120pt"/>
+            <fo:table-column column-width="40pt"/>
+            <fo:table-column column-width="120pt"/>
+            <fo:table-column column-width="100pt"/>
+            <fo:table-column column-width="120pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
+                   <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block text-align="left">PayRoll Number</fo:block>
+                    </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="left">File Member</fo:block>
                     </fo:table-cell>
@@ -51,13 +56,16 @@ under the License.
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="left">File Now With</fo:block>
                     </fo:table-cell>
+                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block text-align="left">Reason/Activity</fo:block>
+                    </fo:table-cell>
                      <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="left">Date File Issued</fo:block>
                     </fo:table-cell>
                    
                 </fo:table-row>
             </fo:table-header>
-            <fo:table-body>
+            <fo:table-body>   	
 
                   <#list activities as activity>
                   <#if activity.currentPossesser?has_content>
@@ -65,6 +73,15 @@ under the License.
                         
                     </#if>
                      <fo:table-row>
+                     
+                     <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <#if activity?has_content>
+                                <fo:block>${activity.payrollNumber?if_exists}</fo:block>
+                            <#else>
+                                <fo:block>Not Defined</fo:block>
+                            </#if>
+                        </fo:table-cell>
+                     
                       <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <#if activity?has_content>
                                 <fo:block>${activity.firstName?if_exists} ${activity.lastName?if_exists}</fo:block>
@@ -73,7 +90,6 @@ under the License.
                             </#if>
                         </fo:table-cell>
                        
-                        
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${activity.memberNumber?if_exists}</fo:block>
                         </fo:table-cell>
@@ -81,6 +97,16 @@ under the License.
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${fileWith.firstName?if_exists} ${fileWith.lastName?if_exists}</fo:block>
                         </fo:table-cell>
+                        
+                           <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <#if activity.Reason?has_content>
+                                  <#assign fileTeasonFor = delegator.findOne("RegistryFileActivity", {"activityId" : activity.Reason}, false)/>
+                                <fo:block>${fileTeasonFor.activity?if_exists}</fo:block>
+                            <#else>
+                                <fo:block>Not Defined</fo:block>
+                            </#if>
+                        </fo:table-cell>
+                        
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${activity.issueDate?if_exists}</fo:block>
                         </fo:table-cell>

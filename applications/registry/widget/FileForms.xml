@@ -565,7 +565,7 @@
     </form>
 
    
-<form name="listMemberfilesForIssue" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="selectFilesToIssue" paginate-target="FindMemberfilesForIssue"
+<form name="listMemberfilesForIssue" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="selectFilesToIssue" paginate-target="regFileIssue"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 	       		<actions>
         <entity-condition entity-name="RegistryFiles" >
@@ -620,7 +620,7 @@
 			</hyperlink>
 		</field> -->
 		<field name="actionBy" title="Requested By"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
-        <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
+        <on-event-update-area event-type="paginate" area-id="search-results" area-target="regFileIssue"/>
     </form>
     
     <form name="listMemberfilesPreparedForRelease" type="multi" use-row-submit="true" title="Selected Monument" separate-columns="true"
@@ -1520,7 +1520,7 @@
 			</hyperlink>
 		</field>
 		 <field name="filesReturn" title="-" widget-style="buttontext">
-			<hyperlink also-hidden="false" description="Dispose File" target="goReturnFile">
+			<hyperlink also-hidden="false" description="Dispose File" target="goSaveFileForDispose">
 				<parameter param-name="partyId" />
 				<parameter param-name="status" /> 
 				<parameter param-name="currentPossesser" /> 
@@ -1616,7 +1616,7 @@
       <field name="volumeIdentifier"><display/></field>
 	  <field name="volumeStatus"><display/></field>
 	    <field name="fileBoxCode"><display/></field>
-	     <field name="fileBox"><display/></field>
+	     <field name="fileBox" title="Retention Period"><display/></field>
 	   <field name="documentOverview" title="Overview" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Volume Overview" target="volumeOverviewURL">
 				<parameter param-name="volumeId" />
@@ -2170,6 +2170,21 @@
 		<field name="stageStatus"><hidden/></field>
 		
 		 <field name="submitButton" title="Save File" widget-style="smallSubmit"><submit button-type="button"/></field>
+	</form>
+	
+	  <form name="disposeFileForm" type="single" target="moveToDispose"
+		default-map-name="updateLeaveDurationContext" header-row-style="header-row"
+		default-table-style="basic-table">
+		 <actions>
+		 
+        </actions>
+		<field name="partyId" title="Member Names:"><display-entity entity-name="Member" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
+		<field name="folioNo" title="File Folio Number:"><hidden/></field>
+		<field name="fileBox" title="Box short Description" widget-style="required" required-field="true"><text size="45"></text></field>
+		<field name="fileBoxCode" title="Box Code" widget-style="required" required-field="true"><text size="45"></text></field>
+		<field name="stageStatus"><hidden/></field>
+		
+		 <field name="submitButton" title="Dispose File" widget-style="smallSubmit"><submit button-type="button"/></field>
 	</form>
 	
 	<!-- ========================= FILE STATUS PERIOD SETUP ================================ -->

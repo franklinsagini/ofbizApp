@@ -10,17 +10,6 @@ import java.text.SimpleDateFormat;
 
 import javolution.util.FastList;
 
-cardStatusId = parameters.cardStatusId
-
-cardStatusIdLong = cardStatusId.toLong();
-
-cardStatusId = parameters.cardStatusId
-
-cardStatusIdLong = cardStatusId.toLong();
-
-action = request.getParameter("action");
-
-
 
 startDate = parameters.startDate
 endDate = parameters.endDate
@@ -60,26 +49,47 @@ print "formatted Date"
 
 exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder()
 
+statusName = org.ofbiz.msaccomanagement.MSaccoManagementServices.getCardStatusName(statusLong);
 
-cardApplications = [];
+println("############STATUS NAME########"+statusName); 
+
+msaccoApplications = [];
+
+
 
 	expr = exprBldr.AND() {
 			GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
 			   LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
-			               EQUALS(cardStatusId : cardStatusIdLong) 
+			               EQUALS(cardStatusId : statusLong)
 			
 		}
-		
 EntityFindOptions findOptions = new EntityFindOptions();
 
+msacco = delegator.findList("MSaccoApplication",  expr, null, ["createdStamp ASC"], findOptions, false);
+ 
+ msacco.eachWithIndex { msaccoItem, index ->
+	no = msaccoItem.mobilePhoneNumber;
 
- statusName = org.ofbiz.msaccomanagement.MSaccoManagementServices.getCardStatusId(cardStatusId);
+ createdTime = msaccoItem.createdStamp;
+ party = msaccoItem.partyId;
+ name = delegator.findOne("Member", [partyId : party], false);
+ payrollNumber =  name.getString("payrollNumber");
+memberNumber =  name.getString("memberNumber");
+ fname = name.getString("firstName");
+ lname = name.getString("lastName");
+ idNo = name.getString("idNumber");
+ 
+ accId = msaccoItem.memberAccountId;
+ acc = delegator.findOne("MemberAccount", [memberAccountId : accId], false);
+ accNo = acc.getString("accountNo");
 
-card = delegator.findList("CardApplication", expr, null, ["createdStamp ASC"], findOptions, false);
+ msaccoApplications.add([createdTime :createdTime,payrollNumber :payrollNumber, memberNumber :memberNumber, fname :fname, lname :lname, phone : no, IdNo : idNo, accNo : accNo]);
+ }
+            
+context.msaccoApplications = msaccoApplications;
+ context.statusName = statusName
+ context.dateStartDate = dateStartDate
+context.dateEndDate = dateEndDate
 
-context.card = card;
-context.startDate = startDate;
-context.endDate = endDate;
 
-
-
+ 

@@ -13,27 +13,24 @@ endDate = parameters.dateB
 activityId = parameters.activityId
 
 
-dateStartDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(startDate);
-dateEndDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(endDate);
+//dateStartDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(startDate);
+//dateEndDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(endDate);
 
- sqlStartDate = new java.sql.Timestamp(dateStartDate.getTime());
- sqlEndDate = new java.sql.Timestamp(dateEndDate.getTime());
+ //sqlStartDate = new java.sql.Timestamp(dateStartDate.getTime());
+ //sqlEndDate = new java.sql.Timestamp(dateEndDate.getTime());
 
 
 filesInCirculationlist= [];
 
+def actName = null ;
+
 exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder()
-
-
-
-
 
 	expr = exprBldr.AND() {
 			NOT_EQUAL(currentPossesser: "REGISTRY")
-			GREATER_THAN_EQUAL_TO(issueDate: sqlStartDate)
-			LESS_THAN_EQUAL_TO(issueDate: sqlEndDate)
-			
+			EQUALS(status : "ISSUED")
 		}
+		
 EntityFindOptions findOptions = new EntityFindOptions();
 findOptions.setMaxRows(100);
 filesInCirculation = delegator.findList("RegistryFiles", expr, null, null, findOptions, false)
@@ -43,22 +40,38 @@ filesInCirculation = delegator.findList("RegistryFiles", expr, null, null, findO
  partylong = party.toLong();
  member = delegator.findOne("Member", [partyId : partylong], false);
  
+reason = filesInCirculationItem.Reason;
+ reasonToString =  reason.toString();
+ 
+ 
+actName = org.ofbiz.registry.FileServices.getactivityName(reasonToString);
+ 
+ println("#######REASON ID  #######"+reason);
+ println("#######REASON NAME JAVA   #######"+actName);
+
+
+//registryActivityName = delegator.findOne("RegistryFileActivity",[activityId : reason ],false);
+ //activityName = registryActivityName.activity;
+ // println("#######REASON NAME  #######"+activityName);
+ 
+//activityName = filesInCirculationItem.Reason;
+ 
+ payRollNo  = filesInCirculationItem.payrollNumber;
  memberNumber = filesInCirculationItem.memberNumber;
  fileOwner = "${member.firstName} ${member.lastName}";
  currentPossesser = filesInCirculationItem.currentPossesser;
  filewith = delegator.findOne("Person", [partyId : currentPossesser], false);
  filewithName ="${filewith.firstName} ${filewith.lastName}";
- 
-  timein  = filesInCirculationItem.issueDate;
+  println("#######NAME  #######"+filewithName);
+ timein  = filesInCirculationItem.issueDate;
  dateStringin = timein.format("yyyy-MMM-dd HH:mm:ss a")
  time = dateStringin;
- 
- 
- 
- 
- filesInCirculationlist.add([fileOwner :fileOwner, memberNumber :memberNumber, filewith : filewithName, time : time]);
+
+
+//activityName: activityName , 
+
+
+ filesInCirculationlist.add([payRollNo : payRollNo, activityName: actName ,  fileOwner :fileOwner, memberNumber :memberNumber, filewith : filewithName, time : time]);
  }
 context.filesInCirculationlist = filesInCirculationlist;
-context.sqlStartDate = sqlStartDate	
-context.sqlEndDate = sqlEndDate	
 

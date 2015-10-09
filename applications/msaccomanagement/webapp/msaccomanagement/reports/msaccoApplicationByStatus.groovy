@@ -10,17 +10,6 @@ import java.text.SimpleDateFormat;
 
 import javolution.util.FastList;
 
-cardStatusId = parameters.cardStatusId
-
-cardStatusIdLong = cardStatusId.toLong();
-
-cardStatusId = parameters.cardStatusId
-
-cardStatusIdLong = cardStatusId.toLong();
-
-action = request.getParameter("action");
-
-
 
 startDate = parameters.startDate
 endDate = parameters.endDate
@@ -52,34 +41,33 @@ if ((endDate?.trim())){
 }
 
 print "formatted Date"
-//println dateStartDate
-//println dateEndDate
+
 
     startDateTimestamp = new Timestamp(sqlStartDate.getTime());
 	endDateTimestamp = new Timestamp(sqlEndDate.getTime());
 
 exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder()
 
+statusName = org.ofbiz.msaccomanagement.MSaccoManagementServices.getCardStatusName(statusLong);
 
-cardApplications = [];
+println("############STATUS NAME########"+statusName); 
+
+msaccoApplications = [];
+
+
 
 	expr = exprBldr.AND() {
 			GREATER_THAN_EQUAL_TO(createdStamp: startDateTimestamp)
 			   LESS_THAN_EQUAL_TO(createdStamp: endDateTimestamp)
-			               EQUALS(cardStatusId : cardStatusIdLong) 
+			               EQUALS(cardStatusId : statusLong)
 			
 		}
-		
 EntityFindOptions findOptions = new EntityFindOptions();
 
-
- statusName = org.ofbiz.msaccomanagement.MSaccoManagementServices.getCardStatusId(cardStatusId);
-
-card = delegator.findList("CardApplication", expr, null, ["createdStamp ASC"], findOptions, false);
-
-context.card = card;
-context.startDate = startDate;
-context.endDate = endDate;
-
-
-
+msacco = delegator.findList("MSaccoApplication",  expr, null, ["createdStamp ASC"], findOptions, false);
+ 
+ context.msacco = msacco
+ context.statusName = statusName
+  context.dateStartDate = startDate
+context.dateEndDate = endDate
+ 
