@@ -30,23 +30,14 @@ summaryCondition.add(EntityCondition.makeCondition("createdStamp", EntityOperato
 summaryCondition.add(EntityCondition.makeCondition("createdStamp", EntityOperator.LESS_THAN_EQUAL_TO, endDate));
 
 loansRepayments = delegator.findList('LoanRepayment',  EntityCondition.makeCondition(summaryCondition, EntityOperator.AND), null,["createdStamp"],null,false)
-loanProducts.each { item ->
-  //get all repaid for this account
-  totalRepayment =0
-  loanName = item.name;
-  loansRepayments.each { repaymentItem ->
-    loanApplication = delegator.findOne('LoanApplication', [loanApplicationId:repaymentItem.loanApplicationId.toLong()], true)
-    if (item.loanProductId == loanApplication.loanProductId.toLong()) {
-      totalRepayment = totalRepayment + repaymentItem.transactionAmount
 
-    }
-  }
+loansRepayments.each { repayment ->
   listBuilder = [
-    loanProductId:loanName,
-    amount:totalRepayment,
+    loanNo:repayment.loanNo,
+    partyId:repayment.partyId,
+    transactionAmount:repayment.transactionAmount,
   ]
   loansRepaymentsList.add(listBuilder)
-
 }
 
 context.loanApps = loansRepaymentsList
