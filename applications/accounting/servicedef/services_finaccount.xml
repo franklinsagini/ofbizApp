@@ -169,6 +169,23 @@ under the License.
         <attribute type="BigDecimal" mode="IN" name="bankBalance" optional="true"/>
      </service>
 
+    <service name="deleteBankRecon" engine="java" default-entity-name="BankReconHeader"
+            location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="deleteBankRecon">
+        <description>Delete Bank Recon Header and all its transactions</description>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute type="String" mode="INOUT" name="finAccountId" optional="true"/>
+        <attribute type="String" mode="IN" name="headerId" optional="false"/>
+     </service>
+
+
+    <service name="updateReconHeader" default-entity-name="BankReconHeader" engine="simple"
+                location="component://accounting/script/org/ofbiz/accounting/finaccount/FinAccountServices.xml" invoke="updateReconHeader" auth="true">
+        <description>Update Bank Recon Header</description>
+        <attribute type="String" mode="IN" name="headerId" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
     <service name="createUnidentifiedUpresented" engine="java" default-entity-name="FinAccountTrans"
             location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="createUnidentifiedUpresented">
         <description>Pulls all transactions of type cheque from account transaction</description>
@@ -177,14 +194,7 @@ under the License.
         <attribute type="String" mode="INOUT" name="headerId" optional="false"/>
         <attribute type="String" mode="IN" name="description" optional="false"/>
      </service>
-    <service name="deleteUnidentifiedUnpresented" engine="java" default-entity-name="BankReconLines"
-            location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="deleteUnidentifiedUnpresented">
-        <description>Pulls all transactions of type cheque from account transaction</description>
-        <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        <auto-attributes mode="INOUT" optional="true" include="pk"/>
-        <attribute type="String" mode="INOUT" name="headerId" optional="false"/>
-        <attribute type="String" mode="IN" name="reconLineId" optional="false"/>
-     </service>
+
 
     <service name="saveReconciliation" engine="java" default-entity-name="BankReconHeader"
             location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="saveReconciliation">
@@ -211,6 +221,14 @@ under the License.
         <attribute type="String" mode="INOUT" name="reconLineId" optional="false"/>
      </service>
 
+    <service name="deleteUnidentifiedUnpresented" engine="java" default-entity-name="BankReconLines"
+            location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="deleteUnidentifiedUnpresented">
+        <description>DELETES THE SELECTED UNIDENTIFIED AND OR UNPRESENTED</description>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <auto-attributes mode="INOUT" optional="true" include="pk"/>
+        <attribute type="String" mode="INOUT" name="headerId" optional="false"/>
+        <attribute type="String" mode="IN" name="reconLineId" optional="false"/>
+     </service>
     <!-- financial account transactions -->
     <service name="finAccountDeposit" engine="java"
             location="org.ofbiz.accounting.finaccount.FinAccountPaymentServices" invoke="finAccountDeposit" auth="true">

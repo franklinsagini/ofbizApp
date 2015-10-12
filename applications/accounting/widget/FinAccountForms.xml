@@ -96,20 +96,28 @@ under the License.
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="NewBankRecon" target="createReconHeader" title="" type="single"
+    <form name="NewBankRecon" target="createReconHeader" default-map-name="bankReconHeader" title="" type="single"
         header-row-style="header-row" default-table-style="basic-table">
+        <alt-target use-when="bankReconHeader!=null" target="updateReconHeader"/>
         <field name="finAccountId" >
             <hidden/>
         </field>
-        <field name="reconDate">
+        <field use-when="bankReconHeader!=null" name="headerId" >
+            <display/>
+        </field>
+        <field use-when="bankReconHeader!=null" name="reconDate" >
+            <display/>
+        </field>
+        <field use-when="bankReconHeader==null" name="reconDate">
             <date-time/>
         </field>
         <field name="bankBalance" title="Bank Statement Balance">
             <text/>
         </field>
-        <field name="submitButton" title="Create" widget-style="smallSubmit">
+        <field name="submitButton" use-when="bankReconHeader==null" title="Create" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
+        <field name="submitButton" use-when="bankReconHeader!=null" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="newUnidentifiedUpresented" target="createUnidentifiedUpresented" title="" type="single"
         header-row-style="header-row" default-table-style="basic-table">
@@ -151,15 +159,8 @@ under the License.
         <actions>
             <entity-condition entity-name="BankReconHeader">
                 <condition-expr field-name="finAccountId" from-field="finAccountId"/>
-                <order-by field-name="reconDate DESC"/>
+                <order-by field-name="headerId DESC"/>
             </entity-condition>
-            <service service-name="performFind" result-map="result" result-map-list="listIt">
-                <field-map field-name="inputFields" from-field="parameters"/>
-                <field-map field-name="entityName" value="BankReconHeader"/>
-                <field-map field-name="orderBy" from-field="parameters.sortField"/>
-                <field-map field-name="viewIndex" from-field="viewIndex"/>
-                <field-map field-name="viewSize" from-field="viewSize"/>
-            </service>
         </actions>
         <field name="finAccountId"><hidden/></field>
         <field name="headerId"><display/></field>
@@ -167,8 +168,19 @@ under the License.
         <field name="partyId" title="Created By"> <display/></field>
         <field name="reconDate"><display/></field>
         <field name="statusName"><display/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="detailsLink" title=" " widget-style="buttontext">
+        <field name="editButton" use-when="&quot;CAPTURED&quot;.equals(&quot;${statusName}&quot;)" title="Edit" widget-style="buttontext">
+            <hyperlink target="newBankRecon" description="${uiLabelMap.CommonEdit}" also-hidden="false">
+                <parameter param-name="headerId"/>
+                <parameter param-name="finAccountId"/>
+            </hyperlink>
+        </field>
+        <field name="deleteReconButton" use-when="&quot;CAPTURED&quot;.equals(&quot;${statusName}&quot;)" title="Delete" widget-style="buttontext">
+            <hyperlink target="deleteBankRecon" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="headerId"/>
+                <parameter param-name="finAccountId"/>
+            </hyperlink>
+        </field>
+        <field name="detailsLink" title="Details" widget-style="buttontext">
             <hyperlink target="bankReconTrans" description="Details" also-hidden="false">
                 <parameter param-name="headerId"/>
             </hyperlink>
@@ -235,7 +247,7 @@ under the License.
 
     <form name="ListUnidentifiedUnpresented" type="multi" use-row-submit="true" title="Selected Monument"
         list-name="bankReconLinesAndFinAccountTrans"  separate-columns="true" odd-row-style="alternate-row"
-        default-table-style="basic-table hover-bar" paginate-target="UnidentifiedUnpresented" target="reconcileBankTrans">
+        default-table-style="basic-table hover-bar" paginate-target="UnidentifiedUnpresented" target="deleteUnidentifiedUnpresented">
 
         <field name="headerId"><hidden/></field>
         <field name="reconLineId"><hidden/></field>
@@ -247,14 +259,15 @@ under the License.
         </field>
         <field name="transactionDate"><display /></field>
         <field name="amount" widget-style="tabletextright"><display /></field>
-        <field name="deleteLink" title=" " widget-style="buttontext">
+
+        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
+       <field name="submitButton" use-when="&quot;CAPTURED&quot;.equals(&quot;${statusName}&quot;)" title="Delete Selected Transaction(s)" widget-style="smallSubmit"><submit/></field>
+<!--         <field name="deleteLink" title=" " widget-style="buttontext">
             <hyperlink target="deleteUnidentifiedUnpresented" description="Delete" also-hidden="false">
                 <parameter param-name="headerId"/>
                 <parameter param-name="reconLineId"/>
             </hyperlink>
-        </field>
-        <!-- <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field> -->
-       <!-- <field name="submitButton" use-when="&quot;CAPTURED&quot;.equals(&quot;${statusName}&quot;)" title="Reconcile Selected Transaction(s)" widget-style="smallSubmit"><submit/></field> -->
+        </field> -->
        <!-- <field name="submitButton" title="Confirm Reconciliation" widget-style="smallSubmit"><submit/></field> -->
     </form>
 
