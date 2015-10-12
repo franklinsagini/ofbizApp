@@ -50,6 +50,7 @@ memberStatusId = parameters.memberStatusId
 branchId = parameters.branchId
 stationId = parameters.stationId
 introducingMember = parameters.introducingMember
+memberTypeId = parameters.memberTypeId
 
 print " -------- Start Date"
 println startDate
@@ -90,7 +91,10 @@ if ((introducingMember) && (introducingMember != null)){
 if ((stationId) && (stationId != null)){
 	stationIdLong = stationId.toLong()
 }
-
+ 
+ if ((memberTypeId) && (memberTypeId != null)){
+	memberTypeIdLong = memberTypeId.toLong()
+}
 
 exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder()
 //(startDate == null) || (endDate == null) || 
@@ -140,10 +144,19 @@ if (!(sqlEndDate)){
 			EQUALS(stationId: stationIdLong)
 	}
 	} 
+	
+	if (memberTypeId){
+		expr = exprBldr.AND() {
+			//GREATER_THAN_EQUAL_TO(joinDate: sqlStartDate)
+			//LESS_THAN_EQUAL_TO(joinDate: sqlEndDate)
+			EQUALS(memberTypeId: memberTypeIdLong)
+	}
+	} 
+	
 }		
 
 // if (memberStatusId)
-else if ((!memberStatusId) && (!branchId)){
+else if ((!memberStatusId) && (!branchId) && (!memberTypeId) ){
 	expr = exprBldr.AND() {
 		GREATER_THAN_EQUAL_TO(joinDate: sqlStartDate)
 		LESS_THAN_EQUAL_TO(joinDate: sqlEndDate)
@@ -159,15 +172,22 @@ else if (memberStatusId)
 			EQUALS(memberStatusId: memberStatusId.toLong())
 			EQUALS(branchId: branchId)
 		}
-	} else{
+	 }
+	if (memberTypeIdId){
+		expr = exprBldr.AND() {
+			GREATER_THAN_EQUAL_TO(joinDate: sqlStartDate)
+			LESS_THAN_EQUAL_TO(joinDate: sqlEndDate)
+			EQUALS(memberStatusId: memberStatusId.toLong())
+			EQUALS(memberTypeId: memberTypeIdLong)
+		}
+	} 
+	
+	 else{
 
 		expr = exprBldr.AND() {
 			GREATER_THAN_EQUAL_TO(joinDate: sqlStartDate)
 			LESS_THAN_EQUAL_TO(joinDate: sqlEndDate)
-			
-			
 			EQUALS(memberStatusId: memberStatusId.toLong())
-
 		}
 
 	}
@@ -213,6 +233,25 @@ if ((stationId) && (sqlEndDate) && (introducingMember)){
 				GREATER_THAN_EQUAL_TO(joinDate: sqlStartDate)
 				LESS_THAN_EQUAL_TO(joinDate: sqlEndDate)
 				EQUALS(introducingMember: introducingMemberLong)
+			}
+	}
+	
+	if ((branchId) && (memberTypeId)){
+			expr = exprBldr.AND() {
+				GREATER_THAN_EQUAL_TO(joinDate: sqlStartDate)
+				LESS_THAN_EQUAL_TO(joinDate: sqlEndDate)
+				EQUALS(branchId: branchId)
+				EQUALS(memberTypeId: memberTypeIdLong)
+			}
+	}
+	
+   if ((branchId) && (memberTypeId) && (stationId)){
+			expr = exprBldr.AND() {
+				GREATER_THAN_EQUAL_TO(joinDate: sqlStartDate)
+				LESS_THAN_EQUAL_TO(joinDate: sqlEndDate)
+				EQUALS(branchId: branchId)
+				EQUALS(memberTypeId: memberTypeIdLong)
+				EQUALS(stationId: stationIdLong)
 			}
 	}
 
