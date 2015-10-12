@@ -3635,8 +3635,12 @@ public class RemittanceServices {
 				
 				//getTotalRemittedChequeAmount(employerCode, month);
 
-		totalRemitted = totalRemitted.setScale(0, RoundingMode.FLOOR);
-		chequeAmount = chequeAmount.setScale(0, RoundingMode.FLOOR);
+//		totalRemitted = totalRemitted.setScale(0, RoundingMode.FLOOR);
+//		chequeAmount = chequeAmount.setScale(0, RoundingMode.FLOOR);
+		
+		totalRemitted = totalRemitted.setScale(0, RoundingMode.HALF_UP);
+		chequeAmount = chequeAmount.setScale(0, RoundingMode.HALF_UP);
+
 
 		// return totalRemitted.setScale(0).compareTo(chequeAmount.setScale(0));
 		log.info(" ############## Total Remitted Scaled " + totalRemitted);
