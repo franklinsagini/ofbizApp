@@ -2524,6 +2524,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="BankRecon"/>
     </request-map>
+    <request-map uri="EditBankRecon">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditBankRecon"/>
+    </request-map>
     <request-map uri="UnidentifiedUnpresented">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="UnidentifiedUnpresented"/>
@@ -2544,14 +2548,7 @@ under the License.
         </response>
         <response name="error" type="view" value="UnidentifiedUnpresented"/>
     </request-map>
-    <request-map uri="deleteUnidentifiedUnpresented">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="deleteUnidentifiedUnpresented"/>
-        <response name="success" type="request-redirect" value="UnidentifiedUnpresented" >
-            <redirect-parameter name="headerId"/>
-        </response>
-        <response name="error" type="view" value="UnidentifiedUnpresented"/>
-    </request-map>
+
     <request-map uri="reconcileBankTrans">
         <security https="true" auth="true" />
         <event type="service-multi" invoke="reconcileBankTrans" />
@@ -2584,6 +2581,14 @@ under the License.
             <redirect-parameter name="headerId"/>
         </response>
         <response name="error" type="view" value="ReconciledItems" />
+    </request-map>
+    <request-map uri="deleteUnidentifiedUnpresented">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="deleteUnidentifiedUnpresented"/>
+        <response name="success" type="request-redirect" value="UnidentifiedUnpresented" >
+            <redirect-parameter name="headerId"/>
+        </response>
+        <response name="error" type="view" value="UnidentifiedUnpresented"/>
     </request-map>
     <request-map uri="newBankRecon">
         <security https="true" auth="true"/>
@@ -2624,6 +2629,24 @@ under the License.
     <request-map uri="createReconHeader">
         <security https="true" auth="true"/>
         <event type="service" invoke="createReconHeader"/>
+        <response name="success" type="view" value="BankRecon"/>
+        <response name="success" type="request-redirect" value="BankRecon" >
+            <redirect-parameter name="finAccountId"/>
+        </response>
+        <response name="error" type="view" value="BankRecon"/>
+    </request-map>
+    <request-map uri="deleteBankRecon">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteBankRecon"/>
+        <response name="success" type="view" value="BankRecon"/>
+        <response name="success" type="request-redirect" value="BankRecon" >
+            <redirect-parameter name="finAccountId"/>
+        </response>
+        <response name="error" type="view" value="BankRecon"/>
+    </request-map>
+    <request-map uri="updateReconHeader">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateReconHeader"/>
         <response name="success" type="view" value="BankRecon"/>
         <response name="success" type="request-redirect" value="BankRecon" >
             <redirect-parameter name="finAccountId"/>
@@ -3661,6 +3684,7 @@ under the License.
 
     <view-map name="EditFinAccount" type="screen" page="component://accounting/widget/FinAccountScreens.xml#EditFinAccount"/>
     <view-map name="BankRecon" type="screen" page="component://accounting/widget/FinAccountScreens.xml#BankRecon"/>
+    <view-map name="EditBankRecon" type="screen" page="component://accounting/widget/FinAccountScreens.xml#EditBankRecon"/>
     <view-map name="UnidentifiedUnpresented" type="screen" page="component://accounting/widget/FinAccountScreens.xml#UnidentifiedUnpresented"/>
     <view-map name="BankReconTrans" type="screen" page="component://accounting/widget/FinAccountScreens.xml#BankReconTrans"/>
     <view-map name="ReconciledItems" type="screen" page="component://accounting/widget/FinAccountScreens.xml#ReconciledItems"/>

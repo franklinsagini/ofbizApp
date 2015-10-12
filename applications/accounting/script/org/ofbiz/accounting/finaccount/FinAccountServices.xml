@@ -27,6 +27,15 @@ under the License.
         <log level="verbose" message="Got settings from arithmetic.properties: roundingDecimals=${roundingDecimals}, roundingMode=${roundingMode}"/>
     </simple-method>
 
+
+    <!-- update an existing Fixed Asset header Record -->
+    <simple-method method-name="updateReconHeader" short-description="Update an existing Bank Recon Header">
+        <entity-one entity-name="BankReconHeader" value-field="lookedUpValue"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+
+
     <simple-method method-name="createFinAccount" short-description="Create a Financial Account">
         <call-simple-method method-name="getArithmeticSettingsInline"/>
 

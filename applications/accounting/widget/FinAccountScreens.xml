@@ -188,6 +188,7 @@ under the License.
          </section>
     </screen>
 
+
     <screen name="BankReconTrans">
         <section>
             <actions>
@@ -195,6 +196,7 @@ under the License.
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
                 <set field="reconDate" from-field="parameters.reconDate"/>
                 <set field="headerId" from-field="parameters.headerId"/>
+                <set field="statusName" from-field="parameters.statusName"/>
                 <entity-one entity-name="BankReconHeader" value-field="bankReconHeader"/>
                  <entity-condition entity-name="BankReconLines" list="bankReconLinesAndFinAccountTrans">
                     <condition-list combine="and">
@@ -232,6 +234,7 @@ under the License.
                                     </link>
                                     <link target="UnidentifiedUnpresented" text="Unidentified Debits/Unreceipted Cheques" style="buttontext">
                                         <parameter param-name="headerId"/>
+                                        <parameter param-name="statusName"/>
                                     </link>
                                     <link target="exportReconTrans.csv" text="Export Transactions" style="buttontext">
                                         <parameter param-name="headerId"/>
@@ -317,6 +320,7 @@ under the License.
                 <set field="reconDate" from-field="parameters.reconDate"/>
                 <set field="headerId" from-field="parameters.headerId"/>
                 <entity-one entity-name="BankReconHeader" value-field="bankReconHeader"/>
+                <set field="statusName" from-field="bankReconHeader.statusName"/>
                 <entity-condition entity-name="BankReconLines" list="bankReconLinesAndFinAccountTrans">
                     <condition-list combine="and">
                         <condition-expr field-name="headerId" from-field="parameters.headerId" />
@@ -491,6 +495,8 @@ under the License.
                 <set field="finAccountId" from-field="parameters.finAccountId"/>
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="KES"/>
                 <entity-one entity-name="FinAccount" value-field="finAccount"/>
+                <set field="headerId" from-field="parameters.headerId"/>
+                <entity-one entity-name="BankReconHeader" value-field="bankReconHeader"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">

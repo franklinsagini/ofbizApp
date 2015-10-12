@@ -247,6 +247,44 @@ public class FinAccountServices {
 		result.put("finAccountId", finAccountId);
 		return result;
 	}
+	
+	public static Map<String, Object> deleteBankRecon(DispatchContext dctx, Map<String, Object> context) {
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String finAccountId = (String) context.get("finAccountId");
+		String headerId = (String) context.get("headerId");
+		
+		GenericValue reconHeader = getReconHeader(delegator, headerId);
+		
+		
+		
+		//get all bankreconlines for this header id
+		List<GenericValue> bankReconLines = null;
+		try {
+			bankReconLines = reconHeader.getRelated("BankReconLines", null, null, false);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//foreach delete
+		
+		for (GenericValue reconLine : bankReconLines) {
+			try {
+				reconLine.remove();
+			} catch (Exception e) {
+				return ServiceUtil.returnError("COULD NOT DELETE TRANSACTION "+reconLine.getString("description"));
+			}
+		}
+		
+		//finally delete the header
+		try {
+			reconHeader.remove();
+		} catch (Exception e) {
+			return ServiceUtil.returnError("COULD NOT DELETE RECONCILIATION "+reconHeader.getString("name"));
+		}
+		return ServiceUtil.returnSuccess("RECONCILIATION DELETED SUCCESSFULLY");
+	}
 
 	public static Map<String, Object> createReconHeader(DispatchContext dctx, Map<String, Object> context) {
 		Delegator delegator = dctx.getDelegator();
