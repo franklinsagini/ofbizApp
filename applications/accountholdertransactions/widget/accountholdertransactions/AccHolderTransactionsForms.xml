@@ -2776,9 +2776,25 @@ under the License.
             	<order-by field-name="accountProductChargeId"></order-by>
             </entity-condition>
         </actions>
+    
+               <field name="startDate" title="From" >
+        	<date-time type="timestamp"/>
+           </field>
         
-        <field name="asDate" title="Date"><date-time type="date"/></field>
-        <field name="transaction" title="Transaction Type" required-field="true">
+        <field name="endDate" title="To" position="2">
+        	<date-time type="timestamp"/>
+        </field>
+        
+           <field name="branchId" title="Branch">
+        	<!-- date-find default-option-from="greaterThanFromDayStart"/ -->
+        	<drop-down allow-empty="true">
+        		<entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup">
+        			<entity-constraint name="isBranch" operator="equals" value="Y"/>
+        		</entity-options>
+        	</drop-down>
+        </field>  
+        
+        <field name="transaction" title="Transaction Type" required-field="true" position="2">
           <drop-down allow-empty="true">
             <entity-options entity-name="AccountProductCharge" description="${transactionType}" key-field-name="accountProductChargeId" >
             <entity-constraint name="isFixed" operator="equals" value="N"/>
@@ -2793,12 +2809,20 @@ under the License.
     <form name="accountTransactionReportExcelCSV" list-name="transactionals" target="" title="" 
          type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
          default-table-style="basic-table hover-bar" paginate="false"> 
-        <field name="accountNo" title="Account Number"><display/></field>
-        <field name="accountName" title="Account Name"><display/></field>
-        <field name="mobileNumber" title="Mobile Number"><display/></field>
-        <field name="transactionAmount" title="Transaction Amount"><display/></field>
-		<field name="memberNumber" title="Member Number"><display/></field>
-		<field name="createdStamp" title="Date"><display/></field>
+         
+        <field name="accountTransactionId" title="TRANSACTION ID"><display/></field>
+        <field name="accountNo" title="ACCOUNT NUMBER"><display/></field>
+        <field name="accountName" title="ACCOUNT NAME"><display/></field>
+        <field name="mobileNumber" title="MOBILE NUMBER"><display/></field>
+        <field name="transactionAmount" title="TRANSACTION AMOUNT"><display/></field>
+		<field name="memberNumber" title="MEMBER NUMBER"><display/></field>
+	    <field name="branchId" title="BRANCH"><display-entity entity-name="PartyGroup" description="${groupName}" key-field-name="partyId" /></field>
+		<field name="receiptNo" title="RECEIPT NUMBER"><display/></field>
+		<field name="chequeNo" title="CHEQUE NUMBER"><display/></field>
+		<field name="reference" title="REFERENCE NUMBER"><display/></field>
+        <field name="slipNumber" title="SLIP NUMBER"><display/></field>
+        <field name="createdStamp" title="TRANSACTION DATE"><display/></field>
+        
         
     </form>
     
