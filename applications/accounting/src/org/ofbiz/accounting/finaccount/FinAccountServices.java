@@ -248,6 +248,42 @@ public class FinAccountServices {
 		return result;
 	}
 
+	public static Map<String, Object> deleteBankRecon(DispatchContext dctx, Map<String, Object> context) {
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String finAccountId = (String) context.get("finAccountId");
+		String headerId = (String) context.get("headerId");
+
+		GenericValue reconHeader = getReconHeader(delegator, headerId);
+
+		// get all bankreconlines for this header id
+		List<GenericValue> bankReconLines = null;
+		try {
+			bankReconLines = reconHeader.getRelated("BankReconLines", null, null, false);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// foreach delete
+
+		for (GenericValue reconLine : bankReconLines) {
+			try {
+				reconLine.remove();
+			} catch (Exception e) {
+				return ServiceUtil.returnError("COULD NOT DELETE TRANSACTION " + reconLine.getString("description"));
+			}
+		}
+
+		// finally delete the header
+		try {
+			reconHeader.remove();
+		} catch (Exception e) {
+			return ServiceUtil.returnError("COULD NOT DELETE RECONCILIATION " + reconHeader.getString("name"));
+		}
+		return ServiceUtil.returnSuccess("RECONCILIATION DELETED SUCCESSFULLY");
+	}
+
 	public static Map<String, Object> createReconHeader(DispatchContext dctx, Map<String, Object> context) {
 		Delegator delegator = dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -294,8 +330,10 @@ public class FinAccountServices {
 			bankReconHeader.put("cashBookBalance", cashBookBalance);
 			bankReconHeader.put("bankBalance", bankBalance);
 			bankReconHeader.put("adjustedBankBalance", BigDecimal.ZERO);
+
 			try {
 				bankReconHeader.create();
+
 			} catch (GenericEntityException e) {
 				e.printStackTrace();
 			}
@@ -309,7 +347,7 @@ public class FinAccountServices {
 		unpresentedUnidentifiedTransactions = getUnpresentedUnidentifiedForHeader(delegator);
 		if (unpresentedUnidentifiedTransactions != null) {
 			for (GenericValue trans : unpresentedUnidentifiedTransactions) {
-
+				System.out.println("HEADER_ID: "+trans.getString("headerId") + " TRANSACTION "+ trans.getString("finAccountTransTypeId"));
 				GenericValue reconLines = delegator.makeValue("BankReconLines");
 				String reconLinesId = delegator.getNextSeqId("BankReconLines");
 
@@ -337,6 +375,7 @@ public class FinAccountServices {
 				}
 			}
 		}
+	
 		transactions = getTransactionsForHeader(reconDate, finAccountId, delegator);
 		if (transactions != null) {
 			for (GenericValue transaction : transactions) {
@@ -376,7 +415,7 @@ public class FinAccountServices {
 					}
 
 					if (acctgTransEntries != null) {
-						if (acctgTransEntries.size()>0) {
+						if (acctgTransEntries.size() > 0) {
 							acctgTransEntry = acctgTransEntries.get(0);
 							// Station Account Transaction
 							EntityConditionList<EntityExpr> stationAccountTransactionCond = EntityCondition.makeCondition(UtilMisc.toList(
@@ -416,16 +455,15 @@ public class FinAccountServices {
 								e.printStackTrace();
 							}
 						}
-						
+
 					} else {
 						System.out.println("WE WERE NO LUCKY IN GETTING ACCTRANS ID");
 					}
 
-				}else {
+				} else {
 					sb.append(transaction.getString("comments"));
 				}
 
-				
 				sb.append(" ");
 				if (payment != null) {
 					sb.append("Cheque No:");
@@ -451,21 +489,7 @@ public class FinAccountServices {
 					bankReconLines.put("isUnidentifiedDebits", "N");
 					bankReconLines.put("isUnreceiptedBankings", "N");
 					bankReconLines.put("isUnpresentedCheques", "N");
-				} else if (transaction.getString("finAccountTransTypeId").equals("UD")) {
-					System.out.println("############################# WE ARE INSIDE " + transaction.getString("finAccountTransTypeId"));
-					totalUnidentifiedDebits = totalUnidentifiedDebits.add(transaction.getBigDecimal("amount"));
-					bankReconLines.put("isUnidentifiedDebits", "Y");
-					bankReconLines.put("isUnpresentedCheques", "N");
-					bankReconLines.put("isUncreditedBankings", "N");
-					bankReconLines.put("isUnreceiptedBankings", "N");
-				} else if (transaction.getString("finAccountTransTypeId").equals("UB")) {
-					System.out.println("############################# WE ARE INSIDE " + transaction.getString("finAccountTransTypeId"));
-					totalUnreceiptedBankings = totalUnreceiptedBankings.add(transaction.getBigDecimal("amount"));
-					bankReconLines.put("isUnreceiptedBankings", "Y");
-					bankReconLines.put("isUnidentifiedDebits", "N");
-					bankReconLines.put("isUnpresentedCheques", "N");
-					bankReconLines.put("isUncreditedBankings", "N");
-				}
+				} 
 
 				// save to BankReconLines
 				bankReconLines.put("reconLineId", reconLineId);
@@ -678,17 +702,29 @@ public class FinAccountServices {
 
 	private static List<GenericValue> getUnpresentedUnidentifiedForHeader(Delegator delegator) {
 		List<GenericValue> unpresentedUnidentifiedTransactions = null;
-		EntityConditionList<EntityExpr> cond = null;
-		cond = EntityCondition.makeCondition(UtilMisc.toList(
-				EntityCondition.makeCondition("isManuallyCreated", EntityOperator.EQUALS, "Y")
-				));
+
+		
+		
+		GenericValue lastSavedReconciliation = getLastSavedRecon(delegator);
+		
+		  // lookup payment applications which took place before the asOfDateTime for this invoice
+        EntityConditionList<EntityExpr> dateCondition = EntityCondition.makeCondition(UtilMisc.toList(
+                EntityCondition.makeCondition("isUnreceiptedBankings", EntityOperator.EQUALS, "Y"),
+                EntityCondition.makeCondition("isUnidentifiedDebits", EntityOperator.EQUALS, "Y")), EntityOperator.OR);
+        
+        EntityConditionList<EntityCondition> conditions = EntityCondition.makeCondition(UtilMisc.toList(
+                dateCondition,
+                EntityCondition.makeCondition("headerId", EntityOperator.EQUALS, lastSavedReconciliation.getString("headerId"))),
+                EntityOperator.AND);
 
 		try {
-			unpresentedUnidentifiedTransactions = delegator.findList("BankReconLines", cond, null, null, null, false);
+			unpresentedUnidentifiedTransactions = delegator.findList("BankReconLines", conditions, null, null, null, false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
 		System.out.println("############################################# NUMBER OF TRANSACTIONS FETCHED: " + unpresentedUnidentifiedTransactions.size());
+		
+		
 		return unpresentedUnidentifiedTransactions;
 	}
 
@@ -873,9 +909,21 @@ public class FinAccountServices {
 							.toMap("headerId", headerId),
 					locale));
 		}
+
+		// Replace is last recon here
+		GenericValue lastRecon = getLastSavedRecon(delegator);
+
+		try {
+			lastRecon.set("isLastRecon", "N");
+			lastRecon.store();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
 		bankReconHeader.set("statusName", "RECONCILED");
 		bankReconHeader.set("adjustedCashBookBalance", adjustedCashBookBalance);
 		bankReconHeader.set("adjustedBankBalance", adjustedBankBalance);
+		bankReconHeader.set("isLastRecon", "Y");
 		try {
 			bankReconHeader.store();
 			// Update FinAccountTrans statusId to FINACT_TRNS_APPROVED
@@ -895,6 +943,31 @@ public class FinAccountServices {
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		result.put("headerId", headerId);
 		return result;
+	}
+
+	private static GenericValue getLastSavedRecon(Delegator delegator) {
+		List<GenericValue> recons = null;
+		GenericValue lastSavedRecon = null;
+
+		EntityConditionList<EntityExpr> lastReconCond = EntityCondition.makeCondition(UtilMisc.toList(
+				EntityCondition.makeCondition("isLastRecon", EntityOperator.EQUALS, "Y"),
+				EntityCondition.makeCondition("statusName", EntityOperator.EQUALS, "RECONCILED")
+				), EntityOperator.AND);
+
+		try {
+			recons = delegator.findList("BankReconHeader", lastReconCond, null, null, null, false);
+			System.out.println("##########################################################################WE GOT "+ recons.size() +" LAST SAVED RECON HEADERS");
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		if (recons != null && recons.size() > 0) {
+			lastSavedRecon = recons.get(0);
+		} else {
+			System.out.println("##################################################################### IS THIS THE FIRST RECON OR WE MISSED IN GETTING THE LAST RECON");
+		}
+		System.out.println("##########################################################################WE GOT HEADER ID "+ lastSavedRecon.getString("headerId") +" LAST SAVED RECON HEADERS");
+		return lastSavedRecon;
 	}
 
 	private static List<GenericValue> getReconciledItems(Delegator delegator, String headerId) {

@@ -184,6 +184,59 @@
             <submit button-type="button" />
         </field>
     </form>
+
+
+    <form name="loanRepaymentExcel" type="single" target="loanRepayment.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <actions>
+            <entity-condition entity-name="PartyGroup" list="partyGroups">
+                <condition-expr field-name="isBranch" operator="equals" value="Y"/>
+            </entity-condition>
+        </actions>
+        <field name="startDate" title="From"  widget-style="required" required-field="true">
+            <date-time type="date-time"/>
+        </field>
+        <field name="endDate" title="To" position="2"  widget-style="required" required-field="true">
+            <date-time type="date-time"/>
+        </field>
+<!--         <field name="loanProductId" title="Loan Type">
+            <drop-down allow-empty="true">
+                <entity-options description="${code} - ${name}" entity-name="LoanProduct" key-field-name="loanProductId"></entity-options>
+            </drop-down>
+        </field> -->
+        <field name="submitButton" title="Generate PDF" widget-style="smallSubmit">
+            <submit button-type="button" />
+        </field>
+    </form>
+
+
+    <form name="loanRepaymentListingExcel" type="single" target="loanRepaymentListing.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <actions>
+            <entity-condition entity-name="PartyGroup" list="partyGroups">
+                <condition-expr field-name="isBranch" operator="equals" value="Y"/>
+            </entity-condition>
+        </actions>
+        <field name="startDate" title="From"  widget-style="required" required-field="true">
+            <date-time type="date-time"/>
+        </field>
+        <field name="endDate" title="To" position="2"  widget-style="required" required-field="true">
+            <date-time type="date-time"/>
+        </field>
+<!--         <field name="loanProductId" title="Loan Type">
+            <drop-down allow-empty="true">
+                <entity-options description="${code} - ${name}" entity-name="LoanProduct" key-field-name="loanProductId"></entity-options>
+            </drop-down>
+        </field> -->
+        <field name="submitButton" title="Generate PDF" widget-style="smallSubmit">
+            <submit button-type="button" />
+        </field>
+    </form>
+
+
+
+
+
     <form name="appliedLoansByLoanTypeFormExcel" type="single" target="appliedLoansByLoanType.csv" title="" header-row-style="header-row"
         default-table-style="basic-table">
         <actions>
@@ -293,6 +346,21 @@
         <field name="loanStatusId" title="Loan Status">
             <display-entity entity-name="LoanStatus" key-field-name="loanStatusId" description="${name}"/>
         </field>
+    </form>
+
+
+    <form name="loanRepaymentCsv" type="list" list-name="loanApps"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="loanProductId" title="Product Name"><display /></field>
+        <field name="amount" title="Total Repayed Amount"><display/></field>
+    </form>
+
+
+    <form name="loanRepaymentListingCsv" type="list" list-name="loanApps"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        <field name="loanNo" title="Loan "><display /></field>
+        <field name="partyId" title="Member"><display /></field>
+        <field name="transactionAmount" title="Repayed Amount"><display /></field>
     </form>
 
 
