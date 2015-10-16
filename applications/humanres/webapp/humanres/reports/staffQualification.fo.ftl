@@ -83,9 +83,16 @@ under the License.
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>${count}</fo:block>
                             </fo:table-cell>
+                       
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${dep.partyQualTypeId?if_exists}</fo:block>
+                            <#if dep.partyQualTypeId?has_content>
+                                 <#assign qualification = delegator.findOne("PartyQualType", {"partyQualTypeId",dep.partyQualTypeId},false) /> 
+                                <fo:block>${qualification.description?if_exists}</fo:block>
+                                <#else>
+                                 <fo:block>  </fo:block>
+                            </#if>
                         </fo:table-cell>
+                        
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${dep.title?if_exists}</fo:block>
                         </fo:table-cell>
