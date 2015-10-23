@@ -257,6 +257,20 @@ under the License.
             <check-errors/>
         </if-empty>
 
+        <if>
+            <condition>
+                    <or>
+                        <if-compare field="payment.statusId" operator="not-equals" value="PMNT_SENT"/>
+                    </or>
+            </condition>
+            <then>
+                <add-error>
+                    <fail-property resource="AccountingUiLabels" property="AccountingStatusNotYetSent"/>
+                </add-error>
+                <check-errors/>
+            </then>
+        </if>
+<!-- #################ADDDED  -->
         <call-class-method method-name="getPaymentNotApplied" class-name="org.ofbiz.accounting.payment.PaymentWorker" ret-field="notAppliedPayment">
             <field field="payment" type="GenericValue"/>
         </call-class-method>
