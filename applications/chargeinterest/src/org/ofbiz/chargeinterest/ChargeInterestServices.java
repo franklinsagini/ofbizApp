@@ -779,5 +779,13 @@ public class ChargeInterestServices {
 
 		return stationMonthInterestManagementId;
 	}
+	
+	//ChargeInterestServices
+	public static synchronized String resolveLoanClearing() {
+
+		//Get all the loans amounts to be credited and updated
+		
+		return "success";
+	}
 
 }

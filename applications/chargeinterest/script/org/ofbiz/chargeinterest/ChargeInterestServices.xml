@@ -133,4 +133,31 @@ under the License.
         
     </simple-method>
     
+    <!-- resolveLoanClearing -->
+        <simple-method method-name="resolveLoanClearing" short-description="Resolve Loan Clearing">
+        <set field="resolvestatus" value="${bsh:org.ofbiz.chargeinterest.ChargeInterestServices.resolveLoanClearing();}"></set>
+        <!-- store-value value-field="lookedUpValue"/ -->
+        
+        <log message="NNNNNNNNNNNNNNN Resolve clearing" level="info"/>
+		<if>
+			 <condition> 
+			 		<if-compare operator="equals" value="success" field="resolvestatus"></if-compare>
+            </condition> 
+            <then> 
+						 <property-to-field resource="ChargeInterestUiLabels.xml" 
+            				property="Successfully updated" field="successMessage" />
+                
+            </then>
+		
+		<else>
+			<add-error> 
+                    <fail-message message="${resolvestatus}"/>
+                </add-error> 
+                <check-errors /> 
+		
+        </else>
+        </if>
+        
+    </simple-method>
+    
 </simple-methods>
