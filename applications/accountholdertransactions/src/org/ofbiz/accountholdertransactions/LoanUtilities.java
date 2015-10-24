@@ -408,6 +408,37 @@ public class LoanUtilities {
 		loanStatusId = Long.valueOf(statusIdString);
 		return loanStatusId;
 	}
+	
+	public static String getLoanStatusGivenLoan(Long loanApplicationId) {
+	
+		if (loanApplicationId == null)
+			return "";
+		
+		if (loanApplicationId == 0L)
+			return "";
+		
+		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
+		Long loanStatusId = loanApplication.getLong("loanStatusId");
+		List<GenericValue> loanStatusELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanStatusELI = delegator.findList("LoanStatus",
+					EntityCondition.makeCondition("loanStatusId", loanStatusId), null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		String name = "";
+		for (GenericValue genericValue : loanStatusELI) {
+			name = genericValue.getString("name");
+		}
+
+//		String statusIdString = String.valueOf(loanStatusId);
+//		statusIdString = statusIdString.replaceAll(",", "");
+//		loanStatusId = Long.valueOf(statusIdString);
+		return name;
+	}
 
 	// Count Loan Guarantors
 
