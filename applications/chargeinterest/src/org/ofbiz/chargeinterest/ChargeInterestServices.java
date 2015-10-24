@@ -808,12 +808,15 @@ public class ChargeInterestServices {
 			
 			//Count Transactions
 			Long transactionCount = null;
-			
-			if (acctgTransId != null)
+			Timestamp dateAdded = null;
+			if (acctgTransId != null){
 			 transactionCount =	countTransactions(acctgTransId);
+			 dateAdded = getTransactionDate(acctgTransId);
+			}
 			
 			genericValue.set("acctgTransId", acctgTransId);
 			genericValue.set("transactionCount", transactionCount);
+			genericValue.set("dateAdded", dateAdded);
 			
 			
 			
@@ -830,6 +833,32 @@ public class ChargeInterestServices {
 		}
 		
 		return "success";
+	}
+
+	private static Timestamp getTransactionDate(String acctgTransId) {
+		EntityConditionList<EntityExpr> expectationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition
+						.makeCondition("acctgTransId",
+								EntityOperator.EQUALS,
+								acctgTransId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> acctgTransEntryELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		try {
+			acctgTransEntryELI = delegator.findList("AcctgTransEntry",
+					expectationConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if (acctgTransEntryELI.size() > 0)
+			return acctgTransEntryELI.get(0).getTimestamp("createdStamp");
+		
+		return null;
 	}
 
 	private static Long countTransactions(String acctgTransId) {
