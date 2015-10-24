@@ -784,8 +784,98 @@ public class ChargeInterestServices {
 	public static synchronized String resolveLoanClearing() {
 
 		//Get all the loans amounts to be credited and updated
+		//For each loan in LoansToResolve get the last transaction id, which is the transaction on which 
+		//clearance happened
+		List<GenericValue> loansToResolveELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loansToResolveELI = delegator.findList("LoansToResolve",
+					null, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		Long loanApplicationId = null;
+		
+		for (GenericValue genericValue : loansToResolveELI) {
+			
+			//Get all the loan clear costing
+			loanApplicationId = genericValue.getLong("loanApplicationId");
+			
+			//Get last transaction id
+			String acctgTransId = getLastTransactionId(loanApplicationId);
+			
+			//Count Transactions
+			Long transactionCount =	countTransactions(acctgTransId);
+			
+			genericValue.set("acctgTransId", acctgTransId);
+			genericValue.set("transactionCount", transactionCount);
+			
+			
+			
+			try {
+				delegator.createOrStore(genericValue);
+			} catch (GenericEntityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+		   
+			
+		}
 		
 		return "success";
+	}
+
+	private static Long countTransactions(String acctgTransId) {
+		EntityConditionList<EntityExpr> expectationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition
+						.makeCondition("acctgTransId",
+								EntityOperator.EQUALS,
+								acctgTransId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> acctgTransEntryELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		try {
+			acctgTransEntryELI = delegator.findList("AcctgTransEntry",
+					expectationConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		return Long.valueOf(acctgTransEntryELI.size());
+	}
+
+	private static String getLastTransactionId(Long loanApplicationId) {
+		EntityConditionList<EntityExpr> expectationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition
+						.makeCondition("loanApplicationId",
+								EntityOperator.EQUALS,
+								loanApplicationId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> loanRepaymentELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<String> orderList = new ArrayList<String>();
+		orderList.add("-createdStamp");
+		try {
+			loanRepaymentELI = delegator.findList("LoanRepayment",
+					expectationConditions, null, orderList, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		GenericValue loanRepayment = loanRepaymentELI.get(0);
+
+		return loanRepayment.getString("acctgTransId");
 	}
 
 }
