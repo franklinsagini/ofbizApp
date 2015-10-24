@@ -807,7 +807,10 @@ public class ChargeInterestServices {
 			String acctgTransId = getLastTransactionId(loanApplicationId);
 			
 			//Count Transactions
-			Long transactionCount =	countTransactions(acctgTransId);
+			Long transactionCount = null;
+			
+			if (acctgTransId != null)
+			 transactionCount =	countTransactions(acctgTransId);
 			
 			genericValue.set("acctgTransId", acctgTransId);
 			genericValue.set("transactionCount", transactionCount);
@@ -872,6 +875,9 @@ public class ChargeInterestServices {
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
+		
+		if ((loanRepaymentELI == null) || (loanRepaymentELI.size() < 1))
+			return null;
 		
 		GenericValue loanRepayment = loanRepaymentELI.get(0);
 
