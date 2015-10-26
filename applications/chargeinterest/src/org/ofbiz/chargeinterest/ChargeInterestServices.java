@@ -1,6 +1,7 @@
 package org.ofbiz.chargeinterest;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -899,14 +900,14 @@ public class ChargeInterestServices {
 								EntityCondition.makeCondition(
 								UtilMisc.toList(EntityCondition.makeCondition(
 										"interestAmount", EntityOperator.GREATER_THAN,
-										"lowerValue"),
+										BigDecimal.ZERO.add(new BigDecimal("0.01"))),
 										EntityCondition
 												.makeCondition("insuranceAmount",
 														EntityOperator.GREATER_THAN,
-														"lowerValue"),
+														BigDecimal.ZERO.add(new BigDecimal("0.01"))),
 										EntityCondition.makeCondition("principalAmount",
 												EntityOperator.GREATER_THAN,
-												"lowerValue")), EntityOperator.OR)
+												BigDecimal.ZERO.add(new BigDecimal("0.01")))), EntityOperator.OR)
 
 				), EntityOperator.AND);
 
