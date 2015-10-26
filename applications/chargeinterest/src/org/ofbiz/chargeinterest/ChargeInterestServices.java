@@ -894,14 +894,14 @@ public class ChargeInterestServices {
 								EntityCondition.makeCondition(
 								UtilMisc.toList(EntityCondition.makeCondition(
 										"interestAmount", EntityOperator.GREATER_THAN,
-										BigDecimal.ZERO),
+										new BigDecimal(0.01)),
 										EntityCondition
 												.makeCondition("insuranceAmount",
 														EntityOperator.GREATER_THAN,
-														BigDecimal.ZERO),
+														new BigDecimal(0.01)),
 										EntityCondition.makeCondition("principalAmount",
 												EntityOperator.GREATER_THAN,
-												BigDecimal.ZERO)), EntityOperator.OR)
+												new BigDecimal(0.01))), EntityOperator.OR)
 
 				), EntityOperator.AND);
 
