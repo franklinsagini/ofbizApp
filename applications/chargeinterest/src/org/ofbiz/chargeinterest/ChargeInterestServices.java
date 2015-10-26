@@ -885,6 +885,11 @@ public class ChargeInterestServices {
 	}
 
 	private static String getLastTransactionId(Long loanApplicationId) {
+		
+		
+		BigDecimal bdZeroValue = new BigDecimal(0.01);
+		//EntityOperator<L, R, T>
+		//bdZeroValue = BigDecimal.ZERO;
 		EntityConditionList<EntityCondition> expectationConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition
 						.makeCondition("loanApplicationId",
@@ -894,14 +899,14 @@ public class ChargeInterestServices {
 								EntityCondition.makeCondition(
 								UtilMisc.toList(EntityCondition.makeCondition(
 										"interestAmount", EntityOperator.GREATER_THAN,
-										new BigDecimal(0.01)),
+										new BigDecimal(bdZeroValue.doubleValue())),
 										EntityCondition
 												.makeCondition("insuranceAmount",
 														EntityOperator.GREATER_THAN,
-														new BigDecimal(0.01)),
+														new BigDecimal(bdZeroValue.doubleValue())),
 										EntityCondition.makeCondition("principalAmount",
 												EntityOperator.GREATER_THAN,
-												new BigDecimal(0.01))), EntityOperator.OR)
+												new BigDecimal(bdZeroValue.doubleValue()))), EntityOperator.OR)
 
 				), EntityOperator.AND);
 
