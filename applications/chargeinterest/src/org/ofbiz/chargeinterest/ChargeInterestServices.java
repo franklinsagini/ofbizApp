@@ -885,11 +885,23 @@ public class ChargeInterestServices {
 	}
 
 	private static String getLastTransactionId(Long loanApplicationId) {
-		EntityConditionList<EntityExpr> expectationConditions = EntityCondition
+		EntityConditionList<EntityCondition> expectationConditions = EntityCondition
 				.makeCondition(UtilMisc.toList(EntityCondition
 						.makeCondition("loanApplicationId",
 								EntityOperator.EQUALS,
-								loanApplicationId)
+								loanApplicationId),
+								
+								EntityCondition.makeCondition(
+								UtilMisc.toList(EntityCondition.makeCondition(
+										"interestAmount", EntityOperator.GREATER_THAN,
+										BigDecimal.ZERO),
+										EntityCondition
+												.makeCondition("insuranceAmount",
+														EntityOperator.GREATER_THAN,
+														BigDecimal.ZERO),
+										EntityCondition.makeCondition("principalAmount",
+												EntityOperator.GREATER_THAN,
+												BigDecimal.ZERO)), EntityOperator.OR)
 
 				), EntityOperator.AND);
 
