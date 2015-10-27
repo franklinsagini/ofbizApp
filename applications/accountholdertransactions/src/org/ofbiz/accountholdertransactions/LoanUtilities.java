@@ -3511,6 +3511,94 @@ public class LoanUtilities {
 		}
 		return accountId;
 	}
+	
+	/****
+	 * Get Interest Payment Account
+	 * */
+	public static String getInterestReceivableAccount() {
+		GenericValue accountHolderTransactionSetup = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		// SaccoProduct
+		try {
+			accountHolderTransactionSetup = delegator.findOne(
+					"AccountHolderTransactionSetup", UtilMisc.toMap(
+							"accountHolderTransactionSetupId",
+							"INTERESTPAYMENT"), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("######## Cannot Get Interest Receivable Account in Loan Disbursement, make sure there is a rcord in Account Holder Transaction Setup with ID INTERESTPAYMENT and accounts configured ");
+			return "Cannot Get Loan Receivable Account in Disbursement ";
+		}
+
+		String loanReceivableAccount = "";
+		if (accountHolderTransactionSetup != null) {
+			loanReceivableAccount = accountHolderTransactionSetup
+					.getString("memberDepositAccId");
+		} else {
+			log.error("######## Cannot Get Loan Interest account, make sure there is a rcord in Account Holder Transaction Setup with ID INTERESTPAYMENT and accounts configured ");
+		}
+		return loanReceivableAccount;
+	}
+	
+	/****
+	 * Insurance Payment Account
+	 * 
+	 * */
+	public static String getInsuranceReceivableAccount() {
+		GenericValue accountHolderTransactionSetup = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		// SaccoProduct
+		try {
+			accountHolderTransactionSetup = delegator.findOne(
+					"AccountHolderTransactionSetup", UtilMisc.toMap(
+							"accountHolderTransactionSetupId",
+							"INSURANCEPAYMENT"), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("######## Cannot Get Interest Receivable Account in INSURANCEPAYMENT, make sure there is a rcord in Account Holder Transaction Setup with ID INSURANCEPAYMENT and accounts configured ");
+			return "Cannot Get Loan Receivable Account in Disbursement ";
+		}
+
+		String loanReceivableAccount = "";
+		if (accountHolderTransactionSetup != null) {
+			loanReceivableAccount = accountHolderTransactionSetup
+					.getString("memberDepositAccId");
+		} else {
+			log.error("######## Cannot Get Loan Interest account, make sure there is a rcord in Account Holder Transaction Setup with ID INSURANCEPAYMENT and accounts configured ");
+		}
+		return loanReceivableAccount;
+	}
+	
+	/****
+	 * Loan Clearance Charge Account
+	 * */
+	public static String getLoanClearanceChargeAccount() {
+		GenericValue accountHolderTransactionSetup = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		// SaccoProduct
+		try {
+			accountHolderTransactionSetup = delegator.findOne(
+					"AccountHolderTransactionSetup", UtilMisc.toMap(
+							"accountHolderTransactionSetupId",
+							"LOANCLEARANCECHARGE"), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("######## Cannot Get Interest Receivable Account in LOANCLEARANCECHARGE, make sure there is a rcord in Account Holder Transaction Setup with ID LOANCLEARANCECHARGE and accounts configured ");
+			return "Cannot Get Loan Clearance Charge Account in Disbursement ";
+		}
+
+		String loanReceivableAccount = "";
+		if (accountHolderTransactionSetup != null) {
+			loanReceivableAccount = accountHolderTransactionSetup
+					.getString("cashAccountId");
+		} else {
+			log.error("######## Cannot Get Loan Interest account, make sure there is a rcord in Account Holder Transaction Setup with ID LOANCLEARANCECHARGE and accounts configured ");
+		}
+		return loanReceivableAccount;
+	}
 
 
 }

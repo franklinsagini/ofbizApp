@@ -122,6 +122,11 @@ public class LoanAccounting {
 			
 			List<Long> listLoanApplicationIDs = getLoanApplicationIDsCleared(loanApplicationId);
 			
+			BigDecimal bdPrincipalCleared = BigDecimal.ZERO;
+			BigDecimal bdInterestCleared = BigDecimal.ZERO;
+			BigDecimal bdInsuranceCleared = BigDecimal.ZERO;
+			
+			
 			BigDecimal bdTotalCharge = BigDecimal.ZERO;
 			for (Long clearedLoanApplicationId : listLoanApplicationIDs) {
 				
@@ -130,6 +135,9 @@ public class LoanAccounting {
 				BigDecimal bdTotalInsuranceAmount = LoanRepayments.getTotalInsurancByLoanDue(clearedLoanApplicationId.toString());
 				log.info(" LLLLLLLL Loan Amount to offset AAAAAAAAAA"+bdTotalLoanBalanceAmount);
 				
+				bdPrincipalCleared = bdPrincipalCleared.add(bdTotalLoanBalanceAmount);
+				bdInterestCleared = bdInterestCleared.add(bdInterestAmount);
+				bdInsuranceCleared = bdInsuranceCleared.add(bdTotalInsuranceAmount);
 				//LoansProcessingServices.get
 				//bdTotalLoanCost = bdTotalLoanCost.add(LoanRepayments.getTotalInterestByLoanDue(clearedLoanApplicationId.toString()));
 				//bdTotalLoanCost = bdTotalLoanCost.add(LoanRepayments.getTotalInsurancByLoanDue(clearedLoanApplicationId.toString()));
@@ -166,6 +174,35 @@ public class LoanAccounting {
 			entrySequenceId = "00006";
 			accountId = LoanUtilities.getLoanClearingChargeAccountId();
 			AccHolderTransactionServices.postTransactionEntryToMemberBranch(delegator, bdTotalCharge, memberPartyId, memberBranchId, accountId, "C", acctgTransId, acctgTransType, entrySequenceId);
+			
+			
+			/***
+			 * Adding ommitted entries to loan clearing
+			 * 00007 Cr Loan to Members with Principal
+			 * 00008 Cr Interest Receivable with Interest 
+			 * 00009 Cr Insurance Receivable with Insurance
+			 * 00010 Dr Member Savings with (Principal + Interest + Insurance)
+			 * 
+			 * */
+			entrySequenceId = "00007";
+			accountId = getLoanReceivableAccount(delegator);
+			AccHolderTransactionServices.postTransactionEntryToMemberBranch(delegator, bdPrincipalCleared, memberPartyId, memberBranchId, accountId, "C", acctgTransId, acctgTransType, entrySequenceId);
+
+			
+			entrySequenceId = "00008";
+			accountId = LoanUtilities.getInterestReceivableAccount();
+			AccHolderTransactionServices.postTransactionEntryToMemberBranch(delegator, bdInterestCleared, memberPartyId, memberBranchId, accountId, "C", acctgTransId, acctgTransType, entrySequenceId);
+			
+			entrySequenceId = "00009";
+			accountId = LoanUtilities.getInsuranceReceivableAccount();
+			AccHolderTransactionServices.postTransactionEntryToMemberBranch(delegator, bdInsuranceCleared, memberPartyId, memberBranchId, accountId, "C", acctgTransId, acctgTransType, entrySequenceId);
+			
+			
+			BigDecimal bdPrincipalInsuranceInterestAmount = bdPrincipalCleared.add(bdInterestCleared).add(bdInsuranceCleared);
+			entrySequenceId = "00010";
+			accountId = LoanUtilities.getMemberDepositAccount(delegator);
+			AccHolderTransactionServices.postTransactionEntryToMemberBranch(delegator, bdPrincipalInsuranceInterestAmount, memberPartyId, memberBranchId, accountId, "D", acctgTransId, acctgTransType, entrySequenceId);
+
 			
 		}
 		try {
