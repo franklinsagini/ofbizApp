@@ -120,8 +120,8 @@ public class LoanReportsService {
 		for (GenericValue genericValue : loanApplicationClearedELI) {
 			loanProduct = LoanUtilities.getLoanProduct(genericValue.getLong("loanProductId"));
 			loanApplicationId = genericValue.getLong("loanApplicationId");
-			result.put(loanApplicationId.toString(), loanProduct.get("name")+"("+loanProduct.get("code")+")"+" - "+genericValue.getBigDecimal("loanAmt").setScale(2, RoundingMode.HALF_UP)+" Balance : "+LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId).setScale(2, RoundingMode.HALF_UP));
-			
+			//result.put(loanApplicationId.toString(), loanProduct.get("name")+"("+loanProduct.get("code")+")"+" - "+genericValue.getBigDecimal("loanAmt").setScale(2, RoundingMode.HALF_UP)+" Balance : "+LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId).setScale(2, RoundingMode.HALF_UP));
+			result.put(loanApplicationId.toString(), loanProduct.get("name")+"("+loanProduct.get("code")+")"+" - "+" Loan No : "+genericValue.getString("loanNo")+" - "+genericValue.getBigDecimal("loanAmt").setScale(2, RoundingMode.HALF_UP)+" Balance : "+LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId).setScale(2, RoundingMode.HALF_UP));
 			//log.info(" PPPPP Product name :::  "+loanProduct.get("name")+" Product !!!");
 		}
 		

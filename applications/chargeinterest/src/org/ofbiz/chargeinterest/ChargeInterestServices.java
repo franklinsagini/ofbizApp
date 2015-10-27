@@ -1,6 +1,7 @@
 package org.ofbiz.chargeinterest;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -778,6 +779,156 @@ public class ChargeInterestServices {
 		}
 
 		return stationMonthInterestManagementId;
+	}
+	
+	//ChargeInterestServices
+	public static synchronized String resolveLoanClearing() {
+
+		//Get all the loans amounts to be credited and updated
+		//For each loan in LoansToResolve get the last transaction id, which is the transaction on which 
+		//clearance happened
+		List<GenericValue> loansToResolveELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loansToResolveELI = delegator.findList("LoansToResolve",
+					null, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		Long loanApplicationId = null;
+		
+		for (GenericValue genericValue : loansToResolveELI) {
+			
+			//Get all the loan clear costing
+			loanApplicationId = genericValue.getLong("loanApplicationId");
+			
+			//Get last transaction id
+			String acctgTransId = getLastTransactionId(loanApplicationId);
+			
+			//Count Transactions
+			Long transactionCount = null;
+			Timestamp dateAdded = null;
+			if (acctgTransId != null){
+			 transactionCount =	countTransactions(acctgTransId);
+			 dateAdded = getTransactionDate(acctgTransId);
+			}
+			
+			genericValue.set("acctgTransId", acctgTransId);
+			genericValue.set("transactionCount", transactionCount);
+			genericValue.set("dateAdded", dateAdded);
+			
+			
+			
+			try {
+				delegator.createOrStore(genericValue);
+			} catch (GenericEntityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+		   
+			
+		}
+		
+		return "success";
+	}
+
+	private static Timestamp getTransactionDate(String acctgTransId) {
+		EntityConditionList<EntityExpr> expectationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition
+						.makeCondition("acctgTransId",
+								EntityOperator.EQUALS,
+								acctgTransId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> acctgTransEntryELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		try {
+			acctgTransEntryELI = delegator.findList("AcctgTransEntry",
+					expectationConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if (acctgTransEntryELI.size() > 0)
+			return acctgTransEntryELI.get(0).getTimestamp("createdStamp");
+		
+		return null;
+	}
+
+	private static Long countTransactions(String acctgTransId) {
+		EntityConditionList<EntityExpr> expectationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition
+						.makeCondition("acctgTransId",
+								EntityOperator.EQUALS,
+								acctgTransId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> acctgTransEntryELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		try {
+			acctgTransEntryELI = delegator.findList("AcctgTransEntry",
+					expectationConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		return Long.valueOf(acctgTransEntryELI.size());
+	}
+
+	private static String getLastTransactionId(Long loanApplicationId) {
+		
+		
+		BigDecimal bdZeroValue = new BigDecimal(0.01);
+		//EntityOperator<L, R, T>
+		//bdZeroValue = BigDecimal.ZERO;
+		EntityConditionList<EntityCondition> expectationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition
+						.makeCondition("loanApplicationId",
+								EntityOperator.EQUALS,
+								loanApplicationId),
+								
+								EntityCondition.makeCondition(
+								UtilMisc.toList(EntityCondition.makeCondition(
+										"interestAmount", EntityOperator.GREATER_THAN,
+										BigDecimal.ZERO.add(new BigDecimal("0.01"))),
+										EntityCondition
+												.makeCondition("insuranceAmount",
+														EntityOperator.GREATER_THAN,
+														BigDecimal.ZERO.add(new BigDecimal("0.01"))),
+										EntityCondition.makeCondition("principalAmount",
+												EntityOperator.GREATER_THAN,
+												BigDecimal.ZERO.add(new BigDecimal("0.01")))), EntityOperator.OR)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> loanRepaymentELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<String> orderList = new ArrayList<String>();
+		orderList.add("-createdStamp");
+		try {
+			loanRepaymentELI = delegator.findList("LoanRepayment",
+					expectationConditions, null, orderList, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if ((loanRepaymentELI == null) || (loanRepaymentELI.size() < 1))
+			return null;
+		
+		GenericValue loanRepayment = loanRepaymentELI.get(0);
+
+		return loanRepayment.getString("acctgTransId");
 	}
 
 }

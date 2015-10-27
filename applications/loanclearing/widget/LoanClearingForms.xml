@@ -382,13 +382,17 @@
             </hyperlink>
         </field>
         
-        <field name="printClearance" title="Print Clearacnce" widget-style="buttontext">
+        <field name="printClearance" title="Print Clearance" widget-style="buttontext">
             <hyperlink target="printClearance" description="Print Loan Clearance" also-hidden="false">
                 <parameter param-name="loanClearId"/>
             </hyperlink>
         </field>
         <field name="createdStamp" title="Created"><display type="date-time"></display></field>
         <field name="createdBy" title="Created By"><display></display></field>
+        
+        <field name="newLoanStatus" title="New Loan Status">
+        <display default-value="${bsh:org.ofbiz.accountholdertransactions.LoanUtilities.getLoanStatusGivenLoan(loanApplicationId)}"></display>
+        </field>
         
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
@@ -701,10 +705,13 @@
             </hyperlink>
         </field>
         
-        <field name="printClearance" title="Print Clearacnce" widget-style="buttontext">
+        <field name="printClearance" title="Print Clearance" widget-style="buttontext">
             <hyperlink target="printClearance" description="Print Loan Clearance" also-hidden="false">
                 <parameter param-name="loanClearId"/>
             </hyperlink>
+        </field>
+        <field name="New Loan Status">
+        <display default-value="${bsh:org.ofbiz.accountholdertransactions.LoanUtilities.getLoanStatusGivenLoan(loanApplicationId)}"></display>
         </field>
         <field name="createdStamp" title="Created"><display type="date-time"></display></field>
         <field name="createdBy" title="Created By"><display></display></field>
