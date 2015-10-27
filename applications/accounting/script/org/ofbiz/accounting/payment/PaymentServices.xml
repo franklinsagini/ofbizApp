@@ -232,6 +232,7 @@ under the License.
             </if-compare-field>
         </if-not-empty>
     </simple-method>
+
     <simple-method method-name="createPaymentApplication" short-description="Create a Payment Application">
         <if-empty field="parameters.invoiceId">
             <if-empty field="parameters.billingAccountId">
@@ -257,20 +258,28 @@ under the License.
             <check-errors/>
         </if-empty>
 
+
         <if>
             <condition>
-                    <or>
-                        <if-compare field="payment.statusId" operator="not-equals" value="PMNT_SENT"/>
-                        <if-compare field="payment.statusId" operator="not-equals" value="PMNT_RECEIVED"/>
-                    </or>
+                <if-compare field="payment.paymentTypeId" operator="not-equals" value="PAYMENT_REVERSAL"/>
             </condition>
             <then>
-                <add-error>
-                    <fail-property resource="AccountingUiLabels" property="AccountingStatusNotYetSent"/>
-                </add-error>
-                <check-errors/>
+             <if>
+                        <condition>
+                                <or>
+                                    <if-compare field="payment.statusId" operator="not-equals" value="PMNT_SENT"/>
+                                </or>
+                        </condition>
+                        <then>
+                            <add-error>
+                                <fail-property resource="AccountingUiLabels" property="AccountingStatusNotYetSent"/>
+                            </add-error>
+                            <check-errors/>
+                        </then>
+            </if>
             </then>
         </if>
+<!--         -->
 <!-- #################ADDDED  -->
         <call-class-method method-name="getPaymentNotApplied" class-name="org.ofbiz.accounting.payment.PaymentWorker" ret-field="notAppliedPayment">
             <field field="payment" type="GenericValue"/>
