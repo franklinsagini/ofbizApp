@@ -78,9 +78,9 @@ public class ChargeInterestServices {
 
 		// update the expectation with transaction id
 		String branchId = station.getString("branchId");
-				
-				//AccHolderTransactionServices
-				//.getEmployeeBranch(userLogin.get("partyId"));
+
+		// AccHolderTransactionServices
+		// .getEmployeeBranch(userLogin.get("partyId"));
 		String acctgTransType = "INTEREST_RECEIVABLE";
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		GenericValue loanExpectation = delegator.makeValidValue(
@@ -112,10 +112,10 @@ public class ChargeInterestServices {
 		// stationMonthInterestManagementId
 		updateChargesWithTransactionId(stationMonthInterestManagementId,
 				acctgTransId);
-		
-		
-		//Log station in Charged Interest Log
-		Long stationInterestChargeLogId = delegator.getNextSeqIdLong("StationInterestChargeLog");
+
+		// Log station in Charged Interest Log
+		Long stationInterestChargeLogId = delegator
+				.getNextSeqIdLong("StationInterestChargeLog");
 		GenericValue stationInterestChargeLog = delegator.makeValidValue(
 				"StationInterestChargeLog", UtilMisc.toMap(
 						"stationInterestChargeLogId",
@@ -137,7 +137,7 @@ public class ChargeInterestServices {
 						"chargedNotCharged", "CHARGED"
 
 				));
-		
+
 		try {
 			delegator.createOrStore(stationInterestChargeLog);
 		} catch (GenericEntityException e) {
@@ -237,11 +237,13 @@ public class ChargeInterestServices {
 				e.printStackTrace();
 			}
 		}
-		
-		
-		//update Station Month Interest Management postingacctgTransId
-		
-		GenericValue stationMonthInterestManagement = LoanUtilities.getEntityValue("StationMonthInterestManagement", "stationMonthInterestManagementId", stationMonthInterestManagementId);
+
+		// update Station Month Interest Management postingacctgTransId
+
+		GenericValue stationMonthInterestManagement = LoanUtilities
+				.getEntityValue("StationMonthInterestManagement",
+						"stationMonthInterestManagementId",
+						stationMonthInterestManagementId);
 		stationMonthInterestManagement.set("postingacctgTransId", acctgTransId);
 		try {
 			delegator.createOrStore(stationMonthInterestManagement);
@@ -249,8 +251,7 @@ public class ChargeInterestServices {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
+
 	}
 
 	private static ExpectTotal processCurrentStation(String currentStationId,
@@ -700,7 +701,7 @@ public class ChargeInterestServices {
 		String employerCode = "";
 		String stationId = "";
 		Boolean allCharged = true;
-		
+
 		Map<String, String> userLogin = new HashMap<String, String>();
 		userLogin.put("userLoginId", "system");
 
@@ -725,10 +726,9 @@ public class ChargeInterestServices {
 
 				Long stationMonthInterestManagementId = addMonthInterestManagement(
 						month, year, employerCode, stationId);
-				
-				
-				chargeStationInterest(stationMonthInterestManagementId, userLogin);
-				
+
+				chargeStationInterest(stationMonthInterestManagementId,
+						userLogin);
 
 			}
 		}
@@ -739,8 +739,8 @@ public class ChargeInterestServices {
 		return "success";
 	}
 
-	private static Long addMonthInterestManagement(Long month,
-			Long year, String employerCode, String stationId) {
+	private static Long addMonthInterestManagement(Long month, Long year,
+			String employerCode, String stationId) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 
 		Long stationMonthInterestManagementId = delegator
@@ -780,74 +780,354 @@ public class ChargeInterestServices {
 
 		return stationMonthInterestManagementId;
 	}
-	
-	//ChargeInterestServices
+
+	// ChargeInterestServices
 	public static synchronized String resolveLoanClearing() {
 
-		//Get all the loans amounts to be credited and updated
-		//For each loan in LoansToResolve get the last transaction id, which is the transaction on which 
-		//clearance happened
-		List<GenericValue> loansToResolveELI = new ArrayList<GenericValue>();
+		// Get all the loans amounts to be credited and updated
+		// For each loan in LoansToResolve get the last transaction id, which is
+		// the transaction on which
+		// clearance happened
+
+		List<GenericValue> loanClearToImportELI = new ArrayList<GenericValue>();
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
-			loansToResolveELI = delegator.findList("LoansToResolve",
+			loanClearToImportELI = delegator.findList("LoanClearToImport",
 					null, null, null, null, false);
 
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
-		
+
 		Long loanApplicationId = null;
-		
-		for (GenericValue genericValue : loansToResolveELI) {
-			
-			//Get all the loan clear costing
-			loanApplicationId = genericValue.getLong("loanApplicationId");
-			
-			//Get last transaction id
-			String acctgTransId = getLastTransactionId(loanApplicationId);
-			
-			//Count Transactions
-			Long transactionCount = null;
-			Timestamp dateAdded = null;
-			if (acctgTransId != null){
-			 transactionCount =	countTransactions(acctgTransId);
-			 dateAdded = getTransactionDate(acctgTransId);
+		GenericValue acctgTransEntry = null;
+		String acctgTransType = "LOAN_CLEARANCE";
+		String entrySequenceId = "";
+		String acctgTransId = "";
+		String accountId = "";
+		for (GenericValue genericValue : loanClearToImportELI) {
+
+			if (genericValue.getLong("transactionCount").equals(4L)) {
+				// process where four entries were done
+				// Get the last record for this transaction id
+				acctgTransEntry = getLastTransactionEntry(genericValue
+						.getString("acctgTransId"));
+				if (!acctgTransEntry.getString("acctgTransEntrySeqId").equals(
+						"00004")) {
+					System.out.println(genericValue.getString("acctgTransId")
+							+ " last transaction not 00004");
+				}
+
+				// Add 5
+				// Add 6
+				// Add 7
+				// Add 8
+				// Add 9
+				// Add 10
+				/***
+				 * 
+				 * acctgTransEntrySeqId glAccountId amount origAmount
+				 * debitCreditFlag
+				 * */
+				// clearance charge
+				acctgTransType = "LOAN_CLEARANCE";
+				entrySequenceId = "00005";
+				accountId = LoanUtilities.getMemberDepositAccount(delegator);
+				acctgTransEntry.setString("acctgTransEntrySeqId",
+						entrySequenceId);
+				acctgTransEntry.set("glAccountId", accountId);
+				acctgTransEntry.set("amount",
+						genericValue.getBigDecimal("totalChargeAmount"));
+				acctgTransEntry.set("origAmount",
+						genericValue.getBigDecimal("totalChargeAmount"));
+				acctgTransEntry.set("debitCreditFlag", "D");
+				try {
+					delegator.createOrStore(acctgTransEntry);
+				} catch (GenericEntityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				// AccHolderTransactionServices.postTransactionEntryToMemberBranch(delegator,
+				// bdTotalCharge, memberPartyId, memberBranchId, accountId, "D",
+				// acctgTransId, acctgTransType, entrySequenceId);
+
+				//
+				// Credit loan clearance charges
+				entrySequenceId = "00006";
+				accountId = LoanUtilities.getLoanClearingChargeAccountId();
+				// AccHolderTransactionServices.postTransactionEntryToMemberBranch(delegator,
+				// bdTotalCharge, memberPartyId, memberBranchId, accountId, "C",
+				// acctgTransId, acctgTransType, entrySequenceId);
+				acctgTransEntry.setString("acctgTransEntrySeqId",
+						entrySequenceId);
+				acctgTransEntry.set("glAccountId", accountId);
+				acctgTransEntry.set("amount",
+						genericValue.getBigDecimal("totalChargeAmount"));
+				acctgTransEntry.set("origAmount",
+						genericValue.getBigDecimal("totalChargeAmount"));
+				acctgTransEntry.set("debitCreditFlag", "C");
+				try {
+					delegator.createOrStore(acctgTransEntry);
+				} catch (GenericEntityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				/***
+				 * Adding ommitted entries to loan clearing 00007 Cr Loan to
+				 * Members with Principal 00008 Cr Interest Receivable with
+				 * Interest 00009 Cr Insurance Receivable with Insurance 00010
+				 * Dr Member Savings with (Principal + Interest + Insurance)
+				 * 
+				 * */
+				entrySequenceId = "00007";
+				accountId = LoanUtilities.getLoanReceivableAccount();
+				// AccHolderTransactionServices.postTransactionEntryToMemberBranch(delegator,
+				// bdPrincipalCleared, memberPartyId, memberBranchId, accountId,
+				// "C", acctgTransId, acctgTransType, entrySequenceId);
+				acctgTransEntry.setString("acctgTransEntrySeqId",
+						entrySequenceId);
+				acctgTransEntry.set("glAccountId", accountId);
+				acctgTransEntry.set("amount",
+						genericValue.getBigDecimal("totalPrincipal"));
+				acctgTransEntry.set("origAmount",
+						genericValue.getBigDecimal("totalPrincipal"));
+				acctgTransEntry.set("debitCreditFlag", "C");
+				try {
+					delegator.createOrStore(acctgTransEntry);
+				} catch (GenericEntityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				entrySequenceId = "00008";
+				accountId = LoanUtilities.getInterestReceivableAccount();
+				// AccHolderTransactionServices.postTransactionEntryToMemberBranch(delegator,
+				// bdInterestCleared, memberPartyId, memberBranchId, accountId,
+				// "C", acctgTransId, acctgTransType, entrySequenceId);
+				acctgTransEntry.setString("acctgTransEntrySeqId",
+						entrySequenceId);
+				acctgTransEntry.set("glAccountId", accountId);
+				acctgTransEntry.set("amount",
+						genericValue.getBigDecimal("totalInterest"));
+				acctgTransEntry.set("origAmount",
+						genericValue.getBigDecimal("totalInterest"));
+				acctgTransEntry.set("debitCreditFlag", "C");
+				try {
+					delegator.createOrStore(acctgTransEntry);
+				} catch (GenericEntityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				entrySequenceId = "00009";
+				accountId = LoanUtilities.getInsuranceReceivableAccount();
+				// AccHolderTransactionServices.postTransactionEntryToMemberBranch(delegator,
+				// bdInsuranceCleared, memberPartyId, memberBranchId, accountId,
+				// "C", acctgTransId, acctgTransType, entrySequenceId);
+				acctgTransEntry.setString("acctgTransEntrySeqId",
+						entrySequenceId);
+				acctgTransEntry.set("glAccountId", accountId);
+				acctgTransEntry.set("amount",
+						genericValue.getBigDecimal("totalInsurance"));
+				acctgTransEntry.set("origAmount",
+						genericValue.getBigDecimal("totalInsurance"));
+				acctgTransEntry.set("debitCreditFlag", "C");
+				try {
+					delegator.createOrStore(acctgTransEntry);
+				} catch (GenericEntityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				// BigDecimal bdPrincipalInsuranceInterestAmount =
+				// bdPrincipalCleared.add(bdInterestCleared).add(bdInsuranceCleared);
+				// BigDecimal bdPrincipalInsuranceInterestAmount =
+				// genericValue.getBigDecimal("totalPrincipal").add(acctgTransEntry.getBigDecimal("totalInterest")).add(acctgTransEntry.getBigDecimal("totalInsurance"));
+				entrySequenceId = "00010";
+				accountId = LoanUtilities.getMemberDepositAccount(delegator);
+				// AccHolderTransactionServices.postTransactionEntryToMemberBranch(delegator,
+				// bdPrincipalInsuranceInterestAmount, memberPartyId,
+				// memberBranchId, accountId, "D", acctgTransId, acctgTransType,
+				// entrySequenceId);
+				acctgTransEntry.setString("acctgTransEntrySeqId",
+						entrySequenceId);
+				acctgTransEntry.set("glAccountId", accountId);
+				acctgTransEntry.set("amount",
+						genericValue.getBigDecimal("totalAmount"));
+				acctgTransEntry.set("origAmount",
+						genericValue.getBigDecimal("totalAmount"));
+				acctgTransEntry.set("debitCreditFlag", "D");
+				try {
+					delegator.createOrStore(acctgTransEntry);
+				} catch (GenericEntityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+
+			} else if (genericValue.getLong("transactionCount").equals(6L)) {
+				// Process where 6 entries where done
+				// Get the last record for this id
+				acctgTransEntry = getLastTransactionEntry(genericValue
+						.getString("acctgTransId"));
+				if (!acctgTransEntry.getString("acctgTransEntrySeqId").equals(
+						"00006")) {
+					System.out.println(genericValue.getString("acctgTransId")
+							+ " last transaction not 00006");
+				}
+				// Add 7
+				// Add 8
+				// Add 9
+				// Add 10
+
+				acctgTransType = "LOAN_CLEARANCE";
+				entrySequenceId = "";
+
+				/***
+				 * Adding ommitted entries to loan clearing 00007 Cr Loan to
+				 * Members with Principal 00008 Cr Interest Receivable with
+				 * Interest 00009 Cr Insurance Receivable with Insurance 00010
+				 * Dr Member Savings with (Principal + Interest + Insurance)
+				 * 
+				 * */
+				/***
+				 * Adding ommitted entries to loan clearing 00007 Cr Loan to
+				 * Members with Principal 00008 Cr Interest Receivable with
+				 * Interest 00009 Cr Insurance Receivable with Insurance 00010
+				 * Dr Member Savings with (Principal + Interest + Insurance)
+				 * 
+				 * */
+				entrySequenceId = "00007";
+				accountId = LoanUtilities.getLoanReceivableAccount();
+				// AccHolderTransactionServices.postTransactionEntryToMemberBranch(delegator,
+				// bdPrincipalCleared, memberPartyId, memberBranchId, accountId,
+				// "C", acctgTransId, acctgTransType, entrySequenceId);
+				acctgTransEntry.setString("acctgTransEntrySeqId",
+						entrySequenceId);
+				acctgTransEntry.set("glAccountId", accountId);
+				acctgTransEntry.set("amount",
+						genericValue.getBigDecimal("totalPrincipal"));
+				acctgTransEntry.set("origAmount",
+						genericValue.getBigDecimal("totalPrincipal"));
+				acctgTransEntry.set("debitCreditFlag", "C");
+				try {
+					delegator.createOrStore(acctgTransEntry);
+				} catch (GenericEntityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				entrySequenceId = "00008";
+				accountId = LoanUtilities.getInterestReceivableAccount();
+				// AccHolderTransactionServices.postTransactionEntryToMemberBranch(delegator,
+				// bdInterestCleared, memberPartyId, memberBranchId, accountId,
+				// "C", acctgTransId, acctgTransType, entrySequenceId);
+				acctgTransEntry.setString("acctgTransEntrySeqId",
+						entrySequenceId);
+				acctgTransEntry.set("glAccountId", accountId);
+				acctgTransEntry.set("amount",
+						genericValue.getBigDecimal("totalInterest"));
+				acctgTransEntry.set("origAmount",
+						genericValue.getBigDecimal("totalInterest"));
+				acctgTransEntry.set("debitCreditFlag", "C");
+				try {
+					delegator.createOrStore(acctgTransEntry);
+				} catch (GenericEntityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				entrySequenceId = "00009";
+				accountId = LoanUtilities.getInsuranceReceivableAccount();
+				// AccHolderTransactionServices.postTransactionEntryToMemberBranch(delegator,
+				// bdInsuranceCleared, memberPartyId, memberBranchId, accountId,
+				// "C", acctgTransId, acctgTransType, entrySequenceId);
+				acctgTransEntry.setString("acctgTransEntrySeqId",
+						entrySequenceId);
+				acctgTransEntry.set("glAccountId", accountId);
+				acctgTransEntry.set("amount",
+						genericValue.getBigDecimal("totalInsurance"));
+				acctgTransEntry.set("origAmount",
+						genericValue.getBigDecimal("totalInsurance"));
+				acctgTransEntry.set("debitCreditFlag", "C");
+				try {
+					delegator.createOrStore(acctgTransEntry);
+				} catch (GenericEntityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				// BigDecimal bdPrincipalInsuranceInterestAmount =
+				// bdPrincipalCleared.add(bdInterestCleared).add(bdInsuranceCleared);
+				// BigDecimal bdPrincipalInsuranceInterestAmount =
+				// acctgTransEntry.getBigDecimal("totalPrincipal").add(acctgTransEntry.getBigDecimal("totalInterest")).add(acctgTransEntry.getBigDecimal("totalInsurance"));
+				entrySequenceId = "00010";
+				accountId = LoanUtilities.getMemberDepositAccount(delegator);
+				// AccHolderTransactionServices.postTransactionEntryToMemberBranch(delegator,
+				// bdPrincipalInsuranceInterestAmount, memberPartyId,
+				// memberBranchId, accountId, "D", acctgTransId, acctgTransType,
+				// entrySequenceId);
+				acctgTransEntry.setString("acctgTransEntrySeqId",
+						entrySequenceId);
+				acctgTransEntry.set("glAccountId", accountId);
+				acctgTransEntry.set("amount",
+						genericValue.getBigDecimal("totalAmount"));
+				acctgTransEntry.set("origAmount",
+						genericValue.getBigDecimal("totalAmount"));
+				acctgTransEntry.set("debitCreditFlag", "D");
+				try {
+					delegator.createOrStore(acctgTransEntry);
+				} catch (GenericEntityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
 			}
-			
-			genericValue.set("acctgTransId", acctgTransId);
-			genericValue.set("transactionCount", transactionCount);
-			genericValue.set("dateAdded", dateAdded);
-			
-			
-			
-			try {
-				delegator.createOrStore(genericValue);
-			} catch (GenericEntityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			
-		   
-			
+
 		}
-		
+
 		return "success";
 	}
 
-	private static Timestamp getTransactionDate(String acctgTransId) {
+	private static GenericValue getLastTransactionEntry(String acctgTransId) {
 		EntityConditionList<EntityExpr> expectationConditions = EntityCondition
-				.makeCondition(UtilMisc.toList(EntityCondition
-						.makeCondition("acctgTransId",
-								EntityOperator.EQUALS,
-								acctgTransId)
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"acctgTransId", EntityOperator.EQUALS, acctgTransId)
 
 				), EntityOperator.AND);
 
 		List<GenericValue> acctgTransEntryELI = new ArrayList<GenericValue>();
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		
+		List<String> orderEntry = new ArrayList<String>();
+		orderEntry.add("-acctgTransEntrySeqId");
+
+		try {
+			acctgTransEntryELI = delegator.findList("AcctgTransEntry",
+					expectationConditions, null, orderEntry, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		if (acctgTransEntryELI.size() > 0)
+			return acctgTransEntryELI.get(0);
+
+		return null;
+	}
+
+	private static Timestamp getTransactionDate(String acctgTransId) {
+		EntityConditionList<EntityExpr> expectationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"acctgTransId", EntityOperator.EQUALS, acctgTransId)
+
+				), EntityOperator.AND);
+
+		List<GenericValue> acctgTransEntryELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
 		try {
 			acctgTransEntryELI = delegator.findList("AcctgTransEntry",
 					expectationConditions, null, null, null, false);
@@ -855,25 +1135,23 @@ public class ChargeInterestServices {
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
-		
+
 		if (acctgTransEntryELI.size() > 0)
 			return acctgTransEntryELI.get(0).getTimestamp("createdStamp");
-		
+
 		return null;
 	}
 
 	private static Long countTransactions(String acctgTransId) {
 		EntityConditionList<EntityExpr> expectationConditions = EntityCondition
-				.makeCondition(UtilMisc.toList(EntityCondition
-						.makeCondition("acctgTransId",
-								EntityOperator.EQUALS,
-								acctgTransId)
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"acctgTransId", EntityOperator.EQUALS, acctgTransId)
 
 				), EntityOperator.AND);
 
 		List<GenericValue> acctgTransEntryELI = new ArrayList<GenericValue>();
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		
+
 		try {
 			acctgTransEntryELI = delegator.findList("AcctgTransEntry",
 					expectationConditions, null, null, null, false);
@@ -881,33 +1159,31 @@ public class ChargeInterestServices {
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
-		
+
 		return Long.valueOf(acctgTransEntryELI.size());
 	}
 
 	private static String getLastTransactionId(Long loanApplicationId) {
-		
-		
+
 		BigDecimal bdZeroValue = new BigDecimal(0.01);
-		//EntityOperator<L, R, T>
-		//bdZeroValue = BigDecimal.ZERO;
+		// EntityOperator<L, R, T>
+		// bdZeroValue = BigDecimal.ZERO;
 		EntityConditionList<EntityCondition> expectationConditions = EntityCondition
-				.makeCondition(UtilMisc.toList(EntityCondition
-						.makeCondition("loanApplicationId",
-								EntityOperator.EQUALS,
-								loanApplicationId),
-								
-								EntityCondition.makeCondition(
-								UtilMisc.toList(EntityCondition.makeCondition(
-										"interestAmount", EntityOperator.GREATER_THAN,
-										BigDecimal.ZERO.add(new BigDecimal("0.01"))),
-										EntityCondition
-												.makeCondition("insuranceAmount",
-														EntityOperator.GREATER_THAN,
-														BigDecimal.ZERO.add(new BigDecimal("0.01"))),
-										EntityCondition.makeCondition("principalAmount",
-												EntityOperator.GREATER_THAN,
-												BigDecimal.ZERO.add(new BigDecimal("0.01")))), EntityOperator.OR)
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanApplicationId", EntityOperator.EQUALS,
+						loanApplicationId),
+
+				EntityCondition.makeCondition(UtilMisc.toList(EntityCondition
+						.makeCondition("interestAmount",
+								EntityOperator.GREATER_THAN,
+								BigDecimal.ZERO.add(new BigDecimal("0.01"))),
+						EntityCondition.makeCondition("insuranceAmount",
+								EntityOperator.GREATER_THAN,
+								BigDecimal.ZERO.add(new BigDecimal("0.01"))),
+						EntityCondition.makeCondition("principalAmount",
+								EntityOperator.GREATER_THAN,
+								BigDecimal.ZERO.add(new BigDecimal("0.01")))),
+						EntityOperator.OR)
 
 				), EntityOperator.AND);
 
@@ -922,13 +1198,69 @@ public class ChargeInterestServices {
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
-		
+
 		if ((loanRepaymentELI == null) || (loanRepaymentELI.size() < 1))
 			return null;
-		
+
 		GenericValue loanRepayment = loanRepaymentELI.get(0);
 
 		return loanRepayment.getString("acctgTransId");
 	}
+
+	// Backup
+	// public static synchronized String resolveLoanClearing() {
+	//
+	// //Get all the loans amounts to be credited and updated
+	// //For each loan in LoansToResolve get the last transaction id, which is
+	// the transaction on which
+	// //clearance happened
+	// List<GenericValue> loansToResolveELI = new ArrayList<GenericValue>();
+	// Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+	// try {
+	// loansToResolveELI = delegator.findList("LoansToResolve",
+	// null, null, null, null, false);
+	//
+	// } catch (GenericEntityException e2) {
+	// e2.printStackTrace();
+	// }
+	//
+	// Long loanApplicationId = null;
+	//
+	// for (GenericValue genericValue : loansToResolveELI) {
+	//
+	// //Get all the loan clear costing
+	// loanApplicationId = genericValue.getLong("loanApplicationId");
+	//
+	// //Get last transaction id
+	// String acctgTransId = getLastTransactionId(loanApplicationId);
+	//
+	// //Count Transactions
+	// Long transactionCount = null;
+	// Timestamp dateAdded = null;
+	// if (acctgTransId != null){
+	// transactionCount = countTransactions(acctgTransId);
+	// dateAdded = getTransactionDate(acctgTransId);
+	// }
+	//
+	// genericValue.set("acctgTransId", acctgTransId);
+	// genericValue.set("transactionCount", transactionCount);
+	// genericValue.set("dateAdded", dateAdded);
+	//
+	//
+	//
+	// try {
+	// delegator.createOrStore(genericValue);
+	// } catch (GenericEntityException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	//
+	//
+	//
+	//
+	// }
+	//
+	// return "success";
+	// }
 
 }
