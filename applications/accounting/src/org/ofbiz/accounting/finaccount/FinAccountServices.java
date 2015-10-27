@@ -344,7 +344,7 @@ public class FinAccountServices {
 		// now get all transactions for this header
 		List<GenericValue> transactions = null;
 		List<GenericValue> unpresentedUnidentifiedTransactions = null;
-		unpresentedUnidentifiedTransactions = getUnpresentedUnidentifiedForHeader(delegator);
+		unpresentedUnidentifiedTransactions = getUnpresentedUnidentifiedForHeader(delegator, finAccountId);
 		if (unpresentedUnidentifiedTransactions != null) {
 			for (GenericValue trans : unpresentedUnidentifiedTransactions) {
 				System.out.println("HEADER_ID: "+trans.getString("headerId") + " TRANSACTION "+ trans.getString("finAccountTransTypeId"));
@@ -700,12 +700,12 @@ public class FinAccountServices {
 		return transactions;
 	}
 
-	private static List<GenericValue> getUnpresentedUnidentifiedForHeader(Delegator delegator) {
+	private static List<GenericValue> getUnpresentedUnidentifiedForHeader(Delegator delegator, String finAccountId) {
 		List<GenericValue> unpresentedUnidentifiedTransactions = null;
 
 		
 		
-		GenericValue lastSavedReconciliation = getLastSavedRecon(delegator);
+		GenericValue lastSavedReconciliation = getLastSavedRecon(delegator, finAccountId);
 		
 		  // lookup payment applications which took place before the asOfDateTime for this invoice
         EntityConditionList<EntityExpr> dateCondition = EntityCondition.makeCondition(UtilMisc.toList(
@@ -911,7 +911,7 @@ public class FinAccountServices {
 		}
 
 		// Replace is last recon here
-		GenericValue lastRecon = getLastSavedRecon(delegator);
+		GenericValue lastRecon = getLastSavedRecon(delegator, bankReconHeader.getString("finAccountId"));
 
 		try {
 			lastRecon.set("isLastRecon", "N");
@@ -945,12 +945,13 @@ public class FinAccountServices {
 		return result;
 	}
 
-	private static GenericValue getLastSavedRecon(Delegator delegator) {
+	private static GenericValue getLastSavedRecon(Delegator delegator, String finAccountId) {
 		List<GenericValue> recons = null;
 		GenericValue lastSavedRecon = null;
 
 		EntityConditionList<EntityExpr> lastReconCond = EntityCondition.makeCondition(UtilMisc.toList(
 				EntityCondition.makeCondition("isLastRecon", EntityOperator.EQUALS, "Y"),
+				EntityCondition.makeCondition("finAccountId", EntityOperator.EQUALS, finAccountId),
 				EntityCondition.makeCondition("statusName", EntityOperator.EQUALS, "RECONCILED")
 				), EntityOperator.AND);
 
