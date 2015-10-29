@@ -708,6 +708,17 @@ allAccountProducts.eachWithIndex { memberAccount, index ->
 		
 		else{
 			memberAccountTransaction.transactionDescription = theTransaction.transactionType+'('+theTransaction.acctgTransId+')';
+			
+			if ((theTransaction.chequeNo != '') && (theTransaction.chequeNo != null) ){
+				memberAccountTransaction.transactionDescription = theTransaction.transactionType+'('+theTransaction.acctgTransId+') Cheque No. '+theTransaction.chequeNo;
+			} 
+			
+			if ((theTransaction.bankSlipNumber != '') && (theTransaction.bankSlipNumber != null) ){
+				memberAccountTransaction.transactionDescription = theTransaction.transactionType+'('+theTransaction.acctgTransId+') Slip No. '+theTransaction.bankSlipNumber;
+			}
+			
+			
+			
 		}
 		
 		//memberAccountTransaction.transactionDescription = theTransaction.transactionType

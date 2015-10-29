@@ -3599,6 +3599,32 @@ public class LoanUtilities {
 		}
 		return loanReceivableAccount;
 	}
+	
+	
+	public static String getLoanReceivableAccount() {
+		GenericValue accountHolderTransactionSetup = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		// SaccoProduct
+		try {
+			accountHolderTransactionSetup = delegator.findOne(
+					"AccountHolderTransactionSetup", UtilMisc.toMap(
+							"accountHolderTransactionSetupId",
+							"LOANDISBURSEMENTACCOUNT"), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("######## Cannot Get Loan Receivable Account in Loan Disbursement, make sure there is a rcord in Account Holder Transaction Setup with ID LOANDISBURSEMENTACCOUNT and accounts configured ");
+			return "Cannot Get Loan Receivable Account in Disbursement ";
+		}
+
+		String loanReceivableAccount = "";
+		if (accountHolderTransactionSetup != null) {
+			loanReceivableAccount = accountHolderTransactionSetup
+					.getString("cashAccountId");
+		} else {
+			log.error("######## Cannot Get Loan Disbursement account, make sure there is a rcord in Account Holder Transaction Setup with ID LOANDISBURSEMENTACCOUNT and accounts configured ");
+		}
+		return loanReceivableAccount;
+	}
 
 
 }
