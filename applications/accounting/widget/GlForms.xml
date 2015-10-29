@@ -66,6 +66,178 @@ under the License.
         <field name="searchButton" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
 
+
+<!-- MANUAL GENERAL LEDGER JOURNAL VOUCHER -->
+
+    <form name="NewMultiDebitJV" type="single" target="createMultiDebitJVHeader" default-map-name="manualGLJV"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="glFiscalTypeId"><hidden value="ACTUAL"/></field>
+        <field name="acctgTransTypeId"><hidden value="MANUAL_JV"/></field>
+        <field name="debitCreditFlag"><hidden value="C"/></field>
+        <field name="glAccountId" >
+            <drop-down>
+                <entity-options entity-name="GlAccountOrganizationAndClass" key-field-name="glAccountId" description="${accountCode} - ${accountName} [${glAccountId}]">
+                    <entity-constraint name="organizationPartyId" operator="equals" env-name="parameters.organizationPartyId"/>
+                    <entity-order-by field-name="accountCode"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="transactionDate"><date-time/></field>
+        <field name="amount"  tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="8"/></field>
+        <field name="narration" title="Narration" position="1" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+            <textarea/>
+        </field>
+        <field name="createButton" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <form name="ListGLJVHeader" type="list" list-name="listIt" paginate-target="MultiplePayment"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="ManualGLJVHeader">
+            </entity-condition>
+        </actions>
+        <field name="organizationPartyId"><hidden/></field>
+        <field name="manualGlJvId"><display/></field>
+        <field name="capturedBy"><display/></field>
+        <field name="approvedBy"><display/></field>
+        <field name="statusName"><display/></field>
+        <field name="transactionDate"><display/></field>
+                <field name="glAccountId" title="Gl Account">
+            <display-entity entity-name="GlAccount"/>
+        </field>
+        <field name="debitCreditFlag"><display/></field>
+        <field name="amount"><display/></field>
+
+
+        <field name="detailsLink" title=" " widget-style="buttontext">
+            <hyperlink target="JVLines" description="Details" also-hidden="false">
+                <parameter param-name="manualGlJvId"/>
+                <parameter param-name="organizationPartyId"/>
+            </hyperlink>
+        </field>
+    </form>
+
+    <form name="GLJVHeader" type="single" target="ConfirmMultiplePayment" default-map-name="manualGLJVHeader">
+          <alt-target use-when="manualGLJVHeader!=null&amp;&amp;manualGLJVHeader.getString(&quot;statusName&quot;).equals(&quot;CAPTURED&quot;)" target="approveGLJV"/>
+          <alt-target use-when="manualGLJVHeader!=null&amp;&amp;manualGLJVHeader.getString(&quot;statusName&quot;).equals(&quot;APPROVED&quot;)" target="postGLJV"/>
+        <field name="manualGlJvId" ><hidden/></field>
+        <field name="organizationPartyId" ><hidden/></field>
+        <field name="capturedBy" position="1"><display/></field>
+        <field name="approvedBy" use-when="manualGLJVHeader!=null&amp;&amp;manualGLJVHeader.getString(&quot;statusName&quot;).equals(&quot;APPROVED&quot;)" position="2"><display/></field>
+        <field name="postedBy" use-when="manualGLJVHeader!=null&amp;&amp;manualGLJVHeader.getString(&quot;statusName&quot;).equals(&quot;POSTED&quot;)" position="1"><display/></field>
+        <field name="statusName" position="2"><display/></field>
+        <field name="isPosted" position="1"><display/></field>
+        <field name="isApproved" position="2"><display/></field>
+        <field name="transactionDate" position="1"><display/></field>
+        <field name="amount" position="2"><display/></field>
+        <field name="glAccountId" position="1"><display/></field>
+        <field name="debitCreditFlag" position="1"><display /></field>
+        <field name="submitButton" use-when="manualGLJVHeader!=null&amp;&amp;manualGLJVHeader.getString(&quot;statusName&quot;).equals(&quot;CAPTURED&quot;)" title="APPROVE JOURNAL VOUCHER" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field name="submitButton" use-when="manualGLJVHeader!=null&amp;&amp;manualGLJVHeader.getString(&quot;statusName&quot;).equals(&quot;APPROVED&quot;)" title="POST JOURNAL VOUCHER" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+   
+
+    <form name="ListVoucherLines" type="list"  list-name="listGLJVLines"  target="updateDebitAccountPayment" separate-columns="true"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+         <field name="paymentId"><hidden/></field>
+         <field name="lineId"><hidden/></field>
+        <field name="glAccountId" title="Debit Account">
+            <drop-down allow-empty="true">
+                <entity-options  key-field-name="glAccountId" entity-name="GlAccount" description="${accountCode} - ${accountName}">
+                    <entity-order-by field-name="accountCode"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="comments"><text/></field>
+        <field name="amount"><text/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="deleteLink" title=" " widget-style="buttontext">
+            <hyperlink target="removeDebitAccountPayment" description="Remove" also-hidden="false">
+                <parameter param-name="lineId"/>
+                <parameter param-name="paymentId"/>
+            </hyperlink>
+        </field>
+    </form>
+
+    <form name="AddVoucherLine" type="single" target="addDebitAccountPayment" default-map-name="MultiPaymentLines">
+        <actions>
+        </actions>
+        <field name="paymentId"><hidden/></field>
+        <field name="glAccountId" >
+            <drop-down>
+                <entity-options entity-name="GlAccountOrganizationAndClass" key-field-name="glAccountId" description="${accountCode} - ${accountName} [${glAccountId}]">
+                    <entity-constraint name="organizationPartyId" operator="equals" env-name="parameters.organizationPartyId"/>
+                    <entity-order-by field-name="accountCode"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="transactionDate"><date-time/></field>
+        <field name="amount"  tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="8"/></field>
+        <field name="narration" title="Narration" position="1" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+            <textarea/>
+        </field>
+        <field name="submitButton" title="Add Debit Account Amount" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+   <form name="ListGLJVHeaderOLD" type="list" list-name="listIt" paginate-target="MultiplePayment"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="MultiPayment">
+                <condition-expr field-name="statusId" operator="equals" value="PMNT_NOT_PAID"/>
+                <order-by field-name="effectiveDate DESC"/>
+            </entity-condition>
+        </actions>
+        <field name="paymentId" widget-style="buttontext">
+            <hyperlink description="${paymentId}" target="paymentOverview">
+                <parameter param-name="paymentId"/>
+            </hyperlink>
+        </field>
+        <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}">
+            <display-entity entity-name="PaymentType"/>
+        </field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
+            <display-entity entity-name="StatusItem"/>
+        </field>
+        <field name="comments">
+            <display/>
+        </field>
+        <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName},${firstName}">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdFrom}]" >
+                    <parameter param-name="partyId" from-field="partyIdFrom"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="partyIdTo" title="${uiLabelMap.AccountingToParty}">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName},${firstName}">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdTo}]" >
+                    <parameter param-name="partyId" from-field="partyIdTo"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="effectiveDate">
+            <display/>
+        </field>
+        <field name="currencyUomId">
+            <hidden/>
+        </field>
+        <field name="amount">
+            <display also-hidden="false" type="currency" currency="${currencyUomId}"/>
+        </field>
+        <field name="detailsLink" title=" " widget-style="buttontext">
+            <hyperlink target="debitLines" description="Debit Lines" also-hidden="false">
+                <parameter param-name="paymentId"/>
+            </hyperlink>
+        </field>
+    </form>
+
+
     <form name="ListAcctgTrans" type="list" title="List Accounting Transactions" list-name="acctgTransList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <actions>

@@ -569,6 +569,18 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="DebitLines"/>
     </request-map>
+    <request-map uri="NewMultiDebitJV">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewMultiDebitJV"/>
+    </request-map>
+    <request-map uri="JVLines">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="JVLines"/>
+    </request-map>
+    <request-map uri="NewMultiCreditPayment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewMultiCreditPayment"/>
+    </request-map>
     <request-map uri="NewMultiplePayment">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="NewMultiplePayment"/>
@@ -583,12 +595,32 @@ under the License.
         <response name="success" type="view" value="editPayment"/>
         <response name="error" type="view" value="newPayment"/>
     </request-map>
+
+
     <request-map uri="createMultiPayment">
         <security https="true" auth="true"/>
         <event type="service" invoke="createMultiPayment"/>
         <response name="success" type="view" value="MultiplePayment"/>
         <response name="error" type="view" value="NewMultiplePayment"/>
     </request-map>
+
+    <request-map uri="createMultiCreditJVHeader">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createMultiCreditJVHeader"/>
+        <response name="success" type="view" value="MultiplePayment"/>
+        <response name="error" type="view" value="NewMultiplePayment"/>
+    </request-map>
+
+    <request-map uri="createMultiDebitJVHeader">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createMultiDebitJVHeader"/>
+        <response name="success" type="view" value="ManualGLJV"/>
+        <response name="error" type="view" value="NewMultiDebitJV"/>
+    </request-map>
+
+
+
+
     <request-map uri="ConfirmMultiplePayment">
         <security https="true" auth="true"/>
         <event type="service" invoke="ConfirmMultiplePayment"/>
@@ -1010,6 +1042,10 @@ under the License.
     <request-map uri="FindTransactionEntries">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindTransactionEntries"/>
+    </request-map>
+    <request-map uri="ManualGLJV">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ManualGLJV"/>
     </request-map>
     <request-map uri="RetriveTransactionEntries">
         <security https="true" auth="true"/>
@@ -3615,8 +3651,11 @@ under the License.
     <view-map name="paymentOverview" type="screen" page="component://accounting/widget/PaymentScreens.xml#PaymentOverview"/>
     <view-map name="newPayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#NewPayment"/>
     <view-map name="MultiplePayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#MultiplePayment"/>
+    
     <view-map name="DebitLines" type="screen" page="component://accounting/widget/PaymentScreens.xml#DebitLines"/>
     <view-map name="NewMultiplePayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#NewMultiplePayment"/>
+    <view-map name="NewMultiCreditPayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#NewMultiCreditPayment"/>
+    
     <view-map name="EditMultiPayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#EditMultiPayment"/>
     <view-map name="editPayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#EditPayment"/>
     <view-map name="editPaymentApplications" type="screen" page="component://accounting/widget/PaymentScreens.xml#EditPaymentApplications"/>
@@ -3640,6 +3679,9 @@ under the License.
     <view-map name="EditAcctgTrans" type="screen" page="component://accounting/widget/GlScreens.xml#EditAcctgTrans"/>
     <view-map name="FindAcctgTransEntries" type="screen" page="component://accounting/widget/GlScreens.xml#FindAcctgTransEntries"/>
     <view-map name="FindTransactionEntries" type="screen" page="component://accounting/widget/GlScreens.xml#FindTransactionEntries"/>
+    <view-map name="ManualGLJV" type="screen" page="component://accounting/widget/GlScreens.xml#ManualGLJV"/>
+    <view-map name="NewMultiDebitJV" type="screen" page="component://accounting/widget/GlScreens.xml#NewMultiDebitJV"/>
+    <view-map name="JVLines" type="screen" page="component://accounting/widget/GlScreens.xml#JVLines"/>
     <view-map name="RetriveTransactionEntries" type="screen" page="component://accounting/widget/GlScreens.xml#RetriveTransactionEntries"/>
     <view-map name="ListUnpostedAcctgTrans" type="screen" page="component://accounting/widget/GlScreens.xml#ListUnpostedAcctgTrans"/>
     <view-map name="ListChecksToPrint" type="screen" page="component://accounting/widget/GlScreens.xml#ListChecksToPrint"/>
