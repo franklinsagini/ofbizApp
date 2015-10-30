@@ -175,6 +175,36 @@ under the License.
             </widgets>
         </section>
     </screen>
+
+
+    <screen name="NewMultiCreditPayment">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditPayment"/>
+                <set field="headerItem" value="payments"/>
+                <set field="tabButtonItem" value="editPayment"/>
+                <set field="paymentId" from-field="parameters.paymentId"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="Use this Form to Capture the Debit Side of the JV">
+                                    <include-form name="NewMultiCreditPayment" location="component://accounting/widget/PaymentForms.xml"/>
+                                </screenlet>
+<!--                                 <screenlet title="Non-Member Transactions:- Receipts">
+                                    <include-form name="NewPaymentIn" location="component://accounting/widget/PaymentForms.xml"/>
+                                </screenlet> -->
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>    
     <screen name="MultiplePayment">
         <section>
             <actions>

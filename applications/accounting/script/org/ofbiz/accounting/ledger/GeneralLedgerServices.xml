@@ -22,6 +22,24 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
     <!-- ========= GlAccount methods ========= -->
+    <simple-method method-name="createMultiDebitJVHeader" short-description="Creates a createMultiDebitJVHeader">
+        <make-value entity-name="ManualGLJVHeader" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set field="newEntity.acctgTransTypeId" value="MANUAL_JV" />
+        <set field="newEntity.glFiscalTypeId" value="ACTUAL" />
+        <set field="newEntity.capturedBy" from-field="userLogin.userLoginId" />
+        <set field="newEntity.statusName" value="CAPTURED" />
+        <set field="newEntity.isPosted" value="N" />
+        <set field="newEntity.isApproved" value="N" />
+        <set field="newEntity.currencyUomId" value="KES" />
+        <set field="newEntity.debitCreditFlag" value="C" />
+        <!-- ManualGLJVHeader uses a sequenced id, so get the next one now and set it... -->
+        <sequenced-id sequence-name="ManualGLJVHeader" field="newEntity.manualGlJvId"/>
+        
+        <now-timestamp field="newEntity.transactionDate"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+
     <simple-method method-name="createGlAccount" short-description="Create an GlAccount">
         <make-value entity-name="GlAccount" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
@@ -37,6 +55,7 @@ under the License.
 
         <create-value value-field="newEntity"/>
     </simple-method>
+
     <simple-method method-name="storeGlAccountBlances" short-description="stores GlAccount Blances Summary">
         <make-value entity-name="TrialBalanceSummary" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>

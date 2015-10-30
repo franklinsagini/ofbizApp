@@ -235,6 +235,83 @@ under the License.
             <submit button-type="button"/>
         </field>
     </form>
+
+
+    <form name="CreateAcctgTransAndEntries" type="single" target="quickCreateAcctgTransAndEntries" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+            <set field="debitGlAccountClassId" from-field="parameters.debitGlAccountClassId"/>
+            <set field="creditGlAccountClassId" from-field="parameters.creditGlAccountClassId"/>
+            <set field="glFiscalTypeId" value="ACTUAL" />
+            <set field="acctgTransTypeId" value="MANUAL_JV" />
+        </actions>
+        <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
+        <field name="glFiscalTypeId"><hidden value="ACTUAL"/></field>
+        <field name="acctgTransTypeId"><hidden value="MANUAL_JV"/></field>
+        <field name="debitGlAccountId" use-when="debitGlAccountClassId!=null">
+            <drop-down>
+                <entity-options entity-name="GlAccountOrganizationAndClass" key-field-name="glAccountId" description="${accountCode} - ${accountName} [${glAccountId}]">
+                    <entity-constraint name="organizationPartyId" operator="equals" env-name="parameters.organizationPartyId"/>
+                    <entity-constraint name="glAccountClassId" operator="equals" env-name="debitGlAccountClassId" ignore-if-null="true"/>
+                    <entity-order-by field-name="accountCode"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="debitGlAccountId" use-when="debitGlAccountClassId==null">
+            <drop-down>
+                <entity-options entity-name="GlAccountOrganizationAndClass" key-field-name="glAccountId" description="${accountCode} - ${accountName} [${glAccountId}]">
+                    <entity-constraint name="organizationPartyId" operator="equals" env-name="parameters.organizationPartyId"/>
+                    <entity-order-by field-name="accountCode"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="creditGlAccountId" use-when="creditGlAccountClassId!=null">
+            <drop-down>
+                <entity-options entity-name="GlAccountOrganizationAndClass" key-field-name="glAccountId" description="${accountCode} - ${accountName} [${glAccountId}]">
+                    <entity-constraint name="organizationPartyId" operator="equals" env-name="parameters.organizationPartyId"/>
+                    <entity-constraint name="glAccountClassId" operator="equals" env-name="creditGlAccountClassId" ignore-if-null="true"/>
+                    <entity-order-by field-name="accountCode"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="creditGlAccountId" use-when="creditGlAccountClassId==null">
+            <drop-down>
+                <entity-options entity-name="GlAccountOrganizationAndClass" key-field-name="glAccountId" description="${accountCode} - ${accountName} [${glAccountId}]">
+                    <entity-constraint name="organizationPartyId" operator="equals" env-name="parameters.organizationPartyId"/>
+                    <entity-order-by field-name="accountCode"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="amount" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="20" maxlength="20"/></field>
+        <field name="transactionDate"><date-time/></field>
+        <field name="description" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="60"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
+    </form>
+
+
+    <form name="NewMultiCreditPayment" type="single" target="createMultiCreditJV" default-map-name="manualGLJV"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="glFiscalTypeId"><hidden value="ACTUAL"/></field>
+        <field name="debitCreditFlag"><hidden value="D"/></field>
+        <field name="debitGlAccountId" >
+            <drop-down>
+                <entity-options entity-name="GlAccountOrganizationAndClass" key-field-name="glAccountId" description="${accountCode} - ${accountName} [${glAccountId}]">
+                    <entity-constraint name="organizationPartyId" operator="equals" env-name="parameters.organizationPartyId"/>
+                    <entity-order-by field-name="accountCode"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="transactionDate"><date-time /></field>
+        <field name="amount"  tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="8"/></field>
+        <field name="comments" title="Narration" position="1" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+            <textarea/>
+        </field>
+        <field name="createButton" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+
     <form name="MultiplePaymentHeader" type="single" target="" default-map-name="multiPayment">
         <field name="cashBookBalance" position="1"><display/></field>
         <field name="bankBalance" position="2"><display/></field>

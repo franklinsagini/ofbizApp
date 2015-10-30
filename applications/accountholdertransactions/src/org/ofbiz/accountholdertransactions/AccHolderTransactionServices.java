@@ -849,7 +849,7 @@ public class AccHolderTransactionServices {
 	 * @author Japheth Odonya @when Aug 24, 2014 7:57:03 PM Creating a Cheque
 	 *         Deposit Accounting Transaction
 	 * */
-	public static String createChequeTransaction(
+	public static synchronized String createChequeTransaction(
 			GenericValue accountTransaction, Map<String, String> userLogin) {
 		// Post the Cash Deposit to the Teller for the logged in user
 		/***
@@ -4802,7 +4802,7 @@ public class AccHolderTransactionServices {
 	 * @author Japheth Odonya @when Jul 6, 2015 10:21:00 PM
 	 *         cashWithdrawalInterbranch
 	 * ***/
-	public static String cashWithdrawalInterbranch(
+	public static synchronized String cashWithdrawalInterbranch(
 			GenericValue accountTransaction, Map<String, String> userLogin) {
 
 		log.info(" UserLogin ---- " + userLogin.get("userLoginId"));
@@ -7846,7 +7846,70 @@ public class AccHolderTransactionServices {
 
 		return addedStatus;
 	}
+	
+	
+	public static String checkTransactionTypeAdded(Long memberAccountId,
+			String transactionType, GenericValue accountTransaction) {
+		String addedStatus = "added";
+		
+		BigDecimal transactionAmount = accountTransaction.getBigDecimal("transactionAmount");
+		//String transactionType = accountTransaction.getString("transactionType");
+		
+		BigDecimal totalChargeAmount = getChargesTotal(memberAccountId, transactionAmount, transactionType);
+		
+		BigDecimal totalAmountToDeduct = transactionAmount.add(totalChargeAmount);
+		
+		BigDecimal bdAvailableAmount = getAvailableBalanceVer3(String.valueOf(memberAccountId));
+		
+		if (totalAmountToDeduct.compareTo(bdAvailableAmount) == 1)
+			return " Your available balance is not sufficient, you only have  KShs. "+bdAvailableAmount+" in your account ! yet the transaction will cost KShs. "+totalAmountToDeduct;
+		
 
+		GenericValue accountProduct = LoanUtilities
+				.getAccountProductGivenMemberAccountId(memberAccountId);
+
+		Long accountProductId = accountProduct.getLong("accountProductId");
+		// CHEQUEWITHDRAWAL BANKERSWITHDRAWAL
+		// Check that there are record for CHEQUEWITHDRAWAL and
+		// BANKERSWITHDRAWAL
+
+		if (!LoanUtilities.existsCharges("CHEQUEWITHDRAWAL", accountProductId)) {
+			return "Please set up charges for Cheque Withdrawal first !";
+		}
+
+		if (!LoanUtilities.existsCharges("BANKERSWITHDRAWAL", accountProductId)) {
+			return "Please set up charges for Bankers Cheque Withdrawal first !";
+		}
+
+		return addedStatus;
+	}
+
+	
+	
+	/****
+	 * Has enough money
+	 * */
+	public static String checkHasEnoughMoney(GenericValue accountTransaction) {
+		String status = "yes";
+		
+		BigDecimal transactionAmount = accountTransaction.getBigDecimal("transactionAmount");
+		//String transactionType = accountTransaction.getString("transactionType");
+		Long memberAccountId = accountTransaction.getLong("memberAccountId");
+		
+		//BigDecimal totalChargeAmount = getChargesTotal(memberAccountId, transactionAmount, transactionType);
+		BigDecimal bdCommissionAmount = getTransactionCommissionAmount(transactionAmount);
+		BigDecimal bdExciseDutyAmount = getTransactionExcideDutyAmount(bdCommissionAmount);
+		
+		BigDecimal totalChargeAmount = bdCommissionAmount.add(bdExciseDutyAmount);
+		BigDecimal totalAmountToDeduct = transactionAmount.add(totalChargeAmount);
+		
+		BigDecimal bdAvailableAmount = getAvailableBalanceVer3(String.valueOf(memberAccountId));
+		
+		if (totalAmountToDeduct.compareTo(bdAvailableAmount) == 1)
+			return " Your available balance is not sufficient, you only have  KShs. "+bdAvailableAmount+" in your account ! yet the transaction will cost KShs. "+totalAmountToDeduct;
+
+		return status;
+	}
 	/***
 	 * @author Japheth Odonya @when Jun 30, 2015 3:58:41 PM Create a transfer
 	 *         from Source Member Account to Destination Member Account
