@@ -382,7 +382,7 @@ public class MSaccoServices {
 					bdMsaccoEnquiryExcise, acctgTransId, "C",
 					exciseDutyAccountId, entrySequence.toString(), memberBranchId);
 			
-			listMemberAccountId = AccHolderTransactionServices.getMemberAccountIdsWithdrawable(AccHolderTransactionServices
+			listMemberAccountId = AccHolderTransactionServices.getMemberAccountIdsAll(AccHolderTransactionServices
 					.getMemberAccount(memberAccountId).getLong("partyId"));
 			
 			for (Long currentMemberAccountId : listMemberAccountId) {
