@@ -42,10 +42,12 @@
 		<set field="exciseDutyRateSetup"
 			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.exciseDutyRateSetUp();}"
 			type="Boolean" />
+			
+		<set field="enoughmoney"
+			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.checkHasEnoughMoney(newEntity);}" />
 
 		<set field="falseField" value="false" type="Boolean" />
-
-
+		
 		<if> <!-- commissionSetup -->
 			<condition>
 				<if-compare-field to-field="commissionSetup"
@@ -119,7 +121,24 @@
 												<check-errors />
 											</then>
 											<else>
-												<!-- Finally Do the saving -->
+												<if>
+													<condition>
+														<if-compare operator="not-equals" value="yes" field="enoughmoney"></if-compare>
+													</condition>
+													<then>
+														<set field="accountTransactionParentId"
+													value="NOTRANSACTION"
+													type="String" />
+													<field-to-result field="accountTransactionParentId"
+													result-name="accountTransactionParentId" />
+														<add-error>
+															<fail-message message="${enoughmoney}"/>
+														</add-error>
+														<check-errors />
+													</then>
+													<else>
+													
+														<!-- Finally Do the saving -->
 												<set field="newEntity.treasuryId"
 													value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerId(userLogin);}"
 													type="String" />
@@ -145,6 +164,10 @@
 
 												<property-to-field resource="AccountHolderTransactionsUILabels.xml"
 													property="commissionChargeSetupSuccess" field="successMessage" />
+													</else>
+												</if>
+												
+												
 
 											</else>
 										</if>
@@ -488,7 +511,7 @@
 			type="String" />
 
 		<set field="addedStatus"
-			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.checkTransactionTypeAdded(memberAccountId, transactionType);}" />
+			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.checkTransactionTypeAdded(memberAccountId, transactionType, newEntity);}" />
 
 		<if>
 			<condition>
