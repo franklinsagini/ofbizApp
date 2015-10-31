@@ -184,14 +184,14 @@ under the License.
                   </fo:table-cell>
                   <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                       <#if acctgTransAndEntry.debitCreditFlag?if_exists == "D">
-                          <fo:block>${acctgTransAndEntry.origAmount?if_exists}</fo:block>
+                          <fo:block>${acctgTransAndEntry.amount?if_exists}</fo:block>
                       <#else>
                           <fo:block></fo:block>
                       </#if>
                   </fo:table-cell>
                   <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                       <#if acctgTransAndEntry.debitCreditFlag?if_exists == "C">
-                          <fo:block>${acctgTransAndEntry.origAmount?if_exists}</fo:block>
+                          <fo:block>${acctgTransAndEntry.amount?if_exists}</fo:block>
                       <#else>
                            <fo:block></fo:block>
                       </#if>
