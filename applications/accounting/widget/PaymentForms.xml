@@ -236,6 +236,125 @@ under the License.
         </field>
     </form>
 
+<!--     <form name="NewMultiPaymentIn" type="single" target="createMultiReceipting" default-map-name="payment"
+        header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+            <entity-condition entity-name="PaymentType" list="paymentTypes">
+                <condition-list combine="or">
+                    <condition-expr field-name="parentTypeId" operator="equals" value="DISBURSEMENT"/>
+                    <condition-expr field-name="parentTypeId" operator="equals" value="TAX_PAYMENT"/>
+                </condition-list>
+                <order-by field-name="description"/>
+            </entity-condition>
+            <entity-one entity-name="PartyGroup" use-cache="true" value-field="partyGroup">
+                <field-map field-name="partyId" from-field="parameters.partyIdFrom"/>
+            </entity-one>
+            <set field="partyGroupName" from-field="partyGroup.groupName"/>
+            <set field="paymentPartyId" from-field="parameters.partyIdFrom" default-value="${defaultOrganizationPartyId}"/>
+            <entity-condition entity-name="PaymentMethodAndFinAccount" list="paymentMethodAndFinAccounts">
+                <condition-list>
+                    <condition-expr field-name="partyId" from-field="paymentPartyId"/>
+                    <condition-expr field-name="statusId" operator="not-equals" value="FNACT_MANFROZEN"/>
+                    <condition-expr field-name="statusId" operator="not-equals" value="FNACT_CANCELLED"/>
+                </condition-list>
+            </entity-condition>
+            <entity-condition entity-name="PartyAcctgPrefAndGroup" list="partyAcctgPrefAndGroup">
+                <condition-expr field-name="partyId" operator="not-equals" value="Company"/>
+            </entity-condition>
+        </actions>
+        <field name="statusId"><hidden value="PMNT_NOT_PAID"/></field>
+        <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
+        <field position="1" name="organizationPartyId" parameter-name="partyIdTo" title="Branch" required-field="true">
+            <drop-down allow-empty="true">
+                <list-options key-name="partyId" list-name="partyAcctgPrefAndGroup"
+                    description="${groupName}" />
+            </drop-down>
+        </field>
+        <field name="partyIdTo" position="2"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1" required-field="true">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="PaymentType">
+                    <entity-constraint name="parentTypeId" value="RECEIPT"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="paymentMethodId" title="${uiLabelMap.AccountingPaymentMethodId}" position="2" required-field="true">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="PaymentMethod" description="${paymentMethodId}">
+                    <entity-order-by field-name="paymentMethodId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="paymentRefNum" position="1" title="CHQ No/EFT No/REF No" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true" ><text/></field>
+
+        <field name="amount" position="2" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text/></field>
+        <field name="comments" title="Description" position="1" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true"><text size="70"/></field>
+        <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
+        <field name="finAccountTransTypeId"><hidden value="DEPOSIT"/></field>
+        <field position="1" name="createButton" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form> -->
+
+  <form name="NewMultiPaymentIn" type="single" target="createMultiReceipting"  default-map-name="payment"
+        header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+            <entity-condition entity-name="PartyAcctgPrefAndGroup" list="partyAcctgPrefAndGroup">
+                <condition-expr field-name="partyId" operator="not-equals" value="Company"/>
+            </entity-condition>
+        </actions>
+        <field name="statusId"><hidden value="PMNT_NOT_PAID"/></field>
+        <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
+<!--         <field position="1" name="organizationPartyId" parameter-name="partyIdTo">
+            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
+                <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
+                    <entity-order-by field-name="groupName"/>
+                </entity-options>
+            </drop-down>
+        </field> -->
+        <field position="1" name="organizationPartyId" parameter-name="partyIdTo" title="Branch" required-field="true">
+            <drop-down allow-empty="true">
+                <list-options key-name="partyId" list-name="partyAcctgPrefAndGroup"
+                    description="${groupName}" />
+            </drop-down>
+        </field>
+        <field name="partyIdFrom" position="2"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}" position="1" required-field="true">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="PaymentType">
+                    <entity-constraint name="parentTypeId" value="RECEIPT"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="paymentMethodId" title="${uiLabelMap.AccountingPaymentMethodId}" position="2" required-field="true">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="PaymentMethod" description="${paymentMethodId}">
+                    <!-- <entity-constraint name="partyId" operator="equals" env-name="defaultOrganizationPartyId"/> -->
+                    <entity-order-by field-name="paymentMethodId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="paymentRefNum" title="CHQ No/EFT No/REF No" position="1" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
+        <field name="overrideGlAccountId" position="2"><lookup target-form-name="LookupGlAccount"/></field>
+        <field name="amount" position="1" required-field="true"><text/></field>
+        <field name="comments" title="Description" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true" position="2"><text size="70"/></field>
+        <field name="finAccountId"><hidden/>
+<!--             <drop-down allow-empty="true">
+                <entity-options entity-name="FinAccount" description="${finAccountName} [${finAccountId}]" filter-by-date="true">
+                    <entity-constraint name="finAccountTypeId" value="BANK_ACCOUNT"/>
+                    <entity-constraint name="statusId" operator="not-equals" value="FNACT_MANFROZEN"/>
+                    <entity-constraint name="statusId" operator="not-equals" value="FNACT_CANCELLED"/>
+                </entity-options>
+            </drop-down> -->
+        </field>
+        <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
+        <field name="finAccountTransTypeId"><hidden value="DEPOSIT"/></field>
+        <field position="1" name="createButton" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
 
     <form name="CreateAcctgTransAndEntries" type="single" target="quickCreateAcctgTransAndEntries" title=""
         header-row-style="header-row" default-table-style="basic-table">
@@ -336,6 +455,20 @@ under the License.
         <field name="comments" position="1"><display/></field>
         <field name="submitButton" title="Confirm Payment" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+    <form name="MultiReceiptHeader" type="single" target="ConfirmMultipleReceipt" default-map-name="multiPayment">
+        <field name="paymentId" position="1"><hidden/></field>
+        <field name="paymentTypeId" position="1"><display/></field>
+        <field name="paymentMethodTypeId" position="2"><display/></field>
+        <field name="paymentMethodId" position="1"><display/></field>
+        <field name="partyIdFrom" position="2"><display/></field>
+        <field name="partyIdTo" position="1"><display/></field>
+        <field name="statusId" position="2"><display/></field>
+        <field name="effectiveDate" position="1"><display/></field>
+        <field name="paymentRefNum" position="2"><display/></field>
+        <field name="amount" position="1"><display/></field>
+        <field name="comments" position="1"><display/></field>
+        <field name="submitButton" title="Confirm Payment" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
     <form name="ListDebitLines" type="list"  list-name="listMultiPaymentLines"  target="updateDebitAccountPayment" separate-columns="true"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
          <field name="paymentId"><hidden/></field>
@@ -357,6 +490,7 @@ under the License.
             </hyperlink>
         </field>
     </form>
+
     <form name="AddDebitLines" type="single" target="addDebitAccountPayment" default-map-name="MultiPaymentLines">
         <actions>
         </actions>
@@ -372,6 +506,23 @@ under the License.
         <field name="amount" ><text/></field>
         <field name="submitButton" title="Add Debit Account Amount" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+
+    <form name="AddCreditLines" type="single" target="addCreditAccountPayment" default-map-name="MultiPaymentLines">
+        <actions>
+        </actions>
+        <field name="paymentId"><hidden/></field>
+        <field name="glAccountId" title="Credit Account">
+            <drop-down allow-empty="true">
+                <entity-options  key-field-name="glAccountId" entity-name="GlAccount" description="${accountCode} - ${accountName}">
+                    <entity-order-by field-name="accountCode"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="comments" position="2"><text size="70"/></field>
+        <field name="amount" ><text/></field>
+        <field name="submitButton" title="Add Debit Account Amount" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
     <form name="ListMultiplePaymentHeader" type="list" list-name="listIt" paginate-target="MultiplePayment"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -417,7 +568,12 @@ under the License.
         <field name="amount">
             <display also-hidden="false" type="currency" currency="${currencyUomId}"/>
         </field>
-        <field name="detailsLink" title=" " widget-style="buttontext">
+        <field name="detailsLink"  use-when="isReceipt.equals(&quot;Y&quot;)" title=" " widget-style="buttontext">
+            <hyperlink target="creditLines" description="Credit Lines" also-hidden="false">
+                <parameter param-name="paymentId"/>
+            </hyperlink>
+        </field>
+        <field name="detailsLink"  use-when="isReceipt.equals(&quot;N&quot;)" title=" " widget-style="buttontext">
             <hyperlink target="debitLines" description="Debit Lines" also-hidden="false">
                 <parameter param-name="paymentId"/>
             </hyperlink>

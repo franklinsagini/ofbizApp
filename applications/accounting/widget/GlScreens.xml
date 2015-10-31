@@ -459,6 +459,7 @@ under the License.
                 <set field="tabButtonItem" value="CaptureGLJV"/>
                 <set field="labelTitleProperty" value="Manual GL Journal Voucher"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
+                 <entity-one entity-name="ManualGLJVHeader" value-field="manualGLJVHeader"/>
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="KES"/>
             </actions>
             <widgets>
@@ -470,7 +471,7 @@ under the License.
                                     <link target="NewMultiDebitJV" text="New Multi Debit JV" style="buttontext create">
                                          <parameter param-name="organizationPartyId"/>
                                     </link>
-                                    <link target="NewMultiCreditPayment" text="New Multi Credit JV" style="buttontext create">
+                                    <link target="NewMultiCreditJV" text="New Multi Credit JV" style="buttontext create">
                                          <parameter param-name="organizationPartyId"/>
                                     </link>
                                 </container>
@@ -495,8 +496,9 @@ under the License.
                 <set field="manualGlJvId" from-field="parameters.manualGlJvId"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
                 <entity-one entity-name="ManualGLJVHeader" value-field="manualGLJVHeader"/>
-               <set field="debitAmount" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getMultiplePaymentDebitAmount(delegator,manualGlJvId)}"/>
-               <set field="totalLines" type="Integer" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getTotalNumberOfDebitLines(delegator,manualGlJvId)}"/>
+                <set field="organizationPartyId" from-field="manualGLJVHeader.organizationPartyId" global="true"/>
+               <set field="debitAmount" type="BigDecimal" value="${bsh:org.ofbiz.accounting.ledger.GeneralLedgerServices.getTotalDebitsForHeader(delegator,manualGlJvId)}"/>
+               <set field="totalLines" type="Integer" value="${bsh:org.ofbiz.accounting.ledger.GeneralLedgerServices.getTotalNumberOfDebitLines(delegator,manualGlJvId)}"/>
                <set field="creditAmount" from-field="manualGLJVHeader.amount"/>
                 <entity-and entity-name="ManualGLJVLines" list="listGLJVLines">
                     <field-map field-name="manualGlJvId" from-field="manualGlJvId" />
@@ -511,8 +513,48 @@ under the License.
                                     <include-form name="GLJVHeader" location="component://accounting/widget/GlForms.xml"/>
                                 </screenlet>
                                 <screenlet title="General Ledger Journal Voucher: Lines">
+                                    <container><label style="h3" text="Total Credit Amount: ${creditAmount}  |  Total Debit Amount: ${debitAmount}  |  Total Debit Lines: ${totalLines}"></label></container>
                                     <include-form name="ListVoucherLines" location="component://accounting/widget/GlForms.xml"/>
-                                     <container><label style="h3" text="Total Credit Amount: ${creditAmount}  Total Debit Amount: ${debitAmount}  Total Debit Lines: ${totalLines}"></label></container>
+                                </screenlet>
+                                <screenlet title="General Ledger Journal Voucher: Add Journal Voucher Line">
+                                    <include-form name="AddVoucherLine" location="component://accounting/widget/GlForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="CreditJVLines">
+        <section>
+            <actions>
+               <set field="titleProperty" value="Manual GL Journal Voucher"/>
+                <set field="tabButtonItem" value="CaptureGLJV"/>
+                <set field="labelTitleProperty" value="Manual GL Journal Voucher"/>
+                <set field="manualGlJvId" from-field="parameters.manualGlJvId"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
+                <entity-one entity-name="ManualGLJVHeader" value-field="manualGLJVHeader"/>
+                <set field="organizationPartyId" from-field="manualGLJVHeader.organizationPartyId" global="true"/>
+               <set field="debitAmount" type="BigDecimal" value="${bsh:org.ofbiz.accounting.ledger.GeneralLedgerServices.getTotalDebitsForHeader(delegator,manualGlJvId)}"/>
+               <set field="totalLines" type="Integer" value="${bsh:org.ofbiz.accounting.ledger.GeneralLedgerServices.getTotalNumberOfDebitLines(delegator,manualGlJvId)}"/>
+               <set field="creditAmount" from-field="manualGLJVHeader.amount"/>
+                <entity-and entity-name="ManualGLJVLines" list="listGLJVLines">
+                    <field-map field-name="manualGlJvId" from-field="manualGlJvId" />
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyGlDecorator" location="${parameters.partyGlDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="General Ledger Journal Voucher: Header">
+                                    <include-form name="GLJVHeader" location="component://accounting/widget/GlForms.xml"/>
+                                </screenlet>
+                                <screenlet title="General Ledger Journal Voucher: Credit Lines">
+                                    <container><label style="h3" text="Total Debit Amount: ${creditAmount}  |  Total Credit Amount: ${debitAmount}  |  Total Credit Lines: ${totalLines}"></label></container>
+                                    <include-form name="ListVoucherLines" location="component://accounting/widget/GlForms.xml"/>
                                 </screenlet>
                                 <screenlet title="General Ledger Journal Voucher: Add Journal Voucher Line">
                                     <include-form name="AddVoucherLine" location="component://accounting/widget/GlForms.xml"/>
@@ -542,9 +584,31 @@ under the License.
                                 <screenlet title="Use this Form to Capture the Credit Side of the JV">
                                     <include-form name="NewMultiDebitJV" location="component://accounting/widget/GlForms.xml"/>
                                 </screenlet>
-<!--                                 <screenlet title="Non-Member Transactions:- Receipts">
-                                    <include-form name="NewPaymentIn" location="component://accounting/widget/PaymentForms.xml"/>
-                                </screenlet> -->
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>    
+
+    <screen name="NewMultiCreditJV">
+        <section>
+            <actions>
+                  <set field="titleProperty" value="Manual GL Journal Voucher"/>
+                <set field="tabButtonItem" value="CaptureGLJV"/>
+                <set field="labelTitleProperty" value="Manual GL Journal Voucher"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="KES"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyGlDecorator" location="${parameters.partyGlDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="Use this Form to Capture the Debit Side of the JV">
+                                    <include-form name="NewMultiCreditJV" location="component://accounting/widget/GlForms.xml"/>
+                                </screenlet>
                             </widgets>
                         </section>
                     </decorator-section>

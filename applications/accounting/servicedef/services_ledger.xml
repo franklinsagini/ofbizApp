@@ -25,6 +25,12 @@ under the License.
     <version>1.0</version>
 
     <!-- ========= General Ledger Services ========= -->
+    <service name="createMultiCreditJVHeader" engine="simple" default-entity-name="ManualGLJVHeader"
+        location="component://accounting/script/org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="createMultiCreditJVHeader" auth="true">
+        <description>Creates a Multi Credit JV Header, This ensentially is the Debit Side that has only one transaction.</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+    </service>
     <service name="createMultiDebitJVHeader" engine="simple" default-entity-name="ManualGLJVHeader"
         location="component://accounting/script/org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="createMultiDebitJVHeader" auth="true">
         <description>Creates a createMultiDebitJVHeader, This ensentially is the Credit Side that has only one transaction.</description>
@@ -44,22 +50,32 @@ under the License.
         <override name="amount" optional="false"/>
     </service>
 
-    <service name="addDebitAccountPayment" engine="java" default-entity-name="MultiPaymentLines"
-        location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="addDebitAccountPayment" auth="true">
-        <description>Create a MultiPaymentLines.</description>
+    <service name="addDebitTransaction" engine="java" default-entity-name="ManualGLJVLines"
+        location="org.ofbiz.accounting.ledger.GeneralLedgerServices" invoke="addDebitTransaction" auth="true">
+        <description>Create a ManualGLJVLines.</description>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <attribute name="organizationPartyId" type="String" mode="INOUT" optional="false"/>
+        <!-- <override name="amount" optional="false"/> -->
+    </service>
+    
+    <service name="addCreditTransaction" engine="java" default-entity-name="ManualGLJVLines"
+        location="org.ofbiz.accounting.ledger.GeneralLedgerServices" invoke="addCreditTransaction" auth="true">
+        <description>Create a ManualGLJVLines.</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <attribute name="organizationPartyId" type="String" mode="INOUT" optional="false"/>
         <!-- <override name="amount" optional="false"/> -->
     </service>
 
-    <service name="updateDebitAccountPayment" engine="java" default-entity-name="MultiPaymentLines"
+    <service name="updateDebitAccountPayment" engine="java" default-entity-name="ManualGLJVLines"
         location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="updateDebitAccountPayment" auth="true">
-        <description>Create a MultiPaymentLines.</description>
+        <description>Create a ManualGLJVLines.</description>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <auto-attributes include="pk" mode="INOUT" optional="true"/>
     </service>
 
-    <service name="removeDebitAccountPayment" default-entity-name="MultiPaymentLines" engine="java"
+    <service name="removeDebitAccountPayment" default-entity-name="ManualGLJVLines" engine="java"
         location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="removeDebitAccountPayment">
         <description>Delete a paymentApplication record.</description>
         <auto-attributes mode="IN" include="pk" optional="false"/>
