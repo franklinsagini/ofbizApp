@@ -1059,7 +1059,7 @@ public class AccHolderTransactionServices {
 	/**
 	 * AcctgTransEntry
 	 * **/
-	public static void postTransactionEntry(Delegator delegator,
+	public static synchronized void postTransactionEntry(Delegator delegator,
 			BigDecimal bdLoanAmount, String employeeBranchId,
 			String memberBranchId, String loanReceivableAccount,
 			String postingType, String acctgTransId, String acctgTransType,
@@ -3018,8 +3018,11 @@ public class AccHolderTransactionServices {
 
 		String memberDepositAccountId = getMemberDepositAccount(
 				stationAccountTransaction, "STATIONACCOUNTPAYMENT");
-		String cashAccountId = getCashAccount(stationAccountTransaction,
-				"STATIONACCOUNTPAYMENT");
+		
+		String cashAccountId = LoanUtilities.getBranchBankAccount(branchId);
+				
+				//getCashAccount(stationAccountTransaction,
+				//"STATIONACCOUNTPAYMENT");
 
 		// Check that the two accounts member deposits and cash deposit accounts
 		// are mapped to
