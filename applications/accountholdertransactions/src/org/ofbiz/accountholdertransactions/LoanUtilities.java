@@ -3625,6 +3625,20 @@ public class LoanUtilities {
 		}
 		return loanReceivableAccount;
 	}
+	
+	/****
+	 * @author Japheth Odonya
+	 * 
+	 * Get Branch Cheque Account given Branch ID
+	 * */
+	public static String getBranchBankAccount(Long branchId) {
+		// TODO Auto-generated method stub
+		GenericValue partyGroup = LoanUtilities.getEntityValue("PartyGroup", "partyId", branchId.toString());
+		
+		String chequeAccountId = partyGroup.getString("chequeAccountId");
+		
+		return chequeAccountId;
+	}
 
 
 }
