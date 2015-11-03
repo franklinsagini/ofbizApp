@@ -6,6 +6,7 @@ partyId = parameters.partyId
 stationId = parameters.stationId
 loanProductId = parameters.loanProductId
 branchId = parameters.branchId
+loanStatusId = parameters.loanStatusId
 
 def combinedList = [];
 def loanItem;
@@ -27,8 +28,17 @@ disburseLoanStatusId = 6.toLong();
 overpayedLoanStatusId = 7.toLong();
 defaultedLoanStatusId = 10030.toLong();
 claimedLoanStatusId = 10013.toLong();
+clearedStatusId = 7.toLong();
 
 //6,10030,10013,7
+
+if ((loanStatusId != null) && (loanStatusId != ""))
+{
+	myLoansList = delegator.findByAnd("LoanApplication",  [loanStatusId: clearedStatusId], null, false);
+	
+}
+else
+{
 
 if ((partyId != null) && (partyId != "")){
 	myLoansList = delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: disburseLoanStatusId], null, false);
@@ -92,6 +102,8 @@ if ((partyId == "") && (loanProductId == "") && (stationId == "") && (branchId =
 	myLoansList =  myLoansList + defaultedList;
 	myLoansList =  myLoansList + claimedLoanList;
 	
+}
+
 }
 
 def loanBalance = BigDecimal.ZERO;
