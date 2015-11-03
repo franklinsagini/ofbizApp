@@ -877,7 +877,11 @@ public class AccHolderTransactionServices {
 		exciseDutyAccountId = accountProduct.getString("exciseDutyAccountId");
 
 		// tellerAccountId = TreasuryUtility.getTellerAccountId(userLogin);
-		bankglAccountId = getCashAccount(null, "CHEQUEDEPOSITACCOUNT");
+		String branchId = getEmployeeBranch(userLogin.get("partyId"));
+				//LoanUtilities.getMemberB
+		bankglAccountId = LoanUtilities.getBranchBankAccount(branchId);
+				
+				//getCashAccount(null, "CHEQUEDEPOSITACCOUNT");
 
 		// Get tha acctgTransId
 		String acctgTransId = creatAccountTransRecordVer2(accountTransaction,
@@ -1059,7 +1063,7 @@ public class AccHolderTransactionServices {
 	/**
 	 * AcctgTransEntry
 	 * **/
-	public static void postTransactionEntry(Delegator delegator,
+	public static synchronized void postTransactionEntry(Delegator delegator,
 			BigDecimal bdLoanAmount, String employeeBranchId,
 			String memberBranchId, String loanReceivableAccount,
 			String postingType, String acctgTransId, String acctgTransType,
@@ -3018,8 +3022,11 @@ public class AccHolderTransactionServices {
 
 		String memberDepositAccountId = getMemberDepositAccount(
 				stationAccountTransaction, "STATIONACCOUNTPAYMENT");
-		String cashAccountId = getCashAccount(stationAccountTransaction,
-				"STATIONACCOUNTPAYMENT");
+		
+		String cashAccountId = LoanUtilities.getBranchBankAccount(branchId.toString());
+				
+				//getCashAccount(stationAccountTransaction,
+				//"STATIONACCOUNTPAYMENT");
 
 		// Check that the two accounts member deposits and cash deposit accounts
 		// are mapped to
