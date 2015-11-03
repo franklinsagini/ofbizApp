@@ -877,7 +877,11 @@ public class AccHolderTransactionServices {
 		exciseDutyAccountId = accountProduct.getString("exciseDutyAccountId");
 
 		// tellerAccountId = TreasuryUtility.getTellerAccountId(userLogin);
-		bankglAccountId = getCashAccount(null, "CHEQUEDEPOSITACCOUNT");
+		String branchId = getEmployeeBranch(userLogin.get("partyId"));
+				//LoanUtilities.getMemberB
+		bankglAccountId = LoanUtilities.getBranchBankAccount(branchId);
+				
+				//getCashAccount(null, "CHEQUEDEPOSITACCOUNT");
 
 		// Get tha acctgTransId
 		String acctgTransId = creatAccountTransRecordVer2(accountTransaction,
@@ -3019,7 +3023,7 @@ public class AccHolderTransactionServices {
 		String memberDepositAccountId = getMemberDepositAccount(
 				stationAccountTransaction, "STATIONACCOUNTPAYMENT");
 		
-		String cashAccountId = LoanUtilities.getBranchBankAccount(branchId);
+		String cashAccountId = LoanUtilities.getBranchBankAccount(branchId.toString());
 				
 				//getCashAccount(stationAccountTransaction,
 				//"STATIONACCOUNTPAYMENT");

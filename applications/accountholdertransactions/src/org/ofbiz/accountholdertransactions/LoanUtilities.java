@@ -3631,9 +3631,9 @@ public class LoanUtilities {
 	 * 
 	 * Get Branch Cheque Account given Branch ID
 	 * */
-	public static String getBranchBankAccount(Long branchId) {
+	public static String getBranchBankAccount(String branchId) {
 		// TODO Auto-generated method stub
-		GenericValue partyGroup = LoanUtilities.getEntityValue("PartyGroup", "partyId", branchId.toString());
+		GenericValue partyGroup = LoanUtilities.getEntityValue("PartyGroup", "partyId", branchId);
 		
 		String chequeAccountId = partyGroup.getString("chequeAccountId");
 		
