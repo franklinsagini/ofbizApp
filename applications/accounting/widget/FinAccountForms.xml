@@ -154,6 +154,68 @@ under the License.
             <submit button-type="button"/>
         </field>
     </form>
+    <form name="newUnreceiptedCheques" target="createUnreceiptedCheques" title="" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+            <entity-condition entity-name="FinAccountTransType" list="finAccountTransType">
+                <condition-list combine="or">
+                    <condition-expr field-name="finAccountTransTypeId" operator="equals" value="UB"/>
+                </condition-list>
+                <order-by field-name="description"/>
+            </entity-condition>
+        </actions>
+        <field name="headerId" >
+            <hidden/>
+        </field>
+        <field name="description" title="Bank Narration">
+            <textarea/>
+        </field>
+        <field name="transactionDate">
+            <date-time/>
+        </field>
+        <field name="amount" title="Transaction Amount">
+            <text/>
+        </field>
+        <field name="finAccountTransTypeId">
+            <drop-down>
+                <list-options list-name="finAccountTransType" key-name="finAccountTransTypeId" description="${description}"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="Create" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="newUnidentifiedDebits" target="createUnidentifiedDebits" title="" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+            <entity-condition entity-name="FinAccountTransType" list="finAccountTransType">
+                <condition-list combine="or">
+                    <condition-expr field-name="finAccountTransTypeId" operator="equals" value="UD"/>
+                </condition-list>
+                <order-by field-name="description"/>
+            </entity-condition>
+        </actions>
+        <field name="headerId" >
+            <hidden/>
+        </field>
+        <field name="description" title="Bank Narration">
+            <textarea/>
+        </field>
+        <field name="transactionDate">
+            <date-time/>
+        </field>
+        <field name="amount" title="Transaction Amount">
+            <text/>
+        </field>
+        <field name="finAccountTransTypeId">
+            <drop-down>
+                <list-options list-name="finAccountTransType" key-name="finAccountTransTypeId" description="${description}"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="Create" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
     <form name="ListBankReconHeader" type="list" list-name="listIt" paginate-target="BankRecon"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -182,7 +244,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="detailsLink" title="Details" widget-style="buttontext">
-            <hyperlink target="bankReconTrans" description="Details" also-hidden="false">
+            <hyperlink target="bankDepoReconTrans" description="Details" also-hidden="false">
                 <parameter param-name="headerId"/>
             </hyperlink>
         </field>
@@ -199,9 +261,28 @@ under the License.
         <field name="adjustedBankBalance" position="2"><display/></field>
     </form>
 
-    <form name="ListBankReconTrans" type="multi" use-row-submit="true" title="Selected Monument"
+    <form name="ListBankWithReconTrans" type="multi" use-row-submit="true" title="Selected Monument"
         list-name="bankReconLinesAndFinAccountTrans"  separate-columns="true" odd-row-style="alternate-row"
-        default-table-style="basic-table hover-bar" paginate-target="bankReconTrans" target="reconcileBankTrans">
+        default-table-style="basic-table hover-bar" paginate-target="bankWithReconTrans" target="reconcileBankTrans">
+
+        <field name="headerId"><hidden/></field>
+        <field name="reconLineId"><hidden/></field>
+        <field name="reconDate"><hidden/></field>
+        <field name="finAccountTransId" ><hidden/></field>
+        <field name="description" title="Narration" ><display /></field>
+        <field name="finAccountTransTypeId" title="Transaction Type">
+            <display-entity entity-name="FinAccountTransType" key-field-name="finAccountTransTypeId" description="${description}"/>
+        </field>
+        <field name="transactionDate"><display /></field>
+        <field name="amount" widget-style="tabletextright"><display /></field>
+        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
+       <field name="submitButton" use-when="&quot;CAPTURED&quot;.equals(&quot;${statusName}&quot;)" title="Reconcile Selected Transaction(s)" widget-style="smallSubmit"><submit/></field>
+       <!-- <field name="submitButton" title="Confirm Reconciliation" widget-style="smallSubmit"><submit/></field> -->
+    </form>
+
+    <form name="ListBankDepoReconTrans" type="multi" use-row-submit="true" title="Selected Monument"
+        list-name="bankReconLinesAndFinAccountTrans"  separate-columns="true" odd-row-style="alternate-row"
+        default-table-style="basic-table hover-bar" paginate-target="bankDepoReconTrans" target="reconcileBankTrans">
 
         <field name="headerId"><hidden/></field>
         <field name="reconLineId"><hidden/></field>
@@ -272,6 +353,44 @@ under the License.
        <!-- <field name="submitButton" title="Confirm Reconciliation" widget-style="smallSubmit"><submit/></field> -->
     </form>
 
+    <form name="ListUnidentifiedDebits" type="multi" use-row-submit="true" title="Selected Monument"
+        list-name="bankReconLinesAndFinAccountTrans"  separate-columns="true" odd-row-style="alternate-row"
+        default-table-style="basic-table hover-bar" paginate-target="UnidentifiedDebits" target="deleteUnidentifiedDebits">
+
+        <field name="headerId"><hidden/></field>
+        <field name="reconLineId"><hidden/></field>
+        <field name="reconDate"><hidden/></field>
+        <field name="finAccountTransId" ><hidden/></field>
+        <field name="description" title="Narration" ><display /></field>
+        <field name="finAccountTransTypeId" title="Transaction Type">
+            <display-entity entity-name="FinAccountTransType" key-field-name="finAccountTransTypeId" description="${description}"/>
+        </field>
+        <field name="transactionDate"><display /></field>
+        <field name="amount" widget-style="tabletextright"><display /></field>
+
+        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
+       <field name="submitButton" use-when="&quot;CAPTURED&quot;.equals(&quot;${statusName}&quot;)" title="Delete Selected Transaction(s)" widget-style="smallSubmit"><submit/></field>
+    </form>
+
+    <form name="ListUnreceiptedCheques" type="multi" use-row-submit="true" title="Selected Monument"
+        list-name="bankReconLinesAndFinAccountTrans"  separate-columns="true" odd-row-style="alternate-row"
+        default-table-style="basic-table hover-bar" paginate-target="UnreceiptedCheques" target="deleteUnreceiptedCheques">
+
+        <field name="headerId"><hidden/></field>
+        <field name="reconLineId"><hidden/></field>
+        <field name="reconDate"><hidden/></field>
+        <field name="finAccountTransId" ><hidden/></field>
+        <field name="description" title="Narration" ><display /></field>
+        <field name="finAccountTransTypeId" title="Transaction Type">
+            <display-entity entity-name="FinAccountTransType" key-field-name="finAccountTransTypeId" description="${description}"/>
+        </field>
+        <field name="transactionDate"><display /></field>
+        <field name="amount" widget-style="tabletextright"><display /></field>
+
+        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
+       <field name="submitButton" use-when="&quot;CAPTURED&quot;.equals(&quot;${statusName}&quot;)" title="Delete Selected Transaction(s)" widget-style="smallSubmit"><submit/></field>
+    </form>
+
     <form name="ListBReconciledItems" type="multi" use-row-submit="true" title="Selected Monument"
         list-name="bankReconLinesAndFinAccountTrans"  separate-columns="true" odd-row-style="alternate-row"
         default-table-style="basic-table hover-bar" paginate-target="reconciledItems" target="unreconcileBankTrans">
@@ -287,7 +406,6 @@ under the License.
         <field name="amount" widget-style="tabletextright"><display /></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
        <field name="submitButton" use-when="&quot;CAPTURED&quot;.equals(&quot;${statusName}&quot;)" title="Return Selected Transaction(s) to Recon" widget-style="smallSubmit"><submit/></field>
-       <!-- <field name="submitButton" title="Confirm Reconciliation" widget-style="smallSubmit"><submit/></field> -->
     </form>
 
 
