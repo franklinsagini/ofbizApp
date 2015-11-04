@@ -577,9 +577,9 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="NewMultiDebitJV"/>
     </request-map>
-    <request-map uri="JVLines">
+    <request-map uri="DebitJVLines">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="JVLines"/>
+        <response name="success" type="view" value="DebitJVLines"/>
     </request-map>
     <request-map uri="CreditJVLines">
         <security https="true" auth="true"/>
@@ -589,6 +589,53 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="NewMultiCreditJV"/>
     </request-map>
+    <request-map uri="approveCreditGLJV">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="approveGLJV"/>
+        <response name="success" type="request-redirect" value="DebitJVLines">
+            <redirect-parameter name="manualGlJvId"/>
+            <redirect-parameter name="organizationPartyId"/>
+        </response>
+        <response name="error" type="request-redirect" value="DebitJVLines">
+            <redirect-parameter name="manualGlJvId"/>
+            <redirect-parameter name="organizationPartyId"/>
+        </response>
+    </request-map>
+    <request-map uri="approveDebitGLJV">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="approveGLJV"/>
+        <response name="success" type="request-redirect" value="CreditJVLines">
+            <redirect-parameter name="manualGlJvId"/>
+            <redirect-parameter name="organizationPartyId"/>
+        </response>
+        <response name="error" type="request-redirect" value="CreditJVLines">
+            <redirect-parameter name="manualGlJvId"/>
+            <redirect-parameter name="organizationPartyId"/>
+        </response>
+    </request-map>
+    <request-map uri="postGLJV">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="postGLJV"/>
+        <response name="success" type="request-redirect" value="DebitJVLines">
+            <redirect-parameter name="manualGlJvId"/>
+            <redirect-parameter name="organizationPartyId"/>
+        </response>
+        <response name="error" type="request-redirect" value="DebitJVLines">
+            <redirect-parameter name="paymentId"/>
+        </response>
+    </request-map>
+   <request-map uri="postDebitGLJV">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="postGLJV"/>
+        <response name="success" type="request-redirect" value="CreditJVLines">
+            <redirect-parameter name="manualGlJvId"/>
+            <redirect-parameter name="organizationPartyId"/>
+        </response>
+        <response name="error" type="request-redirect" value="CreditJVLines">
+            <redirect-parameter name="paymentId"/>
+        </response>
+    </request-map>
+
     <request-map uri="NewMultiplePayment">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="NewMultiplePayment"/>
@@ -645,21 +692,21 @@ under the License.
     <request-map uri="addDebitTransaction">
         <security https="true" auth="true"/>
         <event type="service" invoke="addDebitTransaction"/>
-        <response name="success" type="request-redirect" value="JVLines">
+        <response name="success" type="request-redirect" value="DebitJVLines">
             <redirect-parameter name="manualGlJvId"/>
             <redirect-parameter name="organizationPartyId"/>
         </response>
-        <response name="error" type="view" value="JVLines"/>
+        <response name="error" type="view" value="DebitJVLines"/>
     </request-map>
 
     <request-map uri="addCreditTransaction">
         <security https="true" auth="true"/>
         <event type="service" invoke="addCreditTransaction"/>
-        <response name="success" type="request-redirect" value="JVLines">
+        <response name="success" type="request-redirect" value="CreditJVLines">
             <redirect-parameter name="manualGlJvId"/>
             <redirect-parameter name="organizationPartyId"/>
         </response>
-        <response name="error" type="view" value="JVLines"/>
+        <response name="error" type="view" value="CreditJVLines"/>
     </request-map>
 
 
@@ -2654,9 +2701,6 @@ under the License.
         <security https="true" auth="true" />
         <event type="service-multi" invoke="reconcileBankTrans" />
         <response name="success" type="request-redirect" value="bankReconTrans" >
-            <redirect-parameter name="finAccountId"/>
-            <redirect-parameter name="reconDate"/>
-            <redirect-parameter name="finAccountTransId"/>
             <redirect-parameter name="headerId"/>
         </response>
         <response name="error" type="view" value="BankReconTrans" />
@@ -3749,7 +3793,7 @@ under the License.
     <view-map name="ManualGLJV" type="screen" page="component://accounting/widget/GlScreens.xml#ManualGLJV"/>
     <view-map name="NewMultiDebitJV" type="screen" page="component://accounting/widget/GlScreens.xml#NewMultiDebitJV"/>
     <view-map name="NewMultiCreditJV" type="screen" page="component://accounting/widget/GlScreens.xml#NewMultiCreditJV"/>
-    <view-map name="JVLines" type="screen" page="component://accounting/widget/GlScreens.xml#JVLines"/>
+    <view-map name="DebitJVLines" type="screen" page="component://accounting/widget/GlScreens.xml#DebitJVLines"/>
     <view-map name="CreditJVLines" type="screen" page="component://accounting/widget/GlScreens.xml#CreditJVLines"/>
     <view-map name="RetriveTransactionEntries" type="screen" page="component://accounting/widget/GlScreens.xml#RetriveTransactionEntries"/>
     <view-map name="ListUnpostedAcctgTrans" type="screen" page="component://accounting/widget/GlScreens.xml#ListUnpostedAcctgTrans"/>
