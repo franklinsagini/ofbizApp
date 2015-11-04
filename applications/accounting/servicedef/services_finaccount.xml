@@ -194,6 +194,24 @@ under the License.
         <attribute type="String" mode="INOUT" name="headerId" optional="false"/>
         <attribute type="String" mode="IN" name="description" optional="false"/>
      </service>
+     
+    <service name="createUnreceiptedCheques" engine="java" default-entity-name="FinAccountTrans"
+            location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="createUnreceiptedCheques">
+        <description>Pulls all transactions of type cheque from account transaction</description>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <auto-attributes mode="INOUT" optional="true" include="pk"/>
+        <attribute type="String" mode="INOUT" name="headerId" optional="false"/>
+        <attribute type="String" mode="IN" name="description" optional="false"/>
+     </service>
+
+    <service name="createUnidentifiedDebits" engine="java" default-entity-name="FinAccountTrans"
+            location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="createUnidentifiedDebits">
+        <description>Pulls all transactions of type cheque from account transaction</description>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <auto-attributes mode="INOUT" optional="true" include="pk"/>
+        <attribute type="String" mode="INOUT" name="headerId" optional="false"/>
+        <attribute type="String" mode="IN" name="description" optional="false"/>
+     </service>
 
 
     <service name="saveReconciliation" engine="java" default-entity-name="BankReconHeader"
@@ -201,6 +219,7 @@ under the License.
         <description>Pulls all transactions of type cheque from account transaction</description>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
         <attribute type="String" mode="INOUT" name="headerId" optional="false"/>
+        <attribute type="String" mode="OUT" name="finAccountId" optional="false"/>
      </service>
 
     <service name="reconcileBankTrans" engine="java" default-entity-name="BankReconLines"

@@ -2680,9 +2680,25 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="UnidentifiedUnpresented"/>
     </request-map>
+    <request-map uri="UnidentifiedDebits">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="UnidentifiedDebits"/>
+    </request-map>
+    <request-map uri="UnreceiptedCheques">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="UnreceiptedCheques"/>
+    </request-map>
     <request-map uri="bankReconTrans">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="BankReconTrans"/>
+    </request-map>
+    <request-map uri="bankDepoReconTrans">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BankDepoReconTrans"/>
+    </request-map>
+    <request-map uri="bankWithReconTrans">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BankWithReconTrans"/>
     </request-map>
     <request-map uri="reconciledItems">
         <security https="true" auth="true"/>
@@ -2696,19 +2712,55 @@ under the License.
         </response>
         <response name="error" type="view" value="UnidentifiedUnpresented"/>
     </request-map>
+    <request-map uri="createUnreceiptedCheques">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createUnreceiptedCheques"/>
+        <response name="success" type="request-redirect" value="UnreceiptedCheques" >
+            <redirect-parameter name="headerId"/>
+        </response>
+        <response name="error" type="view" value="UnreceiptedCheques"/>
+    </request-map>
+
+    <request-map uri="deleteUnreceiptedCheques">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="deleteUnidentifiedUnpresented"/>
+        <response name="success" type="request-redirect" value="UnreceiptedCheques" >
+            <redirect-parameter name="headerId"/>
+        </response>
+        <response name="error" type="view" value="UnreceiptedCheques"/>
+    </request-map>
+
+
+    <request-map uri="createUnidentifiedDebits">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createUnidentifiedDebits"/>
+        <response name="success" type="request-redirect" value="UnidentifiedDebits" >
+            <redirect-parameter name="headerId"/>
+        </response>
+        <response name="error" type="view" value="UnidentifiedDebits"/>
+    </request-map>
+
+    <request-map uri="deleteUnidentifiedDebits">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="deleteUnidentifiedUnpresented"/>
+        <response name="success" type="request-redirect" value="UnidentifiedDebits" >
+            <redirect-parameter name="headerId"/>
+        </response>
+        <response name="error" type="view" value="UnidentifiedDebits"/>
+    </request-map>
 
     <request-map uri="reconcileBankTrans">
         <security https="true" auth="true" />
         <event type="service-multi" invoke="reconcileBankTrans" />
-        <response name="success" type="request-redirect" value="bankReconTrans" >
+        <response name="success" type="request-redirect" value="reconciledItems" >
             <redirect-parameter name="headerId"/>
         </response>
-        <response name="error" type="view" value="BankReconTrans" />
+        <response name="error" type="view" value="reconciledItems" />
     </request-map>
     <request-map uri="saveReconciliation">
         <security https="true" auth="true" />
         <event type="service" invoke="saveReconciliation" />
-        <response name="success" type="request-redirect" value="bankReconTrans" >
+        <response name="success" type="request-redirect" value="BankRecon" >
             <redirect-parameter name="finAccountId"/>
             <redirect-parameter name="reconDate"/>
             <redirect-parameter name="finAccountTransId"/>
@@ -2735,6 +2787,7 @@ under the License.
         </response>
         <response name="error" type="view" value="UnidentifiedUnpresented"/>
     </request-map>
+
     <request-map uri="newBankRecon">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="newBankRecon"/>
@@ -2742,6 +2795,14 @@ under the License.
     <request-map uri="newUnidentifiedUpresented">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="newUnidentifiedUpresented"/>
+    </request-map>
+    <request-map uri="newUnidentifiedDebits">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="newUnidentifiedDebits"/>
+    </request-map>
+    <request-map uri="newUnreceiptedCheques">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="newUnreceiptedCheques"/>
     </request-map>
     <request-map uri="createFinAccount">
         <security https="true" auth="true"/>
@@ -3841,10 +3902,16 @@ under the License.
     <view-map name="BankRecon" type="screen" page="component://accounting/widget/FinAccountScreens.xml#BankRecon"/>
     <view-map name="EditBankRecon" type="screen" page="component://accounting/widget/FinAccountScreens.xml#EditBankRecon"/>
     <view-map name="UnidentifiedUnpresented" type="screen" page="component://accounting/widget/FinAccountScreens.xml#UnidentifiedUnpresented"/>
+    <view-map name="UnidentifiedDebits" type="screen" page="component://accounting/widget/FinAccountScreens.xml#UnidentifiedDebits"/>
+    <view-map name="UnreceiptedCheques" type="screen" page="component://accounting/widget/FinAccountScreens.xml#UnreceiptedCheques"/>
     <view-map name="BankReconTrans" type="screen" page="component://accounting/widget/FinAccountScreens.xml#BankReconTrans"/>
+    <view-map name="BankDepoReconTrans" type="screen" page="component://accounting/widget/FinAccountScreens.xml#BankDepoReconTrans"/>
+    <view-map name="BankWithReconTrans" type="screen" page="component://accounting/widget/FinAccountScreens.xml#BankWithReconTrans"/>
     <view-map name="ReconciledItems" type="screen" page="component://accounting/widget/FinAccountScreens.xml#ReconciledItems"/>
     <view-map name="newBankRecon" type="screen" page="component://accounting/widget/FinAccountScreens.xml#newBankRecon"/>
     <view-map name="newUnidentifiedUpresented" type="screen" page="component://accounting/widget/FinAccountScreens.xml#newUnidentifiedUpresented"/>
+    <view-map name="newUnreceiptedCheques" type="screen" page="component://accounting/widget/FinAccountScreens.xml#newUnreceiptedCheques"/>
+    <view-map name="newUnidentifiedDebits" type="screen" page="component://accounting/widget/FinAccountScreens.xml#newUnidentifiedDebits"/>
     <view-map name="EditFinAccountRoles" type="screen" page="component://accounting/widget/FinAccountScreens.xml#EditFinAccountRoles"/>
     <view-map name="EditFinAccountTrans" type="screen" page="component://accounting/widget/FinAccountScreens.xml#EditFinAccountTrans"/>
     <view-map name="EditFinAccountAuths" type="screen" page="component://accounting/widget/FinAccountScreens.xml#EditFinAccountAuths"/>

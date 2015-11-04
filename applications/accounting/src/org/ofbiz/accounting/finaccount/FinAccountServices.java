@@ -628,6 +628,94 @@ public class FinAccountServices {
 		return result;
 	}
 
+	
+	public static Map<String, Object> createUnreceiptedCheques(DispatchContext dctx, Map<String, Object> context) {
+
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String headerId = (String) context.get("headerId");
+		Timestamp transactionDate = (Timestamp) context.get("transactionDate");
+		BigDecimal amount = (BigDecimal) context.get("amount");
+		String description = (String) context.get("description");
+		String finAccountTransTypeId = (String) context.get("finAccountTransTypeId");
+		String referenceNumber = (String) context.get("referenceNumber");
+
+		GenericValue bankReconLines = delegator.makeValue("BankReconLines");
+		String reconLineId = delegator.getNextSeqId("BankReconLines");
+
+
+
+		// save to BankReconLines
+		bankReconLines.put("isUnreceiptedBankings", "Y");
+		bankReconLines.put("reconLineId", reconLineId);
+		bankReconLines.put("headerId", headerId);
+		bankReconLines.put("finAccountTransId", delegator.getNextSeqId("FinAccountTrans"));
+		bankReconLines.put("finAccountTransTypeId", finAccountTransTypeId);
+		bankReconLines.put("transactionDate", transactionDate);
+		bankReconLines.put("amount", amount);
+		bankReconLines.put("description", description);
+		bankReconLines.put("isReconciledItem", "N");
+		bankReconLines.put("isUncreditedBankings", "N");
+		bankReconLines.put("isUnpresentedCheques", "N");
+		bankReconLines.put("referenceNumber", referenceNumber);
+		bankReconLines.put("isManuallyCreated", "Y");
+
+		try {
+			bankReconLines.create();
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		result.put("headerId", headerId);
+		return result;
+	}
+
+	public static Map<String, Object> createUnidentifiedDebits(DispatchContext dctx, Map<String, Object> context) {
+
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String headerId = (String) context.get("headerId");
+		Timestamp transactionDate = (Timestamp) context.get("transactionDate");
+		BigDecimal amount = (BigDecimal) context.get("amount");
+		String description = (String) context.get("description");
+		String finAccountTransTypeId = (String) context.get("finAccountTransTypeId");
+		String referenceNumber = (String) context.get("referenceNumber");
+
+		GenericValue bankReconLines = delegator.makeValue("BankReconLines");
+		String reconLineId = delegator.getNextSeqId("BankReconLines");
+
+
+
+		// save to BankReconLines
+		bankReconLines.put("isUnidentifiedDebits", "Y");
+		bankReconLines.put("reconLineId", reconLineId);
+		bankReconLines.put("headerId", headerId);
+		bankReconLines.put("finAccountTransId", delegator.getNextSeqId("FinAccountTrans"));
+		bankReconLines.put("finAccountTransTypeId", finAccountTransTypeId);
+		bankReconLines.put("transactionDate", transactionDate);
+		bankReconLines.put("amount", amount);
+		bankReconLines.put("description", description);
+		bankReconLines.put("isReconciledItem", "N");
+		bankReconLines.put("isUncreditedBankings", "N");
+		bankReconLines.put("isUnpresentedCheques", "N");
+		bankReconLines.put("referenceNumber", referenceNumber);
+		bankReconLines.put("isManuallyCreated", "Y");
+
+		try {
+			bankReconLines.create();
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		result.put("headerId", headerId);
+		return result;
+	}
+
+	
 	public static Map<String, Object> deleteUnidentifiedUnpresented(DispatchContext dctx, Map<String, Object> context) {
 		String headerId = (String) context.get("headerId");
 		String reconLineId = (String) context.get("reconLineId");
@@ -942,6 +1030,7 @@ public class FinAccountServices {
 		}
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		result.put("headerId", headerId);
+		result.put("finAccountId", bankReconHeader.getString("finAccountId"));
 		return result;
 	}
 
