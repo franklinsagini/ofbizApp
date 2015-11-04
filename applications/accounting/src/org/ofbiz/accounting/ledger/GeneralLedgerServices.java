@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -45,6 +46,213 @@ public class GeneralLedgerServices {
 
 	private static BigDecimal ZERO = BigDecimal.ZERO;
 
+	public static Map<String, Object> approveGLJV(DispatchContext dctx, Map<String, Object> context) {
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		String manualGlJvId = (String) context.get("manualGlJvId");
+		String organizationPartyId = (String) context.get("organizationPartyId");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		
+		//Get the Header Record
+		GenericValue jvHeader = getJVHeader(delegator, manualGlJvId);
+		
+		//Check if total debit and credits are balancing
+		BigDecimal linesAmount = getTotalDebitsForHeader(delegator, manualGlJvId);
+		BigDecimal headerAmount = jvHeader.getBigDecimal("amount");
+		
+		int compare = linesAmount.compareTo(headerAmount);
+		
+		if (compare != 0) {
+			return ServiceUtil.returnError("Debit Can not be more than Credit Amount. Rule of double Entry being enforced ! Balance the Credits and Debit before approving");
+		}
+		
+		//Update Header Record, Check who is posting and chnaged isposted flag
+		try {
+			jvHeader.set("approvedBy", userLogin.getString("userLoginId"));
+			jvHeader.set("statusName", "APPROVED");
+			jvHeader.set("isApproved", "Y");
+			jvHeader.store();
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		result.put("manualGlJvId", manualGlJvId);
+		result.put("organizationPartyId", organizationPartyId);
+		return result;
+	}
+	
+	private static GenericValue getJVHeader(Delegator delegator, String manualGlJvId) {
+		GenericValue jvHeader = null;
+		try {
+			jvHeader = delegator.findOne("ManualGLJVHeader", UtilMisc.toMap("manualGlJvId", manualGlJvId), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		return jvHeader;
+	}
+
+	public static Map<String, Object> postGLJV(DispatchContext dctx, Map<String, Object> context) {
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		String manualGlJvId = (String) context.get("manualGlJvId");
+		String organizationPartyId = (String) context.get("organizationPartyId");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		
+		//Get the Header Record
+		GenericValue jvHeader = getJVHeader(delegator, manualGlJvId);
+		
+		//Create Account Trans Header
+		String accgTransId = createTransactionHeaderForJV(delegator, jvHeader, userLogin);
+		
+		//Create JV Header AcctgTransEntry
+		Boolean isHeaderSuccess = createJVAcctgTransEntry(delegator, jvHeader, userLogin, accgTransId);
+		
+		//Create JV Lines AcctgTransEntry
+		Boolean isLineSuccess = true;
+		List<GenericValue>jvLines = getJVLines(jvHeader);
+		for (GenericValue line : jvLines) {
+			if (isLineSuccess) {
+				isLineSuccess = createJVAcctgTransEntryLine(delegator, line, jvHeader,userLogin, accgTransId);
+			}
+			
+		}
+		
+		
+		
+		
+		
+		
+		if (isHeaderSuccess && isLineSuccess) {
+			try {
+				jvHeader.set("postedBy", userLogin.getString("userLoginId"));
+				jvHeader.set("statusName", "POSTED");
+				jvHeader.set("isPosted", "Y");
+				jvHeader.store();
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+		}else{
+			return ServiceUtil.returnError("THERE WAS A PROBLEM IN GENERATING JV LINES. CALL ICT FOR HELP");
+		}
+		//Update Header Record, Check who is posting and chnaged isposted flag
+
+		
+		
+		
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		result.put("manualGlJvId", manualGlJvId);
+		result.put("organizationPartyId", organizationPartyId);
+		return result;
+	}
+	
+	private static List<GenericValue> getJVLines(GenericValue jvHeader) {
+		List<GenericValue> jvLines = null;
+
+		try {
+			jvLines = jvHeader.getRelated("ManualGLJVLines", null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		return jvLines;
+	}
+	
+	private static Boolean createJVAcctgTransEntryLine(Delegator delegator, GenericValue jvLine, GenericValue jvHeader,GenericValue userLogin, String acctgTransId) {
+		Boolean isSuccess =  false;
+		
+		GenericValue acctgTransEntry = null;
+		String acctgTransEntrySeqId = null;
+		acctgTransEntry = delegator.makeValue("AcctgTransEntry");
+		acctgTransEntrySeqId = delegator.getNextSeqId("AcctgTransEntry");
+		acctgTransEntry.put("acctgTransId", acctgTransId);
+		acctgTransEntry.put("acctgTransEntrySeqId", acctgTransEntrySeqId);
+		acctgTransEntry.put("acctgTransEntryTypeId", "_NA_");
+		acctgTransEntry.put("organizationPartyId", jvHeader.getString("organizationPartyId"));
+		acctgTransEntry.put("amount", jvLine.getBigDecimal("amount"));
+		acctgTransEntry.put("origAmount", jvLine.getBigDecimal("amount"));
+		acctgTransEntry.put("currencyUomId", "KES");
+		acctgTransEntry.put("origCurrencyUomId", "KES");
+		acctgTransEntry.put("debitCreditFlag", jvLine.getString("debitCreditFlag"));
+		acctgTransEntry.put("reconcileStatusId", "AES_NOT_RECONCILED");
+		acctgTransEntry.put("partyId", userLogin.getString("partyId"));
+		acctgTransEntry.put("glAccountId", jvLine.getString("glAccountId"));
+		acctgTransEntry.put("description", "GL JV BY "+userLogin.getString("userLoginId")+".  "+jvLine.get("narration"));
+
+		try {
+			acctgTransEntry.create();
+			isSuccess = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return isSuccess;
+	}
+	
+	private static Boolean createJVAcctgTransEntry(Delegator delegator, GenericValue jvHeader,GenericValue userLogin, String acctgTransId) {
+		Boolean isSuccess =  false;
+		
+		GenericValue acctgTransEntry = null;
+		String acctgTransEntrySeqId = null;
+		acctgTransEntry = delegator.makeValue("AcctgTransEntry");
+		acctgTransEntrySeqId = delegator.getNextSeqId("AcctgTransEntry");
+		acctgTransEntry.put("acctgTransId", acctgTransId);
+		acctgTransEntry.put("acctgTransEntrySeqId", acctgTransEntrySeqId);
+		acctgTransEntry.put("acctgTransEntryTypeId", "_NA_");
+		acctgTransEntry.put("organizationPartyId", jvHeader.getString("organizationPartyId"));
+		acctgTransEntry.put("amount", jvHeader.getBigDecimal("amount"));
+		acctgTransEntry.put("origAmount", jvHeader.getBigDecimal("amount"));
+		acctgTransEntry.put("currencyUomId", "KES");
+		acctgTransEntry.put("origCurrencyUomId", "KES");
+		acctgTransEntry.put("debitCreditFlag", jvHeader.getString("debitCreditFlag"));
+		acctgTransEntry.put("reconcileStatusId", "AES_NOT_RECONCILED");
+		acctgTransEntry.put("partyId", userLogin.getString("partyId"));
+		acctgTransEntry.put("glAccountId", jvHeader.getString("glAccountId"));
+		acctgTransEntry.put("description", "GL JV BY "+userLogin.getString("userLoginId")+".  "+jvHeader.getString("narration"));
+
+		try {
+			acctgTransEntry.create();
+			isSuccess = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return isSuccess;
+	}
+
+	private static String createTransactionHeaderForJV(Delegator delegator, GenericValue jvHeader, GenericValue userLogin) {
+
+		GenericValue acctgTrans = null;
+		String acctgTransId = null;
+
+		if (jvHeader != null) {
+			acctgTrans = delegator.makeValue("AcctgTrans");
+			acctgTransId = delegator.getNextSeqId("AcctgTrans");
+			acctgTrans.put("acctgTransId", acctgTransId);
+			acctgTrans.put("acctgTransTypeId", jvHeader.getString("acctgTransTypeId"));
+			acctgTrans.put("description", "GL JV BY "+userLogin.getString("userLoginId")+".  "+jvHeader.getString("narration"));
+			acctgTrans.put("transactionDate", UtilDateTime.nowTimestamp());
+			acctgTrans.put("isPosted", "Y");
+			acctgTrans.put("isApproved", "Y");
+			acctgTrans.put("postedDate", UtilDateTime.nowTimestamp());
+			acctgTrans.put("glFiscalTypeId", "ACTUAL");
+			acctgTrans.put("partyId", userLogin.getString("partyId"));
+			acctgTrans.put("createdByUserLogin", userLogin.getString("userLoginId"));
+
+			try {
+				acctgTrans.create();
+			} catch (Exception e) {
+
+			}
+		}
+
+		return acctgTransId;
+	}
+	
+	
 	public static Map<String, Object> addDebitTransaction(DispatchContext dctx, Map<String, Object> context) {
 		Delegator delegator = dctx.getDelegator();
 		String manualGlJvId = (String) context.get("manualGlJvId");
@@ -76,7 +284,7 @@ public class GeneralLedgerServices {
 		}
 
 		GenericValue debitLines = delegator.makeValue("ManualGLJVLines");
-		String lineId = delegator.getNextSeqId("lineId");
+		String lineId = delegator.getNextSeqId("ManualGLJVLines");
 
 		debitLines.put("manualGlJvId", manualGlJvId);
 		debitLines.put("narration", narration);

@@ -487,7 +487,7 @@ under the License.
     </screen>
 
 
-    <screen name="JVLines">
+    <screen name="DebitJVLines">
         <section>
             <actions>
                <set field="titleProperty" value="Manual GL Journal Voucher"/>
@@ -509,15 +509,15 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <widgets>
-                                <screenlet title="General Ledger Journal Voucher: Header">
-                                    <include-form name="GLJVHeader" location="component://accounting/widget/GlForms.xml"/>
+                                <screenlet title="General Ledger Journal Voucher: Header (CREDIT HEADER)">
+                                    <include-form name="GLJVCreditHeader" location="component://accounting/widget/GlForms.xml"/>
                                 </screenlet>
-                                <screenlet title="General Ledger Journal Voucher: Lines">
+                                <screenlet title="General Ledger Journal Voucher: Debit Lines">
                                     <container><label style="h3" text="Total Credit Amount: ${creditAmount}  |  Total Debit Amount: ${debitAmount}  |  Total Debit Lines: ${totalLines}"></label></container>
                                     <include-form name="ListVoucherLines" location="component://accounting/widget/GlForms.xml"/>
                                 </screenlet>
-                                <screenlet title="General Ledger Journal Voucher: Add Journal Voucher Line">
-                                    <include-form name="AddVoucherLine" location="component://accounting/widget/GlForms.xml"/>
+                                <screenlet title="General Ledger Journal Voucher: Add Debit Journal Voucher Line">
+                                    <include-form name="AddDebitVoucherLine" location="component://accounting/widget/GlForms.xml"/>
                                 </screenlet>
                             </widgets>
                         </section>
@@ -534,6 +534,7 @@ under the License.
                 <set field="tabButtonItem" value="CaptureGLJV"/>
                 <set field="labelTitleProperty" value="Manual GL Journal Voucher"/>
                 <set field="manualGlJvId" from-field="parameters.manualGlJvId"/>
+                <set field="debitCreditFlag" value="C"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
                 <entity-one entity-name="ManualGLJVHeader" value-field="manualGLJVHeader"/>
                 <set field="organizationPartyId" from-field="manualGLJVHeader.organizationPartyId" global="true"/>
@@ -549,15 +550,15 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <widgets>
-                                <screenlet title="General Ledger Journal Voucher: Header">
-                                    <include-form name="GLJVHeader" location="component://accounting/widget/GlForms.xml"/>
+                                <screenlet title="General Ledger Journal Voucher: Header (DEBIT) ">
+                                    <include-form name="GLJVDebitHeader" location="component://accounting/widget/GlForms.xml"/>
                                 </screenlet>
                                 <screenlet title="General Ledger Journal Voucher: Credit Lines">
                                     <container><label style="h3" text="Total Debit Amount: ${creditAmount}  |  Total Credit Amount: ${debitAmount}  |  Total Credit Lines: ${totalLines}"></label></container>
                                     <include-form name="ListVoucherLines" location="component://accounting/widget/GlForms.xml"/>
                                 </screenlet>
-                                <screenlet title="General Ledger Journal Voucher: Add Journal Voucher Line">
-                                    <include-form name="AddVoucherLine" location="component://accounting/widget/GlForms.xml"/>
+                                <screenlet title="General Ledger Journal Voucher: Add Credit Journal Voucher Line">
+                                    <include-form name="AddCreditVoucherLine" location="component://accounting/widget/GlForms.xml"/>
                                 </screenlet>
                             </widgets>
                         </section>

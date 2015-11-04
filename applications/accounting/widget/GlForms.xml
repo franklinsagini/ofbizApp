@@ -119,6 +119,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="ManualGLJVHeader">
+                <orderBy field="transactionDate" />
             </entity-condition>
         </actions>
         <field name="organizationPartyId"><hidden/></field>
@@ -147,16 +148,39 @@ under the License.
             </hyperlink>
         </field>
         <field name="detailsLink" title=" " use-when="debitCreditFlag.equals(&quot;C&quot;)" widget-style="buttontext">
-            <hyperlink target="JVLines" description="Debit Lines Details" also-hidden="false">
+            <hyperlink target="DebitJVLines" description="Debit Lines Details" also-hidden="false">
                 <parameter param-name="manualGlJvId"/>
                 <parameter param-name="organizationPartyId"/>
             </hyperlink>
         </field>
     </form>
 
-    <form name="GLJVHeader" type="single" target="ConfirmMultiplePayment" default-map-name="manualGLJVHeader">
-          <alt-target use-when="manualGLJVHeader!=null&amp;&amp;manualGLJVHeader.getString(&quot;statusName&quot;).equals(&quot;CAPTURED&quot;)" target="approveGLJV"/>
+    <form name="GLJVCreditHeader" type="single" target="approveCreditGLJV" default-map-name="manualGLJVHeader">
+
           <alt-target use-when="manualGLJVHeader!=null&amp;&amp;manualGLJVHeader.getString(&quot;statusName&quot;).equals(&quot;APPROVED&quot;)" target="postGLJV"/>
+        <field name="manualGlJvId" ><hidden/></field>
+        <field name="organizationPartyId" ><hidden/></field>
+        <field name="capturedBy" position="1"><display/></field>
+        <field name="approvedBy" use-when="manualGLJVHeader!=null&amp;&amp;manualGLJVHeader.getString(&quot;statusName&quot;).equals(&quot;APPROVED&quot;)" position="2"><display/></field>
+        <field name="postedBy" use-when="manualGLJVHeader!=null&amp;&amp;manualGLJVHeader.getString(&quot;statusName&quot;).equals(&quot;POSTED&quot;)" position="1"><display/></field>
+        <field name="statusName" position="2"><display/></field>
+        <field name="isPosted" position="1"><display/></field>
+        <field name="isApproved" position="2"><display/></field>
+        <field name="transactionDate" position="1"><display/></field>
+        <field name="amount" position="2"><display/></field>
+        <field name="glAccountId" position="1"><display/></field>
+        <field name="debitCreditFlag" position="1"><display /></field>
+        <field name="submitButton" use-when="manualGLJVHeader!=null&amp;&amp;manualGLJVHeader.getString(&quot;statusName&quot;).equals(&quot;CAPTURED&quot;)" title="APPROVE JOURNAL VOUCHER" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field name="submitButton" use-when="manualGLJVHeader!=null&amp;&amp;manualGLJVHeader.getString(&quot;statusName&quot;).equals(&quot;APPROVED&quot;)" title="POST JOURNAL VOUCHER" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <form name="GLJVDebitHeader" type="single" target="approveDebitGLJV" default-map-name="manualGLJVHeader">
+
+          <alt-target use-when="manualGLJVHeader!=null&amp;&amp;manualGLJVHeader.getString(&quot;statusName&quot;).equals(&quot;APPROVED&quot;)" target="postDebitGLJV"/>
         <field name="manualGlJvId" ><hidden/></field>
         <field name="organizationPartyId" ><hidden/></field>
         <field name="capturedBy" position="1"><display/></field>
@@ -200,7 +224,7 @@ under the License.
         </field>
     </form>
 
-    <form name="AddVoucherLine" type="single" target="addDebitTransaction" >
+    <form name="AddCreditVoucherLine" type="single" target="addCreditTransaction" >
         <actions>
         </actions>
         <field name="manualGlJvId"><hidden/></field>
@@ -217,10 +241,10 @@ under the License.
         <field name="narration" title="Narration" position="1" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
             <textarea/>
         </field>
-        <field name="submitButton" title="Add Debit Transaction" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Add Line Transaction" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
-    <form name="AddCreditLine" type="single" target="addCreditTransaction" >
+    <form name="AddDebitVoucherLine" type="single" target="addDebitTransaction" >
         <actions>
         </actions>
         <field name="manualGlJvId"><hidden/></field>

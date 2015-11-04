@@ -1022,8 +1022,6 @@ public class FinAccountServices {
 
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		result.put("headerId", headerId);
-		result.put("finAccountTransId", finAccountTransId);
-		result.put("reconLineId", reconLineId);
 		return result;
 
 	}
@@ -1062,8 +1060,6 @@ public class FinAccountServices {
 
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		result.put("headerId", headerId);
-		result.put("finAccountTransId", finAccountTransId);
-		result.put("reconLineId", reconLineId);
 		return result;
 
 	}
