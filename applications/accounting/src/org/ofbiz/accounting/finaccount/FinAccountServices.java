@@ -1747,7 +1747,7 @@ public class FinAccountServices {
 
 		// Create AcctgTransEntry
 		// start with the Debit transaction
-		Boolean isDebitSuccess = createcreateConfirmedTransEntry(delegator, acctgTransId, multiplePaymentHeader, "D");
+		Boolean isDebitSuccess = createcreateConfirmedTransEntryForReceipt(delegator, acctgTransId, multiplePaymentHeader, "D");
 
 		// Credit transactions
 		List<GenericValue> debitLines = getPaymentDebitLines(multiplePaymentHeader);
@@ -1891,7 +1891,7 @@ public class FinAccountServices {
 		acctgTransEntry.put("acctgTransId", acctgTransId);
 		acctgTransEntry.put("acctgTransEntrySeqId", acctgTransEntrySeqId);
 		acctgTransEntry.put("acctgTransEntryTypeId", "_NA_");
-		acctgTransEntry.put("organizationPartyId", multiplePaymentHeader.getString("partyIdFrom"));
+		acctgTransEntry.put("organizationPartyId", multiplePaymentHeader.getString("partyIdTo"));
 		acctgTransEntry.put("amount", line.getBigDecimal("amount"));
 		acctgTransEntry.put("origAmount", multiplePaymentHeader.getBigDecimal("origAmount"));
 		acctgTransEntry.put("currencyUomId", "KES");
@@ -1939,6 +1939,36 @@ public class FinAccountServices {
 		acctgTransEntry.put("debitCreditFlag", debitCreditFlag);
 		acctgTransEntry.put("reconcileStatusId", "AES_NOT_RECONCILED");
 		acctgTransEntry.put("partyId", multiplePaymentHeader.getString("partyIdTo"));
+		acctgTransEntry.put("roleTypeId", "BILL_TO_CUSTOMER");
+		acctgTransEntry.put("glAccountId", getCreditGlAccount(delegator, multiplePaymentHeader.getString("paymentMethodId")));
+
+		try {
+			acctgTransEntry.create();
+			isSuccess = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return isSuccess;
+	}
+	
+	private static Boolean createcreateConfirmedTransEntryForReceipt(Delegator delegator, String acctgTransId, GenericValue multiplePaymentHeader, String debitCreditFlag) {
+
+		GenericValue acctgTransEntry = null;
+		String acctgTransEntrySeqId = null;
+		Boolean isSuccess = false;
+		acctgTransEntry = delegator.makeValue("AcctgTransEntry");
+		acctgTransEntrySeqId = delegator.getNextSeqId("AcctgTransEntry");
+		acctgTransEntry.put("acctgTransId", acctgTransId);
+		acctgTransEntry.put("acctgTransEntrySeqId", acctgTransEntrySeqId);
+		acctgTransEntry.put("acctgTransEntryTypeId", "_NA_");
+		acctgTransEntry.put("organizationPartyId", multiplePaymentHeader.getString("partyIdTo"));
+		acctgTransEntry.put("amount", multiplePaymentHeader.getBigDecimal("amount"));
+		acctgTransEntry.put("origAmount", multiplePaymentHeader.getBigDecimal("origAmount"));
+		acctgTransEntry.put("currencyUomId", "KES");
+		acctgTransEntry.put("origCurrencyUomId", "KES");
+		acctgTransEntry.put("debitCreditFlag", debitCreditFlag);
+		acctgTransEntry.put("reconcileStatusId", "AES_NOT_RECONCILED");
+		acctgTransEntry.put("partyId", multiplePaymentHeader.getString("partyIdFrom"));
 		acctgTransEntry.put("roleTypeId", "BILL_TO_CUSTOMER");
 		acctgTransEntry.put("glAccountId", getCreditGlAccount(delegator, multiplePaymentHeader.getString("paymentMethodId")));
 
