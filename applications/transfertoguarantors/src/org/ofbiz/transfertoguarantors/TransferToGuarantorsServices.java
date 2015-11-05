@@ -195,7 +195,9 @@ public class TransferToGuarantorsServices {
 			bdDepositsBalance = AccHolderTransactionServices.getAccountTotalBalance(accountProductId, partyId);
 			memberDepositsAtAttachment = bdDepositsBalance;
 			//Get the Proportion of savings for this loan
-			BigDecimal bdProportionForThisLoan = getDepositProportion(loanClass, bdDepositsBalance, loanApplicationId);
+			BigDecimal bdProportionForThisLoan = getDepositProportion(loanClass, bdDepositsBalance, loanApplicationId, partyId);
+			
+			log.info(" The loan proportion is "+bdProportionForThisLoan);
 					
 					//bdDepositsBalance.divide(loanProduct.getBigDecimal("multipleOfSavingsAmt"), 4, RoundingMode.FLOOR);
 			
@@ -209,8 +211,8 @@ public class TransferToGuarantorsServices {
 			insuranceDueAtAttachment = totalInsuranceDue;
 			interestDueAtAttachment = totalInterestDue;
 			
-			BigDecimal loanInsurance = totalInterestDue;
-			BigDecimal loanInterest = totalInsuranceDue;
+			BigDecimal loanInsurance = totalInsuranceDue;
+			BigDecimal loanInterest = totalInterestDue;
 			BigDecimal loanPrincipal = totalPrincipalDue;
 			
 			BigDecimal totalLoanDue = totalPrincipalDue.add(totalInterestDue).add(totalInsuranceDue) ;
@@ -407,9 +409,19 @@ public class TransferToGuarantorsServices {
 	}
 
 	private static BigDecimal getDepositProportion(String loanClass,
-			BigDecimal bdDepositsBalance, Long loanApplicationId) {
-		// TODO Auto-generated method stub
-		return null;
+			BigDecimal bdDepositsBalance, Long loanApplicationId, Long partyId) {
+		
+		//Total Balances for member running loans given class
+		BigDecimal bdTotalLoanBalances = LoansProcessingServices.getTotalDisbursedLoanBalancesGivenClass(partyId, loanClass);
+		
+		//Total Balance for this loan
+		BigDecimal bdCurrentLoanBalance = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
+		//Add Interest
+		bdCurrentLoanBalance = bdCurrentLoanBalance.add(LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString()));
+		
+		//Add Insurance
+		bdCurrentLoanBalance = bdCurrentLoanBalance.add(LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString()));
+		return bdCurrentLoanBalance.divide(bdTotalLoanBalances, 4, RoundingMode.HALF_UP).multiply(bdDepositsBalance);
 	}
 
 	private static Long createGuarantorLoans(BigDecimal bdGuarantorLoanAmount,

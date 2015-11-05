@@ -22,6 +22,7 @@ import org.joda.time.Days;
 import org.joda.time.DurationFieldType;
 import org.joda.time.Months;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
+import org.ofbiz.accountholdertransactions.LoanRepayments;
 import org.ofbiz.accountholdertransactions.LoanUtilities;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
@@ -933,6 +934,50 @@ public class LoansProcessingServices {
 
 		for (GenericValue genericValue : loanApplicationELI) {
 			bdTotalBalance = bdTotalBalance.add(getTotalLoanBalancesByLoanApplicationId(genericValue.getLong("loanApplicationId")));
+		}
+
+		return bdTotalBalance;
+	}
+	
+	/***
+	 * Disbursed Loans of specific CLASS - BOSA or FOSA
+	 * */
+	public static BigDecimal getTotalDisbursedLoanBalancesGivenClass(Long partyId, String loanClass){
+		BigDecimal bdTotalBalance = BigDecimal.ZERO;
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> loanApplicationELI = new ArrayList<GenericValue>();
+		
+		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
+				.makeCondition(
+						UtilMisc.toList(EntityCondition.makeCondition(
+								"partyId", EntityOperator.EQUALS,
+								partyId),
+								
+								EntityCondition.makeCondition(
+										"loanStatusId", EntityOperator.EQUALS,
+										6L)
+								
+								
+								), EntityOperator.AND);
+		
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					loanApplicationConditions, null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		GenericValue loanProduct = null;
+		for (GenericValue genericValue : loanApplicationELI) {
+			//if ()
+			loanProduct = LoanUtilities.getEntityValue("LoanProduct", "loanProductId", genericValue.getLong("loanProductId"));
+			if (loanProduct.getString("fosaOrBosa").trim().equals(loanClass.trim())){
+				bdTotalBalance = bdTotalBalance.add(getTotalLoanBalancesByLoanApplicationId(genericValue.getLong("loanApplicationId")));
+				bdTotalBalance = bdTotalBalance.add(LoanRepayments.getTotalInterestByLoanDue(genericValue.getLong("loanApplicationId").toString()));
+				bdTotalBalance = bdTotalBalance.add(LoanRepayments.getTotalInsurancByLoanDue(genericValue.getLong("loanApplicationId").toString()));
+			}
 		}
 
 		return bdTotalBalance;
