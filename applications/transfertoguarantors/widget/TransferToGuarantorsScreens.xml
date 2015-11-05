@@ -82,6 +82,7 @@
                 <entity-one entity-name="LoanApplication" value-field="applicationContext">
                 	<field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
                 </entity-one>
+                <set field="loanApplicationIdString" from-field="loanApplicationId" type="PlainString"/>
                 
                 <set field="partyId" from-field="applicationContext.partyId" type="Long"/>
                 
@@ -107,6 +108,8 @@
             </entity-condition>
             <entity-condition entity-name="LoanStatus" list="loanStatusList">
             </entity-condition>
+            
+            <set field="balance" value="${bsh:org.ofbiz.loans.LoanServices.getLoanBalanceAmount(loanApplicationIdString);}" type="BigDecimal" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -126,6 +129,11 @@
 									
 									<container>
 										<label style="h3"> Loan Amount : ${applicationContext.loanAmt} </label>
+
+									</container>
+									
+									<container>
+										<label style="h3"> Loan Balance (Less Interest and Insurance) : ${balance} </label>
 
 									</container>
 
