@@ -177,15 +177,27 @@ public class TransferToGuarantorsServices {
 		BigDecimal bdDepositsBalance = BigDecimal.ZERO;
 		BigDecimal memberDepositsAtAttachment = BigDecimal.ZERO;
 		
-		Long accountProductId = loanProduct.getLong("accountProductId");
+		Long accountProductId = null; // = loanProduct.getLong("accountProductId");
+		
+		if (loanProduct.getString("fosaOrBosa").trim().equals("FOSA")){
+			accountProductId = LoanUtilities.getAccountProductIdGivenCodeId(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
+		} else {
+			accountProductId = LoanUtilities.getAccountProductIdGivenCodeId(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE);
+		}
+		
+		String loanClass = loanProduct.getString("fosaOrBosa").trim();
+		
 		Long partyId = loanApplication.getLong("partyId");
 		//Get the multiplier account product
 		if ((accountProductId != null) && (loanProduct.getString("multipleOfSavings").equals("Yes")) && (loanProduct.getBigDecimal("multipleOfSavingsAmt") != null) && (loanProduct.getBigDecimal("multipleOfSavingsAmt").compareTo(BigDecimal.ZERO) > 0))
 		{
+			
 			bdDepositsBalance = AccHolderTransactionServices.getAccountTotalBalance(accountProductId, partyId);
 			memberDepositsAtAttachment = bdDepositsBalance;
 			//Get the Proportion of savings for this loan
-			BigDecimal bdProportionForThisLoan = bdDepositsBalance.divide(loanProduct.getBigDecimal("multipleOfSavingsAmt"), 4, RoundingMode.FLOOR);
+			BigDecimal bdProportionForThisLoan = getDepositProportion(loanClass, bdDepositsBalance, loanApplicationId);
+					
+					//bdDepositsBalance.divide(loanProduct.getBigDecimal("multipleOfSavingsAmt"), 4, RoundingMode.FLOOR);
 			
 			bdLoanTransferBalance = bdLoanTransferBalance.subtract(bdProportionForThisLoan);
 			
@@ -392,6 +404,12 @@ public class TransferToGuarantorsServices {
 		}
 
 		return "success";
+	}
+
+	private static BigDecimal getDepositProportion(String loanClass,
+			BigDecimal bdDepositsBalance, Long loanApplicationId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private static Long createGuarantorLoans(BigDecimal bdGuarantorLoanAmount,
