@@ -1789,7 +1789,7 @@
 
 
 		 <set field="partyId" value="${newEntity.partyId}"/>
-
+         
 
 		 <entity-one entity-name="RegistryFiles" value-field="registryFile">
 		 	<field-map field-name="partyId" from-field="partyId"/>
@@ -1797,7 +1797,10 @@
       <log message=">>>>>>>>>>>>>>>>>>>>>>> PARAMETERS > ${parameters}" level="info"/>
 		 <!-- Get status -->
 		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
-		  <set field="registryFile.currentPossesser" from-field="registryFile.intendedPossesser" />
+		  <set field="registryFile.currentPossesser" from-field="parameters.intendedPossesser" />
+		  
+		  <log message="#######GO TO #######${parameters.intendedPossesser}" level="info"/>
+		  
 		 <set field="registryFile.recieptStatus" value="NOTRECEIVED"/>
 		 <set field="registryFile.selectedToBeMoved" value="SEND"/>
 		 <set field="registryFile.carriedBy" from-field="parameters.carriedBy" />
