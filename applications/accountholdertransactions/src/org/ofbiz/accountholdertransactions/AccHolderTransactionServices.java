@@ -253,6 +253,43 @@ public class AccHolderTransactionServices {
 
 		return listMemberAccountId;
 	}
+	
+	
+	public static List<Long> getMemberAccountIdsAll(Long partyId) {
+		List<Long> listMemberAccountId = new ArrayList<Long>();
+
+		Long accountProductId = LoanUtilities
+				.getAccountProductIdGivenCodeId(SAVINGS_ACCOUNT_CODE);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> memberAccountELI = null;
+
+		EntityConditionList<EntityExpr> memberAccountConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS, partyId)
+//						EntityCondition.makeCondition("accountProductId",
+//								EntityOperator.EQUALS, accountProductId)
+								
+						),
+						EntityOperator.AND);
+
+		try {
+			memberAccountELI = delegator.findList("MemberAccount",
+					memberAccountConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		if (memberAccountELI == null) {
+			return listMemberAccountId;
+		}
+		// String accountDetails;
+		for (GenericValue genericValue : memberAccountELI) {
+			listMemberAccountId.add(genericValue.getLong("memberAccountId"));
+		}
+
+		return listMemberAccountId;
+	}
 
 	/****
 	 * Get Account Total Balance Total Opening Account + Total Deposits - Total
@@ -849,7 +886,7 @@ public class AccHolderTransactionServices {
 	 * @author Japheth Odonya @when Aug 24, 2014 7:57:03 PM Creating a Cheque
 	 *         Deposit Accounting Transaction
 	 * */
-	public static String createChequeTransaction(
+	public static synchronized String createChequeTransaction(
 			GenericValue accountTransaction, Map<String, String> userLogin) {
 		// Post the Cash Deposit to the Teller for the logged in user
 		/***
@@ -877,7 +914,11 @@ public class AccHolderTransactionServices {
 		exciseDutyAccountId = accountProduct.getString("exciseDutyAccountId");
 
 		// tellerAccountId = TreasuryUtility.getTellerAccountId(userLogin);
-		bankglAccountId = getCashAccount(null, "CHEQUEDEPOSITACCOUNT");
+		String branchId = getEmployeeBranch(userLogin.get("partyId"));
+				//LoanUtilities.getMemberB
+		bankglAccountId = LoanUtilities.getBranchBankAccount(branchId);
+				
+				//getCashAccount(null, "CHEQUEDEPOSITACCOUNT");
 
 		// Get tha acctgTransId
 		String acctgTransId = creatAccountTransRecordVer2(accountTransaction,
@@ -1059,7 +1100,7 @@ public class AccHolderTransactionServices {
 	/**
 	 * AcctgTransEntry
 	 * **/
-	public static void postTransactionEntry(Delegator delegator,
+	public static synchronized void postTransactionEntry(Delegator delegator,
 			BigDecimal bdLoanAmount, String employeeBranchId,
 			String memberBranchId, String loanReceivableAccount,
 			String postingType, String acctgTransId, String acctgTransType,
@@ -3018,8 +3059,11 @@ public class AccHolderTransactionServices {
 
 		String memberDepositAccountId = getMemberDepositAccount(
 				stationAccountTransaction, "STATIONACCOUNTPAYMENT");
-		String cashAccountId = getCashAccount(stationAccountTransaction,
-				"STATIONACCOUNTPAYMENT");
+		
+		String cashAccountId = LoanUtilities.getBranchBankAccount(branchId.toString());
+				
+				//getCashAccount(stationAccountTransaction,
+				//"STATIONACCOUNTPAYMENT");
 
 		// Check that the two accounts member deposits and cash deposit accounts
 		// are mapped to
@@ -4802,7 +4846,7 @@ public class AccHolderTransactionServices {
 	 * @author Japheth Odonya @when Jul 6, 2015 10:21:00 PM
 	 *         cashWithdrawalInterbranch
 	 * ***/
-	public static String cashWithdrawalInterbranch(
+	public static synchronized String cashWithdrawalInterbranch(
 			GenericValue accountTransaction, Map<String, String> userLogin) {
 
 		log.info(" UserLogin ---- " + userLogin.get("userLoginId"));
@@ -7846,7 +7890,70 @@ public class AccHolderTransactionServices {
 
 		return addedStatus;
 	}
+	
+	
+	public static String checkTransactionTypeAdded(Long memberAccountId,
+			String transactionType, GenericValue accountTransaction) {
+		String addedStatus = "added";
+		
+		BigDecimal transactionAmount = accountTransaction.getBigDecimal("transactionAmount");
+		//String transactionType = accountTransaction.getString("transactionType");
+		
+		BigDecimal totalChargeAmount = getChargesTotal(memberAccountId, transactionAmount, transactionType);
+		
+		BigDecimal totalAmountToDeduct = transactionAmount.add(totalChargeAmount);
+		
+		BigDecimal bdAvailableAmount = getAvailableBalanceVer3(String.valueOf(memberAccountId));
+		
+		if (totalAmountToDeduct.compareTo(bdAvailableAmount) == 1)
+			return " Your available balance is not sufficient, you only have  KShs. "+bdAvailableAmount+" in your account ! yet the transaction will cost KShs. "+totalAmountToDeduct;
+		
 
+		GenericValue accountProduct = LoanUtilities
+				.getAccountProductGivenMemberAccountId(memberAccountId);
+
+		Long accountProductId = accountProduct.getLong("accountProductId");
+		// CHEQUEWITHDRAWAL BANKERSWITHDRAWAL
+		// Check that there are record for CHEQUEWITHDRAWAL and
+		// BANKERSWITHDRAWAL
+
+		if (!LoanUtilities.existsCharges("CHEQUEWITHDRAWAL", accountProductId)) {
+			return "Please set up charges for Cheque Withdrawal first !";
+		}
+
+		if (!LoanUtilities.existsCharges("BANKERSWITHDRAWAL", accountProductId)) {
+			return "Please set up charges for Bankers Cheque Withdrawal first !";
+		}
+
+		return addedStatus;
+	}
+
+	
+	
+	/****
+	 * Has enough money
+	 * */
+	public static String checkHasEnoughMoney(GenericValue accountTransaction) {
+		String status = "yes";
+		
+		BigDecimal transactionAmount = accountTransaction.getBigDecimal("transactionAmount");
+		//String transactionType = accountTransaction.getString("transactionType");
+		Long memberAccountId = accountTransaction.getLong("memberAccountId");
+		
+		//BigDecimal totalChargeAmount = getChargesTotal(memberAccountId, transactionAmount, transactionType);
+		BigDecimal bdCommissionAmount = getTransactionCommissionAmount(transactionAmount);
+		BigDecimal bdExciseDutyAmount = getTransactionExcideDutyAmount(bdCommissionAmount);
+		
+		BigDecimal totalChargeAmount = bdCommissionAmount.add(bdExciseDutyAmount);
+		BigDecimal totalAmountToDeduct = transactionAmount.add(totalChargeAmount);
+		
+		BigDecimal bdAvailableAmount = getAvailableBalanceVer3(String.valueOf(memberAccountId));
+		
+		if (totalAmountToDeduct.compareTo(bdAvailableAmount) == 1)
+			return " Your available balance is not sufficient, you only have  KShs. "+bdAvailableAmount+" in your account ! yet the transaction will cost KShs. "+totalAmountToDeduct;
+
+		return status;
+	}
 	/***
 	 * @author Japheth Odonya @when Jun 30, 2015 3:58:41 PM Create a transfer
 	 *         from Source Member Account to Destination Member Account

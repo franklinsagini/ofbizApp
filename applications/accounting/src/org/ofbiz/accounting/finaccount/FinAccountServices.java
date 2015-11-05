@@ -628,6 +628,94 @@ public class FinAccountServices {
 		return result;
 	}
 
+	
+	public static Map<String, Object> createUnreceiptedCheques(DispatchContext dctx, Map<String, Object> context) {
+
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String headerId = (String) context.get("headerId");
+		Timestamp transactionDate = (Timestamp) context.get("transactionDate");
+		BigDecimal amount = (BigDecimal) context.get("amount");
+		String description = (String) context.get("description");
+		String finAccountTransTypeId = (String) context.get("finAccountTransTypeId");
+		String referenceNumber = (String) context.get("referenceNumber");
+
+		GenericValue bankReconLines = delegator.makeValue("BankReconLines");
+		String reconLineId = delegator.getNextSeqId("BankReconLines");
+
+
+
+		// save to BankReconLines
+		bankReconLines.put("isUnreceiptedBankings", "Y");
+		bankReconLines.put("reconLineId", reconLineId);
+		bankReconLines.put("headerId", headerId);
+		bankReconLines.put("finAccountTransId", delegator.getNextSeqId("FinAccountTrans"));
+		bankReconLines.put("finAccountTransTypeId", finAccountTransTypeId);
+		bankReconLines.put("transactionDate", transactionDate);
+		bankReconLines.put("amount", amount);
+		bankReconLines.put("description", description);
+		bankReconLines.put("isReconciledItem", "N");
+		bankReconLines.put("isUncreditedBankings", "N");
+		bankReconLines.put("isUnpresentedCheques", "N");
+		bankReconLines.put("referenceNumber", referenceNumber);
+		bankReconLines.put("isManuallyCreated", "Y");
+
+		try {
+			bankReconLines.create();
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		result.put("headerId", headerId);
+		return result;
+	}
+
+	public static Map<String, Object> createUnidentifiedDebits(DispatchContext dctx, Map<String, Object> context) {
+
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String headerId = (String) context.get("headerId");
+		Timestamp transactionDate = (Timestamp) context.get("transactionDate");
+		BigDecimal amount = (BigDecimal) context.get("amount");
+		String description = (String) context.get("description");
+		String finAccountTransTypeId = (String) context.get("finAccountTransTypeId");
+		String referenceNumber = (String) context.get("referenceNumber");
+
+		GenericValue bankReconLines = delegator.makeValue("BankReconLines");
+		String reconLineId = delegator.getNextSeqId("BankReconLines");
+
+
+
+		// save to BankReconLines
+		bankReconLines.put("isUnidentifiedDebits", "Y");
+		bankReconLines.put("reconLineId", reconLineId);
+		bankReconLines.put("headerId", headerId);
+		bankReconLines.put("finAccountTransId", delegator.getNextSeqId("FinAccountTrans"));
+		bankReconLines.put("finAccountTransTypeId", finAccountTransTypeId);
+		bankReconLines.put("transactionDate", transactionDate);
+		bankReconLines.put("amount", amount);
+		bankReconLines.put("description", description);
+		bankReconLines.put("isReconciledItem", "N");
+		bankReconLines.put("isUncreditedBankings", "N");
+		bankReconLines.put("isUnpresentedCheques", "N");
+		bankReconLines.put("referenceNumber", referenceNumber);
+		bankReconLines.put("isManuallyCreated", "Y");
+
+		try {
+			bankReconLines.create();
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		result.put("headerId", headerId);
+		return result;
+	}
+
+	
 	public static Map<String, Object> deleteUnidentifiedUnpresented(DispatchContext dctx, Map<String, Object> context) {
 		String headerId = (String) context.get("headerId");
 		String reconLineId = (String) context.get("reconLineId");
@@ -942,6 +1030,7 @@ public class FinAccountServices {
 		}
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		result.put("headerId", headerId);
+		result.put("finAccountId", bankReconHeader.getString("finAccountId"));
 		return result;
 	}
 
@@ -1022,8 +1111,6 @@ public class FinAccountServices {
 
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		result.put("headerId", headerId);
-		result.put("finAccountTransId", finAccountTransId);
-		result.put("reconLineId", reconLineId);
 		return result;
 
 	}
@@ -1062,12 +1149,60 @@ public class FinAccountServices {
 
 		Map<String, Object> result = ServiceUtil.returnSuccess();
 		result.put("headerId", headerId);
-		result.put("finAccountTransId", finAccountTransId);
-		result.put("reconLineId", reconLineId);
 		return result;
 
 	}
 
+	public static Map<String, Object> addCreditAccountPayment(DispatchContext dctx, Map<String, Object> context) {
+		Delegator delegator = dctx.getDelegator();
+		String paymentId = (String) context.get("paymentId");
+		String comments = (String) context.get("comments");
+		String glAccountId = (String) context.get("glAccountId");
+		BigDecimal amount = (BigDecimal) context.get("amount");
+
+		// Controlss
+
+		// 1. Check that the credit amount is not exceeded by the Debit Lines
+		// Get the MultiPayment Header
+		GenericValue multiPayment = null;
+		BigDecimal creditAmount = BigDecimal.ZERO;
+		BigDecimal debitAmount = getMultiplePaymentDebitAmount(delegator, paymentId);
+		try {
+			multiPayment = delegator.findOne("MultiPayment", UtilMisc.toMap("paymentId", paymentId), false);
+			if (multiPayment != null) {
+				creditAmount = multiPayment.getBigDecimal("amount");
+			}
+		} catch (GenericEntityException e1) {
+			e1.printStackTrace();
+		}
+
+		int compare = compareDebitsToCredit(amount, debitAmount, creditAmount);
+
+		if (compare == 1) {
+			return ServiceUtil.returnError("Debit Can not be more than Credit Amount !");
+		}
+
+		GenericValue multiPaymentLines = delegator.makeValue("MultiPaymentLines");
+		String lineId = delegator.getNextSeqId("lineId");
+
+		multiPaymentLines.put("paymentId", paymentId);
+		multiPaymentLines.put("comments", comments);
+		multiPaymentLines.put("glAccountId", glAccountId);
+		multiPaymentLines.put("amount", amount);
+		multiPaymentLines.put("lineId", lineId);
+
+		try {
+			multiPaymentLines.create();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		result.put("paymentId", paymentId);
+
+		return result;
+	}
+	
 	public static Map<String, Object> addDebitAccountPayment(DispatchContext dctx, Map<String, Object> context) {
 		Delegator delegator = dctx.getDelegator();
 		String paymentId = (String) context.get("paymentId");
@@ -1118,7 +1253,7 @@ public class FinAccountServices {
 		return result;
 	}
 
-	private static int compareDebitsToCredit(BigDecimal currentAmount, BigDecimal debitAmount, BigDecimal creditAmount) {
+	public static int compareDebitsToCredit(BigDecimal currentAmount, BigDecimal debitAmount, BigDecimal creditAmount) {
 		System.out.println("######################### INITIAL DEBIT AMOUNT: " + debitAmount);
 		System.out.println("######################### CREDIT AMOUNT: " + creditAmount);
 		debitAmount = debitAmount.add(currentAmount);
@@ -1568,6 +1703,81 @@ public class FinAccountServices {
 		result.put("paymentId", confirmedPaymentId);
 		return result;
 	}
+	
+	public static Map<String, Object> confirmMultiReceipt(DispatchContext dctx, Map<String, Object> context) {
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		String paymentId = (String) context.get("paymentId");
+		String lineId = (String) context.get("lineId");
+		String comments = (String) context.get("comments");
+		String glAccountId = (String) context.get("glAccountId");
+		BigDecimal amount = (BigDecimal) context.get("amount");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+
+		// Ensure a paymentId has been passed
+		if (paymentId == null) {
+			return ServiceUtil.returnError("Payment ID Missing Refresh Page and Try Again !");
+		}
+
+		GenericValue multiplePaymentHeader = null;
+		try {
+			multiplePaymentHeader = delegator.findOne("MultiPayment", UtilMisc.toMap("paymentId", paymentId), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		// Check that the Debits and Credits are balancing
+
+		BigDecimal creditAmount = getMultiplePaymentCreditAmount(multiplePaymentHeader);
+		BigDecimal debitAmount = getMultiplePaymentDebitAmount(delegator, paymentId);
+
+		int compare = creditAmount.compareTo(debitAmount);
+
+		if (compare != 0) {
+			return ServiceUtil.returnError("Ensure that the total Debits Amount is equal to Credit Amount before confirming payment! ");
+		}
+
+		// Create a payment
+
+		String confirmedPaymentId = createConfirmedPayment(delegator, multiplePaymentHeader);
+
+		// Create AcctgTransactions
+
+		String acctgTransId = createConfirmedAcctgTransForReceipt(delegator, multiplePaymentHeader, confirmedPaymentId, userLogin);
+
+		// Create AcctgTransEntry
+		// start with the Debit transaction
+		Boolean isDebitSuccess = createcreateConfirmedTransEntryForReceipt(delegator, acctgTransId, multiplePaymentHeader, "D");
+
+		// Credit transactions
+		List<GenericValue> debitLines = getPaymentDebitLines(multiplePaymentHeader);
+		Boolean isCreditSuccess = null;
+		for (GenericValue line : debitLines) {
+			isCreditSuccess = createcreateConfirmedCreditTransEntry(delegator, acctgTransId, multiplePaymentHeader, line);
+		}
+
+		// Create FinAccountTrans Entry
+		String finAccountTransId = null;
+
+		if (isCreditSuccess && isDebitSuccess) {
+			finAccountTransId = createDepositFinAccountTranRecord(dctx, dispatcher, context, delegator, multiplePaymentHeader, userLogin, confirmedPaymentId);
+		}
+
+		try {
+			GenericValue updatePayment = delegator.findOne("Payment", UtilMisc.toMap("paymentId", confirmedPaymentId), false);
+			updatePayment.set("finAccountTransId", finAccountTransId);
+			multiplePaymentHeader.set("statusId", "PMNT_CONFIRMED");
+			multiplePaymentHeader.store();
+			updatePayment.store();
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		result.put("paymentId", confirmedPaymentId);
+		return result;
+	}
 
 	private static String createFinAccountTranRecord(DispatchContext dctx, LocalDispatcher dispatcher, Map<String, Object> context, Delegator delegator,
 			GenericValue multiplePaymentHeader, GenericValue userLogin, String paymentId) {
@@ -1583,6 +1793,38 @@ public class FinAccountServices {
 		Map<String, Object> inContext = createFinAccountTrans.makeValid(context, ModelService.IN_PARAM);
 		Map<String, Object> createResult = null;
 		inContext.put("finAccountTransTypeId", "WITHDRAWAL");
+		inContext.put("finAccountId", getFinacialAccount(delegator, multiplePaymentHeader.getString("paymentMethodId")));
+		inContext.put("comments", multiplePaymentHeader.getString("comments"));
+		inContext.put("transactionDate", multiplePaymentHeader.getTimestamp("effectiveDate"));
+		inContext.put("amount", multiplePaymentHeader.getBigDecimal("amount"));
+		inContext.put("referenceNumber", multiplePaymentHeader.getString("paymentRefNum"));
+		inContext.put("paymentId", paymentId);
+		inContext.put("statusId", "FINACT_TRNS_CREATED");
+		inContext.put("toggle", "N");
+		inContext.put("isReconcilled", "N");
+		try {
+			createResult = dispatcher.runSync("createFinAccountTrans", inContext);
+		} catch (GenericServiceException e) {
+			e.printStackTrace();
+		}
+		finAccountTransId = (String) createResult.get("finAccountTransId");
+		return finAccountTransId;
+	}
+	
+	private static String createDepositFinAccountTranRecord(DispatchContext dctx, LocalDispatcher dispatcher, Map<String, Object> context, Delegator delegator,
+			GenericValue multiplePaymentHeader, GenericValue userLogin, String paymentId) {
+		String finAccountTransId = null;
+
+		ModelService createFinAccountTrans = null;
+		try {
+			createFinAccountTrans = dctx.getModelService("createFinAccountTrans");
+		} catch (GenericServiceException e1) {
+			e1.printStackTrace();
+		}
+
+		Map<String, Object> inContext = createFinAccountTrans.makeValid(context, ModelService.IN_PARAM);
+		Map<String, Object> createResult = null;
+		inContext.put("finAccountTransTypeId", "DEPOSIT");
 		inContext.put("finAccountId", getFinacialAccount(delegator, multiplePaymentHeader.getString("paymentMethodId")));
 		inContext.put("comments", multiplePaymentHeader.getString("comments"));
 		inContext.put("transactionDate", multiplePaymentHeader.getTimestamp("effectiveDate"));
@@ -1639,6 +1881,34 @@ public class FinAccountServices {
 		}
 		return isSuccess;
 	}
+	
+	private static Boolean createcreateConfirmedCreditTransEntry(Delegator delegator, String acctgTransId, GenericValue multiplePaymentHeader, GenericValue line) {
+		GenericValue acctgTransEntry = null;
+		String acctgTransEntrySeqId = null;
+		Boolean isSuccess = false;
+		acctgTransEntry = delegator.makeValue("AcctgTransEntry");
+		acctgTransEntrySeqId = delegator.getNextSeqId("AcctgTransEntry");
+		acctgTransEntry.put("acctgTransId", acctgTransId);
+		acctgTransEntry.put("acctgTransEntrySeqId", acctgTransEntrySeqId);
+		acctgTransEntry.put("acctgTransEntryTypeId", "_NA_");
+		acctgTransEntry.put("organizationPartyId", multiplePaymentHeader.getString("partyIdTo"));
+		acctgTransEntry.put("amount", line.getBigDecimal("amount"));
+		acctgTransEntry.put("origAmount", multiplePaymentHeader.getBigDecimal("origAmount"));
+		acctgTransEntry.put("currencyUomId", "KES");
+		acctgTransEntry.put("origCurrencyUomId", "KES");
+		acctgTransEntry.put("debitCreditFlag", "C");
+		acctgTransEntry.put("reconcileStatusId", "AES_NOT_RECONCILED");
+		acctgTransEntry.put("glAccountId", line.getString("glAccountId"));
+
+		try {
+			acctgTransEntry.create();
+			isSuccess = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return isSuccess;
+	}
+
 
 	private static List<GenericValue> getPaymentDebitLines(GenericValue multiplePaymentHeader) {
 		List<GenericValue> paymentLines = null;
@@ -1669,7 +1939,37 @@ public class FinAccountServices {
 		acctgTransEntry.put("debitCreditFlag", debitCreditFlag);
 		acctgTransEntry.put("reconcileStatusId", "AES_NOT_RECONCILED");
 		acctgTransEntry.put("partyId", multiplePaymentHeader.getString("partyIdTo"));
-		acctgTransEntry.put("roleTypeId", "BILL_FROM_VENDOR");
+		acctgTransEntry.put("roleTypeId", "BILL_TO_CUSTOMER");
+		acctgTransEntry.put("glAccountId", getCreditGlAccount(delegator, multiplePaymentHeader.getString("paymentMethodId")));
+
+		try {
+			acctgTransEntry.create();
+			isSuccess = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return isSuccess;
+	}
+	
+	private static Boolean createcreateConfirmedTransEntryForReceipt(Delegator delegator, String acctgTransId, GenericValue multiplePaymentHeader, String debitCreditFlag) {
+
+		GenericValue acctgTransEntry = null;
+		String acctgTransEntrySeqId = null;
+		Boolean isSuccess = false;
+		acctgTransEntry = delegator.makeValue("AcctgTransEntry");
+		acctgTransEntrySeqId = delegator.getNextSeqId("AcctgTransEntry");
+		acctgTransEntry.put("acctgTransId", acctgTransId);
+		acctgTransEntry.put("acctgTransEntrySeqId", acctgTransEntrySeqId);
+		acctgTransEntry.put("acctgTransEntryTypeId", "_NA_");
+		acctgTransEntry.put("organizationPartyId", multiplePaymentHeader.getString("partyIdTo"));
+		acctgTransEntry.put("amount", multiplePaymentHeader.getBigDecimal("amount"));
+		acctgTransEntry.put("origAmount", multiplePaymentHeader.getBigDecimal("origAmount"));
+		acctgTransEntry.put("currencyUomId", "KES");
+		acctgTransEntry.put("origCurrencyUomId", "KES");
+		acctgTransEntry.put("debitCreditFlag", debitCreditFlag);
+		acctgTransEntry.put("reconcileStatusId", "AES_NOT_RECONCILED");
+		acctgTransEntry.put("partyId", multiplePaymentHeader.getString("partyIdFrom"));
+		acctgTransEntry.put("roleTypeId", "BILL_TO_CUSTOMER");
 		acctgTransEntry.put("glAccountId", getCreditGlAccount(delegator, multiplePaymentHeader.getString("paymentMethodId")));
 
 		try {
@@ -1722,7 +2022,38 @@ public class FinAccountServices {
 
 		return acctgTransId;
 	}
+	
+	
+	private static String createConfirmedAcctgTransForReceipt(Delegator delegator, GenericValue multiplePaymentHeader, String confirmedPaymentId, GenericValue userLogin) {
 
+		GenericValue acctgTrans = null;
+		String acctgTransId = null;
+
+		if (multiplePaymentHeader != null) {
+			acctgTrans = delegator.makeValue("AcctgTrans");
+			acctgTransId = delegator.getNextSeqId("AcctgTrans");
+			acctgTrans.put("acctgTransId", acctgTransId);
+			acctgTrans.put("acctgTransTypeId", "INCOMING_PAYMENT");
+			acctgTrans.put("transactionDate", UtilDateTime.nowTimestamp());
+			acctgTrans.put("isPosted", "Y");
+			acctgTrans.put("isApproved", "Y");
+			acctgTrans.put("postedDate", UtilDateTime.nowTimestamp());
+			acctgTrans.put("glFiscalTypeId", "ACTUAL");
+			acctgTrans.put("partyId", multiplePaymentHeader.getString("partyIdTo"));
+			acctgTrans.put("roleTypeId", "BILL_TO_CUSTOMER");
+			acctgTrans.put("paymentId", confirmedPaymentId);
+			acctgTrans.put("createdByUserLogin", userLogin.getString("userName"));
+
+			try {
+				acctgTrans.create();
+			} catch (Exception e) {
+
+			}
+		}
+
+		return acctgTransId;
+	}
+	
 	private static String createConfirmedPayment(Delegator delegator, GenericValue multiplePaymentHeader) {
 		GenericValue confirmedPayment = null;
 		String paymentId = null;
@@ -1841,7 +2172,7 @@ public class FinAccountServices {
 			List<GenericValue> cardApplication = null;
 
 			EntityConditionList<EntityExpr> accountTransactionsCond = EntityCondition.makeCondition(UtilMisc.toList(
-					EntityCondition.makeCondition("transactionAmount", EntityOperator.EQUALS, acctgTransEntry.getBigDecimal("origAmount")),
+					EntityCondition.makeCondition("transactionAmount", EntityOperator.EQUALS, acctgTransEntry.getBigDecimal("amount")),
 					EntityCondition.makeCondition("acctgTransId", EntityOperator.EQUALS, acctgTransEntry.getString("acctgTransId"))
 					), EntityOperator.AND);
 

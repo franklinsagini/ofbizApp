@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -37,12 +38,363 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.accounting.finaccount.FinAccountServices;
 
 public class GeneralLedgerServices {
 
 	public static final String module = GeneralLedgerServices.class.getName();
 
 	private static BigDecimal ZERO = BigDecimal.ZERO;
+
+	public static Map<String, Object> approveGLJV(DispatchContext dctx, Map<String, Object> context) {
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		String manualGlJvId = (String) context.get("manualGlJvId");
+		String organizationPartyId = (String) context.get("organizationPartyId");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		
+		//Get the Header Record
+		GenericValue jvHeader = getJVHeader(delegator, manualGlJvId);
+		
+		//Check if total debit and credits are balancing
+		BigDecimal linesAmount = getTotalDebitsForHeader(delegator, manualGlJvId);
+		BigDecimal headerAmount = jvHeader.getBigDecimal("amount");
+		
+		int compare = linesAmount.compareTo(headerAmount);
+		
+		if (compare != 0) {
+			return ServiceUtil.returnError("Debit Can not be more than Credit Amount. Rule of double Entry being enforced ! Balance the Credits and Debit before approving");
+		}
+		
+		//Update Header Record, Check who is posting and chnaged isposted flag
+		try {
+			jvHeader.set("approvedBy", userLogin.getString("userLoginId"));
+			jvHeader.set("statusName", "APPROVED");
+			jvHeader.set("isApproved", "Y");
+			jvHeader.store();
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		result.put("manualGlJvId", manualGlJvId);
+		result.put("organizationPartyId", organizationPartyId);
+		return result;
+	}
+	
+	private static GenericValue getJVHeader(Delegator delegator, String manualGlJvId) {
+		GenericValue jvHeader = null;
+		try {
+			jvHeader = delegator.findOne("ManualGLJVHeader", UtilMisc.toMap("manualGlJvId", manualGlJvId), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		return jvHeader;
+	}
+
+	public static Map<String, Object> postGLJV(DispatchContext dctx, Map<String, Object> context) {
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		String manualGlJvId = (String) context.get("manualGlJvId");
+		String organizationPartyId = (String) context.get("organizationPartyId");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		
+		//Get the Header Record
+		GenericValue jvHeader = getJVHeader(delegator, manualGlJvId);
+		
+		//Create Account Trans Header
+		String accgTransId = createTransactionHeaderForJV(delegator, jvHeader, userLogin);
+		
+		//Create JV Header AcctgTransEntry
+		Boolean isHeaderSuccess = createJVAcctgTransEntry(delegator, jvHeader, userLogin, accgTransId);
+		
+		//Create JV Lines AcctgTransEntry
+		Boolean isLineSuccess = true;
+		List<GenericValue>jvLines = getJVLines(jvHeader);
+		for (GenericValue line : jvLines) {
+			if (isLineSuccess) {
+				isLineSuccess = createJVAcctgTransEntryLine(delegator, line, jvHeader,userLogin, accgTransId);
+			}
+			
+		}
+		
+		
+		
+		
+		
+		
+		if (isHeaderSuccess && isLineSuccess) {
+			try {
+				jvHeader.set("postedBy", userLogin.getString("userLoginId"));
+				jvHeader.set("statusName", "POSTED");
+				jvHeader.set("isPosted", "Y");
+				jvHeader.store();
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+		}else{
+			return ServiceUtil.returnError("THERE WAS A PROBLEM IN GENERATING JV LINES. CALL ICT FOR HELP");
+		}
+		//Update Header Record, Check who is posting and chnaged isposted flag
+
+		
+		
+		
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		result.put("manualGlJvId", manualGlJvId);
+		result.put("organizationPartyId", organizationPartyId);
+		return result;
+	}
+	
+	private static List<GenericValue> getJVLines(GenericValue jvHeader) {
+		List<GenericValue> jvLines = null;
+
+		try {
+			jvLines = jvHeader.getRelated("ManualGLJVLines", null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		return jvLines;
+	}
+	
+	private static Boolean createJVAcctgTransEntryLine(Delegator delegator, GenericValue jvLine, GenericValue jvHeader,GenericValue userLogin, String acctgTransId) {
+		Boolean isSuccess =  false;
+		
+		GenericValue acctgTransEntry = null;
+		String acctgTransEntrySeqId = null;
+		acctgTransEntry = delegator.makeValue("AcctgTransEntry");
+		acctgTransEntrySeqId = delegator.getNextSeqId("AcctgTransEntry");
+		acctgTransEntry.put("acctgTransId", acctgTransId);
+		acctgTransEntry.put("acctgTransEntrySeqId", acctgTransEntrySeqId);
+		acctgTransEntry.put("acctgTransEntryTypeId", "_NA_");
+		acctgTransEntry.put("organizationPartyId", jvHeader.getString("organizationPartyId"));
+		acctgTransEntry.put("amount", jvLine.getBigDecimal("amount"));
+		acctgTransEntry.put("origAmount", jvLine.getBigDecimal("amount"));
+		acctgTransEntry.put("currencyUomId", "KES");
+		acctgTransEntry.put("origCurrencyUomId", "KES");
+		acctgTransEntry.put("debitCreditFlag", jvLine.getString("debitCreditFlag"));
+		acctgTransEntry.put("reconcileStatusId", "AES_NOT_RECONCILED");
+		acctgTransEntry.put("partyId", userLogin.getString("partyId"));
+		acctgTransEntry.put("glAccountId", jvLine.getString("glAccountId"));
+		acctgTransEntry.put("description", "GL JV BY "+userLogin.getString("userLoginId")+".  "+jvLine.get("narration"));
+
+		try {
+			acctgTransEntry.create();
+			isSuccess = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return isSuccess;
+	}
+	
+	private static Boolean createJVAcctgTransEntry(Delegator delegator, GenericValue jvHeader,GenericValue userLogin, String acctgTransId) {
+		Boolean isSuccess =  false;
+		
+		GenericValue acctgTransEntry = null;
+		String acctgTransEntrySeqId = null;
+		acctgTransEntry = delegator.makeValue("AcctgTransEntry");
+		acctgTransEntrySeqId = delegator.getNextSeqId("AcctgTransEntry");
+		acctgTransEntry.put("acctgTransId", acctgTransId);
+		acctgTransEntry.put("acctgTransEntrySeqId", acctgTransEntrySeqId);
+		acctgTransEntry.put("acctgTransEntryTypeId", "_NA_");
+		acctgTransEntry.put("organizationPartyId", jvHeader.getString("organizationPartyId"));
+		acctgTransEntry.put("amount", jvHeader.getBigDecimal("amount"));
+		acctgTransEntry.put("origAmount", jvHeader.getBigDecimal("amount"));
+		acctgTransEntry.put("currencyUomId", "KES");
+		acctgTransEntry.put("origCurrencyUomId", "KES");
+		acctgTransEntry.put("debitCreditFlag", jvHeader.getString("debitCreditFlag"));
+		acctgTransEntry.put("reconcileStatusId", "AES_NOT_RECONCILED");
+		acctgTransEntry.put("partyId", userLogin.getString("partyId"));
+		acctgTransEntry.put("glAccountId", jvHeader.getString("glAccountId"));
+		acctgTransEntry.put("description", "GL JV BY "+userLogin.getString("userLoginId")+".  "+jvHeader.getString("narration"));
+
+		try {
+			acctgTransEntry.create();
+			isSuccess = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return isSuccess;
+	}
+
+	private static String createTransactionHeaderForJV(Delegator delegator, GenericValue jvHeader, GenericValue userLogin) {
+
+		GenericValue acctgTrans = null;
+		String acctgTransId = null;
+
+		if (jvHeader != null) {
+			acctgTrans = delegator.makeValue("AcctgTrans");
+			acctgTransId = delegator.getNextSeqId("AcctgTrans");
+			acctgTrans.put("acctgTransId", acctgTransId);
+			acctgTrans.put("acctgTransTypeId", jvHeader.getString("acctgTransTypeId"));
+			acctgTrans.put("description", "GL JV BY "+userLogin.getString("userLoginId")+".  "+jvHeader.getString("narration"));
+			acctgTrans.put("transactionDate", UtilDateTime.nowTimestamp());
+			acctgTrans.put("isPosted", "Y");
+			acctgTrans.put("isApproved", "Y");
+			acctgTrans.put("postedDate", UtilDateTime.nowTimestamp());
+			acctgTrans.put("glFiscalTypeId", "ACTUAL");
+			acctgTrans.put("partyId", userLogin.getString("partyId"));
+			acctgTrans.put("createdByUserLogin", userLogin.getString("userLoginId"));
+
+			try {
+				acctgTrans.create();
+			} catch (Exception e) {
+
+			}
+		}
+
+		return acctgTransId;
+	}
+	
+	
+	public static Map<String, Object> addDebitTransaction(DispatchContext dctx, Map<String, Object> context) {
+		Delegator delegator = dctx.getDelegator();
+		String manualGlJvId = (String) context.get("manualGlJvId");
+		String narration = (String) context.get("narration");
+		String glAccountId = (String) context.get("glAccountId");
+		String organizationPartyId = (String) context.get("organizationPartyId");
+		BigDecimal amount = (BigDecimal) context.get("amount");
+
+		// Controlss
+
+		// 1. Check that the credit amount is not exceeded by the Debit Lines
+		// Get the MultiPayment Header
+		GenericValue multiDebitHeader = null;
+		BigDecimal creditAmount = BigDecimal.ZERO;
+		BigDecimal debitAmount = getTotalDebitsForHeader(delegator, manualGlJvId);
+		try {
+			multiDebitHeader = delegator.findOne("ManualGLJVHeader", UtilMisc.toMap("manualGlJvId", manualGlJvId), false);
+			if (multiDebitHeader != null) {
+				creditAmount = multiDebitHeader.getBigDecimal("amount");
+			}
+		} catch (GenericEntityException e1) {
+			e1.printStackTrace();
+		}
+
+		int compare = FinAccountServices.compareDebitsToCredit(amount, debitAmount, creditAmount);
+
+		if (compare == 1) {
+			return ServiceUtil.returnError("Debit Can not be more than Credit Amount. Rule of double Entry being enforced !");
+		}
+
+		GenericValue debitLines = delegator.makeValue("ManualGLJVLines");
+		String lineId = delegator.getNextSeqId("ManualGLJVLines");
+
+		debitLines.put("manualGlJvId", manualGlJvId);
+		debitLines.put("narration", narration);
+		debitLines.put("glAccountId", glAccountId);
+		debitLines.put("amount", amount);
+		debitLines.put("lineId", lineId);
+		debitLines.put("debitCreditFlag", "D");
+
+		try {
+			debitLines.create();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		result.put("manualGlJvId", manualGlJvId);
+		result.put("organizationPartyId", organizationPartyId);
+
+		return result;
+	}
+
+	public static Map<String, Object> addCreditTransaction(DispatchContext dctx, Map<String, Object> context) {
+		Delegator delegator = dctx.getDelegator();
+		String manualGlJvId = (String) context.get("manualGlJvId");
+		String narration = (String) context.get("narration");
+		String glAccountId = (String) context.get("glAccountId");
+		String organizationPartyId = (String) context.get("organizationPartyId");
+		BigDecimal amount = (BigDecimal) context.get("amount");
+
+		// Controlss
+
+		// 1. Check that the credit amount is not exceeded by the Debit Lines
+		// Get the MultiPayment Header
+		GenericValue multiDebitHeader = null;
+		BigDecimal creditAmount = BigDecimal.ZERO;
+		BigDecimal debitAmount = getTotalDebitsForHeader(delegator, manualGlJvId);
+		try {
+			multiDebitHeader = delegator.findOne("ManualGLJVHeader", UtilMisc.toMap("manualGlJvId", manualGlJvId), false);
+			if (multiDebitHeader != null) {
+				creditAmount = multiDebitHeader.getBigDecimal("amount");
+			}
+		} catch (GenericEntityException e1) {
+			e1.printStackTrace();
+		}
+
+		int compare = FinAccountServices.compareDebitsToCredit(amount, debitAmount, creditAmount);
+
+		if (compare == 1) {
+			return ServiceUtil.returnError("Debit Can not be more than Credit Amount. Rule of double Entry being enforced !");
+		}
+
+		GenericValue debitLines = delegator.makeValue("ManualGLJVLines");
+		String lineId = delegator.getNextSeqId("lineId");
+
+		debitLines.put("manualGlJvId", manualGlJvId);
+		debitLines.put("narration", narration);
+		debitLines.put("glAccountId", glAccountId);
+		debitLines.put("amount", amount);
+		debitLines.put("lineId", lineId);
+		debitLines.put("debitCreditFlag", "C");
+
+		try {
+			debitLines.create();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		result.put("manualGlJvId", manualGlJvId);
+		result.put("organizationPartyId", organizationPartyId);
+
+		return result;
+	}
+
+	public static BigDecimal getTotalDebitsForHeader(Delegator delegator, String manualGlJvId) {
+		BigDecimal debitAmount = BigDecimal.ZERO;
+		List<GenericValue> debitLines = null;
+
+		EntityConditionList<EntityExpr> cond = EntityCondition.makeCondition(UtilMisc.toList(
+				EntityCondition.makeCondition("manualGlJvId", EntityOperator.EQUALS, manualGlJvId)
+				));
+		try {
+			debitLines = delegator.findList("ManualGLJVLines", cond, null, null, null, false);
+			for (GenericValue line : debitLines) {
+				debitAmount = debitAmount.add(line.getBigDecimal("amount"));
+			}
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		return debitAmount;
+	}
+
+	public static int getTotalNumberOfDebitLines(Delegator delegator, String manualGlJvId) {
+
+		int totalDebitLines = 0;
+		List<GenericValue> debitLines = null;
+
+		try {
+			EntityConditionList<EntityExpr> cond = EntityCondition.makeCondition(UtilMisc.toList(
+					EntityCondition.makeCondition("manualGlJvId", EntityOperator.EQUALS, manualGlJvId)
+					));
+			debitLines = delegator.findList("ManualGLJVLines", cond, null, null, null, false);
+			totalDebitLines = debitLines.size();
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		return totalDebitLines;
+	}
 
 	public static Map<String, Object> createUpdateCostCenter(DispatchContext dctx, Map<String, ? extends Object> context) {
 		LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -90,7 +442,7 @@ public class GeneralLedgerServices {
 		StringBuffer sb = new StringBuffer();
 
 		List<GenericValue> accountTransactions = null;
-		List<GenericValue>stationAccountTransactions = null;
+		List<GenericValue> stationAccountTransactions = null;
 		GenericValue member = null;
 		GenericValue station = null;
 		GenericValue acctgTrans = null;
@@ -98,19 +450,18 @@ public class GeneralLedgerServices {
 		List<GenericValue> mSaccoApplication = null;
 		List<GenericValue> cardApplication = null;
 
-		//To Handle Non Member Payments
+		// To Handle Non Member Payments
 		try {
 			acctgTrans = delegator.findOne("AcctgTrans", UtilMisc.toMap("acctgTransId", acctgTransEntry.getString("acctgTransId")), false);
-			if (acctgTrans.getString("paymentId")!= null) {
+			if (acctgTrans.getString("paymentId") != null) {
 				payment = delegator.findOne("Payment", UtilMisc.toMap("paymentId", acctgTrans.getString("paymentId")), false);
 			}
 		} catch (GenericEntityException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
-		
-		//Station Account Transaction
+
+		// Station Account Transaction
 		EntityConditionList<EntityExpr> stationAccountTransactionCond = EntityCondition.makeCondition(UtilMisc.toList(
 				EntityCondition.makeCondition("transactionAmount", EntityOperator.EQUALS, acctgTransEntry.getBigDecimal("amount")),
 				EntityCondition.makeCondition("acctgTransId", EntityOperator.EQUALS, acctgTransEntry.getString("acctgTransId"))
@@ -121,7 +472,7 @@ public class GeneralLedgerServices {
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
-		
+
 		EntityConditionList<EntityExpr> accountTransactionsCond = EntityCondition.makeCondition(UtilMisc.toList(
 				EntityCondition.makeCondition("transactionAmount", EntityOperator.EQUALS, acctgTransEntry.getBigDecimal("origAmount")),
 				EntityCondition.makeCondition("acctgTransId", EntityOperator.EQUALS, acctgTransEntry.getString("acctgTransId"))
@@ -139,12 +490,12 @@ public class GeneralLedgerServices {
 			try {
 				member = delegator.findOne("Member", UtilMisc.toMap("partyId", accountTransaction.getLong("partyId")), false);
 			} catch (GenericEntityException e) {
-				
+
 				e.printStackTrace();
 			}
-			
+
 			sb.append(accountTransaction.getString("transactionType"));
-			if(accountTransaction.getString("chequeNo")!= null){
+			if (accountTransaction.getString("chequeNo") != null) {
 				sb.append(" ");
 				sb.append("ChequeNo: ");
 				sb.append(accountTransaction.getString("chequeNo"));
@@ -158,14 +509,14 @@ public class GeneralLedgerServices {
 			EntityConditionList<EntityExpr> msaccoApplCond = EntityCondition.makeCondition(UtilMisc.toList(
 					EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, accountTransaction.getLong("partyId"))
 					));
-			if(accountTransaction.getString("transactionType").equals("MSACCOWITHDRAWAL") || accountTransaction.getString("transactionType").equals("MSACCOENQUIRY")){
-				
+			if (accountTransaction.getString("transactionType").equals("MSACCOWITHDRAWAL") || accountTransaction.getString("transactionType").equals("MSACCOENQUIRY")) {
+
 				try {
 					mSaccoApplication = delegator.findList("MSaccoApplication", msaccoApplCond, null, null, null, false);
 				} catch (GenericEntityException e) {
 					e.printStackTrace();
 				}
-				
+
 				String phoneNo = null;
 				for (GenericValue phone : mSaccoApplication) {
 					phoneNo = phone.getString("mobilePhoneNumber");
@@ -175,13 +526,13 @@ public class GeneralLedgerServices {
 				sb.append(" ");
 				sb.append(phoneNo);
 			}
-			if(accountTransaction.getString("transactionType").equals("ATMWITHDRAWAL") || accountTransaction.getString("transactionType").equals("POSWITHDRAWAL") || accountTransaction.getString("transactionType").equals("VISAWITHDRAWAL")){
+			if (accountTransaction.getString("transactionType").equals("ATMWITHDRAWAL") || accountTransaction.getString("transactionType").equals("POSWITHDRAWAL") || accountTransaction.getString("transactionType").equals("VISAWITHDRAWAL")) {
 				try {
 					cardApplication = delegator.findList("CardApplication", msaccoApplCond, null, null, null, false);
 				} catch (GenericEntityException e) {
 					e.printStackTrace();
 				}
-				
+
 				String cardNo = null;
 				for (GenericValue card : cardApplication) {
 					cardNo = card.getString("cardNumber");
@@ -192,26 +543,26 @@ public class GeneralLedgerServices {
 				sb.append(cardNo);
 			}
 
-		}else if (payment!=null) {
+		} else if (payment != null) {
 			sb.append(payment.getString("comments"));
 			sb.append(" ");
 			sb.append("ChequeNo: ");
 			sb.append(payment.getString("paymentRefNum"));
-		}else if(stationAccountTransactions.size()>0){
+		} else if (stationAccountTransactions.size() > 0) {
 			GenericValue stationAccountTransaction = stationAccountTransactions.get(0);
-			if(stationAccountTransaction.getLong("stationId")!=null){
+			if (stationAccountTransaction.getLong("stationId") != null) {
 				try {
-					System.out.println("TRYING TO RETRIVE STATION USING "+stationAccountTransaction.getString("stationId"));
+					System.out.println("TRYING TO RETRIVE STATION USING " + stationAccountTransaction.getString("stationId"));
 					station = delegator.findOne("Station", UtilMisc.toMap("stationId", stationAccountTransaction.getString("stationId")), false);
 				} catch (GenericEntityException e) {
 					e.printStackTrace();
 				}
 				sb.append("Station Remitance");
 				sb.append(" ");
-				if (station!=null) {
+				if (station != null) {
 					sb.append(station.getString("name"));
 				}
-				if(stationAccountTransaction.getString("chequeNumber")!= null){
+				if (stationAccountTransaction.getString("chequeNumber") != null) {
 					sb.append(" ");
 					sb.append("ChequeNo: ");
 					sb.append(stationAccountTransaction.getString("chequeNumber"));
@@ -221,7 +572,7 @@ public class GeneralLedgerServices {
 				sb.append(" ");
 				sb.append(stationAccountTransaction.getString("monthyear"));
 			}
-		}else if(acctgTransEntry.getString("glAccountTypeId")!=null && acctgTransEntry.getString("glAccountTypeId").equals("TREASURY_TRANSFER")){
+		} else if (acctgTransEntry.getString("glAccountTypeId") != null && acctgTransEntry.getString("glAccountTypeId").equals("TREASURY_TRANSFER")) {
 			sb.append("TREASURY TRANSFER");
 			GenericValue partyNameView = null;
 			try {
@@ -229,23 +580,23 @@ public class GeneralLedgerServices {
 			} catch (GenericEntityException e) {
 				e.printStackTrace();
 			}
-			if (partyNameView!=null) {
+			if (partyNameView != null) {
 				sb.append(" ");
 				sb.append("by");
 				sb.append(" ");
-				if(partyNameView.getString("firstName")!=null){
+				if (partyNameView.getString("firstName") != null) {
 					sb.append(partyNameView.getString("firstName"));
 				}
 				sb.append(" ");
-				if(partyNameView.getString("middleName")!=null){
+				if (partyNameView.getString("middleName") != null) {
 					sb.append(partyNameView.getString("middleName"));
 				}
 				sb.append(" ");
-				if(partyNameView.getString("lastName")!=null){
+				if (partyNameView.getString("lastName") != null) {
 					sb.append(partyNameView.getString("lastName"));
 				}
 			}
-		}else if(acctgTransEntry.getString("glAccountTypeId")!=null && acctgTransEntry.getString("glAccountTypeId").equals("TREASURY_TRANSFER")){
+		} else if (acctgTransEntry.getString("glAccountTypeId") != null && acctgTransEntry.getString("glAccountTypeId").equals("TREASURY_TRANSFER")) {
 			sb.append("TREASURY TRANSFER");
 			GenericValue partyNameView = null;
 			try {
@@ -253,34 +604,34 @@ public class GeneralLedgerServices {
 			} catch (GenericEntityException e) {
 				e.printStackTrace();
 			}
-			if (partyNameView!=null) {
+			if (partyNameView != null) {
 				sb.append(" ");
 				sb.append("by");
 				sb.append(" ");
-				if(partyNameView.getString("firstName")!=null){
+				if (partyNameView.getString("firstName") != null) {
 					sb.append(partyNameView.getString("firstName"));
 				}
 				sb.append(" ");
-				if(partyNameView.getString("middleName")!=null){
+				if (partyNameView.getString("middleName") != null) {
 					sb.append(partyNameView.getString("middleName"));
 				}
 				sb.append(" ");
-				if(partyNameView.getString("lastName")!=null){
+				if (partyNameView.getString("lastName") != null) {
 					sb.append(partyNameView.getString("lastName"));
 				}
 			}
 
-		}else if(acctgTransEntry.getString("glAccountTypeId")==null && acctgTrans.getString("description")!=null){
+		} else if (acctgTransEntry.getString("glAccountTypeId") == null && acctgTrans.getString("description") != null) {
 			sb.append(acctgTrans.getString("description"));
 		}
-		
-		if(sb.length()<1){
-			if (acctgTransEntry.getString("glAccountTypeId")!=null) {
+
+		if (sb.length() < 1) {
+			if (acctgTransEntry.getString("glAccountTypeId") != null) {
 				sb.append(acctgTransEntry.getString("glAccountTypeId"));
 			}
-			
+
 		}
-		
+
 		return sb.toString();
 	}
 }

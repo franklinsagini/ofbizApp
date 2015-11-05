@@ -134,6 +134,45 @@ under the License.
         </section>
     </screen>
 
+
+    <screen name="CreditLines">
+        <section>
+            <actions>
+                <set field="headerItem" value="filesReturn" />
+                <set field="tabButtonItem" value="find" />
+                <set field="titleProperty" value="PageTitleFindInvoice" />
+                <set field="paymentId" from-field="parameters.paymentId"/>
+                <entity-one entity-name="MultiPayment" value-field="multiPayment"/>
+               <set field="debitAmount" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getMultiplePaymentDebitAmount(delegator,paymentId)}"/>
+               <set field="totalLines" type="Integer" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getTotalNumberOfDebitLines(delegator,paymentId)}"/>
+               <set field="creditAmount" from-field="multiPayment.amount"/>
+                <entity-and entity-name="MultiPaymentLines" list="listMultiPaymentLines">
+                    <field-map field-name="paymentId" from-field="paymentId" />
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="Non-Member Payments Multi Receipts Header">
+                                    <include-form name="MultiReceiptHeader" location="component://accounting/widget/PaymentForms.xml"/>
+                                </screenlet>
+                                <screenlet title="Non-Member Receipts Multi Payments Credit Lines">
+                                    <include-form name="ListDebitLines" location="component://accounting/widget/PaymentForms.xml"/>
+                                     <container><label style="h3" text="Total Debit Amount: ${creditAmount}  Total Credit Amount: ${debitAmount}  Total Credit Lines: ${totalLines}"></label></container>
+                                </screenlet>
+                                <screenlet title="Add Credit Lines">
+                                    <include-form name="AddCreditLines" location="component://accounting/widget/PaymentForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
     <screen name="ListPayments">
         <section>
             <actions>
@@ -175,6 +214,36 @@ under the License.
             </widgets>
         </section>
     </screen>
+
+
+    <screen name="NewMultiCreditPayment">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditPayment"/>
+                <set field="headerItem" value="payments"/>
+                <set field="tabButtonItem" value="editPayment"/>
+                <set field="paymentId" from-field="parameters.paymentId"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="Use this Form to Capture the Debit Side of the JV">
+                                    <include-form name="NewMultiCreditPayment" location="component://accounting/widget/PaymentForms.xml"/>
+                                </screenlet>
+<!--                                 <screenlet title="Non-Member Transactions:- Receipts">
+                                    <include-form name="NewPaymentIn" location="component://accounting/widget/PaymentForms.xml"/>
+                                </screenlet> -->
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>    
     <screen name="MultiplePayment">
         <section>
             <actions>
@@ -189,7 +258,9 @@ under the License.
                         <section>
                             <widgets>
                                 <container style="button-bar">
-                                    <link target="NewMultiplePayment" text="New Multiple Payment" style="buttontext create">
+                                    <link target="NewMultiplePayment" text="New Multi Account Payment" style="buttontext create">
+                                    </link>
+                                    <link target="NewMultipleReceipting" text="New Multi Account Receipting" style="buttontext create">
                                     </link>
                                 </container>
                                 <screenlet id="EditFinAccountPanel" collapsible="true">
@@ -218,6 +289,33 @@ under the License.
                             <widgets>
                                 <screenlet title="Non-Member Multi Payments">
                                     <include-form name="NewMultiPaymentOut" location="component://accounting/widget/PaymentForms.xml"/>
+                                </screenlet>
+<!--                                 <screenlet title="Non-Member Transactions:- Receipts">
+                                    <include-form name="NewPaymentIn" location="component://accounting/widget/PaymentForms.xml"/>
+                                </screenlet> -->
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="NewMultipleReceipting">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditPayment"/>
+                <set field="headerItem" value="payments"/>
+                <set field="tabButtonItem" value="editPayment"/>
+                <set field="paymentId" from-field="parameters.paymentId"/>
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="Non-Member Multi Receipting">
+                                    <include-form name="NewMultiPaymentIn" location="component://accounting/widget/PaymentForms.xml"/>
                                 </screenlet>
 <!--                                 <screenlet title="Non-Member Transactions:- Receipts">
                                     <include-form name="NewPaymentIn" location="component://accounting/widget/PaymentForms.xml"/>

@@ -44,28 +44,64 @@ under the License.
   <!-- ========================================================= -->
   <!-- org.ofbiz.accounting.imprest -->
   <!-- ========================================================= -->
-<entity entity-name="BankReconHeader"
-            package-name="org.ofbiz.accounting.ledger"
-            title="Bank Reconciliation Header">
-      <field name="headerId" type="id-ne" enable-audit-log="true"></field>
-      <field name="reconDate" type="date-time"></field>
-      <field name="description" type="description" enable-audit-log="true"></field>
-      <field name="partyId" type="id" enable-audit-log="true"></field>
+
+    <entity entity-name="ManualGLJVHeader"
+            package-name="org.ofbiz.accounting.payment"
+            title="Payment Entity">
+      <field name="manualGlJvId" type="id-ne" enable-audit-log="true"></field>
+      <field name="acctgTransTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="glFiscalTypeId" type="id-ne" enable-audit-log="true"></field>
+      <field name="capturedBy" type="id-ne" enable-audit-log="true"></field>
+      <field name="approvedBy" type="id" enable-audit-log="true"></field>
+      <field name="postedBy" type="id" enable-audit-log="true"></field>
       <field name="statusName" type="description"></field>
-      <field name="finAccountId" type="id-ne"></field>
-      <field name="cashBookBalance" type="currency-amount"></field>
-      <field name="bankBalance" type="currency-amount"></field>
-      <field name="adjustedCashBookBalance" type="currency-amount"></field>
-      <field name="adjustedBankBalance" type="currency-amount"></field>
-       <field name="isLastRecon" type="indicator"></field>
-      <prim-key field="headerId"/>
-      <relation type="one" fk-name="FINACCT_RECON_HED" rel-entity-name="FinAccount">
-        <key-map field-name="finAccountId"/>
+      <field name="isPosted" type="indicator"></field>
+      <field name="isApproved" type="indicator"></field>
+      <field name="transactionDate" type="date-time" enable-audit-log="true"></field>
+      <field name="amount" type="currency-amount" enable-audit-log="true"></field>
+      <field name="currencyUomId" type="id" enable-audit-log="true"></field>
+      <field name="narration" type="description" enable-audit-log="true"></field>
+      <field name="glAccountId" type="id-ne" enable-audit-log="true"></field>
+      <field name="debitCreditFlag" type="indicator" enable-audit-log="true"></field>
+      <field name="organizationPartyId" type="id"><description>The internal organization Party that owns (or rather, is liable for) the JV.</description></field>
+      <prim-key field="manualGlJvId"/>
+      <relation type="one" fk-name="MULT_GL_JV" rel-entity-name="AcctgTransType">
+        <key-map field-name="acctgTransTypeId"/>
       </relation>
-      <index name="UNI_DESC" unique="true">
-        <index-field name="description"/>
-      </index>
-</entity>
+      <relation type="one" fk-name="FINACCT_ORGPTY" title="Organization" rel-entity-name="Party">
+            <key-map field-name="organizationPartyId" rel-field-name="partyId"/>
+        </relation>
+      <relation type="one" fk-name="MULT_GL_JV_FiscalType" rel-entity-name="GlFiscalType">
+        <key-map field-name="glFiscalTypeId"/>
+      </relation>
+      <relation type="one" fk-name="MULT_PAYMENT_CUOM" title="Currency" rel-entity-name="Uom">
+        <key-map field-name="currencyUomId" rel-field-name="uomId"/>
+      </relation>
+      <relation type="one" fk-name="MULT_GL_JV_GLACCOUNT" rel-entity-name="GlAccount">
+        <key-map field-name="glAccountId"/>
+      </relation>
+    </entity>
+
+  <entity entity-name="ManualGLJVLines"
+            package-name="org.ofbiz.accounting.payment"
+            title="Payment Entity">
+      <field name="manualGlJvId" type="id-ne" enable-audit-log="true"></field>
+      <field name="lineId" type="id-ne" enable-audit-log="true"></field>
+      <field name="glAccountId" type="id-ne" enable-audit-log="true"></field>
+      <field name="amount" type="currency-amount" enable-audit-log="true"></field>
+       <field name="narration" type="comment" enable-audit-log="true"></field>
+      <field name="debitCreditFlag" type="indicator" enable-audit-log="true"></field>
+      <prim-key field="manualGlJvId"/>
+      <prim-key field="lineId"/>
+      <relation type="one" fk-name="MULT_PAYMENT_HEADER" rel-entity-name="ManualGLJVHeader">
+        <key-map field-name="manualGlJvId"/>
+      </relation>
+      <relation type="one" fk-name="MULT_GL_JVLINES_GLACCOUNT" rel-entity-name="GlAccount">
+        <key-map field-name="glAccountId"/>
+      </relation>
+    </entity>
+
+
     <entity entity-name="MultiPayment"
             package-name="org.ofbiz.accounting.payment"
             title="Payment Entity">
@@ -76,6 +112,7 @@ under the License.
       <field name="partyIdFrom" type="id-ne" enable-audit-log="true"></field>
       <field name="partyIdTo" type="id-ne" enable-audit-log="true"></field>
       <field name="statusId" type="id" enable-audit-log="true"></field>
+      <field name="isReceipt" type="indicator"></field>
       <field name="effectiveDate" type="date-time" enable-audit-log="true"></field>
       <field name="paymentRefNum" type="short-varchar" enable-audit-log="true"></field>
       <field name="amount" type="currency-amount" enable-audit-log="true"></field>
@@ -143,6 +180,30 @@ under the License.
       <prim-key field="generatedId"/>
       <prim-key field="acctgTransId"/>
 </entity>
+
+<entity entity-name="BankReconHeader"
+            package-name="org.ofbiz.accounting.ledger"
+            title="Bank Reconciliation Header">
+      <field name="headerId" type="id-ne" enable-audit-log="true"></field>
+      <field name="reconDate" type="date-time"></field>
+      <field name="description" type="description" enable-audit-log="true"></field>
+      <field name="partyId" type="id" enable-audit-log="true"></field>
+      <field name="statusName" type="description"></field>
+      <field name="finAccountId" type="id-ne"></field>
+      <field name="cashBookBalance" type="currency-amount"></field>
+      <field name="bankBalance" type="currency-amount"></field>
+      <field name="adjustedCashBookBalance" type="currency-amount"></field>
+      <field name="adjustedBankBalance" type="currency-amount"></field>
+       <field name="isLastRecon" type="indicator"></field>
+      <prim-key field="headerId"/>
+      <relation type="one" fk-name="FINACCT_RECON_HED" rel-entity-name="FinAccount">
+        <key-map field-name="finAccountId"/>
+      </relation>
+      <index name="UNI_DESC" unique="true">
+        <index-field name="description"/>
+      </index>
+</entity>
+
 <entity entity-name="BankReconLines"
             package-name="org.ofbiz.accounting.ledger"
             title="Bank Reconciliation Lines">

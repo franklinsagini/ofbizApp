@@ -569,9 +569,80 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="DebitLines"/>
     </request-map>
+    <request-map uri="creditLines">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreditLines"/>
+    </request-map>
+    <request-map uri="NewMultiDebitJV">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewMultiDebitJV"/>
+    </request-map>
+    <request-map uri="DebitJVLines">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="DebitJVLines"/>
+    </request-map>
+    <request-map uri="CreditJVLines">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreditJVLines"/>
+    </request-map>
+    <request-map uri="NewMultiCreditJV">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewMultiCreditJV"/>
+    </request-map>
+    <request-map uri="approveCreditGLJV">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="approveGLJV"/>
+        <response name="success" type="request-redirect" value="DebitJVLines">
+            <redirect-parameter name="manualGlJvId"/>
+            <redirect-parameter name="organizationPartyId"/>
+        </response>
+        <response name="error" type="request-redirect" value="DebitJVLines">
+            <redirect-parameter name="manualGlJvId"/>
+            <redirect-parameter name="organizationPartyId"/>
+        </response>
+    </request-map>
+    <request-map uri="approveDebitGLJV">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="approveGLJV"/>
+        <response name="success" type="request-redirect" value="CreditJVLines">
+            <redirect-parameter name="manualGlJvId"/>
+            <redirect-parameter name="organizationPartyId"/>
+        </response>
+        <response name="error" type="request-redirect" value="CreditJVLines">
+            <redirect-parameter name="manualGlJvId"/>
+            <redirect-parameter name="organizationPartyId"/>
+        </response>
+    </request-map>
+    <request-map uri="postGLJV">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="postGLJV"/>
+        <response name="success" type="request-redirect" value="DebitJVLines">
+            <redirect-parameter name="manualGlJvId"/>
+            <redirect-parameter name="organizationPartyId"/>
+        </response>
+        <response name="error" type="request-redirect" value="DebitJVLines">
+            <redirect-parameter name="paymentId"/>
+        </response>
+    </request-map>
+   <request-map uri="postDebitGLJV">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="postGLJV"/>
+        <response name="success" type="request-redirect" value="CreditJVLines">
+            <redirect-parameter name="manualGlJvId"/>
+            <redirect-parameter name="organizationPartyId"/>
+        </response>
+        <response name="error" type="request-redirect" value="CreditJVLines">
+            <redirect-parameter name="paymentId"/>
+        </response>
+    </request-map>
+
     <request-map uri="NewMultiplePayment">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="NewMultiplePayment"/>
+    </request-map>
+    <request-map uri="NewMultipleReceipting">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewMultipleReceipting"/>
     </request-map>
     <request-map uri="editPayment">
         <security https="true" auth="true"/>
@@ -583,15 +654,78 @@ under the License.
         <response name="success" type="view" value="editPayment"/>
         <response name="error" type="view" value="newPayment"/>
     </request-map>
+
+
     <request-map uri="createMultiPayment">
         <security https="true" auth="true"/>
         <event type="service" invoke="createMultiPayment"/>
         <response name="success" type="view" value="MultiplePayment"/>
         <response name="error" type="view" value="NewMultiplePayment"/>
     </request-map>
+
+    <request-map uri="createMultiReceipting">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createMultiReceipting"/>
+        <response name="success" type="view" value="MultiplePayment"/>
+        <response name="error" type="view" value="MultiplePayment"/>
+    </request-map>
+
+    <request-map uri="createMultiCreditJVHeader">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createMultiCreditJVHeader"/>
+        <response name="success" type="request-redirect" value="ManualGLJV">
+            <redirect-parameter name="organizationPartyId"/>
+        </response>
+        <response name="error" type="view" value="NewMultiDebitJV"/>
+    </request-map>
+
+    <request-map uri="createMultiDebitJVHeader">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createMultiDebitJVHeader"/>
+        <response name="success" type="request-redirect" value="ManualGLJV">
+            <redirect-parameter name="organizationPartyId"/>
+        </response>
+        <response name="error" type="view" value="NewMultiDebitJV"/>
+    </request-map>
+
+
+    <request-map uri="addDebitTransaction">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="addDebitTransaction"/>
+        <response name="success" type="request-redirect" value="DebitJVLines">
+            <redirect-parameter name="manualGlJvId"/>
+            <redirect-parameter name="organizationPartyId"/>
+        </response>
+        <response name="error" type="view" value="DebitJVLines"/>
+    </request-map>
+
+    <request-map uri="addCreditTransaction">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="addCreditTransaction"/>
+        <response name="success" type="request-redirect" value="CreditJVLines">
+            <redirect-parameter name="manualGlJvId"/>
+            <redirect-parameter name="organizationPartyId"/>
+        </response>
+        <response name="error" type="view" value="CreditJVLines"/>
+    </request-map>
+
+
+
+
+
     <request-map uri="ConfirmMultiplePayment">
         <security https="true" auth="true"/>
         <event type="service" invoke="ConfirmMultiplePayment"/>
+        <response name="success" type="request-redirect" value="paymentOverview">
+            <redirect-parameter name="paymentId"/>
+        </response>
+        <response name="error" type="request-redirect" value="debitLines">
+            <redirect-parameter name="paymentId"/>
+        </response>
+    </request-map>
+    <request-map uri="ConfirmMultipleReceipt">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="ConfirmMultipleReceipt"/>
         <response name="success" type="request-redirect" value="paymentOverview">
             <redirect-parameter name="paymentId"/>
         </response>
@@ -606,6 +740,16 @@ under the License.
             <redirect-parameter name="paymentId"/>
         </response>
         <response name="error" type="request-redirect" value="debitLines">
+            <redirect-parameter name="paymentId"/>
+        </response>
+    </request-map>
+    <request-map uri="addCreditAccountPayment">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="addCreditAccountPayment"/>
+        <response name="success" type="request-redirect" value="creditLines">
+            <redirect-parameter name="paymentId"/>
+        </response>
+        <response name="error" type="request-redirect" value="creditLines">
             <redirect-parameter name="paymentId"/>
         </response>
     </request-map>
@@ -1010,6 +1154,10 @@ under the License.
     <request-map uri="FindTransactionEntries">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindTransactionEntries"/>
+    </request-map>
+    <request-map uri="ManualGLJV">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ManualGLJV"/>
     </request-map>
     <request-map uri="RetriveTransactionEntries">
         <security https="true" auth="true"/>
@@ -2532,9 +2680,25 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="UnidentifiedUnpresented"/>
     </request-map>
+    <request-map uri="UnidentifiedDebits">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="UnidentifiedDebits"/>
+    </request-map>
+    <request-map uri="UnreceiptedCheques">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="UnreceiptedCheques"/>
+    </request-map>
     <request-map uri="bankReconTrans">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="BankReconTrans"/>
+    </request-map>
+    <request-map uri="bankDepoReconTrans">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BankDepoReconTrans"/>
+    </request-map>
+    <request-map uri="bankWithReconTrans">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="BankWithReconTrans"/>
     </request-map>
     <request-map uri="reconciledItems">
         <security https="true" auth="true"/>
@@ -2548,22 +2712,55 @@ under the License.
         </response>
         <response name="error" type="view" value="UnidentifiedUnpresented"/>
     </request-map>
+    <request-map uri="createUnreceiptedCheques">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createUnreceiptedCheques"/>
+        <response name="success" type="request-redirect" value="UnreceiptedCheques" >
+            <redirect-parameter name="headerId"/>
+        </response>
+        <response name="error" type="view" value="UnreceiptedCheques"/>
+    </request-map>
+
+    <request-map uri="deleteUnreceiptedCheques">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="deleteUnidentifiedUnpresented"/>
+        <response name="success" type="request-redirect" value="UnreceiptedCheques" >
+            <redirect-parameter name="headerId"/>
+        </response>
+        <response name="error" type="view" value="UnreceiptedCheques"/>
+    </request-map>
+
+
+    <request-map uri="createUnidentifiedDebits">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createUnidentifiedDebits"/>
+        <response name="success" type="request-redirect" value="UnidentifiedDebits" >
+            <redirect-parameter name="headerId"/>
+        </response>
+        <response name="error" type="view" value="UnidentifiedDebits"/>
+    </request-map>
+
+    <request-map uri="deleteUnidentifiedDebits">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="deleteUnidentifiedUnpresented"/>
+        <response name="success" type="request-redirect" value="UnidentifiedDebits" >
+            <redirect-parameter name="headerId"/>
+        </response>
+        <response name="error" type="view" value="UnidentifiedDebits"/>
+    </request-map>
 
     <request-map uri="reconcileBankTrans">
         <security https="true" auth="true" />
         <event type="service-multi" invoke="reconcileBankTrans" />
-        <response name="success" type="request-redirect" value="bankReconTrans" >
-            <redirect-parameter name="finAccountId"/>
-            <redirect-parameter name="reconDate"/>
-            <redirect-parameter name="finAccountTransId"/>
+        <response name="success" type="request-redirect" value="reconciledItems" >
             <redirect-parameter name="headerId"/>
         </response>
-        <response name="error" type="view" value="BankReconTrans" />
+        <response name="error" type="view" value="reconciledItems" />
     </request-map>
     <request-map uri="saveReconciliation">
         <security https="true" auth="true" />
         <event type="service" invoke="saveReconciliation" />
-        <response name="success" type="request-redirect" value="bankReconTrans" >
+        <response name="success" type="request-redirect" value="BankRecon" >
             <redirect-parameter name="finAccountId"/>
             <redirect-parameter name="reconDate"/>
             <redirect-parameter name="finAccountTransId"/>
@@ -2590,6 +2787,7 @@ under the License.
         </response>
         <response name="error" type="view" value="UnidentifiedUnpresented"/>
     </request-map>
+
     <request-map uri="newBankRecon">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="newBankRecon"/>
@@ -2597,6 +2795,14 @@ under the License.
     <request-map uri="newUnidentifiedUpresented">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="newUnidentifiedUpresented"/>
+    </request-map>
+    <request-map uri="newUnidentifiedDebits">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="newUnidentifiedDebits"/>
+    </request-map>
+    <request-map uri="newUnreceiptedCheques">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="newUnreceiptedCheques"/>
     </request-map>
     <request-map uri="createFinAccount">
         <security https="true" auth="true"/>
@@ -3615,8 +3821,13 @@ under the License.
     <view-map name="paymentOverview" type="screen" page="component://accounting/widget/PaymentScreens.xml#PaymentOverview"/>
     <view-map name="newPayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#NewPayment"/>
     <view-map name="MultiplePayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#MultiplePayment"/>
+    
     <view-map name="DebitLines" type="screen" page="component://accounting/widget/PaymentScreens.xml#DebitLines"/>
+    <view-map name="CreditLines" type="screen" page="component://accounting/widget/PaymentScreens.xml#CreditLines"/>
     <view-map name="NewMultiplePayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#NewMultiplePayment"/>
+    <view-map name="NewMultipleReceipting" type="screen" page="component://accounting/widget/PaymentScreens.xml#NewMultipleReceipting"/>
+    
+    
     <view-map name="EditMultiPayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#EditMultiPayment"/>
     <view-map name="editPayment" type="screen" page="component://accounting/widget/PaymentScreens.xml#EditPayment"/>
     <view-map name="editPaymentApplications" type="screen" page="component://accounting/widget/PaymentScreens.xml#EditPaymentApplications"/>
@@ -3640,6 +3851,11 @@ under the License.
     <view-map name="EditAcctgTrans" type="screen" page="component://accounting/widget/GlScreens.xml#EditAcctgTrans"/>
     <view-map name="FindAcctgTransEntries" type="screen" page="component://accounting/widget/GlScreens.xml#FindAcctgTransEntries"/>
     <view-map name="FindTransactionEntries" type="screen" page="component://accounting/widget/GlScreens.xml#FindTransactionEntries"/>
+    <view-map name="ManualGLJV" type="screen" page="component://accounting/widget/GlScreens.xml#ManualGLJV"/>
+    <view-map name="NewMultiDebitJV" type="screen" page="component://accounting/widget/GlScreens.xml#NewMultiDebitJV"/>
+    <view-map name="NewMultiCreditJV" type="screen" page="component://accounting/widget/GlScreens.xml#NewMultiCreditJV"/>
+    <view-map name="DebitJVLines" type="screen" page="component://accounting/widget/GlScreens.xml#DebitJVLines"/>
+    <view-map name="CreditJVLines" type="screen" page="component://accounting/widget/GlScreens.xml#CreditJVLines"/>
     <view-map name="RetriveTransactionEntries" type="screen" page="component://accounting/widget/GlScreens.xml#RetriveTransactionEntries"/>
     <view-map name="ListUnpostedAcctgTrans" type="screen" page="component://accounting/widget/GlScreens.xml#ListUnpostedAcctgTrans"/>
     <view-map name="ListChecksToPrint" type="screen" page="component://accounting/widget/GlScreens.xml#ListChecksToPrint"/>
@@ -3686,10 +3902,16 @@ under the License.
     <view-map name="BankRecon" type="screen" page="component://accounting/widget/FinAccountScreens.xml#BankRecon"/>
     <view-map name="EditBankRecon" type="screen" page="component://accounting/widget/FinAccountScreens.xml#EditBankRecon"/>
     <view-map name="UnidentifiedUnpresented" type="screen" page="component://accounting/widget/FinAccountScreens.xml#UnidentifiedUnpresented"/>
+    <view-map name="UnidentifiedDebits" type="screen" page="component://accounting/widget/FinAccountScreens.xml#UnidentifiedDebits"/>
+    <view-map name="UnreceiptedCheques" type="screen" page="component://accounting/widget/FinAccountScreens.xml#UnreceiptedCheques"/>
     <view-map name="BankReconTrans" type="screen" page="component://accounting/widget/FinAccountScreens.xml#BankReconTrans"/>
+    <view-map name="BankDepoReconTrans" type="screen" page="component://accounting/widget/FinAccountScreens.xml#BankDepoReconTrans"/>
+    <view-map name="BankWithReconTrans" type="screen" page="component://accounting/widget/FinAccountScreens.xml#BankWithReconTrans"/>
     <view-map name="ReconciledItems" type="screen" page="component://accounting/widget/FinAccountScreens.xml#ReconciledItems"/>
     <view-map name="newBankRecon" type="screen" page="component://accounting/widget/FinAccountScreens.xml#newBankRecon"/>
     <view-map name="newUnidentifiedUpresented" type="screen" page="component://accounting/widget/FinAccountScreens.xml#newUnidentifiedUpresented"/>
+    <view-map name="newUnreceiptedCheques" type="screen" page="component://accounting/widget/FinAccountScreens.xml#newUnreceiptedCheques"/>
+    <view-map name="newUnidentifiedDebits" type="screen" page="component://accounting/widget/FinAccountScreens.xml#newUnidentifiedDebits"/>
     <view-map name="EditFinAccountRoles" type="screen" page="component://accounting/widget/FinAccountScreens.xml#EditFinAccountRoles"/>
     <view-map name="EditFinAccountTrans" type="screen" page="component://accounting/widget/FinAccountScreens.xml#EditFinAccountTrans"/>
     <view-map name="EditFinAccountAuths" type="screen" page="component://accounting/widget/FinAccountScreens.xml#EditFinAccountAuths"/>
