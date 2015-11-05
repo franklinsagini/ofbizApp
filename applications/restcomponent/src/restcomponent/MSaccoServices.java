@@ -385,6 +385,12 @@ public class MSaccoServices {
 			listMemberAccountId = AccHolderTransactionServices.getMemberAccountIdsAll(AccHolderTransactionServices
 					.getMemberAccount(memberAccountId).getLong("partyId"));
 			
+			//getMemberAccountIdsWithdrawable
+			
+//			listMemberAccountId = AccHolderTransactionServices.getMemberAccountIdsWithdrawable(AccHolderTransactionServices
+//					.getMemberAccount(memberAccountId).getLong("partyId"));
+//			
+
 			for (Long currentMemberAccountId : listMemberAccountId) {
 				
 				
