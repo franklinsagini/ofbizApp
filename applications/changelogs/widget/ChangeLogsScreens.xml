@@ -200,6 +200,12 @@
                             <screenlet title="Transactions">
                                 <include-form name="transactionLogsForm" location="component://changelogs/widget/ChangeLogsForms.xml"/>
                             </screenlet>
+                             <screenlet title="Audit Trail Report">
+                                <include-form name="changeLogsForm" location="component://changelogs/widget/ChangeLogsForms.xml"/>
+                            </screenlet>
+                             <screenlet title="Change Logs Report That have No user Details">
+                                <include-form name="changeLogsFormNoUser" location="component://changelogs/widget/ChangeLogsForms.xml"/>
+                            </screenlet>
                         </container>
                         <container style="clear"/>
                     </decorator-section>
@@ -238,6 +244,44 @@
                 </container -->
                 
 				<include-form name="transactionLogsExcelData" location="component://changelogs/widget/ChangeLogsForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="changeLogsExcel">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+
+                <script location="component://changelogs/webapp/changelogs/WEB-INF/actions/reports/changeLogsDetails.groovy"/>
+                
+            </actions>
+            <widgets>
+				<include-form name="changeLogsExcelData" location="component://changelogs/widget/ChangeLogsForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+       <screen name="changeLogsExcelNoUser">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+
+                <script location="component://changelogs/webapp/changelogs/WEB-INF/actions/reports/changeLogsDetailsNoUser.groovy"/>
+                
+            </actions>
+            <widgets>
+				<include-form name="changeLogsExcelDataNoUser" location="component://changelogs/widget/ChangeLogsForms.xml"/>
             </widgets>
         </section>
     </screen>

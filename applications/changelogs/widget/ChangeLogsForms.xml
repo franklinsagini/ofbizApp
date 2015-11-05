@@ -116,5 +116,70 @@
         
     </form>
     
+    <form name="changeLogsForm" type="single" target="changeLogsExcel.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+
+        <field name="startDate" title="From" position="1">
+        	<date-time type="date"/>
+        </field>
+        
+        <field name="endDate" title="To" position="2">
+        	<date-time type="date"/>
+        </field>
+        
+        <field name="changedBy" position="1">
+        <drop-down allow-empty="true">
+          <entity-options entity-name="UserLogin"  key-field-name="userLoginId" description="${userLoginId}"></entity-options>
+        </drop-down>
+        </field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="changeLogsFormNoUser" type="single" target="changeLogsExcelNoUser.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+
+        <field name="startDate" title="From" position="1">
+        	<date-time type="date"/>
+        </field>
+        
+        <field name="endDate" title="To" position="2">
+        	<date-time type="date"/>
+        </field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="changeLogsExcelData" list-name="ChangeLogs" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+       
+         <field name="ChangedBy" title="System User"><display/></field>
+         <field name="changeLogId" title="Change Log Id"><display/></field>
+         <field name="clientIpAddress" title="Access Point"><display/></field>
+         <field name="clientHostName" title="Client Host Name"><display/></field>
+         <field name="changedEntity" title="Module Accessed"><display/></field>
+         <field name="from" title="From"><display/></field>
+         <field name="to" title="To"><display/></field>
+         <field name="changeTime" title="Time Changed"><display/></field>
+      </form>
+      
+      <form name="changeLogsExcelDataNoUser" list-name="ChangeLogsNoUser" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="ChangedBy" title="System User"><display/></field>
+        <field name="changeLogId" title="Change Log Id"><display/></field>
+         <field name="clientIpAddress" title="Access Point"><display/></field>
+         <field name="clientHostName" title="Client Host Name"><display/></field>
+        <field name="changedEntity" title="Module Accessed"><display/></field>
+        <field name="from" title="From"><display/></field>
+        <field name="to" title="To"><display/></field>
+        <field name="changeTime" title="Time Changed"><display/></field>
+      </form>
+    
 	
 </forms>
