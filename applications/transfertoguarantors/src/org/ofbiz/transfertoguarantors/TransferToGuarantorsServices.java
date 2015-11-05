@@ -177,15 +177,29 @@ public class TransferToGuarantorsServices {
 		BigDecimal bdDepositsBalance = BigDecimal.ZERO;
 		BigDecimal memberDepositsAtAttachment = BigDecimal.ZERO;
 		
-		Long accountProductId = loanProduct.getLong("accountProductId");
+		Long accountProductId = null; // = loanProduct.getLong("accountProductId");
+		
+		if (loanProduct.getString("fosaOrBosa").trim().equals("FOSA")){
+			accountProductId = LoanUtilities.getAccountProductIdGivenCodeId(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
+		} else {
+			accountProductId = LoanUtilities.getAccountProductIdGivenCodeId(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE);
+		}
+		
+		String loanClass = loanProduct.getString("fosaOrBosa").trim();
+		
 		Long partyId = loanApplication.getLong("partyId");
 		//Get the multiplier account product
 		if ((accountProductId != null) && (loanProduct.getString("multipleOfSavings").equals("Yes")) && (loanProduct.getBigDecimal("multipleOfSavingsAmt") != null) && (loanProduct.getBigDecimal("multipleOfSavingsAmt").compareTo(BigDecimal.ZERO) > 0))
 		{
+			
 			bdDepositsBalance = AccHolderTransactionServices.getAccountTotalBalance(accountProductId, partyId);
 			memberDepositsAtAttachment = bdDepositsBalance;
 			//Get the Proportion of savings for this loan
-			BigDecimal bdProportionForThisLoan = bdDepositsBalance.divide(loanProduct.getBigDecimal("multipleOfSavingsAmt"), 4, RoundingMode.FLOOR);
+			BigDecimal bdProportionForThisLoan = getDepositProportion(loanClass, bdDepositsBalance, loanApplicationId, partyId);
+			
+			log.info(" The loan proportion is "+bdProportionForThisLoan);
+					
+					//bdDepositsBalance.divide(loanProduct.getBigDecimal("multipleOfSavingsAmt"), 4, RoundingMode.FLOOR);
 			
 			bdLoanTransferBalance = bdLoanTransferBalance.subtract(bdProportionForThisLoan);
 			
@@ -197,8 +211,8 @@ public class TransferToGuarantorsServices {
 			insuranceDueAtAttachment = totalInsuranceDue;
 			interestDueAtAttachment = totalInterestDue;
 			
-			BigDecimal loanInsurance = totalInterestDue;
-			BigDecimal loanInterest = totalInsuranceDue;
+			BigDecimal loanInsurance = totalInsuranceDue;
+			BigDecimal loanInterest = totalInterestDue;
 			BigDecimal loanPrincipal = totalPrincipalDue;
 			
 			BigDecimal totalLoanDue = totalPrincipalDue.add(totalInterestDue).add(totalInsuranceDue) ;
@@ -392,6 +406,22 @@ public class TransferToGuarantorsServices {
 		}
 
 		return "success";
+	}
+
+	private static BigDecimal getDepositProportion(String loanClass,
+			BigDecimal bdDepositsBalance, Long loanApplicationId, Long partyId) {
+		
+		//Total Balances for member running loans given class
+		BigDecimal bdTotalLoanBalances = LoansProcessingServices.getTotalDisbursedLoanBalancesGivenClass(partyId, loanClass);
+		
+		//Total Balance for this loan
+		BigDecimal bdCurrentLoanBalance = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
+		//Add Interest
+		bdCurrentLoanBalance = bdCurrentLoanBalance.add(LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString()));
+		
+		//Add Insurance
+		bdCurrentLoanBalance = bdCurrentLoanBalance.add(LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString()));
+		return bdCurrentLoanBalance.divide(bdTotalLoanBalances, 4, RoundingMode.HALF_UP).multiply(bdDepositsBalance);
 	}
 
 	private static Long createGuarantorLoans(BigDecimal bdGuarantorLoanAmount,
