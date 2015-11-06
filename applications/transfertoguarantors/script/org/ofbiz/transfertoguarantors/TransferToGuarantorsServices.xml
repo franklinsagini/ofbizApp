@@ -96,6 +96,19 @@ under the License.
 				</if>
     </simple-method>
     
+    <!-- updateGuarantorLoanApplication -->
+         <simple-method method-name="updateGuarantorLoanApplication" short-description="Update LoanApplication">
+         <set field="loanApplicationId" from-field="parameters.loanApplicationId" type="Long"/>
+        <entity-one entity-name="LoanApplication" value-field="lookedUpValue">
+        	<field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
+        </entity-one>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+		<set field="repaymentPeriod" from-field="parameters.repaymentPeriod"/>
+		<set field="processingStatus" value="${bsh:org.ofbiz.transfertoguarantors.TransferToGuarantorsServices.updateGuarantorLoansRepayperiod(loanApplicationId, repaymentPeriod);}"></set>     
+        
+        <!-- store-value value-field="lookedUpValue"/ -->
+    </simple-method>
+    
     
     
 </simple-methods>

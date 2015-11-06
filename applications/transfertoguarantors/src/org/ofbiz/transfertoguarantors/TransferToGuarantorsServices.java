@@ -1087,5 +1087,35 @@ public class TransferToGuarantorsServices {
 
 		return loanApplicationELI;
 	}
+	
+	
+	public static String updateGuarantorLoansRepayperiod(Long loanApplicationId,
+			Long repaymentPeriod){
+		
+		//Get all guarantor loans whose parent loan application is loanApplicationId and update their repayment period
+		List<GenericValue> loanApplicationELI = null; 
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					EntityCondition.makeCondition("parentLoanApplicationId",
+							loanApplicationId), null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		for (GenericValue genericValue : loanApplicationELI) {
+			genericValue.set("repaymentPeriod", repaymentPeriod);
+			
+		}
+		
+		try {
+			delegator.storeAll(loanApplicationELI);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return "success";
+	}
 
 }
