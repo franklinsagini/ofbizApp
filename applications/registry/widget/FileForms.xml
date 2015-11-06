@@ -620,7 +620,7 @@
 			</hyperlink>
 		</field> -->
 		<field name="actionBy" title="Requested By"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
-        <on-event-update-area event-type="paginate" area-id="search-results" area-target="regFileIssue"/>
+       
     </form>
     
     <form name="listMemberfilesPreparedForRelease" type="multi" use-row-submit="true" title="Selected Monument" separate-columns="true"
@@ -723,11 +723,10 @@
 			</hyperlink>
 		</field>
 		<field name="actionBy" title="Requested By"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
-        <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
 
    
-        <form name="listMemberfilesForDivert" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="selectFilesToDivert" paginate-target="FindMemberfilesForDivert"
+        <form name="listMemberfilesForDivert" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="selectFilesToDivert" paginate-target="regFileDivert"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 	       		<actions>
          <entity-condition entity-name="RegistryFiles" >
@@ -779,7 +778,6 @@
 		
 		 <field name="submitButton" title="Select" widget-style="buttontext"> <submit button-type="button"/></field>
 		<field name="actionBy" title="Currently With"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
-        <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
     
     <form name="listMemberfilesPreparedForDivert" type="multi" use-row-submit="true" title="Selected Monument" separate-columns="true"
@@ -877,7 +875,6 @@
 				<parameter param-name="currentPossesser" /> 
 			</hyperlink>
 		</field>
-        <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
 
 
@@ -995,7 +992,6 @@
 				<parameter param-name="currentPossesser" /> 
 			</hyperlink>
 		</field>
-        <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
     
     
@@ -1058,7 +1054,6 @@
 			</hyperlink>
 		</field> -->
 		
-        <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
     
     
@@ -1151,7 +1146,6 @@
 		
 		 <field name="submitButton" title="Select" widget-style="buttontext"> <submit button-type="button"/></field>
 		<field name="actionBy" title="Currently With"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
-        <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
     
                                        <!-- LIST OF FILES READY TO BE SEND TO ANOTHER STAFF -->
@@ -1161,11 +1155,26 @@
                <actions>
            <entity-condition entity-name="RegistryFiles" >
         <condition-list>
-        <condition-expr field-name="selectedToBeMoved" operator="equals" value="SELECTED_FOR_ANOTHER_STAFF"/>
+        <condition-expr field-name="recieptStatus" operator="equals" value="RECEIVED"/>
           <condition-expr field-name="stageStatus" operator="equals" value="ACTIVE"/>
           <condition-expr field-name="currentPossesser" operator="equals" value="${userLogin.partyId}"/>
         </condition-list>
         </entity-condition>
+           
+         <entity-condition entity-name="Person" list="fileCarrierList" >
+        		<condition-list combine="and">
+        			<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+        			<condition-expr field-name="isSeparated" operator="not-equals" value="Y"/>       		
+        		</condition-list>
+        	</entity-condition>
+        	
+            <service result-map-list="listIt" result-map="result" service-name="performFind">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="RegistryFiles"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
            
         </actions>
                
@@ -1176,8 +1185,17 @@
 		 <field name="actionBy"><hidden/></field>
 		 <field name="Reason"><hidden/></field>
 		 
-		 <field name="intendedPossesser" title="Send To"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity></field>
-		   <field name="carriedBy" title="Carried By"><display-entity key-field-name="partyId" entity-name="Person" description="${firstName}  ${lastName}"></display-entity></field>
+		 <field name="intendedPossesser" title="Send File To" required-field="true">
+		 <drop-down allow-empty="true">
+             <list-options list-name="fileCarrierList" key-name="partyId"  description="${firstName}  ${lastName}" /> 
+            </drop-down>
+		</field>
+		<field name="carriedBy" title="File Carried By" required-field="true">
+		 <drop-down allow-empty="true">
+             <list-options list-name="fileCarrierList" key-name="partyId"  description="${firstName}  ${lastName}" /> 
+            </drop-down>
+		</field>
+		
 		<field name="deselectfile" title="Deselect" widget-style="buttontext">
 			<hyperlink also-hidden="false" description="Deselect" target="selectFilesToIssue">
 				<parameter param-name="partyId" />
@@ -1243,7 +1261,6 @@
 				<parameter param-name="currentPossesser" /> 
 			</hyperlink>
 		</field>
-        <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
 
     <form name="listMemberfilesForReturn" type="multi" use-row-submit="true" title="Selected Monument" separate-columns="true"  paginate-target="FindMemberfilesForReturn"
@@ -1343,7 +1360,6 @@
 				<parameter param-name="stageStatus" /> 
 			</hyperlink>
 		</field>
-        <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
     
     <!-- ============================================ SEMI-ACTIVE FILES =============================================== -->
@@ -1405,7 +1421,6 @@
 			</hyperlink>
 		</field>
 		<field name="partyId" title="Member Name"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
-        <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
     
     <!-- ============================================ ARCHIVED FILES =============================================== -->
@@ -1467,7 +1482,6 @@
 			</hyperlink>
 		</field>
 		<field name="partyId" title="Member Name"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
-        <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
     
     <!-- ============================================ FILES FOR DISPOSAL =============================================== -->
@@ -1527,7 +1541,6 @@
 			</hyperlink>
 		</field>
 		<field name="partyId" title="Member Name"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
-        <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
     
     <!-- ============================================ FILES FOR DECEASED =============================================== -->
@@ -1580,7 +1593,6 @@
 			</hyperlink>
 		</field> -->
 		<field name="partyId" title="Member Name"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
-        <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
     
 
