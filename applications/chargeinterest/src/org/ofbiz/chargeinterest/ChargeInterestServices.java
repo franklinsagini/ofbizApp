@@ -782,7 +782,7 @@ public class ChargeInterestServices {
 	}
 
 	// ChargeInterestServices
-	public static synchronized String resolveLoanClearing() {
+	public static synchronized String resolveLoanClearingOld() {
 
 		// Get all the loans amounts to be credited and updated
 		// For each loan in LoansToResolve get the last transaction id, which is
@@ -1262,5 +1262,44 @@ public class ChargeInterestServices {
 	//
 	// return "success";
 	// }
+	
+	public static synchronized String resolveLoanClearing() {
+		//Get all the loans cleared with isDisbursed being null
+		List<GenericValue> loanApplicationELI = new ArrayList<GenericValue>();
+		
+		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
+				.makeCondition(
+						UtilMisc.toList(EntityCondition.makeCondition(
+								"repaymentStartDate", EntityOperator.EQUALS,
+								GenericValue.NULL_FIELD),
+								
+								EntityCondition.makeCondition(
+										"loanStatusId", EntityOperator.EQUALS,
+										6L)
+								
+								
+								), EntityOperator.AND);
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					loanApplicationConditions, null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		log.info(" Count the loans ######## "+loanApplicationELI.size());
+
+		int count = 0;
+		for (GenericValue genericValue : loanApplicationELI) {
+			count++;
+			LoanServices.calculateLoanRepaymentStartDate(genericValue);
+			log.info(" fixed number ######## "+count);
+		}
+		
+		return "success";
+	}
 
 }

@@ -89,6 +89,7 @@ public class TransferToGuarantorsServices {
 		String postingType;
 		String entrySequenceId;
 		GenericValue accountHolderTransactionSetup;
+		BigDecimal bdOffsetAmount = BigDecimal.ZERO;
 		
 		String userLoginId = userLogin.get("userLoginId");
 		Long sequence = 0L;
@@ -201,6 +202,44 @@ public class TransferToGuarantorsServices {
 					
 					//bdDepositsBalance.divide(loanProduct.getBigDecimal("multipleOfSavingsAmt"), 4, RoundingMode.FLOOR);
 			
+			//Offset member share deposits get minimum shares minus current shares (offset value and add to the member share capital)
+			BigDecimal bdMinimumShareCapital = LoanUtilities.getShareCapitalLimitToAttacheLoan(partyId);
+			
+			BigDecimal bdShareCapitalBalance = LoanUtilities
+					.getShareCapitalAccountBalance(partyId);
+			bdShareCapitalBalance = bdShareCapitalBalance.setScale(2,
+					RoundingMode.HALF_UP);
+			
+			if (bdMinimumShareCapital.compareTo(bdShareCapitalBalance) == 1){
+				//Get the difference and add it to member share capital
+				bdOffsetAmount = bdMinimumShareCapital.subtract(bdShareCapitalBalance);
+				bdProportionForThisLoan = bdProportionForThisLoan.subtract(bdOffsetAmount);
+				
+				Long shareCapitalAccountProductId = LoanUtilities.getAccountProductIdGivenCodeId(AccHolderTransactionServices.SHARE_CAPITAL_CODE);
+				Long memberAccountShareCapitalId = LoanUtilities.getMemberAccountIdFromMemberAccount(partyId, shareCapitalAccountProductId);
+				
+				String accountTransactionParentId = AccHolderTransactionServices
+						.getcreateAccountTransactionParentId(memberAccountShareCapitalId,
+								userLogin);
+				
+				//FROMLOANATTACHMENT
+				AccHolderTransactionServices.memberTransactionDeposit(
+						bdOffsetAmount, memberAccountShareCapitalId, userLogin,
+						"FROMLOANATTACHMENT", accountTransactionParentId, null,
+						acctgTransId, null, loanApplicationId);
+				
+				//Debit share capital account with the bdOffsetAmount
+				String accountToCredit = LoanUtilities.getAccountProductGivenCodeId(AccHolderTransactionServices.SHARE_CAPITAL_CODE).getString("glAccountId");
+				sequence = sequence + 1;
+				
+				//post share capital to gl
+				String posting = "C";
+				LoanRepayments.postTransactionEntry(delegator, bdOffsetAmount, partyId.toString(), accountToCredit, posting, acctgTransId, acctgTransType, sequence.toString(), userLogin);
+				
+			}
+			
+			
+			
 			bdLoanTransferBalance = bdLoanTransferBalance.subtract(bdProportionForThisLoan);
 			
 			//BigDecimal totalLoanDue 
@@ -239,7 +278,7 @@ public class TransferToGuarantorsServices {
 				//Only do this if the member has deposits
 				
 				String accountToDebit = LoanUtilities.getAccountProductGivenCodeId(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE).getString("glAccountId");
-				sequence = Long.valueOf(LoanRepayments.repayLoanOnLoanAttachment(loanRepayment, userLogin, acctgTransId, acctgTransType, accountToDebit, sequence));
+				sequence = Long.valueOf(LoanRepayments.repayLoanOnLoanAttachment(loanRepayment, userLogin, acctgTransId, acctgTransType, accountToDebit, sequence, bdOffsetAmount));
 			
 			Long memberAccountId = LoanUtilities.getMemberAccountIdFromMemberAccount(partyId, accountProductId);
 			
@@ -248,8 +287,10 @@ public class TransferToGuarantorsServices {
 							userLogin);
 			//Transfer proportion balance from Member Deposits Account
 			//Debit Member Deposits MPA
+			//Proportion + Offset Amount
+			BigDecimal amountFromDeposit = bdProportionForThisLoan.add(bdOffsetAmount);
 			AccHolderTransactionServices.memberTransactionDeposit(
-					bdProportionForThisLoan, memberAccountId, userLogin,
+					amountFromDeposit, memberAccountId, userLogin,
 					"LOANREPAYMENT", accountTransactionParentId, null,
 					acctgTransId, null, loanApplicationId);
 			}
@@ -503,6 +544,7 @@ public class TransferToGuarantorsServices {
 			e.printStackTrace();
 		}
 		
+		LoanServices.calculateLoanRepaymentStartDate(newLoanApplication);
 		postingType = "D";
 		sequence = sequence + 1;
 		entrySequenceId = sequence.toString();

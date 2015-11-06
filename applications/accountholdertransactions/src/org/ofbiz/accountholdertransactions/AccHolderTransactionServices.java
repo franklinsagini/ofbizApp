@@ -2475,6 +2475,9 @@ public class AccHolderTransactionServices {
 					|| ((transactionType != null) && (transactionType
 							.equals("ATTACHMENTREVERSAL")))
 							
+					|| ((transactionType != null) && (transactionType
+							.equals("FROMLOANATTACHMENT")))
+							
 
 					|| ((transactionType != null) && (transactionType
 							.equals("MEMBERACCOUNTJVINC")))) {
