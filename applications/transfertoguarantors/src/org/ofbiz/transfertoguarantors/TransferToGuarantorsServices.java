@@ -459,7 +459,9 @@ public class TransferToGuarantorsServices {
 						"parentLoanApplicationId",
 						loanApplication.getLong("loanApplicationId"), "loanNo",
 						String.valueOf(loanApplicationId), "createdBy",
-						userLogin.get("userLoginId"), "isActive", "Y", "partyId",
+						userLogin.get("userLoginId"), "isActive", "Y",
+						"isDisbursed", "Y",
+						"partyId",
 						loanGuarantor.getLong("guarantorId"),
 
 						"loanProductId", defaulterLoanProductId,
