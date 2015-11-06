@@ -3775,7 +3775,7 @@ public class LoanRepayments {
 	 * Repay a loan - standard
 	 * */
 	public static String repayLoanOnLoanAttachment(GenericValue loanRepayment,
-			Map<String, String> userLogin, String acctgTransId, String acctgTransType, String accountToDebit, Long sequence) {
+			Map<String, String> userLogin, String acctgTransId, String acctgTransType, String accountToDebit, Long sequence, BigDecimal bdOffsetAmount) {
 
 		log.info("FFFFFFFFF start loan repayment FFFFFFFFFF");
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
@@ -3940,7 +3940,7 @@ public class LoanRepayments {
 		log.info(" ####### Party or Branch or Company in Loan Repayment is ###### "
 				+ partyId);
 		postTransactionEntry(delegator,
-				loanRepayment.getBigDecimal("transactionAmount"), partyId,
+				loanRepayment.getBigDecimal("transactionAmount").add(bdOffsetAmount), partyId,
 				accountToDebit, postingType, acctgTransId, acctgTransType,
 				entrySequenceId, userLogin);
 
