@@ -3996,6 +3996,8 @@ public class RemittanceServices {
 					null, station, month, stationNumber,
 					stationName, employerCode, employerName, employeeNames, pushMonthYearStationId);
 			
+			
+			
 			//Add Principal
 			remitanceCode = loanProduct.getString("code") + "A";
 			remitanceDescription = remitanceDescription + " PRINCIPAL";
@@ -4005,6 +4007,10 @@ public class RemittanceServices {
 			{
 				bdPrincipalDue = BigDecimal.ZERO;
 			}
+			
+
+			
+			
 			Long expectedPaymentSentId = delegator.getNextSeqIdLong("ExpectedPaymentSent");
 			expectedPaymentSent = delegator.makeValue("ExpectedPaymentSent",
 					UtilMisc.toMap("expectedPaymentSentId", expectedPaymentSentId, "isActive", "Y", "branchId",
@@ -4129,7 +4135,7 @@ public class RemittanceServices {
 	}
 	
 	
-	
+
 	private static String getPushMonthYearMonth(Long pushMonthYearStationId) {
 		GenericValue pushMonthYearStation = LoanUtilities.getEntityValue("PushMonthYearStation", "pushMonthYearStationId", pushMonthYearStationId);
 		String month = pushMonthYearStation.getLong("month").toString()+pushMonthYearStation.getLong("year").toString();
