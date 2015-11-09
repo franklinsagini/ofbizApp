@@ -7,6 +7,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Array;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -2459,4 +2460,21 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 	 return annualUsedDays;
  }
  
-   }  // close  Class 
+//method to convert date String to sql Date
+ 
+ public static Date sqlDateConvert(String Date){
+	 SimpleDateFormat theFormat = new SimpleDateFormat("yyyy-mm-dd");
+	 java.sql.Date convertedDate = null;
+		 try {
+			Date parsedDate =  theFormat.parse(Date);
+		    convertedDate= new java.sql.Date(parsedDate.getTime());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+		 return convertedDate;
+ }
+
+
+}  // close  Class 

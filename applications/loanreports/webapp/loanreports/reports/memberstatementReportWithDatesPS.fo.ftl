@@ -17,13 +17,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#escape x as x?xml>
- <#if memberList?has_content>
-     <#list memberList as member>
-               
-             <fo:block font-weight="bold" text-align="center" provisional-distance-between-starts="2in" font-size="10pt" margin-left="0.2in">--------------------------------------------------------------------------------------------------</fo:block>
-        
-             
-                    <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
+    <#if memberStatementList?has_content>
+        <#-- REPORT TITLE -->
+        <!-- fo:block font-size="18pt" font-weight="bold" text-align="center">
+            CHAI SACCO
+        </fo:block -->
+        <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
             ${member.firstName?if_exists} ${member.middleName?if_exists} ${member.lastName?if_exists}
         </fo:block>
         
@@ -73,30 +72,13 @@ under the License.
             </fo:list-item>
             
         </fo:list-block>
-             
-             
-             
-             
-             
-            
-      
-       <#if memberStatementList?has_content>
-        <#-- REPORT TITLE -->
-        <!-- fo:block font-size="18pt" font-weight="bold" text-align="center">
-            CHAI SACCO
-        </fo:block -->
-
         <fo:block><fo:leader/></fo:block>
         <#-- fo:block margin-left="0.4in" text-decoration="underline" font-size="10pt" text-align="left"  font-weight="bold" >
             Member Statement
         </fo:block -->
-                
+
 		 <#list memberStatementList as statement>
- 
-			 <#if statement.partyId == member.partyId>
-			 
-			 
-			  <#assign totalAmount = statement.itemTotal >
+		 <#assign totalAmount = statement.itemTotal >
 		 
         <fo:list-block provisional-distance-between-starts="2in" font-size="10pt" margin-left="0.2in">
             <fo:list-item>
@@ -309,6 +291,7 @@ under the License.
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>
                                 
+                                
                                 </fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right">
@@ -330,19 +313,10 @@ under the License.
                 </fo:table-body>
             </fo:table>
         </fo:block>
-			 
-			 
-			 
-			 
-			 </#if>
-		
+
         </#list>
-    </#if>
-    
-   </#list>
+
     <#else>
         <fo:block text-align="center">NO DATA FOUND</fo:block>
     </#if>
-    
-    
 </#escape>
