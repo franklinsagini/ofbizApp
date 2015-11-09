@@ -123,18 +123,18 @@ public class TransferToGuarantorsServices {
 		
 		//The loan must not have negative Interest, negative insurance or negative principal balance
 		BigDecimal bdInsuranceBalance = LoanRepayments.getTotalInsurancByLoanDue(loanApplication.getLong("loanApplicationId").toString());
-		bdInsuranceBalance = bdInsuranceBalance.setScale(2, RoundingMode.FLOOR);
+		bdInsuranceBalance = bdInsuranceBalance.setScale(0, RoundingMode.FLOOR);
 		if (bdInsuranceBalance.compareTo(BigDecimal.ZERO) == -1)
 			return " The loan has -VE insurance balance which will mean the insurance was over charged or loan was over paid - please resolve that , that is part of data cleanup";
 		
 		BigDecimal bdInterestBalance = LoanRepayments.getTotalInterestByLoanDue(loanApplication.getLong("loanApplicationId").toString());
-		bdInterestBalance = bdInterestBalance.setScale(2, RoundingMode.FLOOR);
+		bdInterestBalance = bdInterestBalance.setScale(0, RoundingMode.FLOOR);
 		if (bdInterestBalance.compareTo(BigDecimal.ZERO) == -1)
 			return " The loan has -VE interest balance which will mean the interest was over charged or loan was over paid - please resolve that , that is part of data cleanup";
 
 		
 		BigDecimal bdPrincipalBalance = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
-		bdPrincipalBalance = bdPrincipalBalance.setScale(2, RoundingMode.FLOOR);
+		bdPrincipalBalance = bdPrincipalBalance.setScale(0, RoundingMode.FLOOR);
 		if (bdPrincipalBalance.compareTo(BigDecimal.ZERO) == -1)
 			return " The loan has -VE loan balance which will mean the loan was over paid - please resolve that , that is part of data cleanup";
 
