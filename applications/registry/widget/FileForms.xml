@@ -267,7 +267,7 @@
 
 
 	<form name="FileActivityListForm" type="list" list-name="listIt"	use-row-submit="true" separate-columns="true" target="updatefileActivity"
-		paginate-target="EditFileActivityForm" odd-row-style="alternate-row"	header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		paginate-target="editFileActivity" odd-row-style="alternate-row"	header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 		<actions>
 			<entity-condition entity-name="RegistryFileActivity"></entity-condition>
 		</actions>
@@ -353,7 +353,6 @@
 			</hyperlink>
 		</field>
 		
-        <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
     </form>
     
      <!--  +++++++++++++++++++++++++++++++++++++++++++++FILE REQUESTS======================================================================= -->
@@ -1317,7 +1316,7 @@
 
     <!-- List Memeber Files -->
 
-    <form name="listInactiveMemberfiles" target="" title="" list-name="listIt" type="list" paginate-target="FindInactiveMemberfiles"
+    <form name="listInactiveMemberfiles" target="" title="" list-name="listIt" type="list" paginate-target="findRegFileInactive"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
          <entity-condition entity-name="RegistryFiles" >
@@ -1362,7 +1361,7 @@
     </form>
     
     <!-- ============================================ SEMI-ACTIVE FILES =============================================== -->
- <form name="FindMemberSemiActivefiles" default-map-name="FindMemberSemiActivefilesContext" target="findRegFileSemiActive" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
+ <form name="FindMemberSemiActivefiles" default-map-name="FindMemberSemiActivefilesContext" target="findRegFileSemiActive" title="" type="single"  header-row-style="header-row" default-table-style="basic-table"  paginate-target="semiActiveFiles">
         <actions>
         	 <!-- <set field="recieptStatus" value="RELEASED"/> -->
         </actions>
@@ -1377,7 +1376,7 @@
 
     <!-- List Memeber Files -->
 
-    <form name="listMemberSemiActivefiles" target="" title="" list-name="listIt" type="list" paginate-target="FindMemberSemiActivefiles"
+    <form name="listMemberSemiActivefiles" target="" title="" list-name="listIt" type="list" paginate-target="findRegFileSemiActive"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
          <entity-condition entity-name="RegistryFiles" >
@@ -1438,7 +1437,7 @@
 
     <!-- List Memeber Files -->
 
-    <form name="listMemberArchivedfiles" target="" title="" list-name="listIt" type="list" paginate-target="FindMemberArchivedfiles"
+    <form name="listMemberArchivedfiles" target="" title="" list-name="listIt" type="list" paginate-target="archive"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
          <entity-condition entity-name="RegistryFiles" >
@@ -1499,7 +1498,7 @@
 
     <!-- List Memeber Files -->
 
-    <form name="listMemberfilesForDisposal" target="" title="" list-name="listIt" type="list" paginate-target="FindMemberfilesForDisposal"
+    <form name="listMemberfilesForDisposal" target="" title="" list-name="listIt" type="list" paginate-target="findRegFileDisposal"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
          <entity-condition entity-name="RegistryFiles" >
@@ -1558,7 +1557,7 @@
 
     <!-- List Memeber Files -->
 
-    <form name="listMemberfilesForDeceasedMembers" target="" title="" list-name="listIt" type="list" paginate-target="FindMemberfilesForDeceasedMembers"
+    <form name="listMemberfilesForDeceasedMembers" target="" title="" list-name="listIt" type="list" paginate-target="findRegFileDeceased"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
          <entity-condition entity-name="RegistryFiles" >
