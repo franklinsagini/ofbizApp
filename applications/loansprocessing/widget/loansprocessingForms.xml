@@ -938,11 +938,11 @@
 		</field>
 
 		<field name="lastRepaymentDate" title="Last Repayment">
-			<display type="date"></display>
+			<display description="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.getLastRepaymentDate(loanApplicationId);}"></display>
 		</field>
-
-		<field name="repaidLastDuration" use-when="lastRepaymentDate!=null" title="Repaid Last Duration">
-			<display default-value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.lastRepaymentDurationToDate(lastRepaymentDate);}"></display>
+		<!-- use-when="lastRepaymentDate!=null" -->
+		<field name="repaidLastDuration" title="Repaid Last Duration">
+			<display description="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.lastRepaymentDurationToDate(loanApplicationId);}"></display>
 		</field>
 
 		<field name="createdStamp" title="Created">

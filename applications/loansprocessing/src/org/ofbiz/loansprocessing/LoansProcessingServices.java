@@ -405,7 +405,67 @@ public class LoansProcessingServices {
 		return loanStatusId;
 	}
 
+	public static Timestamp getLastRepaymentDate(Long loanApplicationId) {
+		
+		//Get the record from loanApplication
+		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationId);
+		Timestamp lastRepaymentDate = loanApplication.getTimestamp("lastRepaymentDate");
+		//Get Last Repayment Date
+		List<GenericValue> loanRepaymentELI = null; // =
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<String> listOrder = new ArrayList<String>();
+		listOrder.add("-loanRepaymentId");
+		
+		EntityConditionList<EntityExpr> loanRepaymentConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanApplicationId", EntityOperator.EQUALS,
+						loanApplicationId), EntityCondition.makeCondition(
+						"principalAmount", EntityOperator.GREATER_THAN, BigDecimal.ZERO)),
+						EntityOperator.AND);
+		
+		try {
+			loanRepaymentELI = delegator.findList("LoanRepayment",
+					loanRepaymentConditions, null, listOrder, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		if ((loanRepaymentELI != null) && (loanRepaymentELI.size() > 0)){
+			lastRepaymentDate = loanRepaymentELI.get(0).getTimestamp("createdStamp");
+		}
+		
+		
+		return lastRepaymentDate;
+	}
+	
+	public static String lastRepaymentDurationToDate(Long loanApplicationId) {
+		
+		//Get Last Repayment Date
+		Timestamp lastRepaymentDate = getLastRepaymentDate(loanApplicationId);
+		
+		String days = "";
+		if (lastRepaymentDate == null)
+			return days;
+
+		DateTime startDate = new DateTime(lastRepaymentDate.getTime());
+		DateTime endDate = new DateTime(Calendar.getInstance()
+				.getTimeInMillis());
+
+		Days noOfDays = Days.daysBetween(startDate, endDate);
+		Months noOfMonths = Months.monthsBetween(startDate, endDate);
+		if (noOfDays.get(DurationFieldType.days()) <= 60) {
+			days = noOfDays.get(DurationFieldType.days()) + " days ago";
+		} else {
+			days = noOfMonths.getMonths() + " months ago";
+		}
+		return days;
+	}
+	
+	
 	public static String lastRepaymentDurationToDate(Timestamp lastRepaymentDate) {
+		
+		//Get Last Repayment Date
+		
 		String days = "";
 		if (lastRepaymentDate == null)
 			return days;
