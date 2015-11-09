@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -2624,6 +2625,107 @@ public class OnlineRemittanceProcessingServices {
 		
 		
 		return "success";
+	}
+	
+	public static String remittanceNotCreated(Map<String, String> userLogin, String stationId, Long month, Long year){
+		
+		log.info("############ station id "+stationId);
+		log.info("############ Month "+month);
+		log.info("############ Year "+year);
+		
+		if (year.toString().length() != 4){
+			return "Please  make sure that the year field has 4 characters, "+year+" is a wrong value";
+		}
+		
+		//Get Station Employer code
+		GenericValue station = LoanUtilities.getEntityValue("Station", "stationId", stationId);
+		
+		String employerCode = station.getString("employerCode");
+		
+		//Get all stations with under this employer
+		// String employerCode
+		EntityConditionList<EntityExpr> employerStationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"employerCode", EntityOperator.EQUALS,
+						employerCode.trim())
+
+				), EntityOperator.AND);
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> stationELI = null;
+		try {
+			stationELI = delegator.findList(
+					"Station", employerStationConditions, null,
+					null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		//Check and make sure that
+		Boolean foundRecord = false;
+		
+		Map existRecord = null;
+		
+		for (GenericValue genericValue : stationELI) {
+			//if this station and month record exists for this year then set found to true
+			existRecord = existStationRecord(genericValue.getString("stationId"), month, year);
+			
+			if (existRecord != null)
+			{
+				if (existRecord.get("state").equals("exist")){
+					foundRecord = true;
+				}
+			}
+			
+		}
+		
+		if (foundRecord)
+			return "There is already a record for this station for the month and year ("+month+"/"+year+") created by "+existRecord.get("createdBy")+" at "+existRecord.get("date");
+		
+		return "success";
+	}
+
+	private static Map<String, String> existStationRecord(String stationId, Long month,
+			Long year) {
+		
+		Map<String, String> existRecord = new HashMap<String, String>();
+		EntityConditionList<EntityExpr> pushMonthYearStationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"stationId", EntityOperator.EQUALS,
+						stationId.trim()),
+						
+						EntityCondition.makeCondition(
+								"month", EntityOperator.EQUALS,
+								month),
+								
+								EntityCondition.makeCondition(
+										"year", EntityOperator.EQUALS,
+										year)
+
+				), EntityOperator.AND);
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> pushMonthYearStationELI = null;
+		try {
+			pushMonthYearStationELI = delegator.findList(
+					"PushMonthYearStation", pushMonthYearStationConditions, null,
+					null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if ((pushMonthYearStationELI == null) || (pushMonthYearStationELI.size() < 1)){
+			
+			return null;
+		}
+		
+		existRecord.put("state", "exist");
+		existRecord.put("createdBy", pushMonthYearStationELI.get(0).getString("createdBy"));
+		existRecord.put("date", pushMonthYearStationELI.get(0).getString("createdStamp"));
+		
+		return existRecord;
 	}
 
 	
