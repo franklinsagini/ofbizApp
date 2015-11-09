@@ -102,7 +102,7 @@
     </form>
 	
 	<form name="FilesListForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateFiles"
-		paginate-target="FindMemberfilesToAddVolumeAndDoc" odd-row-style="alternate-row" default-map-name="FilesContext" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		paginate-target="editfiles" odd-row-style="alternate-row" default-map-name="FilesContext" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 		 <actions>
         <entity-condition entity-name="RegistryFiles" >
        <condition-expr field-name="stageStatus" operator="equals" value="ACTIVE"/> 
@@ -426,8 +426,7 @@
 				<parameter param-name="partyId" />
 			</hyperlink>
 		</field>
-		
-        <on-event-update-area event-type="paginate" area-id="search-results" area-target="ListFindSurveySearchResults"/>
+ 
     </form>
     
    
@@ -815,7 +814,7 @@
   
      <!--  ============================================== RECEIVE FILE ================================================== -->
    
-    <form name="FindMemberfilesForDispatch" default-map-name="FindMemberfilesForDispatchContext" target="regFileDispatch" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
+    <form name="FindMemberfilesForDispatch" default-map-name="FindMemberfilesForDispatchContext" target="regFileReceive" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
         <actions>
         	<set field="status" value="ISSUED"/> 
         	<set field="recieptStatus" value="NOTRECEIVED"/> 
@@ -1263,7 +1262,7 @@
 		</field>
     </form>
 
-    <form name="listMemberfilesForReturn" type="multi" use-row-submit="true" title="Selected Monument" separate-columns="true"  paginate-target="FindMemberfilesForReturn"
+    <form name="listMemberfilesForReturn" type="multi" use-row-submit="true" title="Selected Monument" separate-columns="true"  paginate-target="regFileReturn"
                  target="returnfiles" default-table-style="basic-table hover-bar">
                 <actions>
          <entity-condition entity-name="RegistryFiles" >

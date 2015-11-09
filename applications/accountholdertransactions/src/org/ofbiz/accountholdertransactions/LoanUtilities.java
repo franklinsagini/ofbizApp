@@ -3116,6 +3116,32 @@ public class LoanUtilities {
 		
 		return shareMinimum.getBigDecimal("minShareCapital");
 	}
+	
+	public static BigDecimal getShareCapitalLimitToAttacheLoan(Long partyId) {
+		GenericValue member = LoanUtilities.getMember(partyId);
+		
+		Long memberClassId = member.getLong("memberClassId");
+		
+		if (memberClassId == null){
+			memberClassId = LoanUtilities.getMemberClassId("Class B");
+		}
+		
+		if (memberClassId.equals(LoanUtilities.getMemberClassId("Class A"))){
+			memberClassId = LoanUtilities.getMemberClassId("Class B");
+		}
+		
+		GenericValue shareMinimum = getShareMinimumEntity(memberClassId);
+		
+		if (shareMinimum == null)
+			return null;
+		
+		BigDecimal bdShareCapitalLimit = shareMinimum.getBigDecimal("minShareCapital");
+		
+		bdShareCapitalLimit = bdShareCapitalLimit.setScale(2,
+				RoundingMode.HALF_UP);
+		
+		return bdShareCapitalLimit;
+	}
 
 	public static String getMemberAccountIdGivenMemberAndAccountCode(
 			Long partyId, String code) {
