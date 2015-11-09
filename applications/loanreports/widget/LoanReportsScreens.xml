@@ -136,6 +136,11 @@
                             <screenlet title="Member Statement">
                                 <include-form name="memberstatementreportWithDatesForm" location="component://loanreports/widget/LoanReportsForms.xml"/>
                             </screenlet>
+                            
+                             <screenlet title="Member Statement Per Stations">
+                                <include-form name="memberstatementreportWithDatesFormPS" location="component://loanreports/widget/LoanReportsForms.xml"/>
+                            </screenlet>
+                            
                         </container>
                         <container style="clear"/>
                     </decorator-section>
@@ -146,6 +151,27 @@
     
     <!-- memberstatementreportWithDatesPDF -->
     <screen name="memberstatementreportWithDatesPDF">
+        <section>
+            <actions>
+                <set field="viewSize" value="99999"/>
+                <!-- script location="component://party/webapp/partymgr/WEB-INF/actions/reports/loanDetails.groovy"/ -->
+                <script location="component://loanreports/webapp/loanreports/WEB-INF/actions/reports/memberstatementReportWithDatesPS.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <!-- xsl-fo><html-template location="component://party/webapp/partymgr/member/reports/loanDetails.fo.ftl"/></xsl-fo -->
+                            <xsl-fo><html-template location="component://loanreports/webapp/loanreports/reports/memberstatementReportWithDatesPS.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+       <!-- memberstatementreportWithDatesPDF -->
+    <screen name="memberstatementreportWithDatesPDFPS">
         <section>
             <actions>
                 <set field="viewSize" value="99999"/>
