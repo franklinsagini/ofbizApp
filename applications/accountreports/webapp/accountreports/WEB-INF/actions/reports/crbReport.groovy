@@ -16,9 +16,7 @@ import org.ofbiz.base.util.UtilMisc;
  import org.ofbiz.base.util.UtilValidate;
  import org.ofbiz.entity.model.ModelEntity;
  import org.ofbiz.entity.model.ModelReader;
-
-
-
+ import  org.ofbiz.accounting.ledger.CrbReportServices
 
 crbReportListBuilder = []
 crbReportList = [];
@@ -54,6 +52,8 @@ loanApps.each { obj ->
      gender = delegator.findOne("Gender", [genderId : member.genderId], false); 
     //GET MARITAL STATUS
      maritalStatus = delegator.findOne("MaritalStatus", [maritalStatusId : member.maritalStatusId], false);
+    //GET MARITAL STATUS
+     station = delegator.findOne("Station", [stationId : (member.stationId).toString()], false);
     //GET LOAN DETAILS
      loanProduct = delegator.findOne("LoanProduct", [loanProductId : obj.loanProductId], false);
     //GET EMPLOYEMENT TYPE
@@ -101,7 +101,11 @@ loanApps.each { obj ->
          secondaryIdentificationDocumentNumber = member.passportNumber
     }
 
-     
+   loanRepaymentAmount =   CrbReportServices.getLastRepaymentAmount(delegator, obj.loanApplicationId)
+   daysInArrears = CrbReportServices.getDaysSinceLastRepayment(delegator, obj.loanApplicationId)
+   lastRepaymentDate = org.ofbiz.loansprocessing.LoansProcessingServices.getLastRepaymentDate(obj.loanApplicationId)
+   currentLoanBalance = org.ofbiz.loansprocessing.LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(obj.loanApplicationId)
+
      crbReportListBuilder = [
         surname:member.lastName,
         forename1: member.firstName,
@@ -136,7 +140,7 @@ loanApps.each { obj ->
         datePhysicalAddress:"",
         pinNumber:member.pinNumber,
         consumerWorkE:member.emailAddress,
-        employerName:"",
+        employerName:station.name,
         employerIndustryType:"",
         employmentDate:"",
         employeeType:employementType.name,
@@ -152,10 +156,10 @@ loanApps.each { obj ->
         originalAmount:obj.approvedAmt,
         currencyFacility:"KES",
         amountKSH:obj.approvedAmt,
-        currentBalance:obj.outstandingBalance,
+        currentBalance:currentLoanBalance,
         overdueBalance:"",
         overdueDate:obj.nextInstallmentDate,
-        noDaysArrears:"",
+        noDaysArrears: daysInArrears,
         noInstalmentsInArrears:"",
         performingNonPerforming:"",
         accountStatus:accountStatus,
@@ -166,9 +170,9 @@ loanApps.each { obj ->
         deferredPaymentAmount:"",
         m:"",
         disbursementDate:obj.disbursementDate,
-        instalmentAmount:"",
-        lastPaymentDate:obj.lastRepaymentDate,
-        lastLoanPayment:"",
+        instalmentAmount:loanRepaymentAmount,
+        lastPaymentDate:lastRepaymentDate,
+        lastLoanPayment:loanRepaymentAmount,
         typeofSecurity:"S"
 
     ]
