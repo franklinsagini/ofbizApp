@@ -1521,7 +1521,9 @@ public class LoanRepayments {
 		BigDecimal bdTotalInsuranceExpectedToDate = getTotalInsuranceByLoanExpected(loanApplicationId);
 		// getTotalExpectedInsuranceAmountByLoanApplicationId(Long.valueOf(loanApplicationId));
 		// Total Insurance Paid to Date
+		
 		BigDecimal bdTotalInsurancePaidToDate = getTotalInsurancePaid(loanApplicationId);
+		
 		// Get the difference
 
 		// totalInsuranceDue =
