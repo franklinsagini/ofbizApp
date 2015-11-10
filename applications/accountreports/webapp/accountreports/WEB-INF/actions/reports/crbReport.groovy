@@ -105,6 +105,14 @@ loanApps.each { obj ->
    daysInArrears = CrbReportServices.lastRepaymentDurationToDateInDays(obj.loanApplicationId)
    lastRepaymentDate = org.ofbiz.loansprocessing.LoansProcessingServices.getLastRepaymentDate(obj.loanApplicationId)
    currentLoanBalance = org.ofbiz.loansprocessing.LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(obj.loanApplicationId)
+   noInstalmentsInArrears = 0
+    if (daysInArrears.toInteger()>30) {
+        daysInArrears = daysInArrears
+        noInstalmentsInArrears = daysInArrears/30
+    }else{
+        daysInArrears = 0
+        noInstalmentsInArrears = daysInArrears/30
+    }
 
      crbReportListBuilder = [
         surname:member.lastName,
@@ -160,7 +168,7 @@ loanApps.each { obj ->
         overdueBalance:"",
         overdueDate:obj.nextInstallmentDate,
         noDaysArrears: daysInArrears,
-        noInstalmentsInArrears:"",
+        noInstalmentsInArrears:noInstalmentsInArrears,
         performingNonPerforming:"",
         accountStatus:accountStatus,
         accountStatusDate:currentDate,
