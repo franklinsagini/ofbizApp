@@ -101,7 +101,7 @@ loanApps.each { obj ->
          secondaryIdentificationDocumentNumber = member.passportNumber
     }
 
-   loanRepaymentAmount =   CrbReportServices..getLastRepaymentAmount(delegator, obj.loanApplicationId)
+   loanRepaymentAmount =   CrbReportServices.getLastRepaymentAmount(delegator, obj.loanApplicationId)
    formatedloanRepaymentAmount = CrbReportServices.getCRBAmountFormat(loanRepaymentAmount)
    daysInArrears = CrbReportServices.lastRepaymentDurationToDateInDays(obj.loanApplicationId)
    lastRepaymentDate = org.ofbiz.loansprocessing.LoansProcessingServices.getLastRepaymentDate(obj.loanApplicationId)
@@ -217,7 +217,7 @@ loanApps.each { obj ->
         disbursementDate:obj.disbursementDate,
         instalmentAmount:formatedloanRepaymentAmount,
         lastPaymentDate:formatedLastRepaymentDate,
-        lastLoanPayment:loanRepaymentAmount,
+        lastLoanPayment:formatedloanRepaymentAmount,
         typeofSecurity:"S"
 
     ]
