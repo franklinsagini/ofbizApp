@@ -39,7 +39,7 @@ if (loanStatusId) {
 
 loanApps = delegator.findList('LoanApplication',  EntityCondition.makeCondition(summaryCondition, EntityOperator.AND), null,null,null,false)
 
-
+currentDate = UtilDateTime.nowTimestamp();
 
 
 
@@ -102,7 +102,7 @@ loanApps.each { obj ->
     }
 
    loanRepaymentAmount =   CrbReportServices.getLastRepaymentAmount(delegator, obj.loanApplicationId)
-   daysInArrears = CrbReportServices.getDaysSinceLastRepayment(delegator, obj.loanApplicationId)
+   daysInArrears = CrbReportServices.lastRepaymentDurationToDateInDays(obj.loanApplicationId)
    lastRepaymentDate = org.ofbiz.loansprocessing.LoansProcessingServices.getLastRepaymentDate(obj.loanApplicationId)
    currentLoanBalance = org.ofbiz.loansprocessing.LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(obj.loanApplicationId)
 
@@ -163,7 +163,7 @@ loanApps.each { obj ->
         noInstalmentsInArrears:"",
         performingNonPerforming:"",
         accountStatus:accountStatus,
-        accountStatusDate:"",
+        accountStatusDate:currentDate,
         accountClosureReason:"",
         repaymentPeriod:obj.repaymentPeriod,
         deferredPaymentDate:"",
