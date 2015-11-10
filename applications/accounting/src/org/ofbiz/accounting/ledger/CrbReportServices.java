@@ -3,12 +3,10 @@ package org.ofbiz.accounting.ledger;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Map;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.DurationFieldType;
-import org.joda.time.Months;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -17,7 +15,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.service.DispatchContext;
+import org.ofbiz.loansprocessing.LoansProcessingServices;
 
 import com.ibm.icu.util.Calendar;
 
@@ -58,19 +56,14 @@ public class CrbReportServices {
 		return repayment;
 	}
 
-	public static String getDaysSinceLastRepayment(Delegator delegator, Long loanApplicationId) {
 
-		GenericValue repayment = getLastRepayment(delegator, loanApplicationId);
-		if (repayment != null) {
-			return lastRepaymentDurationToDateInDays(repayment.getTimestamp("createdStamp"));
-		} else {
-			return "0";
-		}
 
-	}
+	public static int lastRepaymentDurationToDateInDays(Long loanApplicationId) {
 
-	public static String lastRepaymentDurationToDateInDays(Timestamp lastRepaymentDate) {
-		String days = "";
+		// Get Last Repayment Date
+		Timestamp lastRepaymentDate = LoansProcessingServices.getLastRepaymentDate(loanApplicationId);
+
+		int days = 0;
 		if (lastRepaymentDate == null)
 			return days;
 
@@ -79,8 +72,11 @@ public class CrbReportServices {
 				.getTimeInMillis());
 
 		Days noOfDays = Days.daysBetween(startDate, endDate);
-		days = noOfDays.get(DurationFieldType.days()) + " days ago";
-		return days;
+
+		return days = noOfDays.get(DurationFieldType.days());
+
 	}
+
+
 
 }
