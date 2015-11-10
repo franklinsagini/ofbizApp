@@ -56,8 +56,6 @@ public class CrbReportServices {
 		return repayment;
 	}
 
-
-
 	public static int lastRepaymentDurationToDateInDays(Long loanApplicationId) {
 
 		// Get Last Repayment Date
@@ -77,6 +75,23 @@ public class CrbReportServices {
 
 	}
 
+	public static String getCRBDateFormat(Timestamp date) {
+		String formattedDate = "";
+		String stringDate = date.toString();
+		String newDate = stringDate.replaceAll("\\D", "");
+		formattedDate = newDate.substring(0, 8);
+		return formattedDate;
+	}
 
+	public static String getCRBAmountFormat(BigDecimal amount) {
+		String formattedAmount = "";
+		String stringAmount = amount.toString();
+		if (stringAmount.contains(".")) {
+			formattedAmount = stringAmount.replaceAll("\\D", "");
+		}else {
+			formattedAmount = stringAmount+"00";
+		}
+		return formattedAmount;
+	}
 
 }
