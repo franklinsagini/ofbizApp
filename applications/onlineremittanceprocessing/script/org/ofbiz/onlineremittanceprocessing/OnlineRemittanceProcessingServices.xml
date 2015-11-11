@@ -353,7 +353,34 @@ under the License.
         
         <set field="newEntity.isActive" value="Y"/>
 	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
-        <create-value value-field="newEntity"/>
+	    
+	    <set field="stationId" from-field="parameters.stationId"/>
+	    <set field="month" from-field="parameters.month" type="Long"/>
+	    <set field="year" from-field="parameters.year" type="Long"/>
+	    
+	    <!-- Only create if there is no other record for the same station for the same year -->
+	    <set field="createdStatus" value="${bsh:org.ofbiz.onlineremittanceprocessing.OnlineRemittanceProcessingServices.remittanceNotCreated(userLogin, stationId, month, year);}"></set>
+        <!-- store-value value-field="lookedUpValue"/ -->
+        
+		<if>
+			 <condition> 
+			 		<if-compare operator="equals" value="success" field="createdStatus"></if-compare>
+            </condition> 
+            <then> 
+            	 <create-value value-field="newEntity"/>
+				 <property-to-field resource="OnlineRemittanceProcessingUiLabels.xml" 
+            				property="Successfully created Push Month Year Station Record" field="successMessage" />
+                
+            </then>
+		<else>
+			<add-error> 
+                    <fail-message message="${createdStatus}"/>
+                </add-error> 
+                <check-errors /> 
+		
+        </else>
+        </if>
+       
     </simple-method>
     
      <simple-method method-name="updatePushMonthYearStation" short-description="Update PushMonthYearStation">

@@ -1521,7 +1521,9 @@ public class LoanRepayments {
 		BigDecimal bdTotalInsuranceExpectedToDate = getTotalInsuranceByLoanExpected(loanApplicationId);
 		// getTotalExpectedInsuranceAmountByLoanApplicationId(Long.valueOf(loanApplicationId));
 		// Total Insurance Paid to Date
+		
 		BigDecimal bdTotalInsurancePaidToDate = getTotalInsurancePaid(loanApplicationId);
+		
 		// Get the difference
 
 		// totalInsuranceDue =
@@ -1581,6 +1583,76 @@ public class LoanRepayments {
 	 *         accrued for specific loan
 	 * **/
 	public static BigDecimal getTotalPrincipaByLoanDue(String loanApplicationId) {
+		BigDecimal totalPrincipalDue = BigDecimal.ZERO;
+
+		log.info("REEEEEEEEEEEEEEEEEEEEEL ---- totalPrincipalDue "+totalPrincipalDue);
+		totalPrincipalDue = getTotalPrincipalDue(Long.valueOf(loanApplicationId));
+		
+		log.info("REEEEEEEEEEEEEEEEEEEEEL ---- totalPrincipalDue "+totalPrincipalDue+" loanApplicationId "+loanApplicationId);
+		
+		//Get loan variation and change principal due based on that
+		Long loanApplicationIdLong = Long.valueOf(loanApplicationId);
+		
+		BigDecimal loanVariationAmount = getLoanVariationAmount(loanApplicationIdLong);
+		//Set the new principal amount factoring in loan variation
+		if ((loanVariationAmount != null) && (loanVariationAmount.compareTo(BigDecimal.ZERO) == 1)){
+			
+			BigDecimal bdInterestForVariation = getInterestOnSchedule(loanApplicationIdLong);
+			if (bdInterestForVariation.compareTo(BigDecimal.ZERO) < 1)
+			{
+				bdInterestForVariation = BigDecimal.ZERO;
+			}
+			BigDecimal bdInsuranceForVariation = getInsuranceOnSchedule(loanApplicationIdLong);
+			if (bdInsuranceForVariation.compareTo(BigDecimal.ZERO) < 1)
+			{
+				bdInsuranceForVariation = BigDecimal.ZERO;
+			}
+			
+			//check that loanVariaton is greater than sum of principal, interest and insurance
+			BigDecimal principalInterestInsuranceSum = totalPrincipalDue.add(bdInterestForVariation).add(bdInsuranceForVariation);
+			
+			if (loanVariationAmount.compareTo(principalInterestInsuranceSum) == 1){
+				//User the new principal
+				//Sum interest and insurance
+				BigDecimal bdInterestPrincipalSum = bdInterestForVariation.add(bdInsuranceForVariation);
+				totalPrincipalDue = loanVariationAmount.subtract(bdInterestPrincipalSum);
+			}
+			
+		}
+		
+		return totalPrincipalDue;
+	}
+	
+	private static BigDecimal getLoanVariationAmount(Long loanApplicationId) {
+		//Get the loan varaiation record
+		
+		List<String> listOrder = new ArrayList<String>();
+		listOrder.add("-loanVariationId");
+		
+		List<GenericValue> loanVariationELI = new ArrayList<GenericValue>();
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanApplicationId", EntityOperator.EQUALS, loanApplicationId)
+
+				), EntityOperator.AND);
+		try {
+			loanVariationELI = delegator.findList("LoanVariation",
+					loanApplicationConditions, null, listOrder, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		if ((loanVariationELI == null) || (loanVariationELI.size() < 1))
+			return null;
+		
+		return loanVariationELI.get(0).getBigDecimal("newAmount");
+	}
+	
+	/***
+	 * Original Loan Principal Due -  for a rainy day
+	 * */
+	public static BigDecimal getTotalPrincipaByLoanDueOriginal(String loanApplicationId) {
 		BigDecimal totalPrincipalDue = BigDecimal.ZERO;
 
 		log.info("REEEEEEEEEEEEEEEEEEEEEL ---- totalPrincipalDue "+totalPrincipalDue);

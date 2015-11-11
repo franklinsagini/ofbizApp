@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -61,9 +62,11 @@ public class AccountReportsServices {
 		// e2.printStackTrace();
 		// }
 		List<GenericValue> listAcctgTrans = null;
+		List<String> listTransactions = new ArrayList<String>();
+		listTransactions.add("-createdStamp");
 		// MemberStationList
 		try {
-			listAcctgTrans = delegator.findList("AcctgTrans", null, null, null,
+			listAcctgTrans = delegator.findList("AcctgTrans", null, null, listTransactions,
 					null, false);
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();

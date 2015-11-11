@@ -16,9 +16,7 @@ import org.ofbiz.base.util.UtilMisc;
  import org.ofbiz.base.util.UtilValidate;
  import org.ofbiz.entity.model.ModelEntity;
  import org.ofbiz.entity.model.ModelReader;
-
-
-
+ import  org.ofbiz.accounting.ledger.CrbReportServices
 
 crbReportListBuilder = []
 crbReportList = [];
@@ -41,7 +39,7 @@ if (loanStatusId) {
 
 loanApps = delegator.findList('LoanApplication',  EntityCondition.makeCondition(summaryCondition, EntityOperator.AND), null,null,null,false)
 
-
+currentDate = UtilDateTime.nowTimestamp();
 
 
 
@@ -54,6 +52,8 @@ loanApps.each { obj ->
      gender = delegator.findOne("Gender", [genderId : member.genderId], false); 
     //GET MARITAL STATUS
      maritalStatus = delegator.findOne("MaritalStatus", [maritalStatusId : member.maritalStatusId], false);
+    //GET MARITAL STATUS
+     station = delegator.findOne("Station", [stationId : (member.stationId).toString()], false);
     //GET LOAN DETAILS
      loanProduct = delegator.findOne("LoanProduct", [loanProductId : obj.loanProductId], false);
     //GET EMPLOYEMENT TYPE
@@ -101,7 +101,56 @@ loanApps.each { obj ->
          secondaryIdentificationDocumentNumber = member.passportNumber
     }
 
-     
+   loanRepaymentAmount =   CrbReportServices.getLastRepaymentAmount(delegator, obj.loanApplicationId)
+   formatedloanRepaymentAmount = CrbReportServices.getCRBAmountFormat(loanRepaymentAmount)
+   daysInArrears = CrbReportServices.lastRepaymentDurationToDateInDays(obj.loanApplicationId)
+   lastRepaymentDate = org.ofbiz.loansprocessing.LoansProcessingServices.getLastRepaymentDate(obj.loanApplicationId)
+   formatedLastRepaymentDate = CrbReportServices.getCRBDateFormat(lastRepaymentDate)
+   currentLoanBalance = org.ofbiz.loansprocessing.LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(obj.loanApplicationId)
+   noInstalmentsInArrears = 0
+    member_maritalStatus = ""
+    
+    if (daysInArrears.toInteger()>30) {
+        daysInArrears = daysInArrears
+        noInstalmentsInArrears = daysInArrears/30
+    }else{
+        daysInArrears = 0
+        noInstalmentsInArrears = 0
+    }
+
+    performingNonPerforming = ""
+    if (daysInArrears.toInteger()>90) {
+        performingNonPerforming = "B"
+    }else{
+          performingNonPerforming = "A"
+    }
+
+    locationCountry = ""
+    nationality = ""
+
+    if (member.citizenship == "KEN") {
+        locationCountry = "KENYA"
+        nationality = "KENYAN"
+    }
+
+
+    if (maritalStatus.name == "Married") {
+        member_maritalStatus = "M"
+    }else if (maritalStatus.name == "Single") {
+        member_maritalStatus = "S"
+    }else if (maritalStatus.name == "Divorced") {
+        member_maritalStatus = "D"
+    }else  {
+        member_maritalStatus = "U"
+    }
+
+    member_gender = ""
+    if (gender.name == "Male") {
+        member_gender = "M"
+    }else if (gender.name == "Female") {
+        member_gender = "F"
+    }
+
      crbReportListBuilder = [
         surname:member.lastName,
         forename1: member.firstName,
@@ -111,9 +160,9 @@ loanApps.each { obj ->
         dateOfBirth:member.birthDate,
         clientNumber:member.memberNumber,
         loanNumber:obj.loanNo,
-        gender:gender.name,
-        nationality:member.citizenship,
-        maritalStatus:maritalStatus.name,
+        gender:member_gender,
+        nationality:nationality,
+        maritalStatus:member_maritalStatus,
         primaryIdentificationDocumentType:primaryIdentificationDocumentType,
         primaryIdentificationDocNumber:primaryIdentificationDocNumber,
         secondaryIdentificationDocumentType:secondaryIdentificationDocumentType,
@@ -132,11 +181,11 @@ loanApps.each { obj ->
         physicalAddress2:"",
         plotNumber:"",
         locationTown:"",
-        locationCountry:"",
+        locationCountry:locationCountry,
         datePhysicalAddress:"",
         pinNumber:member.pinNumber,
         consumerWorkE:member.emailAddress,
-        employerName:"",
+        employerName:station.name,
         employerIndustryType:"",
         employmentDate:"",
         employeeType:employementType.name,
@@ -152,23 +201,23 @@ loanApps.each { obj ->
         originalAmount:obj.approvedAmt,
         currencyFacility:"KES",
         amountKSH:obj.approvedAmt,
-        currentBalance:obj.outstandingBalance,
+        currentBalance:currentLoanBalance,
         overdueBalance:"",
         overdueDate:obj.nextInstallmentDate,
-        noDaysArrears:"",
-        noInstalmentsInArrears:"",
-        performingNonPerforming:"",
+        noDaysArrears: daysInArrears,
+        noInstalmentsInArrears:noInstalmentsInArrears,
+        performingNonPerforming:performingNonPerforming,
         accountStatus:accountStatus,
-        accountStatusDate:"",
+        accountStatusDate:currentDate,
         accountClosureReason:"",
         repaymentPeriod:obj.repaymentPeriod,
         deferredPaymentDate:"",
         deferredPaymentAmount:"",
         m:"",
         disbursementDate:obj.disbursementDate,
-        instalmentAmount:"",
-        lastPaymentDate:obj.lastRepaymentDate,
-        lastLoanPayment:"",
+        instalmentAmount:formatedloanRepaymentAmount,
+        lastPaymentDate:formatedLastRepaymentDate,
+        lastLoanPayment:formatedloanRepaymentAmount,
         typeofSecurity:"S"
 
     ]
