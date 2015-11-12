@@ -76,6 +76,16 @@ loanApps.each { obj ->
         }
 
     }
+    disbursementDate = 0;
+    if (obj.disbursementDate != null) {
+        disbursementDate = CrbReportServices.getCRBDateFormat(obj.disbursementDate)
+    }
+    approvedAmt = 0;
+    if (obj.approvedAmt != null) {
+        approvedAmt = CrbReportServices.getCRBAmountFormat(obj.approvedAmt)
+    }
+    
+    
     //GET ACCOUNT STATUS DETAILS
     accountsStatus = null;
     dateAccountOpened  = null;
@@ -206,9 +216,9 @@ loanApps.each { obj ->
         accountProductType:"H",
         instalmentDueDate:"",
         dateAccountOpened:dateAccountOpened,
-        originalAmount:obj.approvedAmt,
+        originalAmount:approvedAmt,
         currencyFacility:"KES",
-        amountKSH:obj.approvedAmt,
+        amountKSH:approvedAmt,
         currentBalance:currentLoanBalance,
         overdueBalance:"",
         overdueDate:obj.nextInstallmentDate,
@@ -222,7 +232,7 @@ loanApps.each { obj ->
         deferredPaymentDate:"",
         deferredPaymentAmount:"",
         m:"",
-        disbursementDate:obj.disbursementDate,
+        disbursementDate:disbursementDate,
         instalmentAmount:formatedloanRepaymentAmount,
         lastPaymentDate:formatedLastRepaymentDate,
         lastLoanPayment:formatedloanRepaymentAmount,
