@@ -347,7 +347,7 @@ public class FinAccountServices {
 		unpresentedUnidentifiedTransactions = getUnpresentedUnidentifiedForHeader(delegator, finAccountId);
 		if (unpresentedUnidentifiedTransactions != null) {
 			for (GenericValue trans : unpresentedUnidentifiedTransactions) {
-				System.out.println("HEADER_ID: "+trans.getString("headerId") + " TRANSACTION "+ trans.getString("finAccountTransTypeId"));
+				System.out.println("HEADER_ID: " + trans.getString("headerId") + " TRANSACTION " + trans.getString("finAccountTransTypeId"));
 				GenericValue reconLines = delegator.makeValue("BankReconLines");
 				String reconLinesId = delegator.getNextSeqId("BankReconLines");
 
@@ -375,7 +375,7 @@ public class FinAccountServices {
 				}
 			}
 		}
-	
+
 		transactions = getTransactionsForHeader(reconDate, finAccountId, delegator);
 		if (transactions != null) {
 			for (GenericValue transaction : transactions) {
@@ -489,7 +489,7 @@ public class FinAccountServices {
 					bankReconLines.put("isUnidentifiedDebits", "N");
 					bankReconLines.put("isUnreceiptedBankings", "N");
 					bankReconLines.put("isUnpresentedCheques", "N");
-				} 
+				}
 
 				// save to BankReconLines
 				bankReconLines.put("reconLineId", reconLineId);
@@ -628,7 +628,6 @@ public class FinAccountServices {
 		return result;
 	}
 
-	
 	public static Map<String, Object> createUnreceiptedCheques(DispatchContext dctx, Map<String, Object> context) {
 
 		Delegator delegator = dctx.getDelegator();
@@ -643,8 +642,6 @@ public class FinAccountServices {
 
 		GenericValue bankReconLines = delegator.makeValue("BankReconLines");
 		String reconLineId = delegator.getNextSeqId("BankReconLines");
-
-
 
 		// save to BankReconLines
 		bankReconLines.put("isUnreceiptedBankings", "Y");
@@ -687,8 +684,6 @@ public class FinAccountServices {
 		GenericValue bankReconLines = delegator.makeValue("BankReconLines");
 		String reconLineId = delegator.getNextSeqId("BankReconLines");
 
-
-
 		// save to BankReconLines
 		bankReconLines.put("isUnidentifiedDebits", "Y");
 		bankReconLines.put("reconLineId", reconLineId);
@@ -715,7 +710,6 @@ public class FinAccountServices {
 		return result;
 	}
 
-	
 	public static Map<String, Object> deleteUnidentifiedUnpresented(DispatchContext dctx, Map<String, Object> context) {
 		String headerId = (String) context.get("headerId");
 		String reconLineId = (String) context.get("reconLineId");
@@ -791,19 +785,18 @@ public class FinAccountServices {
 	private static List<GenericValue> getUnpresentedUnidentifiedForHeader(Delegator delegator, String finAccountId) {
 		List<GenericValue> unpresentedUnidentifiedTransactions = null;
 
-		
-		
 		GenericValue lastSavedReconciliation = getLastSavedRecon(delegator, finAccountId);
-		
-		  // lookup payment applications which took place before the asOfDateTime for this invoice
-        EntityConditionList<EntityExpr> dateCondition = EntityCondition.makeCondition(UtilMisc.toList(
-                EntityCondition.makeCondition("isUnreceiptedBankings", EntityOperator.EQUALS, "Y"),
-                EntityCondition.makeCondition("isUnidentifiedDebits", EntityOperator.EQUALS, "Y")), EntityOperator.OR);
-        
-        EntityConditionList<EntityCondition> conditions = EntityCondition.makeCondition(UtilMisc.toList(
-                dateCondition,
-                EntityCondition.makeCondition("headerId", EntityOperator.EQUALS, lastSavedReconciliation.getString("headerId"))),
-                EntityOperator.AND);
+
+		// lookup payment applications which took place before the asOfDateTime
+		// for this invoice
+		EntityConditionList<EntityExpr> dateCondition = EntityCondition.makeCondition(UtilMisc.toList(
+				EntityCondition.makeCondition("isUnreceiptedBankings", EntityOperator.EQUALS, "Y"),
+				EntityCondition.makeCondition("isUnidentifiedDebits", EntityOperator.EQUALS, "Y")), EntityOperator.OR);
+
+		EntityConditionList<EntityCondition> conditions = EntityCondition.makeCondition(UtilMisc.toList(
+				dateCondition,
+				EntityCondition.makeCondition("headerId", EntityOperator.EQUALS, lastSavedReconciliation.getString("headerId"))),
+				EntityOperator.AND);
 
 		try {
 			unpresentedUnidentifiedTransactions = delegator.findList("BankReconLines", conditions, null, null, null, false);
@@ -811,8 +804,7 @@ public class FinAccountServices {
 			e.printStackTrace();
 		}
 		System.out.println("############################################# NUMBER OF TRANSACTIONS FETCHED: " + unpresentedUnidentifiedTransactions.size());
-		
-		
+
 		return unpresentedUnidentifiedTransactions;
 	}
 
@@ -1046,7 +1038,7 @@ public class FinAccountServices {
 
 		try {
 			recons = delegator.findList("BankReconHeader", lastReconCond, null, null, null, false);
-			System.out.println("##########################################################################WE GOT "+ recons.size() +" LAST SAVED RECON HEADERS");
+			System.out.println("##########################################################################WE GOT " + recons.size() + " LAST SAVED RECON HEADERS");
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
@@ -1056,7 +1048,7 @@ public class FinAccountServices {
 		} else {
 			System.out.println("##################################################################### IS THIS THE FIRST RECON OR WE MISSED IN GETTING THE LAST RECON");
 		}
-		System.out.println("##########################################################################WE GOT HEADER ID "+ lastSavedRecon.getString("headerId") +" LAST SAVED RECON HEADERS");
+		System.out.println("##########################################################################WE GOT HEADER ID " + lastSavedRecon.getString("headerId") + " LAST SAVED RECON HEADERS");
 		return lastSavedRecon;
 	}
 
@@ -1202,7 +1194,7 @@ public class FinAccountServices {
 
 		return result;
 	}
-	
+
 	public static Map<String, Object> addDebitAccountPayment(DispatchContext dctx, Map<String, Object> context) {
 		Delegator delegator = dctx.getDelegator();
 		String paymentId = (String) context.get("paymentId");
@@ -1598,23 +1590,21 @@ public class FinAccountServices {
 		if (msaccoApplicationId != null) {
 			try {
 				msaccoApplication = delegator.findOne("MSaccoApplication", UtilMisc.toMap("msaccoApplicationId", msaccoApplicationId), false);
-				if (msaccoApplication.getString("sent") != null && msaccoApplication.getString("sent").equals(sent)) {
-					return ServiceUtil.returnError("Seems Like there is already a pending request. Kindly wait for it to be sent");
-				} else {
-					msaccoApplication.set("sent", sent);
-					msaccoApplication.store();
-					// update logs here
-					msaccoLogs = delegator.makeValue("MSaccoLog");
-					Long msaccoLogId = delegator.getNextSeqIdLong("MSaccoLog");
-					msaccoLogs.put("msaccoLogId", msaccoLogId);
-					msaccoLogs.put("isActive", "Y");
-					msaccoLogs.put("isActive", "1");
-					msaccoLogs.put("cardStatusId", msaccoApplication.getLong("cardStatusId"));
-					msaccoLogs.put("msaccoApplicationId", msaccoApplicationId);
-					msaccoLogs.put("comment", "PIN RESEND REQUESTED");
-					msaccoLogs.put("createdBy", userLogin.getString("userLoginId"));
-					msaccoLogs.create();
-				}
+
+				msaccoApplication.set("sent", sent);
+				msaccoApplication.store();
+				// update logs here
+				msaccoLogs = delegator.makeValue("MSaccoLog");
+				Long msaccoLogId = delegator.getNextSeqIdLong("MSaccoLog");
+				msaccoLogs.put("msaccoLogId", msaccoLogId);
+				msaccoLogs.put("isActive", "Y");
+				msaccoLogs.put("isActive", "1");
+				msaccoLogs.put("cardStatusId", msaccoApplication.getLong("cardStatusId"));
+				msaccoLogs.put("msaccoApplicationId", msaccoApplicationId);
+				msaccoLogs.put("comment", "PIN RESEND REQUESTED");
+				msaccoLogs.put("createdBy", userLogin.getString("userLoginId"));
+				msaccoLogs.create();
+
 			} catch (GenericEntityException e) {
 				e.printStackTrace();
 			}
@@ -1703,7 +1693,7 @@ public class FinAccountServices {
 		result.put("paymentId", confirmedPaymentId);
 		return result;
 	}
-	
+
 	public static Map<String, Object> confirmMultiReceipt(DispatchContext dctx, Map<String, Object> context) {
 		Delegator delegator = dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -1810,7 +1800,7 @@ public class FinAccountServices {
 		finAccountTransId = (String) createResult.get("finAccountTransId");
 		return finAccountTransId;
 	}
-	
+
 	private static String createDepositFinAccountTranRecord(DispatchContext dctx, LocalDispatcher dispatcher, Map<String, Object> context, Delegator delegator,
 			GenericValue multiplePaymentHeader, GenericValue userLogin, String paymentId) {
 		String finAccountTransId = null;
@@ -1881,7 +1871,7 @@ public class FinAccountServices {
 		}
 		return isSuccess;
 	}
-	
+
 	private static Boolean createcreateConfirmedCreditTransEntry(Delegator delegator, String acctgTransId, GenericValue multiplePaymentHeader, GenericValue line) {
 		GenericValue acctgTransEntry = null;
 		String acctgTransEntrySeqId = null;
@@ -1908,7 +1898,6 @@ public class FinAccountServices {
 		}
 		return isSuccess;
 	}
-
 
 	private static List<GenericValue> getPaymentDebitLines(GenericValue multiplePaymentHeader) {
 		List<GenericValue> paymentLines = null;
@@ -1950,7 +1939,7 @@ public class FinAccountServices {
 		}
 		return isSuccess;
 	}
-	
+
 	private static Boolean createcreateConfirmedTransEntryForReceipt(Delegator delegator, String acctgTransId, GenericValue multiplePaymentHeader, String debitCreditFlag) {
 
 		GenericValue acctgTransEntry = null;
@@ -2022,8 +2011,7 @@ public class FinAccountServices {
 
 		return acctgTransId;
 	}
-	
-	
+
 	private static String createConfirmedAcctgTransForReceipt(Delegator delegator, GenericValue multiplePaymentHeader, String confirmedPaymentId, GenericValue userLogin) {
 
 		GenericValue acctgTrans = null;
@@ -2053,7 +2041,7 @@ public class FinAccountServices {
 
 		return acctgTransId;
 	}
-	
+
 	private static String createConfirmedPayment(Delegator delegator, GenericValue multiplePaymentHeader) {
 		GenericValue confirmedPayment = null;
 		String paymentId = null;
