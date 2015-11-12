@@ -4518,15 +4518,14 @@
         <set from-field="separationApplicationId" field="newEntity.separationApplicationId"/>
         <set field="newEntity.createdDate" from-field="dateCreated"/>
         <set field="newEntity.processStatus" value="NOT PROCESSED"/>
+        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
+        <!-- set field="productType" value="Loan"/ -->
         <create-value value-field="newEntity"/>
         <property-to-field resource="HumanResUiLabels"
 			property="CreateSuccess" field="successMessage" />
     </simple-method>
-    
     <simple-method method-name="updateSeparationApplication" short-description="Update Separation Application">
-       <entity-one value-field="lookedUpValue" entity-name="SeparationApplication"></entity-one>
-	   <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-	   <store-value value-field="lookedUpValue"/>
+        
         <property-to-field resource="HumanResUiLabels"
 			property="UpdateSuccess" field="successMessage" />
     </simple-method>
@@ -5166,9 +5165,6 @@
 	
 	<set field="theCreatedDate" from-field="createdDate"/>
 	<set field="theEffectiveDate" from-field="effectiveDate"/>
-	<set field="DateFormEffectiveDate" value="${bsh:org.ofbiz.humanres.LeaveServices.sqlDateConvert(theEffectiveDate)}"/>
-	
-	<log message="#####Formated date## ${DateFormEffectiveDate}" level="info"/>
 	
 	<set field="appointmentDATE" value="${bsh:org.ofbiz.humanres.Separation.getAppointmentDate(party)}"/>
 	<set field="appointmentdate" from-field="appointmentDATE" type="date"/>
@@ -5183,20 +5179,6 @@
 	<set field="golden" value="${bsh:org.ofbiz.humanres.Separation.getGoldenHandShake(separationTypeId)}"/>
 	<set field="transportAll" value="${bsh:org.ofbiz.humanres.Separation.transportAllowance(separationTypeId)}"/>
 	<set field="noticePreiod" from-field="noticeP" type="String"/>
-	
-	<!-- Get Leave Balances As at the effective Date  -->
-	
-	<set field="accruedLeaveBal" value="${bsh:org.ofbiz.humanres.LeaveServices.getAccruedLeavesAtThisdate(DateFormEffectiveDate,party)}"/>
-	<set field="forwardedBalance" value="${bsh:org.ofbiz.humanres.LeaveServices.getForwardedLeaves(party)}"  type="BigDecimal"/>
-	<set field="usedBalance" value="${bsh:org.ofbiz.humanres.LeaveServices.getTotalUsedDays(DateFormEffectiveDate,party)}"/>
-	<set field="totalDays" value="${bsh:org.ofbiz.humanres.LeaveServices.totalLeaveDays(forwardedBalance,accruedLeaveBal)}"/>
-	<set field="balanceActual" value="${bsh: org.ofbiz.humanres.LeaveServices.balanceLeave(totalDays,usedBalance)}"/>
-	
-	 <log message="###accruedLeaveBal***#####${accruedLeaveBal}" level="info"/>
-	  <log message="###forwardedBalance***#####${forwardedBalance}" level="info"/>
-	   <log message="###usedBalance**#####${usedBalance}" level="info"/>
-	    <log message="###totalDays***#####${totalDays}" level="info"/>
-	     <log message="###balanceActual***#####${balanceActual}" level="info"/>
 	
 	<set field="daysDifference" value="${bsh:org.ofbiz.humanres.Separation.calculateTheCalendarDaysBetweenDates(theCreatedDate,theEffectiveDate)}"/>
 	<set field="leaveBalance" value="${bsh:org.ofbiz.humanres.Separation.getLeaveBalances(party)}"/>
@@ -5270,22 +5252,18 @@
 	
 	
 	<simple-method method-name="undoLink">
-	  <entity-one entity-name="SeparationDetail" value-field="lookedUpValue"/>
-	  <set-pk-fields value-field="lookedUpValue" map="parameters"/>
-	  <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-      <remove-value value-field="lookedUpValue"/> 	
-  
-    <entity-one value-field="FromseparationApplication" entity-name="SeparationApplication">
-	<field-map field-name="separationApplicationId" value="${lookedUpValue.separationApplicationId}"/>
-	</entity-one>
-	<set field="FromseparationApplication.processStatus" value="NOT PROCESSED"/>
-	<store-value value-field="FromseparationApplication"/>
-
-    <property-to-field resource="HumanResUiLabels" property="Process Successfully Reversed" field="successMessage"/>
+	 <entity-one entity-name="SeparationDetail" value-field="lookedUpValue"/>
+     <remove-value value-field="lookedUpValue"/> 	
+    <property-to-field resource="HumanResUiLabels" property="Process Successfully Undone" field="successMessage"/>
 	</simple-method>
 	
 	
-
+	
+	
+	
+	
+	
+	
 	<!-- Save Separation Types -->
 	
 	<simple-method method-name="createseparationApplicationTypes">
