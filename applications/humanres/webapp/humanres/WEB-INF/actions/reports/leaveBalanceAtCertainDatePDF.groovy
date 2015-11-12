@@ -80,7 +80,6 @@ if (partyId && asFromDate) {
 		    balances = org.ofbiz.humanres.LeaveServices.balanceLeave(totalDays, usedLeaveBal);
      
             println("###########  inside Groovy NAMES##"+name)
-            println("###########  inside Accrued##"+accruedBal)
             println("###########  inside Groovy SQL Date"+sqlFromDate)
             println("########## inside Groovy Party Id"+leaveB.partyId)
       
