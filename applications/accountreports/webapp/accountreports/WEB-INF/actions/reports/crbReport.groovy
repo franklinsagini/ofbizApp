@@ -104,8 +104,16 @@ loanApps.each { obj ->
    loanRepaymentAmount =   CrbReportServices.getLastRepaymentAmount(delegator, obj.loanApplicationId)
    formatedloanRepaymentAmount = CrbReportServices.getCRBAmountFormat(loanRepaymentAmount)
    daysInArrears = CrbReportServices.lastRepaymentDurationToDateInDays(obj.loanApplicationId)
-   lastRepaymentDate = org.ofbiz.loansprocessing.LoansProcessingServices.getLastRepaymentDate(obj.loanApplicationId)
-   formatedLastRepaymentDate = CrbReportServices.getCRBDateFormat(lastRepaymentDate)
+    lastRepaymentDate = 0
+    formatedLastRepaymentDate = 0
+   if (lastRepaymentDate != null) {
+         lastRepaymentDate = org.ofbiz.loansprocessing.LoansProcessingServices.getLastRepaymentDate(obj.loanApplicationId)
+         println("############### LAST REPAYMENT DATE: "+lastRepaymentDate)
+         if (lastRepaymentDate!=null) {
+             formatedLastRepaymentDate = CrbReportServices.getCRBDateFormat(lastRepaymentDate)
+         }
+          
+   }
    currentLoanBalance = org.ofbiz.loansprocessing.LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(obj.loanApplicationId)
    noInstalmentsInArrears = 0
     member_maritalStatus = ""
