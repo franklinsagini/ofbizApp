@@ -24,6 +24,7 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -374,6 +375,45 @@ public class FinAccountServices {
 					e.printStackTrace();
 				}
 			}
+		}
+		if (finAccountId.equalsIgnoreCase("22")) {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+			Date parsedDate = null;
+			try {
+				parsedDate = dateFormat.parse("2015-07-23 00:00:00.0");
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
+			
+			System.out.println("######################### FIN ACCOUNT ID: "+ finAccountId);
+			GenericValue reconLines = delegator.makeValue("BankReconLines");
+			String reconLinesId = delegator.getNextSeqId("BankReconLines");
+			reconLines.put("isUnpresentedCheques", "Y");
+			reconLines.put("isUncreditedBankings", "N");
+			reconLines.put("isUnidentifiedDebits", "N");
+			reconLines.put("isUnreceiptedBankings","N");
+			reconLines.put("headerId", headerId);
+			reconLines.put("finAccountTransId", "IM57");
+			reconLines.put("finAccountTransTypeId", "WITHDRAWAL");
+			reconLines.put("finAccountId", "22");
+			reconLines.put("transactionDate",timestamp );
+			reconLines.put("amount", new BigDecimal(244000.01));
+			reconLines.put("description", "Cheque Withdrawal 5592");
+			reconLines.put("isReconciledItem", "N");
+
+			// save to BankReconLines
+			reconLines.put("reconLineId", reconLinesId);
+			
+			
+		try {
+			reconLines.create();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+			
+			
 		}
 
 		transactions = getTransactionsForHeader(reconDate, finAccountId, delegator);
