@@ -130,8 +130,8 @@ public class WithdrawalProcessingServices {
 		
 		
 		//getTotalLoanBalancesByLoanApplicationId
-		BigDecimal bdLoanBalance =WithdrawalProcessingServices.getLoanBalance(loanApplicationId);
-				
+		BigDecimal bdLoanBalance = WithdrawalProcessingServices.getLoanBalance(loanApplicationId);
+		log.info("LLLLLLLL Loan Balance "+bdLoanBalance);		
 				//LoansProcessingServices.getLoanBalance.(loanApplicationId);
 
 		Long noOfGuarators = new Long(LoansProcessingServices
