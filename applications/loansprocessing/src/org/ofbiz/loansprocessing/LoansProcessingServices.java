@@ -324,8 +324,11 @@ public class LoansProcessingServices {
 	}
 
 	public static BigDecimal getLoanCurrentContributionAmount(Long memberId) {
+//		BigDecimal bdTotalDisbursedLoans = LoanServices
+//				.getTotalDisbursedLoans(memberId);
 		BigDecimal bdTotalDisbursedLoans = LoanServices
-				.getTotalDisbursedLoans(memberId);
+				.getTotalDisbursedLoansBalance(memberId);
+		
 		// getTotalLoansRunning(memberId);
 		BigDecimal bdContributionAmount = getGruaduatedScaleContribution(bdTotalDisbursedLoans, memberId);
 		return bdContributionAmount;
@@ -333,8 +336,10 @@ public class LoansProcessingServices {
 
 	public static BigDecimal getLoanNewContributionAmount(Long memberId,
 			Long loanProductId, BigDecimal loanAmt) {
+		
+		//getTotalDisbursedLoans
 		BigDecimal bdTotalDisbursedLoans = LoanServices
-				.getTotalDisbursedLoans(memberId);
+				.getTotalDisbursedLoansBalance(memberId);
 		// getTotalLoanBalances(memberId,
 		// loanProductId);
 
