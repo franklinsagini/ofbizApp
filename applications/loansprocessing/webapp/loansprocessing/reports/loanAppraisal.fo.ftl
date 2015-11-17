@@ -79,7 +79,11 @@ under the License.
                 <fo:block font-weight="bold"> Terms of Service </fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block> ${employmentType.name} </fo:block>
+                <fo:block> 
+                <#if (employmentType??)>
+								    ${employmentType.name}
+								</#if>
+                </fo:block>
             </fo:list-item-body>
         </fo:list-item>
         <fo:list-item>
