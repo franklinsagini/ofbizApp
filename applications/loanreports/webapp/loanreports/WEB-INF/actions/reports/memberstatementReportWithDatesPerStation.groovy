@@ -9,7 +9,8 @@
 	import java.text.SimpleDateFormat;
 	
 	partyId = parameters.partyId
-	
+	stationId = parameters.stationId
+	stationIdL = stationId.toLong();
 	
 	//Account Product
 	accountProductId = parameters.accountProductId
@@ -19,6 +20,7 @@
 	class MemberStatement{
 		def name
 		def code
+		def partyId
 		def loanNo
 		def accountCode
 		def accountName
@@ -36,15 +38,35 @@
 		def isLoan
 		def isLoanTransaction
 		def repaymentMode
+		def partyId
 	}
 	
 	
 	//end of class definition
 	
 	def memberStatementList = []
+	def controlMemberListBuilder = []
+	def controlMemberList = []
+
+	memberList = delegator.findList("Member",EntityCondition.makeCondition("stationId",stationIdL),null,null,null,false);
+	
+	int numberOfMembers = memberList.size();
 	
 
-
+   println("######Number of members"+numberOfMembers) 
+	  
+   memberList.eachWithIndex{ genericValue, indexinf ->
+    controlMemberListBuilder = [
+    partyId:genericValue.partyId
+    
+    ]
+    
+    //(GenericValue genericValue : memberList) 
+     
+     lpartyIdLong = genericValue.partyId;
+             
+     println("####PARTY ID###"+lpartyIdLong)
+             
 	startDate = parameters.startDate
 	endDate = parameters.endDate
 	
@@ -57,23 +79,25 @@
 	java.sql.Date sqlEndDate = null;
 	java.sql.Date sqlStartDate = null;
 	
-	//dateStartDate = Date.parse("yyyy-MM-dd hh:mm:ss", startDate).format("dd/MM/yyyy")
 	
 	if ((startDate?.trim())){
 		dateStartDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(startDate);
 	
 		sqlStartDate = new java.sql.Date(dateStartDate.getTime());
 	}
-	//(endDate != null) ||
+	
 	if ((endDate?.trim())){
 		dateEndDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(endDate);
 		sqlEndDate = new java.sql.Date(dateEndDate.getTime());
 	}
 	
 	
-	 lpartyId = partyId.toLong();
+	//lpartyId = partyId.toLong();
+	 lpartyId = lpartyIdLong.toLong();
 	
 	lmemberAccountId = null;
+	
+	
 	
 	if((accountProductId != null) && (!accountProductId.equals(""))){
 		laccountProductId = accountProductId.toLong();
@@ -244,7 +268,6 @@
 	context.combinedList = combinedList;
 	
 	def memberStatement =  new MemberStatement()
-	//def memberStatementList = []
 	
 	theDisburseLoanStatusId = 6.toLong();
 	theClearedLoanStatusId = 7.toLong();
@@ -291,6 +314,7 @@
 		memberStatement =  new MemberStatement()
 		
 		memberStatement.itemTotal = BigDecimal.ZERO;
+	    memberStatement.partyId = genericValue.partyId 
 	
 		loanTransaction = new MemberTransaction();
 		loanTransaction.transactionDate = loanItem.disbursementDate;
@@ -302,7 +326,6 @@
 			parentLoanApplication = delegator.findOne("LoanApplication", [loanApplicationId : parentLoanApplicationId], false);
 			loanTransaction.transactionDescription = 'Loan Attached from ( Loan No : '+parentLoanApplication.loanNo+") - "+loanProduct.name;
 		}
-		
 		loanTransaction.increaseDecrease = 'D'
 		loanTransaction.transactionAmount = loanItem.loanAmt
 		loanTransaction.isLoan = true
@@ -369,7 +392,7 @@
 	
 				if (interestInsurance.repaymentName.equals("INTEREST")){
 					
-					if (interestInsurance.acctgTransId != null){
+					if (interestInsurance.acctgTransId != null){ 
 						
 						if (interestInsurance.stationMonthInterestManagementId != null){
 							stationMonthInterestManagement = delegator.findOne("StationMonthInterestManagement", [stationMonthInterestManagementId : interestInsurance.stationMonthInterestManagementId], false);
@@ -386,7 +409,7 @@
 						
 					}else{
 						loanTransaction.transactionDescription = "Interest Charged";
-					}
+					} // close else
 					
 					
 				} else if (interestInsurance.repaymentName.equals("INSURANCE")){
@@ -460,7 +483,8 @@
 				loanTransaction.isLoanTransaction = true
 				loanTransaction.repaymentMode  = loanRepaymentItem.repaymentMode
 				memberStatement.listOfTransactions.add(loanTransaction);
-			}
+			
+			} // close if ... Add Insurance is insurance amount greater than ZERO
 	
 	
 			//Add Interest if interest amount is greater than ZERO
@@ -495,7 +519,7 @@
 				loanTransaction.isLoanTransaction = true
 				loanTransaction.repaymentMode  = loanRepaymentItem.repaymentMode
 				memberStatement.listOfTransactions.add(loanTransaction);
-			}
+			} // close if ...Add Interest if interest amount is greater than ZERO
 	
 	
 			//Add Principal if principal amount is greater than ZERO
@@ -530,11 +554,14 @@
 				loanTransaction.isLoanTransaction = true
 				loanTransaction.repaymentMode  = loanRepaymentItem.repaymentMode
 				memberStatement.listOfTransactions.add(loanTransaction);
-			}
+		
+	           	memberStatement.partyId = genericValue.partyId
+			}// close if .. Add Principal if principal amount is greater than ZERO
 	
-	
+	       memberStatement.partyId = genericValue.partyId
 		}
-	
+	    
+	    memberStatement.partyId = genericValue.partyId
 		memberStatement.listOfTransactions.sort{it.transactionDate};
 		memberStatementList.add(memberStatement)
 		//	statementItem = delegator.makeValue("ExpectedPaymentSent",
@@ -580,7 +607,8 @@
 		memberStatement.itemTotal = BigDecimal.ZERO;
 		String memberAccountIdStr = memberAccount.memberAccountId;
 		memberStatement.availableBalace = org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getAvailableBalanceVer3(memberAccountIdStr);
-	
+	    memberStatement.partyId = genericValue.partyId
+	    
 		//Add Opening Balance
 		memberAccountTransaction = new MemberTransaction()
 		
@@ -598,7 +626,7 @@
 		memberAccountTransaction.increaseDecrease = 'I'
 		memberAccountTransaction.transactionAmount = openingBalanceAmount
 		memberStatement.listOfTransactions.add(memberAccountTransaction);
-	
+	    memberStatement.partyId = genericValue.partyId
 		//Add Account Transactions to each product
 	
 		allTransactions = null;
@@ -724,12 +752,19 @@
 			memberAccountTransaction.transactionAmount = theTransaction.transactionAmount
 	
 			memberStatement.listOfTransactions.add(memberAccountTransaction);
-	
-		}
-	
-		memberStatement.listOfTransactions.sort{it.transactionDate};
+			
+	        memberStatement.listOfTransactions.sort{it.transactionDate};
+	        memberStatement.partyId = genericValue.partyId
+		} // close all transactions eachWithIndex
 		
+		memberStatement.partyId = genericValue.partyId
 		memberStatementList.add(memberStatement)
-	
-  }
-context.memberStatementList = memberStatementList;
+	 } //close all account products
+	memberStatement.partyId = genericValue.partyId
+	context.memberStatementList = memberStatementList;
+	controlMemberList.add(controlMemberListBuilder)
+ }// close for loop
+
+context.memberList = memberList;
+    
+

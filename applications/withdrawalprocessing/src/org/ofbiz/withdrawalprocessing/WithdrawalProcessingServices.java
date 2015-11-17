@@ -127,8 +127,12 @@ public class WithdrawalProcessingServices {
 	// Get Guaranteed Amount
 	public static BigDecimal getLoanGuarateedAmountByGuarantor(
 			Long loanApplicationId, Long guarantorId) {
-		BigDecimal bdLoanBalance = LoansProcessingServices
-				.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
+		
+		
+		//getTotalLoanBalancesByLoanApplicationId
+		BigDecimal bdLoanBalance = WithdrawalProcessingServices.getLoanBalance(loanApplicationId);
+		log.info("LLLLLLLL Loan Balance "+bdLoanBalance);		
+				//LoansProcessingServices.getLoanBalance.(loanApplicationId);
 
 		Long noOfGuarators = new Long(LoansProcessingServices
 				.getNumberOfGuarantors(loanApplicationId).size());
