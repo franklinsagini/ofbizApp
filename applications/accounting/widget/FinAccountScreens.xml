@@ -390,7 +390,7 @@ under the License.
                                         <parameter param-name="headerId"/>
                                         <parameter param-name="statusName"/>
                                     </link>
-                                    <link target="exportReconTrans.csv" text="Export Transactions" style="buttontext">
+                                    <link target="exportUpresented.csv" text="Export Unpresented Transactions" style="buttontext">
                                         <parameter param-name="headerId"/>
                                     </link>
                                     <link use-when="&quot;CAPTURED&quot;.equals(&quot;${statusName}&quot;)" target="saveReconciliation" text="Save Reconciliation" style="buttontext">
@@ -456,6 +456,56 @@ under the License.
                         </condition-list>
                     </condition-list>
                     <order-by field-name="transactionDate DESC"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <container>
+                     <include-form name="UnidentifiedUpresentedCSV" location="component://accounting/widget/FinAccountForms.xml" />
+                </container>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="UnidentifiedCSV">
+        <section>
+            <actions>
+                 <set field="viewSize" value="99999"/>
+                <set field="finAccountId" from-field="parameters.finAccountId"/>
+                <set field="reconDate" from-field="parameters.reconDate"/>
+                <set field="headerId" from-field="parameters.headerId"/>
+                <entity-one entity-name="BankReconHeader" value-field="bankReconHeader"/>
+                <entity-condition entity-name="BankReconLines" list="bankReconLinesAndFinAccountTrans">
+                    <condition-list combine="and">
+                        <condition-expr field-name="headerId" from-field="parameters.headerId" />
+                        <condition-expr field-name="isReconciledItem" value="N"/>
+                        <condition-expr field-name="isUnidentifiedDebits" value="Y"/>
+                    </condition-list>
+                    <order-by field-name="transactionDate DESC"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <container>
+                     <include-form name="UnidentifiedUpresentedCSV" location="component://accounting/widget/FinAccountForms.xml" />
+                </container>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="UpresentedCSV">
+        <section>
+            <actions>
+                 <set field="viewSize" value="99999"/>
+                <set field="finAccountId" from-field="parameters.finAccountId"/>
+                <set field="reconDate" from-field="parameters.reconDate"/>
+                <set field="headerId" from-field="parameters.headerId"/>
+                <entity-one entity-name="BankReconHeader" value-field="bankReconHeader"/>
+                 <entity-condition entity-name="BankReconLines" list="bankReconLinesAndFinAccountTrans">
+                    <condition-list combine="and">
+                        <condition-expr field-name="headerId" from-field="parameters.headerId" />
+                        <condition-expr field-name="isReconciledItem" value="N" ignore-if-empty="true"/>
+                        <condition-expr field-name="isUnidentifiedDebits" value="N" ignore-if-empty="true"/>
+                        <condition-expr field-name="isUnreceiptedBankings" value="N" ignore-if-empty="true"/>
+                        <condition-expr field-name="isUncreditedBankings" value="N" ignore-if-empty="true"/>
+                    </condition-list>
+                     <order-by field-name="transactionDate DESC"/>
                 </entity-condition>
             </actions>
             <widgets>
@@ -574,7 +624,7 @@ under the License.
                                 <link target="newUnidentifiedDebits" text="New Unidentified Debits" style="buttontext">
                                     <parameter param-name="headerId"/>
                                 </link>
-                                <link target="exportUnidentifiedUpresented.csv" text="Export Unidentified Debits/Unreceipted Cheques" style="buttontext">
+                                <link target="exportUnidentified.csv" text="Export Unidentified Debits" style="buttontext">
                                     <parameter param-name="headerId"/>
                                 </link>
                             </widgets>
@@ -635,7 +685,7 @@ under the License.
                                 <link target="newUnreceiptedCheques" text="New Unreceipted Cheques" style="buttontext">
                                     <parameter param-name="headerId"/>
                                 </link>
-                                <link target="exportUnidentifiedUpresented.csv" text="Export Unidentified Debits/Unreceipted Cheques" style="buttontext">
+                                <link target="exportUnidentified.csv" text="Export Unidentified Debits" style="buttontext">
                                     <parameter param-name="headerId"/>
                                 </link>
                             </widgets>
