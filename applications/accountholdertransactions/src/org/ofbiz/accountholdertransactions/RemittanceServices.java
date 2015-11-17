@@ -527,10 +527,7 @@ public class RemittanceServices {
 		    } 
 			//Else use old graduated scale
 		    else{
-		    	BigDecimal bdAmount = LoanServices.getTotalDisbursedLoansBalance(member.getLong("partyId"));
-		    			
-		    			//LoansProcessingServices.getTotalDisbursedLoans(member.getLong("partyId"));
-		    	
+		    	BigDecimal bdAmount = LoansProcessingServices.getTotalDisbursedLoans(member.getLong("partyId"));
 		    	bdContributingAmt = LoansProcessingServices.getGruaduatedScaleContributionOld(bdAmount);
 						
 	

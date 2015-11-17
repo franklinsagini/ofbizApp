@@ -952,41 +952,7 @@ public class LoanServices {
 
 		return bdDisbursedLoansTotal;
 	}
-	
-	/*****
-	 * Get disbursed loans balances
-	 * */
-	public static BigDecimal getTotalDisbursedLoansBalance(Long partyId) {
-		BigDecimal bdDisbursedLoansTotal = BigDecimal.ZERO;
 
-		Long loanStatusId = getLoanStatusId("DISBURSED");
-		List<GenericValue> loanApplicationELI = null; // =
-		EntityConditionList<EntityExpr> loanApplicationsConditions = EntityCondition
-				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
-						"partyId", EntityOperator.EQUALS, partyId),
-
-				EntityCondition.makeCondition("loanStatusId",
-						EntityOperator.EQUALS, loanStatusId)
-
-				), EntityOperator.AND);
-
-		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		try {
-			loanApplicationELI = delegator.findList("LoanApplication",
-					loanApplicationsConditions, null, null, null, false);
-		} catch (GenericEntityException e) {
-			e.printStackTrace();
-		}
-
-		for (GenericValue genericValue : loanApplicationELI) {
-
-//			bdDisbursedLoansTotal = bdDisbursedLoansTotal.add(genericValue
-//					.getBigDecimal("loanAmt"));
-			bdDisbursedLoansTotal = bdDisbursedLoansTotal.add(getLoanBalanceExcludeInterestAndInsurance(genericValue.getLong("loanApplicationId")));
-		}
-
-		return bdDisbursedLoansTotal;
-	}
 	public static String getShareDepositAccountId(String code) {
 		// TODO Auto-generated method stub
 		List<GenericValue> accountProductELI = null; // =
@@ -2393,6 +2359,11 @@ public class LoanServices {
 	
 	public static BigDecimal getLoanBalanceExcludeInterestAndInsurance(Long loanApplicationId) {
 		BigDecimal bdRemainingBalance = BigDecimal.ZERO;
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+//		bdRemainingBalance = getLoanAmount(delegator,
+//				String.valueOf(loanApplicationId)).subtract(
+//				getLoansRepaidByLoanApplicationId(loanApplicationId));
 		
 		bdRemainingBalance = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
 		

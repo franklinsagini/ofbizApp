@@ -35,7 +35,6 @@ import org.ofbiz.entity.datasource.GenericHelperInfo;
 import org.ofbiz.entity.jdbc.SQLProcessor;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
-import org.ofbiz.loans.LoanServices;
 import org.ofbiz.loansprocessing.LoansProcessingServices;
 import org.ofbiz.party.party.SaccoUtility;
 
@@ -2089,10 +2088,7 @@ public class OnlineRemittanceProcessingServices {
 		    } 
 			//Else use old graduated scale
 		    else{
-		    	BigDecimal bdAmount = LoanServices.getTotalDisbursedLoansBalance(member.getLong("partyId"));
-		    			
-		    			//LoansProcessingServices.getTotalDisbursedLoanBalances(member.getLong("partyId"));
-		    			//LoansProcessingServices.getTotalDisbursedLoans(member.getLong("partyId"));
+		    	BigDecimal bdAmount = LoansProcessingServices.getTotalDisbursedLoans(member.getLong("partyId"));
 		    	bdContributingAmt = LoansProcessingServices.getGruaduatedScaleContributionOld(bdAmount);
 						
 	
