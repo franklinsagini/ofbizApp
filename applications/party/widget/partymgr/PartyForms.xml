@@ -3537,59 +3537,59 @@ Gender
 
         <!-- field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field -->
         <field name="startDate" widget-style="required" required-field="true">
-        	<!-- date-find default-option-from="greaterThanFromDayStart"/ -->
-        	<date-time type="date"/>
+            <!-- date-find default-option-from="greaterThanFromDayStart"/ -->
+            <date-time type="date"/>
         </field>
         
         <field name="endDate" position="2" widget-style="required" required-field="true">
-        	<!-- date-find default-option-thru="upThruDay"/ -->
-        	<date-time type="date"/>
+            <!-- date-find default-option-thru="upThruDay"/ -->
+            <date-time type="date"/>
         </field>
         
          <field name="memberStatusId" title="Status">
-        	<!-- date-find default-option-from="greaterThanFromDayStart"/ -->
-        	<drop-down allow-empty="true">
-        		<entity-options description="${name}" entity-name="MemberStatus"></entity-options>
-        	</drop-down>
+            <!-- date-find default-option-from="greaterThanFromDayStart"/ -->
+            <drop-down allow-empty="true">
+                <entity-options description="${name}" entity-name="MemberStatus"></entity-options>
+            </drop-down>
         </field>
         
          <field name="branchId" title="Branch" position="2">
-        	<!-- date-find default-option-from="greaterThanFromDayStart"/ -->
-        	<drop-down allow-empty="true">
-        		<entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup">
-        			<entity-constraint name="isBranch" operator="equals" value="Y"/>
-        		</entity-options>
-        	</drop-down>
+            <!-- date-find default-option-from="greaterThanFromDayStart"/ -->
+            <drop-down allow-empty="true">
+                <entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup">
+                    <entity-constraint name="isBranch" operator="equals" value="Y"/>
+                </entity-options>
+            </drop-down>
         </field>  
         
         <field name="stationId" title="Station">
-        	<drop-down allow-empty="true">
-        		<entity-options description="${name} - ${stationNumber}" entity-name="Station" key-field-name="stationId"></entity-options>
-        	</drop-down>
+            <drop-down allow-empty="true">
+                <entity-options description="${name} - ${stationNumber}" entity-name="Station" key-field-name="stationId"></entity-options>
+            </drop-down>
         </field>
         
          <field name="employmentTypeId" title="Employment Type">
-        	<drop-down allow-empty="true">
-        		<entity-options description="${name}" entity-name="EmploymentType" key-field-name="employmentTypeId"></entity-options>
-        	</drop-down>
+            <drop-down allow-empty="true">
+                <entity-options description="${name}" entity-name="EmploymentType" key-field-name="employmentTypeId"></entity-options>
+            </drop-down>
         </field>  
         
         <!-- IntroducingMemberSummary --> 
         <field name="introducingMember" title="Introducing Member">
-        	<drop-down allow-empty="true">
-        		<entity-options description="${firstName} ${middleName} ${lastName}" entity-name="IntroducingMemberSummary" key-field-name="partyId">
-        			<entity-order-by field-name="firstName"/>
-        		</entity-options>
-        	</drop-down>
+            <drop-down allow-empty="true">
+                <entity-options description="${firstName} ${middleName} ${lastName}" entity-name="IntroducingMemberSummary" key-field-name="partyId">
+                    <entity-order-by field-name="firstName"/>
+                </entity-options>
+            </drop-down>
         </field>  
         
                
        <field name="memberTypeId" title="Member Type" position="1">
-        	<drop-down allow-empty="true">
-        		<entity-options description="${name}" entity-name="MemberType" >
-        			<entity-order-by field-name="name"/>
-        		</entity-options>
-        	</drop-down>
+            <drop-down allow-empty="true">
+                <entity-options description="${name}" entity-name="MemberType" >
+                    <entity-order-by field-name="name"/>
+                </entity-options>
+            </drop-down>
         </field>
         
         
@@ -3597,8 +3597,47 @@ Gender
             <submit button-type="button"/>
         </field>
     </form>
+
+    <!-- MemberStatusByDate -->
+    <form name="MemberStatusByDate" type="single" target="MemberStatusByDate.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+
+        <field name="endDate" title="As At" position="2" widget-style="required" required-field="true">
+        	<date-time type="date"/>
+        </field>
+
+         <field name="memberStatusId" title="Status">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name}" entity-name="MemberStatus"></entity-options>
+        	</drop-down>
+        </field>
+
+        <field name="submitButton" title="Download Excel" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+
+    </form>
     
         <form name="listMembersByDate" list-name="membersList" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+            <field name="partyId" title="Names">
+                <display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName}" key-field-name="partyId"></display-entity>
+            </field>
+            <field name="memberStatusId" title="Status">
+                <display-entity entity-name="MemberStatus" description="${name}" key-field-name="memberStatusId" ></display-entity>
+            </field>
+            <field name="idNumber" title="ID Number"><display/></field>
+            <field name="payrollNumber" title="Payroll Number"><display/></field>
+            <field name="mobileNumber" title="Mobile Number"><display/></field>
+            
+            <field name="joinDate" title="Join Date"><display type="date"/></field>
+            <field name="memberNumber" title="Member Number"><display/></field>
+            <field name="stationId" title="Station"><display-entity entity-name="Station" description="${name}"/></field>
+            <field name="branchId" title="Branch"><display-entity entity-name="PartyGroup" description="${groupName}" key-field-name="partyId" /></field>
+    </form>
+
+        <form name="MemberStatusByDateCSV" list-name="membersList" target="" title="" 
          type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
          default-table-style="basic-table hover-bar" paginate="false"> 
 	        <field name="partyId" title="Names">
@@ -3616,5 +3655,6 @@ Gender
 	        <field name="stationId" title="Station"><display-entity entity-name="Station" description="${name}"/></field>
 	        <field name="branchId" title="Branch"><display-entity entity-name="PartyGroup" description="${groupName}" key-field-name="partyId" /></field>
     </form>
+    
     
 </forms>
