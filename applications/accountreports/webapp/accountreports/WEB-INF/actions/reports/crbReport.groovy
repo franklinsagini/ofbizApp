@@ -46,6 +46,7 @@ currentDate = UtilDateTime.nowTimestamp();
 loanApps.each { obj ->
          //GET MEMBER
      member = delegator.findOne("Member", [partyId : obj.partyId], false);
+     println("Generating CRB Report for Member " + member.firstName, + " " +member.lastName)
      //GET SALUTATION 
      salutation = delegator.findOne("Salutation", [salutationId : member.salutationId], false);
      //GET GENDER 
