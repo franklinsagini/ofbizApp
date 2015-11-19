@@ -3791,6 +3791,27 @@
             </widgets>
         </section>
     </screen>
+
+    <screen name="MemberStatusByDate">
+        <section>
+            <actions>
+                <set field="headerItem" value="MemberStatusByDate" />
+                <set field="tabButtonItem" value="MemberStatusByDate" />
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container>
+                            <screenlet title="Member Status As At">
+                                <include-form name="MemberStatusByDate" location="component://party/widget/partymgr/PartyForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     
     <!-- memberRegistrationByDateExcel -->
     <screen name="memberRegistrationByDateExcel">
@@ -3803,6 +3824,20 @@
            <widgets>
 
                 <include-form name="listMembersByDate" location="component://party/widget/partymgr/PartyForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+
+    <!-- MemberStatusByDateCSV -->
+    <screen name="MemberStatusByDateCSV">
+        <section>
+           <actions>
+                <set field="viewSize" value="99999"/>
+               <script location="component://party/webapp/partymgr/WEB-INF/actions/reports/memberStatusByDate.groovy"/>
+           </actions>
+           <widgets>
+                <include-form name="MemberStatusByDateCSV" location="component://party/widget/partymgr/PartyForms.xml"/>
             </widgets>
         </section>
     </screen>
