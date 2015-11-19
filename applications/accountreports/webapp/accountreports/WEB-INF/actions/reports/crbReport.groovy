@@ -46,7 +46,6 @@ currentDate = UtilDateTime.nowTimestamp();
 loanApps.each { obj ->
          //GET MEMBER
      member = delegator.findOne("Member", [partyId : obj.partyId], false);
-     println("Generating CRB Report for Member "+ member.firstName+ " " +member.lastName)
      //GET SALUTATION 
      salutation = delegator.findOne("Salutation", [salutationId : member.salutationId], false);
      //GET GENDER 
@@ -77,16 +76,6 @@ loanApps.each { obj ->
         }
 
     }
-    disbursementDate = 0;
-    if (obj.disbursementDate != null) {
-        disbursementDate = CrbReportServices.getCRBDateFormat(obj.disbursementDate)
-    }
-    approvedAmt = 0;
-    if (obj.approvedAmt != null) {
-        approvedAmt = CrbReportServices.getCRBAmountFormat(obj.approvedAmt)
-    }
-    
-    
     //GET ACCOUNT STATUS DETAILS
     accountsStatus = null;
     dateAccountOpened  = null;
@@ -115,16 +104,8 @@ loanApps.each { obj ->
    loanRepaymentAmount =   CrbReportServices.getLastRepaymentAmount(delegator, obj.loanApplicationId)
    formatedloanRepaymentAmount = CrbReportServices.getCRBAmountFormat(loanRepaymentAmount)
    daysInArrears = CrbReportServices.lastRepaymentDurationToDateInDays(obj.loanApplicationId)
-    lastRepaymentDate = 0
-    formatedLastRepaymentDate = 0
-   if (lastRepaymentDate != null) {
-         lastRepaymentDate = org.ofbiz.loansprocessing.LoansProcessingServices.getLastRepaymentDate(obj.loanApplicationId)
-         println("############### LAST REPAYMENT DATE: "+lastRepaymentDate)
-         if (lastRepaymentDate!=null) {
-             formatedLastRepaymentDate = CrbReportServices.getCRBDateFormat(lastRepaymentDate)
-         }
-          
-   }
+   lastRepaymentDate = org.ofbiz.loansprocessing.LoansProcessingServices.getLastRepaymentDate(obj.loanApplicationId)
+   formatedLastRepaymentDate = CrbReportServices.getCRBDateFormat(lastRepaymentDate)
    currentLoanBalance = org.ofbiz.loansprocessing.LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(obj.loanApplicationId)
    noInstalmentsInArrears = 0
     member_maritalStatus = ""
@@ -217,9 +198,9 @@ loanApps.each { obj ->
         accountProductType:"H",
         instalmentDueDate:"",
         dateAccountOpened:dateAccountOpened,
-        originalAmount:approvedAmt,
+        originalAmount:obj.approvedAmt,
         currencyFacility:"KES",
-        amountKSH:approvedAmt,
+        amountKSH:obj.approvedAmt,
         currentBalance:currentLoanBalance,
         overdueBalance:"",
         overdueDate:obj.nextInstallmentDate,
@@ -233,7 +214,7 @@ loanApps.each { obj ->
         deferredPaymentDate:"",
         deferredPaymentAmount:"",
         m:"",
-        disbursementDate:disbursementDate,
+        disbursementDate:obj.disbursementDate,
         instalmentAmount:formatedloanRepaymentAmount,
         lastPaymentDate:formatedLastRepaymentDate,
         lastLoanPayment:formatedloanRepaymentAmount,
