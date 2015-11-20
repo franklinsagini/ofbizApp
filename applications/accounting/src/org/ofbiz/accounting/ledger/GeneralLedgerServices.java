@@ -159,6 +159,83 @@ public class GeneralLedgerServices {
 		return jvLines;
 	}
 	
+	public static Map<String, Object> deleteGLJV(DispatchContext dctx, Map<String, Object> context) {
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String organizationPartyId = (String) context.get("organizationPartyId");
+		String manualGlJvId = (String) context.get("manualGlJvId");
+		System.out.println("############### organizationPartyId "+organizationPartyId);
+		System.out.println("############### manualGlJvId "+manualGlJvId);
+
+		GenericValue jvHeader = getJVHeader(delegator, manualGlJvId);
+
+		// get all bankreconlines for this header id
+		List<GenericValue> jvLines = null;
+		jvLines = getJVLines(jvHeader);
+		// foreach delete
+
+		for (GenericValue line : jvLines) {
+			try {
+				line.remove();
+			} catch (Exception e) {
+				return ServiceUtil.returnError("COULD NOT DELETE TRANSACTION " + line.getString("narration"));
+			}
+		}
+
+		// finally delete the header
+		try {
+			jvHeader.remove();
+		} catch (Exception e) {
+			return ServiceUtil.returnError("COULD NOT DELETE RECONCILIATION " + jvHeader.getString("narration"));
+		}
+		Map<String, Object> result = ServiceUtil.returnSuccess("GL DELETED SUCCESSFULLY");
+		result.put("manualGlJvId", manualGlJvId);
+		result.put("organizationPartyId", organizationPartyId);
+		return result;
+	}
+	
+	public static Map<String, Object> deleteLoanClearItem(DispatchContext dctx, Map<String, Object> context) {
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		Long loanClearId = (Long) context.get("loanClearId");
+		Long loanClearItemId = (Long) context.get("loanClearItemId");
+		System.out.println("############### loanClearId "+loanClearId);
+		System.out.println("############### loanClearItemId "+loanClearItemId);
+
+		GenericValue loanClearHeader = getLoanClearHeader(delegator, loanClearId);
+		GenericValue loanClearItem = null;
+		
+		if (loanClearHeader.getString("isCleared").equals("N")) {
+			try {
+				loanClearItem = delegator.findOne("LoanClearItem", UtilMisc.toMap("loanClearItemId", loanClearItemId), false);
+				loanClearItem.remove();
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+		}else{
+			Map<String, Object> errorResult = ServiceUtil.returnError("THIS LOAN HAS ALREADY BEEN CLEARED. YOU CAN NOT DELETE A CLEARED LOAN");
+			errorResult.put("loanClearId", loanClearId);
+			errorResult.put("loanClearItemId", loanClearItemId);
+			return errorResult;
+		}
+		Map<String, Object> result = ServiceUtil.returnSuccess("DELETED SUCCESSFULLY");
+		result.put("loanClearId", loanClearId);
+		return result;
+	}
+
+	private static GenericValue getLoanClearHeader(Delegator delegator, Long loanClearId) {
+		GenericValue loanClearHeader = null;
+		try {
+			loanClearHeader = delegator.findOne("LoanClear", UtilMisc.toMap("loanClearId", loanClearId), false);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return loanClearHeader;
+	}
+
 	private static Boolean createJVAcctgTransEntryLine(Delegator delegator, GenericValue jvLine, GenericValue jvHeader,GenericValue userLogin, String acctgTransId) {
 		Boolean isSuccess =  false;
 		
