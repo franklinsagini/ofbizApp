@@ -531,5 +531,68 @@
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
     
+    <!-- listLoanStatusLog -->
+    <form name="listLoanStatusLog" type="list" list-name="listIt"
+		paginate-target="viewapplicationprofile" default-entity-name="LoanStatusLog"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="loanStatusLog" target="updateLoanStatusLog">
+		<actions>
+			<entity-condition entity-name="LoanStatusLog">
+				<condition-list combine="and">
+					<condition-expr field-name="loanApplicationId" operator="equals" from-field="loanApplicationId"/>
+					<condition-expr field-name="loanStatusId" operator="equals" value="10030"/>
+				</condition-list>
+				<order-by field-name="-loanStatusLogId"/>
+			</entity-condition>
+			<!-- entity-and entity-name="LoanApplication" >
+				<field-map field-name="parentLoanApplicationId"  from-field="loanApplicationId"/>
+			</entity-and -->		
+		</actions>
+		<field name="loanApplicationId">
+			<hidden value="${parameters.loanApplicationId}"/>
+		</field>
+		<field name="loanStatusLogId">
+			<hidden></hidden>
+		</field>
+		<field name="loanStatusId" title="Status">
+			<display-entity entity-name="LoanStatus" description="${name}" key-field-name="loanStatusId"></display-entity>
+		</field>
+		
+		<field name="memberDepositsAmtProportion" title="Deposit Proportion Used">
+			<text></text>
+		</field>
+		
+		<field name="shareCapitalOffsetAmt" title="Share Capital Offset">
+			<text></text>
+		</field>
+		
+		<field name="balanceAtAttachment" title="Loan Balance at Attachment">
+			<text></text>
+		</field>
+		
+		<field name="interestDueAtAttachment" title="Interest at Attachment">
+			<text></text>
+		</field>
+		
+		<field name="insuranceDueAtAttachment" title="Insurance at Attachment">
+			<text></text>
+		</field>
+		
+
+
+		<field name="createdStamp" title="Created">
+			<display type="date-time" />
+		</field>
+		
+		<field name="createdBy" title="Created By">
+			<display />
+		</field>
+
+		
+	
+		
+		 <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+		
+	</form>
 
 </forms>
