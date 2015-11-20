@@ -3,7 +3,9 @@ package org.ofbiz.transfertoguarantors;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,10 +20,15 @@ import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.loans.LoanServices;
 import org.ofbiz.loansprocessing.LoansProcessingServices;
+
+import sun.nio.cs.ext.Big5_Solaris;
 
 /*****
  * 
@@ -83,13 +90,14 @@ public class TransferToGuarantorsServices {
 	/*****
 	 * Transfer Loan to Guarantors
 	 * */
-	public static String transferToGuarantors(Long loanApplicationId,
+	public static synchronized String transferToGuarantors(Long loanApplicationId,
 			Map<String, String> userLogin) {
 		
 		String postingType;
 		String entrySequenceId;
 		GenericValue accountHolderTransactionSetup;
 		BigDecimal bdOffsetAmount = BigDecimal.ZERO;
+		BigDecimal  memberDepositsAmtProportion  = BigDecimal.ZERO;
 		
 		String userLoginId = userLogin.get("userLoginId");
 		Long sequence = 0L;
@@ -197,10 +205,13 @@ public class TransferToGuarantorsServices {
 		{
 			
 			bdDepositsBalance = AccHolderTransactionServices.getAccountTotalBalance(accountProductId, partyId);
+			
+			//Round it up
+			bdDepositsBalance = bdDepositsBalance.setScale(2, RoundingMode.HALF_UP);
 			memberDepositsAtAttachment = bdDepositsBalance;
 			//Get the Proportion of savings for this loan
 			BigDecimal bdProportionForThisLoan = getDepositProportion(loanClass, bdDepositsBalance, loanApplicationId, partyId);
-			
+			memberDepositsAmtProportion = bdProportionForThisLoan;
 			log.info(" The loan proportion is "+bdProportionForThisLoan);
 					
 					//bdDepositsBalance.divide(loanProduct.getBigDecimal("multipleOfSavingsAmt"), 4, RoundingMode.FLOOR);
@@ -213,9 +224,13 @@ public class TransferToGuarantorsServices {
 			bdShareCapitalBalance = bdShareCapitalBalance.setScale(2,
 					RoundingMode.HALF_UP);
 			
-			if (bdMinimumShareCapital.compareTo(bdShareCapitalBalance) == 1){
+			if ((bdMinimumShareCapital.compareTo(bdShareCapitalBalance) == 1) && (bdDepositsBalance.compareTo(BigDecimal.ZERO) == 1)){
 				//Get the difference and add it to member share capital
 				bdOffsetAmount = bdMinimumShareCapital.subtract(bdShareCapitalBalance);
+				
+				if (bdProportionForThisLoan.compareTo(bdOffsetAmount) == -1){
+					bdOffsetAmount = bdProportionForThisLoan;
+				}
 				bdProportionForThisLoan = bdProportionForThisLoan.subtract(bdOffsetAmount);
 				
 				Long shareCapitalAccountProductId = LoanUtilities.getAccountProductIdGivenCodeId(AccHolderTransactionServices.SHARE_CAPITAL_CODE);
@@ -237,6 +252,7 @@ public class TransferToGuarantorsServices {
 				
 				//post share capital to gl
 				String posting = "C";
+				bdOffsetAmount = bdOffsetAmount.setScale(2, RoundingMode.HALF_UP);
 				LoanRepayments.postTransactionEntry(delegator, bdOffsetAmount, partyId.toString(), accountToCredit, posting, acctgTransId, acctgTransType, sequence.toString(), userLogin);
 				
 			}
@@ -317,6 +333,8 @@ public class TransferToGuarantorsServices {
 				
 				"dateAttached", new Timestamp(Calendar.getInstance().getTimeInMillis()),
 				"memberDepositsAtAttachment", memberDepositsAtAttachment,
+				"memberDepositsAmtProportion", memberDepositsAmtProportion,
+				"shareCapitalOffsetAmt", bdOffsetAmount,
 				"balanceAtAttachment", balanceAtAttachment,
 				
 				"interestDueAtAttachment", interestDueAtAttachment,
@@ -416,7 +434,7 @@ public class TransferToGuarantorsServices {
 				.getString("memberDepositAccId");
 		// createAccountingEntry(loanExpectation, acctgTransId, accountId,
 		// postingType, delegator);
-
+		loanPrincipal = loanPrincipal.setScale(2, RoundingMode.HALF_UP);
 		if (loanPrincipal.compareTo(BigDecimal.ZERO) == 1) {
 			LoanRepayments.postTransactionEntry(delegator, loanPrincipal, partyId.toString(), accountId, postingType, acctgTransId, acctgTransType, entrySequenceId, userLogin);
 			//postTransactionEntry(delegator, loanPrincipal, partyId,
@@ -436,6 +454,8 @@ public class TransferToGuarantorsServices {
 		
 		BigDecimal bdGuarantorLoanAmount = bdLoanTransferBalance.divide(new BigDecimal(
 				noOfGuarantors), 6, RoundingMode.HALF_UP);
+		
+		bdGuarantorLoanAmount = bdGuarantorLoanAmount.setScale(2, RoundingMode.HALF_UP);
 
 		for (GenericValue loanGuarantor : loanGuarantorELI) {
 			sequence = createGuarantorLoans(bdGuarantorLoanAmount, loanGuarantor,
@@ -621,7 +641,7 @@ public class TransferToGuarantorsServices {
 	
 	
 	//reverseLoanAttachmentToDefaulterProcessing
-	public static String reverseLoanAttachmentToDefaulterProcessing(Long loanApplicationId,
+	public static synchronized String reverseLoanAttachmentToDefaulterProcessing(Long loanApplicationId,
 			Map<String, String> userLogin) {
 		
 		//The loan must be defaulted first
@@ -660,6 +680,8 @@ public class TransferToGuarantorsServices {
 		//Check if a loan is not disbursed
 		if (!loanApplication.getLong("loanStatusId").equals(LoanUtilities.getLoanStatusId("DEFAULTED")))
 			return "We can only reverse DEFAULTED and attached loans, please verify that this is a defaulted loan";
+		
+		
 
 		Long parentLoanApplicationId = loanApplication.getLong("loanApplicationId");
 		//Get all disbursed loans whose parent is this loan
@@ -667,7 +689,20 @@ public class TransferToGuarantorsServices {
 		
 		if ((attacheLoansList == null) || (attacheLoansList.size() < 1))
 			return " The system cannot find loans associated with this Defaulted loan, you need to have them mapped to the parent loan - please contact ICT";
+		
+		//If there is no DEFAULTED loan status log in the logs for this loan, then create one first
+		//and ask for the values for (memberDepositsAmtProportion, shareCapitalOffsetAmt, balanceAtAttachment,interestDueAtAttachment and insuranceDueAtAttachment)
+		// to be provided
+		if (!defaultedStatusLogExists(loanApplicationId)){
+			createDefaultedLog(loanApplicationId, userLogin);
 			
+			return "Please fill in values for (memberDepositsAmtProportion, shareCapitalOffsetAmt, balanceAtAttachment,interestDueAtAttachment and insuranceDueAtAttachment) in the Loans log (current record) so as to enable a loan reversal ";
+		}
+		
+		String logValues = getLogValues(loanApplicationId);
+		if (!logValues.equals("success")){
+			return logValues;
+		}
 		
 		BigDecimal bdTotalAmountAttached = getTotalAttachedAmount(parentLoanApplicationId);
 		
@@ -677,15 +712,29 @@ public class TransferToGuarantorsServices {
 		
 		//Reset the loan Balance for the defaulted Loan
 		//Set the Loan Balance to the total loan attached
-		String acctgTransId = "";
+		String acctgTransType = "LOAN_RECEIVABLE";
 		
-		setNewLoanBalance(bdTotalAmountAttached, parentLoanApplicationId, userLogin, acctgTransId);
+		GenericValue loanRepayment = delegator.makeValidValue("LoanRepayment", UtilMisc.toMap(
+				
+				"partyId", loanApplication.getLong("partyId")));
+
+		String acctgTransId = LoanRepayments.createAccountingTransaction(loanRepayment,
+				acctgTransType, userLogin, delegator);
+		
+		GenericValue currentloanStatusLog = getCurrentLoanStatusLog(loanApplicationId);
+		//setNewLoanBalance(bdTotalAmountAttached, parentLoanApplicationId, userLogin, acctgTransId);
+		//memberDepositsAmtProportion, shareCapitalOffsetAmt, balanceAtAttachment,interestDueAtAttachment and insuranceDueAtAttachment
+		setNewLoanBalance(bdTotalAmountAttached, currentloanStatusLog.getBigDecimal("balanceAtAttachment") ,currentloanStatusLog.getBigDecimal("interestDueAtAttachment") , currentloanStatusLog.getBigDecimal("insuranceDueAtAttachment"), parentLoanApplicationId, userLogin, acctgTransId);
 		
 		//Set the Interest due to the total interest charged
+		if (bdTotalInterestChargedOnGuarantors.compareTo(BigDecimal.ZERO) == 1){
 		setNewLoanInterest(bdTotalInterestChargedOnGuarantors, parentLoanApplicationId, userLogin, acctgTransId);
+		}
 		//set the Insurance due to the total insurance charged
-		setNewLoanInsurance(bdTotalInsuranceChargedOnGuarantors, parentLoanApplicationId, userLogin, acctgTransId);
 		
+		if (bdTotalInsuranceChargedOnGuarantors.compareTo(BigDecimal.ZERO) == 1){
+			setNewLoanInsurance(bdTotalInsuranceChargedOnGuarantors, parentLoanApplicationId, userLogin, acctgTransId);
+		}
 		//Set loan status to Disbursed 
 		loanApplication.set("loanStatusId", LoanUtilities.getLoanStatusId("DISBURSED"));
 		try {
@@ -702,21 +751,366 @@ public class TransferToGuarantorsServices {
 
 		
 		//Return amount paid to member savings account
+		Map<String, BigDecimal> loanAmountsMap = new HashMap<String, BigDecimal>();
+		
+//		amountsMap.put("insurance", bdInsurancePaid);
+//		amountsMap.put("interest", bdInterestPaid);
+//		amountsMap.put("principal", bdPrincipalPaid);
+		loanAmountsMap.put("insurance", BigDecimal.ZERO);
+		loanAmountsMap.put("interest", BigDecimal.ZERO);
+		loanAmountsMap.put("principal", BigDecimal.ZERO);
+		
 		for (GenericValue genericValue : attacheLoansList) {
-			returnAmountPaidByGuarantor(genericValue.getLong("loanApplicationId"), acctgTransId, userLogin);
+			Map<String, BigDecimal> amountMap;
+			amountMap = returnAmountPaidByGuarantor(genericValue.getLong("loanApplicationId"), acctgTransId, userLogin);
+			loanAmountsMap.put("insurance", loanAmountsMap.get("insurance").add(amountMap.get("insurance")));
+			loanAmountsMap.put("interest", loanAmountsMap.get("interest").add(amountMap.get("interest")));
+			loanAmountsMap.put("principal", loanAmountsMap.get("principal").add(amountMap.get("principal")));
+			
 		}
+		
+		BigDecimal bdTotalPaid = loanAmountsMap.get("insurance").add(loanAmountsMap.get("interest"));
+		bdTotalPaid = bdTotalPaid.add(loanAmountsMap.get("principal"));
 		
 		//Repay each guarantor loan with the the total amount 
 		for (GenericValue genericValue : attacheLoansList) {
 			reverseIndividualGuarantorLoan(genericValue.getLong("loanApplicationId"), acctgTransId, userLogin);
 		}
+		
+		
+		
+		//Debit Loan to members
+		BigDecimal bdPrincipalPaid = loanAmountsMap.get("principal");
+		BigDecimal bdInterestPaid = loanAmountsMap.get("interest");
+		BigDecimal bdInsurancePaid = loanAmountsMap.get("insurance");
+		
+		
+		if (bdPrincipalPaid.compareTo(BigDecimal.ZERO) == 1){
+		sequence = sequence + 1;
+		String posting = "D";
+		accountHolderTransactionSetup = LoanRepayments.getAccountHolderTransactionSetupRecord(
+				"PRINCIPALPAYMENT", delegator);
+		Long partyId = loanApplication.getLong("partyId");
+		String accountId = accountHolderTransactionSetup
+				.getString("memberDepositAccId");
+		LoanRepayments.postTransactionEntry(delegator, bdPrincipalPaid, partyId.toString(), accountId, posting, acctgTransId, acctgTransType, sequence.toString(), userLogin);
+		}
+		
+		//Debit Interest Receivable
+		if (bdInterestPaid.compareTo(BigDecimal.ZERO) == 1){
+		sequence = sequence + 1;
+		String posting = "D";
+		accountHolderTransactionSetup = LoanRepayments.getAccountHolderTransactionSetupRecord(
+				"INTERESTPAYMENT", delegator);
+		Long partyId = loanApplication.getLong("partyId");
+		String accountId = accountHolderTransactionSetup
+				.getString("memberDepositAccId");
+		LoanRepayments.postTransactionEntry(delegator, bdInterestPaid, partyId.toString(), accountId, posting, acctgTransId, acctgTransType, sequence.toString(), userLogin);
+		}
+		
+		//Debit Insurance Receivable
+		
+		if (bdInsurancePaid.compareTo(BigDecimal.ZERO) == 1){
+			sequence = sequence + 1;
+			String posting = "D";
+			accountHolderTransactionSetup = LoanRepayments.getAccountHolderTransactionSetupRecord(
+					"INSURANCEPAYMENT", delegator);
+			Long partyId = loanApplication.getLong("partyId");
+			String accountId = accountHolderTransactionSetup
+					.getString("memberDepositAccId");
+			LoanRepayments.postTransactionEntry(delegator, bdInsurancePaid, partyId.toString(), accountId, posting, acctgTransId, acctgTransType, sequence.toString(), userLogin);
+		}
+		
+		//Credit Member Savings
+		if (bdTotalPaid.compareTo(BigDecimal.ZERO) == 1){
+		String posting = "C";
+		String accountId = LoanUtilities.getAccountProductGivenCodeId(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE).getString("glAccountId");
+		Long partyId = loanApplication.getLong("partyId");
+		
+		LoanRepayments.postTransactionEntry(delegator, bdTotalPaid, partyId.toString(), accountId, posting, acctgTransId, acctgTransType, sequence.toString(), userLogin);
+
+		}
+
+
+		//Debit the member deposit account with the deposits balance
+		//ATTACHMENTREVERSAL
+		Long partyId = loanApplication.getLong("partyId");
+		Long memberDepositProductId = LoanUtilities.getAccountProductIdGivenCodeId(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE);
+		Long memberDepositAccountId = LoanUtilities.getMemberAccountIdFromMemberAccount(partyId, memberDepositProductId);
+		
+		String accountTransactionParentId = AccHolderTransactionServices
+				.getcreateAccountTransactionParentId(memberDepositAccountId,
+						userLogin);
+//		GenericValue currentloanStatusLog = getCurrentLoanStatusLog(loanApplicationId);
+//		//setNewLoanBalance(bdTotalAmountAttached, parentLoanApplicationId, userLogin, acctgTransId);
+//		//memberDepositsAmtProportion, shareCapitalOffsetAmt, balanceAtAttachment,interestDueAtAttachment and insuranceDueAtAttachment
+		
+		if ((currentloanStatusLog.getBigDecimal("memberDepositsAmtProportion") != null) && (currentloanStatusLog.getBigDecimal("memberDepositsAmtProportion").compareTo(BigDecimal.ZERO) == 1)){
+		AccHolderTransactionServices.memberTransactionDeposit(
+				currentloanStatusLog.getBigDecimal("memberDepositsAmtProportion"), memberDepositAccountId, userLogin,
+				"ATTACHMENTREVERSAL", accountTransactionParentId, null,
+				acctgTransId, null, loanApplicationId);
+		
+		//Debit share capital account with the bdOffsetAmount
+		String accountToCredit = LoanUtilities.getAccountProductGivenCodeId(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE).getString("glAccountId");
+		sequence = sequence + 1;
+		
+		//post member deposit to gl
+		String posting = "C";
+		LoanRepayments.postTransactionEntry(delegator, currentloanStatusLog.getBigDecimal("memberDepositsAmtProportion"), partyId.toString(), accountToCredit, posting, acctgTransId, acctgTransType, sequence.toString(), userLogin);
+		}
+		
+		//Re-distributing member deposit
+		BigDecimal bdMemberDepositDistributed = currentloanStatusLog.getBigDecimal("memberDepositsAmtProportion");
+		
+		BigDecimal amount = BigDecimal.ZERO;
+		
+		if ((bdMemberDepositDistributed != null) && (bdMemberDepositDistributed.compareTo(BigDecimal.ZERO) == 1)){
+			//to share capital
+			if ((currentloanStatusLog.getBigDecimal("shareCapitalOffsetAmt") != null) && (currentloanStatusLog.getBigDecimal("shareCapitalOffsetAmt").compareTo(BigDecimal.ZERO) == 1)){
+			Long sharecapitalProductId = LoanUtilities.getAccountProductIdGivenCodeId(AccHolderTransactionServices.SHARE_CAPITAL_CODE);
+			Long sharecapitalAccountId = LoanUtilities.getMemberAccountIdFromMemberAccount(partyId, sharecapitalProductId);
+			
+			amount = currentloanStatusLog.getBigDecimal("shareCapitalOffsetAmt");
+			
+			if (bdMemberDepositDistributed.compareTo(amount) == -1){
+				amount = bdMemberDepositDistributed;
+				bdMemberDepositDistributed = BigDecimal.ZERO;
+			} else{
+				bdMemberDepositDistributed = bdMemberDepositDistributed.subtract(amount);
+			}
+			
+			AccHolderTransactionServices.memberTransactionDeposit(
+					amount, sharecapitalAccountId, userLogin,
+					"CAPITALOFFSETREVERSAL", accountTransactionParentId, null,
+					acctgTransId, null, loanApplicationId);
+			}
+			
+			String accountToCredit = LoanUtilities.getAccountProductGivenCodeId(AccHolderTransactionServices.SHARE_CAPITAL_CODE).getString("glAccountId");
+			sequence = sequence + 1;
+			//post share capital to gl
+			String posting = "D";
+			LoanRepayments.postTransactionEntry(delegator, amount, partyId.toString(), accountToCredit, posting, acctgTransId, acctgTransType, sequence.toString(), userLogin);
+				
+			//bdMemberDepositDistributed = bdMemberDepositDistributed.subtract(currentloanStatusLog.getBigDecimal("shareCapitalOffsetAmt"));
+		}
+		
+		//to insurance
+		
+		String posting = "D";
+		String accountId;
+		amount = currentloanStatusLog.getBigDecimal("insuranceDueAtAttachment");
+		if ((amount != null) && (amount.compareTo(BigDecimal.ZERO) == 1)){
+		sequence = sequence + 1;
+		accountHolderTransactionSetup = LoanRepayments.getAccountHolderTransactionSetupRecord(
+				"INSURANCEPAYMENT", delegator);
+		accountId = accountHolderTransactionSetup
+				.getString("memberDepositAccId");
+		
+		if (bdMemberDepositDistributed.compareTo(amount) == -1){
+			amount = bdMemberDepositDistributed;
+			bdMemberDepositDistributed = BigDecimal.ZERO;
+		} else{
+			bdMemberDepositDistributed = bdMemberDepositDistributed.subtract(amount);
+		}
+		
+		LoanRepayments.postTransactionEntry(delegator, amount, partyId.toString(), accountId, posting, acctgTransId, acctgTransType, sequence.toString(), userLogin);
+		}
+		
+		//to interest 
+		amount = currentloanStatusLog.getBigDecimal("interestDueAtAttachment");
+
+		if ((amount != null) && (amount.compareTo(BigDecimal.ZERO) == 1)){
+		sequence = sequence + 1;
+		posting = "D";
+		accountHolderTransactionSetup = LoanRepayments.getAccountHolderTransactionSetupRecord(
+				"INTERESTPAYMENT", delegator);
+		accountId = accountHolderTransactionSetup
+				.getString("memberDepositAccId");
+		
+		
+		if (bdMemberDepositDistributed.compareTo(amount) == -1){
+			amount = bdMemberDepositDistributed;
+			bdMemberDepositDistributed = BigDecimal.ZERO;
+		} else{
+			bdMemberDepositDistributed = bdMemberDepositDistributed.subtract(amount);
+		}
+		
+		LoanRepayments.postTransactionEntry(delegator, amount, partyId.toString(), accountId, posting, acctgTransId, acctgTransType, sequence.toString(), userLogin);
+		}
+		
+		//to principal
+		amount = currentloanStatusLog.getBigDecimal("balanceAtAttachment");
+		if ((amount != null) && (amount.compareTo(BigDecimal.ZERO) == 1)){
+		sequence = sequence + 1;
+		accountHolderTransactionSetup = LoanRepayments.getAccountHolderTransactionSetupRecord(
+				"PRINCIPALPAYMENT", delegator);
+		accountId = accountHolderTransactionSetup
+				.getString("memberDepositAccId");
+		posting = "D";
+		
+		if (bdMemberDepositDistributed.compareTo(amount) == -1){
+			amount = bdMemberDepositDistributed;
+			bdMemberDepositDistributed = BigDecimal.ZERO;
+		} else{
+			bdMemberDepositDistributed = bdMemberDepositDistributed.subtract(amount);
+		}
+		
+		LoanRepayments.postTransactionEntry(delegator, amount, partyId.toString(), accountId, posting, acctgTransId, acctgTransType, sequence.toString(), userLogin);
+		}
+
+		
 
 		
 		
 		return "success";
 	}
 
-	private static void returnAmountPaidByGuarantor(Long loanApplicationId,
+	private static GenericValue getCurrentLoanStatusLog(Long loanApplicationId) {
+		Long loanStatusId = LoanUtilities.getLoanStatusId("DEFAULTED");
+
+		EntityConditionList<EntityExpr> loanStatusLogConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanApplicationId", EntityOperator.EQUALS, loanApplicationId),
+						EntityCondition.makeCondition("loanStatusId",
+								EntityOperator.EQUALS, loanStatusId)),
+						EntityOperator.AND);
+		
+		List<GenericValue> loanStatusLogELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		List<String> listOrder = new ArrayList<String>();
+		listOrder.add("-loanStatusLogId");
+
+		try {
+			loanStatusLogELI = delegator.findList("LoanStatusLog",
+					loanStatusLogConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if (loanStatusLogELI == null)
+			return null;
+		
+		if (loanStatusLogELI.size() < 1)
+			return null;
+		
+		GenericValue loanStatusLog = loanStatusLogELI.get(0);
+		
+		return loanStatusLog;
+	}
+
+	private static String getLogValues(Long loanApplicationId) {
+		Long loanStatusId = LoanUtilities.getLoanStatusId("DEFAULTED");
+
+		EntityConditionList<EntityExpr> loanStatusLogConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanApplicationId", EntityOperator.EQUALS, loanApplicationId),
+						EntityCondition.makeCondition("loanStatusId",
+								EntityOperator.EQUALS, loanStatusId)),
+						EntityOperator.AND);
+		
+		List<GenericValue> loanStatusLogELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		List<String> listOrder = new ArrayList<String>();
+		listOrder.add("-loanStatusLogId");
+
+		try {
+			loanStatusLogELI = delegator.findList("LoanStatusLog",
+					loanStatusLogConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if (loanStatusLogELI == null){
+			return "No DEFAULTED loan status log for the loan application";
+		}
+		
+		if (loanStatusLogELI.size() < 1){
+			return "No DEFAULTED loan status log for the loan application";
+		}
+		
+		GenericValue loanStatusLog = loanStatusLogELI.get(0);
+		//(memberDepositsAmtProportion, shareCapitalOffsetAmt, balanceAtAttachment,interestDueAtAttachment and insuranceDueAtAttachment)
+		if (loanStatusLog.getBigDecimal("memberDepositsAmtProportion") == null)
+			return "Please provide a value for memberDepositsAmtProportion in the Loan Status Log definition below! provide zero if there is no value";
+	
+		if (loanStatusLog.getBigDecimal("shareCapitalOffsetAmt") == null)
+			return "Please provide a value for shareCapitalOffsetAmt in the Loan Status Log definition below! provide zero if there is no value";
+
+		if (loanStatusLog.getBigDecimal("balanceAtAttachment") == null)
+			return "Please provide a value for balanceAtAttachment in the Loan Status Log definition below! provide zero if there is no value";
+
+		if (loanStatusLog.getBigDecimal("interestDueAtAttachment") == null)
+			return "Please provide a value for interestDueAtAttachment in the Loan Status Log definition below! provide zero if there is no value";
+		
+		if (loanStatusLog.getBigDecimal("insuranceDueAtAttachment") == null)
+			return "Please provide a value for insuranceDueAtAttachment in the Loan Status Log definition below! provide zero if there is no value";
+
+		return "success";
+	}
+
+	private static void createDefaultedLog(Long loanApplicationId,
+			Map<String, String> userLogin) {
+		GenericValue loanStatusLog;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		Long loanStatusLogId = delegator.getNextSeqIdLong("LoanStatusLog");
+		
+		Long loanStatusId = LoanUtilities.getLoanStatusId("DEFAULTED");
+		loanStatusLog = delegator.makeValue("LoanStatusLog", UtilMisc
+				.toMap("loanStatusLogId", loanStatusLogId,
+						
+						"loanApplicationId",
+						loanApplicationId,
+						
+						"isActive", "Y",
+						"createdBy", userLogin.get("userLoginId"), 
+						"updatedBy", null,
+						"loanStatusId", loanStatusId,
+						
+						"comment", ""));
+		try {
+			delegator.createOrStore(loanStatusLog);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	private static boolean defaultedStatusLogExists(Long loanApplicationId) {
+		
+		Long loanStatusId = LoanUtilities.getLoanStatusId("DEFAULTED");
+
+		EntityConditionList<EntityExpr> loanStatusLogConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"loanApplicationId", EntityOperator.EQUALS, loanApplicationId),
+						EntityCondition.makeCondition("loanStatusId",
+								EntityOperator.EQUALS, loanStatusId)),
+						EntityOperator.AND);
+		
+		List<GenericValue> loanStatusLogELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		try {
+			loanStatusLogELI = delegator.findList("LoanStatusLog",
+					loanStatusLogConditions, null, null, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+		
+		if ((loanStatusLogELI == null) || (loanStatusLogELI.size() < 1)) 
+			return false;
+		
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	private static Map<String, BigDecimal> returnAmountPaidByGuarantor(Long loanApplicationId,
 			String acctgTransId, Map<String, String> userLogin) {
 		//Repay each interest amount  repaid with and credit savings account with the amount
 		BigDecimal bdInterestPaid = LoanRepayments.getTotalInterestPaid(loanApplicationId.toString());
@@ -759,7 +1153,12 @@ public class TransferToGuarantorsServices {
 						.getString("accountTransactionParentId"), acctgTransId,
 				null, null);
 		
-
+		Map<String, BigDecimal> amountsMap = new HashMap<String, BigDecimal>();
+		amountsMap.put("insurance", bdInsurancePaid);
+		amountsMap.put("interest", bdInterestPaid);
+		amountsMap.put("principal", bdPrincipalPaid);
+		
+		return amountsMap;
 		
 	}
 
@@ -999,6 +1398,64 @@ public class TransferToGuarantorsServices {
 		BigDecimal loanInsurance = BigDecimal.ZERO;
 		BigDecimal loanPrincipal = bdTotalAmountAttached.multiply(new BigDecimal(-1));
 		BigDecimal transactionAmount = bdTotalAmountAttached.multiply(new BigDecimal(-1));
+		
+		GenericValue loanRepayment;
+		loanRepayment = delegator.makeValue("LoanRepayment", UtilMisc.toMap(
+				"loanRepaymentId", loanRepaymentId, "isActive", "Y",
+				"createdBy", userLoginId, "partyId", loanApplication.getLong("partyId"), "loanApplicationId",
+				loanApplication.getLong("loanApplicationId"),
+
+				"loanNo", loanApplication.getString("loanNo"),
+				"loanAmt", bdLoanAmt,
+
+				"totalLoanDue", totalLoanDue, "totalInterestDue",
+				totalInterestDue, "totalInsuranceDue", totalInsuranceDue,
+				"totalPrincipalDue", totalPrincipalDue, "interestAmount",
+				loanInterest, "insuranceAmount", loanInsurance,
+				"principalAmount", loanPrincipal, "transactionAmount",
+				transactionAmount, "acctgTransId", acctgTransId, "repaymentType", "REATTACHMENT", "repaymentMode", "REATTACHMENT"));
+		try {
+			delegator.createOrStore(loanRepayment);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		
+	}
+	
+	private static void setNewLoanBalance(BigDecimal bdTotalAmountAttached, BigDecimal balanceAtAttachment, BigDecimal interestDueAtAttachment, 
+			BigDecimal insuranceDueAtAttachment,
+			Long parentLoanApplicationId, Map<String, String> userLogin,
+			String acctgTransId) {
+		String userLoginId = (String) userLogin.get("userLoginId");
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		Long loanRepaymentId = delegator.getNextSeqIdLong("LoanRepayment", 1);
+		Long loanApplicationId = parentLoanApplicationId;
+		
+		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", parentLoanApplicationId);
+		BigDecimal bdLoanAmt = loanApplication.getBigDecimal("loanAmt");
+		//LoanRepayments.getT
+//		BigDecimal totalLoanDue = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
+//		BigDecimal totalInterestDue = LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString());
+//		BigDecimal totalInsuranceDue = LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString());
+//		BigDecimal totalPrincipalDue = LoanRepayments.getTotalPrincipaByLoanDue(loanApplicationId.toString());
+		
+		
+		//BigDecimal 
+		
+		BigDecimal loanInterest = interestDueAtAttachment.multiply(new BigDecimal(-1));
+		BigDecimal loanInsurance = insuranceDueAtAttachment.multiply(new BigDecimal(-1));
+		BigDecimal loanPrincipal = balanceAtAttachment.multiply(new BigDecimal(-1));
+		BigDecimal transactionAmount = balanceAtAttachment.add(interestDueAtAttachment).add(insuranceDueAtAttachment);
+		transactionAmount = transactionAmount.multiply(new BigDecimal(-1));
+				//bdTotalAmountAttached.multiply(new BigDecimal(-1));
+		
+		BigDecimal totalLoanDue = transactionAmount;
+		BigDecimal totalInterestDue = loanInterest;
+		BigDecimal totalInsuranceDue = loanInsurance;
+		BigDecimal totalPrincipalDue = loanPrincipal;
+
+
 		
 		GenericValue loanRepayment;
 		loanRepayment = delegator.makeValue("LoanRepayment", UtilMisc.toMap(
