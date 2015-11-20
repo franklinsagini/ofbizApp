@@ -84,6 +84,19 @@
 		</response>
 	</request-map>
 	
+	<request-map uri="updateLoanStatusLog">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateLoanStatusLog" />
+		<response name="success" type="request-redirect"
+			value="viewapplicationprofile">
+				<redirect-parameter name="loanApplicationId"/>
+			</response>
+		<response name="error" type="view" value="viewapplicationprofile">
+				<redirect-parameter name="loanApplicationId"/>
+		</response>
+	</request-map>
+	
+	
 	<request-map uri="updateGuarantorLoanApplication">
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateGuarantorLoanApplication" />

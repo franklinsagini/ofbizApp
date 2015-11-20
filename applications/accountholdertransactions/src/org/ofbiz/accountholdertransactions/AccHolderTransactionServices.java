@@ -2434,6 +2434,9 @@ public class AccHolderTransactionServices {
 
 					|| ((transactionType != null) && (transactionType
 							.equals("TRANSFERFROM")))
+							
+					|| ((transactionType != null) && (transactionType
+							.equals("CAPITALOFFSETREVERSAL")))
 
 					|| ((transactionType != null) && (transactionType
 							.equals("LOANREPAYMENT")))
