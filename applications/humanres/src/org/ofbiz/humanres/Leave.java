@@ -20,6 +20,8 @@ import javolution.util.FastMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTimeConstants;
+import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
@@ -641,9 +643,11 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
 		Map<String, Object> result = FastMap.newInstance();
 		/*Delegator delegator = DelegatorFactoryImpl.getDelegator(null);*/
 		Date thruDate = null;
+		Date fromDate = null;
 		double originalDuration=0;
 		double newDuration=0;
 		int differenceBtnCallNThru=0;
+		int daysBtwCallBackAndFromDate=0;
 		Date callBackDate=null;
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		String leaveId = (String) request.getParameter("leaveId");
@@ -673,6 +677,7 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
 		if(leave!=null){
 			thruDate= leave.getDate("thruDate");
 			originalDuration = leave.getDouble("leaveDuration");
+			fromDate = leave.getDate("fromDate");
 		}
 		else{
 			log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> COULD NOT GET LEAVE===============================" );
@@ -682,13 +687,21 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
 
 			log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Thru Date : " + thruDate);
 			log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> originalDuration: " + originalDuration);
+			log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> fromDate: " + fromDate);
+			log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CallBackDate: " + callBackDate);
 
 			differenceBtnCallNThru=AccHolderTransactionServices.calculateWorkingDaysBetweenDates(callBackDate, thruDate);
+			daysBtwCallBackAndFromDate = HumanResServices.calculateWorkingNonHolidayDaysBetweenDates(fromDate, callBackDate);
 			newDuration=originalDuration-differenceBtnCallNThru;
 
-			log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Difference: " + differenceBtnCallNThru);
+			int holidays = countNumberOfHolidays(fromDate, callBackDate);
+			log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>No Of Holidays: " + holidays);
+			int noOfWorkDays = daysBtwCallBackAndFromDate - holidays;
 			
-			result.put("newDuration", String.valueOf(newDuration));
+			log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Difference: " + differenceBtnCallNThru);
+			log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> New Leave Duration: " + noOfWorkDays);
+			
+			result.put("newDuration", String.valueOf(noOfWorkDays)); 
 			
 			Gson gson = new Gson();
 			String json = gson.toJson(result);
@@ -725,6 +738,8 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
 			}
 
 			return json;
+			
+			
 // result.get("fowardMessage").toString();
 
 	}
@@ -823,4 +838,38 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
 		return memberNo;
 	}
 
+	public static int countNumberOfHolidays(Date startDate, Date endDate) {
+		
+		java.sql.Date startDateSql = new  java.sql.Date(startDate.getTime());
+		java.sql.Date endDateSql = new  java.sql.Date(endDate.getTime());
+		
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		EntityConditionList<EntityExpr> dateConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"holidayDate", EntityOperator.GREATER_THAN_EQUAL_TO,
+						startDateSql), EntityCondition.makeCondition(
+						"holidayDate", EntityOperator.LESS_THAN_EQUAL_TO,
+						endDateSql)), EntityOperator.AND);
+		
+		List<GenericValue> holidaysELI = null;
+		int numberHolidays = 0;
+		
+		try {
+			holidaysELI = delegator.findList("PublicHolidays", dateConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+	    for(GenericValue genericValue : holidaysELI ){
+	    	 numberHolidays = genericValue.size();
+	    } 
+   	 
+	    int numberHolidaysNo =  holidaysELI.size();
+	     log.info("########## NUMBER OF HOLIDAYS ##### "+numberHolidaysNo);
+
+		
+		return numberHolidaysNo;
+	}//close method
+
+	
+	
 }

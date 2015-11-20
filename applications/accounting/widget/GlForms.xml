@@ -65,6 +65,14 @@ under the License.
         <field name="performSearch" position="1"><hidden value="Y"/></field>
         <field name="searchButton" widget-style="buttontext"><submit button-type="text-link"/></field>
     </form>
+    <form name="QuickTransEntry" target="QuickTransEntry" type="single" title="" default-map-name="journal"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="acctgTransId" title="${uiLabelMap.FormFieldTitle_acctgTransId}" entity-name="AcctgTrans" position="1">
+            <text size="20"/>
+        </field>
+        <field name="performSearch" position="1"><hidden value="Y"/></field>
+        <field name="searchButton" widget-style="buttontext"><submit button-type="text-link"/></field>
+    </form>
 
 
 <!-- MANUAL GENERAL LEDGER JOURNAL VOUCHER -->
@@ -115,13 +123,9 @@ under the License.
         </field>
     </form>
 
-    <form name="ListGLJVHeader" type="list" list-name="listIt" paginate-target="MultiplePayment" default-map-name="manualGLJVHeader"
+    <form name="ListGLJVHeader" type="list" list-name="manualGLJVHeaderList" paginate-target="MultiplePayment" 
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        <actions>
-            <entity-condition entity-name="ManualGLJVHeader">
-                <orderBy field="transactionDate" />
-            </entity-condition>
-        </actions>
+
         <field name="organizationPartyId"><hidden/></field>
         <field name="manualGlJvId"><display/></field>
         <field name="capturedBy"><display/></field>

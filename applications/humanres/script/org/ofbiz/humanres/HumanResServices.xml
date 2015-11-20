@@ -2978,13 +2978,45 @@
     
      <!-- ==============================EMPLOYEE CALL BACK FROM LEAVE================================== -->
      <simple-method method-name="updateLeaveDuration"
-        short-description="Reject Employee Leave">
+        short-description="Employee call Back">
         <entity-one entity-name="EmplLeave" value-field="lookedUpValue" />
         <set-nonpk-fields value-field="lookedUpValue" map="parameters" />
         <set field="lookedUpValue.leaveDuration" from-field="lookedUpValue.newDuration" />
+        <set field="theNewDuration" from-field="lookedUpValue.newDuration" type="BigDecimal"/>
+         
+        <set field="leaveId" from-field="lookedUpValue.leaveId"/>
+        <log message="#######LEaveID ${leaveId}" level="info"/>
         
-        <set field="lookedUpValue.thruDate" from-field="lookedUpValue.callBackDate" />
+        <set field="originalDays" value="${bsh:org.ofbiz.humanres.LeaveServices.getOriginalDuration(leaveId);}"/>
+        <log message="#######original Days### ${originalDays}" level="info"/>
+                
+        <set field="daysDiff" value="${bsh:org.ofbiz.humanres.LeaveServices.daysDifference(originalDays,theNewDuration);}" type="BigDecimal"/> 
+        <log message="#######Days DIffs### ${daysDiff}" level="info"/>
+       
+        <set field="startFromDate" from-field="lookedUpValue.fromDate" type="date"/>
+        <log message="#######Start From Date### ${startFromDate}" level="info"/>
+        
+        <set field="newDaysToUSe" from-field="lookedUpValue.newDuration" type="Integer"/>
+        <log message="#######newDaysToUSe### ${newDaysToUSe}" level="info"/> 
+        
+        <set field="lookedUpValue.thruDate" from-field="lookedUpValue.callBackDate"/>
+        <set field="lookedUpValue.CalledBack" value="CB" />
+        <set field="setCallBackDate" from-field="lookedUpValue.callBackDate"/>
+        
+        <set field="resumingExtendLeave" from-field="lookedUpValue.originalThruDate"/>
+        
+        <set field="lookedUpValue.resumptionDate" value="${bsh:org.ofbiz.humanres.HumanResServices.calculateEndWorkingNonHolidayDayResumption(setCallBackDate);}"/>
+        <log message="#######resumptionDate### ${lookedUpValue.resumptionDate}" level="info"/> 
+        
+        <set field="lookedUpValue.resumeForExtendDate" value="${bsh:org.ofbiz.humanres.HumanResServices.calculateEndWorkingNonHolidayDayResumption(resumingExtendLeave);}" type="date"/>
+        <log message="#######resume Leave Date### ${resumingLeave}" level="info"/> 
+        
+         <set field="lookedUpValue.daysDifference" value="${bsh:org.ofbiz.humanres.LeaveServices.daysDifference(originalDays,theNewDuration);}"  type="Double"/>
+          
+          
+ 
         <store-value value-field="lookedUpValue" />
+			
 			
         
         <make-value value-field="newEntity" entity-name="LeaveStatusLog" />
@@ -2994,10 +3026,14 @@
         <set field="newEntity.leaveStsLogId" from-field="leaveStsLogId" />
         <log message="===== Leave Rejected log stored for ${lookedUpValue.partyId} by ${userLogin.userLoginId} ===" level="info"/>
         <set field="newEntity.rejectedBy" value="${userLogin.partyId}"  />
-        <set field="newEntity.leaveId" from="lookedUpValue.leaveId" />
+        <set field="newEntity.leaveId" from="lookedUpV
+        alue.leaveId" />
         <set field="newEntity.approvalStatus" value="Called Back" />
         <create-value value-field="newEntity" />
 			<log message="===== Leave Rejected log stored for ${lookedUpValue.partyId} by ${userLogin.userLoginId} ===" level="info"/>
+			
+	   <property-to-field resource="HumanResUiLabels"
+			  property="CreateSuccess" field="successMessage" />
     </simple-method>
     
      <!-- ==============================RESET STAFF LOST LEAVE DAYS================================== -->
@@ -3235,6 +3271,14 @@
 		<set field="fromDate" from-field="parameters.fromDate"  />
 		<set field="newEntity.fromDate" from-field="fromDate"  />
 		
+		<set field="originalThruDate" from-field="parameters.thruDate"/>
+		<set field="newEntity.originalThruDate" from-field="originalThruDate"/>
+		
+		<set field="originalDuration" from-field="parameters.leaveDuration"/>
+		<set field="newEntity.originalNewDuration" from-field="originalDuration"/>
+		
+		<log message="########Original Duration ${originalDuration}" level="info"/>
+		<log message="########Original Thru date ${originalThruDate}" level="info"/>
 		
 		<log message="########FROM DATE PARAM ${parameters.fromDate}" level="info"/>
 		<log message="########FROM DATE PARAM ENTITY ${newEntity.fromDate}" level="info"/>
@@ -4518,14 +4562,15 @@
         <set from-field="separationApplicationId" field="newEntity.separationApplicationId"/>
         <set field="newEntity.createdDate" from-field="dateCreated"/>
         <set field="newEntity.processStatus" value="NOT PROCESSED"/>
-        <!--  set field="entity.loanStatus" value="DRAFT"/ -->
-        <!-- set field="productType" value="Loan"/ -->
         <create-value value-field="newEntity"/>
         <property-to-field resource="HumanResUiLabels"
 			property="CreateSuccess" field="successMessage" />
     </simple-method>
+    
     <simple-method method-name="updateSeparationApplication" short-description="Update Separation Application">
-        
+       <entity-one value-field="lookedUpValue" entity-name="SeparationApplication"></entity-one>
+	   <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+	   <store-value value-field="lookedUpValue"/>
         <property-to-field resource="HumanResUiLabels"
 			property="UpdateSuccess" field="successMessage" />
     </simple-method>
@@ -5165,6 +5210,9 @@
 	
 	<set field="theCreatedDate" from-field="createdDate"/>
 	<set field="theEffectiveDate" from-field="effectiveDate"/>
+	<set field="DateFormEffectiveDate" value="${bsh:org.ofbiz.humanres.LeaveServices.sqlDateConvert(theEffectiveDate)}"/>
+	
+	<log message="#####Formated date## ${DateFormEffectiveDate}" level="info"/>
 	
 	<set field="appointmentDATE" value="${bsh:org.ofbiz.humanres.Separation.getAppointmentDate(party)}"/>
 	<set field="appointmentdate" from-field="appointmentDATE" type="date"/>
@@ -5179,6 +5227,20 @@
 	<set field="golden" value="${bsh:org.ofbiz.humanres.Separation.getGoldenHandShake(separationTypeId)}"/>
 	<set field="transportAll" value="${bsh:org.ofbiz.humanres.Separation.transportAllowance(separationTypeId)}"/>
 	<set field="noticePreiod" from-field="noticeP" type="String"/>
+	
+	<!-- Get Leave Balances As at the effective Date  -->
+	
+	<set field="accruedLeaveBal" value="${bsh:org.ofbiz.humanres.LeaveServices.getAccruedLeavesAtThisdate(DateFormEffectiveDate,party)}"/>
+	<set field="forwardedBalance" value="${bsh:org.ofbiz.humanres.LeaveServices.getForwardedLeaves(party)}"  type="BigDecimal"/>
+	<set field="usedBalance" value="${bsh:org.ofbiz.humanres.LeaveServices.getTotalUsedDays(DateFormEffectiveDate,party)}"/>
+	<set field="totalDays" value="${bsh:org.ofbiz.humanres.LeaveServices.totalLeaveDays(forwardedBalance,accruedLeaveBal)}"/>
+	<set field="balanceActual" value="${bsh: org.ofbiz.humanres.LeaveServices.balanceLeave(totalDays,usedBalance)}"/>
+	
+	 <log message="###accruedLeaveBal***#####${accruedLeaveBal}" level="info"/>
+	  <log message="###forwardedBalance***#####${forwardedBalance}" level="info"/>
+	   <log message="###usedBalance**#####${usedBalance}" level="info"/>
+	    <log message="###totalDays***#####${totalDays}" level="info"/>
+	     <log message="###balanceActual***#####${balanceActual}" level="info"/>
 	
 	<set field="daysDifference" value="${bsh:org.ofbiz.humanres.Separation.calculateTheCalendarDaysBetweenDates(theCreatedDate,theEffectiveDate)}"/>
 	<set field="leaveBalance" value="${bsh:org.ofbiz.humanres.Separation.getLeaveBalances(party)}"/>
@@ -5252,17 +5314,19 @@
 	
 	
 	<simple-method method-name="undoLink">
-	 <entity-one entity-name="SeparationDetail" value-field="lookedUpValue"/>
-     <remove-value value-field="lookedUpValue"/> 	
-    <property-to-field resource="HumanResUiLabels" property="Process Successfully Undone" field="successMessage"/>
+	  <entity-one entity-name="SeparationDetail" value-field="lookedUpValue"/>
+	  <set-pk-fields value-field="lookedUpValue" map="parameters"/>
+	  <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+      <remove-value value-field="lookedUpValue"/> 	
+  
+    <entity-one value-field="FromseparationApplication" entity-name="SeparationApplication">
+	<field-map field-name="separationApplicationId" value="${lookedUpValue.separationApplicationId}"/>
+	</entity-one>
+	<set field="FromseparationApplication.processStatus" value="NOT PROCESSED"/>
+	<store-value value-field="FromseparationApplication"/>
+
+    <property-to-field resource="HumanResUiLabels" property="Process Successfully Reversed" field="successMessage"/>
 	</simple-method>
-	
-	
-	
-	
-	
-	
-	
 	
 	<!-- Save Separation Types -->
 	
@@ -5307,10 +5371,9 @@
 	   <create-value value-field="newEntity" />
       <property-to-field resource="HumanResUiLabels"
 	  property="CreateSuccess" field="successMessage" />
-
-			</simple-method>
+   </simple-method>
 			
-			<simple-method method-name="deleteLeaveStaff"
+   <simple-method method-name="deleteLeaveStaff"
 		short-description="Remove A Leave Staff">
 		<set field="staffId" from-field="parameters.staffId" />
 		<entity-one entity-name="LeaveStaff" value-field="lookedUpValue" />
@@ -5319,9 +5382,38 @@
 			property="DeleteSuccess" field="successMessage" />
 	</simple-method>
 	
+    <simple-method method-name="completeLeave" short-description="A method to update the leave if one does not want to Extend">
+	    <entity-one value-field="lookedUpValue" entity-name="EmplLeave"></entity-one>
+	    <set-pk-fields value-field="lookedUpValue" map="parameters"/>
+	    <set field="lookedUpValue.CalledBack" value="completed"/>
+	    <store-value value-field="lookedUpValue"/>
+	     <property-to-field resource="HumanResUiLabels" property="Leaves Added to the Balance " field="successMessage"/>
+    </simple-method>			
 	
+	  <simple-method method-name="EmployeeCallBackExtendLeave" short-description="A method  to Extend Leave">
+	    <entity-one value-field="lookedUpValue" entity-name="EmplLeave"></entity-one>
+	    <set-pk-fields value-field="lookedUpValue" map="parameters"/>
+	    <set field="leaveIdUse" from-field="lookedUpValue.leaveId"/>
+	    <log message="##########leaveIdUse ${leaveIdUse}" level="info"/>	    
+	    
+	    <set field="leaveId" value="${bsh:org.ofbiz.humanres.HumanResServices.getLeaveEndExend(leaveIdUse);}"/>
+	   
+	   <log message="##########LEAVE ID ${leaveId}" level="info"/>
+	   
+	    <set field="lookedUpValue.CalledBack" value="extended"/>
+	    <store-value value-field="lookedUpValue"/>
+	     <property-to-field resource="HumanResUiLabels" property="Leave Days Extended " field="successMessage"/>
+    </simple-method>	
 	
-	
+	<simple-method method-name="calcelScheduledLeaves" short-description="Method to Cancel The Scheduled Leaves">
+	 <entity-one value-field="lookedUpValue" entity-name="EmplLeave"></entity-one>
+	 <set-pk-fields value-field="lookedUpValue" map="parameters"/>
+	 <set field="lookedUpValue.applicationStatus" value="Cancelled"/>
+	 <set field="lookedUpValue.approvalStatus" value="Cancelled"/>
+	 <store-value value-field="lookedUpValue"/>
+	 <property-to-field resource="HumanResUilabels" property="Scheduled Leave Successfully Cancelled" field="successMessage"/>
+	   
+	</simple-method>
 	
 	</simple-methods>
 	
