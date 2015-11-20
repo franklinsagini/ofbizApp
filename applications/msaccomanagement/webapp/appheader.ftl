@@ -93,7 +93,7 @@ under the License.
      success : function(data){
 
 				 $('#NewMSaccoApplication input[name="mobilePhoneNumber"]').val(data.mobileNumber);
-
+                 $('#NewMSaccoApplication input[name="mobilePhoneNo"]').val(data.mobileNumber);
 		
                },
       error : function(errorData){

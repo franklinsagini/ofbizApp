@@ -958,13 +958,26 @@ under the License.
 
 </form>
 
+<form name="monthlyLeaveSCV" type="single" target="monthlyLeaveCSV.csv" odd-row-style="header-row" default-table-style="basic-table">
+      <field name="fromDate" title="FROM" required-field="true"><date-time/></field> 
+      <field name="thruDate" title="TO" required-field="true"><date-time/></field> 
+      <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+           <submit button-type="button"/>
+       </field>
+</form>
+
 <form name="leaveAtCertainDate" type="single" target="leaveAtCertainDate" odd-row-style="header-row" default-table-style="basic-table">
       <field name="fromDate" title="FROM" required-field="true"><date-time/></field> 
-       <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+      <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
             <submit button-type="button"/>
-            
-        </field>
+      </field>
+</form>
 
+<form name="leaveAtCertainDateExcel" type="single" target="leaveAtCertainDateExcel.csv" odd-row-style="header-row" default-table-style="basic-table">
+      <field name="fromDate" title="FROM" required-field="true"><date-time/></field> 
+      <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+            <submit button-type="button"/>
+      </field>
 </form>
 
 <form name="staffListAsAtCertainDate" type="single" target="staffListAsAtCertainDatePDF" odd-row-style="header-row" default-table-style="basic-table">
@@ -1003,5 +1016,101 @@ under the License.
         </field>
 
 </form>
+
+<form name="empLeaveRecordPrint" type="single" target="empLeaveRecordPrint.csv" odd-row-style="header-row" default-table-style="basic-table">
+       <field name="partyId"   title="Select Staff">
+            <lookup target-form-name="LookupEmployee"/>
+        </field>
+       <field name="leaveTypeId" title="${uiLabelMap.HumanResLeaveType}" position="2">
+			<drop-down allow-empty="true">
+				<entity-options description="${description}"
+					key-field-name="leaveTypeId" entity-name="EmplLeaveType" />
+			</drop-down>
+	   </field>
+	   <field name="leaveStatus" title="Approval Status">
+            <drop-down allow-empty="true">
+                <option key="Rejected" description="Rejected Leave(s)"/>
+                <option key="Approved" description="Approved Leave(s)"/>
+                <option key="Cancelled" description="Cancelled Leave(s)"/>
+            </drop-down>
+        </field>
+       <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+</form>
+        
+ <form name="empLeaveRecordPrintCSVScreen" list-name="leaveBalancelist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="payrollNo" title="Payroll Number"><display/></field>
+        <field name="name" title="Staff Name"><display/></field>
+        <field name="leaveTypeId" title="Leave Type"><display/></field>
+        <field name="emplLeaveReasonTypeId" title="Reason For Leave"><display/></field>
+        <field name="fromDate" title="From"><display/></field>
+		<field name="thruDate" title="Through"><display/></field>
+		<field name="leaveDuration" title="Leave Duration"><display/></field>
+		<field name="approvalStatus" title="Approval Status"><display/></field>
+        <field name="rejectReason" title="Reason For Leave Rejection"><display/></field>
+		<field name="responsibleEmployee" title="Approver"><display/></field>
+		<field name="handedOverTo" title="Handed Over To"><display/></field>
+		<field name="createdDate" title="Created Time"><display/></field>
+ </form>  
+ 
+ <form name="empLeaveRecordPrintPdf" type="single" target="empLeaveRecordPrintPdf" odd-row-style="header-row" default-table-style="basic-table">
+       <field name="partyId"   title="Select Staff">
+            <lookup target-form-name="LookupEmployee"/>
+        </field>
+       <field name="leaveTypeId" title="${uiLabelMap.HumanResLeaveType}" position="2">
+			<drop-down allow-empty="true">
+				<entity-options description="${description}"
+					key-field-name="leaveTypeId" entity-name="EmplLeaveType" />
+			</drop-down>
+	   </field>
+	   <field name="leaveStatus" title="Approval Status">
+            <drop-down allow-empty="true">
+                <option key="Rejected" description="Rejected Leave(s)"/>
+                <option key="Approved" description="Approved Leave(s)"/>
+                <option key="Cancelled" description="Cancelled Leave(s)"/>
+            </drop-down>
+        </field>
+       <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+</form>      
+        
+ <form name="monthlyLeaveForm" list-name="leaveBalancelist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="payrollNo" title="Payroll Number"><display/></field>
+        <field name="name" title="Staff Name"><display/></field>
+        <field name="leaveTypeId" title="Leave Type"><display/></field>
+        <field name="emplLeaveReasonTypeId" title="Reason For Leave"><display/></field>
+        <field name="fromDate" title="From"><display/></field>
+		<field name="thruDate" title="Through"><display/></field>
+		<field name="leaveDuration" title="Leave Duration"><display/></field>
+		<field name="approvalStatus" title="Approval Status"><display/></field>
+		<field name="responsibleEmployee" title="Approver"><display/></field>
+		<field name="handedOverTo" title="Handed Over To"><display/></field>
+		<field name="createdDate" title="Created Time"><display/></field>
+ </form>  
+         
+ <form name="leaveAtCertainDateExcelForm" list-name="leaveBalancelist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="payrollNo" title="Payroll Number"><display/></field>
+        <field name="name" title="Staff Name"><display/></field>
+        <field name="leaveTypeId" title="Leave Type"><display/></field>
+        <field name="emplLeaveReasonTypeId" title="Reason For Leave"><display/></field>
+        <field name="fromDate" title="From"><display/></field>
+		<field name="thruDate" title="Through"><display/></field>
+		<field name="leaveDuration" title="Leave Duration"><display/></field>
+		<field name="approvalStatus" title="Approval Status"><display/></field>
+		<field name="responsibleEmployee" title="Approver"><display/></field>
+		<field name="handedOverTo" title="Handed Over To"><display/></field>
+		<field name="createdDate" title="Created Time"><display/></field>
+ </form>  
+         
+
+        
         
 </forms>

@@ -750,18 +750,44 @@ under the License.
                                 <include-form name="scheduledLeavesFormCSV" location="component://humanres/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
-                        <screenlet title="Monthly Leave Reports">
+                        
+                        <container style="lefthalf">
+                        <screenlet title="Monthly Leave Reports (PDF)">
                           <include-form name="monthlyLeave" location="component://humanres/widget/ReportForms.xml"/>
                         </screenlet>
+                        </container>
                         
-                        <screenlet title="Leave Report As At Certain Date">
+                         <container style="righthalf">
+                        <screenlet title="Monthly Leave Reports (CSV) ">
+                          <include-form name="monthlyLeaveSCV" location="component://humanres/widget/ReportForms.xml"/>
+                        </screenlet>
+                        </container>
+                        
+                        <container style="lefthalf">
+                        <screenlet title="Leave Report As At Certain Date (PDF)">
                          <include-form name="leaveAtCertainDate" location="component://humanres/widget/ReportForms.xml"/>
                         </screenlet>
+                        </container>
+                        
+                        <container style="righthalf">
+                            <screenlet title="Leave Report As At Certain Date(Excel)">
+                            <include-form name="leaveAtCertainDateExcel" location="component://humanres/widget/ReportForms.xml"/>
+                        </screenlet>
+                        </container>
                         
                         <screenlet title="Leave Balance Report As At Certain Date">
                          <include-form name="leaveBalanceAtCertainDate" location="component://humanres/widget/ReportForms.xml"/>
                         </screenlet>
-                        
+                        <container style="righthalf">
+                        <screenlet title="Employee Leave Records (pdf) ">
+                        <include-form location="component://humanres/widget/ReportForms.xml" name="empLeaveRecordPrintPdf"/>
+                        </screenlet>
+                        </container>
+                        <container style="lefthalf">
+                        <screenlet title="Employee Leave Records (excel)">
+                        <include-form location="component://humanres/widget/ReportForms.xml" name="empLeaveRecordPrint"/>
+                        </screenlet>
+                        </container> 
                         	</widgets>
                         </section>
                     </decorator-section>
@@ -2565,5 +2591,90 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+     <screen name="empLeaveRecordPrintCSVScreen">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/empLeaveRecordPrintCSVScreen.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="STAFF (S) LEAVE RECORDS "/>
+                </container>
+                <include-form name="empLeaveRecordPrintCSVScreen" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+ <screen name="empLeaveRecordPrintpdf">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/empLeaveRecordPrintpdf.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/empLeaveRecordPrintpdf.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+       <screen name="monthlyLeaveScreenCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/monthlyLeaveCSV.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="Employee On Leave Between ${fromToDate} AND ${thruToDate}"/>
+                </container>
+                <include-form name="monthlyLeaveForm" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+      <screen name="leaveAtCertainDateExcelScreen">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/leaveAtCertainDateExcelScreen.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="Leave At Certain Date AS AT ${fromToDate} "/>
+                </container>
+                <include-form name="leaveAtCertainDateExcelForm" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
 
 </screens>

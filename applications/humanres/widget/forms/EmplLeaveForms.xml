@@ -66,7 +66,13 @@
 			<display />
 		</field>
 		<field name="leaveDuration">
-			<display />
+			<hidden />
+		</field>
+		<field name="originalNewDuration">
+			<hidden/>
+		</field>
+		<field name="originalThruDate">
+			<display/>
 		</field>
 		<field name="responsibleEmployee" title="Approver">
 			<display-entity entity-name="Person" description="${firstName} ${lastName}"
@@ -83,10 +89,13 @@
 			<hyperlink also-hidden="false" description="Employee Callback"
 				target="callBackEmployee">
 				<parameter param-name="thruDate" /> 
-				<parameter param-name="leaveId" /> 
+				<parameter param-name="fromDate" />
+ 				<parameter param-name="leaveId" /> 
 				<parameter param-name="partyId" />
 				<parameter param-name="leaveDuration" />  
 				<parameter param-name="leaveTypeId" /> 
+				<parameter param-name="originalNewDuration"/>
+				<parameter param-name="originalThruDate"/>
 			</hyperlink>
 		</field>  
 				<field name="description">
@@ -307,14 +316,18 @@
         </actions>
 		
 		<field name="leaveId"><hidden/></field>
-		<field name="partyId" title="Staff:"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
-		<field name="leaveTypeId" title="Leave Type:"><display-entity entity-name="EmplLeaveType" key-field-name="leaveTypeId" description="${description}"></display-entity></field>
-		<field name="leaveDuration"  title="Original Leave Duration (Days):"><display /></field>
-		<field name="thruDate" title="Original Leave End Date:"><display/></field>
-		<field name="callBackDate" required-field="true"><date-time type="date"/></field>
-		<field name="newDuration" required-field="true"><text/></field>
+		<field name="partyId" title="Staff:" position="1"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}"></display-entity></field>
+		<field name="leaveTypeId" title="Leave Type:" position="2"><display-entity entity-name="EmplLeaveType" key-field-name="leaveTypeId" description="${description}"></display-entity></field>
+		<field name="originalNewDuration"  title="Original Leave Duration (Days):" position="3"><display /></field>
+		<field name="originalThruDate" title="Original End Date:"><display/></field>
+		<field name="leaveDuration"  title="Current Leave Duration (Days):" position="2"><display /></field>
+		<field name="fromDate" title="From_Date:" position="3"><display></display></field>
+		<field name="thruDate" title="Current End Date:"><display/></field>
 		
-		 <field name="submitButton" title="Call Back Employee" widget-style="smallSubmit"><submit button-type="button"/></field>
+		<field name="callBackDate" required-field="true" position="2"><date-time type="date"/></field>
+		<field name="newDuration" required-field="true" position="3"><text/></field>
+		
+		 <field name="submitButton" title="Call Back Employee" widget-style="smallSubmit" position="2"><submit button-type="button"/></field>
 	</form>
 	
 	
@@ -1151,7 +1164,7 @@
         <actions>
         
         <entity-condition entity-name="EmplLeave">
-        <order-by field-name="leaveId ASC"/>
+        <order-by field-name="createdStamp DESC"/>
         			<!--  <condition-expr field-name="partyId" operator="equals" from-field="userLogin.partyId"/>  -->
         	</entity-condition> 
         
@@ -1317,8 +1330,229 @@
 				<parameter param-name="staffId" />
 			</hyperlink>
 		</field>
+	</form>
+	
+	
+<form name="callBack" list-name="EmplLeave" type="list"
+		odd-row-style="alternate-row" header-row-style="header-row-2"
+		paginate-target="FindActiveLeaves" default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="EmplLeave">
+					<condition-list>
+					  <condition-expr field-name="CalledBack" value="CB"/>
+					</condition-list>
+			</entity-condition>
+		</actions>
+		
+		<field name="leaveId"><hidden /></field>
+		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
+			<display-entity entity-name="Person" description="${lastName}, ${firstName}  [${employeeNumber}]">
+			</display-entity>
+		</field>
+		<field name="leaveTypeId" title="${uiLabelMap.HumanResLeaveType}">
+			<display-entity entity-name="EmplLeaveType" />
+		</field>
+		<field name="emplLeaveReasonTypeId" title="${uiLabelMap.HumanResLeaveReasonType}">
+			<display-entity entity-name="EmplLeaveReasonType" description="${reason}" />
+		</field>
+		<field name="fromDate">
+			<display />
+		</field>
+		<field name="thruDate">
+			<display />
+		</field>
+		<field name="leaveDuration">
+			<display />
+		</field>
+		<field name="originalThruDate">
+			<display />
+		</field>
+		<field name="originalNewDuration" title="Original Duration">
+			<display />
+		</field>
+		
+		<field name="daysDifference" title="Days Called">
+			<display />
+		</field>
+		
+		<field name="responsibleEmployee" title="Approver">
+			<display-entity entity-name="Person" description="${firstName} ${lastName}"
+				key-field-name="partyId">
 
+			</display-entity>
+		</field>
+		<field name="handedOverTo" title="Handed Over To">
+			<display-entity entity-name="Person" description="${firstName} ${lastName}"
+				key-field-name="partyId">
+			</display-entity>
+		</field>
+		
+		<field name="callBackextendLeave" title="" widget-style="buttontext"><submit button-type="button"/>
+		   <hyperlink  target="callBackextendLeave"  also-hidden="false" description="Extend_Leave">
+				<parameter param-name="leaveId" /> 
+				<parameter param-name="partyId"/>
+				<parameter param-name="leaveTypeId"/>
+				<parameter param-name="daysDifference"/>
+				<parameter param-name="leaveDuration"/>
+				<parameter param-name="originalNewDuration"/>
+				<parameter param-name="fromDate"/>
+				<parameter param-name="thruDate"/>
+		   </hyperlink>
+		</field>
+		
+		<field name="compeleted" title="Complete" widget-style="buttontext"><submit button-type="button"/>
+		   <hyperlink also-hidden="false" target="completeLeave" description="Add Back Leave Days" request-confirmation="true" confirmation-message="Do you want to complete this Employee Leave?">
+				<parameter param-name="leaveId" /> 
+		   </hyperlink>
+		</field>
+		
+		<field name="description">
+			<hidden />
+		</field>
+	</form>
+	
+	 <form name="EmployeeCallBackExtendLeave" type="single" target="EmployeeCallBackExtendLeave"
+		default-map-name="updateLeaveDurationContext" header-row-style="header-row"
+		default-table-style="basic-table">
+		 <actions>
+        </actions>
+			<field name="leaveId"><hidden/></field>
+			<field name="partyId" title="Staff:" position="1"><display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName}   [${employeeNumber}]"></display-entity></field>
+			<field name="leaveTypeId" title="Leave Type:" position="2"><display-entity entity-name="EmplLeaveType" key-field-name="leaveTypeId" description="${description}"></display-entity></field>
+			<field name="daysDifference" title="Days To Extend" position="3"><display></display></field>
+			<field name="leaveDuration" title="Current Leave Duration" position="1">
+			<display></display>
+		    </field>
+		    <field name="originalNewDuration" title="Original Days" position="2" ><display></display></field>
+			<field name="fromDate" position="3">
+			<display></display>
+		    </field>
+		    <field name="thruDate" required-field="true">
+			<display></display>
+		    </field>	
+			
+		 <field name="submitButton" title="Extend Employee Leave" widget-style="smallSubmit"><submit button-type="button"/></field>
+	</form>
+	
+	<form name="extendedLeaves" list-name="EmplLeave" type="list"
+		odd-row-style="alternate-row" header-row-style="header-row-2"
+		paginate-target="FindActiveLeaves" default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="EmplLeave">
+					<condition-list>
+					  <condition-expr field-name="CalledBack" value="extended"/>
+					</condition-list>
+			</entity-condition>
+		</actions>
+		
+		<field name="leaveId"><hidden /></field>
+		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
+			<display-entity entity-name="Person" description="${lastName}, ${firstName}  [${employeeNumber}]">
+			</display-entity>
+		</field>
+		<field name="leaveTypeId" title="${uiLabelMap.HumanResLeaveType}">
+			<display-entity entity-name="EmplLeaveType" />
+		</field>
+		<field name="emplLeaveReasonTypeId" title="${uiLabelMap.HumanResLeaveReasonType}">
+			<display-entity entity-name="EmplLeaveReasonType" description="${reason}" />
+		</field>
+		<field name="fromDate">
+			<display />
+		</field>
+		<field name="thruDate" title="End Date(After Call Back)">
+			<display />
+		</field>
+		<field name="leaveDuration" title="Days Used(Before Call Back)">
+			<display />
+		</field>
+		<field name="originalThruDate">
+			<display />
+		</field>
+		<field name="originalNewDuration" title="Original Duration">
+			<display />
+		</field>
+		
+		<field name="daysDifference" title="Extended Days">
+			<display />
+		</field>
+		
+		<field name="responsibleEmployee" title="Approver">
+			<display-entity entity-name="Person" description="${firstName} ${lastName}"
+				key-field-name="partyId">
+
+			</display-entity>
+		</field>
+		<field name="handedOverTo" title="Handed Over To">
+			<display-entity entity-name="Person" description="${firstName} ${lastName}"
+				key-field-name="partyId">
+			</display-entity>
+		</field>
+
+	 	<field name="compeleted" title="Complete" widget-style="buttontext"><submit button-type="button"/>
+		   <hyperlink also-hidden="false" target="completeLeave" description="Remove Record" request-confirmation="true" confirmation-message="Do you want to complete this Employee Leave?">
+				<parameter param-name="leaveId" /> 
+		   </hyperlink>
+		</field> 
+	</form>
+	
+	<form name="scheduledLeave" list-name="EmplLeave" type="list"
+		odd-row-style="alternate-row" header-row-style="header-row-2"
+		paginate-target="FindActiveLeaves" default-table-style="basic-table hover-bar">
+		<actions>
+			<set field="today" value="${nowTimestamp}" type="Date"/>
+			 <entity-condition entity-name="EmplLeave" list="EmplLeave">
+				  <condition-list>
+					<condition-expr field-name="fromDate" operator="greater"
+						from-field="today" />
+					<!-- <condition-expr field-name="thruDate" operator="greater-equals"
+						from-field="today" /> -->
+					<condition-expr field-name="applicationStatus" operator="equals"
+						value="Approved" />
+				</condition-list>
+			</entity-condition>
+		</actions>
+		
+		<field name="leaveId"><hidden /></field>
+		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
+			<display-entity entity-name="Person" description="${lastName}, ${firstName} [${employeeNumber}]">
+			</display-entity>
+		</field>
+		<field name="leaveTypeId" title="${uiLabelMap.HumanResLeaveType}">
+			<display-entity entity-name="EmplLeaveType" />
+		</field>
+		<field name="emplLeaveReasonTypeId" title="${uiLabelMap.HumanResLeaveReasonType}">
+			<display-entity entity-name="EmplLeaveReasonType" description="${reason}" />
+		</field>
+		<field name="fromDate">
+			<display />
+		</field>
+		<field name="thruDate">
+			<display />
+		</field>
+		<field name="leaveDuration">
+			<display />
+		</field>
+		
+		<field name="responsibleEmployee" title="Approver">
+			<display-entity entity-name="Person" description="${firstName} ${lastName}"
+				key-field-name="partyId">
+
+			</display-entity>
+		</field>
+		<field name="handedOverTo" title="Handed Over To">
+			<display-entity entity-name="Person" description="${firstName} ${lastName}"
+				key-field-name="partyId">
+			</display-entity>
+		</field>
+
+	 	<field name="compeleted" title="Canmcel_Leave" widget-style="buttontext"><submit button-type="button"/>
+		   <hyperlink also-hidden="false" target="calcelScheduledLeaves" description="Cancel Leave" request-confirmation="true" confirmation-message="Do you want to complete this Employee Leave?">
+				<parameter param-name="leaveId" /> 
+		   </hyperlink>
+		</field> 
 
 	</form>
+	
+	
 	
 </forms>

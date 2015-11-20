@@ -3506,7 +3506,7 @@
   </service>
 
  <service name="undoLink" engine="simple" location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml"
-  auth="true" default-entity-name="separationDetailCalculation" invoke="undoLink">
+  auth="true" default-entity-name="SeparationDetail" invoke="undoLink">
   <description>Method to create separation Application Types</description>
   <auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
   <auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
@@ -3533,10 +3533,34 @@
   <description>Approve Leave Application</description>		
 </service>
 
-<service name="sendRejectionMail" engine="java"
+  <service name="sendRejectionMail" engine="java"
 		location="org.ofbiz.humanres.LeaveServices" invoke="SendRejectionMailToStaff" auth="true">
 		<description>Send Rejection Mail</description>
-		
 	</service>
+	
+<service name="completeLeave" engine="simple" default-entity-name="EmplLeave"  location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="completeLeave" auth="true">
+   <description>Complete the employee Leave After Not Willing to go back to complete leave</description>
+   <auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
+   <auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
+</service>	
+	
+<service name="extendLeave" engine="simple" default-entity-name="EmplLeave"  location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="completeLeave" auth="true">
+   <description>Extend Employee Leave After call Back</description>
+   <auto-attributes mode="IN" include="pk" optional="true"></auto-attributes>
+   <auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
+</service>	
+
+<service name="EmployeeCallBackExtendLeave" engine="simple" invoke="EmployeeCallBackExtendLeave" location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" default-entity-name="EmplLeave">
+   <description>Service to extend the leave days of an employee</description>
+   <auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
+   <auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
+</service>
+
+<service name="calcelScheduledLeaves" engine="simple" default-entity-name="EmplLeave"
+   location="component://humanres/script/org/ofbiz/humanres/HumanResServices.xml" invoke="calcelScheduledLeaves" auth="true">
+	  <description>Service to Invoke the Calcellation Of Scheduled Leaves</description>
+	  <auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
+	  <auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
+</service>		
 
 </services>

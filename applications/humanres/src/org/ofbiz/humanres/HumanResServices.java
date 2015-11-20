@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import java.sql.*;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -1681,7 +1683,7 @@ public class HumanResServices {
 		return holidayCount;
 	}
 
-	private static int getNumberOfHolidays(Date startDate, Date endDate) {
+	public static int getNumberOfHolidays(Date startDate, Date endDate) {
 		int holidayCount = 0;
 		LocalDate localDateStartDate = new LocalDate(startDate.getTime());
 		LocalDate localDateEndDate = new LocalDate(endDate.getTime());
@@ -5976,13 +5978,180 @@ public class HumanResServices {
 				state = "VALID";
 			}
 			
-			
 			return state;
 		}
 
 
+	// Method for the Employee call Back to
 		
+	public static String getLeaveEndExend(String leaveId){
+            Delegator delegator =  DelegatorFactoryImpl.getDelegator(null);
+			Date fromDate = null;
+			Date endDate = null;
+			Date resumeDate = null;
+		
+			GenericValue getLeaveResumptionExtendELI = null;
+			try {
 
+				getLeaveResumptionExtendELI = delegator.findOne("EmplLeave",
+						UtilMisc.toMap("leaveId", leaveId), false);
+			} catch (GenericEntityException e2) {
+				e2.printStackTrace();
+			}
+			Date resumingLeaveDate = null;
+			Double resumingLeaveDuration = 0.0;
+			if(getLeaveResumptionExtendELI.size() > 0){
+				 resumingLeaveDate = getLeaveResumptionExtendELI.getDate("resumeForExtendDate");
+				 log.info("#####resumeForExtendDateJKJKJK#######"+resumingLeaveDate);
+				 resumingLeaveDuration = getLeaveResumptionExtendELI.getDouble("daysDifference");
+				 log.info("#####dresumingLeaveDurationJJJJJJ#######"+resumingLeaveDuration);
+			}
+			
+			// calculate leave end date
+			endDate = calculateEndWorkingNonHolidayDay(resumingLeaveDate,
+					resumingLeaveDuration.intValue());
+			 log.info("#####END DATEJJJJJJJJJJJJJ#######"+endDate);
+		//	 Date endDateSql = java.sql.Date.valueOf(endDate.toString());
+			 
+			 Date convertedEndDate = sqlDateConvert(endDate);
+			 log.info("#####convertedEndDateYYYYYYYYYY#######"+convertedEndDate);
+			 
+			
+		    Date reComeBack = calculateEndWorkingNonHolidayDayResumption(endDate);
+		    log.info("##reComeBackJJJJJJJJJJJJJ#######"+reComeBack);
+		    
+		    
+			
+			/// GET LEAVE DETAILS TO FILL THE nEXT lEAVE APP
+			GenericValue getLeaveDetails = null;
+			try {
 
+				getLeaveDetails = delegator.findOne("EmplLeave",
+						UtilMisc.toMap("leaveId", leaveId), false);
+			} catch (GenericEntityException e2) {
+				e2.printStackTrace();
 
+			}
+			
+			
+		//	if(getLeaveDetails.size() > 0){
+				
+			//	getLeaveDetails.set("calledBack", "extended");
+				
+				GenericValue makeValuesToEmplLeave = delegator.makeValue("EmplLeave");
+				String newLeaveId  =  delegator.getNextSeqId("EmplLeave");
+				makeValuesToEmplLeave.put("leaveId", newLeaveId);
+				makeValuesToEmplLeave.put("partyId", getLeaveDetails.getString("partyId"));
+				makeValuesToEmplLeave.put("leaveTypeId", getLeaveDetails.getString("leaveTypeId"));
+				makeValuesToEmplLeave.put("emplLeaveReasonTypeId", getLeaveDetails.getString("emplLeaveReasonTypeId"));
+				makeValuesToEmplLeave.put("fromDate", resumingLeaveDate);
+				makeValuesToEmplLeave.put("leaveDuration", resumingLeaveDuration);
+				makeValuesToEmplLeave.put("thruDate", convertedEndDate);
+				makeValuesToEmplLeave.put("isDeductedFromAnnual", "Y");
+				makeValuesToEmplLeave.put("financialYear",  getLeaveDetails.getString("financialYear"));
+				makeValuesToEmplLeave.put("hasbalance", getLeaveDetails.getString("hasbalance"));
+				makeValuesToEmplLeave.put("resumptionDate", reComeBack);
+				makeValuesToEmplLeave.put("isActive", getLeaveDetails.getString("isActive"));
+				makeValuesToEmplLeave.put("createdBy",getLeaveDetails.getString("createdBy"));
+				makeValuesToEmplLeave.put("leaveStatus", getLeaveDetails.getString("leaveStatus"));
+				makeValuesToEmplLeave.put("createdDate", new java.sql.Timestamp(0));
+				makeValuesToEmplLeave.put("applicationStatus", getLeaveDetails.getString("applicationStatus"));
+				makeValuesToEmplLeave.put("approvalStatus", getLeaveDetails.getString("approvalStatus"));
+				makeValuesToEmplLeave.put("responsibleEmployee", getLeaveDetails.getString("responsibleEmployee"));
+				makeValuesToEmplLeave.put("handedOverTo", getLeaveDetails.getString("handedOverTo"));
+				makeValuesToEmplLeave.put("workflowDocumentTypeId", getLeaveDetails.getString("workflowDocumentTypeId"));
+				try{
+					makeValuesToEmplLeave.create();
+				}catch(GenericEntityException ex){
+					ex.printStackTrace();
+				}
+				
+	//}
+			return leaveId;
+		}// close the method 
+
+	///calculate resumption Non Holiday
+	
+	public static Date calculateEndWorkingNonHolidayDayResumption(Date resumeDate) {
+		//int noOfDays =  duration + 1;
+		LocalDate localDateEndDate = new LocalDate(resumeDate.getTime());
+        LocalDate resumeDay = localDateEndDate.plusDays(1);
+		// If this is happening on sunday or saturday push it to start on monday
+		if (resumeDay.getDayOfWeek() == DateTimeConstants.SATURDAY) {
+			resumeDay = resumeDay.plusDays(2);
+		}
+
+		if (resumeDay.getDayOfWeek() == DateTimeConstants.SUNDAY) {
+			resumeDay = resumeDay.plusDays(1);
+		}
+
+		int noOfHolidays = getNumberOfHolidays(resumeDate, 1);
+		log.info("=============== NUMBER OF HOLIDAYS" + noOfHolidays);
+		resumeDay = resumeDay.plusDays(noOfHolidays);
+        
+		if (resumeDay.getDayOfWeek() == DateTimeConstants.SATURDAY) {
+			resumeDay = resumeDay.plusDays(2);
+		} else if (resumeDay.getDayOfWeek() == DateTimeConstants.SUNDAY) {
+			resumeDay = resumeDay.plusDays(2);
+		}
+		
+		while(isHoliday(resumeDay.toDate()) == true){
+			if(isHoliday(resumeDay.toDate()) == true){
+				resumeDay = resumeDay.plusDays(1);
+			}
+		}  
+		
+		if (resumeDay.getDayOfWeek() == DateTimeConstants.SATURDAY) {
+			resumeDay = resumeDay.plusDays(2);
+		} else if (resumeDay.getDayOfWeek() == DateTimeConstants.SUNDAY) {
+			resumeDay = resumeDay.plusDays(2);
+		}
+		log.info("#####################calculateEndWorkingNonHolidayDayResumption##"+resumeDay.toDate());
+		
+		Date date = java.sql.Date.valueOf(resumeDay.toString());
+	
+		 return date;
+	}
+	
+	/// calculate  resume date Another
+	
+	public static Date calculateEndWorkingNonHolidayDayResume(Date fromDate,int leaveDuration){
+		
+		Date endDate = null;
+		Date resumeDate = null;
+		
+		endDate = calculateEndWorkingNonHolidayDay(fromDate,
+				leaveDuration);
+		int leaveTillResumption = leaveDuration + 1;
+		resumeDate = calculateEndWorkingNonHolidayDay(fromDate,
+				leaveTillResumption);
+		log.info("#################Util Endateon##"+resumeDate);
+		
+		Date date = java.sql.Date.valueOf(resumeDate.toString());
+		log.info("#################sql Endateon##"+date);
+		return date;
+		
+	}
+	
+	  public static Date sqlDateConvert(Date Date){
+		  LocalDate localDateEndDate = new LocalDate(Date.getTime());
+		  SimpleDateFormat theFormat = new SimpleDateFormat("yyyy-mm-dd");
+		  
+		  Date date = java.sql.Date.valueOf(localDateEndDate.toString());
+		 	 
+		  return date;
+		 	 
+		 	/* java.sql.Date convertedDate = null;
+		 		 try {
+		 			Date parsedDate =  theFormat.parse(Date.toString());
+		 		    convertedDate= new java.sql.Date(parsedDate.getTime());
+		 		} catch (ParseException e) {
+		 			// TODO Auto-generated catch block
+		 		e.printStackTrace();
+		 		}
+		 	
+		 		 return convertedDate;*/
+		  }//close method
+	
+	
 }

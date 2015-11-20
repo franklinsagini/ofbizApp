@@ -2594,11 +2594,6 @@
 		<response name="error" type="view" value="FindEmplLeaves" />
 	</request-map>
 
-
-
-
-
-
 	<request-map uri="updateEmplLeaveExt">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="EditEmplLeave"
@@ -4302,6 +4297,11 @@
 		<response name="success" type="view" value="monthlyLeavePDF" />
 	</request-map>
 	
+	<request-map uri="monthlyLeaveCSV.csv">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="monthlyLeaveCSV" save-home-view="true" />
+	</request-map>
+	
 	<request-map uri="leaveAtCertainDate">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="leaveAtCertainDatePDF" />
@@ -4372,6 +4372,68 @@
 	<response name="error" type="view" value="printSeparationDetail" />
 	</request-map>
 	
+	<request-map uri="callBack">
+	<security auth="true" https="true"/>
+	<response name="success" type="view" value="callBack"></response>
+	<response name="error" type="view" value="callBack"></response>
+	</request-map>
+	
+	<request-map uri="extendLeave">
+	<security https="true" auth="true"/>
+	<event type="service" invoke="extendLeave"></event>
+	<response name="sucess" type="view" value="callBack"></response>
+	<response name="error" type="view" value="callBack"></response>
+	</request-map>
+	
+	<request-map uri="completeLeave">
+	<security auth="true" https="true"/>
+	<event type="service" invoke="completeLeave"></event>
+	<response name="success" type="view" value="callBack"></response>
+	<response name="error" type="view" value="callBack"></response>
+	</request-map>
+	
+	<!-- To Print leave in Csv -->
+	<request-map uri="empLeaveRecordPrint.csv">
+	<security https="true" auth="true"/>
+	<response name="success" type="view" value="empLeaveRecordPrintcsv" save-home-view="true"></response>
+	</request-map>
+	
+	<request-map uri="empLeaveRecordPrintPdf">
+	<security https="true" auth="true"/>
+	<response name="success" type="view" value="empLeaveRecordPrintPdf" save-home-view="true"></response>
+	</request-map>
+	
+	<request-map uri="callBackextendLeave">
+	  <security auth="true" https="true"/>
+	  <response name="success" type="view" value="callBackextendLeave"></response>
+	  <response name="error" type="view" value="callBackextendLeave"></response>
+	</request-map>
+	
+	<request-map uri="leaveAtCertainDateExcel.csv">
+	  <security auth="true" https="true"/>
+	  <response name="success" type="view" value="leaveAtCertainDateExcel" save-home-view="true"></response>
+	</request-map>
+	
+	<request-map uri="EmployeeCallBackExtendLeave">
+	 <security auth="true" https="true"/>
+	 <event type="service" invoke="EmployeeCallBackExtendLeave"></event>
+	 <response name="success" type="view" value="callBackextendLeave"></response>
+	 <response name="error" type="view" value="callBackextendLeave"></response>
+	</request-map>
+	
+	<request-map uri="scheduledLeave">
+	  <security auth="true" https="true"/>
+	  <response name="success" type="view" value="scheduledLeave"></response>
+	  <response name="error" type="view" value="scheduledLeave"></response>
+	</request-map>
+	
+	<request-map uri="calcelScheduledLeaves">
+	  <security auth="true" https="true"/>
+	  <event type="service" invoke="calcelScheduledLeaves"></event>
+	  <response name="success" type="view" value="scheduledLeave"></response>
+	  <response name="error" type="view" value="scheduledLeave"></response>
+	</request-map>
+	
 	<view-map name="selfAppraisalReportPDF" type="screenfop"
 		page="component://humanres/widget/ReportScreens.xml#selfAppraisalReportPDF"
 		content-type="application/pdf" encoding="none" />
@@ -4394,7 +4456,7 @@
 
 	<view-map name="staffSeparatedReportCSV" type="screencsv"
 		page="component://humanres/widget/ReportScreens.xml#staffSeparatedReportCSV"
-		content-type="text/csv" encoding="none" />
+		content-type="text/csv" encoding="none"/>
 
 	<view-map name="StaffPerformancePerDepartmentPDF" type="screenfop"
 		page="component://humanres/widget/PerfReportScreens.xml#StaffPerformancePerDepartmentPDF"
@@ -5123,9 +5185,22 @@
 			
 	<view-map name="separationApplicationTypes" type="screen"
 		page="component://humanres/widget/EmployeeScreens.xml#SeparationApplicationTypes" />
-			
     	<view-map name="printSeparationDetail" type="screenfop"
 		page="component://humanres/widget/ReportScreens.xml#printSeparationDetail"
 		content-type="application/pdf" encoding="none" />			
+	<view-map name="callBack" type="screen"
+		page="component://humanres/widget/EmplLeaveScreens.xml#callBack"/>
+	<view-map name="empLeaveRecordPrintcsv" type="screencsv"
+		page="component://humanres/widget/ReportScreens.xml#empLeaveRecordPrintCSVScreen"
+		content-type="text/csv" encoding="none"/>
+    <view-map name="empLeaveRecordPrintPdf" type="screenfop"
+		page="component://humanres/widget/ReportScreens.xml#empLeaveRecordPrintpdf"
+		content-type="application/pdf" encoding="none"/>		
+    <view-map name="callBackextendLeave" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#callBackEmployeeExtendLeave"></view-map>		
+	<view-map name="monthlyLeaveCSV" type="screencsv" page="component://humanres/widget/ReportScreens.xml#monthlyLeaveScreenCSV"
+	          content-type="text/csv" encoding="none"/>	
+    <view-map name="leaveAtCertainDateExcel" type="screencsv" page="component://humanres/widget/ReportScreens.xml#leaveAtCertainDateExcelScreen" 
+              content-type="text/csv" encoding="none"></view-map>	
+    <view-map name="scheduledLeave" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#scheduledLeave"></view-map>                 
 			
-</site-conf>
+	</site-conf>
