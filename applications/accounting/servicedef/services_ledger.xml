@@ -45,6 +45,14 @@ under the License.
         <auto-attributes include="pk" mode="INOUT" optional="true"/>
         <attribute name="manualGlJvId" type="String" mode="INOUT" optional="false"/>
         <attribute name="organizationPartyId" type="String" mode="INOUT" optional="false"/>
+    </service>    
+    <service name="deleteGLJV" engine="java" default-entity-name="ManualGLJVHeader"
+        location="org.ofbiz.accounting.ledger.GeneralLedgerServices" invoke="deleteGLJV" auth="true">
+        <description>Approving of Journal Voucher</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <attribute name="manualGlJvId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="organizationPartyId" type="String" mode="INOUT" optional="false"/>
     </service>
     <service name="postGLJV" engine="java" default-entity-name="ManualGLJVHeader"
         location="org.ofbiz.accounting.ledger.GeneralLedgerServices" invoke="postGLJV" auth="true">

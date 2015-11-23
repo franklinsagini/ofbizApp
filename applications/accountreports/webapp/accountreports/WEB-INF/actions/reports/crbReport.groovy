@@ -102,57 +102,16 @@ loanApps.each { obj ->
     }
 
    loanRepaymentAmount =   CrbReportServices.getLastRepaymentAmount(delegator, obj.loanApplicationId)
-   formatedloanRepaymentAmount = CrbReportServices.getCRBAmountFormat(loanRepaymentAmount)
    daysInArrears = CrbReportServices.lastRepaymentDurationToDateInDays(obj.loanApplicationId)
    lastRepaymentDate = org.ofbiz.loansprocessing.LoansProcessingServices.getLastRepaymentDate(obj.loanApplicationId)
-   formatedLastRepaymentDate = ""
-   if (lastRepaymentDate != null) {
-        formatedLastRepaymentDate = CrbReportServices.getCRBDateFormat(lastRepaymentDate)
-   }
-  
    currentLoanBalance = org.ofbiz.loansprocessing.LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(obj.loanApplicationId)
    noInstalmentsInArrears = 0
-    member_maritalStatus = ""
-    
     if (daysInArrears.toInteger()>30) {
         daysInArrears = daysInArrears
         noInstalmentsInArrears = daysInArrears/30
     }else{
         daysInArrears = 0
-        noInstalmentsInArrears = 0
-    }
-
-    performingNonPerforming = ""
-    if (daysInArrears.toInteger()>90) {
-        performingNonPerforming = "B"
-    }else{
-          performingNonPerforming = "A"
-    }
-
-    locationCountry = ""
-    nationality = ""
-
-    if (member.citizenship == "KEN") {
-        locationCountry = "KENYA"
-        nationality = "KENYAN"
-    }
-
-
-    if (maritalStatus.name == "Married") {
-        member_maritalStatus = "M"
-    }else if (maritalStatus.name == "Single") {
-        member_maritalStatus = "S"
-    }else if (maritalStatus.name == "Divorced") {
-        member_maritalStatus = "D"
-    }else  {
-        member_maritalStatus = "U"
-    }
-
-    member_gender = ""
-    if (gender.name == "Male") {
-        member_gender = "M"
-    }else if (gender.name == "Female") {
-        member_gender = "F"
+        noInstalmentsInArrears = daysInArrears/30
     }
 
      crbReportListBuilder = [
@@ -164,9 +123,9 @@ loanApps.each { obj ->
         dateOfBirth:member.birthDate,
         clientNumber:member.memberNumber,
         loanNumber:obj.loanNo,
-        gender:member_gender,
-        nationality:nationality,
-        maritalStatus:member_maritalStatus,
+        gender:gender.name,
+        nationality:member.citizenship,
+        maritalStatus:maritalStatus.name,
         primaryIdentificationDocumentType:primaryIdentificationDocumentType,
         primaryIdentificationDocNumber:primaryIdentificationDocNumber,
         secondaryIdentificationDocumentType:secondaryIdentificationDocumentType,
@@ -185,7 +144,7 @@ loanApps.each { obj ->
         physicalAddress2:"",
         plotNumber:"",
         locationTown:"",
-        locationCountry:locationCountry,
+        locationCountry:"",
         datePhysicalAddress:"",
         pinNumber:member.pinNumber,
         consumerWorkE:member.emailAddress,
@@ -210,7 +169,7 @@ loanApps.each { obj ->
         overdueDate:obj.nextInstallmentDate,
         noDaysArrears: daysInArrears,
         noInstalmentsInArrears:noInstalmentsInArrears,
-        performingNonPerforming:performingNonPerforming,
+        performingNonPerforming:"",
         accountStatus:accountStatus,
         accountStatusDate:currentDate,
         accountClosureReason:"",
@@ -219,9 +178,9 @@ loanApps.each { obj ->
         deferredPaymentAmount:"",
         m:"",
         disbursementDate:obj.disbursementDate,
-        instalmentAmount:formatedloanRepaymentAmount,
-        lastPaymentDate:formatedLastRepaymentDate,
-        lastLoanPayment:formatedloanRepaymentAmount,
+        instalmentAmount:loanRepaymentAmount,
+        lastPaymentDate:lastRepaymentDate,
+        lastLoanPayment:loanRepaymentAmount,
         typeofSecurity:"S"
 
     ]
