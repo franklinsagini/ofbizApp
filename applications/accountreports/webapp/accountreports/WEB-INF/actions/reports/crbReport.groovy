@@ -46,6 +46,7 @@ currentDate = UtilDateTime.nowTimestamp();
 loanApps.each { obj ->
          //GET MEMBER
      member = delegator.findOne("Member", [partyId : obj.partyId], false);
+     println("Generating CRB Report for Member "+ member.firstName+ " " +member.lastName)
      //GET SALUTATION 
      salutation = delegator.findOne("Salutation", [salutationId : member.salutationId], false);
      //GET GENDER 
@@ -76,6 +77,16 @@ loanApps.each { obj ->
         }
 
     }
+    loanDisbursementDate = 0;
+    if (obj.disbursementDate != null) {
+        loanDisbursementDate = CrbReportServices.getCRBDateFormat(obj.disbursementDate)
+    }
+    loanApprovedAmt = 0;
+    if (obj.approvedAmt != null) {
+        loanApprovedAmt = CrbReportServices.getCRBAmountFormat(obj.approvedAmt)
+    }
+    
+    
     //GET ACCOUNT STATUS DETAILS
     accountsStatus = null;
     dateAccountOpened  = null;
@@ -102,16 +113,61 @@ loanApps.each { obj ->
     }
 
    loanRepaymentAmount =   CrbReportServices.getLastRepaymentAmount(delegator, obj.loanApplicationId)
+   formatedloanRepaymentAmount = CrbReportServices.getCRBAmountFormat(loanRepaymentAmount)
    daysInArrears = CrbReportServices.lastRepaymentDurationToDateInDays(obj.loanApplicationId)
-   lastRepaymentDate = org.ofbiz.loansprocessing.LoansProcessingServices.getLastRepaymentDate(obj.loanApplicationId)
+    lastRepaymentDate = 0
+    formatedLastRepaymentDate = 0
+   if (lastRepaymentDate != null) {
+         lastRepaymentDate = org.ofbiz.loansprocessing.LoansProcessingServices.getLastRepaymentDate(obj.loanApplicationId)
+         println("############### LAST REPAYMENT DATE: "+lastRepaymentDate)
+         if (lastRepaymentDate!=null) {
+             formatedLastRepaymentDate = CrbReportServices.getCRBDateFormat(lastRepaymentDate)
+         }
+          
+   }
    currentLoanBalance = org.ofbiz.loansprocessing.LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(obj.loanApplicationId)
    noInstalmentsInArrears = 0
+    member_maritalStatus = ""
+    
     if (daysInArrears.toInteger()>30) {
         daysInArrears = daysInArrears
         noInstalmentsInArrears = daysInArrears/30
     }else{
         daysInArrears = 0
-        noInstalmentsInArrears = daysInArrears/30
+        noInstalmentsInArrears = 0
+    }
+
+    performingNonPerforming = ""
+    if (daysInArrears.toInteger()>90) {
+        performingNonPerforming = "B"
+    }else{
+          performingNonPerforming = "A"
+    }
+
+    locationCountry = ""
+    nationality = ""
+
+    if (member.citizenship == "KEN") {
+        locationCountry = "KENYA"
+        nationality = "KENYAN"
+    }
+
+
+    if (maritalStatus.name == "Married") {
+        member_maritalStatus = "M"
+    }else if (maritalStatus.name == "Single") {
+        member_maritalStatus = "S"
+    }else if (maritalStatus.name == "Divorced") {
+        member_maritalStatus = "D"
+    }else  {
+        member_maritalStatus = "U"
+    }
+
+    member_gender = ""
+    if (gender.name == "Male") {
+        member_gender = "M"
+    }else if (gender.name == "Female") {
+        member_gender = "F"
     }
 
      crbReportListBuilder = [
@@ -123,9 +179,9 @@ loanApps.each { obj ->
         dateOfBirth:member.birthDate,
         clientNumber:member.memberNumber,
         loanNumber:obj.loanNo,
-        gender:gender.name,
-        nationality:member.citizenship,
-        maritalStatus:maritalStatus.name,
+        gender:member_gender,
+        nationality:nationality,
+        maritalStatus:member_maritalStatus,
         primaryIdentificationDocumentType:primaryIdentificationDocumentType,
         primaryIdentificationDocNumber:primaryIdentificationDocNumber,
         secondaryIdentificationDocumentType:secondaryIdentificationDocumentType,
@@ -144,7 +200,7 @@ loanApps.each { obj ->
         physicalAddress2:"",
         plotNumber:"",
         locationTown:"",
-        locationCountry:"",
+        locationCountry:locationCountry,
         datePhysicalAddress:"",
         pinNumber:member.pinNumber,
         consumerWorkE:member.emailAddress,
@@ -161,15 +217,15 @@ loanApps.each { obj ->
         accountProductType:"H",
         instalmentDueDate:"",
         dateAccountOpened:dateAccountOpened,
-        originalAmount:obj.approvedAmt,
+        originalAmount:loanApprovedAmt,
         currencyFacility:"KES",
-        amountKSH:obj.approvedAmt,
+        amountKSH:loanApprovedAmt,
         currentBalance:currentLoanBalance,
         overdueBalance:"",
         overdueDate:obj.nextInstallmentDate,
         noDaysArrears: daysInArrears,
         noInstalmentsInArrears:noInstalmentsInArrears,
-        performingNonPerforming:"",
+        performingNonPerforming:performingNonPerforming,
         accountStatus:accountStatus,
         accountStatusDate:currentDate,
         accountClosureReason:"",
@@ -177,10 +233,10 @@ loanApps.each { obj ->
         deferredPaymentDate:"",
         deferredPaymentAmount:"",
         m:"",
-        disbursementDate:obj.disbursementDate,
-        instalmentAmount:loanRepaymentAmount,
-        lastPaymentDate:lastRepaymentDate,
-        lastLoanPayment:loanRepaymentAmount,
+        disbursementDate:loanDisbursementDate,
+        instalmentAmount:formatedloanRepaymentAmount,
+        lastPaymentDate:formatedLastRepaymentDate,
+        lastLoanPayment:formatedloanRepaymentAmount,
         typeofSecurity:"S"
 
     ]
