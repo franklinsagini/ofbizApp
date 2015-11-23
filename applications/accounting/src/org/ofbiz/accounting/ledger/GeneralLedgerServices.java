@@ -210,7 +210,34 @@ public class GeneralLedgerServices {
 		if (loanClearHeader.getString("isCleared").equals("N")) {
 			try {
 				loanClearItem = delegator.findOne("LoanClearItem", UtilMisc.toMap("loanClearItemId", loanClearItemId), false);
+				//save log here
+				GenericValue loanClearItemLog = null;
+				String loanClearItemLogId = null;
+				loanClearItemLog = delegator.makeValue("LoanClearItemLog");
+				loanClearItemLogId = delegator.getNextSeqId("LoanClearItemLog");
+				loanClearItemLog.put("loanClearItemLogId", loanClearItemLogId);
+				loanClearItemLog.put("loanClearItemId", loanClearItem.getLong("loanClearItemId"));
+				loanClearItemLog.put("loanClearId", loanClearItem.getLong("loanClearId"));
+				loanClearItemLog.put("isActive", loanClearItem.getString("organizationPartyId"));
+				loanClearItemLog.put("deletedBy", userLogin.getString("userLoginId"));
+				loanClearItemLog.put("deletedOn", UtilDateTime.nowTimestamp());
+				loanClearItemLog.put("createdBy", loanClearItem.getString("createdBy"));
+				loanClearItemLog.put("updatedBy", loanClearItem.getString("updatedBy"));
+				loanClearItemLog.put("loanApplicationId", loanClearItem.getLong("loanApplicationId"));
+				loanClearItemLog.put("loanAmt", loanClearItem.getBigDecimal("loanAmt"));
+				loanClearItemLog.create();
+				
+				// We can now safe remove loanClearItem				
 				loanClearItem.remove();
+				
+				//Update Loan Record to display the button
+				GenericValue loan = getLoan(delegator, loanClearItem.getLong("loanApplicationId"));
+				System.out.println("########## LOAN RETRIVED "+loan.getString("loanNo"));
+				System.out.println("########## LOAN BEFORE UPDATE "+loan.getString("isAddedToClear"));
+				loan.set("isAddedToClear", null);
+				loan.store();
+				
+				System.out.println("########## LOAN UPDATED "+loan.getString("isAddedToClear"));
 			} catch (GenericEntityException e) {
 				e.printStackTrace();
 			}
@@ -223,6 +250,17 @@ public class GeneralLedgerServices {
 		Map<String, Object> result = ServiceUtil.returnSuccess("DELETED SUCCESSFULLY");
 		result.put("loanClearId", loanClearId);
 		return result;
+	}
+
+	private static GenericValue getLoan(Delegator delegator, Long loanApplicationId) {
+		GenericValue loan = null;
+		try {
+			loan = delegator.findOne("LoanApplication", UtilMisc.toMap("loanApplicationId", loanApplicationId), false);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return loan;
 	}
 
 	private static GenericValue getLoanClearHeader(Delegator delegator, Long loanClearId) {
