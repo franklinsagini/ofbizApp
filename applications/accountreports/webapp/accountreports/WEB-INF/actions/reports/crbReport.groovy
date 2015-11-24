@@ -49,24 +49,34 @@ loanApps.each { obj ->
      println("Generating CRB Report for Member "+ member.firstName+ " " +member.lastName)
      //GET SALUTATION 
      salutation = delegator.findOne("Salutation", [salutationId : member.salutationId], false);
+     println("############### SALUTATION FOUND: "+ salutation)
      //GET GENDER 
      gender = delegator.findOne("Gender", [genderId : member.genderId], false); 
+     println("############### GENDER FOUND: "+ gender)
     //GET MARITAL STATUS
      maritalStatus = delegator.findOne("MaritalStatus", [maritalStatusId : member.maritalStatusId], false);
+     println("############### MARITAL STATUS FOUND: "+ maritalStatus)
     //GET MARITAL STATUS
      station = delegator.findOne("Station", [stationId : (member.stationId).toString()], false);
+     println("############### STATION FOUND: "+ station)
     //GET LOAN DETAILS
      loanProduct = delegator.findOne("LoanProduct", [loanProductId : obj.loanProductId], false);
+
+     println("############### LOAN PRODUCT FOUND: "+ loanProduct)
     //GET EMPLOYEMENT TYPE
      employementType = delegator.findOne("EmploymentType", [employmentTypeId : member.employmentTypeId], false);
+     println("############### EMPLOYMENT TYPE FOUND: "+ employementType)
     //GET BRANCH DETAILS
      branch = delegator.findOne("PartyGroup", [partyId : member.branchId], false);
+     println("############### BRANCH FOUND: "+ branch)
     //GET Account DETAILS
      account = delegator.findOne("AccountProduct", [accountProductId : obj.accountProductId], false);
+     println("############### ACCOUNT FOUND: "+ account)
     //GET A List of Member Account DETAILS
     accountCondition = [];
     accountCondition.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, member.partyId));
     member_accounts = delegator.findList('MemberAccount',  EntityCondition.makeCondition(accountCondition, EntityOperator.AND), null,null,null,false)
+    println("############### MEMBER ACCOUNTS FOUND: "+ member_accounts)
     //GET ACTIVE LOAN ACCOUNT
     loanMemberAccount = null;
     member_accounts.each { ac ->
@@ -119,7 +129,7 @@ loanApps.each { obj ->
     formatedLastRepaymentDate = 0
    if (lastRepaymentDate != null) {
          lastRepaymentDate = org.ofbiz.loansprocessing.LoansProcessingServices.getLastRepaymentDate(obj.loanApplicationId)
-         println("############### LAST REPAYMENT DATE: "+lastRepaymentDate)
+         
          if (lastRepaymentDate!=null) {
              formatedLastRepaymentDate = CrbReportServices.getCRBDateFormat(lastRepaymentDate)
          }
