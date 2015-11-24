@@ -64,7 +64,12 @@ loanApps.each { obj ->
 
      println("############### LOAN PRODUCT FOUND: "+ loanProduct)
     //GET EMPLOYEMENT TYPE
+    employment = ""
      employementType = delegator.findOne("EmploymentType", [employmentTypeId : member.employmentTypeId], false);
+     if (employementType!=null) {
+         employment = employementType.name 
+     }
+
      println("############### EMPLOYMENT TYPE FOUND: "+ employementType)
     //GET BRANCH DETAILS
      branch = delegator.findOne("PartyGroup", [partyId : member.branchId], false);
@@ -217,7 +222,7 @@ loanApps.each { obj ->
         employerName:station.name,
         employerIndustryType:"",
         employmentDate:"",
-        employeeType:employementType.name,
+        employeeType:employment,
         salaryBand:"",
         lendersTradingName:"CHAI SACCO LTD",
         lendersRegisteredName:"CHAI SACCO LTD",
