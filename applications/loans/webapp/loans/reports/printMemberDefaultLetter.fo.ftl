@@ -61,7 +61,7 @@ under the License.
                 <fo:block font-weight="bold">Loan outstanding as at ${nowTimestamp?if_exists}</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>Kshs ${minimumShareContribution?string(",##0.00")}</fo:block>
+                <fo:block><#-- Kshs ${minimumShareContribution?string(",##0.00")} --></fo:block>
             </fo:list-item-body>
         </fo:list-item>
         <fo:list-item>
@@ -69,7 +69,7 @@ under the License.
                 <fo:block font-weight="bold">Add Accrued Interest</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>Kshs ${loanRepayment?string(",##0.00")}</fo:block>
+                <fo:block><#-- Kshs ${loanRepayment?string(",##0.00")} --> </fo:block>
             </fo:list-item-body>
         </fo:list-item>
         <fo:list-item>
@@ -86,7 +86,7 @@ under the License.
                 <fo:block font-weight="bold">Less Shares as at  ${nowTimestamp?if_exists}</fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>Kshs ${totalDeduction?string(",##0.00")}</fo:block>
+                <fo:block><#-- Kshs ${totalDeduction?string(",##0.00")} --> </fo:block>
             </fo:list-item-body>
         </fo:list-item>
         <fo:list-item>
