@@ -42,4 +42,5 @@ context.totalDeduction = totalDeduction;
 myGuarantorList = delegator.findByAnd("LoanGuarantor",  [loanApplicationId : lloanApplicationId], null, false);
 context.myGuarantorList = myGuarantorList
 
+
 return

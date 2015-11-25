@@ -77,6 +77,7 @@
                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
                 <property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/>
                 <set field="loanApplicationId" from-field="parameters.loanApplicationId" type="Long"/>
+                <set field="myloanApplicationId" from-field="parameters.loanApplicationId"/>
                 <set field="loanApplicationCtx" from-field="parameters"/>
                 
                 <entity-one entity-name="LoanApplication" value-field="applicationContext">
@@ -157,6 +158,23 @@
 									</container>
 
 								</screenlet>
+								
+								<screenlet>
+                                	<section>
+                                		
+                                		<widgets>
+                                			
+                                			<container style="button-bar">
+                                							
+	                                            <link target="printDefaulterNotice?loanApplicationId=${myloanApplicationId}"  text="Print Defaulter Notice" style="buttontext create">
+	                                                <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
+	                                            </link>
+                                           
+                                            </container>
+                                		</widgets>
+                                		
+                                	</section>
+                                </screenlet>
 
 
 								<screenlet>
@@ -299,6 +317,26 @@
                                 </container>
                             </fail-widgets>
                         </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="printDefaulterNotice">
+        <section>
+            <actions>
+                <set field="viewSize" value="99999"/>
+                <!-- script location="component://party/webapp/partymgr/WEB-INF/actions/reports/loanDetails.groovy"/ -->
+                <script location="component://transfertoguarantors/webapp/transfertoguarantors/WEB-INF/actions/reports/printDefaulterNotice.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <!-- xsl-fo><html-template location="component://party/webapp/partymgr/member/reports/loanDetails.fo.ftl"/></xsl-fo -->
+                            <xsl-fo><html-template location="component://transfertoguarantors/webapp/transfertoguarantors/reports/printDefaulterNotice.fo.ftl"/></xsl-fo>
+                        </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
