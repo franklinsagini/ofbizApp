@@ -55,7 +55,7 @@ under the License.
     </fo:block>
     
     <fo:block font-size="12pt" text-align="center" margin-bottom="0.2in">
-    	The loan repayment is now on default by ${periodFromLastRepay} and the defaulted amount plus Accrued interest is Recoverable from the guarantor’s salaries after three times defaults.
+    	The loan repayment is now on default by ${periodFromLastRepay} and the defaulted amount plus Accrued interest is Recoverable from the guarantor's salaries after three times defaults.
 	</fo:block>
 	
 	<fo:block font-size="12pt" text-align="center" margin-bottom="0.2in">
