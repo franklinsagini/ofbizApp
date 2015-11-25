@@ -46,26 +46,42 @@ currentDate = UtilDateTime.nowTimestamp();
 loanApps.each { obj ->
          //GET MEMBER
      member = delegator.findOne("Member", [partyId : obj.partyId], false);
+     println("Generating CRB Report for Member "+ member.firstName+ " " +member.lastName)
      //GET SALUTATION 
      salutation = delegator.findOne("Salutation", [salutationId : member.salutationId], false);
+     println("############### SALUTATION FOUND: "+ salutation)
      //GET GENDER 
      gender = delegator.findOne("Gender", [genderId : member.genderId], false); 
+     println("############### GENDER FOUND: "+ gender)
     //GET MARITAL STATUS
      maritalStatus = delegator.findOne("MaritalStatus", [maritalStatusId : member.maritalStatusId], false);
+     println("############### MARITAL STATUS FOUND: "+ maritalStatus)
     //GET MARITAL STATUS
      station = delegator.findOne("Station", [stationId : (member.stationId).toString()], false);
+     println("############### STATION FOUND: "+ station)
     //GET LOAN DETAILS
      loanProduct = delegator.findOne("LoanProduct", [loanProductId : obj.loanProductId], false);
+
+     println("############### LOAN PRODUCT FOUND: "+ loanProduct)
     //GET EMPLOYEMENT TYPE
+    employment = ""
      employementType = delegator.findOne("EmploymentType", [employmentTypeId : member.employmentTypeId], false);
+     if (employementType!=null) {
+         employment = employementType.name 
+     }
+
+     println("############### EMPLOYMENT TYPE FOUND: "+ employementType)
     //GET BRANCH DETAILS
      branch = delegator.findOne("PartyGroup", [partyId : member.branchId], false);
+     println("############### BRANCH FOUND: "+ branch)
     //GET Account DETAILS
      account = delegator.findOne("AccountProduct", [accountProductId : obj.accountProductId], false);
+     println("############### ACCOUNT FOUND: "+ account)
     //GET A List of Member Account DETAILS
     accountCondition = [];
     accountCondition.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, member.partyId));
     member_accounts = delegator.findList('MemberAccount',  EntityCondition.makeCondition(accountCondition, EntityOperator.AND), null,null,null,false)
+    println("############### MEMBER ACCOUNTS FOUND: "+ member_accounts)
     //GET ACTIVE LOAN ACCOUNT
     loanMemberAccount = null;
     member_accounts.each { ac ->
@@ -76,6 +92,16 @@ loanApps.each { obj ->
         }
 
     }
+    loanDisbursementDate = 0;
+    if (obj.disbursementDate != null) {
+        loanDisbursementDate = CrbReportServices.getCRBDateFormat(obj.disbursementDate)
+    }
+    loanApprovedAmt = 0;
+    if (obj.approvedAmt != null) {
+        loanApprovedAmt = CrbReportServices.getCRBAmountFormat(obj.approvedAmt)
+    }
+    
+    
     //GET ACCOUNT STATUS DETAILS
     accountsStatus = null;
     dateAccountOpened  = null;
@@ -104,12 +130,16 @@ loanApps.each { obj ->
    loanRepaymentAmount =   CrbReportServices.getLastRepaymentAmount(delegator, obj.loanApplicationId)
    formatedloanRepaymentAmount = CrbReportServices.getCRBAmountFormat(loanRepaymentAmount)
    daysInArrears = CrbReportServices.lastRepaymentDurationToDateInDays(obj.loanApplicationId)
-   lastRepaymentDate = org.ofbiz.loansprocessing.LoansProcessingServices.getLastRepaymentDate(obj.loanApplicationId)
-   formatedLastRepaymentDate = ""
+    lastRepaymentDate = 0
+    formatedLastRepaymentDate = 0
    if (lastRepaymentDate != null) {
-        formatedLastRepaymentDate = CrbReportServices.getCRBDateFormat(lastRepaymentDate)
+         lastRepaymentDate = org.ofbiz.loansprocessing.LoansProcessingServices.getLastRepaymentDate(obj.loanApplicationId)
+         
+         if (lastRepaymentDate!=null) {
+             formatedLastRepaymentDate = CrbReportServices.getCRBDateFormat(lastRepaymentDate)
+         }
+          
    }
-  
    currentLoanBalance = org.ofbiz.loansprocessing.LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(obj.loanApplicationId)
    noInstalmentsInArrears = 0
     member_maritalStatus = ""
@@ -192,7 +222,7 @@ loanApps.each { obj ->
         employerName:station.name,
         employerIndustryType:"",
         employmentDate:"",
-        employeeType:employementType.name,
+        employeeType:employment,
         salaryBand:"",
         lendersTradingName:"CHAI SACCO LTD",
         lendersRegisteredName:"CHAI SACCO LTD",
@@ -202,9 +232,9 @@ loanApps.each { obj ->
         accountProductType:"H",
         instalmentDueDate:"",
         dateAccountOpened:dateAccountOpened,
-        originalAmount:obj.approvedAmt,
+        originalAmount:loanApprovedAmt,
         currencyFacility:"KES",
-        amountKSH:obj.approvedAmt,
+        amountKSH:loanApprovedAmt,
         currentBalance:currentLoanBalance,
         overdueBalance:"",
         overdueDate:obj.nextInstallmentDate,
@@ -218,7 +248,7 @@ loanApps.each { obj ->
         deferredPaymentDate:"",
         deferredPaymentAmount:"",
         m:"",
-        disbursementDate:obj.disbursementDate,
+        disbursementDate:loanDisbursementDate,
         instalmentAmount:formatedloanRepaymentAmount,
         lastPaymentDate:formatedLastRepaymentDate,
         lastLoanPayment:formatedloanRepaymentAmount,

@@ -19,7 +19,13 @@
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
     
-   
+    <service name="deleteLoanClearItem" engine="java" location="org.ofbiz.accounting.ledger.GeneralLedgerServices" invoke="deleteLoanClearItem" auth="true">
+        <description>Approving of Journal Voucher</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <attribute name="loanClearId" type="Long" mode="INOUT" optional="false"/>
+        <attribute name="loanClearItemId" type="Long" mode="IN" optional="false"/>
+    </service>
     
     <service name="updateLoanClearLimit" engine="simple" default-entity-name="LoanClearLimit"
              location="component://loanclearing/script/org/ofbiz/loanclearing/LoanClearingServices.xml" invoke="updateLoanClearLimit" auth="true">

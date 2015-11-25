@@ -678,6 +678,14 @@ under the License.
         </response>
         <response name="error" type="view" value="NewMultiDebitJV"/>
     </request-map>
+    <request-map uri="DeleteGLJV">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteGLJV"/>
+        <response name="success" type="request-redirect" value="ManualGLJV">
+            <redirect-parameter name="organizationPartyId"/>
+        </response>
+        <response name="error" type="view" value="NewMultiDebitJV"/>
+    </request-map>
 
     <request-map uri="createMultiDebitJVHeader">
         <security https="true" auth="true"/>
@@ -1100,6 +1108,10 @@ under the License.
     <request-map uri="FindAcctgTrans">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindAcctgTrans"/>
+    </request-map>
+    <request-map uri="QuickTransEntry">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="QuickTransEntry"/>
     </request-map>
     <request-map uri="CreateAcctgTransAndEntries">
         <security https="true" auth="true"/>
@@ -3862,6 +3874,7 @@ under the License.
     <view-map name="InterOwings" type="screen" page="component://accounting/widget/GlScreens.xml#InterOwings"/>
     <view-map name="PartyAccountsSummary" type="screen" page="component://accounting/widget/GlScreens.xml#PartyAccountsSummary"/>
     <view-map name="FindAcctgTrans" type="screen" page="component://accounting/widget/GlScreens.xml#FindAcctgTrans"/>
+    <view-map name="QuickTransEntry" type="screen" page="component://accounting/widget/GlScreens.xml#QuickTransEntry"/>
     <view-map name="CreateAcctgTransAndEntries" type="screen" page="component://accounting/widget/GlScreens.xml#CreateAcctgTransAndEntries"/>
     <view-map name="approvePayrollTotals" type="screen" page="component://accounting/widget/GlScreens.xml#approvePayrollTotals"/>
     <view-map name="EditAcctgTrans" type="screen" page="component://accounting/widget/GlScreens.xml#EditAcctgTrans"/>
