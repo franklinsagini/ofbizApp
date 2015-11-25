@@ -214,6 +214,19 @@ public class LoansProcessingServices {
 		bdLoansBalance = bdTotalLoanAmount.subtract(bdLoansRepaidAmount);
 		return bdLoansBalance;
 	}
+	
+	/***
+	 * Get loan balance inclusive of Interest and Insurance
+	 * */
+	public static BigDecimal getTotalLoanBalacePlusInterestPlusInsurace(Long loanApplicationId){
+		BigDecimal bdTotalBalance = BigDecimal.ZERO;
+		
+		bdTotalBalance = bdTotalBalance.add(getTotalLoanBalancesByLoanApplicationId(loanApplicationId));
+		bdTotalBalance = bdTotalBalance.add(LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString()));
+		bdTotalBalance = bdTotalBalance.add(LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString()));
+		
+		return bdTotalBalance;
+	}
 
 	public static BigDecimal getTotalLoansRunning(Long memberId,
 			Long loanProductId) {
@@ -457,6 +470,29 @@ public class LoansProcessingServices {
 			days = noOfDays.get(DurationFieldType.days()) + " days ago";
 		} else {
 			days = noOfMonths.getMonths() + " months ago";
+		}
+		return days;
+	}
+	
+	public static String lastRepaymentDurationToDateVersion2(Long loanApplicationId) {
+		
+		//Get Last Repayment Date
+		Timestamp lastRepaymentDate = getLastRepaymentDate(loanApplicationId);
+		
+		String days = "";
+		if (lastRepaymentDate == null)
+			return days;
+
+		DateTime startDate = new DateTime(lastRepaymentDate.getTime());
+		DateTime endDate = new DateTime(Calendar.getInstance()
+				.getTimeInMillis());
+
+		Days noOfDays = Days.daysBetween(startDate, endDate);
+		Months noOfMonths = Months.monthsBetween(startDate, endDate);
+		if (noOfDays.get(DurationFieldType.days()) <= 60) {
+			days = noOfDays.get(DurationFieldType.days()) + " day(s) ";
+		} else {
+			days = noOfMonths.getMonths() + " month(s) ";
 		}
 		return days;
 	}

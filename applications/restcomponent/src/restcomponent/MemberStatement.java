@@ -189,7 +189,7 @@ public class MemberStatement {
 							EntityOperator.AND);
 			List<GenericValue> accountTransactionELI = null;
 			List<String> orderByList = new ArrayList<String>();
-			orderByList.add("createdStamp DESC");
+			orderByList.add("createdStamp");
 			try {
 				accountTransactionELI = delegator.findList(
 						"AccountTransaction", transactionConditions, null,
