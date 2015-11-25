@@ -91,10 +91,10 @@ under the License.
         </fo:list-item>
         <fo:list-item>
             <fo:list-item-label>
-                <fo:block font-weight="bold">Balance Due as at  ${nowTimestamp?if_exists}</fo:block>
+                <fo:block font-weight="bold">Balance Due as at  </fo:block>
             </fo:list-item-label>
             <fo:list-item-body start-indent="body-start()">
-                <fo:block>Kshs ${totalDeduction?string(",##0.00")}</fo:block>
+                <fo:block><#-- Kshs ${totalDeduction?string(",##0.00")} --></fo:block>
             </fo:list-item-body>
         </fo:list-item>
         

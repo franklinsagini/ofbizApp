@@ -1,4 +1,5 @@
 import groovy.time.*
+import static java.math.RoundingMode.HALF_UP
 
 loanApplicationId = parameters.loanApplicationId
 
@@ -53,7 +54,8 @@ bdTotalLoanBalance = org.ofbiz.loansprocessing.LoansProcessingServices.getTotalL
 context.bdTotalLoanBalance = bdTotalLoanBalance
 
 int numberOfGuarantors = myGuarantorList.size();
-bdAmountPerGuarantor = bdTotalLoanBalance.divide(numberOfGuarantors);
+//
+bdAmountPerGuarantor = bdTotalLoanBalance.divide(numberOfGuarantors, 2, HALF_UP);
 context.bdAmountPerGuarantor = bdAmountPerGuarantor
 
 periodFromLastRepay = org.ofbiz.loansprocessing.LoansProcessingServices.lastRepaymentDurationToDateVersion2(lloanApplicationId);
