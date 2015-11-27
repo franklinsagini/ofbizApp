@@ -16,6 +16,7 @@ import javolution.util.FastMap;
 
 import org.joda.time.DateTime;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
+import org.ofbiz.accountholdertransactions.LoanUtilities;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
@@ -47,10 +48,10 @@ public class MemberStatement {
 	@GET
 	// @Produces("text/plain")
 	@Produces("application/json")
-	@Path("{user}")
-	public Response getStatement(@PathParam("user") String user) {
+	@Path("{memberNumber}")
+	public Response getStatement(@PathParam("memberNumber") String memberNumber) {
 
-		System.out.println(" Testing for this user ########### " + user);
+		System.out.println(" Testing for this memberNumber ########### " + memberNumber);
 
 		String username = null;
 		String password = null;
@@ -63,13 +64,17 @@ public class MemberStatement {
 				.createLocalDispatcher("default", delegator);
 		// Map<String, String> paramMap = UtilMisc.toMap("message", message);
 
-		Map<String, String> paramMap = UtilMisc.toMap("user", user,
-				"login.username", username, "login.password", password);
+//		Map<String, String> paramMap = UtilMisc.toMap("user", user,
+//				"login.username", username, "login.password", password);
+		Map<String, String> paramMap = UtilMisc.toMap("memberNumber", memberNumber);
+
 
 		Map<String, Object> result = FastMap.newInstance();
 
 		try {
-			result = dispatcher.runSync("statement", paramMap);
+			//result = dispatcher.runSync("statement", paramMap);
+			//statement_usingmembernumber
+			result = dispatcher.runSync("statement_usingmembernumber", paramMap);
 		} catch (GenericServiceException e1) {
 			Debug.logError(e1, PingResource.class.getName());
 			return Response.serverError().entity(e1.toString()).build();
@@ -93,8 +98,8 @@ public class MemberStatement {
 
 	@GET
 	@Produces("application/json")
-	@Path("/accounts/{user}")
-	public Response getAccountBalances(@PathParam("user") String user) {
+	@Path("/accounts/{memberNumber}")
+	public Response getAccountBalances(@PathParam("memberNumber") String memberNumber) {
 		BigDecimal bdBalance = null;
 
 		List<StatementAccount> listStatmentAccount = new ArrayList<StatementAccount>();
@@ -102,15 +107,16 @@ public class MemberStatement {
 
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		// Give User Login get the :-
-		GenericValue userLogin = null;
-		try {
-			userLogin = delegator.findOne("UserLogin",
-					UtilMisc.toMap("userLoginId", user), false);
-		} catch (GenericEntityException e) {
-			e.printStackTrace();
-		}
-		String partyIdStr = userLogin.getString("partyId");
-
+//		GenericValue userLogin = null;
+//		try {
+//			userLogin = delegator.findOne("UserLogin",
+//					UtilMisc.toMap("userLoginId", user), false);
+//		} catch (GenericEntityException e) {
+//			e.printStackTrace();
+//		}
+//		String partyIdStr = userLogin.getString("partyId");
+		GenericValue member = LoanUtilities.getMemberGivenMemberNumber(memberNumber);
+		String partyIdStr = member.getString("partyId");
 		if ((partyIdStr == null) || (partyIdStr.equals(""))) {
 			return null;
 		}
@@ -324,8 +330,8 @@ public class MemberStatement {
 	// Add Loans
 	@GET
 	@Produces("application/json")
-	@Path("/loansbalances/{user}")
-	public Response getLoanBalances(@PathParam("user") String user) {
+	@Path("/loansbalances/{memberNumber}")
+	public Response getLoanBalances(@PathParam("memberNumber") String memberNumber) {
 		// BigDecimal bdBalance = null;
 
 		List<LoanAccount> listLoanAccount = new ArrayList<LoanAccount>();
@@ -333,18 +339,20 @@ public class MemberStatement {
 
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		// Give User Login get the :-
-		GenericValue userLogin = null;
-		try {
-			userLogin = delegator.findOne("UserLogin",
-					UtilMisc.toMap("userLoginId", user), false);
-		} catch (GenericEntityException e) {
-			e.printStackTrace();
-		}
-		
-		if (userLogin == null)
-			return null;
-		
-		String partyIdStr = userLogin.getString("partyId");
+//		GenericValue userLogin = null;
+//		try {
+//			userLogin = delegator.findOne("UserLogin",
+//					UtilMisc.toMap("userLoginId", user), false);
+//		} catch (GenericEntityException e) {
+//			e.printStackTrace();
+//		}
+//		
+//		if (userLogin == null)
+//			return null;
+//		
+//		String partyIdStr = userLogin.getString("partyId");
+		GenericValue member = LoanUtilities.getMemberGivenMemberNumber(memberNumber);
+		String partyIdStr = member.getString("partyId");
 
 		if ((partyIdStr == null) || (partyIdStr.equals(""))) {
 			return null;
