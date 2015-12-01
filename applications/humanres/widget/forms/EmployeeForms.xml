@@ -1682,7 +1682,7 @@
     <field name="separationDetailId"><hidden/></field>
     <field name="separationApplicationId"><hidden/></field>
     <field name="partyId"><display-entity entity-name="Person" description="${firstName}  ${lastName}"></display-entity></field>
-    <field name="separationTypesId"><display-entity entity-name="SeparationTypes" description="${separationName}"></display-entity></field>
+    <field name="separationTypesId" title="Separation Type"><display-entity entity-name="SeparationTypes" description="${separationName}"></display-entity></field>
     
     <field name="salary"><display/></field>
     <field name="leaveAllowance"><display></display></field>
@@ -1698,19 +1698,19 @@
     <field name="dayLeftSaccoActivities"><display></display></field>
     <field name="amountPayableToChai"><display></display></field>
     <field name="status" title="Process Status"><display></display></field>
-    <field name="forwardStatus"><display></display></field>
-    <field name="separateEmployee" title="Separate Employee" widget-style="buttontext" use-when="${status=='Not Separated'}">
+<!--     <field name="forwardStatus"><display></display></field>
+ -->    <field name="separateEmployee" title="Separate Employee" widget-style="buttontext" use-when="${status=='Not Separated'}">
            <hyperlink target="separateEmployee" description="Separate Employee" also-hidden="false" request-confirmation="true" confirmation-message="Are you sure of separating this staff?">
                <parameter param-name="partyId"/>
            </hyperlink> 
        </field> 
-<!--     <field name="undoLink" title="Undo" widget-style="smallSubmit">
+     <field name="undoLink" title="Undo" widget-style="smallSubmit">
     <hyperlink target="undoLink" also-hidden="false" description="Undo Process" request-confirmation="true" confirmation-message="Do you want to Undo?">
     <parameter param-name="separationDetailId"/>
     </hyperlink>
-    </field>   -->
-    <field name="submitButton" title="Forward" widget-style="smallSubmit" use-when="${forwardStatus=='NOT FORWARDED'}"><submit button-type="button"/></field>
-   
+    </field>  
+<!--     <field name="submitButton" title="Forward" widget-style="smallSubmit" use-when="${forwardStatus=='NOT FORWARDED'}"><submit button-type="button"/></field>
+ -->   
     <field name="printButton" title="Print" widget-style="buttontext">
     <hyperlink target="printSeparationDetail" also-hidden="false" description="Print Detail">
     <parameter param-name="separationDetailId"/>

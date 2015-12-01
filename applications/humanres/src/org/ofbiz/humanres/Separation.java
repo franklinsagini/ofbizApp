@@ -2,8 +2,10 @@ package org.ofbiz.humanres;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +25,9 @@ import org.ofbiz.entity.DelegatorFactoryImpl;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
 
 /**
  * @author Ronald
@@ -42,16 +47,7 @@ public class Separation {
        
 	} // close separationModule
 	
-	
-	
-	
-	
-	
-	
 
-	
-	
-	
 	
 	public static BigDecimal getLeaveBalances(String partyId){
 		Delegator delegator=DelegatorFactoryImpl.getDelegator(null);
@@ -123,50 +119,141 @@ public class Separation {
 		
 	}
 	
-
+	
+	//EMPLOYEE LOANS TO BE INCLUDED IN THIS METHOD
+	
 	public static BigDecimal employeeLoans(String partyId){
-		
-		//EMPLOYEE LOANS TO BE INCLUDED IN THIS METHOD
-		
 		BigDecimal employeeLoans= new BigDecimal(9000);
-		return employeeLoans;
 		
+		List<GenericValue> LoanDetailsELI = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		GenericValue employeeDetail = null;
+		
+		// get National ID Number
+		
+		try{
+		    employeeDetail = delegator.findOne("Person",UtilMisc.toMap("partyId",partyId), false);
+		 }catch(GenericEntityException ex){
+			ex.printStackTrace();
+		}
+		String nationalIdNumber = null;
+		if(employeeDetail.size() > 0){
+			nationalIdNumber = employeeDetail.getString("nationalIDNumber"); 
+		}
+		log.info("------------- National ID Number-----------"+nationalIdNumber);
+		
+		//   ---------------GET LOAN INFO------------------------------------------
+		BigDecimal zeroOutStandingBalance = BigDecimal.ZERO;
+		
+		EntityConditionList<EntityExpr> loanConditions = EntityCondition.makeCondition(UtilMisc.toList(
+		        EntityCondition.makeCondition("idNumber", EntityOperator.EQUALS, nationalIdNumber),
+		        EntityCondition.makeCondition("outstandingBalance", EntityOperator.GREATER_THAN, zeroOutStandingBalance)),
+				EntityOperator.AND);
+		
+		try{
+			LoanDetailsELI = delegator.findList("LoanApplication",loanConditions, null, null, null, false) ;
+		}catch(GenericEntityException ep){
+			ep.printStackTrace();
+		}
+		    BigDecimal loanAmountTotal = BigDecimal.ZERO;
+		 for(GenericValue genericValue : LoanDetailsELI){
+				loanAmountTotal = loanAmountTotal.add(genericValue.getBigDecimal("outstandingBalance"));
+		}
+		 log.info("-------------OutStanding Loan Balance-----------"+loanAmountTotal);
+	
+		return loanAmountTotal;	
 	}
+	
+	
+	
+	
 	
 	public static BigDecimal employeeBasicSalaryKsh(String party){
-		BigDecimal empSalary = new BigDecimal(30000);
-		 
-		 return empSalary;
 		
+		log.info("############### method employeeBasicSalaryKsh Reached #################");
+
+		BigDecimal empSalary = new BigDecimal(30000);
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> getSeparationDetailsELI = null;
+		try{
+			getSeparationDetailsELI = delegator.findByAnd("SeparationApplication",UtilMisc.toMap("partyId", party),null, false);
+		   }catch(GenericEntityException ex){
+			ex.printStackTrace();
+	    }
+		
+		String effectiveDate = null;
+		for(GenericValue getDetail : getSeparationDetailsELI){
+			effectiveDate =  getDetail.getString("effectiveDate");
+		}
+	
+	/*	dateFromDate = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(asFromDate);
+		sqlFromDate = new java.sql.Date(dateFromDate.getTime());
+
+		fromDateTimestamp = new Timestamp(sqlFromDate.getTime());*/
+  
+		LocalDate effectiveDateConvertToLocalTime = new LocalDate(effectiveDate);
+		LocalDate effectiveDateMinusSomeMonths = effectiveDateConvertToLocalTime.minusMonths(2);
+		LocalDate plusFourMonths = effectiveDateConvertToLocalTime.plusMonths(4);
+		
+		log.info("--------## effectiveDate ------------#########"+effectiveDate);
+
+		log.info("--------## effectiveDate Minus Two Months ------------#########"+effectiveDateMinusSomeMonths);
+		
+		Timestamp timestamp = new Timestamp(effectiveDateMinusSomeMonths.toDateTimeAtStartOfDay().getMillis());
+		
+		Timestamp timestampFourMonthsAhead = new Timestamp(plusFourMonths.toDateTimeAtStartOfDay().getMillis());
+		
+		log.info("--------## effectiveDate Timestamp ------------#########"+timestamp);
+		log.info("--------## FOUR MONTHS AHEAD Timestamp ------------#########"+timestampFourMonthsAhead);
+
+		Date today = new java.sql.Timestamp(0);
+
+	
+		EntityConditionList<EntityExpr> payrollConditions = EntityCondition.makeCondition(UtilMisc.toList(
+				        EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, party),
+				        EntityCondition.makeCondition("closed", EntityOperator.EQUALS, "Y"),
+						EntityCondition.makeCondition("lastUpdatedStamp",EntityOperator.GREATER_THAN_EQUAL_TO, timestamp),
+						EntityCondition.makeCondition("lastUpdatedStamp",EntityOperator.LESS_THAN,timestampFourMonthsAhead)),
+						EntityOperator.AND);
+		
+		List<GenericValue> getPayrollId = null;
+		try{
+			getPayrollId = delegator.findList("StaffPayroll",payrollConditions,null,null,null,false);
+		   }catch(GenericEntityException e){
+			e.printStackTrace();
+	        }
+		
+		   String payRollId = null;
+		   for(GenericValue getThePayRollId : getPayrollId){
+			     payRollId = getThePayRollId.getString("staffPayrollId");
+	       	}
+	         log.info("#############StaffPayRollId##########"+payRollId);
+		   
+		   EntityConditionList<EntityExpr> payrollElementCondition = EntityCondition.makeCondition(UtilMisc.toList(
+			        EntityCondition.makeCondition("staffPayrollId", EntityOperator.EQUALS, payRollId),
+					EntityCondition.makeCondition("payrollElementId",EntityOperator.EQUALS, "BASICPAY")),
+					EntityOperator.AND);
+		   
+		   
+	   List<GenericValue> getBasicPM = null;  
+		try{
+		   getBasicPM = delegator.findList("StaffPayrollElements", payrollElementCondition,null,null,null, false);
+		}catch(GenericEntityException ex){
+			ex.printStackTrace();
+		}
+        log.info("#############StaffPayRollElements ##########"+payRollId);
+       
+        BigDecimal salaryPayPM = BigDecimal.ZERO;
+        for(GenericValue genericValue : getBasicPM){
+        	salaryPayPM = genericValue.getBigDecimal("amount");
+        }
+        
+        log.info("#############Employeee Salary ##########"+salaryPayPM);
+        
+        
+		 return salaryPayPM;
 	}
 	
-/*	public static Double AmountDueToLeave(Double daysTo, Double leaveBal,Double basicSalary){
-		Double leaveAllowance=0.0;
-		Double excessLeave=0.0;
-		Double lessLeave=0.0;
-		if(daysTo >= 60){
-			leaveAllowance=(leaveBal * basicSalary * 12.0)/365.0;
-		}
-		else if (daysTo < 60.0) {
-			Double addToLeaveToDaysTo;
-			addToLeaveToDaysTo=	daysTo+leaveBal;
-			 if(addToLeaveToDaysTo==60.0){
-				 leaveAllowance=0.00;
-			 }else if(addToLeaveToDaysTo>60.0){
-				  excessLeave=addToLeaveToDaysTo-60.0;
-				 leaveAllowance=(excessLeave * basicSalary * 12.0)/365.0;
-			 }else if (addToLeaveToDaysTo < 60) {
-				 lessLeave = 60.0 - addToLeaveToDaysTo;
-				 leaveAllowance=0.0;
-			}
-		}else if (daysTo < 60.0 && leaveBal >60.0 ){ 
-			leaveAllowance=0.00;
-		}else if (daysTo > 60.0 && leaveBal > 60.0) {
-			leaveAllowance=(leaveBal * basicSalary * 12.0)/365.0;
-		}
-		
-		return leaveAllowance;
-	}*/
 	
 	//Leave Allowance Calculation
 	
@@ -218,7 +305,7 @@ public class Separation {
 			}
 		}
 		
-		log.info("#########**LEAVE DAYS ALLOWANCE***######     "+ leaveAllowance);
+		log.info("--------------**LEAVE DAYS ALLOWANCE***----------    "+ leaveAllowance);
 		
 		return leaveAllowance;
 	}
@@ -272,7 +359,7 @@ public class Separation {
 	//Number of years worked
 	
 	public static int getNumberOfYearsBetweenWK(String strDate1, String dateFormat1, String strDate2, String dateFormat2) {
-		log.info("############# YEARS BETWEEN METHOD###############");       
+		log.info("------------- YEARS BETWEEN METHOD----------");       
 		
 		int years = 0;
 		         
@@ -293,14 +380,14 @@ public class Separation {
 		            System.err.println(ex.getMessage());
 		        }
 		       
-		        log.info("############################"+years);
+		        log.info("#############YEARS BTW###############"+years);
 		        return years;
 		    }
 		    
 //get notice period of the searation type
 	public static String getNoticePeriod(String separationTypeId){
 		
-		log.info("##############NOTICE PERIOD##############");
+		log.info("-------------NOTICE PERIOD------------");
 		
 		Delegator delegator= DelegatorFactoryImpl.getDelegator(null);
 		List<GenericValue> noticePeriodELI = null;
@@ -325,7 +412,7 @@ public class Separation {
 	
 public static BigDecimal getGoldenHandShake(String separationTypeId){
 		
-		log.info("##############GOLDEN HAND SHAKE##############");
+		log.info("=============GOLDEN HAND SHAKE----------------");
 		
 		Delegator delegator= DelegatorFactoryImpl.getDelegator(null);
 		List<GenericValue> noticePeriodELI = null;
@@ -422,8 +509,12 @@ public static BigDecimal grossTotal(BigDecimal basicSalary, BigDecimal leaveAllo
 	 }catch(Exception e){
 			e.printStackTrace();
 	 }
+	 
+	 BigDecimal roundedPayeeAmt = PayeeAmt.setScale(2, RoundingMode.CEILING);
+	 
 	 log.info("########PAYE#######  "+PayeeAmt);
-	 return PayeeAmt;
+	 log.info("########PAYE#######  "+roundedPayeeAmt);
+	 return roundedPayeeAmt;
 	
  }
  //Amount After Paye
