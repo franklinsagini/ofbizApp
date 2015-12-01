@@ -105,5 +105,81 @@ public class MemberStatementService {
 		return result;
 
 	}
+	
+	/***
+	 * Member Transactions Given Member Number
+	 * */
+	public static Map<String, Object> memberTransactionsGivenMemberNumber(DispatchContext dctx,
+			Map<String, ?> context) {
+		Delegator delegator = dctx.getDelegator();
+		String memberNumber = (String) context.get("memberNumber");
+		//GenericValue member = LoanUtilities.getEntityValue("Member", primaryKeyName, primaryKeyValue)
+		GenericValue member = LoanUtilities.getMemberGivenMemberNumber(memberNumber.trim());
+		String partyId = member.getString("partyId");
+
+
+		EntityConditionList<EntityExpr> transactionConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS, Long.valueOf(partyId))),
+						EntityOperator.AND);
+		List<GenericValue> accountTransactionELI = null;
+		List<String> orderByList = new ArrayList<String>();
+		orderByList.add("createdStamp DESC");
+		try {
+			accountTransactionELI = delegator.findList("AccountTransaction",
+					transactionConditions, null, orderByList, null, false);
+
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		Transaction transaction;
+
+		/***
+		 * public String transactionType; public BigDecimal transactionAmount;
+		 * public Timestamp createdStamp;
+		 * 
+		 * public String accountNo; public String accountName;
+		 * 
+		 * **/
+		GenericValue memberAccount = null;
+
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		List<Transaction> listTransactions = new ArrayList<Transaction>();
+		Timestamp dateCreated;
+		Gson gson = new Gson();
+
+		for (GenericValue genericValue : accountTransactionELI) {
+			transaction = new Transaction();
+
+			transaction.setTransactionType(genericValue
+					.getString("transactionType"));
+			transaction.setTransactionAmount(genericValue
+					.getBigDecimal("transactionAmount"));
+			
+			//genericValue.getT
+			dateCreated = new Timestamp(genericValue.getTimestamp("createdStamp").getTime());
+			DateTime dateTimeCreated = new DateTime(dateCreated.getTime());
+			transaction.setCreatedStamp(dateTimeCreated.toString("dd/MM/yyyy"));
+			try {
+				memberAccount = delegator.findOne(
+						"MemberAccount",
+						UtilMisc.toMap("memberAccountId",
+								genericValue.getLong("memberAccountId")),
+						false);
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+			transaction.setAccountName(memberAccount.getString("accountName"));
+			transaction.setAccountNo(memberAccount.getString("accountNo"));
+			listTransactions.add(transaction);
+		}
+
+		String json = gson.toJson(listTransactions);
+		result.put("transactions", json);
+		// result.put("listTransactions", listTransactions);
+		return result;
+
+	}
 
 }
