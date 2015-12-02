@@ -5203,6 +5203,8 @@
 	<set field="yearWorkedMultiple" value="${FromTypesOfSeparation.yearsWorked}"/>
 	
 	<set field="createdDate" value="${FromseparationApplication.createdDate}"/>
+	<set field="notificationDate" value="${FromseparationApplication.notificationDate}"/>
+	
 	<set field="effectiveDate" value="${FromseparationApplication.effectiveDate}"/>
 	<set field="party" value="${FromseparationApplication.partyId}"/>
 	<set field="separationTypeId" value="${FromseparationApplication.separationTypesId}"/>
@@ -5214,6 +5216,7 @@
 	
 	 <log message="------theEffectiveDate------*******${theEffectiveDate}" level="info"/>
 	  <log message="---------DateFormEffectiveDate-----------${DateFormEffectiveDate}" level="info"/>
+	<log message="--------Notification Date--------${notificationDate}" level="info"/>
 	
 	<log message="#####Formated date## ${DateFormEffectiveDate}" level="info"/>
 	
@@ -5245,7 +5248,7 @@
 	    <log message="###totalDays***#####${totalDays}" level="info"/>
 	     <log message="###balanceActual***#####${balanceActual}" level="info"/>
 	
-	<set field="daysDifference" value="${bsh:org.ofbiz.humanres.Separation.calculateTheCalendarDaysBetweenDates(theCreatedDate,theEffectiveDate)}"/>
+	<set field="daysDifference" value="${bsh:org.ofbiz.humanres.Separation.calculateTheCalendarDaysBetweenDates(theEffectiveDate,notificationDate)}"/>
 	<set field="leaveBalance" value="${bsh:org.ofbiz.humanres.Separation.getLeaveBalances(party)}"/>
 	<set field="employeeBasicSalary" value="${bsh:org.ofbiz.humanres.Separation.employeeBasicSalaryKsh(party)}"/>
 	<set field="employeeLoans" value="${bsh:org.ofbiz.humanres.Separation.employeeLoans(party)}"/>
@@ -5253,11 +5256,13 @@
     <set field="servicePaidEmpl" value="${bsh:org.ofbiz.humanres.Separation.servicePayAmount(separationTypeId,employeeBasicSalary,yearsWorked)}"/> 
 	<set field="lostAmount" value="${bsh:org.ofbiz.humanres.Separation.EmployeeLostItemsAmount(party)}"/>
 	<set field="leaveAllowance" value="${bsh:org.ofbiz.humanres.Separation.leaveAllowanceAmount(separationTypeId,daysDifference,balanceActual,employeeBasicSalary)}" type="BigDecimal"/>
+	<set field="lienOfNotice" value="${bsh:org.ofbiz.humanres.Separation.lienOfNoticeMethod(separationTypeId,daysDifference,balanceActual,employeeBasicSalary)}" type="BigDecimal"/>
 	<set field="grossTotal" value="${bsh:org.ofbiz.humanres.Separation.grossTotal(employeeBasicSalary,leaveAllowance,servicePaidEmpl,transportAll,golden)}"/>
-    <set field="payeAmt" value="${bsh:org.ofbiz.humanres.Separation.amountPAYE(grossTotal)}"/>
+    <set field="payeAmt" value="${bsh:org.ofbiz.humanres.Separation.amountPAYE(grossTotal,lienOfNotice)}"/>
     <set field="amtAfterPaye" value="${bsh:org.ofbiz.humanres.Separation.totalNetAmount(grossTotal,payeAmt)}"/> 
     <set field="finalAmount" value="${bsh:org.ofbiz.humanres.Separation.finalTotal(amtAfterPaye,lostAmount,employeeLoans)}"/> 
- 
+    <set field="grossSubjectToPAYEE" value="${bsh:org.ofbiz.humanres.Separation.grossSubjectToPAYEE(grossTotal,lienOfNotice)}"/>
+   
     
     <log message="###GROSS***#####${grossTotal}" level="info"/>
     <log message="###PAYE#####${payeAmt}" level="info"/>
@@ -5285,11 +5290,14 @@
 	<set field="newEntity.salary" from-field="employeeBasicSalary"/>
 	<set field="newEntity.leaveAllowance" from-field="leaveAllowance"/>
 	<set field="newEntity.total" from-field="grossTotal"/>
+	 <set field="newEntity.lienOfNotice" from-field="lienOfNotice"/>
 	<!-- <set field="newEntity.lienToNotice"/> -->
 	<set field="newEntity.PAYE" from-field="payeAmt"/>
     <set field="newEntity.staffLoans" from-field="employeeLoans"/> 
     <set field="newEntity.lostItemAmount" from-field="lostAmount"/>
+    <set field="newEntity.leaveDaysAsAtEffect" from-field="balanceActual"/>
     
+     <set field="newEntity.grossSubjectToPAYEE" from-field="grossSubjectToPAYEE"/>
 	<!-- <set field="newEntity.chaiSaccoLoans" from-field=""/> -->
 	<set field="newEntity.amountPayableToChai" from-field="finalAmount"/>
 	<set field="newEntity.goldenHandShake" from-field="golden"/>
