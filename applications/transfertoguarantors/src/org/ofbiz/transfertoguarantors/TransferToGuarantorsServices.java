@@ -155,8 +155,7 @@ public class TransferToGuarantorsServices {
 				
 				"partyId", loanApplication.getLong("partyId")));
 
-		String acctgTransId = LoanRepayments.createAccountingTransaction(loanRepayment,
-				acctgTransType, userLogin, delegator);
+
 		Long disbursedLoanStatusId = LoanServices.getLoanStatusId("DISBURSED");
 		
 		if (loanApplication.getLong("loanStatusId") != disbursedLoanStatusId)
@@ -197,6 +196,8 @@ public class TransferToGuarantorsServices {
 			accountProductId = LoanUtilities.getAccountProductIdGivenCodeId(AccHolderTransactionServices.MEMBER_DEPOSIT_CODE);
 		}
 		
+		String acctgTransId = LoanRepayments.createAccountingTransaction(loanRepayment,
+				acctgTransType, userLogin, delegator);
 		String loanClass = loanProduct.getString("fosaOrBosa").trim();
 		
 		Long partyId = loanApplication.getLong("partyId");
@@ -211,8 +212,7 @@ public class TransferToGuarantorsServices {
 			memberDepositsAtAttachment = bdDepositsBalance;
 			//Get the Proportion of savings for this loan
 			BigDecimal bdProportionForThisLoan = getDepositProportion(loanClass, bdDepositsBalance, loanApplicationId, partyId);
-			memberDepositsAmtProportion = bdProportionForThisLoan;
-			log.info(" The loan proportion is "+bdProportionForThisLoan);
+			
 					
 					//bdDepositsBalance.divide(loanProduct.getBigDecimal("multipleOfSavingsAmt"), 4, RoundingMode.FLOOR);
 			
@@ -224,9 +224,16 @@ public class TransferToGuarantorsServices {
 			bdShareCapitalBalance = bdShareCapitalBalance.setScale(2,
 					RoundingMode.HALF_UP);
 			
+			//If the member deposits proportion is greater than the sum of loan balance (includes interest and insurance ) and offset amount then
+			// then the proportion becomes the sum of loan balance and offset amount
+			bdProportionForThisLoan = getProportionAmount(loanApplicationId, bdMinimumShareCapital, bdShareCapitalBalance, bdProportionForThisLoan);
+			memberDepositsAmtProportion = bdProportionForThisLoan;
+			log.info(" The loan proportion is "+bdProportionForThisLoan);
+			
 			if ((bdMinimumShareCapital.compareTo(bdShareCapitalBalance) == 1) && (bdDepositsBalance.compareTo(BigDecimal.ZERO) == 1)){
 				//Get the difference and add it to member share capital
 				bdOffsetAmount = bdMinimumShareCapital.subtract(bdShareCapitalBalance);
+				
 				
 				if (bdProportionForThisLoan.compareTo(bdOffsetAmount) == -1){
 					bdOffsetAmount = bdProportionForThisLoan;
@@ -470,6 +477,32 @@ public class TransferToGuarantorsServices {
 		}
 
 		return "success";
+	}
+
+	private static BigDecimal getProportionAmount(Long loanApplicationId,
+			BigDecimal bdMinimumShareCapital, BigDecimal bdShareCapitalBalance,
+			BigDecimal bdProportionForThisLoan) {
+		// TODO Auto-generated method stub
+		
+		BigDecimal totalInterestDue = LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString());
+		BigDecimal totalInsuranceDue = LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString());
+		BigDecimal totalPrincipalBalance = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
+		BigDecimal loanBalance = totalInsuranceDue.add(totalInterestDue).add(totalPrincipalBalance);	
+		
+		BigDecimal offsetAmount = bdMinimumShareCapital.subtract(bdShareCapitalBalance);
+		if (offsetAmount.compareTo(BigDecimal.ZERO) == -1){
+			offsetAmount = BigDecimal.ZERO;
+		}
+		
+		BigDecimal balanceOffsetSum = loanBalance.add(offsetAmount);
+		//If the member deposits proportion is greater than the sum of loan balance (includes interest and insurance ) and offset amount then
+		// then the proportion becomes the sum of loan balance and offset amount
+		
+		if (bdProportionForThisLoan.compareTo(balanceOffsetSum) == 1)
+			bdProportionForThisLoan = balanceOffsetSum;
+		
+		
+		return bdProportionForThisLoan;
 	}
 
 	private static BigDecimal getDepositProportion(String loanClass,

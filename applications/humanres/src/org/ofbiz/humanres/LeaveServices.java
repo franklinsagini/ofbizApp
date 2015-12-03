@@ -2278,6 +2278,9 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		String appointmentDateOfEmp = null;
 		LocalDateTime accrueStart  = null;
 		// find appointment date 
+		
+		log.info(" ---------- Date This Date------------ "+thisDate);
+		
 		GenericValue EmpAppintmentDateELI = null;
 		
 		LocalDateTime stCurrentDate = new LocalDateTime(Calendar.getInstance().getTimeInMillis());
@@ -2289,7 +2292,6 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 			thatDay = stCurrentDate;
 			
 		}
-		
 		
 		try{
 			EmpAppintmentDateELI = delegator.findOne("Person",UtilMisc.toMap("partyId", partyId), false);
@@ -2312,7 +2314,8 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		
 		PeriodType monthDay = PeriodType.months();
 		
-		log.info(" ######## FIRST DAY ########## "+firstDayOfYear.toDate());
+		log.info(" ---------- Appointment Date------------ "+appointmentDateOfEmp);
+		log.info(" ---------- FIRST DAY ------------- "+firstDayOfYear.toDate());
 		
 		Period difference = new Period(accrueStart, thatDay, monthDay);
 			int months = difference.getMonths();
@@ -2326,6 +2329,7 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		 }
 		 if (accrualRate != null) {
 			   accrualRate = employeeLeaveType.getBigDecimal("accrualRate");
+			   log.info("----------------Accrual Rate ----------"+accrualRate);
 		}else {
 			   System.out.println("######## Accrual Rate not found #### ");
 		}
@@ -2338,7 +2342,7 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		        	accruedLeaveDays = accrualRate.multiply(new BigDecimal(months));
 		        }
 		        
-		        System.out.println("######## Accrual Balance JAC#### "+accruedLeaveDays);
+		        System.out.println("------------Accrual Leave Balance To Partilar date ------------ "+accruedLeaveDays);
 		        
 		 return accruedLeaveDays;
 		
@@ -2463,17 +2467,20 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 //method to convert date String to sql Date
  
   public static Date sqlDateConvert(String Date){
- 	 SimpleDateFormat theFormat = new SimpleDateFormat("yyyy-mm-dd");
- 	 java.sql.Date convertedDate = null;
- 		 try {
- 			Date parsedDate =  theFormat.parse(Date);
- 		    convertedDate= new java.sql.Date(parsedDate.getTime());
- 		} catch (ParseException e) {
- 			// TODO Auto-generated catch block
- 		e.printStackTrace();
- 		}
- 	
- 		 return convertedDate;
+ 
+	  java.sql.Date sql = null;
+	  try {
+	     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+         Date parsed = format.parse(Date);
+         sql = new java.sql.Date(parsed.getTime());
+	  } catch (ParseException e) {
+			// TODO Auto-generated catch block
+		e.printStackTrace();
+		}
+	  
+	  log.info("--------------SQL DATE---"+sql); 
+	  
+	  return sql;
   }
  
 public static BigDecimal getOriginalDuration(String LeaveId){
