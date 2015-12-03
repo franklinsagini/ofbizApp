@@ -22,10 +22,13 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
         
      <simple-method method-name="createDeathNotification" short-description="Create DeathNotification">
-			<call-simple-method method-name="saveDeathNotification"></call-simple-method>
+			<call-simple-method method-name="saveDeathNotification" scope="inline"></call-simple-method>
 			
 			<!-- set field="notificationNo" from-field="newEntity.deathNotificationId"/>
 			<store-value value-field="newEntity"/ -->
+			<set field="deathNotificationId" from-field="deathNotificationId" type="Long"/>
+			<set field="status" value="${bsh:org.ofbiz.deathmanagement.DeathManagement.updateDeadMembersLoansToDeceased(deathNotificationId, userLogin);}"/>
+			<!-- Update the member disbursed loans to deceased -->
     </simple-method>
     
     <simple-method method-name="saveDeathNotification" use-transaction="true">

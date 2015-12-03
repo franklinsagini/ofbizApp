@@ -390,6 +390,11 @@ public class LoanUtilities {
 	public static Long getLoanStatusId(String name) {
 		List<GenericValue> loanStatusELI = null; // =
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		
+		if (name != null){
+			name = name.trim();
+		}
+		
 		try {
 			loanStatusELI = delegator.findList("LoanStatus",
 					EntityCondition.makeCondition("name", name), null, null,
