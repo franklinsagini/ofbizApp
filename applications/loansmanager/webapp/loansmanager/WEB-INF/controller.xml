@@ -25,7 +25,7 @@
     
     <request-map uri="forwardedLoanApplications"><security https="true" auth="true"/><response name="success" type="view" value="forwardedLoanApplications"/></request-map>
     <request-map uri="approvedLoanApplications"><security https="true" auth="true"/><response name="success" type="view" value="approvedLoanApplications"/></request-map>
- 	
+ 	<request-map uri="rejectedLoanApplications"><security https="true" auth="true"/><response name="success" type="view" value="rejectedLoanApplications"/></request-map>
  	
  	<request-map uri="loanapplication">
         <security https="true" auth="true" />
@@ -509,6 +509,32 @@
 		<response name="success" type="view" value="LookupActiveMember" />
 	</request-map>
 	
+	<request-map uri="rejectionLetter">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="rejectionLetter" />
+	</request-map>
+	
+	<request-map uri="rejectLoanReason">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="rejectLoanReason">
+			<redirect-parameter name="loanApplicationId" />
+			<redirect-parameter name="partyId" />
+		</response>
+	</request-map>
+	
+	 <!-- Reject Loan Application -->
+    <request-map uri="rejectLoanApplication">
+         <security auth="true" https="true"/>
+         <event type="java" path="org.ofbiz.loans.LoanServices" invoke="rejectLoanApplication"  />
+         <response name="success" type="request-redirect" value="rejectLoanReason"/> 
+         <response name="error" type="view" value="rejectLoanReason" />
+    </request-map>
+    
+       <request-map uri="rejectLoanApplicationScreen">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="rejectLoanApplicationScreen" />
+	</request-map>
+	
 		<view-map name="LookupActiveMember" type="screen"
 		page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember" />
        
@@ -517,6 +543,8 @@
     
         <view-map name="forwardedLoanApplications" type="screen" page="component://loansmanager/widget/loansmanagerScreens.xml#forwardedLoanApplications"/>
         <view-map name="approvedLoanApplications" type="screen" page="component://loansmanager/widget/loansmanagerScreens.xml#approvedLoanApplications"/>
+        <view-map name="rejectedLoanApplications" type="screen" page="component://loansmanager/widget/loansmanagerScreens.xml#rejectedLoanApplications"/>
+    
     
          <view-map name="loansGuaranteed" type="screen"
                 page="component://loansprocessing/widget/loansprocessingScreens.xml#loansGuaranteed" />
@@ -547,7 +575,12 @@
 	<view-map name="returnToLoans" type="screen"
 		page="component://loansmanager/widget/loansmanagerScreens.xml#returnToLoans" />
 		
-		
-     
-    
+   <view-map name="rejectionLetter" type="screenfop"
+		page="component://loansmanager/widget/loansmanagerScreens.xml#rejectionLetterReport" content-type="application/pdf" 
+		encoding="none"/>	
+   <view-map name="rejectLoanReason" type="screen"
+		page="component://loansmanager/widget/loansmanagerScreens.xml#rejectLoanReason" />			
+      <view-map name="rejectLoanApplicationScreen" type="screen" page="component://loansmanager/widget/loansmanagerScreens.xml#rejectLoanReason"/>
+  	
+
 </site-conf>
