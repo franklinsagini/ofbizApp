@@ -30,28 +30,52 @@
         <actions>
         	
             <entity-condition entity-name="DeathNotification">
+            	<order-by field-name="-deathNotificationId"/>
             </entity-condition>
         </actions>
         <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
         <field name="deathNotificationId"><hidden/></field>
         <field name="partyId" title="Member">
-        	<drop-down>
+        	<!-- drop-down>
         		<entity-options description="${firstName} ${middleName} ${lastName}" entity-name="Member">
         			<entity-constraint name="partyId" operator="equals" value="${partyId}"/>
         		</entity-options>
-        	</drop-down>
+        	</drop-down -->
+        	<display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName} Member Number - ${memberNumber}"></display-entity>
         </field>
 
-        <field name="notificationNo" title="Death No" widget-style="required" required-field="true"><text></text></field>
-        <field name="dateReported" title="Date Reported" widget-style="required" required-field="true"><date-time type="date"/></field>
+        <field name="notificationNo" title="Death No">
+        	<display></display>
+        </field>
+        <field name="dateReported" title="Date Reported">
+        	<display type="date"></display>
+        	<!--  date-time type="date"/ -->
+        </field>
         
-        <field name="dateofDeath" title="Date of Death"><date-time type="date"/></field>
+        <field name="dateofDeath" title="Date of Death">
+        <display type="date"></display>
+        	<!--  date-time type="date"/ -->
+        </field>
         
-        <field name="causeOfDeath" title="Cause of Death"><text></text></field>
-        <field name="burialPermitNo" title="Burial Permit No."><text></text></field>
-        <field name="reportedBy" title="Reported By"><text></text></field>
-        <field name="relationship" title="Relationship"><text></text></field>
-        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="causeOfDeath" title="Cause of Death">
+        	<display></display>
+        </field>
+        <field name="burialPermitNo" title="Burial Permit No.">
+        	<display></display>
+        </field>
+        <field name="reportedBy" title="Reported By">
+        	<display></display>
+        </field>
+        <field name="relationship" title="Relationship">
+        	<display></display>
+        </field>
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+        <field name="createdBy" title="Created By">
+        	<display></display>
+        </field>
+        <field name="createdStamp" title="When Created">
+        	<display></display>
+        </field>
 
     </form>
     
