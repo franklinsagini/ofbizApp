@@ -19,8 +19,12 @@ under the License.
 <#escape x as x?xml>
  <#if rejectedLoan?has_content>
     <#if loanStatusRejection?has_content>
-       <fo:block font-size="12pt" font-weight="bold" text-align="left">
-                     CHAI CO-OP. SAVINGS AND CREDIT SOCIETY LTD.
+      <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
+      <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
+      <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
+      
+       <#--fo:block font-size="12pt" font-weight="bold" text-align="left">
+                     CHAI SAVINGS AND CREDIT CO-OP SOCIETY LTD.
         </fo:block>
          <fo:block font-size="12pt" font-weight="bold" text-align="left">
               <fo:leader/>    
@@ -31,7 +35,7 @@ under the License.
         
          <fo:block font-size="6pt" text-align="left">
               <fo:leader/>        
-        </fo:block>
+        </fo:block -->
          <fo:block font-size="7pt" text-align="left">
                DATE  :   ${today}
         </fo:block>
@@ -50,7 +54,7 @@ under the License.
          <fo:block font-size="9pt" text-align="left">
                 <fo:leader/>       
         </fo:block>
-         <fo:block font-size="7pt" text-align="left">
+         <fo:block font-size="7pt"  text-align="left">
               STATION  : ${getStationOfMember.name}     
         </fo:block>
         
@@ -72,12 +76,24 @@ under the License.
          <fo:block font-size="9pt" text-align="left">
                 <fo:leader/>       
         </fo:block>
+        
+        
+          <fo:block font-size="10pt" font-weight="bold" text-decoration="underline" text-align="left">
+              RE : LOAN REJECTION
+        </fo:block>
+          
+         <fo:block font-size="9pt" text-align="left">
+                <fo:leader/>       
+        </fo:block>
+        
+
+
          <fo:block font-size="9pt" text-align="left">
                 <fo:leader/>       
         </fo:block>
         
          <fo:block font-size="9pt" text-align="left">
-            We acknowledged receipt of your subject reference loan Application for Kshs ${rejectedLoan.appliedAmt} on ${todayy}
+            We acknowledged receipt of your ${loanType} Application for Kshs ${rejectedLoan.appliedAmt} on ${todayy}
             Payable in ${rejectedLoan.repaymentPeriod} month(s) Installment.
                 <fo:block font-size="9pt" text-align="left">
                     We hereby inform you that the loan was rejected ${loanStatusRejection} .
@@ -116,7 +132,7 @@ under the License.
         </fo:block>
          
           <fo:block font-size="10pt" text-align="left">
-                    CHAI CS and  CS LTD.
+                    Chai Sacco Ltd
          </fo:block>
          
         <fo:block font-size="9pt" text-align="left">
@@ -130,9 +146,8 @@ under the License.
         </fo:block>
          
         <fo:block font-size="9pt" text-align="left">
-                    LOAN MANAGER
+                   BRANCH MANAGER
          </fo:block>
-        
         
    
         </#if>
