@@ -99,9 +99,9 @@ under the License.
 
         <#-- Footer -->
         <fo:static-content flow-name="xsl-region-after" font-size="${footerFontSize?default("8pt")}">
-            <fo:block text-align="center" border-top="thin solid black" padding="3pt">${uiLabelMap.CommonPage} <fo:page-number/> ${uiLabelMap.CommonOf} <fo:page-number-citation ref-id="theEnd"/></fo:block>
-           <fo:block text-align="center" font-style="italic">Board Members: Boniface Ayub(Chairman),James Hinga(Vice Chairman), James Cherutich(Hon. Secretary),John King'ori(Treasurer)
-            G.Miano,S.Tarus,J.Mugo,L.Migiro,P.Mbaabu,Purity Maina (Chief Executive Officer) </fo:block>
+            <fo:block text-align="center" border-top="thin solid black" padding="3pt"></fo:block>
+           <#--fo:block text-align="center" font-style="italic">Board Members: Boniface Ayub(Chairman),James Hinga(Vice Chairman), James Cherutich(Hon. Secretary),John King'ori(Treasurer)
+            G.Miano,S.Tarus,J.Mugo,L.Migiro,P.Mbaabu,Purity Maina (Chief Executive Officer) </fo:block-->
         
         </fo:static-content>
 
