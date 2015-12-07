@@ -5676,8 +5676,9 @@ public class HumanResServices {
 		List<GenericValue> leaveELI = null;
 		
 		EntityConditionList<EntityExpr> closeConditions = EntityCondition
-				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition("quarter",EntityOperator.EQUALS, period),
-						EntityCondition.makeCondition("stage",EntityOperator.NOT_EQUAL, "FORWARDED")),
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition("quarter",EntityOperator.EQUALS, period)
+						// EntityCondition.makeCondition("stage",EntityOperator.NOT_EQUAL, "FORWARDED")
+						),
 						EntityOperator.AND);
 		
 		try {
@@ -5686,13 +5687,13 @@ public class HumanResServices {
 			e2.printStackTrace();
 		}
 		
-
+/*
 		if (leaveELI.size() > 0) {
 			results = "INVALID";
-		}
-		else {
+		}*/
+		//else {
 			results = "VALID";
-		}
+		//}
 
 		return results;
 	}
