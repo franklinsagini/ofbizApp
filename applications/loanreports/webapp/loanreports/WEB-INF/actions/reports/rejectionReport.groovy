@@ -27,7 +27,12 @@ loanApplicationIdLong = loanApplicationIdString.toLong();
          
     // Get Date For Formatting
     
-    dateCreated =  rejectedLoan.createdStamp; 
+    dateCreated =  rejectedLoan.createdStamp;
+    
+    // Get loan Product 
+    loanProductId = rejectedLoan.loanProductId;
+    
+    ///////
          
    loanStatusIdLong = loanStatus.toLong();
          
@@ -67,4 +72,14 @@ java.sql.Date  todayy      = new java.sql.Date(dateCreated.getTime());
    getStationOfMember =  delegator.findOne("Station", [stationId : stationOfMember.stationId.toString()], false);
      
     context.getStationOfMember = getStationOfMember;   
+    
+  ////// Get The Loan Type
+  
+   productLoanType = delegator.findOne("LoanProduct", [loanProductId : loanProductId], false);
+  
+  context.loanType = productLoanType.name
+  
+  
+  
+    
      
