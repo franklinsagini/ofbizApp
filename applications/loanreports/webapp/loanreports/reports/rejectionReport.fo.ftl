@@ -18,6 +18,7 @@ under the License.
 -->
 <#escape x as x?xml>
  <#if rejectedLoan?has_content>
+     
     <#if loanStatusRejection?has_content>
       <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
       <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
@@ -36,6 +37,7 @@ under the License.
          <fo:block font-size="6pt" text-align="left">
               <fo:leader/>        
         </fo:block -->
+        
          <fo:block font-size="7pt" text-align="left">
                DATE  :   ${today}
         </fo:block>
@@ -78,10 +80,10 @@ under the License.
         </fo:block>
         
         
-          <fo:block font-size="10pt" font-weight="bold" text-decoration="underline" text-align="left">
+          <fo:block font-size="10pt" font-weight="bold"  text-align="left">
               RE : LOAN REJECTION
         </fo:block>
-          
+            <fo:block border="thin solid black"> </fo:block>
          <fo:block font-size="9pt" text-align="left">
                 <fo:leader/>       
         </fo:block>
@@ -93,10 +95,11 @@ under the License.
         </fo:block>
         
          <fo:block font-size="9pt" text-align="left">
-            We acknowledged receipt of your ${loanType} Application for Kshs ${rejectedLoan.appliedAmt} on ${todayy}
+            We acknowledge receipt of your ${loanType} Application for Kshs ${rejectedLoan.appliedAmt} on ${todayy}
             Payable in ${rejectedLoan.repaymentPeriod} month(s) Installment.
+            <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
                 <fo:block font-size="9pt" text-align="left">
-                    We hereby inform you that the loan was rejected ${loanStatusRejection} .
+                    We hereby inform you that the loan was rejected ${loanStatusRejection}.
                 </fo:block>
         </fo:block>
          <fo:block font-size="9pt" text-align="left">
@@ -110,7 +113,7 @@ under the License.
         </fo:block>
         
         <fo:block font-size="9pt" text-align="left">
-                     We thank you for support and Co-operation.
+                     We thank you for your support and co-operation.
          </fo:block>
         
         <fo:block font-size="9pt" text-align="left">
