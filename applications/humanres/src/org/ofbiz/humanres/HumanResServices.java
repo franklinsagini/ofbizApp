@@ -5940,7 +5940,7 @@ public class HumanResServices {
 				e.printStackTrace();
 			}
 			if (StaffScoresELI2.size() > 0) {
-				state = "INVALID";
+				state = "VALID";
 				return state;
 			} 
 			
@@ -5955,7 +5955,7 @@ public class HumanResServices {
 			
 
 			if (StaffScoresELI.size() > 0) {
-				state = "INVALID";
+				state = "VALID";
 				return state;
 			} else {
 				state = "VALID";
