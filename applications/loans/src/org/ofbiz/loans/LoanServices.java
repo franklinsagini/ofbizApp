@@ -1952,6 +1952,8 @@ public class LoanServices {
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		String loanApplicationId = (String) request
 				.getParameter("loanApplicationId");
+		String rejectReason = (String) request
+				.getParameter("comment");
 		HttpSession session = request.getSession();
 		GenericValue userLogin = (GenericValue) session
 				.getAttribute("userLogin");
@@ -1978,6 +1980,8 @@ public class LoanServices {
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
 		}
+		
+		log.info("----------Comment Rejectrion reason---------"+rejectReason);
 		// Create a Log
 		GenericValue loanStatusLog;
 		Long loanStatusLogId = delegator.getNextSeqIdLong("LoanStatusLog", 1);
@@ -1985,7 +1989,7 @@ public class LoanServices {
 		loanStatusLog = delegator.makeValue("LoanStatusLog", UtilMisc.toMap(
 				"loanStatusLogId", loanStatusLogId, "loanApplicationId",
 				Long.valueOf(loanApplicationId), "loanStatusId", loanStatusId,
-				"createdBy", userLoginId, "comment", "forwarded to Loans"));
+				"createdBy", userLoginId, "comment", rejectReason));
 		try {
 			delegator.createOrStore(loanStatusLog);
 		} catch (GenericEntityException e2) {
