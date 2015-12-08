@@ -68,7 +68,17 @@ QNT_Totalq4 = org.ofbiz.humanres.HumanResServices.Q4StringSingle(partyId, year, 
 QNT_Totalall4qstotalScore = org.ofbiz.humanres.HumanResServices.TotalScoreStringSingle(partyId, year, Goal_Quantitative)
 QNT_Totalall4qstotalMaxScore = org.ofbiz.humanres.HumanResServices.getMaxTotalPartyPerformanceSingle(partyId, year, Goal_Quantitative)
 
+	context.QNT_Totalq1 = QNT_Totalq1;
+context.QNT_Totalq2 = QNT_Totalq2;
+context.QNT_Totalq3 = QNT_Totalq3;
+context.QNT_Totalq4 = QNT_Totalq4;
+context.QNT_Totalall4qstotalScore = QNT_Totalall4qstotalScore;
+context.QNT_Totalall4qstotalMaxScore = QNT_Totalall4qstotalMaxScore;
+
+
 	}
+	
+
 
 	expr3 = exprBldr.AND() {
 			EQUALS(perfReviewDefId: groupId)
@@ -101,12 +111,6 @@ QTT_Totalall4qstotalMaxScore = org.ofbiz.humanres.HumanResServices.getMaxTotalPa
 
 	}
 
-context.QNT_Totalq1 = QNT_Totalq1;
-context.QNT_Totalq2 = QNT_Totalq2;
-context.QNT_Totalq3 = QNT_Totalq3;
-context.QNT_Totalq4 = QNT_Totalq4;
-context.QNT_Totalall4qstotalScore = QNT_Totalall4qstotalScore;
-context.QNT_Totalall4qstotalMaxScore = QNT_Totalall4qstotalMaxScore;
 context.QTT_Totalq1 = QTT_Totalq1;
 context.QTT_Totalq2 = QTT_Totalq2;
 context.QTT_Totalq3 = QTT_Totalq3;

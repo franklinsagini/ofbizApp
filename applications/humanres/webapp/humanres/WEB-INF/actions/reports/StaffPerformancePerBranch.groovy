@@ -109,6 +109,7 @@ ReviewGroup1.eachWithIndex { ReviewGroup1Item, index ->
 		expr3 = exprBldr.AND() {
 			EQUALS(perfReviewDefId: groupId)
 			EQUALS(perfGoalsDefId: Goal_Quantitative)
+			//NOT_EQUAL(actionPlanIndicatorDescription : " ")
 		}
 		Goal_QuantitativeGroup = delegator.findList("PerfActionPlanIndicatorDefinition", expr3, null, null, null, false);
 		Goal_QuantitativeGroup.eachWithIndex { Goal_QuantitativeGroupItem, index3 ->

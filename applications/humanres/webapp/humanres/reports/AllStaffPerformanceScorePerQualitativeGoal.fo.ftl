@@ -32,10 +32,10 @@ under the License.
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
-            <fo:table-column column-width="15pt"/>
-            <fo:table-column column-width="100pt"/>
-            <fo:table-column column-width="85pt"/>
-            <fo:table-column column-width="85pt"/>
+            <fo:table-column column-width="30pt"/>
+            <fo:table-column column-width="130pt"/>
+            <fo:table-column column-width="115pt"/>
+            <#--fo:table-column column-width="85pt"/-->
             <fo:table-column column-width="40pt"/>
             <fo:table-column column-width="40pt"/>
             <fo:table-column column-width="40pt"/>
@@ -53,9 +53,9 @@ under the License.
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block>Branch</fo:block>
                     </fo:table-cell>
-                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                    <#--fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block>Department</fo:block>
-                    </fo:table-cell>
+                    </fo:table-cell-->
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block>Max Score</fo:block>
                     </fo:table-cell>
@@ -91,9 +91,9 @@ under the License.
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${score.branch?if_exists}</fo:block>
                         </fo:table-cell>
-                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                        <#--fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${score.department?if_exists}</fo:block>
-                        </fo:table-cell>
+                        </fo:table-cell-->
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${score.MaxPossibleScore?if_exists}</fo:block>
                         </fo:table-cell>

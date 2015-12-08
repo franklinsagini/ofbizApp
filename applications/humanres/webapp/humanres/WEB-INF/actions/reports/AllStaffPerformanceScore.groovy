@@ -35,11 +35,11 @@ increment = org.ofbiz.humanres.HumanResServices.StaffSalaryIncrement(party, year
 
 
 staff = delegator.findOne("Person", [partyId : party], false);
-dept = delegator.findOne("department", [departmentId : staff.departmentId], false);
-bran = delegator.findOne("PartyGroup", [partyId : dept.branchId], false);
+//dept = delegator.findOne("department", [departmentId : staff.departmentId], false);
+bran = delegator.findOne("PartyGroup", [partyId : staff.branchId], false);
 name = "${staff.firstName} ${staff.lastName}";
 branch = bran.groupName
-department = dept.departmentName
+//department = dept.departmentName
 Q1 = q1
 Q2 = q2
 Q3 = q3
@@ -47,10 +47,11 @@ Q4 = q4
 Total = all4qstotalScore
 
 //}
-scorelist.add([name :name, branch :branch, department : department, Q1 : Q1,
+scorelist.add([name :name, branch :branch, Q1 : Q1,
  Q2 : Q2, Q3 : Q3, Q4 : Q4, Total : Total, bonus : bonus, increment : increment]);
  }
  
+ // department : department, 
  
 context.scorelist = scorelist;
 context.year = year;
