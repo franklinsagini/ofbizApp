@@ -140,11 +140,6 @@ loanApps.each { obj ->
          }
           
    }
-memberDob=""
-if (member.birthDate != null) {
-    memberDob = CrbReportServices.getCRBDateFormat(member.birthDate)
-}
-
    currentLoanBalance = org.ofbiz.loansprocessing.LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(obj.loanApplicationId)
    noInstalmentsInArrears = 0
     member_maritalStatus = ""
@@ -196,7 +191,7 @@ if (member.birthDate != null) {
         forename2:member.middleName,
         forename3:"",
         salutation:salutation.name,
-        dateOfBirth:memberDob,
+        dateOfBirth:member.birthDate,
         clientNumber:member.memberNumber,
         loanNumber:obj.loanNo,
         gender:member_gender,
