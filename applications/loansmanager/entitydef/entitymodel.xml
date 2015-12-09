@@ -9,4 +9,18 @@
     <copyright></copyright>
     <version></version>
 
+      <entity entity-name="LoanTopUp"
+            package-name="org.ofbiz.loansmanager.loantopup"
+            title="Loan Top Up Entity">
+      <field name="loanApplicationId" type="id-vlong-int"   enable-audit-log="true"></field>
+      <field name="loanTopUpId" type="id-ne" enable-audit-log="true"></field>
+      <field name="amount" type="currency-amount" enable-audit-log="true"></field>
+       <field name="narration" type="comment" enable-audit-log="true"></field>
+      <prim-key field="loanApplicationId"/>
+      <prim-key field="loanTopUpId"/>
+    <relation type="one" fk-name="LoanTopUp_FK" rel-entity-name="LoanApplication">
+        <key-map field-name="loanApplicationId"/>
+    </relation>
+    </entity>
+
 </entitymodel>
