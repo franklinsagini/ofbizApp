@@ -29,13 +29,13 @@ sName = staff.lastName
 
 name = "${fName} ${sName}"
 branchId = staff.branchId
-depId = staff.departmentId
+//depId = staff.departmentId
 
 bran = delegator.findOne("PartyGroup", [partyId : branchId], false);
-dept = delegator.findOne("department", [departmentId : depId], false);
+//dept = delegator.findOne("department", [departmentId : depId], false);
 
 branch = bran.groupName
-department = dept.departmentName
+//department = dept.departmentName
 
 	groupId = ReviewGroupItem.perfReviewDefId
 
@@ -61,10 +61,10 @@ QNT_all4qstotalScore = org.ofbiz.humanres.HumanResServices.PartyPerformancePerIn
 
 
 	scorelist.add([IndicatorDescription : IndicatorDescription, MaxPossibleScore : MaxPossibleScore, name : name,
-		 branch : branch, department : department, Q1 : QNT_q1, Q2 : QNT_q2, Q3 : QNT_q3, Q4 : QNT_q4, Total : QNT_all4qstotalScore]);
+		 branch : branch, Q1 : QNT_q1, Q2 : QNT_q2, Q3 : QNT_q3, Q4 : QNT_q4, Total : QNT_all4qstotalScore]);
 
 	}
-
+//department : department, 
 
 
 }
