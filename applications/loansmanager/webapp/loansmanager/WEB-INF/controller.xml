@@ -26,7 +26,12 @@
     <request-map uri="forwardedLoanApplications"><security https="true" auth="true"/><response name="success" type="view" value="forwardedLoanApplications"/></request-map>
     <request-map uri="approvedLoanApplications"><security https="true" auth="true"/><response name="success" type="view" value="approvedLoanApplications"/></request-map>
  	<request-map uri="rejectedLoanApplications"><security https="true" auth="true"/><response name="success" type="view" value="rejectedLoanApplications"/></request-map>
- 	
+ 
+    <request-map uri="loanTopUp">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="loanTopUp"/>
+    </request-map>
+
  	<request-map uri="loanapplication">
         <security https="true" auth="true" />
         <response name="success" type="view" value="loanapplication" />
@@ -80,8 +85,25 @@
                 <security https="true" auth="true" />
                 <response name="success" type="view" value="viewapplicationprofile"
                         save-home-view="true" />
+        </request-map>     
+        <request-map uri="topUpLoan">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="topUpLoan"
+                        save-home-view="true" />
         </request-map>
         
+    <request-map uri="requestTopup">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="requestTopup"/>
+        <response name="success" type="request-redirect" value="topUpLoan">
+            <redirect-parameter name="loanApplicationId"/>
+        </response>
+        <response name="error" type="request-redirect" value="topUpLoan">
+            <redirect-parameter name="loanApplicationId"/>
+        </response>
+    </request-map>
+
+
         <request-map uri="loanLogs">
         	<security https="true" auth="true"/>
         	<response name="success" type="view" value="loanLogs"></response>
@@ -509,11 +531,11 @@
 		<response name="success" type="view" value="LookupActiveMember" />
 	</request-map>
 	
-	<request-map uri="rejectionLetter">
-		<security https="true" auth="true" />
-		<response name="success" type="view" value="rejectionLetter" />
-	</request-map>
-	
+            <request-map uri="rejectionLetter">
+                <security https="true" auth="true" />
+                <response name="success" type="view" value="rejectionLetter" />
+            </request-map>
+        	
 	<request-map uri="rejectLoanReason">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="rejectLoanReason">
@@ -544,6 +566,8 @@
         <view-map name="forwardedLoanApplications" type="screen" page="component://loansmanager/widget/loansmanagerScreens.xml#forwardedLoanApplications"/>
         <view-map name="approvedLoanApplications" type="screen" page="component://loansmanager/widget/loansmanagerScreens.xml#approvedLoanApplications"/>
         <view-map name="rejectedLoanApplications" type="screen" page="component://loansmanager/widget/loansmanagerScreens.xml#rejectedLoanApplications"/>
+        
+        <view-map name="loanTopUp" type="screen" page="component://loansmanager/widget/loansmanagerScreens.xml#loanTopUp"/>
     
     
          <view-map name="loansGuaranteed" type="screen"
@@ -556,9 +580,11 @@
      <view-map name="loanLogs" type="screen"
                 page="component://loansprocessing/widget/loansprocessingScreens.xml#loanLogs" />  
     
-     <view-map name="viewapplicationprofile" type="screen"
-                page="component://loansmanager/widget/loansmanagerScreens.xml#viewapplicationprofile" />
-                
+     <view-map name="viewapplicationprofile" type="screen" page="component://loansmanager/widget/loansmanagerScreens.xml#viewapplicationprofile" />
+     <view-map name="viewapplicationprofile" type="screen" page="component://loansmanager/widget/loansmanagerScreens.xml#viewapplicationprofile" />
+             
+    <view-map name="topUpLoan" type="screen" page="component://loansmanager/widget/loansmanagerScreens.xml#topUpLoan"/>             
+
      <view-map name="changeLoanDetails" type="screen"
                 page="component://loansmanager/widget/loansmanagerScreens.xml#changeLoanDetails" />
                 
@@ -575,9 +601,7 @@
 	<view-map name="returnToLoans" type="screen"
 		page="component://loansmanager/widget/loansmanagerScreens.xml#returnToLoans" />
 		
-   <view-map name="rejectionLetter" type="screenfop"
-		page="component://loansmanager/widget/loansmanagerScreens.xml#rejectionLetterReport" content-type="application/pdf" 
-		encoding="none"/>	
+
    <view-map name="rejectLoanReason" type="screen"
 		page="component://loansmanager/widget/loansmanagerScreens.xml#rejectLoanReason" />			
       <view-map name="rejectLoanApplicationScreen" type="screen" page="component://loansmanager/widget/loansmanagerScreens.xml#rejectLoanReason"/>
