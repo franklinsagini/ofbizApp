@@ -76,14 +76,14 @@ public class Separation {
 		LocalDate localDateEndDate = new LocalDate(created);
 		BigDecimal daysCounting = BigDecimal.ZERO;
 		
-			while (localDateStartDate.toDate().before(localDateEndDate.toDate())) {
+			while (localDateEndDate.toDate().before(localDateStartDate.toDate())) {
 				/*if ((localDateStartDate.getDayOfWeek() != DateTimeConstants.SATURDAY)
 						&& (localDateStartDate.getDayOfWeek() != DateTimeConstants.SUNDAY)) {
 					daysCount++;
 				   }*/
 				daysCount++;
 				
-				localDateStartDate = localDateStartDate.plusDays(1);
+				localDateEndDate = localDateEndDate.plusDays(1);
 
 			}
 		
@@ -294,13 +294,26 @@ public class Separation {
 	
 	//   ------------------------LIEN OF NOTICE------------------------------------
 	
-		public static BigDecimal lienOfNoticeMethod( String separationTypeId,BigDecimal daysTo, BigDecimal leaveBal, BigDecimal basicSalary){
+		public static BigDecimal lienOfNoticeMethod(String separationTypeId,BigDecimal daysTo, BigDecimal leaveBal, BigDecimal basicSalary, String periodOdNotice){
 			Delegator delegator=DelegatorFactoryImpl.getDelegator(null);
 			List<GenericValue> SeparationTypeELI=null;
 			BigDecimal leaveAllowance = BigDecimal.ZERO;
 			BigDecimal lienOfNoticeAmount = BigDecimal.ZERO;
+			BigDecimal month = new BigDecimal(12);
+			BigDecimal daysOfyear = new BigDecimal(365);
+			BigDecimal noticePeriod = new BigDecimal(periodOdNotice);
+			BigDecimal allSixtyDays = new BigDecimal(60);     
 			
-			try{
+			if(daysTo.compareTo(BigDecimal.ZERO) == 0 ){
+				   lienOfNoticeAmount = noticePeriod.multiply(basicSalary).multiply(month).divide(daysOfyear,4,RoundingMode.HALF_UP);
+			}else if(daysTo.compareTo(noticePeriod) > 0){
+				lienOfNoticeAmount = BigDecimal.ZERO;
+			}else if(daysTo.compareTo(noticePeriod) < 0){
+				BigDecimal lessDaysTo = noticePeriod.subtract(daysTo);
+				  lienOfNoticeAmount = lessDaysTo.multiply(basicSalary).multiply(month).divide(daysOfyear,4,RoundingMode.HALF_UP);
+			}
+			
+		/*	try{
 				SeparationTypeELI=delegator.findList("SeparationTypes", EntityCondition.makeCondition(UtilMisc.toMap("separationTypesId", separationTypeId))
 						, null, null, null, false);
 			}catch(GenericEntityException e){
@@ -312,18 +325,17 @@ public class Separation {
 				 String noticePeriodDays=genericValue.getString("noticePeriod");
 				 noticePeriod= new BigDecimal(noticePeriodDays);
 				 log.info("***########**NoticePeriod#####"+noticePeriod);
-			}
+			}*/
 			
-			BigDecimal month = new BigDecimal(12);
-			BigDecimal daysOfyear = new BigDecimal(365);
+			
 			
 			// if days he applied are more or equal to notice period required then give leave allowance
 				
-			lienOfNoticeAmount = daysTo.multiply(basicSalary).multiply(month).divide(daysOfyear,4,RoundingMode.HALF_UP);
+			//lienOfNoticeAmount = daysTo.multiply(basicSalary).multiply(month).divide(daysOfyear,4,RoundingMode.HALF_UP);
 			
 			
 			
-			
+/*			
 			if(daysTo.compareTo(noticePeriod) >= 0){
 				lienOfNoticeAmount = BigDecimal.ZERO;
 			}else if (daysTo.compareTo(noticePeriod) < 0) {
@@ -346,7 +358,7 @@ public class Separation {
 					
 					
 				}
-			}
+			}*/
 			
 			log.info("--------------**LIEN OF NOTICE------***----------    "+ lienOfNoticeAmount);
 			
@@ -583,8 +595,11 @@ public static BigDecimal grossTotal(BigDecimal basicSalary, BigDecimal leaveAllo
 
 		
 		try {
-			grossMinusLienOfNotice = grossIncome.subtract(lienOfNotice);
-			PayeeAmt = percentBigInt.multiply(grossMinusLienOfNotice).divide(hundredPercent,4,RoundingMode.HALF_UP);
+			
+			//grossMinusLienOfNotice = grossIncome.subtract(lienOfNotice);
+			
+			PayeeAmt = percentBigInt.multiply(grossIncome).divide(hundredPercent,4,RoundingMode.HALF_UP);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -630,12 +645,12 @@ public static BigDecimal grossTotal(BigDecimal basicSalary, BigDecimal leaveAllo
 	 
  }
  
- public static BigDecimal finalTotal(BigDecimal netAfterPaye,BigDecimal amountLostByEmployee, BigDecimal loans){
+ public static BigDecimal finalTotal(BigDecimal netAfterPaye,BigDecimal amountLostByEmployee, BigDecimal lienOfNotice){
 	
 	 BigDecimal finalAmount= BigDecimal.ZERO;
 	 try{
 		 
-		 finalAmount = netAfterPaye.subtract(amountLostByEmployee).subtract(loans);
+		 finalAmount = netAfterPaye.subtract(amountLostByEmployee).subtract(lienOfNotice);
 		 
 	 }catch(Exception e){
 			e.printStackTrace();
