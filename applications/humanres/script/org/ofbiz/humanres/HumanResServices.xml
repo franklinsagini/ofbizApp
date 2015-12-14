@@ -5256,11 +5256,11 @@
     <set field="servicePaidEmpl" value="${bsh:org.ofbiz.humanres.Separation.servicePayAmount(separationTypeId,employeeBasicSalary,yearsWorked)}"/> 
 	<set field="lostAmount" value="${bsh:org.ofbiz.humanres.Separation.EmployeeLostItemsAmount(party)}"/>
 	<set field="leaveAllowance" value="${bsh:org.ofbiz.humanres.Separation.leaveAllowanceAmount(separationTypeId,daysDifference,balanceActual,employeeBasicSalary)}" type="BigDecimal"/>
-	<set field="lienOfNotice" value="${bsh:org.ofbiz.humanres.Separation.lienOfNoticeMethod(separationTypeId,daysDifference,balanceActual,employeeBasicSalary)}" type="BigDecimal"/>
+	<set field="lienOfNotice" value="${bsh:org.ofbiz.humanres.Separation.lienOfNoticeMethod(separationTypeId,daysDifference,balanceActual,employeeBasicSalary,noticePreiod)}" type="BigDecimal"/>
 	<set field="grossTotal" value="${bsh:org.ofbiz.humanres.Separation.grossTotal(employeeBasicSalary,leaveAllowance,servicePaidEmpl,transportAll,golden)}"/>
     <set field="payeAmt" value="${bsh:org.ofbiz.humanres.Separation.amountPAYE(grossTotal,lienOfNotice)}"/>
     <set field="amtAfterPaye" value="${bsh:org.ofbiz.humanres.Separation.totalNetAmount(grossTotal,payeAmt)}"/> 
-    <set field="finalAmount" value="${bsh:org.ofbiz.humanres.Separation.finalTotal(amtAfterPaye,lostAmount,employeeLoans)}"/> 
+    <set field="finalAmount" value="${bsh:org.ofbiz.humanres.Separation.finalTotal(amtAfterPaye,lostAmount,lienOfNotice)}"/> 
     <set field="grossSubjectToPAYEE" value="${bsh:org.ofbiz.humanres.Separation.grossSubjectToPAYEE(grossTotal,lienOfNotice)}"/>
    
     
