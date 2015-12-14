@@ -5914,7 +5914,7 @@ public class HumanResServices {
 		
 	/*=================================== VALIDATE SCORES BEFORE FORWARDING ======================================*/
 		
-		public static String forwardPerformanceScoresValidation(String party, String whichScore) {
+		public static String forwardPerformanceScoresValidation(String party, String whichScore, String openedQuarter) {
 			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 			List<GenericValue> StaffScoresELI = null;
 			List<GenericValue> StaffScoresELI2 = null;
@@ -5924,11 +5924,13 @@ public class HumanResServices {
 
 			EntityConditionList<EntityExpr> anyZeroConditions = EntityCondition.makeCondition(UtilMisc.toList(
 					        EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, party),
+					        EntityCondition.makeCondition("quarter", EntityOperator.EQUALS, openedQuarter),
 							EntityCondition.makeCondition(whichScore, EntityOperator.LESS_THAN, one)),
 							EntityOperator.AND);
 			
 			EntityConditionList<EntityExpr> anyblankConditions = EntityCondition.makeCondition(UtilMisc.toList(
 			        EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, party),
+			        EntityCondition.makeCondition("quarter", EntityOperator.EQUALS, openedQuarter),
 					EntityCondition.makeCondition(whichScore, EntityOperator.EQUALS, blank)),
 					EntityOperator.AND);
 
@@ -6153,6 +6155,28 @@ public class HumanResServices {
 		 	
 		 		 return convertedDate;*/
 		  }//close method
+	  
+		public static String getOpenPeriod() { 
+			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+			String state = null;
+			List<GenericValue> FileLI = null;
+			try {
+				FileLI = delegator.findList("PerfReviewPeriod",
+						EntityCondition.makeCondition("status", "OPEN"), null,
+						null, null, false);
+
+			} catch (GenericEntityException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+               String openedQuarter = null;
+		    for(GenericValue genericValue : FileLI){
+		    	openedQuarter = genericValue.getString("quarter");
+		    }
+		    
+		    return openedQuarter;
+
+		}
 	
 	
 }

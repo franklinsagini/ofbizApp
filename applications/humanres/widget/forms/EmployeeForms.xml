@@ -136,7 +136,7 @@
 		 <field name="contractPeriod" title="Period (In Months)"><display also-hidden="false"/></field>
 		 <field name="contractEnd" title="End Date"><display also-hidden="false"/></field>
 		  <field name="dismissStaff" title="-" widget-style="buttontext"  >
-			<hyperlink also-hidden="false" description="Dismiss Staff" target="separationApplication" request-confirmation="true" confirmation-message="Dismis Staff">
+			<hyperlink also-hidden="false" description="Dismiss Staff" target="contractEmplseparation" request-confirmation="true" confirmation-message="Dismis Staff">
 				<parameter param-name="partyId" />
 			</hyperlink>
 		</field>
@@ -1678,7 +1678,7 @@
        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
         <entity-condition entity-name="SeparationDetail">
-       
+          <condition-expr field-name="status" operator="equals" value="PROCESSED"/> 
         </entity-condition>
         </actions>
     <field name="separationDetailId"><hidden/></field>
@@ -1700,17 +1700,17 @@
     <field name="staffLoans"><display></display></field>
     <field name="lostItemAmount"><display></display></field>
     <field name="noticePeriod" title="Notice Given(Days)"><display></display></field>
-    <field name="dayLeftSaccoActivities"><display></display></field>
+  <!--   <field name="dayLeftSaccoActivities"><display></display></field> -->
     <field name="amountPayableToChai"><display></display></field>
     <field name="status" title="Process Status"><display></display></field>
 <!--     <field name="forwardStatus"><display></display></field>
- -->    <field name="separateEmployee" title="Separate Employee" widget-style="buttontext" use-when="${processStatus=='PROCESSED'}">
+ -->    <field name="separateEmployee" title="Separate Employee" widget-style="buttontext" use-when="${status=='Processed'}">
            <hyperlink target="separateEmployee" description="Separate Employee" also-hidden="false" request-confirmation="true" confirmation-message="Are you sure of separating this staff?">
                <parameter param-name="partyId"/>
            </hyperlink> 
        </field> 
-     <field name="undoLink" title="Undo" widget-style="smallSubmit">
-    <hyperlink target="undoLink" also-hidden="false" description="Undo Process" request-confirmation="true" confirmation-message="Do you want to Undo?">
+     <field name="undoLink" title="Undo" widget-style="smallSubmit" use-when="${status=='Processed'}">
+    <hyperlink target="undoLink" also-hidden="false" description="Reverse Process" request-confirmation="true" confirmation-message="Do you want to Undo?">
     <parameter param-name="separationDetailId"/>
     </hyperlink>
     </field>  
@@ -1849,6 +1849,46 @@
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
     </form>
+    
+    
+    <form name="separationSeparated" target="" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" paginate-target="separationApplicationTypes"
+       odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        <entity-condition entity-name="SeparationDetail">
+             <condition-expr field-name="status" operator="equals" value="Separated"/> 
+        </entity-condition>
+        </actions>
+    <field name="separationDetailId"><hidden/></field>
+    <field name="separationApplicationId"><hidden/></field>
+    <field name="partyId"><display-entity entity-name="Person" description="${firstName}  ${lastName}"></display-entity></field>
+    <field name="separationTypesId" title="Separation Type"><display-entity entity-name="SeparationTypes" description="${separationName}"></display-entity></field>
+    
+    <field name="salary"><display/></field>
+    
+    <field name="leaveDaysAsAtEffect" title="Leave Balance"><display></display></field>
+    <field name="leaveAllowance"><display></display></field>
+     <field name="goldenHandShake"><display></display></field>
+    <field name="transportAllowance"><display></display></field>
+    <field name="servicePay"><display></display></field>
+    <field name="total" title="Gross Income(Total)"><display></display></field>
+   <!--  <field name="grossSubjectToPAYEE"><display></display></field> -->
+    <field name="PAYE"><display></display></field>
+    <field name="lienOfNotice"><display></display></field>
+    <field name="staffLoans"><display></display></field>
+    <field name="lostItemAmount"><display></display></field>
+    <field name="noticePeriod" title="Notice Given(Days)"><display></display></field>
+   <!--  <field name="dayLeftSaccoActivities"><display></display></field> -->
+    <field name="amountPayableToChai"><display></display></field>
+    <field name="status" title="Process Status"><display></display></field>
+  
+    <field name="printButton" title="Print" widget-style="buttontext">
+    <hyperlink target="printSeparationDetail" also-hidden="false" description="Print Detail">
+    <parameter param-name="separationDetailId"/>
+    </hyperlink>
+    </field>
+    </form>
+    
+    
     
     
 </forms>

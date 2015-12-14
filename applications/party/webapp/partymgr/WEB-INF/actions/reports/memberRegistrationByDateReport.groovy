@@ -98,8 +98,8 @@ if ((stationId) && (stationId != null)){
 
 exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder()
 //(startDate == null) || (endDate == null) || 
-if (!(sqlEndDate)){
-	expr = null;
+if ((sqlEndDate)){
+	// expr = null;
 	
 	
 	if ((branchId) && (memberStatusId)){
@@ -173,7 +173,7 @@ else if (memberStatusId)
 			EQUALS(branchId: branchId)
 		}
 	 }
-	if (memberTypeIdId){
+	if (memberTypeId){
 		expr = exprBldr.AND() {
 			GREATER_THAN_EQUAL_TO(joinDate: sqlStartDate)
 			LESS_THAN_EQUAL_TO(joinDate: sqlEndDate)
