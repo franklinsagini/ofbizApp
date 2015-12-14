@@ -108,6 +108,154 @@
     </screen>
     
     
+        <screen name="rejectedLoanApplications">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Rejected Loan Application"/>
+                <set field="headerItem" value="rejectedLoanApplications"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createLoanApplication"/>
+                <set field="loanApplicationCtx" from-field="parameters"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/>
+                <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                
+                <entity-one entity-name="LoanApplication" value-field="applicationContext">
+                    <field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
+                </entity-one>
+             <!-- condition-expr field-name="productType" operator="equals" value="Loan"/ -->
+             <entity-condition entity-name="LoanProduct" list="productsList">
+                
+            </entity-condition>
+            <entity-condition entity-name="PaymentMethodType" list="paymentMethodsList">
+            </entity-condition>
+            <entity-condition entity-name="LoanStatus" list="loanStatusList">
+            </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+
+                        <section name="search-results">
+                            <widgets>
+                                <screenlet>
+                                    <include-form name="FindLoansRejected" location="component://loansmanager/widget/loansmanagerForms.xml"/>
+                                </screenlet>
+                                <screenlet title="Loan Applications">
+                                    <include-form name="listRejectedLoanApplications" location="component://loansmanager/widget/loansmanagerForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+        <screen name="loanTopUp">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Top Up Loan"/>
+                <set field="headerItem" value="loanTopUp"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="loanApplicationCtx" from-field="parameters"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="FindLoansToTop" location="component://loansmanager/widget/loansmanagerForms.xml"/>
+                        		</screenlet>
+                        		<screenlet title="Loan Applications">
+                        			<include-form name="ListLoansToTop" location="component://loansmanager/widget/loansmanagerForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="topUpLoan">
+        <section>
+            <actions>
+                <set field="headerItem" value="Top up Loan" />
+                <set field="headerItem" value="loanTopUp"/>
+                <set field="titleProperty" value="Top up Loan" />
+                <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                <entity-one entity-name="LoanApplication" value-field="loanApplication">
+                    <field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
+                </entity-one>
+               <set field="debitAmount" type="BigDecimal" value="0.00"/>
+               <set field="originalAppliedAmount" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getOriginalAppliedAmount(delegator,loanApplicationId)}"/>
+               <set field="originalDisbursedAmount" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getOriginalDisbursedAmount(delegator,loanApplicationId)}"/>
+               <set field="maximumTopupAmount" type="BigDecimal" value="${bsh:org.ofbiz.accounting.finaccount.FinAccountServices.getMaxAcceptableTopupAmount(delegator,loanApplicationId)}"/>
+               <!-- <set field="creditAmount" from-field="multiPayment.amount"/> -->
+                <entity-and entity-name="MultiPaymentLines" list="listMultiPaymentLines">
+                    <field-map field-name="paymentId" from-field="paymentId" />
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <not>
+                                    <if-empty field="loanApplication"/>
+                                </not>
+                            </condition>
+                            <widgets>
+                                <screenlet title="Loan Information">
+                                    <include-form name="LoanHeaderApplicationDetails" location="component://loansmanager/widget/loansmanagerForms.xml"/>
+                                </screenlet>
+                                <screenlet title="Request Loan Top Up">
+                                    <container><label style="h3" text="Original Applied Amount: ${originalAppliedAmount}  |  Original Disbursed Amount: ${originalDisbursedAmount} |  Maximum Acceptable  Top Amount: ${maximumTopupAmount}"></label></container>
+                                    <include-form name="RequestTopUp" location="component://loansmanager/widget/loansmanagerForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <screenlet title="Loan Information">
+                                    <include-form name="LoanHeaderApplicationDetails" location="component://loansmanager/widget/loansmanagerForms.xml"/>
+                                </screenlet>
+                                <screenlet title="Top Up Loan Details">
+                                    <include-form name="RequestTopUpDetails" location="component://accounting/widget/PaymentForms.xml"/>
+                                     <container><label style="h3" text="Total Loan Amount: ${creditAmount}  Maximum Top Up Amount: ${debitAmount}  Requested Amount : ${totalLines}"></label></container>
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    
+    
+     <screen name="rejectionLetterReport">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://loanreports/webapp/loanreports/WEB-INF/actions/reports/rejectionReport.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDeoratorRepp" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://loanreports/webapp/loanreports/reports/rejectionReport.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
      <screen name="viewapplicationprofile">
         <section>
             <actions>
@@ -118,47 +266,19 @@
                 <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
                 <set field="layoutSettings.javaScripts[]" value="/partymgr/js/PartyProfileContent.js" global="true"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/ViewProfile.groovy"/>
-                
                 <entity-one entity-name="LoanApplication" value-field="loanApplication">
                                     <field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/>
                 </entity-one>
-                
-                 
             </actions>
             <widgets>
                 <decorator-screen name="CommonLoanApplicationDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                       
                         <section>
                             <condition>
                                 <not><if-empty field="loanApplication"/></not>
                             </condition>
                             <widgets>
-                                <!-- section>
-                                    <condition>
-                                        <if-compare field="showOld" operator="equals" value="true" type="Boolean"/>
-                                    </condition>
-                                    <widgets>
-                                        <container style="button-bar button-style-2">
-                                            <link target="viewmemberprofile" text="${uiLabelMap.PartyHideOld}">
-                                                <parameter param-name="partyId" from-field="party.partyId"/>
-                                            </link>
-                                        </container>
-                                    </widgets>
-                                    <fail-widgets>
-                                        <container style="button-bar button-style-2">
-                                            <link target="viewmemberprofile" text="${uiLabelMap.PartyShowOld}">
-                                                <parameter param-name="partyId" from-field="party.partyId"/>
-                                                <parameter param-name="SHOW_OLD" value="true"/>
-                                            </link>
-                                        </container>
-                                    </fail-widgets>
-                                </section -->
-                               
-                                        <!-- include-portal-page id="PartyProfile"/ -->
-                                        
-                                   		<include-portal-page id="ApplicationProfile"/>
-                               
+                           	<include-portal-page id="ApplicationProfile"/>
                             </widgets>
                             <fail-widgets>
                                 <container>
@@ -710,6 +830,56 @@
                                        <include-form name="NewReturnToLoans" location="component://loansmanager/widget/loansmanagerForms.xml"/>
                                  </screenlet>
                                <screenlet title="List">
+                                       <include-form name="loanLogs" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
+                                 </screenlet>
+                               
+                            </widgets>
+                            <fail-widgets>
+                                <container>
+                                    <label style="h3">${uiLabelMap.PartyNoPartyFoundWithPartyId}: ${parameters.partyId}</label>
+                                </container>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <!--Loan Reject Reason -->
+         <screen name="rejectLoanReason">
+       <section>
+            <actions>
+                <set field="titleProperty" value="reason For Rejecting Loans"/>
+                <set field="tabButtonItem" value="rejectLoanReason"/>
+                <set field="headerItem" value="rejectLoanReason"/>
+                <set field="labelTitleProperty" value="Return to Loans"/>
+                <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                <set field="layoutSettings.javaScripts[]" value="/partymgr/js/PartyProfileContent.js" global="true"/>
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/ViewProfile.groovy"/>
+                
+                <entity-one entity-name="LoanApplication" value-field="loanApplication">
+                           <field-map field-name="loanApplicationId" from-field="parameters.loanApplicationId"/>
+                </entity-one>
+                <set field="partyId" from-field="loanApplication.partyId"/>
+                
+                <set field="memberNumber" from-field="loanApplication.memberNumber"/>
+                <set field="approvedAmt" value="${loanApplication.loanAmt}"/>
+                 
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonLoanApplicationDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                       
+                        <section>
+                            <condition>
+                                <not><if-empty field="loanApplication"/></not>
+                            </condition>
+                            <widgets>
+                            <screenlet title="Reject Loan">
+                                       <include-form name="rejectLoanReason" location="component://loansmanager/widget/loansmanagerForms.xml"/>
+                                 </screenlet>
+                               <screenlet title="Logs">
                                        <include-form name="loanLogs" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
                                  </screenlet>
                                

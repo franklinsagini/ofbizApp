@@ -1090,9 +1090,9 @@
 		<set from-field="singlestaff.hod" field="newEntity.hod"/>
 		
 		<!-- Commented out these so that the default score can be null by Japheth Odonya -->
-		<!-- set value="${bsh:org.ofbiz.humanres.HumanResServices.returnBigDecimal();}" field="newEntity.scoreTwo"/>
+		<set value="${bsh:org.ofbiz.humanres.HumanResServices.returnBigDecimal();}" field="newEntity.scoreTwo"/>
 		<set value="${bsh:org.ofbiz.humanres.HumanResServices.returnBigDecimal();}" field="newEntity.scoreThree"/>
-		<set value="${bsh:org.ofbiz.humanres.HumanResServices.returnBigDecimal();}" field="newEntity.scoreFour"/ -->
+		<set value="${bsh:org.ofbiz.humanres.HumanResServices.returnBigDecimal();}" field="newEntity.scoreFour"/>
 				
 		<create-value value-field="newEntity" />
 		<property-to-field resource="HumanResUiLabels"
@@ -1223,7 +1223,7 @@
 		<simple-method method-name="submitPersonalReviewScores" short-description="Update PerfGoals">
 		
 		
-		<set field="score" value="scoreTwo"/>
+		<set field="score" value="scoreOne"/>
 		<set field="party" from-field="parameters.partyId"/>
 		<set field="validate" value="${bsh:org.ofbiz.humanres.HumanResServices.forwardPerformanceScoresValidation(party, score);}"/>
 		<set field="invalid" value="INVALID"/>
@@ -5256,11 +5256,11 @@
     <set field="servicePaidEmpl" value="${bsh:org.ofbiz.humanres.Separation.servicePayAmount(separationTypeId,employeeBasicSalary,yearsWorked)}"/> 
 	<set field="lostAmount" value="${bsh:org.ofbiz.humanres.Separation.EmployeeLostItemsAmount(party)}"/>
 	<set field="leaveAllowance" value="${bsh:org.ofbiz.humanres.Separation.leaveAllowanceAmount(separationTypeId,daysDifference,balanceActual,employeeBasicSalary)}" type="BigDecimal"/>
-	<set field="lienOfNotice" value="${bsh:org.ofbiz.humanres.Separation.lienOfNoticeMethod(separationTypeId,daysDifference,balanceActual,employeeBasicSalary)}" type="BigDecimal"/>
+	<set field="lienOfNotice" value="${bsh:org.ofbiz.humanres.Separation.lienOfNoticeMethod(separationTypeId,daysDifference,balanceActual,employeeBasicSalary,noticePreiod)}" type="BigDecimal"/>
 	<set field="grossTotal" value="${bsh:org.ofbiz.humanres.Separation.grossTotal(employeeBasicSalary,leaveAllowance,servicePaidEmpl,transportAll,golden)}"/>
     <set field="payeAmt" value="${bsh:org.ofbiz.humanres.Separation.amountPAYE(grossTotal,lienOfNotice)}"/>
     <set field="amtAfterPaye" value="${bsh:org.ofbiz.humanres.Separation.totalNetAmount(grossTotal,payeAmt)}"/> 
-    <set field="finalAmount" value="${bsh:org.ofbiz.humanres.Separation.finalTotal(amtAfterPaye,lostAmount,employeeLoans)}"/> 
+    <set field="finalAmount" value="${bsh:org.ofbiz.humanres.Separation.finalTotal(amtAfterPaye,lostAmount,lienOfNotice)}"/> 
     <set field="grossSubjectToPAYEE" value="${bsh:org.ofbiz.humanres.Separation.grossSubjectToPAYEE(grossTotal,lienOfNotice)}"/>
    
     
