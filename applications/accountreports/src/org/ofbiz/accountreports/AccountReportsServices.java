@@ -130,7 +130,11 @@ public class AccountReportsServices {
 		BigDecimal bdTotalDebits = getTotalEntries(acctgTransId, "D");
 		BigDecimal bdTotalCredits = getTotalEntries(acctgTransId, "C");
 		
-		if (bdTotalDebits.compareTo(bdTotalCredits) == 0)
+		BigDecimal difference = bdTotalDebits.subtract(bdTotalCredits).abs();
+		
+		difference = difference.setScale(1, RoundingMode.HALF_UP);
+		
+		if ((bdTotalDebits.compareTo(bdTotalCredits) == 0) || (difference.compareTo(BigDecimal.ZERO) == 0))
 		{
 			return true;
 		}
