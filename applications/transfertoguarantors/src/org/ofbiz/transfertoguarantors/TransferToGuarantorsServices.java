@@ -1155,14 +1155,20 @@ public class TransferToGuarantorsServices {
 
 	private static Map<String, BigDecimal> returnAmountPaidByGuarantor(Long loanApplicationId,
 			String acctgTransId, Map<String, String> userLogin) {
-		//Repay each interest amount  repaid with and credit savings account with the amount
-		BigDecimal bdInterestPaid = LoanRepayments.getTotalInterestPaid(loanApplicationId.toString());
-		//Repay each insurance amount  repaid with and credit savings account with the amount
-		BigDecimal bdInsurancePaid = LoanRepayments.getTotalInsurancePaid(loanApplicationId.toString());
-		//Repay each principal amount repaid with and credit savings account with the amount
-		BigDecimal bdPrincipalPaid = LoanRepayments.getTotalPrincipalPaid(loanApplicationId);
 		
-		BigDecimal bdTotalPaid = bdInterestPaid.add(bdInsurancePaid).add(bdPrincipalPaid);
+		//REATTACHMENT
+		//repaymentMode
+		
+		//Repay each interest amount  repaid with and credit savings account with the amount
+		BigDecimal bdInterestPaid = LoanRepayments.getTotalInterestPaid(loanApplicationId.toString()).subtract(LoanRepayments.getTotalInterestPaidIsReattachment(loanApplicationId.toString()));
+		//Repay each insurance amount  repaid with and credit savings account with the amount
+		BigDecimal bdInsurancePaid = LoanRepayments.getTotalInsurancePaid(loanApplicationId.toString()).subtract(LoanRepayments.getTotalInsurancePaidIsReattachment(loanApplicationId.toString()));
+		//Repay each principal amount repaid with and credit savings account with the amount
+		BigDecimal bdPrincipalPaid = LoanRepayments.getTotalPrincipalPaid(loanApplicationId).subtract(LoanRepayments.getTotalPrincipalPaidIsReattachment(loanApplicationId));
+		
+		BigDecimal bdTotalPaid = BigDecimal.ZERO;
+		
+		bdTotalPaid = bdInterestPaid.add(bdInsurancePaid).add(bdPrincipalPaid);
 				//LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
 		
 		//Add the toal to member savings account
@@ -1190,6 +1196,8 @@ public class TransferToGuarantorsServices {
 		// GenericValue, String, Map<String,String>, String, BigDecimal, null,
 		// String
 		String transactionType = "ATTACHMENTREVERSAL";
+		
+		if (bdTotalPaid.compareTo(BigDecimal.ZERO) == 1)
 		AccHolderTransactionServices.createTransaction(null, transactionType, userLogin,
 				memberAccountId.toString(), bdTotalPaid, null,
 				accountTransactionParent
