@@ -3399,7 +3399,7 @@
 			save-home-view="true">
 		</response>
 	</request-map>
-
+	
 	<!-- Create Separation Details -->
 	<request-map uri="createSeparationApplication">
 		<security https="true" auth="true" />
@@ -3439,6 +3439,16 @@
 			value="separationApplication" />
 		<response name="error" type="request-redirect-noparam" value="separationApplication" />
 	</request-map>
+	
+	<request-map uri="contractEmplseparation">
+		<security https="true" auth="true" />
+		<event type="java" path="org.ofbiz.humanres.SeparateEmployee"
+			invoke="separateInterOrContract"></event>
+		<response name="success" type="request-redirect-noparam"
+			value="contractEmplseparation" />
+		<response name="error" type="request-redirect-noparam" value="contractEmplseparation" />
+	</request-map>
+	
 
 	<request-map uri="calcelSeparation">
 		<security https="true" auth="true" />

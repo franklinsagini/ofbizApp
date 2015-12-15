@@ -50,6 +50,7 @@ public class SeparateEmployee {
 			updatePersonalDetails(delegator, partyId);
 			updatePayroll(delegator, partyId);
 			disableUserLogin(delegator,partyId);
+			updateSeparationDetail(delegator,partyId);
 			try {
 				delegator.createOrStore(genericValue);
 			} catch (GenericEntityException e) {
@@ -208,6 +209,79 @@ public class SeparateEmployee {
 			}
 		}
 		
+	}
+	
+	
+	// update Separation Detail
+	private static void updateSeparationDetail(Delegator delegator,String partyId){
+		
+		log.info("*****-----------updateSeparationDetail----------***"+partyId);
+		
+		List<GenericValue> updateSeparationDetailELI=null;
+		
+		try{
+			updateSeparationDetailELI=delegator.findList("SeparationDetail", EntityCondition
+					.makeCondition("partyId",partyId), null,
+					null, null, false);
+		}catch(GenericEntityException ex){
+			ex.printStackTrace();
+		}
+		
+		for (GenericValue genericValue : updateSeparationDetailELI) 
+		{
+			genericValue.setString("status", "Separated");
+			try {
+				delegator.createOrStore(genericValue);
+			} catch (GenericEntityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
+	
+	//separate Intern
+	
+	public static String separateInterOrContract(HttpServletRequest request,
+			HttpServletResponse response) {
+		
+		Delegator delegator = (Delegator) request.getAttribute("delegator");
+		String partyId =  (String) request.getParameter("partyId");
+		
+		List<GenericValue> sepELI = null;
+		// String partyId = party.getString("partyId");
+		log.info("######### partyId is :::: " + partyId);
+
+
+		try {
+			sepELI = delegator.findList("SeparationApplication", EntityCondition
+					.makeCondition("partyId", partyId), null,
+					null, null, false);
+		
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+
+		for (GenericValue genericValue : sepELI) 
+		{
+			genericValue.setString("separated", "Y");
+			genericValue.setString("status", "Separated");
+			
+//			updateLoginInfo(delegator, partyId);
+			updatePersonalDetails(delegator, partyId);
+			updatePayroll(delegator, partyId);
+			disableUserLogin(delegator,partyId);
+			try {
+				delegator.createOrStore(genericValue);
+			} catch (GenericEntityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return partyId;
 	}
 	
 }
