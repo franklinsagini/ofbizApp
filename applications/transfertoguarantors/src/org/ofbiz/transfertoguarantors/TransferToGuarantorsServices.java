@@ -727,6 +727,7 @@ public class TransferToGuarantorsServices {
 		//and ask for the values for (memberDepositsAmtProportion, shareCapitalOffsetAmt, balanceAtAttachment,interestDueAtAttachment and insuranceDueAtAttachment)
 		// to be provided
 		if (!defaultedStatusLogExists(loanApplicationId)){
+			System.out.println("Loan Application ID $$$$$$$$$$$$$$$ "+loanApplicationId);
 			createDefaultedLog(loanApplicationId, userLogin);
 			
 			return "Please fill in values for (memberDepositsAmtProportion, shareCapitalOffsetAmt, balanceAtAttachment,interestDueAtAttachment and insuranceDueAtAttachment) in the Loans log (current record) so as to enable a loan reversal ";
@@ -1088,7 +1089,7 @@ public class TransferToGuarantorsServices {
 
 	private static void createDefaultedLog(Long loanApplicationId,
 			Map<String, String> userLogin) {
-		GenericValue loanStatusLog;
+		GenericValue loanStatusLog = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		Long loanStatusLogId = delegator.getNextSeqIdLong("LoanStatusLog");
 		
@@ -1105,12 +1106,21 @@ public class TransferToGuarantorsServices {
 						"loanStatusId", loanStatusId,
 						
 						"comment", ""));
+		
+		List<GenericValue> logs = new ArrayList<GenericValue>();
+		logs.add(loanStatusLog);
 		try {
-			delegator.createOrStore(loanStatusLog);
+			//delegator.createOrStore(loanStatusLog);
+			TransactionUtil.begin();
+			delegator.storeAll(logs);
+			TransactionUtil.commit();
+			
 		} catch (GenericEntityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		System.out.println("####### Saving the loan log for reversal ###################");
 		
 	}
 
