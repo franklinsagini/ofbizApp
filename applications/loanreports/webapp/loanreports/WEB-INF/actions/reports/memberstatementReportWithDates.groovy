@@ -408,7 +408,7 @@ allLoansList.eachWithIndex { loanItem, index ->
 			{
 				loanTransaction.increaseDecrease = 'I'
 				loanTransaction.transactionAmount = loanTransaction.transactionAmount * -1;
-				loanTransaction.transactionDescription = loanTransaction.transactionDescription+' (JV/Over Charge) '
+				loanTransaction.transactionDescription = loanTransaction.transactionDescription+' (JV/Over Charge/Reversal) '
 			}
 			//loanTransaction.isLoan = true
 			loanTransaction.isLoanTransaction = true

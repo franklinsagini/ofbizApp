@@ -98,4 +98,45 @@
 		</section>
 	</screen>
 	
+	<!-- InterestTransactions -->
+	<screen name="InterestTransactions">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Interest Transactions" />
+				<set field="headerItem" value="interestreversal" />
+				<set field="tabButtonItem" value="interestreversal" />
+				<set field="displayPassword" value="Y" />
+				<set field="target" value="interestreversal" />
+				<set field="accountTransactionCtx" from-field="parameters"/>
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+				<!-- property-to-field field="defaultCountryGeoId" resource="general" 
+					property="KEN" default="KEN"/ -->
+				<!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+
+				</actions>
+			<widgets>
+				<!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+				<decorator-screen name="MpaReversalCommonDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+
+
+						<section name="search-results">
+							<widgets>
+								<screenlet title="Search Transactions">
+									<include-form name="FindInterestTransaction"
+										location="component://mpareversal/widget/MpaReversalForms.xml" />
+								</screenlet>
+								<screenlet title="Transactions">
+									<include-form name="listInterestTransactions"
+										location="component://mpareversal/widget/MpaReversalForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
 </screens>
