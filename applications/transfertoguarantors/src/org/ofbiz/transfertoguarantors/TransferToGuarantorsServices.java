@@ -1018,7 +1018,7 @@ public class TransferToGuarantorsServices {
 
 		try {
 			loanStatusLogELI = delegator.findList("LoanStatusLog",
-					loanStatusLogConditions, null, null, null, false);
+					loanStatusLogConditions, null, listOrder, null, false);
 
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
