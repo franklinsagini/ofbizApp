@@ -233,13 +233,24 @@
 		<response name="error" type="view" value="myrunningloans" />
 	</request-map>
 	
-	<request-map uri="clearAll">
+	<!-- request-map uri="clearAll">
 		<security auth="true" https="true" />
 		<event type="java" path="org.ofbiz.loans.LoanServices" invoke="clearAll" />
 		<response name="success" type="request-redirect" value="loanClear">
 		</response>
 		<response name="error" type="view" value="loanClear" />
-	</request-map>
+	</request-map -->
+	
+	
+	<request-map uri="clearAll">
+		<security https="true" auth="true" />
+		<event type="service" invoke="clearAll" />
+		<response name="success" type="request-redirect" value="loanClear">
+			<redirect-parameter name="loanClearId"/>
+		</response>
+		<response name="error" type="request-redirect" value="loanClear" />
+</request-map>
+	
 	
 	<request-map uri="reverseAllClearance">
 		<security auth="true" https="true" />

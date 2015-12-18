@@ -727,6 +727,7 @@ public class TransferToGuarantorsServices {
 		//and ask for the values for (memberDepositsAmtProportion, shareCapitalOffsetAmt, balanceAtAttachment,interestDueAtAttachment and insuranceDueAtAttachment)
 		// to be provided
 		if (!defaultedStatusLogExists(loanApplicationId)){
+			System.out.println("Loan Application ID $$$$$$$$$$$$$$$ "+loanApplicationId);
 			createDefaultedLog(loanApplicationId, userLogin);
 			
 			return "Please fill in values for (memberDepositsAmtProportion, shareCapitalOffsetAmt, balanceAtAttachment,interestDueAtAttachment and insuranceDueAtAttachment) in the Loans log (current record) so as to enable a loan reversal ";
@@ -1017,7 +1018,7 @@ public class TransferToGuarantorsServices {
 
 		try {
 			loanStatusLogELI = delegator.findList("LoanStatusLog",
-					loanStatusLogConditions, null, null, null, false);
+					loanStatusLogConditions, null, listOrder, null, false);
 
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
@@ -1052,7 +1053,7 @@ public class TransferToGuarantorsServices {
 
 		try {
 			loanStatusLogELI = delegator.findList("LoanStatusLog",
-					loanStatusLogConditions, null, null, null, false);
+					loanStatusLogConditions, null, listOrder, null, false);
 
 		} catch (GenericEntityException e2) {
 			e2.printStackTrace();
@@ -1088,7 +1089,7 @@ public class TransferToGuarantorsServices {
 
 	private static void createDefaultedLog(Long loanApplicationId,
 			Map<String, String> userLogin) {
-		GenericValue loanStatusLog;
+		GenericValue loanStatusLog = null;
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		Long loanStatusLogId = delegator.getNextSeqIdLong("LoanStatusLog");
 		
@@ -1105,12 +1106,21 @@ public class TransferToGuarantorsServices {
 						"loanStatusId", loanStatusId,
 						
 						"comment", ""));
+		
+		List<GenericValue> logs = new ArrayList<GenericValue>();
+		logs.add(loanStatusLog);
 		try {
-			delegator.createOrStore(loanStatusLog);
+			//delegator.createOrStore(loanStatusLog);
+			TransactionUtil.begin();
+			delegator.storeAll(logs);
+			TransactionUtil.commit();
+			
 		} catch (GenericEntityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		System.out.println("####### Saving the loan log for reversal ###################");
 		
 	}
 
@@ -1145,14 +1155,20 @@ public class TransferToGuarantorsServices {
 
 	private static Map<String, BigDecimal> returnAmountPaidByGuarantor(Long loanApplicationId,
 			String acctgTransId, Map<String, String> userLogin) {
-		//Repay each interest amount  repaid with and credit savings account with the amount
-		BigDecimal bdInterestPaid = LoanRepayments.getTotalInterestPaid(loanApplicationId.toString());
-		//Repay each insurance amount  repaid with and credit savings account with the amount
-		BigDecimal bdInsurancePaid = LoanRepayments.getTotalInsurancePaid(loanApplicationId.toString());
-		//Repay each principal amount repaid with and credit savings account with the amount
-		BigDecimal bdPrincipalPaid = LoanRepayments.getTotalPrincipalPaid(loanApplicationId);
 		
-		BigDecimal bdTotalPaid = bdInterestPaid.add(bdInsurancePaid).add(bdPrincipalPaid);
+		//REATTACHMENT
+		//repaymentMode
+		
+		//Repay each interest amount  repaid with and credit savings account with the amount
+		BigDecimal bdInterestPaid = LoanRepayments.getTotalInterestPaid(loanApplicationId.toString()).subtract(LoanRepayments.getTotalInterestPaidIsReattachment(loanApplicationId.toString()));
+		//Repay each insurance amount  repaid with and credit savings account with the amount
+		BigDecimal bdInsurancePaid = LoanRepayments.getTotalInsurancePaid(loanApplicationId.toString()).subtract(LoanRepayments.getTotalInsurancePaidIsReattachment(loanApplicationId.toString()));
+		//Repay each principal amount repaid with and credit savings account with the amount
+		BigDecimal bdPrincipalPaid = LoanRepayments.getTotalPrincipalPaid(loanApplicationId).subtract(LoanRepayments.getTotalPrincipalPaidIsReattachment(loanApplicationId));
+		
+		BigDecimal bdTotalPaid = BigDecimal.ZERO;
+		
+		bdTotalPaid = bdInterestPaid.add(bdInsurancePaid).add(bdPrincipalPaid);
 				//LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
 		
 		//Add the toal to member savings account
@@ -1180,6 +1196,8 @@ public class TransferToGuarantorsServices {
 		// GenericValue, String, Map<String,String>, String, BigDecimal, null,
 		// String
 		String transactionType = "ATTACHMENTREVERSAL";
+		
+		if (bdTotalPaid.compareTo(BigDecimal.ZERO) == 1)
 		AccHolderTransactionServices.createTransaction(null, transactionType, userLogin,
 				memberAccountId.toString(), bdTotalPaid, null,
 				accountTransactionParent

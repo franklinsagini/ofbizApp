@@ -2582,30 +2582,34 @@ public class LoanServices {
 	/**
 	 * clearAll
 	 * */
-	public static String clearAll(HttpServletRequest request,
-			HttpServletResponse response) {
+	public static String clearAll(Long loanClearId, Map<String, String> userLogin) {
 		Map<String, Object> result = FastMap.newInstance();
-		Delegator delegator = (Delegator) request.getAttribute("delegator");
-		String loanClearId = (String) request.getParameter("loanClearId");
-		HttpSession session = request.getSession();
-		GenericValue userLogin = (GenericValue) session
-				.getAttribute("userLogin");
-		String userLoginId = userLogin.getString("userLoginId");
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+
+		String userLoginId = userLogin.get("userLoginId");
 		String branchId = AccHolderTransactionServices.getEmployeeBranch((String)userLogin.get("partyId"));
 		GenericValue loanClear = null;
 
-		loanClearId = loanClearId.replaceAll(",", "");
 		try {
 			loanClear = delegator.findOne("LoanClear",
-					UtilMisc.toMap("loanClearId", Long.valueOf(loanClearId)),
+					UtilMisc.toMap("loanClearId", loanClearId),
 					false);
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
+		
+		if (loanClear.get("loanApplicationId") == null)
+			return "Please make sure you updated the Loan Clear with the new Loan Application being processed (should be forwarded to Loans By Now)";
 
 		if (loanClear.getLong("loanApplicationId") == null) {
-			return "error";
+			return "Please make sure you updated the Loan Clear with the new Loan Application being processed (should be forwarded to Loans By Now)";
 		}
+		
+		GenericValue loanApplicationAttached = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanClear.getLong("loanApplicationId"));
+		
+		Long loanStatusForwardedLoansId  = LoanUtilities.getLoanStatusId("FORWARDEDLOANS");
+		if (!loanStatusForwardedLoansId.equals(loanApplicationAttached.getLong("loanStatusId")))
+			return "The Loan Attached and Updated on the Loan Clear must be at the Forwarded To Loans Status, Please verify that you added attached the correct Loan";
 
 		Map<String, String> userLoginMap = new HashMap<String, String>();
 		userLoginMap.put("userLoginId", userLoginId);

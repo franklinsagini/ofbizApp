@@ -1,15 +1,23 @@
 package org.ofbiz.chargeinterest;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
@@ -28,6 +36,11 @@ import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.loans.AmortizationServices;
 import org.ofbiz.loans.LoanServices;
+import org.ofbiz.service.GenericDispatcherFactory;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.calendar.RecurrenceRule;
+import org.ofbiz.webapp.event.EventHandlerException;
 
 //org.ofbiz.chargeinterest.ChargeInterestServices.chargeStationInterest
 public class ChargeInterestServices {
@@ -674,6 +687,52 @@ public class ChargeInterestServices {
 		return false;
 	}
 
+	// Already Charged for Month all stations
+	private static Boolean alreadyChargedAllStations(Long month, Long year,
+			String stationId) {
+
+		String employerCode = LoanUtilities.getStationEmployerCode(stationId);
+		List<String> listStationIds = LoanUtilities.getStationIds(employerCode);
+
+		Boolean charged = false;
+		// getRelatedStationIds(stationId);
+		EntityConditionList<EntityExpr> stationMonthInterestManagementConditions;
+		for (String theStationId : listStationIds) {
+			stationMonthInterestManagementConditions = EntityCondition
+					.makeCondition(UtilMisc.toList(EntityCondition
+							.makeCondition("month", EntityOperator.EQUALS,
+									month),
+
+					EntityCondition.makeCondition("year",
+							EntityOperator.EQUALS, year),
+
+					EntityCondition.makeCondition("stationId",
+							EntityOperator.EQUALS, theStationId)
+
+					), EntityOperator.AND);
+
+			List<GenericValue> stationMonthInterestManagementELI = new ArrayList<GenericValue>();
+			Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+			try {
+				stationMonthInterestManagementELI = delegator.findList(
+						"StationMonthInterestManagement",
+						stationMonthInterestManagementConditions, null, null,
+						null, false);
+
+			} catch (GenericEntityException e2) {
+				e2.printStackTrace();
+			}
+
+			if ((stationMonthInterestManagementELI != null)
+					&& (stationMonthInterestManagementELI.size() > 0)) {
+				charged = true;
+			}
+
+		}
+
+		return charged;
+	}
+
 	public static synchronized String processChargeInterestAllStations() {
 
 		// Get all the stations
@@ -716,7 +775,7 @@ public class ChargeInterestServices {
 			// Check if station has been charged
 			station = LoanUtilities.getStation(stationId);
 
-			if (alreadyCharged(month, year, station.getString("stationId"))) {
+			if (alreadyChargedAllStations(month, year, station.getString("stationId"))) {
 				System.out.println(" YYYYYYYYY Has been charged already");
 
 			} else {
@@ -965,8 +1024,6 @@ public class ChargeInterestServices {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-				
 
 			} else if (genericValue.getLong("transactionCount").equals(6L)) {
 				// Process where 6 entries where done
@@ -1262,44 +1319,114 @@ public class ChargeInterestServices {
 	//
 	// return "success";
 	// }
-	
+
 	public static synchronized String resolveLoanClearing() {
-		//Get all the loans cleared with isDisbursed being null
-		List<GenericValue> loanApplicationELI = new ArrayList<GenericValue>();
-		
-		EntityConditionList<EntityExpr> loanApplicationConditions = EntityCondition
-				.makeCondition(
-						UtilMisc.toList(EntityCondition.makeCondition(
-								"repaymentStartDate", EntityOperator.EQUALS,
-								GenericValue.NULL_FIELD),
-								
-								EntityCondition.makeCondition(
-										"loanStatusId", EntityOperator.EQUALS,
-										6L)
-								
-								
-								), EntityOperator.AND);
-		
+		// Get all the loans cleared with isDisbursed being null
+		// List<GenericValue> loanApplicationELI = new
+		// ArrayList<GenericValue>();
+		//
+		// EntityConditionList<EntityExpr> loanApplicationConditions =
+		// EntityCondition
+		// .makeCondition(
+		// UtilMisc.toList(EntityCondition.makeCondition(
+		// "repaymentStartDate", EntityOperator.EQUALS,
+		// GenericValue.NULL_FIELD),
+		//
+		// EntityCondition.makeCondition(
+		// "loanStatusId", EntityOperator.EQUALS,
+		// 6L)
+		//
+		//
+		// ), EntityOperator.AND);
+		//
+		// Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		//
+		// try {
+		// loanApplicationELI = delegator.findList("LoanApplication",
+		// loanApplicationConditions, null, null,
+		// null, false);
+		// } catch (GenericEntityException e) {
+		// e.printStackTrace();
+		// }
+		//
+		// log.info(" Count the loans ######## "+loanApplicationELI.size());
+		//
+		// int count = 0;
+		// for (GenericValue genericValue : loanApplicationELI) {
+		// count++;
+		// LoanServices.calculateLoanRepaymentStartDate(genericValue);
+		// log.info(" fixed number ######## "+count);
+		// }
+		// Scheduled Interest
+		scheduleInterestForAllStations();
+
+		return "success";
+	}
+
+	// Schedule interest charging for all the stations
+	public static String scheduleInterestForAllStations() {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		
+		LocalDispatcher dispatcher = (new GenericDispatcherFactory())
+				.createLocalDispatcher("interestcalculationsforallstations",
+						delegator);
+
+		// HttpSession session = request.getSession();
+		// Map<String, String> userLogin = (HashMap)
+		// session.getAttribute("userLogin");
+		// userLogin.get("userLoginId")
+
+		// Map<String, String> context = UtilMisc.toMap("userLogin",
+		// "Interest Testing !!");
+
+		// TODO Auto-generated method stub
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		sdf.setLenient(false);
+		Date startDate = null;
 		try {
-			loanApplicationELI = delegator.findList("LoanApplication",
-					loanApplicationConditions, null, null,
-					null, false);
-		} catch (GenericEntityException e) {
+			startDate = sdf.parse("16-12-2015 00:32:26");
+			// startDate = sdf.parse("15-12-2015 19:43:00");
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		log.info(" Count the loans ######## "+loanApplicationELI.size());
 
-		int count = 0;
-		for (GenericValue genericValue : loanApplicationELI) {
-			count++;
-			LoanServices.calculateLoanRepaymentStartDate(genericValue);
-			log.info(" fixed number ######## "+count);
+		Map<String, String> userLogin = new HashMap<String, String>();// (HashMap<String,
+																		// Object>)request.getAttribute("userLogin");
+		// Map<String, Object> result = new HashMap<String, Object>();
+		userLogin.put("userLoginId", "system");
+		// userLogin
+		Map<String, String> context = UtilMisc.toMap();
+		try {
+			long startTime = startDate.getTime();
+
+			// (new Date()).getTime();
+			// result = dispatcher.runSync("calculateInterestEarned", context);
+			// dispatcher.schedule("calculateInterestEarned", startTime,
+			// context);
+			int frequency = RecurrenceRule.MONTHLY;
+			int interval = 1;
+			int count = -1;
+			dispatcher.schedule("processChargeInterestAllStations", context,
+					startTime, frequency, interval, count);
+		} catch (GenericServiceException e) {
+			e.printStackTrace();
 		}
-		
-		return "success";
+
+		// Writer out;
+		// try {
+		// out = response.getWriter();
+		// out.write("");
+		// out.flush();
+		// } catch (IOException e) {
+		// try {
+		// throw new EventHandlerException(
+		// "Unable to get response writer", e);
+		// } catch (EventHandlerException e1) {
+		// e1.printStackTrace();
+		// }
+		// }
+		return "";
+
 	}
 
 }

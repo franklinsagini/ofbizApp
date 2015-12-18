@@ -116,4 +116,29 @@ under the License.
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     
+    <!-- clearAll -->
+    <simple-method method-name="clearAll" short-description="Clear Loan (Fosa Clearing)">
+        <set field="loanClearId" from-field="parameters.loanClearId" type="Long"/>
+				<set field="clearingStatus" value="${bsh:org.ofbiz.loans.LoanServices.clearAll(loanClearId, userLogin);}"></set>
+				<!-- success -->
+				<if>
+					<condition>
+						<if-compare operator="not-equals" value="success" field="clearingStatus"></if-compare>
+					</condition>
+					<then>
+						<add-error> 
+		                    <!-- fail-property resource="SalaryProcessingUiLabels.xml"  
+		                        property="pullStationError" / --> 
+		                        <fail-message message="${clearingStatus}"/>
+		                </add-error> 
+		                <check-errors /> 
+					</then>
+					<else>
+						 <property-to-field resource="LoanClearingUiLabels.xml" 
+            				property="Successfully Cleared Loan" field="successMessage" />
+						
+					</else>
+				</if>
+    </simple-method>
+    
 </simple-methods>

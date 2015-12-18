@@ -88,5 +88,14 @@
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
     
+    <!-- clearAll -->
+    <service name="clearAll" engine="simple" default-entity-name="LoanClear"
+             location="component://loanclearing/script/org/ofbiz/loanclearing/LoanClearingServices.xml" invoke="clearAll" auth="true">
+        <description>Clear Loan Specified</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
     
 </services>
