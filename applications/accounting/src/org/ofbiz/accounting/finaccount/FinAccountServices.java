@@ -1285,10 +1285,69 @@ public class FinAccountServices {
 		return result;
 	}
 
+	public static Map<String, Object> approveLoanTop(DispatchContext dctx, Map<String, Object> context) {
+		Delegator delegator = dctx.getDelegator();
+		Long loanApplicationId = (Long) context.get("loanApplicationId");
+		String loanTopUpId =  (String) context.get("loanTopUpId");
+		
+		GenericValue loanTopUpRecord  = getLoanTopUpRecord(delegator, loanApplicationId, loanTopUpId);
+		loanTopUpRecord.set("statusName", "APPROVED");
+		try {
+			loanTopUpRecord.store();
+		} catch (Exception e) {
+			
+		}
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		result.put("loanApplicationId", loanApplicationId.toString());
+		return result;
+	}
+	
+	public static Map<String, Object> disburseLoanTop(DispatchContext dctx, Map<String, Object> context) {
+		Delegator delegator = dctx.getDelegator();
+		Long loanApplicationId = (Long) context.get("loanApplicationId");
+		String loanTopUpId =  (String) context.get("loanTopUpId");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		
+		GenericValue loanTopUpRecord  = getLoanTopUpRecord(delegator, loanApplicationId, loanTopUpId);
+		GenericValue loan = getLoan(delegator, loanApplicationId.toString());
+		
+		//Create LoanTopUpLog Record
+		GenericValue loanTopUpLog = delegator.makeValue("LoanTopUpLog");
+		String loanTopUpLogId = delegator.getNextSeqId("LoanTopUpLog");
+
+		loanTopUpLog.put("loanApplicationId", loanApplicationId);
+		loanTopUpLog.put("loanTopUpLogId", loanTopUpLogId);
+		loanTopUpLog.put("loanTopUpId", loanTopUpId);
+		loanTopUpLog.put("topUpAmount", loanTopUpRecord.getBigDecimal("amount"));
+		loanTopUpLog.put("originalAppliedamount", getOriginalAppliedAmount(delegator, loanApplicationId.toString()));
+		loanTopUpLog.put("originalDisbursedamount", getOriginalDisbursedAmount(delegator, loanApplicationId.toString()));
+		loanTopUpLog.put("disbursedBy", userLogin.getString("userLoginId"));
+		try {
+			loanTopUpLog.create();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		//Set the New Disbursed Amount
+		loan.set("loanAmt", loanTopUpRecord.getBigDecimal("amount").add(getOriginalDisbursedAmount(delegator, loanApplicationId.toString())));
+		
+		
+		loanTopUpRecord.set("statusName", "DISBURSED");
+		try {
+			loanTopUpRecord.store();
+			loan.store();
+		} catch (Exception e) {
+			
+		}
+		Map<String, Object> result = ServiceUtil.returnSuccess();
+		result.put("loanApplicationId", loanApplicationId.toString());
+		return result;
+	}
+	
 	public static Map<String, Object> requestTopup(DispatchContext dctx, Map<String, Object> context) {
 		Delegator delegator = dctx.getDelegator();
 		Long loanApplicationId = (Long) context.get("loanApplicationId");
-		String comments = (String) context.get("comments");
+		String narration = (String) context.get("narration");
 		BigDecimal amount = (BigDecimal) context.get("amount");
 
 		// Controlss
@@ -1322,10 +1381,10 @@ public class FinAccountServices {
 		String loanTopUpId = delegator.getNextSeqId("LoanTopUp");
 
 		loanTopUp.put("loanApplicationId", loanApplicationId);
-		loanTopUp.put("narration", comments);
+		loanTopUp.put("narration", narration);
 		loanTopUp.put("amount", amount);
 		loanTopUp.put("loanTopUpId", loanTopUpId);
-
+		loanTopUp.put("statusName", "CAPTURED");
 		try {
 			loanTopUp.create();
 		} catch (Exception e) {
@@ -1333,7 +1392,7 @@ public class FinAccountServices {
 		}
 
 		Map<String, Object> result = ServiceUtil.returnSuccess();
-		result.put("loanApplicationId", loanApplicationId);
+		result.put("loanApplicationId", loanApplicationId.toString());
 
 		return result;
 	}
@@ -1367,6 +1426,32 @@ public class FinAccountServices {
 			e.printStackTrace();
 		}
 		return loanApplication;
+	}
+	public static GenericValue getLoanTopUpRecord(Delegator delegator, Long loanApplicationId, String loanTopUpId){
+		Map<String, String> fields = UtilMisc.<String, String> toMap("loanApplicationId", loanApplicationId, "loanTopUpId", loanTopUpId);
+		GenericValue loanTopUpRecord = null;
+	
+		try {
+			loanTopUpRecord = delegator.findOne("LoanTopUp", fields, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		return loanTopUpRecord;
+	}
+	
+	public static GenericValue getLoanTopUpRecord(Delegator delegator, String loanApplicationId){
+		List<GenericValue> loanTopUpRecords = null;
+		GenericValue loanTopUpRecord = null;
+		EntityConditionList<EntityExpr> cond = EntityCondition.makeCondition(UtilMisc.toList(
+				EntityCondition.makeCondition("loanApplicationId", EntityOperator.EQUALS, Long.valueOf(loanApplicationId))
+				));
+		try {
+			loanTopUpRecords = delegator.findList("LoanTopUp", cond, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		loanTopUpRecord = loanTopUpRecords.get(0);
+		return loanTopUpRecord;
 	}
 
 	public static int compareDebitsToCredit(BigDecimal currentAmount, BigDecimal debitAmount, BigDecimal creditAmount) {

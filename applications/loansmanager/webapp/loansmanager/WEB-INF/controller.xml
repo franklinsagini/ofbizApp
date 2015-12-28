@@ -86,7 +86,7 @@
                 <response name="success" type="view" value="viewapplicationprofile"
                         save-home-view="true" />
         </request-map>     
-        <request-map uri="topUpLoan">
+            <request-map uri="topUpLoan">
                 <security https="true" auth="true" />
                 <response name="success" type="view" value="topUpLoan"
                         save-home-view="true" />
@@ -102,6 +102,30 @@
             <redirect-parameter name="loanApplicationId"/>
         </response>
     </request-map>
+
+
+    <request-map uri="approveLoanTop">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="approveLoanTop"/>
+        <response name="success" type="request-redirect" value="topUpLoan">
+            <redirect-parameter name="loanApplicationId"/>
+        </response>
+        <response name="error" type="request-redirect" value="topUpLoan">
+            <redirect-parameter name="loanApplicationId"/>
+        </response>
+    </request-map>
+
+    <request-map uri="disburseLoanTop">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="disburseLoanTop"/>
+        <response name="success" type="request-redirect" value="topUpLoan">
+            <redirect-parameter name="loanApplicationId"/>
+        </response>
+        <response name="error" type="request-redirect" value="topUpLoan">
+            <redirect-parameter name="loanApplicationId"/>
+        </response>
+    </request-map>
+
 
 
         <request-map uri="loanLogs">
