@@ -37,6 +37,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import javolution.util.FastMap;
 
+import org.ofbiz.accountholdertransactions.LoanUtilities;
+import org.ofbiz.accounting.finaccount.LoanDisbursement;
 import org.ofbiz.accounting.trialbalance.TrialBalanceServices;
 import org.ofbiz.accounting.util.UtilAccounting;
 import org.ofbiz.base.util.Debug;
@@ -1285,174 +1287,7 @@ public class FinAccountServices {
 		return result;
 	}
 
-	public static Map<String, Object> approveLoanTop(DispatchContext dctx, Map<String, Object> context) {
-		Delegator delegator = dctx.getDelegator();
-		Long loanApplicationId = (Long) context.get("loanApplicationId");
-		String loanTopUpId =  (String) context.get("loanTopUpId");
-		
-		GenericValue loanTopUpRecord  = getLoanTopUpRecord(delegator, loanApplicationId, loanTopUpId);
-		loanTopUpRecord.set("statusName", "APPROVED");
-		try {
-			loanTopUpRecord.store();
-		} catch (Exception e) {
-			
-		}
-		Map<String, Object> result = ServiceUtil.returnSuccess();
-		result.put("loanApplicationId", loanApplicationId.toString());
-		return result;
-	}
-	
-	public static Map<String, Object> disburseLoanTop(DispatchContext dctx, Map<String, Object> context) {
-		Delegator delegator = dctx.getDelegator();
-		Long loanApplicationId = (Long) context.get("loanApplicationId");
-		String loanTopUpId =  (String) context.get("loanTopUpId");
-		GenericValue userLogin = (GenericValue) context.get("userLogin");
-		
-		GenericValue loanTopUpRecord  = getLoanTopUpRecord(delegator, loanApplicationId, loanTopUpId);
-		GenericValue loan = getLoan(delegator, loanApplicationId.toString());
-		
-		//Create LoanTopUpLog Record
-		GenericValue loanTopUpLog = delegator.makeValue("LoanTopUpLog");
-		String loanTopUpLogId = delegator.getNextSeqId("LoanTopUpLog");
 
-		loanTopUpLog.put("loanApplicationId", loanApplicationId);
-		loanTopUpLog.put("loanTopUpLogId", loanTopUpLogId);
-		loanTopUpLog.put("loanTopUpId", loanTopUpId);
-		loanTopUpLog.put("topUpAmount", loanTopUpRecord.getBigDecimal("amount"));
-		loanTopUpLog.put("originalAppliedamount", getOriginalAppliedAmount(delegator, loanApplicationId.toString()));
-		loanTopUpLog.put("originalDisbursedamount", getOriginalDisbursedAmount(delegator, loanApplicationId.toString()));
-		loanTopUpLog.put("disbursedBy", userLogin.getString("userLoginId"));
-		try {
-			loanTopUpLog.create();
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		
-		//Set the New Disbursed Amount
-		loan.set("loanAmt", loanTopUpRecord.getBigDecimal("amount").add(getOriginalDisbursedAmount(delegator, loanApplicationId.toString())));
-		
-		
-		loanTopUpRecord.set("statusName", "DISBURSED");
-		try {
-			loanTopUpRecord.store();
-			loan.store();
-		} catch (Exception e) {
-			
-		}
-		Map<String, Object> result = ServiceUtil.returnSuccess();
-		result.put("loanApplicationId", loanApplicationId.toString());
-		return result;
-	}
-	
-	public static Map<String, Object> requestTopup(DispatchContext dctx, Map<String, Object> context) {
-		Delegator delegator = dctx.getDelegator();
-		Long loanApplicationId = (Long) context.get("loanApplicationId");
-		String narration = (String) context.get("narration");
-		BigDecimal amount = (BigDecimal) context.get("amount");
-
-		// Controlss
-
-		// 1. Check that the credit amount is not exceeded by the Debit Lines
-		// Get the MultiPayment Header
-		GenericValue loanApplication = null;
-		BigDecimal previousAppliedAmount = BigDecimal.ZERO;
-		BigDecimal previousDisbursedAmount = BigDecimal.ZERO;
-		BigDecimal maxAcceptableTopupAmount = BigDecimal.ZERO;
-		BigDecimal requestedTopupAmount = amount;
-		try {
-			loanApplication = delegator.findOne("LoanApplication", UtilMisc.toMap("loanApplicationId", loanApplicationId), false);
-			if (loanApplication != null) {
-				previousDisbursedAmount = loanApplication.getBigDecimal("loanAmt");
-				previousAppliedAmount = loanApplication.getBigDecimal("appliedAmt");
-			}
-		} catch (GenericEntityException e1) {
-			e1.printStackTrace();
-		}
-		
-		
-		maxAcceptableTopupAmount = getMaxAcceptableTopupAmount(previousAppliedAmount, previousDisbursedAmount);
-		int compare = compareLoanTopValues(requestedTopupAmount, maxAcceptableTopupAmount);
-
-		if (compare == 1) {
-			return ServiceUtil.returnError("Requested Topup Amount is exceeding the originally applied amount of "+previousAppliedAmount);
-		}
-
-		GenericValue loanTopUp = delegator.makeValue("LoanTopUp");
-		String loanTopUpId = delegator.getNextSeqId("LoanTopUp");
-
-		loanTopUp.put("loanApplicationId", loanApplicationId);
-		loanTopUp.put("narration", narration);
-		loanTopUp.put("amount", amount);
-		loanTopUp.put("loanTopUpId", loanTopUpId);
-		loanTopUp.put("statusName", "CAPTURED");
-		try {
-			loanTopUp.create();
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-
-		Map<String, Object> result = ServiceUtil.returnSuccess();
-		result.put("loanApplicationId", loanApplicationId.toString());
-
-		return result;
-	}
-
-	
-	private static BigDecimal getMaxAcceptableTopupAmount(BigDecimal previousAppliedAmount, BigDecimal previousDisbursedAmount) {
-		return previousAppliedAmount.subtract(previousDisbursedAmount);
-	}
-	
-	public static BigDecimal getMaxAcceptableTopupAmount(Delegator delegator, String loanApplicationId) {
-		BigDecimal orginalAppliedAmount = getOriginalAppliedAmount(delegator, loanApplicationId);
-		BigDecimal orginalDisbursedAmount = getOriginalDisbursedAmount(delegator, loanApplicationId);
-		return orginalAppliedAmount.subtract(orginalDisbursedAmount);
-	}
-	
-	public static BigDecimal getOriginalAppliedAmount(Delegator delegator, String loanApplicationId){
-		GenericValue loan = getLoan(delegator, loanApplicationId);
-		return loan.getBigDecimal("appliedAmt");
-	}
-	
-	public static BigDecimal getOriginalDisbursedAmount(Delegator delegator, String loanApplicationId){
-		GenericValue loan = getLoan(delegator, loanApplicationId);
-		return loan.getBigDecimal("loanAmt");
-	}
-
-	private static GenericValue getLoan(Delegator delegator,String loanApplicationId) {
-		GenericValue loanApplication = null;
-		try {
-			loanApplication = delegator.findOne("LoanApplication", UtilMisc.toMap("loanApplicationId", Long.valueOf(loanApplicationId)), false);
-		} catch (GenericEntityException e) {
-			e.printStackTrace();
-		}
-		return loanApplication;
-	}
-	public static GenericValue getLoanTopUpRecord(Delegator delegator, Long loanApplicationId, String loanTopUpId){
-		Map<String, String> fields = UtilMisc.<String, String> toMap("loanApplicationId", loanApplicationId, "loanTopUpId", loanTopUpId);
-		GenericValue loanTopUpRecord = null;
-	
-		try {
-			loanTopUpRecord = delegator.findOne("LoanTopUp", fields, false);
-		} catch (GenericEntityException e) {
-			e.printStackTrace();
-		}
-		return loanTopUpRecord;
-	}
-	
-	public static GenericValue getLoanTopUpRecord(Delegator delegator, String loanApplicationId){
-		List<GenericValue> loanTopUpRecords = null;
-		GenericValue loanTopUpRecord = null;
-		EntityConditionList<EntityExpr> cond = EntityCondition.makeCondition(UtilMisc.toList(
-				EntityCondition.makeCondition("loanApplicationId", EntityOperator.EQUALS, Long.valueOf(loanApplicationId))
-				));
-		try {
-			loanTopUpRecords = delegator.findList("LoanTopUp", cond, null, null, null, false);
-		} catch (GenericEntityException e) {
-			e.printStackTrace();
-		}
-		loanTopUpRecord = loanTopUpRecords.get(0);
-		return loanTopUpRecord;
-	}
 
 	public static int compareDebitsToCredit(BigDecimal currentAmount, BigDecimal debitAmount, BigDecimal creditAmount) {
 		System.out.println("######################### INITIAL DEBIT AMOUNT: " + debitAmount);
@@ -1476,23 +1311,6 @@ public class FinAccountServices {
 	}
 
 	private static int compareBigDecimals(BigDecimal value1, BigDecimal value2) {
-		int comparison = value1.compareTo(value2);
-
-		String str1 = "####################### Both values are equal ";
-		String str2 = "####################### First Value is greater ";
-		String str3 = "####################### Second value is greater";
-
-		if (comparison == 0)
-			System.out.println(str1);
-		else if (comparison == 1)
-			System.out.println(str2);
-		else if (comparison == -1)
-			System.out.println(str3);
-
-		return comparison;
-	}
-	
-	private static int compareLoanTopValues(BigDecimal value1, BigDecimal value2) {
 		int comparison = value1.compareTo(value2);
 
 		String str1 = "####################### Both values are equal ";
