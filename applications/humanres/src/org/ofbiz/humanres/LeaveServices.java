@@ -929,6 +929,14 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		log.info("==================CURRENT YEAR ############ " + currentYear);
 		return currentYear;
 	}
+	
+	public static String getYearOfParameterisedDate(Date fromDate) {
+		LocalDateTime today = new LocalDateTime(fromDate);
+		int thisYear = today.getYear();
+		String currentYear = Integer.toString(thisYear);
+		log.info("==================getYearOfParameterisedDate ############ " + currentYear);
+		return currentYear;
+	}
 
 
 	public static String getSupervisorLevel(GenericValue party) {
@@ -2283,10 +2291,13 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		
 		GenericValue EmpAppintmentDateELI = null;
 		
-		LocalDateTime stCurrentDate = new LocalDateTime(Calendar.getInstance().getTimeInMillis());
-		LocalDateTime firstDayOfYear = stCurrentDate.dayOfYear().withMinimumValue();
 		LocalDateTime thatDay = new LocalDateTime(thisDate);
-		 
+		LocalDateTime stCurrentDate = new LocalDateTime(Calendar.getInstance().getTimeInMillis());
+		LocalDateTime firstDayOfYear = thatDay.dayOfYear().withMinimumValue();
+		int thatMonth = thatDay.getMonthOfYear();
+		int thatDayOfMonth = thatDay.getDayOfMonth();
+		log.info(" ---------- THAT MONTH EEH------------ "+thatMonth); 
+		log.info(" ---------- THAT DAY OF MONTH------------ "+thatDayOfMonth); 
 		if(thatDay.isAfter(stCurrentDate)){
 			
 			thatDay = stCurrentDate;
@@ -2336,12 +2347,18 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		 
 		 BigDecimal accruedLeaveDays = accrualRate.multiply(new BigDecimal(months));
 		   
-		        if(accruedLeaveDays.compareTo(BigDecimal.ZERO) < 0 ){
+		  if(accruedLeaveDays.compareTo(BigDecimal.ZERO) < 0 ){
 		        	accruedLeaveDays = BigDecimal.ZERO;
-		        }else{
+		   }else{
 		        	accruedLeaveDays = accrualRate.multiply(new BigDecimal(months));
-		        }
-		        
+		   }
+		   
+		  BigDecimal addedDaysIfDec = new BigDecimal(2.5); 
+		  
+		  if((thatMonth == 12) && (thatDayOfMonth == 31)){
+			  accruedLeaveDays = accruedLeaveDays.add(accrualRate);
+		  }
+		  
 		        System.out.println("------------Accrual Leave Balance To Partilar date ------------ "+accruedLeaveDays);
 		        
 		 return accruedLeaveDays;
@@ -2355,10 +2372,12 @@ public static Map getCarryoverUsed(Delegator delegator, Double leaveDuration, St
 		Timestamp now = UtilDateTime.nowTimestamp();
 		String financialYear = LeaveServices.getCurrentYear(now);
 		
+	    String financeThatYear = LeaveServices.getYearOfParameterisedDate(asThisDate);
+		
 		EntityConditionList<EntityExpr> leaveConditionsEmp = EntityCondition
 				.makeCondition(UtilMisc.toList(
 					EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, PartyId),
-					EntityCondition.makeCondition("financialYear",EntityOperator.EQUALS, financialYear),
+					EntityCondition.makeCondition("financialYear",EntityOperator.EQUALS, financeThatYear),
 					EntityCondition.makeCondition("fromDate",EntityOperator.LESS_THAN_EQUAL_TO, asThisDate),
 					EntityCondition.makeCondition("isDeductedFromAnnual",EntityOperator.EQUALS, "Y"),
 					EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "Approved")),

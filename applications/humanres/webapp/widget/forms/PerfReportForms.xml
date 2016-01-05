@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+       <form name=""></form>
+       
+       
+        <form name="singleStaffPerformance" type="single" target="SingleStaffPerformanceScoresPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <actions>
+        <entity-condition entity-name="yearForPerReportsView" list="periodList">
+			</entity-condition>
+		</actions>
+        <field name="partyId"   title="Employee" widget-style="required"	required-field="true">
+            <lookup target-form-name="LookupEmployee"/> 
+        </field>
+        <field name="year" title="Select Financial Year" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="year" list-name="periodList"
+					description="${year}" />
+			</drop-down>
+		</field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="AllStaffPerformance" type="single" target="allStaffPerformanceScoresPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+         <actions>
+        <entity-condition entity-name="yearForPerReportsView" list="periodList">
+			</entity-condition>
+		</actions>
+         <field name="year" title="Select Financial Year" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="year" list-name="periodList"
+					description="${year}" />
+			</drop-down>
+		</field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+     <form name="AllStaffPerformanceCSV" type="single" target="AllStaffPerformanceCSVCSV.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+         <actions>
+        <entity-condition entity-name="yearForPerReportsView" list="periodList">
+			</entity-condition>
+		</actions>
+         <field name="year" title="Select Financial Year" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="year" list-name="periodList"
+					description="${year}" />
+			</drop-down>
+		</field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="AllStaffPerformanceExport" list-name="scorelist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="name" title="Staff"><display/></field>
+        <field name="branch" title="Branch"><display/></field>
+      <!--   <field name="department" title="Department"><display/></field> -->
+        <field name="Q1" title="Quarter One Score"><display/></field>
+        <field name="Q2" title="Quarter Two Score"><display/></field>
+        <field name="Q3" title="Quarter Three Score"><display/></field>
+        <field name="Q4" title="Quarter Four Score"><display/></field>
+        <field name="Total" title="Total Score"><display/></field>
+        <field name="bonus" title="Bonus (% of bonus of basic salary)"><display/></field>
+        <field name="increment" title="Salary Increment (% of basic salary)"><display/></field>
+        
+    </form>
+    
+     <form name="StaffPerScoreBracket" type="single" target="postingByEmployeepdf" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <actions>
+        <entity-condition entity-name="PerfReviewPeriod" list="periodList">
+			</entity-condition>
+		</actions>
+         <field name="year" title="Select Financial Year" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="year" list-name="periodList"
+					description="${year}" />
+			</drop-down>
+		</field>
+		<field name="bracket" required-field="true" widget-style="required">
+            <drop-down allow-empty="true">
+                <option key="Below" description="Below 50%"/>
+                <option key="FiftyPlus" description="51% - 70%"/>
+                <option key="SeventyPlus" description="71% - 80%"/>
+                <option key="EightyPlus" description="81% - 90%"/>
+                <option key="Above" description="Above 90%"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="StaffPerScoreQuarter" type="single" target="postingByEmployeepdf" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <actions>
+        <entity-condition entity-name="PerfReviewPeriod" list="periodList">
+			</entity-condition>
+		</actions>
+         <field name="quarter" title="Select Period Quarter" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="quarter" list-name="periodList"
+					description="${quarter}" />
+			</drop-down>
+		</field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+      <form name="StaffPerformancePerGoal" type="single" target="StaffPerformancePerGoalPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <actions>
+        <entity-condition entity-name="PerfGoals" list="GoalsList">
+                <condition-expr field-name="perfGoalsDefId" operator="equals" value="QNT_GOALS"/>
+				<order-by field-name="perfGoalsId"/>
+			</entity-condition>
+		 <entity-condition entity-name="yearForPerReportsView" list="periodList">
+			</entity-condition>
+		</actions>
+		<field name="partyId"   title="Employee" widget-style="required"	required-field="true">
+            <lookup target-form-name="LookupEmployee"/> 
+        </field>
+         <field name="year" title="Select Financial Year" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="year" list-name="periodList"
+					description="${year}" />
+			</drop-down>
+		</field>
+        
+        <field name="perfGoalsId" title="Select Goal" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="perfGoalsId" list-name="GoalsList"
+					description="${goal}" />
+			</drop-down>
+		</field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    
+        <form name="SelfOrHODAppraisal" type="single" target="SelfOrHodAppraisalPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <actions>
+        <entity-condition entity-name="yearForPerReportsView" list="periodList">
+			</entity-condition>
+		</actions>
+        <field name="partyId"   title="Employee" widget-style="required"	required-field="true">
+            <lookup target-form-name="LookupEmployee"/> 
+        </field>
+        <field name="year" title="Select Financial Year" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="year" list-name="periodList"
+					description="${year}" />
+			</drop-down>
+		</field>
+		 <field name="appraiserType" title="Select Type of Appraisal" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<option key="SELF" description="Self Appraisal"/>
+				<option key="HOD" description="Supervisor/HOD Appraisal"/>
+			</drop-down>
+		</field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    <form name="AllStaffPerformanceOnQualitativeGoals" type="single" target="AllStaffPerformanceScorePerQualitativeGoalPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+         <actions>
+        <entity-condition entity-name="yearForPerReportsView" list="periodList">
+			</entity-condition>
+			 <entity-condition entity-name="PerfGoals" list="GoalsList">
+                <condition-expr field-name="perfGoalsDefId" operator="equals" value="QTT_GOALS"/>
+				<order-by field-name="perfGoalsId"/>
+			</entity-condition>
+		</actions>
+		<field name="perfGoalsId" title="Select Goal" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="perfGoalsId" list-name="GoalsList"
+					description="${goal}" />
+			</drop-down>
+		</field>
+         <field name="year" title="Select Financial Year" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="year" list-name="periodList"
+					description="${year}" />
+			</drop-down>
+		</field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="AllStaffPerformanceOnQualitativeGoalCSV" type="single" target="AllStaffPerformanceOnQualitativeGoalCSV.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+         <actions>
+        <entity-condition entity-name="yearForPerReportsView" list="periodList">
+			</entity-condition>
+			 <entity-condition entity-name="PerfGoals" list="GoalsList">
+                <condition-expr field-name="perfGoalsDefId" operator="equals" value="QTT_GOALS"/>
+				<order-by field-name="perfGoalsId"/>
+			</entity-condition>
+		</actions>
+		<field name="perfGoalsId" title="Select Goal" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="perfGoalsId" list-name="GoalsList"
+					description="${goal}" />
+			</drop-down>
+		</field>
+         <field name="year" title="Select Financial Year" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="year" list-name="periodList"
+					description="${year}" />
+			</drop-down>
+		</field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="AllStaffPerformanceOnQualitativeGoalExport" list-name="scorelist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+       
+        
+        <field name="name" title="Staff"><display/></field>
+        <field name="branch" title="Branch"><display/></field>
+       <!--  <field name="department" title="Department"><display/></field> -->
+        <field name="MaxPossibleScore" title="Maximum Score"><display/></field>
+        <field name="Q1" title="Quarter One Score"><display/></field>
+        <field name="Q2" title="Quarter Two Score"><display/></field>
+        <field name="Q3" title="Quarter Three Score"><display/></field>
+        <field name="Q4" title="Quarter Four Score"><display/></field>
+        <field name="Total" title="Total Score"><display/></field>
+        
+    </form>
+    
+    
+     <form name="StaffPerformanceOfWholeSociety" type="single" target="StaffPerformanceOfSociety" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+         <actions>
+        <entity-condition entity-name="yearForPerReportsView" list="periodList">
+			</entity-condition>
+			 <entity-condition entity-name="PartyGroup" list="branchList">
+			 <condition-expr field-name="isBranch" value="Y"/>
+				<order-by field-name="partyId"/>
+			</entity-condition>
+		</actions>
+		 <field name="year" title="Select Financial Year" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="year" list-name="periodList"
+					description="${year}" />
+			</drop-down>
+		</field>
+		
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    
+    
+     <form name="StaffPerformancePerBranch" type="single" target="StaffPerformancePerBranchPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+         <actions>
+        <entity-condition entity-name="yearForPerReportsView" list="periodList">
+			</entity-condition>
+			 <entity-condition entity-name="PartyGroup" list="branchList">
+			 <condition-expr field-name="isBranch" value="Y"/>
+				<order-by field-name="partyId"/>
+			</entity-condition>
+		</actions>
+		 <field name="year" title="Select Financial Year" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="year" list-name="periodList"
+					description="${year}" />
+			</drop-down>
+		</field>
+		<field name="branch" title="Select Branch" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="partyId" list-name="branchList"
+					description="${groupName}" />
+			</drop-down>
+		</field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    
+     <form name="StaffPerformancePerDepartment" type="single" target="StaffPerformancePerDepartmentPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+         <actions>
+        <entity-condition entity-name="yearForPerReportsView" list="periodList">
+			</entity-condition>
+			 <entity-condition entity-name="PartyGroup" list="branchList">
+			 <condition-expr field-name="isBranch" value="Y"/>
+				<order-by field-name="partyId"/>
+			</entity-condition>
+		</actions>
+		 <field name="year" title="Select Financial Year" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="year" list-name="periodList"
+					description="${year}" />
+			</drop-down>
+		</field>
+		<field name="branchId" title="Select Branch" widget-style="required"	required-field="true">
+			<drop-down allow-empty="true">
+				<list-options key-name="partyId" list-name="branchList"
+					description="${groupName}" />
+			</drop-down>
+		</field>
+        <field name="departmentId" title=" Select Department" widget-style="required"	required-field="true">
+            <drop-down allow-empty="true">
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    <form name="selfAppraisalReport" type="single" target="selfAppraisalReportPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="quarter" title="Select Quarter">
+        <drop-down allow-empty="false">
+        <entity-options description="${quarter}" entity-name="PerfReviewPeriod"></entity-options>
+        </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>    
+    
+    <form name="harmonizedAppraisalReport" type="single" target="harmonizedAppraisalReportPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="quarter" title="Select Quarter">
+        <drop-down allow-empty="false">
+        <entity-options description="${quarter}" entity-name="PerfReviewPeriod"></entity-options>
+        </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>   
+    
+    <form name="submittedAppraisalReport" type="single" target="submittedAppraisalReportPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="quarter" title="Select Quarter">
+        <drop-down allow-empty="false">
+        <entity-options description="${quarter}" entity-name="PerfReviewPeriod"></entity-options>
+        </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>   
+    
+    
+</forms>

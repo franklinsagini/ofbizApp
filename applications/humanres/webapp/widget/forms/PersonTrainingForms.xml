@@ -1,0 +1,898 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+    <form name="showTrainingCalendar" type="single" target="applyTraining">
+        <field name="partyId"><hidden value="${loginPartyId}"/></field>
+        <field name="approverId" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="trainingClassTypeId" title="${uiLabelMap.HumanResTraining} ${uiLabelMap.CommonName}"><display/></field>
+        <field name="approvalStatus"><hidden value="TRAINING_APPLIED"/></field>
+        <field name="workEffortTypeId"><hidden/></field>
+        <field name="workEffortId"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display type="date-time"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display type="date-time"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonApply}"><submit button-type="button"/></field>
+    </form>
+    <form name="editTrainingCalendar" type="single" target="createTrainingCalendar" default-map-name="workEffort">
+        <alt-target use-when="workEffort!=null" target="updateTrainingCalendar"/>
+        <field name="workEffortId" use-when="workEffort!=null"><hidden/></field>
+        <field name="partyId"><hidden value="${parameters.userLogin.partyId}"/></field>
+        <field name="roleTypeId" use-when="workEffort==null"><hidden value="CAL_OWNER"/></field>
+        <field name="workEffortTypeId"><hidden value="TRAINING"/></field>
+        <field name="statusId" use-when="workEffort==null"><hidden value="PRTYASGN_ASSIGNED"/></field>
+        <field name="currentStatusId"><hidden value="CAL_TENTATIVE"/></field>
+        <field name="workEffortName" title="${uiLabelMap.HumanResTrainings} ${uiLabelMap.CommonName}">
+            <drop-down allow-empty="false">
+                <entity-options description="${description}" key-field-name="trainingClassTypeId" entity-name="TrainingClassType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"><text/></field>
+        <field name="scopeEnumId"><hidden value="WES_PUBLIC"/></field>
+        <field name="estimatedStartDate" title="${uiLabelMap.CommonFromDate}"><date-time input-method="time-dropdown" /></field>
+        <field name="estimatedCompletionDate" title="${uiLabelMap.CommonThruDate}"><date-time input-method="time-dropdown"/></field>
+        <field name="trainingPartnerId" title="Training Partner" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="trainingVenue" title="Training Venue"><text/></field>
+        <field name="totalCost" title="Total Cost"> <display/></field>
+        <field name="add" title="${uiLabelMap.CommonAdd}"><submit/></field>
+    </form>
+    <form name="AssignTraining" type="single" target="assignTraining">
+        <field name="approverId"><hidden value="${loginPartyId}"/></field>
+        <field name="fromDate"><hidden/></field>
+        <field name="thruDate"><hidden/></field>
+        <field name="trainingClassTypeId"><hidden/></field>
+        <field name="workEffortId"><hidden/></field>
+        <field name="approvalStatus"><hidden value="TRAINING_ASSIGNED"/></field>
+        <field name="partyId" title="Employee" position="1"><lookup target-form-name="LookupEmployee" size="10"/></field>
+        <field name="roleTypeId"> <hidden value="CAL_ATTENDEE"/></field>
+        <field name="add" title="${uiLabelMap.CommonAdd}"  position="2"><submit/></field>
+    </form>
+    <form name="ListTrainingParticipants" list-name="listIt" title="" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="PersonTraining"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <auto-fields-entity entity-name="PersonTraining" default-field-type="hidden"/>
+        <field name="partyId" title="Employee" widget-style="buttontext">
+            <display-entity entity-name="Person" description="${firstName} ${middleName} ${lastName} (${employeeNumber})">
+                <!-- sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="">
+                    <parameter param-name="partyId" from-field="partyId"/>
+                </sub-hyperlink -->
+            </display-entity>
+        </field>
+        <field name="approvalStatus"><!-- display-entity entity-name="StatusItem" key-field-name="statusId"/ --> <hidden/></field>
+        <field name="trainingRequestId" title="Training Request" widget-style="buttontext"><hidden/></field>
+        <field name="trainingClassTypeId" title="Training Class	">
+        	<display-entity entity-name="TrainingClassType"/> 
+        </field>
+        <field name="addCosts" title="Costs" widget-style="">
+            <hyperlink target="trainingCosts" description="Costs" also-hidden="false">
+                <parameter param-name="partyId"/>
+                <parameter param-name="trainingClassTypeId"/>
+                <parameter param-name="fromDate"/>
+            </hyperlink>
+        </field>
+    </form>
+    <form name="FindTrainingApprovals" target="FindTrainingApprovals" title="" type="single" default-title-style="tableheadtext" default-widget-style="inputBox">
+        <auto-fields-entity entity-name="PersonTraining" default-field-type="find"/>
+        <field name="trainingRequestId"><hidden/></field>
+        <field name="workEffortId"><hidden/></field>
+        <field name="partyId" title="Employee"><lookup target-form-name="LookupEmployee"/></field>
+        <field name="trainingClassTypeId" title="Training Class">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" key-field-name="trainingClassTypeId" entity-name="TrainingClassType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>        
+        <field name="fromDate" title="From Date"><date-find type="date"/> </field>
+        <field name="thruDate" title="Through Date"><date-find type="date"/> </field>
+        <!-- field name="approverId" title="Approver" use-when="!hasAdminPermission"><hidden value="${loginPartyId}"/></field -->  
+        <field name="approverId" title="Approver"><text-find/></field>   
+        <field name="approvalStatus" title="Approval Status"><text-find/></field>
+        <field name="reason"><text-find ignore-case="true"/></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="ListTrainingApprovals" type="list" list-name="listIt" target="updateTrainingStatus" title="" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="PersonTraining"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <auto-fields-entity entity-name="PersonTraining" default-field-type="display"/>
+        <field name="trainingRequestId"><hidden/></field>
+        <field name="workEffortId"><hidden/></field>
+        <field name="partyId" title="Employee" widget-style="buttontext">
+            <display-entity entity-name="Person" description="${firstName} ${lastName} (${employeeNumber})">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="buttontext">
+                    <parameter param-name="partyId" from-field="partyId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="approverId" title="Approver"  widget-style="buttontext">
+            <display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName} (${employeeNumber})">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${approverId}" link-style="buttontext">
+                    <parameter param-name="partyId" from-field="approverId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="trainingClassTypeId" title="Training Class"/>
+        <field name="fromDate" title="From Date"><display type="date"/> </field>
+        <field name="thruDate" title="Through Date"><display type="date"/> </field>
+        <field name="approvalStatus" title="Approval Status"><display/></field>
+        <field name="UpdateStatus" title="${uiLabelMap.CommonUpdate}"><display description="Update"/></field>
+        <field name="UpdateStatus" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext" use-when="(&quot;${approvalStatus}&quot;.equals(&quot;TRAINING_APPLIED&quot;))||(&quot;${approvalStatus}&quot;.equals(&quot;TRAINING_APPROVED&quot;))">
+            <hyperlink description="${uiLabelMap.CommonUpdate}" target="EditTrainingApprovals">
+                <parameter param-name="partyId"/>
+                <parameter param-name="trainingClassTypeId"/>
+                <parameter param-name="fromDate"/>
+            </hyperlink>
+        </field>
+        <field name="approvalStatus"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
+        <field name="trainingClassTypeId"><display-entity entity-name="TrainingClassType"/></field>
+    </form>
+    <form name="EditTrainingApprovals" type="single" target="updateTrainingStatus" default-map-name="personTraining">
+        <auto-fields-service service-name="updateTrainingStatus" default-field-type="display"/>
+        <field name="partyId" title="${uiLabelMap.FormFieldTitle_employeePartyId}"/>
+        <field name="trainingClassTypeId" title="${uiLabelMap.HumanResTrainingClassType}"/>
+        <field name="approvalStatus">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="StatusItem" key-field-name="statusId" description="${description}">
+                    <entity-constraint name="statusTypeId" operator="equals" value="TRAINING_STATUS"/>
+                        <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="approvalStatus" use-when="personTraining!=null&amp;&amp;personTraining.getString(&quot;approvalStatus&quot;).equals(&quot;TRAINING_REJECTED&quot;)"><display/></field>
+        <field name="reason" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text/></field>
+        <field name="reason" use-when="personTraining!=null&amp;&amp;personTraining.getString(&quot;approvalStatus&quot;).equals(&quot;TRAINING_REJECTED&quot;)"><display/></field>
+        <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="FindTrainingStatus" target="FindTrainingStatus" title="" type="single" default-title-style="tableheadtext" default-widget-style="inputBox">
+        <auto-fields-entity entity-name="PersonTraining" default-field-type="find"/>
+        <field name="partyId"><hidden value="${loginPartyId}"/></field>
+        <field name="trainingClassTypeId" title="${uiLabelMap.HumanResTrainingClassType}">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" key-field-name="trainingClassTypeId" entity-name="TrainingClassType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>  
+        </field>
+        <field name="approverId"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="approvalStatus"><text-find ignore-case="true"/></field>
+        <field name="reason"><text-find ignore-case="true"/></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSearch}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="ListTrainingStatus" list-name="listIt" title="" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar"
+    	separate-columns="true">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="PersonTraining"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <auto-fields-entity entity-name="PersonTraining" default-field-type="display"/>
+        <field name="partyId" title="Employee" widget-style="buttontext">
+            <display-entity entity-name="Person" description="${firstName} ${middleName} ${lastName} (${employeeNumber})">
+                <!-- sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="buttontext">
+                    <parameter param-name="partyId" from-field="partyId"/>
+                </sub-hyperlink -->
+            </display-entity>
+        </field>
+        <field name="approverId" widget-style="buttontext">
+            <display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} (${employeeNumber})">
+                <!-- sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${approverId}" link-style="buttontext">
+                    <parameter param-name="partyId" from-field="approverId"/>
+                </sub-hyperlink -->
+            </display-entity>
+        </field>
+        <field name="workEffortId" widget-style="buttontext"><hidden/></field>
+        <field name="trainingRequestId" widget-style="buttontext"><hidden/></field>
+        <field name="trainingClassTypeId" title="${uiLabelMap.HumanResTrainingClassType}"/>
+        <field name="approvalStatus"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
+        <field name="trainingClassTypeId"><display-entity entity-name="TrainingClassType"/></field>
+        <field name="fromDate" title="From"><display type="date"/></field>
+        <field name="thruDate" title="To"><display type="date"/></field>
+    </form>
+
+    <form name="simpleListTrainingStatus" list-name="listIt" title="" type="list" odd-row-style="alternate-row" default-table-style="basic-table">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="PersonTraining"/>
+                <field-map field-name="orderBy" value="fromDate"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>        
+        <field name="trainingClassTypeId"><display-entity entity-name="TrainingClassType"/></field>
+        <field name="fromDate"><display type="date" /></field>
+        <field name="thruDate"><display type="date"/></field>
+        <field name="trainingClassTypeId" title="${uiLabelMap.HumanResTrainingClassType}"/>
+        <field name="approvalStatus"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
+        <field name="trainingClassTypeId"><display-entity entity-name="TrainingClassType"/></field>
+        <field name="approverId" title="Approver" widget-style="buttontext">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
+        </field>
+    </form>
+
+    <form name="ListEmplTrainings" type="list" list-name="listIt" separate-columns="true" target="updateEmplLeave" paginate-target="FindEmplLeaves"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PersonTraining">
+                <condition-expr field-name="partyId" from-field="partyId"/>
+                <order-by field-name="fromDate"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-entity entity-name="PersonTraining" default-field-type="display"/>
+        <field name="partyId" title="${uiLabelMap.FormFieldTitle_employeePartyId}">
+            <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
+        </field>
+        <field name="approverId">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
+        </field>
+        <field name="trainingRequestId"/>
+        <field name="trainingClassTypeId" title="${uiLabelMap.HumanResTrainingClassType}"/>
+        <field name="approvalStatus"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
+        <field name="trainingClassTypeId"><display-entity entity-name="TrainingClassType"/></field>
+    </form>
+    
+        <!-- Training Cost Type -->
+    <form name="AddTrainingCostType" type="single" target="createTrainingCostType"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="trainingCostTypeContext">
+        
+        <field name="trainingCostTypesId"><hidden/></field>
+        <field name="costType" title="Training Cost Type" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field>
+        <field name="description" title="Description" ><text size="30" maxlength="60"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+    </form>
+    
+    <form name="listTrainingCostType" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateTrainingCostType" paginate-target="trainingCostType"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="TrainingCostType">
+            </entity-condition>
+        </actions>
+        <auto-fields-service default-field-type="hidden" service-name="updateTrainingCostType"/>
+        
+       <field name="trainingCostTypesId"><hidden/></field>
+        <field name="costType" title="Training Cost Type"><text size="30" maxlength="60"/></field>
+        <field name="description" title="Description" ><text size="30" maxlength="60"/></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteTrainingCostType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="trainingCostTypesId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- New Training Costs-->
+    <form name="AddTrainingCosts" type="single" target="createTrainingCosts"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="trainingCostsContext">
+        
+        <actions>
+        	<entity-condition entity-name="Person" list="personList"></entity-condition>
+        	<set field="partyId" from-field="partyId"/>        	
+        	<entity-condition entity-name="TrainingClassType" list="trainingClassTypeList"></entity-condition>
+        	<set field="trainingClassTypeId" from-field="trainingClassTypeId"/>
+        </actions>
+
+        <field name="trainingCostId"><hidden/></field>
+        <field name="partyId" title="Employee" parameter-name="partyId"><hidden/></field>
+        <field name="trainingClassTypeId" title="Training Class Type" parameter-name="trainingClassTypeId"><hidden/></field>
+        <field name="fromDate" parameter-name="fromDate"><hidden/></field>
+        
+		 <field name="trainingCostTypesId" title="Training Cost Type" tooltip="${uiLabelMap.CommonRequired}" 
+		 	widget-style="required" required-field="true">
+            <drop-down allow-empty="true">
+                <entity-options description="${costType}" key-field-name="trainingCostTypesId" entity-name="TrainingCostType">
+                    <entity-order-by field-name="trainingCostTypesId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="cost" title="Cost (KSH)" tooltip="${uiLabelMap.CommonRequired}" 
+		 	widget-style="required" required-field="true">
+		 	<text size="30" maxlength="60"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/></field>
+        </form>
+        
+        <form name="listTrainingCosts" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateTrainingCosts" paginate-target="trainingCostTypes"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	<!--<set field="partyId" from-field="parameters.partyId"/>
+            <set field="trainingClassTypeId" from-field="parameters.trainingClassTypeId"/>   
+            <set field="fromDate" from-field="parameters.fromDate"/>   
+                 
+        	--><entity-condition entity-name="TrainingCosts" >   
+        		<condition-list combine="and">        			
+        			<condition-expr field-name="partyId" operator="equals" from-field="parameters.partyId"/>    
+        			<condition-expr field-name="trainingClassTypeId" operator="equals" from-field="parameters.trainingClassTypeId"/>
+        			<condition-expr field-name="fromDate" operator="equals" from-field="parameters.fromDate"/>
+        		</condition-list> 	        		
+        	</entity-condition>
+        </actions>
+        
+        <auto-fields-service default-field-type="hidden" service-name="updateTrainingCosts"/>
+
+        <field name="partyId"><hidden/></field>
+        <field name="trainingClassTypeId"><hidden/></field>
+        <field name="trainingCostTypesId" title="Cost Type">
+        	<display-entity entity-name="TrainingCostType" key-field-name="trainingCostTypesId" description="${costType}"/>
+        </field>
+        <field name="cost" title="Cost (KSH)"> <display/></field>
+        <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteTrainingCosts" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="trainingCostId"/>
+                <parameter param-name="partyId"/>
+                <parameter param-name="trainingClassTypeId"/>
+                <parameter param-name="fromDate"/>
+            </hyperlink>
+        </field>
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
+    </form>
+    
+    
+    
+    
+    <!--======================= TRAINING TYPES DEFINITION =================================== -->
+
+	<form name="TrainingTypeForm" type="single" target="createStaffTrainingType"
+		focus-field-name="name" header-row-style="header-row"
+		default-table-style="basic-table" default-map-name="TrainingTypesContext">
+
+		<field name="trainingTypeId">
+			<hidden />
+		</field>
+		<field name="trainingName" title="Training Name" widget-style="required"
+			required-field="true">
+			<text />
+		</field>
+		
+		<field name="parentTraining" title="PRE REQUISITE TRAINING">
+			<drop-down allow-empty="true">
+			<entity-options description="${trainingName}" entity-name="TrainingTypes" key-field-name="trainingTypeId"></entity-options>
+			</drop-down>
+		</field>
+		<field name="essentialSkill" title="Skill To Be Acquired">
+			<drop-down allow-empty="true">
+			<entity-options description="${description}" entity-name="SkillType" key-field-name="skillTypeId"></entity-options>
+			</drop-down>
+		</field>
+		<field name="timeFrame" title="Training Period">
+			<text />
+		</field>
+		<field name="submitButton" title="${uiLabelMap.CommonSave}"
+			widget-style="smallSubmit">
+			<submit button-type="button" />
+		</field>
+	</form>
+
+	<form name="listTrainingTypeForm" type="multi" use-row-submit="true"
+		title="Selected Monument" separate-columns="true" paginate-target="TrainingTypeForm"
+		target="updateStaffTrainingType" default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="TrainingTypes">
+				<order-by field-name="trainingTypeId" />
+			</entity-condition>
+		</actions>
+		<field name="trainingTypeId">
+			<hidden />
+		</field>
+		<field name="trainingName" title="Training Name" widget-style="required"
+			required-field="true">
+			<text />
+		</field>
+		
+		<field name="parentTraining" title="PRE REQUISITE TRAINING">
+			<drop-down allow-empty="true">
+			<entity-options description="${trainingName}" entity-name="TrainingTypes" key-field-name="trainingTypeId"></entity-options>
+			</drop-down>
+		</field>
+		<field name="essentialSkill" title="Skill To Be Acquired">
+			<drop-down allow-empty="true">
+			<entity-options description="${description}" entity-name="SkillType" key-field-name="skillTypeId"></entity-options>
+			</drop-down>
+		</field>
+		<field name="timeFrame" title="Training Period">
+			<text />
+		</field>
+
+
+		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"
+			widget-style="buttontext">
+			<hyperlink target="deleteStaffTrainingType" description="${uiLabelMap.CommonDelete}"
+				also-hidden="false" request-confirmation="true"
+				confirmation-message="Remove Training Type?">
+				<parameter param-name="trainingTypeId" />
+			</hyperlink>
+		</field>
+
+		<field name="_rowSubmit" title="${uiLabelMap.CommonSelect}">
+			<hidden value="Y" />
+		</field>
+		<field name="submitButton" title="Update Reviews" widget-style="smallSubmit">
+			<submit />
+		</field>
+
+	</form>
+	
+	
+	
+	
+	  
+	  
+
+	<form name="CostTypeForm" type="single" target="createStaffTrainingCostType"
+		focus-field-name="name" header-row-style="header-row"
+		default-table-style="basic-table" default-map-name="CostTypesContext">
+		
+		<alt-target use-when="CostTypesContext!=null" target="updateStaffTrainingCostType"/>
+
+		<field name="costTypeId">
+			<hidden />
+		</field>
+		<field name="costTypeId" use-when="CostTypesContext!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display /></field>
+		<field name="CostName" title="Cost Name" widget-style="required"
+			required-field="true">
+			<text />
+		</field>
+		<field name="trainingFees" title="Training Fees" widget-style="required"
+			required-field="true">
+			<text />
+		</field>
+		<field name="travelCost" title="Travel Cost" widget-style="required"
+			required-field="true">
+			<text />
+		</field>
+		<field name="accomodationCost" title="Accomodation Cost" widget-style="required"
+			required-field="true">
+			<text />
+		</field>
+		<field name="allowance" title="Allowance" widget-style="required"
+			required-field="true">
+			<text />
+		</field>
+		<field use-when="CostTypesContext==null" name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field use-when="CostTypesContext!=null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+		
+		
+	</form>
+
+	<form name="listCostTypeForm" type="list" list-name="listIt"  use-row-submit="true"
+		title="Selected Monument" separate-columns="true" paginate-target="CostTypeForm"
+		target="" default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="CostTypes">
+				<order-by field-name="costTypeId" />
+			</entity-condition>
+		</actions>
+		<field name="costTypeId">
+			<hidden />
+		</field>
+		<field name="CostName" title="Cost Name" widget-style="required"
+			required-field="true">
+			<display />
+		</field>
+		<field name="trainingFees" title="Training Fees" widget-style="required"
+			required-field="true">
+			<display type="currency" currency="KES"/>
+		</field>
+		<field name="travelCost" title="Travel Cost" widget-style="required"
+			required-field="true">
+			<display type="currency" currency="KES"/>
+		</field>
+		<field name="accomodationCost" title="Accomodation Cost" widget-style="required"
+			required-field="true">
+			<display type="currency" currency="KES"/>
+		</field>
+		<field name="allowance" title="Allowance" widget-style="required"
+			required-field="true">
+			<display type="currency" currency="KES"/>
+		</field>
+
+
+		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"
+			widget-style="buttontext">
+			<hyperlink target="deleteStaffTrainingCostType" description="${uiLabelMap.CommonDelete}"
+				also-hidden="false" request-confirmation="true"
+				confirmation-message="Remove Cost Type?">
+				<parameter param-name="costTypeId" />
+			</hyperlink>
+		</field>
+
+		<field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field>
+
+	</form>
+	
+	
+	  <!--======================= CREATE TRAINING EVENTS DEFINITION =================================== -->
+
+	<form name="TrainingEventsForm" type="single" target="createStaffTrainingEvent"
+		focus-field-name="name" header-row-style="header-row"
+		default-table-style="basic-table" default-map-name="TrainingEventContext">
+
+		<field name="eventId">
+			<hidden />
+		</field>
+		<field name="eventName" title="Training Name" widget-style="required"
+			required-field="true">
+			<text />
+		</field>
+		<field name="trainingTypeId" title="Training Type" widget-style="required"
+			required-field="true">
+			<drop-down allow-empty="true">
+			<entity-options description="${trainingName}" entity-name="TrainingTypes" key-field-name="trainingTypeId"></entity-options>
+			</drop-down>
+		</field>
+		<field name="costTypeId" title="Cost Type" widget-style="required"
+			required-field="true">
+			<drop-down allow-empty="true">
+			<entity-options description="${CostName}" entity-name="CostTypes" key-field-name="costTypeId"></entity-options>
+			</drop-down>
+		</field>
+		<field name="startDate" title="Statrt Date" widget-style="required"
+			required-field="true">
+			<date-time type="date" />
+		</field>
+		<field name="endDate" title="End Date" widget-style="required"
+			required-field="true">
+			<date-time type="date" />
+		</field>
+		
+		
+		<field name="submitButton" title="${uiLabelMap.CommonSave}"
+			widget-style="smallSubmit">
+			<submit button-type="button" />
+		</field>
+	</form>
+
+	<form name="listTrainingEventsForm" type="multi" use-row-submit="true"
+		title="Selected Monument" separate-columns="true" paginate-target="TrainingEventsForm"
+		target="updateStaffTrainingEvent" default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="TrainingEvent">
+				<order-by field-name="eventId" />
+			</entity-condition>
+		</actions>
+		<field name="eventId">
+			<hidden />
+		</field>
+		<field name="eventName" title="Training Name" widget-style="required"
+			required-field="true">
+			<text />
+		</field>
+		<field name="trainingTypeId" title="Training Type" widget-style="required"
+			required-field="true">
+			<drop-down allow-empty="true">
+			<entity-options description="${trainingName}" entity-name="TrainingTypes" key-field-name="trainingTypeId"></entity-options>
+			</drop-down>
+		</field>
+		<field name="costTypeId" title="Cost Type" widget-style="required"
+			required-field="true">
+			<drop-down allow-empty="true">
+			<entity-options description="${CostName}" entity-name="CostTypes" key-field-name="costTypeId"></entity-options>
+			</drop-down>
+		</field>
+		<field name="startDate" title="Statrt Date" widget-style="required"
+			required-field="true">
+			<date-time type="date" />
+		</field>
+		<field name="endDate" title="End Date" widget-style="required"
+			required-field="true">
+			<date-time type="date" />
+		</field>
+
+
+		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"
+			widget-style="buttontext">
+			<hyperlink target="deleteStaffTrainingEvent" description="${uiLabelMap.CommonDelete}"
+				also-hidden="false" request-confirmation="true"
+				confirmation-message="Remove Training Event?">
+				<parameter param-name="eventId" />
+			</hyperlink>
+		</field>
+
+		<field name="_rowSubmit" title="${uiLabelMap.CommonSelect}">
+			<hidden value="Y" />
+		</field>
+		<field name="submitButton" title="Update Reviews" widget-style="smallSubmit">
+			<submit />
+		</field>
+
+	</form>
+	
+	 <!--======================= ADD STAFF TO TRAINING EVENTS DEFINITION =================================== -->
+
+	<form name="AddStaffToTrainingEventsForm" type="single" target="addStaffToTrainingEvent"
+		focus-field-name="name" header-row-style="header-row"
+		default-table-style="basic-table" default-map-name="PatyInTrainingEventContext">
+         
+         <actions>
+         <set field="p" from-field="parameters.partyId"/>
+         </actions>
+		<field name="partyTrainingId">
+			<hidden />
+		</field>
+		<field name="partyId" title="Staff" widget-style="required"
+			required-field="true" use-when="p == null">
+			<lookup target-form-name="LookupEmployee"/>
+		</field>
+		<field name="partyId" title="Staff" use-when="p !=null">
+			<display-entity entity-name="Person" description="${firstName}  ${lastName}"></display-entity>
+		</field>
+		<field name="eventId" title="Training Event" widget-style="required"
+			required-field="true">
+			<drop-down allow-empty="true">
+			<entity-options description="${eventName}" entity-name="TrainingEvent" key-field-name="eventId"></entity-options>
+			</drop-down>
+		</field>
+		
+		<field name="submitButton" title="${uiLabelMap.CommonSave}"
+			widget-style="smallSubmit">
+			<submit button-type="button" />
+		</field>
+	</form>
+
+	<form name="listAddStaffToTrainingEventsForm" type="multi" use-row-submit="true"
+		title="Selected Monument" separate-columns="true" paginate-target="AddStaffToTrainingEventsForm"
+		target="updateaddStaffToTrainingEvent" default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="PatyInTrainingEvent">
+				<order-by field-name="partyTrainingId" />
+			</entity-condition>
+		</actions>
+		<field name="partyTrainingId">
+			<hidden />
+		</field>
+		<field name="partyId" title="Staff" >
+			<display-entity entity-name="Person" description="${firstName}  ${lastName}"></display-entity>
+		</field>
+		<field name="eventId" title="Training Event" widget-style="required"
+			required-field="true">
+			<drop-down allow-empty="true">
+			<entity-options description="${eventName}" entity-name="TrainingEvent" key-field-name="eventId"></entity-options>
+			</drop-down>
+		</field>
+
+		<field name="deleteLink" title="${uiLabelMap.CommonDelete}"
+			widget-style="buttontext">
+			<hyperlink target="deleteaddStaffToTrainingEvent" description="${uiLabelMap.CommonDelete}"
+				also-hidden="false" request-confirmation="true"
+				confirmation-message="Remove Staff?">
+				<parameter param-name="partyTrainingId" />
+			</hyperlink>
+		</field>
+
+		<field name="_rowSubmit" title="${uiLabelMap.CommonSelect}">
+			<hidden value="Y" />
+		</field>
+		<field name="submitButton" title="Update Reviews" widget-style="smallSubmit">
+			<submit />
+		</field>
+
+	</form>
+	
+	
+	
+	           <!--  ===================== APPROVE STAFF TRAINING ================================== -->
+	           
+	    <form name="ApproveStaffTrainingForm" type="multi" use-row-submit="true"
+		title="Selected Monument" separate-columns="true" paginate-target="AddStaffToTrainingEventsForm"
+		target="approveTraining" default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="PatyInTrainingEvent">
+			<condition-expr field-name="approvalStatus" operator="equals" value="NEW"/>
+				<order-by field-name="partyTrainingId" />
+			</entity-condition>
+		</actions>
+		<field name="partyTrainingId">
+			<hidden />
+		</field>
+		<field name="partyId" title="Staff" >
+			<display-entity entity-name="Person" description="${firstName}  ${lastName}"></display-entity>
+		</field>
+		<field name="eventId" title="Training Event" >
+			<display-entity entity-name="TrainingEvent" description="${eventName}"></display-entity>
+		</field>
+
+		<field name="disapprove" title="Disapprove"	widget-style="buttontext">
+			<hyperlink target="disapproveTraining" description="Disapprove"
+				also-hidden="false" request-confirmation="true"
+				confirmation-message="Disapprove Staff?">
+				<parameter param-name="partyTrainingId"/>
+			</hyperlink>
+		</field>
+
+		<field name="_rowSubmit" title="Select To Approve">
+			<check />
+		</field>
+		<field name="submitButton" title="Approve Selected" widget-style="smallSubmit">
+			<submit />
+		</field>
+
+	</form>
+	
+	
+	 <!--  ===================== TRAINING APPROVALS ================================== -->
+	           
+	           <form name="TrainingApprovalsForm" type="multi" use-row-submit="true"
+		title="Selected Monument" separate-columns="true" paginate-target="AddStaffToTrainingEventsForm"
+		target="updateaddStaffToTrainingEvent" default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="PatyInTrainingEvent">
+			<condition-expr field-name="approvalStatus" operator="equals" value="APPROVED"/>
+				<order-by field-name="partyTrainingId" />
+			</entity-condition>
+		</actions>
+		<field name="partyTrainingId">
+			<hidden />
+		</field>
+		<field name="partyId" title="Staff" >
+			<display-entity entity-name="Person" description="${firstName}  ${lastName}"></display-entity>
+		</field>
+		<field name="eventId" title="Training Event" >
+			<display-entity entity-name="TrainingEvent" description="${eventName}"></display-entity>
+		</field>
+		
+		<field name="approvalStatus">
+			<display />
+		</field>
+	</form>
+	
+	
+	
+	 
+	     <!--  ===================== STAFF WHO NEED TRAINING FOR HR DEPARTMENT================================== -->
+	           
+	    <form name="StaffWhoNeedTrainingForm" type="multi" use-row-submit="true"
+		title="Selected Monument" separate-columns="true" paginate-target="AddStaffToTrainingEventsForm"
+		target="approveTraining" default-table-style="basic-table hover-bar">
+		<actions>
+			<entity-condition entity-name="StaffWhoNeedTraining">
+			<condition-expr field-name="trainingStageFromHod" value="FORWARDED" operator="equals"/> 
+				<order-by field-name="needId" />
+			</entity-condition>
+		</actions>
+		<field name="needId">
+			<hidden />
+		</field>
+		<field name="partyId" title="Staff" >
+			<display-entity entity-name="Person" description="${firstName}  ${lastName}"></display-entity>
+		</field>
+		<field name="departmentId" title="Staff Department" >
+			<display-entity entity-name="department" description="${departmentName}"></display-entity>
+		</field>
+		
+		<field name="branchId" title="Staff Branch" >
+			<display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}"></display-entity>
+		</field>
+		
+		<field name="skillRequired" title="Skill Required" >
+			<display-entity entity-name="SkillType" key-field-name="skillTypeId" description="${description}"></display-entity>
+		</field>
+		<field name="skillGap" title="Other Skills Gap"><display/></field>
+
+		<field name="addStaffToRequiredTraining" title="-"	widget-style="buttontext">
+			<hyperlink target="AddStaffToTraining" description="Add Staff To A Training"	also-hidden="false">
+				<parameter param-name="partyId"/>
+			</hyperlink>
+		</field>
+
+
+	</form>
+	
+	
+	
+	 <!--======================= STAFF WHO NEED TRAINING FOR HODS =================================== -->
+
+	<form name="AddStaffWithTrainingNeedsForm" type="single" target="hodAddStaffWithTrainingNeeds"
+		focus-field-name="name" header-row-style="header-row"
+		default-table-style="basic-table" default-map-name="PatyTrainingNeedContext">
+        
+        <actions>
+         <entity-condition entity-name="SkillType" list="skillsList">
+				<order-by field-name="skillTypeId"/>
+			</entity-condition>
+        </actions>
+        
+		<field name="needId">
+			<hidden />
+		</field>
+		<field name="partyId" title="Staff" >
+			<display-entity entity-name="Person" description="${firstName}  ${lastName}"></display-entity>
+		</field>
+		
+		<field name="skillName" title="Skill Name (If skill not in list)">
+			<text></text>
+		</field>
+		<field name="skillRequired" title="Key Skill" >
+			<drop-down allow-empty="true">
+			<entity-options description="${description}" entity-name="SkillType" key-field-name="skillTypeId"></entity-options>
+			</drop-down>
+		</field>
+		
+		<field name="skillGap" title="Skills Gap" tooltip="(If more than one, Describe others here)"><textarea cols="80" rows="5"/></field>
+		
+		<field name="submitButton" title="${uiLabelMap.CommonSave}"
+			widget-style="smallSubmit">
+			<submit button-type="button" />
+		</field>
+	</form>
+	
+	
+	
+	
+		<!-- form name="ListStaffWithTrainingNeedsForm" type="list"  target="hodAddStaffWithTrainingNeeds"
+		focus-field-name="name" header-row-style="header-row"
+		default-table-style="basic-table" default-map-name="PatyTrainingNeedContext" -->
+		<form name="ListStaffWithTrainingNeedsForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="hodAddStaffWithTrainingNeeds" paginate-target="addStaffToTrainingList"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        
+        <actions>
+        	<entity-condition entity-name="StaffWhoNeedTraining">
+        		<condition-expr field-name="partyId" from-field="partyId"/>
+        	</entity-condition>
+         <!-- entity-condition entity-name="SkillType" list="skillsList">
+				<order-by field-name="skillTypeId"/>
+			</entity-condition -->
+        </actions>
+        
+		<field name="needId">
+			<hidden />
+		</field>
+		<field name="partyId" title="Staff" >
+			<display-entity entity-name="Person" description="${firstName}  ${lastName}"></display-entity>
+		</field>
+		
+		<field name="skillName" title="Skill Name (If skill not in list)">
+			<display></display>
+		</field>
+		<field name="skillRequired" title="Key Skill" >
+			<!-- drop-down allow-empty="true">
+			<entity-options description="${description}" entity-name="SkillType" key-field-name="skillTypeId"></entity-options>
+			</drop-down -->
+			<display-entity entity-name="SkillType" description="${description}" key-field-name="skillTypeId"></display-entity>
+		</field>
+		
+		<!-- tooltip="(If more than one, Describe others here)" -->
+		<field name="skillGap" title="Skills Gap" >
+			<display></display>
+		</field>
+		
+		<!-- field name="submitButton" title="${uiLabelMap.CommonSave}"
+			widget-style="smallSubmit">
+			<submit button-type="button" />
+		</field -->
+	</form>
+	
+</forms>
