@@ -1,0 +1,2680 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+	<screen name="StaffReportOptions">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Staff Reports"/>
+                <set field="headerItem" value="reports"/>
+                <property-map resource="BirtUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <label style="h3">${uiLabelMap.BirtOrderReportsWarning}</label>
+                        <include-portal-page id="StaffReportsPage"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+
+    <screen name="StaffListGeneral">
+    	 <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+          
+            </actions>
+            <widgets>
+                <screenlet title="Staff List General">
+                    <include-form name="StaffListGen" location="component://humanres/widget/ReportForms.xml"/>
+                </screenlet>
+            </widgets>
+        </section>
+    </screen>
+    
+   
+
+    <screen name="StaffList">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Staff List"/>
+                <set field="headerItem" value="employeeReports"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="staffList"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+
+                <!-- <set field="userLoginId" from-field="userLogin.userLoginId"/>  -->
+                <!-- <entity-one entity-name="userLogin" value-field="userLoginId"/> -->
+                <!-- entity-one entity-name="Person" value-field="staffListContext"/-->
+
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+
+                		<screenlet>
+                			<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    		<decorator-section name="body">
+                    		<include-menu name="EmployeeReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                       
+                        <section>
+                        	<widgets>
+                        	 <container style="lefthalf">
+                           
+                            <screenlet title="Staff Listing(PDF)">
+                                <include-form name="staffListingForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                         <container style="righthalf">                          
+                            <screenlet title="Staff Statutory Report ">
+                                <include-form name="staffListingFormCSV" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+						 <screenlet></screenlet>
+                        <container style="lefthalf">
+                           
+                            <screenlet title="Staff On Probation(PDF)">
+                                <include-form name="staffOnProbationForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                        <container style="righthalf">                          
+                            <screenlet title="Staff On Probation(Excel)">
+                                <include-form name="staffOnProbationFormCSV" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                          <screenlet title="Employee List Employment Terms">
+                        <include-form location="component://humanres/widget/ReportForms.xml" name="staffListEmploymentTerms"/>
+                        </screenlet>
+                        <screenlet title="Staff Per Branch">
+                        <include-form location="component://humanres/widget/ReportForms.xml" name="staffBranch"/>
+                        </screenlet>
+                        <screenlet title="Run Staff List as at Certain Date">
+                        <include-form location="component://humanres/widget/ReportForms.xml" name="staffListAsAtCertainDate"/>
+                        </screenlet>
+                         <screenlet title="Staff on Probation As At Certain Date">
+                        <include-form location="component://humanres/widget/ReportForms.xml" name="StaffOnProbationAsAtCertainDate"/>
+                        </screenlet>
+                        	</widgets>
+                        </section>
+	                    </decorator-section>
+	                	</decorator-screen>
+                	</screenlet>
+
+
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- StaffList CSV -->
+    <screen name="stafflistcsv">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Staff List"/>
+                <set field="headerItem" value="staffList"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="staffList"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+
+                <!-- entity-one entity-name="Person" value-field="staffListContext"/-->
+
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+                		<screenlet>
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="listStaff" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                		</screenlet>
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="stafflistpdf">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Staff list"/>
+                <set field="headerItem" value="staffList"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="staffList"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+
+                <entity-condition entity-name="StaffListReport" list="staffList">
+                </entity-condition>
+
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/stafflist.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+
+
+
+    <screen name="EmployeeQualifications">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Qualifications"/>
+                <set field="headerItem" value="employeeQualifications"/>
+                <set field="tabButtonItem" value="employeeQualifications"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeQualifications"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+
+                <!-- entity-one entity-name="PersonAndPartyQual" value-field="employeeQualificationsContext"/-->
+
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+
+                		<screenlet>
+                			<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    		<decorator-section name="body">
+                    		<include-menu name="EmployeeReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section name="search-results">
+                        	<widgets>
+                        	 <container style="lefthalf">
+                            <screenlet title="Staff Qualification Report(PDF)">
+                                <include-form name="staffQualificationsForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                         <container style="righthalf">
+                            <screenlet title="Staff Qualification Report(Excel)">
+                                <include-form name="staffQualificationsFormCSV" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                         <container style="lefthalf">
+                            <screenlet title="Staff With This Qualification Report(PDF)">
+                                <include-form name="staffWithThisQualificationsForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                         <container style="righthalf">
+                            <screenlet title="Staff With This Qualification Report(Excel)">
+                                <include-form name="staffWithThisQualificationsFormCSV" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+                		</screenlet>
+
+
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Employee Qualifications CSV -->
+    <screen name="EmployeeQualificationscsv">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Qualifications"/>
+                <set field="headerItem" value="employeeQualifications"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeQualifications"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+
+                <!-- entity-one entity-name="PersonAndPartyQual" value-field="employeeQualificationsContext"/-->
+
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+
+                		<screenlet>
+
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="listEmployeeQualifications" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+
+                		</screenlet>
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Employee Qualifications PDF -->
+    <screen name="EmployeeQualificationspdf">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Qualifications"/>
+                <set field="headerItem" value="employeeQualifications"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeQualifications"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+
+                <entity-condition entity-name="PersonAndPartyQual" list="qualList">
+                	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+                </entity-condition>
+           </actions>
+            <widgets>
+                <platform-specific>
+                    <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffQualList.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+
+
+    <screen name="EmployeeSkills">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Skills"/>
+                <set field="headerItem" value="employeeSkills"/>
+                <set field="tabButtonItem" value="employeeSkills"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeSkills"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+
+                <!-- entity-one entity-name="PersonAndPartySkills" value-field="employeeSkillsContext"/ -->
+
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+
+                		<screenlet>
+                			<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    		<decorator-section name="body">
+                    		<include-menu name="EmployeeReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section name="search-results">
+                        	<widgets>
+                        	 <container style="lefthalf">
+                            <screenlet title="Employee Skills Report(PDF)">
+                                <include-form name="staffSkillsForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                            </container>
+                            
+                            <container style="righthalf">
+                            <screenlet title="Employee Skills Report(Excel)">
+                                <include-form name="staffSkillsFormCSV" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                            </container>
+                            
+                             <container style="lefthalf">
+                            <screenlet title="Employees With This Skill Report(PDF)">
+                                <include-form name="staffWithThisSkillsForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                            </container>
+                            
+                              <container style="righthalf">
+                            <screenlet title="Employees With This Skill Report(Excel)">
+                                <include-form name="staffWithThisSkillsFormCSV" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                            </container>
+
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+                		</screenlet>
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- EmployeeSkills CSV -->
+    <screen name="EmployeeSkillscsv">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Skills"/>
+                <set field="headerItem" value="employeeSkills"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeSkills"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+
+                <!-- entity-one entity-name="PersonAndPartySkills" value-field="employeeSkillsContext"/ -->
+
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+
+                		<screenlet>
+
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="listEmployeeSkills" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+
+                		</screenlet>
+
+
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- EmployeeSkills PDF -->
+    <screen name="EmployeeSkillspdf">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Skills"/>
+                <set field="headerItem" value="employeeSkills"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeSkills"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+
+                <entity-condition entity-name="PersonAndPartySkills" list="skillList">
+                	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+                </entity-condition>
+           </actions>
+            <widgets>
+                <platform-specific>
+                    <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffSkillList.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+
+    <screen name="StaffEmploymentHistoryDetails">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Spouse Details"/>
+                <set field="headerItem" value="employeeSpouseDetails"/>
+                <set field="tabButtonItem" value="employeeSpouseDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeSpouseDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+
+                <!-- entity-one entity-name="PartyAndSpouse" value-field="employeeSpouseDetailsContext"/-->
+
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+
+                		<screenlet>
+                			<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    		<decorator-section name="body">
+                    		<include-menu name="EmployeeReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section name="search-results">
+                        	<widgets>
+                        		 <container style="lefthalf">
+                            <screenlet title="Staff Employment History (PDF)">
+                                <include-form name="employmentHistoryForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                         <container style="righthalf">
+                            <screenlet title="Staff Employment History (Excel)">
+                                <include-form name="employmentHistoryFormCSV" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+                		</screenlet>
+
+
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Employee Spouse Details CSV -->
+    <screen name="EmployeeSpouseDetailscsv">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Spouse Details"/>
+                <set field="headerItem" value="employeeSpouseDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeSpouseDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+
+                <!-- entity-one entity-name="PartyAndSpouse" value-field="employeeSpouseDetailsContext"/-->
+
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+
+                		<screenlet>
+
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="listEmployeeSpouseDetails" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+
+                		</screenlet>
+
+
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Employee Spouse Details PDF -->
+    <screen name="EmployeeSpouseDetailspdf">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Spouse Details"/>
+                <set field="headerItem" value="employeeSpouseDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeSpouseDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+
+                <entity-condition entity-name="PartyAndSpouse" list="spouseList">
+                	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+                </entity-condition>
+           </actions>
+            <widgets>
+                <platform-specific>
+                    <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffSpouseList.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="employeeRelationDetails">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Dependant Details"/>
+                <set field="headerItem" value="employeeRelationDetails"/>
+                <set field="tabButtonItem" value="employeeRelationDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeRelationDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+
+                <!-- entity-one entity-name="PartyAndDependants" value-field="employeeDependantDetailsContext"/-->
+
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+
+                		<screenlet>
+                			<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    		<decorator-section name="body">
+                    		<include-menu name="EmployeeReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section name="search-results">
+                        	<widgets>
+                        	
+                        		 <container style="lefthalf">
+                            <screenlet title="Employee Spouse (PDF)">
+                                <include-form name="employeeSpouseDetailsFTL" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                            </container>
+                            
+                             <container style="righthalf">
+                            <screenlet title="Employee Spouse (Excel)">
+                                <include-form name="employeeSpouseDetailCSV" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                            </container>
+                            
+                             <container style="lefthalf">
+                            <screenlet title="Employee Next of Kin (PDF)">
+                                <include-form name="nextOfKinForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                             </container>
+                             
+                              <container style="righthalf">
+                            <screenlet title="Employee Next of Kin (Excel)">
+                                <include-form name="nextOfKinFormCSV" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                             </container>
+                             
+                               <container style="lefthalf">
+                            <screenlet title="Employee Dependents (PDF)">
+                                <include-form name="dependentsForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                         <container style="righthalf">
+                            <screenlet title="Employee Dependents (Excel)">
+                                <include-form name="dependentsFormCSV" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+                		</screenlet>
+
+
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Employee Dependant Details CSV -->
+    <screen name="EmployeeDependantDetailscsv">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Dependant Details"/>
+                <set field="headerItem" value="employeeDependantDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeDependantDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+
+                <!-- entity-one entity-name="PartyAndDependants" value-field="employeeDependantDetailsContext"/-->
+
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+
+                		<screenlet>
+
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="listEmployeeDependantDetails" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+
+                		</screenlet>
+
+
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Employee Dependant Details PDF -->
+    <screen name="EmployeeDependantDetailspdf">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Dependant Details"/>
+                <set field="headerItem" value="employeeDependantDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeDependantDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+
+                <entity-condition entity-name="PartyAndDependants" list="dependantList">
+                	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+                </entity-condition>
+           </actions>
+            <widgets>
+                <platform-specific>
+                    <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffDependantList.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+
+    <screen name="employeeLeaveReports">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee NOK Details"/>
+                <set field="headerItem" value="employeeLeaveReports"/>
+                <set field="tabButtonItem" value="employeeLeaveReports"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeLeaveReports"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+
+
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+
+                		<screenlet>
+                			<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    		<decorator-section name="body">
+                    		<include-menu name="EmployeeReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section name="search-results">
+                        	<widgets>
+							 <container style="lefthalf">
+                            <screenlet title="Employee Leave Plan (PDF)">
+                                <include-form name="leaveCalendarForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                            </container>
+                            
+                             <container style="righthalf">
+                            <screenlet title="Employee Leave Plan (Excel)">
+                                <include-form name="leaveCalendarFormCSV" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+							</container>
+                            <screenlet></screenlet>
+							
+                        		 <container style="lefthalf">
+                            <screenlet title="Employee Leave Balance (PDF)">
+                                <include-form name="leaveBalanceForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                            </container>
+                            
+                             <container style="righthalf">
+                            <screenlet title="Employee Leave Balance (Excel)">
+                                <include-form name="leaveBalanceFormCSV" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                            <screenlet></screenlet>
+                            <screenlet></screenlet>
+							
+                            </container>
+                            <container style="lefthalf">
+                            <screenlet title="Staff On Leave (PDF)">
+                                <include-form name="staffOnLeaveForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                            </container>
+                            
+                             <container style="righthalf">
+                            <screenlet title="Staff On Leave (Excel)">
+                                <include-form name="staffOnLeaveFormCSV" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                            </container>
+                        <screenlet></screenlet>
+                         <container style="lefthalf">
+                            <screenlet title="Staff Resumption Summary (PDF)">
+                                <include-form name="resumptionSummaryForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                            </container>
+                            
+                             <container style="righthalf">
+                            <screenlet title="Staff Resumption Summary (Excel)">
+                                <include-form name="resumptionSummaryFormCSV" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                            </container>
+                            
+                            <screenlet></screenlet>
+                        
+                       <container style="lefthalf">
+                            <screenlet title="Leave Logs (PDF)">
+                                <include-form name="leaveActivityForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                       <container style="righthalf">
+                            <screenlet title="Leave Logs (Excel)">
+                                <include-form name="leaveActivityFormCSV" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container> 
+                        <screenlet></screenlet>
+                         <container style="lefthalf">
+                            <screenlet title="Scheduled Leaves (PDF)" >
+                                <include-form name="scheduledLeavesForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container> 
+                        
+                          <container style="righthalf">
+                            <screenlet title="Scheduled Leaves (Excel)">
+                                <include-form name="scheduledLeavesFormCSV" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                        <container style="lefthalf">
+                        <screenlet title="Monthly Leave Reports (PDF)">
+                          <include-form name="monthlyLeave" location="component://humanres/widget/ReportForms.xml"/>
+                        </screenlet>
+                        </container>
+                        
+                         <container style="righthalf">
+                        <screenlet title="Monthly Leave Reports (CSV) ">
+                          <include-form name="monthlyLeaveSCV" location="component://humanres/widget/ReportForms.xml"/>
+                        </screenlet>
+                        </container>
+                        
+                        <container style="lefthalf">
+                        <screenlet title="Leave Report As At Certain Date (PDF)">
+                         <include-form name="leaveAtCertainDate" location="component://humanres/widget/ReportForms.xml"/>
+                        </screenlet>
+                        </container>
+                        
+                        <container style="righthalf">
+                            <screenlet title="Leave Report As At Certain Date(Excel)">
+                            <include-form name="leaveAtCertainDateExcel" location="component://humanres/widget/ReportForms.xml"/>
+                        </screenlet>
+                        </container>
+                        
+                        <screenlet title="Leave Balance Report As At Certain Date">
+                         <include-form name="leaveBalanceAtCertainDate" location="component://humanres/widget/ReportForms.xml"/>
+                        </screenlet>
+                        <container style="righthalf">
+                        <screenlet title="Employee Leave Records (pdf) ">
+                        <include-form location="component://humanres/widget/ReportForms.xml" name="empLeaveRecordPrintPdf"/>
+                        </screenlet>
+                        </container>
+                        <container style="lefthalf">
+                        <screenlet title="Employee Leave Records (excel)">
+                        <include-form location="component://humanres/widget/ReportForms.xml" name="empLeaveRecordPrint"/>
+                        </screenlet>
+                        </container> 
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+                		</screenlet>
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Employee NOK Details CSV -->
+    <screen name="EmployeeNOKDetailscsv">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee NOK Details"/>
+                <set field="headerItem" value="employeeNOKDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeNOKDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+
+                <!-- entity-one entity-name="PartyAndNextOfKin" value-field="employeeNOKDetailsContext"/-->
+
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+
+                		<screenlet>
+
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="listEmployeeNOKDetails" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+
+                		</screenlet>
+
+
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Employee NOK Details PDF -->
+    <screen name="EmployeeNOKDetailspdf">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee NOK Details"/>
+                <set field="headerItem" value="employeeNOKDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="employeeNOKDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+
+                <entity-condition entity-name="PartyAndNextOfKin" list="nokList">
+                	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+                </entity-condition>
+           </actions>
+            <widgets>
+                <platform-specific>
+                    <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffNOKList.fo.ftl"/></xsl-fo>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+
+
+    <screen name="PostingDetails">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Posting Details"/>
+                <set field="headerItem" value="postingDetails"/>
+                <set field="tabButtonItem" value="postingDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="postingDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+
+                		<screenlet>
+                			<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    		<decorator-section name="body">
+                    		<include-menu name="EmployeeReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    		
+                    	<section name="search-results">
+                        	<widgets>
+                        	 <container style="lefthalf">
+                            <screenlet title="Staff Postings Report (PDF)">
+                                <include-form name="staffPostingsList" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                         <container style="righthalf">
+                            <screenlet title="Staff Postings Report (Excel)">
+                                <include-form name="staffPostingsListCSV" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                         <container style="lefthalf">
+                            <screenlet title="Staff Postings By Employee (PDF)">
+                                <include-form name="staffPostingsByEmployee" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                         <container style="righthalf">
+                            <screenlet title="Staff Postings By Employee  (Excel)">
+                                <include-form name="staffPostingsByEmployeeCSV" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+<!--                         
+                         <container style="lefthalf">
+                            <screenlet title="Staff Postings By Branch (PDF)">
+                                <include-form name="staffQualificationsForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                         <container style="righthalf">
+                            <screenlet title="Staff Postings By Branch  (Excel)">
+                                <include-form name="staffQualificationsFormCSV" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container> -->
+                            <screenlet title="Staff Posting As At Certain Date">
+                               <include-form name="staffPostingsPerDate" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        	</widgets>
+                        </section>
+                    		
+                    		
+                        <!--<section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Employee Posting Details">
+                        			<include-form name="listPostingDetails" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+
+                        		<screenlet>
+
+                			<container style="button-bar">
+                				<link target="postingDetailscsv" text="Staff Posting Details CSV" style="buttontext">
+                                                 image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ 
+                                                <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
+                                            </link>
+                                <link target="postingDetailspdf" text="Staff Posting Details PDF" style="buttontext">
+                                                 image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ 
+                                                <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
+                                            </link>
+                			</container>
+                		</screenlet>
+
+                        	</widgets>
+                        </section> -->
+                    </decorator-section>
+                </decorator-screen>
+                		</screenlet>
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Employee Posting Details CSV -->
+    <screen name="PostingDetailscsv">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Posting Details"/>
+                <set field="headerItem" value="postingDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="postingDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+
+                <!-- entity-one entity-name="PartyAndNextOfKin" value-field="employeeNOKDetailsContext"/-->
+
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+
+                		<screenlet>
+
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="listPostingDetails" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+
+                		</screenlet>
+
+
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
+  
+    <!-- Employee Posting Details PDF -->
+    <screen name="PostingDetailspdf">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Posting Details"/>
+                <set field="headerItem" value="postingDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="postingDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+
+                <entity-condition entity-name="EmploymentAndPerson" list="postingList">
+                	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+                </entity-condition>
+                
+           </actions>
+            <widgets>
+            	<decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+            		<decorator-section name="body">
+            			<platform-specific>
+                    		<xsl-fo><html-template location="component://humanres/webapp/humanres/reports/postingDetailsList.fo.ftl"/></xsl-fo>
+               			 </platform-specific>
+            		</decorator-section>
+            	</decorator-screen>
+                
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    
+    <!-- Employee Posting By Employee -->
+    
+    
+    <screen name="PostingByEmployeecsv">
+	    <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+                <entity-one value-field="staff" entity-name="Person">
+			   <field-map field-name="partyId" value="${parameters.partyId}"/>
+		       </entity-one>
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/nextOfKinExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="STAFF NEXT_OF_KIN(S)"/>
+                    <label style="h3" text="Payroll Number: ${staff.employeeNumber}"/>
+                    <label style="h3" text="Staff Name: ${staff.firstName} ${staff.lastName}"/>
+                </container>
+                <include-form name="nextOfKinFormExport" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    
+    <screen name="PostingByEmployeepdf">
+	    <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeePostingDetailsFTL.groovy"/>                
+                
+           </actions>
+            <widgets>
+            	<decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+            		<decorator-section name="body">
+            			<platform-specific>
+                    		<xsl-fo><html-template location="component://humanres/webapp/humanres/reports/postingDetailsByEmployee.fo.ftl"/></xsl-fo>
+               			 </platform-specific>
+            		</decorator-section>
+            	</decorator-screen>
+                
+            </widgets>
+        </section>
+    </screen>
+    
+  
+
+    <screen name="PositionDetails">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Position Details"/>
+                <set field="headerItem" value="positionDetails"/>
+                <set field="tabButtonItem" value="positionDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="positionDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+
+                <!-- entity-one entity-name="PartyAndNextOfKin" value-field="employeeNOKDetailsContext"/-->
+
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+
+                		<screenlet>
+                			<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    		<decorator-section name="body">
+                    		<include-menu name="EmployeeReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Employee Position Details">
+                        			<include-form name="listPositionDetails" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+
+                        		<screenlet>
+
+                			<container style="button-bar">
+                				<link target="positionDetailscsv" text="Staff Position Details CSV" style="buttontext">
+                                                <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
+                                                <image url-mode="raw" src="${iconsLocation}/page_excel.png"/>
+                                            </link>
+                                <link target="positionDetailspdf" text="Staff Position Details PDF" style="buttontext">
+                                                <!-- image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/ -->
+                                                <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
+                                            </link>
+                			</container>
+                		</screenlet>
+
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+                		</screenlet>
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Employee Position Details CSV -->
+    <screen name="PositionDetailscsv">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Position Details"/>
+                <set field="headerItem" value="positionDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="positionDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+
+                <!-- entity-one entity-name="PartyAndNextOfKin" value-field="employeeNOKDetailsContext"/-->
+
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+
+                		<screenlet>
+
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet>
+                        			<include-form name="listPositionDetails" location="component://humanres/widget/ReportForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+
+                		</screenlet>
+
+
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Employee Position Details PDF -->
+    <screen name="PositionDetailspdf">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Position Details"/>
+                <set field="headerItem" value="positionDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="positionDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+
+                <entity-condition entity-name="PersonAndEmplPositionAndFulfillment" list="positionList">
+                	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+                </entity-condition>
+           </actions>
+            <widgets>
+                <platform-specific>
+                    <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/positionDetailsList.fo.ftl"/></xsl-fo> 
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="SeparationSummaryReport">
+       <section>
+            <actions>
+                <set field="titleProperty" value="Separation Summary Report"/>
+                <set field="headerItem" value="EmpSeparation"/>
+                <set field="tabButtonItem" value="separationSummaryReport"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="SeparationSummaryReport"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+
+                <!-- entity-one entity-name="PayslipView" value-field="payslipViewContext"/ -->
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="SeparationTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="SeparationReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet>
+                                	<section>
+                                		<widgets>
+    									 <container style="lefthalf">
+                            <screenlet title="Separated Staff (PDF)" >
+                                <include-form name="staffSeparatedReportForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container> 
+                        
+                          <container style="righthalf">
+                            <screenlet title="Separated Staff (Excel)">
+                                <include-form name="staffSeparatedReportCSV" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <screenlet></screenlet>
+                                		</widgets>
+                                	</section>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+       </screen>
+
+    <screen name="employeeSpouseDetailsFTLOLD">
+        <section>
+            <actions>
+                <set field="labelTitleProperty" value="Employee Dependant Details"/>
+                <set field="titleProperty" value="Employee Dependant Details"/>
+                <set field="headerItem" value="employeeDependantDetails"/>
+                <set field="tabButtonItem" value="employeeSpouseDetailsFTL"/>
+
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                            <include-menu name="EmployeeReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="InventoryValuation" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <section>
+                                    <condition>
+                                        <if-compare field="parameters.showSearchResults" operator="equals" value="Y"/>
+                                    </condition>
+                                    <widgets>
+                                        <link text="${uiLabelMap.AccountingExportAsPdf}" style="button" target="InventoryValuation.pdf" target-window="_BLANK">
+                                            <parameter param-name="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                                            <parameter param-name="facilityId" from-field="parameters.facilityId"/>
+                                            <parameter param-name="productId" from-field="parameters.productId"/>
+                                            <parameter param-name="thruDate" from-field="parameters.thruDate"/>
+                                        </link>
+                                        <link text="${uiLabelMap.AccountingExportAsCsv}" style="button" target="InventoryValuation.csv">
+                                            <parameter param-name="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                                            <parameter param-name="facilityId" from-field="parameters.facilityId"/>
+                                            <parameter param-name="productId" from-field="parameters.productId"/>
+                                            <parameter param-name="thruDate" from-field="parameters.thruDate"/>
+                                        </link>
+                                        <screenlet title="${uiLabelMap.AccountingInventoryValuationList}">
+                                            <include-form name="InventoryValuationList" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
+                                        </screenlet>
+                                    </widgets>
+                                </section>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="employeeSpouseDetailsFTLPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeeSpouseDetailsFTL.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/employeeSpouseDetails.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="nextOfKinPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/nextOfKin.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/nextOfKin.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	
+	 <screen name="leaveCalendarPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffLeavePlan.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffLeavePlan.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	
+	 <screen name="leaveActivityPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffLeaveLogs.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffLeaveLogs.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+      <screen name="employmentHistoryPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employmentHistory.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/employmentHistory.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="staffOnProbationPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffOnProbation.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffOnProbation.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="dependentsPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffDependent.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffDependent.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="leaveBalancePDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/leaveBalance.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/leaveBalance.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="staffQualificationsPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffQualification.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffQualification.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="staffSkillsPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffSkills.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffSkills.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="staffWithThisSkillsPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffWithSkill.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffWithSkill.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="staffWithThisQualificationsPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffWithThisQualification.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffWithThisQualification.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+     <screen name="resumptionSummaryPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/resumptionSummary.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/resumptionSummary.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+      <screen name="scheduledLeavesPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/scheduledLeaves.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/scheduledLeaves.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+   <screen name="staffListingPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffListing.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffListing.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+   <screen name="staffOnLeavePDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffOnLeave.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffOnLeave.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+   <screen name="fileMovementPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/fileMovement.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/fileMovement.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="employeeSpouseDetailsFTL">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-menu name="EmployeeReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                       
+                       
+                        <container style="clear"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- ============================= CSV Reports ============================================= -->
+     <screen name="staffListingCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffListingExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="STAFF LISTING"/>
+                </container>
+                <include-form name="staffListingExport" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="staffOnProbationCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffOnProbationExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="STAFF ON PROBATION"/>
+                </container>
+                <include-form name="staffOnProbationExport" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+     <screen name="staffQualificationsCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+                <entity-one value-field="staff" entity-name="Person">
+			   <field-map field-name="partyId" value="${parameters.partyId}"/>
+		       </entity-one>
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffQualificationExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="STAFF QUALIFICATIONS"/>
+                    <label style="h3" text="Payroll Number: ${staff.employeeNumber}"/>
+                    <label style="h3" text="Staff Name: ${staff.firstName} ${staff.lastName}"/>
+                </container>
+                <include-form name="staffQualificationsExport" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="staffWithThisQualificationsCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffWithThisQualificationExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="STAFF WITH [${parameters.title}] QUALIFICATION"/>
+                </container>
+                <include-form name="staffWithThisQualificationsExport" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+      <screen name="staffSkillsCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+                <entity-one value-field="staff" entity-name="Person">
+			   <field-map field-name="partyId" value="${parameters.partyId}"/>
+		       </entity-one>
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffSkillsExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="STAFF SKILLS"/>
+                    <label style="h3" text="Payroll Number: ${staff.employeeNumber}"/>
+                    <label style="h3" text="Staff Name: ${staff.firstName} ${staff.lastName}"/>
+                </container>
+                <include-form name="staffSkillsFormExport" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="staffWithThisSkillsCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+                 <entity-one value-field="skill" entity-name="SkillType">
+			   <field-map field-name="skillTypeId" value="${parameters.skillTypeId}"/>
+		       </entity-one>
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffWithSkillExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="STAFF WITH [${skill.description}] SKILL"/>
+                </container>
+                <include-form name="staffWithThisSkillsFormExport" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="employmentHistoryCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+                <entity-one value-field="staff" entity-name="Person">
+			   <field-map field-name="partyId" value="${parameters.partyId}"/>
+		       </entity-one>
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employmentHistoryExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="STAFF EMPLOYMENT HISTORY"/>
+                    <label style="h3" text="Payroll Number: ${staff.employeeNumber}"/>
+                    <label style="h3" text="Staff Name: ${staff.firstName} ${staff.lastName}"/>
+                </container>
+                <include-form name="employmentHistoryExport" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="employeeSpouseDetailCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+                <entity-one value-field="staff" entity-name="Person">
+			   <field-map field-name="partyId" value="${parameters.partyId}"/>
+		       </entity-one>
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employeeSpouseDetailExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="STAFF SPOUSE(S)"/>
+                    <label style="h3" text="Payroll Number: ${staff.employeeNumber}"/>
+                    <label style="h3" text="Staff Name: ${staff.firstName} ${staff.lastName}"/>
+                </container>
+                <include-form name="employeeSpouseExport" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+     <screen name="nextOfKinCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+                <entity-one value-field="staff" entity-name="Person">
+			   <field-map field-name="partyId" value="${parameters.partyId}"/>
+		       </entity-one>
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/nextOfKinExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="STAFF NEXT_OF_KIN(S)"/>
+                    <label style="h3" text="Payroll Number: ${staff.employeeNumber}"/>
+                    <label style="h3" text="Staff Name: ${staff.firstName} ${staff.lastName}"/>
+                </container>
+                <include-form name="nextOfKinFormExport" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="dependentsCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+                <entity-one value-field="staff" entity-name="Person">
+			   <field-map field-name="partyId" value="${parameters.partyId}"/>
+		       </entity-one>
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffDependentExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="STAFF DEPENDANT(S)"/>
+                    <label style="h3" text="Payroll Number: ${staff.employeeNumber}"/>
+                    <label style="h3" text="Staff Name: ${staff.firstName} ${staff.lastName}"/>
+                </container>
+                <include-form name="dependentsFormExport" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="leaveBalanceCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/leaveBalanceExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="STAFF ${parameters.leaveType} LEAVE BALANCE"/>
+                </container>
+                <include-form name="leaveBalanceExport" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+	
+	 <screen name="resumptionSummaryCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/resumptionSummaryExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="STAFF RESUMPTION FROM LEAVE SUMMARY"/>
+                </container>
+                <include-form name="resumptionSummaryExport" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+	
+	 <screen name="staffOnLeaveCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffOnLeaveExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="STAFF ON LEAVE LISTING"/>
+                </container>
+                <include-form name="staffOnLeaveFormExport" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+	
+	 <screen name="scheduledLeavesCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/scheduledLeavesExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="STAFF SCHEDULED LEAVES LISTING"/>
+                </container>
+                <include-form name="scheduledLeavesExport" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+	
+	<screen name="leaveCalendarCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+
+                <!-- <entity-one entity-name="Facility" value-field="facility" use-cache="true"/> -->
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffLeavePlanExport.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="STAFF LEAVE PLAN"/>
+                </container>
+                <include-form name="leaveCalendarExport" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+      <screen name="StaffTrainingReportScreen">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Staff List"/>
+                <set field="headerItem" value="staffTraining"/>
+                <set field="tabButtonItem" value="trainingReport"/> 
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="staffList"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+
+                <!-- <set field="userLoginId" from-field="userLogin.userLoginId"/>  -->
+                <!-- <entity-one entity-name="userLogin" value-field="userLoginId"/> -->
+                <!-- entity-one entity-name="Person" value-field="staffListContext"/-->
+
+            </actions>
+            <widgets>
+                <section>
+                	<widgets>
+
+                		<screenlet>
+                			<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    		<decorator-section name="body">
+                    		<include-menu name="TrainingNewMenu" location="component://humanres/widget/HumanresMenus.xml"/>
+                       
+                        <section>
+                        	<widgets>
+                        	 <container style="lefthalf">
+                           
+                            <screenlet title="Staff on Training">
+                                <include-form name="staffOnTrainingReportForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                         <container style="righthalf">
+                           
+                            <screenlet title="Staff on Training (EXCEL)">
+                                <include-form name="staffOnTrainingCSV" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                         <screenlet></screenlet>
+						 <screenlet></screenlet>
+                         <container style="lefthalf">                          
+                            <screenlet title="Scheduled Training">
+                                <include-form name="scheduledTrainingReportForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        
+                         <container style="righthalf">                          
+                            <screenlet title="Scheduled Training (EXCEL)">
+                                <include-form name="scheduledStaffOnTrainingCSV" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <screenlet></screenlet>
+						 <screenlet></screenlet>
+                        <container style="lefthalf">
+                           
+                            <screenlet title="Staff Training History">
+                                <include-form name="staffTrainingHistoryReportForm" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                         <container style="righthalf">
+                           
+                            <screenlet title="Staff Training History (EXCEL)">
+                                <include-form name="StaffTrainingHistoryCSV" location="component://humanres/widget/ReportForms.xml"/>
+                            </screenlet>
+                        </container>
+                        	</widgets>
+                        </section>
+	                    </decorator-section>
+	                	</decorator-screen>
+                	</screenlet>
+
+
+                	</widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="staffOnTrainingPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffOnTraining.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffOnTraining.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <!-- ===================  ALL STAFF ON TRAINING EXCEL =============== -->
+
+     <screen name="staffOnTrainingCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+               
+
+                
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffOnTraining.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="STAFF CURRENTLY ON TRAINING"/>
+                </container>
+                <include-form name="staffOnTrainingExport" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="scheduledStaffOnTrainingPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/scheduledStaffTraining.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/scheduledStaffTraining.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <!-- ===================  SCHEDULED TRAINING EXCEL =============== -->
+
+     <screen name="scheduledStaffOnTrainingCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+               
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/scheduledStaffTraining.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="SCHEDULED STAFF TRAINING"/>
+                </container>
+                <include-form name="scheduledStaffOnTrainingExport" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="StaffTrainingHistoryPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffTrainingHistory.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffTrainingHistory.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <!-- ===================  STAFF TRAINING HISTORY EXCEL =============== -->
+
+     <screen name="StaffTrainingHistoryCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+                <entity-one value-field="staff" entity-name="Person">
+                <field-map field-name="partyId" from-field="parameters.partyId"/>
+                </entity-one>
+
+                
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffTrainingHistory.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text=" STAFF TRAINING HISTORY FOR [${staff.firstName} ${staff.lastName}]"/>
+                </container>
+                <include-form name="StaffTrainingHistoryExport" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+                                         
+                                         <!-- SEPARATED STAFF -->
+                                         
+      <screen name="staffSeparatedReportPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/separatedStaff.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/separatedStaff.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <!-- ===================  STAFF TRAINING HISTORY EXCEL =============== -->
+
+     <screen name="staffSeparatedReportCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                
+
+                
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/separatedStaff.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text=" SEPARATED STAFF"/>
+                </container>
+                <include-form name="staffSeparatedReportExport" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+       <screen name="staffListEmploymentTermsPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employmentTerms.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffListEmploymentTerms.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="staffBranchPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffBranch.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffBranch.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+ <screen name="monthlyLeavePDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/monthlyLeavePDF.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/monthlyLeavePDF.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Leave staff as at certain date -->
+    <screen name="leaveAtCertainDatePDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/leaveAtCertainDatePDF.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/leaveAtCertainDatePDF.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="staffListAsAtCertainDatePDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffListAsAtCertainDatePDF.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffListAsAtCertainDatePDF.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="selfAppraisalReportPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/selfApp.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/selfApp.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="harmonizedAppraisalReportPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/hodApp.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                           <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/hodApp.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="submittedAppraisalReportPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/forwardedApp.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/forwardedApp.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    <screen name="printSeparationDetail">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/printSeparationDetail.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDeoratorRepp" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/separateTheCal.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+<!-- Employee Postings As at Certain Date -->
+ <screen name="postingDetailsPerDatepdf">
+	    <section>
+            <actions>
+                <set field="titleProperty" value="Employee Posting Details"/>
+                <set field="headerItem" value="postingDetails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="postingDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <set field="dateCompare" from-field="parameters.fromDate"/>
+
+<!--                  <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/postingDetailsPerDatepdf.groovy"/>
+ -->
+                <entity-condition entity-name="EmploymentAndPerson" list="postingList">
+                	<condition-list>
+                	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+                	<condition-expr field-name="fromDate" operator="less-equals" from-field="dateCompare"/>
+                	</condition-list>
+                </entity-condition>
+                
+           </actions>
+            <widgets>
+            	<decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+            		<decorator-section name="body">
+            			<platform-specific>
+                    		<xsl-fo><html-template location="component://humanres/webapp/humanres/reports/postingDetailsPerDatepdf.fo.ftl"/></xsl-fo>
+               			 </platform-specific>
+            		</decorator-section>
+            	</decorator-screen>
+                
+            </widgets>
+        </section>
+    </screen>
+    
+      <screen name="StaffOnProbationAsAtCertainDate">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/StaffOnProbationAsAtCertainDate.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/StaffOnProbationAsAtCertainDate.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Leave Report as at certain date -->
+
+ <screen name="leaveBalanceAtCertainDatePDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/leaveBalanceAtCertainDatePDF.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/leaveBalanceAtCertainDatePDF.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="empLeaveRecordPrintCSVScreen">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/empLeaveRecordPrintCSVScreen.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="STAFF (S) LEAVE RECORDS "/>
+                </container>
+                <include-form name="empLeaveRecordPrintCSVScreen" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+ <screen name="empLeaveRecordPrintpdf">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/empLeaveRecordPrintpdf.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/empLeaveRecordPrintpdf.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+       <screen name="monthlyLeaveScreenCSV">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/monthlyLeaveCSV.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="Employee On Leave Between ${fromToDate} AND ${thruToDate}"/>
+                </container>
+                <include-form name="monthlyLeaveForm" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+      <screen name="leaveAtCertainDateExcelScreen">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/leaveAtCertainDateExcelScreen.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="Leave At Certain Date AS AT ${fromToDate} "/>
+                </container>
+                <include-form name="leaveAtCertainDateExcelForm" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+
+</screens>

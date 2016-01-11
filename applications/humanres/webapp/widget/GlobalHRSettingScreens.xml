@@ -1,0 +1,853 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+    <screen name="editSupervisorLevel">
+        <section>
+            <actions>
+                <set field="headerItem" value="editSupervisorLevel"/>
+                <!-- <set field="titleProperty" value="PageTitleListSupervisorLevels"/> -->
+                <set field="SupervisorLevelId" from-field="parameters.SupervisorLevelId"/>
+                 <entity-one entity-name="SupervisorLevel" value-field="supervisor"/>
+                 <set field="partyId" from-field="parameters.partyId"/>
+                 <entity-one entity-name="Member" value-field="memberContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet id="SupervisorLevelPanel" title="${uiLabelMap.HumanResAddSupervisorLevel}" collapsible="true">
+                            <include-form name="AddSupervisorLevels" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        </screenlet>
+                        <include-form name="listSupervisorLevel" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+	<screen name="insertMenuDecorator">
+		<section>
+			<actions>
+				 <set field="headerItem" value="GlobalHRSettings"/>
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<section>
+									<widgets>
+										<container style="leftclear">
+											<include-menu name="GlobalHRSettingMenus"
+												location="component://humanres/widget/HumanresMenus.xml" />
+										</container>
+									</widgets>
+								</section>
+								<decorator-section-include name="body" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+
+
+    
+    
+    <screen name="EditSkillTypes">
+        <section>
+            <actions>
+                <set field="headerItem" value="SkillType"/>
+                <set field="titleProperty" value="PageTitleListSkillTypes"/>
+                <set field="skillTypeId" from-field="parameters.skillTypeId"/>
+                 <entity-one entity-name="SkillType" value-field="skillType"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet id="AddSkillTypePanel" title="${uiLabelMap.HumanResAddSkillType}" collapsible="true">
+                            <include-form name="AddSkillType" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        </screenlet>
+                        <include-form name="ListSkillTypes" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	
+	
+    <screen name="EditResponsibilityTypes">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditResponsibilityType"/>
+                <set field="tabButtonItem" value="ResponsibilityType"/>
+                <set field="responsibilityTypeId" from-field="parameters.responsibilityTypeId"/>
+                <entity-one entity-name="ResponsibilityType" value-field="responsibilityType"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet id="AddResponsibilityTypePanel" title="${uiLabelMap.HumanResAddEmplPositionResponsibility}" collapsible="true">
+                            <include-form name="AddResponsibilityType" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        </screenlet>
+                        <include-form name="ListResponsibilityTypes" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditTerminationTypes">
+        <section>
+            <actions>
+                <set field="tabButtonItem" value="TerminationType"/>
+                <set field="titleProperty" value="HumanResTerminationTypes"/>
+                <set field="terminationTypeId" from-field="parameters.terminationTypeId"/>
+                <entity-one entity-name="TerminationType" value-field="terminationType"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet id="AddTerminationTypePanel" title="${uiLabelMap.HumanResAddTerminationType}" collapsible="true">
+                            <include-form name="AddTerminationType" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        </screenlet>
+                        <include-form name="ListTerminationTypes" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="FindEmplPositionTypes">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResFindPositionTypes"/>
+                <set field="headerItem" value="EmplPositionTypes"/>
+                <set field="tabButtonItem" value="EmplPositionTypes"/>
+                <set field="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
+                <set field="payGradeId" from-field="parameters.payGradeId"/>
+                <set field="emplPositionTypeCtx" from-field="parameters"/>
+
+            </actions>
+            <widgets>
+                <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <container style="button-bar">
+                                    <link target="EditEmplPositionTypes" text="New Position" style="buttontext create"/>
+                                </container>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindEmplPositionTypes" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListEmplPositionTypes" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="FindPerformancePositions">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResFindPositionTypes"/>
+                <set field="headerItem" value="EmplPositionTypes"/>
+                <set field="tabButtonItem" value="FindPerfPositions"/>
+                <set field="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
+                <set field="payGradeId" from-field="parameters.payGradeId"/>
+                <set field="emplPositionTypeCtx" from-field="parameters"/>
+
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="KPITargetManagementBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="FindPerfPositions" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListPerfPositions" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+   <screen name="EditEmplPositionTypes">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResFindPositionTypes"/>
+                <set field="headerItem" value="EmplPositionTypes"/>
+                <set field="tabButtonItem" value="EmplPositionTypes"/>
+                <set field="tabButtonItem2" value="EditEmplPositionType"/>
+                <set field="payGradeId" from-field="parameters.payGradeId"/>
+                <set field="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
+                <entity-one entity-name="EmplPositionType" value-field="emplPositionType"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <not>
+                                    <if-empty field="emplPositionTypeId"/>
+                                </not>
+                            </condition>
+                            <widgets>
+                                <!-- include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmplPositionTypeTabBar"/ -->
+                            </widgets>
+                        </section>
+                        <screenlet title="Job Position Definition">
+                            <section>
+                                <widgets>
+                                    <include-form name="EditEmplPositionTypes" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                                </widgets>
+                            </section>
+                        </screenlet>
+                        <screenlet title="Employee Positions">
+                            <section>
+                                <widgets>
+                                    <include-form name="ListEmployeePositionTypes" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                                </widgets>
+                            </section>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen> 
+    
+
+    
+    <screen name="FindSalaryAdvanceTypes">
+        <section>
+            <actions>
+                <set field="titleProperty" value="advanceSalary"/>
+                <set field="headerItem" value="advanceSalary"/>
+                <set field="tabButtonItem" value="EmplPositionTypes"/>
+                <set field="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
+                <set field="emplPositionTypeCtx" from-field="parameters"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <container style="button-bar">
+                                    <link target="EditSalaryAdvanceTypes" text="New Salary Advance Type" style="buttontext create"/>
+                                </container>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindEmplPositionTypes" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListEmplPositionTypes" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+   <screen name="EditSalaryAdvanceTypes">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResFindPositionTypes"/>
+                <set field="headerItem" value="EmplPositionTypes"/>
+                <set field="tabButtonItem" value="EmplPositionTypes"/>
+                <set field="tabButtonItem2" value="EditEmplPositionType"/>
+                <set field="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
+                <entity-one entity-name="EmplPositionType" value-field="emplPositionType"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <not>
+                                    <if-empty field="emplPositionTypeId"/>
+                                </not>
+                            </condition>
+                            <widgets>
+                                <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmplPositionTypeTabBar"/>
+                            </widgets>
+                        </section>
+                        <screenlet title="${uiLabelMap.HumanResEditEmplPositionType}">
+                            <section>
+                                <widgets>
+                                    <include-form name="EditEmplPositionTypes" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                                </widgets>
+                            </section>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditEmplPositionTypeRates">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResEmplPositionTypeRate"/>
+                <set field="headerItem" value="EmplPositionTypes"/>
+                <set field="tabButtonItem" value="EmplPositionTypes"/>
+                <set field="tabButtonItem2" value="EditEmplPositionTypeRate"/>
+                <set field="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
+                <entity-one entity-name="EmplPositionTypeRate" value-field="emplPositionTypeRate"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-menu location="component://humanres/widget/HumanresMenus.xml" name="EmplPositionTypeTabBar"/>
+                        <screenlet id="AddEmplPositionTypeRatePanel" title="${uiLabelMap.CommonAdd} ${uiLabelMap.HumanResEmplPositionType} ${uiLabelMap.CommonRate}" collapsible="true">
+                            <include-form name="AddEmplPositionTypeRate" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        </screenlet>
+                            <include-form name="ListEmplPositionTypeRates" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditTerminationReasons">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResAddTerminationReason"/>
+                <set field="tabButtonItem" value="TerminationReason"/>
+                <set field="terminationReasonId" from-field="parameters.terminationReasonId"/>
+                <entity-one entity-name="TerminationReason" value-field="terminationReason"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet id="AddTerminationReasonPanel" title="${uiLabelMap.HumanResAddTerminationReason}" collapsible="true">
+                            <include-form name="AddTerminationReason" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        </screenlet>
+                        <include-form name="ListTerminationReasons" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditJobInterviewType">
+        <section>                        
+            <actions>
+                <set field="tabButtonItem" value="JobInterviewType"/>
+                <set field="titleProperty" value="PageTitleEditJobInterviewType"/>
+                <set field="jobInterviewTypeId" from-field="parameters.jobInterviewTypeId"/>
+                <entity-one entity-name="JobInterviewType" value-field="interviewType" />
+            </actions>            
+            <widgets>
+                <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">                                                                                       
+                        <screenlet id="AddJobInterviewTypePanel" title="${uiLabelMap.HumanResAddJobInterviewType}" collapsible="true">
+                            <include-form name="AddJobInterviewType" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        </screenlet> 
+                        <include-form name="ListJobInterviewType" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
+    <screen name="EditTrainingTypes">
+        <section>                        
+            <actions>
+                <set field="tabButtonItem" value="EditTrainingTypes"/>
+                <set field="titleProperty" value="PageTitleEditTrainingTypes"/>
+            </actions>            
+            <widgets>
+                <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">                                                                                       
+                        <screenlet id="AddTrainingTypePanel" title="${uiLabelMap.CommonAdd} ${uiLabelMap.HumanResTrainingTypes}" collapsible="true">
+                            <include-form name="AddTrainingTypes" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        </screenlet>
+                            <include-form name="ListTrainingTypes" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
+    <screen name="EditEmplLeaveTypes">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResEditEmplLeaveType"/>
+                <set field="headerItem" value="GlobalHRSettings"/>
+                <set field="tabButtonItem" value="EmplLeaveType"/>
+                <set field="leaveTypeId" from-field="parameters.leaveTypeId"/>
+                <entity-one entity-name="EmplLeaveType" value-field="editleavetype"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-menu name="EmplLeaveReasonTypeTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <screenlet id="AddEmplLeaveTypePanel" title="${uiLabelMap.HumanResAddEmplLeaveType}" collapsible="true">
+                            <include-form name="AddEmplLeaveType" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        </screenlet>
+                        <screenlet title="Leave Types">
+                         <include-form name="ListEmplLeaveTypes" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        </screenlet>
+                       
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditEmplLeaveReasonTypes">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResEditEmplReasonype"/>
+                <set field="headerItem" value="GlobalHRSettings"/>
+                <set field="tabButtonItem" value="EmplLeaveReasonType"/>
+                <set field="emplLeaveReasonTypeId" from-field="parameters.emplLeaveReasonTypeId"/>
+                <entity-one entity-name="EmplLeaveReasonType" value-field="emplreasonType"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-menu name="EmplLeaveReasonTypeTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <screenlet id="AddEmplReasonTypePanel" title="${uiLabelMap.HumanResAddEmplLeaveReasonType}" collapsible="true">
+                            <include-form name="AddEmplLeaveReasonType" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        </screenlet>
+                        <include-form name="ListEmplLeaveReasonTypes" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="PublicHoliday">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitlePublicHoliday"/>
+                <set field="headerItem" value="GlobalHRSettings"/>
+                <set field="tabButtonItem" value="publicHoliday"/>
+                <entity-one entity-name="WorkEffort" value-field="workEffort"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="GlobalHRSettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet id="addPublicHoliday" title="${uiLabelMap.PageTitleAddPublicHoliday}" collapsible="true">
+                                    <include-form name="AddPublicHoliday" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                                </screenlet>
+                                <screenlet id="listPublicHoliday" title="${uiLabelMap.PageTitlePublicHolidayList}" collapsible="true">
+                                    <include-form name="ListPublicHoliday" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+      
+     <screen name="RetirementAgeSetupScreen">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Retirement"/>
+                <set field="tabButtonItem" value="retirement"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createBankDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="RetirementAge" value-field="retirementAgeContext"/>
+            </actions>
+            <widgets>
+                  <decorator-screen name="insertMenuDecorator" location="component://humanres/widget/GlobalHRSettingScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="New Retirement Age">
+                                    <include-form name="NewRetirementAge" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                                </screenlet>
+                                
+                        		<screenlet title="Current Retrement Age In Use">
+                        			<include-form name="listRetirementAge" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        		</screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+      <screen name="NewBankBranch">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Bank Branch"/>
+                <set field="headerItem" value="bankbranch"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createBankBranch"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <set field="bankDetailsId" from-field="parameters.bankDetailsId"/>
+                
+                <entity-one entity-name="BankBranch" value-field="bankBranchContext"/>
+                
+                <entity-one value-field="bank" entity-name="BankDetails">
+                	<field-map field-name="bankDetailsId" from-field="bankDetailsId"/>
+                </entity-one>
+            </actions>
+            <widgets>
+                <decorator-screen name="insertMenuDecorator" location="component://humanres/widget/GlobalHRSettingScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet title="New Bank Branch  for ${bank.bankName}">
+                                    <include-form name="NewBankBranch" location="component://payroll/widget/payroll/PayrollForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Bank Branch List">
+                        			<include-form name="listBankBranch" location="component://payroll/widget/payroll/PayrollForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    <screen name="NewBansdsskDetails">
+        <section>                        
+            <actions>
+               <set field="titleProperty" value="Bank Details"/>
+                <set field="headerItem" value="GlobalHRSettings"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createBankDetails"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <entity-one entity-name="BankDetails" value-field="bankDetailsContext"/>
+            </actions>            
+            <widgets>
+                <decorator-screen name="insertMenuDecorator" location="component://humanres/widget/GlobalHRSettingScreens.xml">
+                    <decorator-section name="body">                                                                                       
+                        <section>
+                            <widgets>
+                                <screenlet title="New Bank">
+                                    <include-form name="NewBankDetails" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                                </screenlet>
+                                
+                        		<screenlet title="Bank List">
+                        			<include-form name="listBankDetails" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        		</screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>            
+        </section>
+    </screen>
+    
+     <screen name="NewPartyContent">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Bank Details"/>
+                <set field="tabButtonItem" value="partyContents"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPartyContentType"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="PartyContentType" value-field="partycontentTypeContext"/>
+            </actions>
+            <widgets>
+                  <decorator-screen name="insertMenuDecorator" location="component://humanres/widget/GlobalHRSettingScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="New Party Content Type">
+                                    <include-form name="NewPartyContent" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                                </screenlet>
+                                
+                        		<screenlet title="Party Content Types List">
+                        			<include-form name="listPartyContents" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        		</screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="NewPayrollPrefix">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Payroll Prefix"/>
+                <set field="tabButtonItem" value="payrollPrefix"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPayrollPrefix"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                <set field="lowerCase" from-field="parameters.lowerCase" />
+                <entity-one entity-name="payRollPrefix" value-field="PayrollPrefixContext"/>
+                <set field="payRollPrefix" from-field="PayrollPrefixContext.payRollPrefix"
+					default-value="${PayrollPrefixContext.payRollPrefix}" />
+            </actions>
+            <widgets>
+                  <decorator-screen name="insertMenuDecorator" location="component://humanres/widget/GlobalHRSettingScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                               <screenlet>
+                               </screenlet>
+                        		<screenlet title="Payroll Prefix Currently In Use">
+                        			<include-form name="listPayrollPrefix" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        		</screenlet>
+                        		<screenlet>
+                        		</screenlet>
+                        		 <screenlet title="Change Payroll Prefix">
+                                    <include-form name="addPayrollPrefix" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="editDepartment">
+    <section>
+            <actions>
+                <set field="titleProperty" value="department"/>
+                <set field="tabButtonItem" value="department"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPayrollPrefix"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                <set field="lowerCase" from-field="parameters.lowerCase" />
+                <entity-one entity-name="department" value-field="departmentContext"/>
+                <set field="payRollPrefix" from-field="PayrollPrefixContext.payRollPrefix"
+					default-value="${PayrollPrefixContext.payRollPrefix}" />
+            </actions>
+            <widgets>
+                  <decorator-screen name="insertMenuDecorator" location="component://humanres/widget/GlobalHRSettingScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                               <screenlet>
+                               </screenlet>
+                        		<screenlet title="Add Department">
+                        			<include-form name="editDepartment" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        		</screenlet>
+                        		<screenlet>
+                        		</screenlet>
+                        		 <screenlet title="Department list">
+                                    <include-form name="listDepartment" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	
+	<screen name="staffOfficialEmails">
+    <section>
+            <actions>
+                <set field="titleProperty" value="officialEmails"/>
+                <set field="tabButtonItem" value="officialEmails"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createEmail"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+            </actions>
+            <widgets>
+                  <decorator-screen name="insertMenuDecorator" location="component://humanres/widget/GlobalHRSettingScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                               <screenlet>
+                               </screenlet>
+                        		<screenlet title="Add Staff Email">
+                        			<include-form name="editStaffOfficialEmails" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        		</screenlet>
+                        		<screenlet>
+                        		</screenlet>
+                        		 <screenlet title="Staff Email list">
+                                    <include-form name="listStaffOfficialEmails" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="leaveWorkflowScreens">
+		<section>
+			<actions>
+				<set field="titleProperty" value="leave" />
+				 <set field="headerItem" value="GlobalHRSettings"/>
+				 <set field="tabButtonItem" value="leaveWorkflow"/>
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+				
+
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+				<decorator-section name="pre-body">
+						<include-menu name="GlobalHRSettingMenus"
+							location="component://humanres/widget/HumanresMenus.xml" />
+							
+							<include-menu name="leaveWorkFlowSettingsTabBar"
+					location="component://humanres/widget/HumanresMenus.xml"/>
+					</decorator-section>
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								  <screenlet title="Add Workflows">
+                            <include-form name="AddLeaveWorkflow" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        </screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="WorkFlows">
+									 <include-form name="ListLeaveWorkflows" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	 <screen name="workFlowResponsibleStaffScreens">
+		<section>
+			<actions>
+				<set field="titleProperty" value="leave" />
+				 <set field="headerItem" value="GlobalHRSettings"/>
+				 <set field="tabButtonItem" value="workFlowResponsibleStaff"/>
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+				<set field="employeeCtx" from-field="parameters"/>
+
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+				<decorator-section name="pre-body">
+						<include-menu name="GlobalHRSettingMenus"
+							location="component://humanres/widget/HumanresMenus.xml" />
+							
+							<include-menu name="leaveWorkFlowSettingsTabBar"
+					location="component://humanres/widget/HumanresMenus.xml"/>
+					</decorator-section>
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								  <screenlet title="Add Responsible Staff">
+                            <include-form name="AddLeaveWorkFlowResponsibleStaff" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        </screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+							<screenlet title="Workflow Responsible Staff">
+								    <!--  <include-form name="FindEmployeeResponsibleForWorkflow" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/> -->
+								
+									 <include-form name="ListLeaveWorkFlowResponsibleStaff" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	 <screen name="WorkflowStaffMappingScreens">
+		<section>
+			<actions>
+				<set field="titleProperty" value="leave" />
+				 <set field="headerItem" value="GlobalHRSettings"/>
+				 <set field="tabButtonItem" value="WorkflowStaffMapping"/>
+				<set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_" />
+				
+
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+				<decorator-section name="pre-body">
+						<include-menu name="GlobalHRSettingMenus"
+							location="component://humanres/widget/HumanresMenus.xml" />
+							
+							<include-menu name="leaveWorkFlowSettingsTabBar"
+					location="component://humanres/widget/HumanresMenus.xml"/>
+					</decorator-section>
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								  <screenlet title="Add Staff To Workflow">
+                            <include-form name="AddLeaveWorkFlowStaffMapping" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                        </screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="Staff in Workflow">
+									 <include-form name="ListLeaveWorkFlowStaffMapping" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+								</screenlet>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	
+	
+	
+	   
+    
+    
+</screens>

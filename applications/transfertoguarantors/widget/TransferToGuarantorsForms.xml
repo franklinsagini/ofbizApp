@@ -301,8 +301,9 @@
 		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="loanApplication" target="updateGuarantorLoanApplication">
 		<actions>
 			<entity-condition entity-name="LoanApplication">
-				<condition-list combine="or">
+				<condition-list combine="and">
 					<condition-expr field-name="parentLoanApplicationId" operator="equals" from-field="loanApplicationId"/>
+					<condition-expr field-name="loanStatusId" operator="not-equals" value="10016"/>
 				</condition-list>
 			</entity-condition>
 			<!-- entity-and entity-name="LoanApplication" >
@@ -363,6 +364,79 @@
 		</field>
 		
 		 <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+		
+	</form>
+	
+	<!-- Reversed Loans -->
+	 <form name="listReversedGuarantorLoans" type="list" list-name="listIt"
+		paginate-target="theloanslisting" default-entity-name="LoanApplication"
+		separate-columns="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="loanApplication" target="updateGuarantorLoanApplication">
+		<actions>
+			<entity-condition entity-name="LoanApplication">
+				<condition-list combine="and">
+					<condition-expr field-name="parentLoanApplicationId" operator="equals" from-field="loanApplicationId"/>
+					<condition-expr field-name="loanStatusId" operator="equals" value="10016"/>
+				</condition-list>
+			</entity-condition>
+			<!-- entity-and entity-name="LoanApplication" >
+				<field-map field-name="parentLoanApplicationId"  from-field="loanApplicationId"/>
+			</entity-and -->		
+		</actions>
+		<field name="loanApplicationId">
+			<hidden value="${parameters.loanApplicationId}"/>
+		</field>
+		<field name="loanNo">
+			<display also-hidden="false" />
+		</field>
+		<field name="partyId" title="Member">
+			<display-entity description="${firstName} ${middleName} ${lastName}"
+				entity-name="Member" also-hidden="false"></display-entity>
+			
+		</field>
+		
+		<field name="loanProductId" title="Product">
+			<display-entity description="${name} ${code}"
+				entity-name="LoanProduct" also-hidden="false"></display-entity>
+			
+		</field>
+		
+		<field name="loanAmt" title="Disbursed Amount">
+			<display also-hidden="false" />
+		</field>
+		
+		<field name="loanBalance" title="Loan Balance">
+			<display also-hidden="false" default-value="${bsh:org.ofbiz.loansprocessing.LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);}" />
+		</field>
+		
+		<field name="interestRatePM" title="Interest Rate(P.M)">
+			<text></text>
+		</field>
+		<field name="repaymentPeriod" title="Repayment Period">
+			<text></text>
+		</field>
+	
+		<field name="loanStatusId" title="Status">
+			<display-entity entity-name="LoanStatus" description="${name}" key-field-name="loanStatusId"></display-entity>
+		</field>
+
+		<field name="createdStamp" title="Created">
+			<display type="date-time" />
+		</field>
+		
+		<field name="createdBy" title="Created By">
+			<display />
+		</field>
+
+		
+		<field name="loanLogs" title="Logs" widget-style="buttontext">
+			<hyperlink target="loanLogs" description="Logs"
+				also-hidden="false">
+				<parameter param-name="loanApplicationId" />
+			</hyperlink>
+		</field>
+		
+		 <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
 		
 	</form>
 	

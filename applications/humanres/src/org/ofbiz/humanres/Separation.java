@@ -302,69 +302,86 @@ public class Separation {
 			BigDecimal month = new BigDecimal(12);
 			BigDecimal daysOfyear = new BigDecimal(365);
 			BigDecimal noticePeriod = new BigDecimal(periodOdNotice);
-			BigDecimal allSixtyDays = new BigDecimal(60);     
+			BigDecimal allSixtyDays = new BigDecimal(60);   
+			GenericValue procedureNotificationELE = null;
 			
-			if(daysTo.compareTo(BigDecimal.ZERO) == 0 ){
+			 try{
+				 procedureNotificationELE = delegator.findOne("SeparationTypes", UtilMisc.toMap("separationTypesId", separationTypeId), false);
+			 }catch(GenericEntityException ex){
+				 ex.printStackTrace();
+			 }
+			  String notificationProcedure = null;
+			 if(procedureNotificationELE.size() > 0){
+				 notificationProcedure = procedureNotificationELE.getString("notificationProcedure");
+			 }
+			 
+			 log.info("########************NOTIFICATION PROCEDURE ******#########"+notificationProcedure);
+			 
+			// ---------- && (notificationProcedure == "EmplToAdmin")
+			 if(notificationProcedure.equalsIgnoreCase("EmplToAdmin")){
+			 
+			   if(daysTo.compareTo(BigDecimal.ZERO) == 0){
 				   lienOfNoticeAmount = noticePeriod.multiply(basicSalary).multiply(month).divide(daysOfyear,4,RoundingMode.HALF_UP);
-			}else if(daysTo.compareTo(noticePeriod) > 0){
-				lienOfNoticeAmount = BigDecimal.ZERO;
-			}else if(daysTo.compareTo(noticePeriod) < 0){
-				BigDecimal lessDaysTo = noticePeriod.subtract(daysTo);
-				  lienOfNoticeAmount = lessDaysTo.multiply(basicSalary).multiply(month).divide(daysOfyear,4,RoundingMode.HALF_UP);
-			}
-			
-		/*	try{
-				SeparationTypeELI=delegator.findList("SeparationTypes", EntityCondition.makeCondition(UtilMisc.toMap("separationTypesId", separationTypeId))
-						, null, null, null, false);
-			}catch(GenericEntityException e){
-				e.printStackTrace();
-			}
-			
-			BigDecimal noticePeriod=BigDecimal.ZERO;
-			for(GenericValue genericValue:SeparationTypeELI){
-				 String noticePeriodDays=genericValue.getString("noticePeriod");
-				 noticePeriod= new BigDecimal(noticePeriodDays);
-				 log.info("***########**NoticePeriod#####"+noticePeriod);
-			}*/
-			
-			
-			
-			// if days he applied are more or equal to notice period required then give leave allowance
-				
-			//lienOfNoticeAmount = daysTo.multiply(basicSalary).multiply(month).divide(daysOfyear,4,RoundingMode.HALF_UP);
-			
-			
-			
-/*			
-			if(daysTo.compareTo(noticePeriod) >= 0){
-				lienOfNoticeAmount = BigDecimal.ZERO;
-			}else if (daysTo.compareTo(noticePeriod) < 0) {
-				lienOfNoticeAmount = daysTo.multiply(basicSalary).multiply(month).divide(daysOfyear,4,RoundingMode.HALF_UP);
-				BigDecimal addToLeaveToDaysTo = daysTo.add(leaveBal);
-				log.info("#################FIRSTAddToLeaveToDays###############"+ addToLeaveToDaysTo);
-				if(addToLeaveToDaysTo.compareTo(noticePeriod)==0){
-					
-					leaveAllowance = BigDecimal.ZERO;
-					
-				}else if (addToLeaveToDaysTo.compareTo(noticePeriod) > 0) {
-					log.info("#################SECONSDAddToLeaveToDays###############"+ addToLeaveToDaysTo);
-					BigDecimal excessLeavedays = addToLeaveToDaysTo.subtract(noticePeriod);
-					leaveAllowance = (excessLeavedays.multiply(basicSalary).multiply(new BigDecimal(12))).divide(new BigDecimal(365),4,RoundingMode.HALF_UP);
-					log.info("#################ExcessoLeaveToDays###############"+ excessLeavedays);
-				}else if (addToLeaveToDaysTo.compareTo(noticePeriod) < 0) {
-					
-					BigDecimal penaltLessLeaveDays = addToLeaveToDaysTo.subtract(noticePeriod);
-					leaveAllowance= (penaltLessLeaveDays.multiply(basicSalary).multiply(month)).divide(daysOfyear,4,RoundingMode.HALF_UP); 
-					
-					
-				}
-			}*/
+			     }else if(daysTo.compareTo(noticePeriod) > 0){
+				        lienOfNoticeAmount = BigDecimal.ZERO;
+		     	 }else if(daysTo.compareTo(noticePeriod) < 0){
+			    	BigDecimal lessDaysTo = noticePeriod.subtract(daysTo);
+				    lienOfNoticeAmount = lessDaysTo.multiply(basicSalary).multiply(month).divide(daysOfyear,4,RoundingMode.HALF_UP);
+			   }
+			 }else{
+				 lienOfNoticeAmount = BigDecimal.ZERO;
+			 }
 			
 			log.info("--------------**LIEN OF NOTICE------***----------    "+ lienOfNoticeAmount);
 			
 			return lienOfNoticeAmount;
 		}
 	
+ //-----------lieu of notice ADMIN TO EMPL
+		public static BigDecimal lienOfNoticeMethodAdminToEmpl(String separationTypeId,BigDecimal daysTo, BigDecimal leaveBal, BigDecimal basicSalary, String periodOdNotice){
+			Delegator delegator=DelegatorFactoryImpl.getDelegator(null);
+			List<GenericValue> SeparationTypeELI=null;
+			BigDecimal leaveAllowance = BigDecimal.ZERO;
+			BigDecimal lienOfNoticeAmount = BigDecimal.ZERO;
+			BigDecimal month = new BigDecimal(12);
+			BigDecimal daysOfyear = new BigDecimal(365);
+			BigDecimal noticePeriod = new BigDecimal(periodOdNotice);
+			BigDecimal allSixtyDays = new BigDecimal(60);   
+			GenericValue procedureNotificationELE = null;
+			
+			 try{
+				 procedureNotificationELE = delegator.findOne("SeparationTypes", UtilMisc.toMap("separationTypesId", separationTypeId), false);
+			 }catch(GenericEntityException ex){
+				 ex.printStackTrace();
+			 }
+			  String notificationProcedure = null;
+			 if(procedureNotificationELE.size() > 0){
+				 notificationProcedure = procedureNotificationELE.getString("notificationProcedure");
+			 }
+			 
+			 log.info("########************NOTIFICATION PROCEDURE ******#########"+notificationProcedure);
+			 
+			// ---------- && (notificationProcedure == "EmplToAdmin")
+			 if(notificationProcedure.equalsIgnoreCase("AdminToEmpl")){
+			 
+			   if(daysTo.compareTo(BigDecimal.ZERO) == 0){
+				   lienOfNoticeAmount = noticePeriod.multiply(basicSalary).multiply(month).divide(daysOfyear,4,RoundingMode.HALF_UP);
+			     }else if(daysTo.compareTo(noticePeriod) > 0){
+				        lienOfNoticeAmount = BigDecimal.ZERO;
+		     	 }else if(daysTo.compareTo(noticePeriod) < 0){
+			    	BigDecimal lessDaysTo = noticePeriod.subtract(daysTo);
+				    lienOfNoticeAmount = lessDaysTo.multiply(basicSalary).multiply(month).divide(daysOfyear,4,RoundingMode.HALF_UP);
+			   }
+			 }else{
+				 lienOfNoticeAmount = BigDecimal.ZERO;
+			 }
+			
+			log.info("--------------**LIEN OF NOTICE------***----------    "+ lienOfNoticeAmount);
+			
+			return lienOfNoticeAmount;
+		}
+		
+		
 	//Method to Return the Employee Service Pay
 	
 	public static BigDecimal servicePayAmount(String separationTypeId, BigDecimal basicSalary, int yearsWrkd){
@@ -537,14 +554,14 @@ public static String getAppointmentDate(String partyId) {
 
 //method for gross total
 
-public static BigDecimal grossTotal(BigDecimal basicSalary, BigDecimal leaveAllowance, BigDecimal servicePay, BigDecimal transportAllowance, BigDecimal goldenHandShake){
+public static BigDecimal grossTotal(BigDecimal basicSalary, BigDecimal leaveAllowance, BigDecimal servicePay, BigDecimal transportAllowance, BigDecimal goldenHandShake,BigDecimal lienOfNoticeAdminToEmpl){
 	log.info("########GROSS METHOD#######");
 	
 	// -----Subjected to PAYE
 	
 	BigDecimal total= BigDecimal.ZERO;
 	try{
-	total=basicSalary.add(leaveAllowance).add(servicePay).add(transportAllowance).add(goldenHandShake);
+	total=basicSalary.add(leaveAllowance).add(servicePay).add(transportAllowance).add(goldenHandShake).add(lienOfNoticeAdminToEmpl);
 	}catch(Exception e){
 		e.printStackTrace();
 	}

@@ -20,12 +20,12 @@ expr = exprBldr.AND() {
 	employeeList.eachWithIndex { staffItem, index ->
 	
 		party = staffItem.partyId
-		separationType = staffItem.separationTypeId
+		separationType = staffItem.separationTypesId
 		
 		staff = delegator.findOne("Person", [partyId : party], false);
 		branches = delegator.findOne("PartyGroup", [partyId : staff.branchId], false);
 		departments = delegator.findOne("department", [departmentId : staff.departmentId], false);
-		typeOfSeparation = delegator.findOne("SeparationType", [separationTypeId : separationType], false);
+		typeOfSeparation = delegator.findOne("SeparationTypes", [separationTypesId : separationType], false);
 		
 		payroll = staff.employeeNumber;
 		fname = staff.firstName;
@@ -33,7 +33,7 @@ expr = exprBldr.AND() {
 		name = "${fname} ${sname}"
 		bran = branches.groupName;
 		depart = departments.departmentName;
-		separateType = typeOfSeparation.name;
+		separateType = typeOfSeparation.separationName;
 		separationReason = staffItem.reason;
 		dateEffected = staffItem.effectiveDate;
 		
