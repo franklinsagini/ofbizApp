@@ -2,6 +2,8 @@ package org.ofbiz.accounting.ledger;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -82,12 +84,42 @@ public class CrbReportServices {
 		formattedDate = newDate.substring(0, 8);
 		return formattedDate;
 	}
+	
+	public static String getCRBDateFormat(String date) {
+		String formattedDate = "";
+		String newDate = date.replaceAll("\\D", "");
+		formattedDate = newDate.substring(0, 8);
+		return formattedDate;
+	}
 
+	public static String getCRBDateFormat(java.sql.Date date) {
+		String formattedDate = "";
+		String stringDate = date.toString();
+		String newDate = stringDate.replaceAll("\\D", "");
+		formattedDate = newDate.substring(0, 8);
+		return formattedDate;
+	}
+
+	public static String getCRBPhoneFormat(String phone) {
+		String formattedPhone = "";
+//		//+254727059877
+//		String newText = phone.replace('+', '');
+//		token = phone.replace("+", "&amp;");
+//		String my_new_str = my_str.replaceAll("&", "&amp;");
+		char c = phone.charAt(0);
+		if (c == '+') {
+			formattedPhone = phone.substring(phone.indexOf(c) + 1);
+		}
+		
+		return formattedPhone;
+	}
+	
 	public static String getCRBAmountFormat(BigDecimal amount) {
 		String formattedAmount = "";
 		String stringAmount = amount.toString();
 		if (stringAmount.contains(".")) {
-			formattedAmount = stringAmount.replaceAll("\\D", "");
+			String newAmount = stringAmount.substring(0, stringAmount.indexOf(".")+3);
+			formattedAmount = newAmount.replaceAll("\\D", "");
 		}else {
 			formattedAmount = stringAmount+"00";
 		}

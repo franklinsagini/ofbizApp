@@ -34,6 +34,7 @@ summaryCondition = [];
 if (loanStatusId) {
   loanStatusIdL = loanStatusId.toLong()
   summaryCondition.add(EntityCondition.makeCondition("loanStatusId", EntityOperator.EQUALS, loanStatusIdL));
+  //summaryCondition.add(EntityCondition.makeCondition("memberNumber", EntityOperator.EQUALS, "15227"));
 }
 
 
@@ -42,10 +43,12 @@ loanApps = delegator.findList('LoanApplication',  EntityCondition.makeCondition(
 currentDate = UtilDateTime.nowTimestamp();
 
 
-
+count = 0
 loanApps.each { obj ->
          //GET MEMBER
-     member = delegator.findOne("Member", [partyId : obj.partyId], false);
+    if (count < 5) {
+
+                member = delegator.findOne("Member", [partyId : obj.partyId], false);
      println("Generating CRB Report for Member "+ member.firstName+ " " +member.lastName)
      //GET SALUTATION 
      salutation = delegator.findOne("Salutation", [salutationId : member.salutationId], false);
@@ -67,7 +70,11 @@ loanApps.each { obj ->
     employment = ""
      employementType = delegator.findOne("EmploymentType", [employmentTypeId : member.employmentTypeId], false);
      if (employementType!=null) {
-         employment = employementType.name 
+         if (employementType.name == "Permanent") {
+             employment = "003"
+         }else if (employementType.name == "Temporary" || employementType.name == "(Temporary)") {
+             employment = "001"
+         }
      }
 
      println("############### EMPLOYMENT TYPE FOUND: "+ employementType)
@@ -92,26 +99,58 @@ loanApps.each { obj ->
         }
 
     }
+
+// ====================
     loanDisbursementDate = 0;
     if (obj.disbursementDate != null) {
         loanDisbursementDate = CrbReportServices.getCRBDateFormat(obj.disbursementDate)
+    }    
+
+
+    if (currentDate != null) {
+        currentDate = CrbReportServices.getCRBDateFormat(currentDate)
     }
+//==========================================
     loanApprovedAmt = 0;
-    if (obj.approvedAmt != null) {
-        loanApprovedAmt = CrbReportServices.getCRBAmountFormat(obj.approvedAmt)
+    if (obj.loanAmt != null) {
+        loanApprovedAmt = CrbReportServices.getCRBAmountFormat(obj.loanAmt)
+         print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>LOAN APPROVED AMOUNT: "+loanApprovedAmt
     }
+
+    print "LOAN APPROVED AMOUNT: "+loanApprovedAmt+" >>>>>>>>>>>>>>>>>>"
     
     
     //GET ACCOUNT STATUS DETAILS
     accountsStatus = null;
     dateAccountOpened  = null;
-     accountStatus=null;
+     accountStatusName=null;
     if (loanMemberAccount!=null) {
         accountsStatus= delegator.findOne("AccountStatus", [accountStatusId : (loanMemberAccount.accountStatusId).toString()], false);
         dateAccountOpened = loanMemberAccount.createdStamp
-         accountStatus=accountsStatus.name
+
+
+         if(accountsStatus.name == "ACTIVE"){
+                accountStatusName= "F"
+            }else if (accountsStatus.name ==  "INACTIVE") {
+                accountStatusName= "B"
+            }else if (accountsStatus.name == "CLOSED") {
+                accountStatusName= "A"
+            }
     }
-     
+
+
+    if (dateAccountOpened != null) {
+        dateAccountOpened = CrbReportServices.getCRBDateFormat(dateAccountOpened)
+    }
+
+    birthDate = null;
+    if (member.birthDate != null) {
+        birthDate = CrbReportServices.getCRBDateFormat(member.birthDate) 
+    }         
+    mobileNumber = null;
+    if (member.mobileNumber != null) {
+        mobileNumber = CrbReportServices.getCRBPhoneFormat(member.mobileNumber) 
+    }         
 
 
     //CHECK IF USING ID
@@ -140,13 +179,13 @@ loanApps.each { obj ->
          }
           
    }
-   currentLoanBalance = org.ofbiz.loansprocessing.LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(obj.loanApplicationId)
+   currentLoanBalance = CrbReportServices.getCRBAmountFormat(org.ofbiz.loansprocessing.LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(obj.loanApplicationId))
    noInstalmentsInArrears = 0
     member_maritalStatus = ""
     
     if (daysInArrears.toInteger()>30) {
         daysInArrears = daysInArrears
-        noInstalmentsInArrears = daysInArrears/30
+        noInstalmentsInArrears = daysInArrears.intdiv(30)
     }else{
         daysInArrears = 0
         noInstalmentsInArrears = 0
@@ -162,9 +201,14 @@ loanApps.each { obj ->
     locationCountry = ""
     nationality = ""
 
-    if (member.citizenship == "KEN") {
+    if (member.citizenship == "KEN" || member.citizenship == "254") {
         locationCountry = "KENYA"
         nationality = "KENYAN"
+    }
+
+    permanentAddress = ""
+    if(member.permanentAddress != null || member.permanentAddress != "0" || member.permanentAddress != "1"){
+        permanentAddress = member.permanentAddress
     }
 
 
@@ -191,7 +235,7 @@ loanApps.each { obj ->
         forename2:member.middleName,
         forename3:"",
         salutation:salutation.name,
-        dateOfBirth:member.birthDate,
+        dateOfBirth:birthDate,
         clientNumber:member.memberNumber,
         loanNumber:obj.loanNo,
         gender:member_gender,
@@ -206,10 +250,10 @@ loanApps.each { obj ->
         mobileTelephoneNumber:member.mobileNumber,
         homeTelephoneNumber:"",
         workTelephoneNumber:"",
-        postalAddress1:member.permanentAddress,
+        postalAddress1:permanentAddress,
         postalAddress2:"",
         postalLocationTown:"",
-        postalLocationCountry:"",
+        postalLocationCountry:"KENYA",
         postCode:"",
         physicalAddress1:"",
         physicalAddress2:"",
@@ -227,7 +271,7 @@ loanApps.each { obj ->
         lendersTradingName:"CHAI SACCO LTD",
         lendersRegisteredName:"CHAI SACCO LTD",
         lendersBranchName:branch.groupName,
-        lendersBranchCode:"",
+        lendersBranchCode:"S",
         accountJointSingleIndicator:"S",
         accountProductType:"H",
         instalmentDueDate:"",
@@ -241,7 +285,7 @@ loanApps.each { obj ->
         noDaysArrears: daysInArrears,
         noInstalmentsInArrears:noInstalmentsInArrears,
         performingNonPerforming:performingNonPerforming,
-        accountStatus:accountStatus,
+        accountStatus:accountStatusName,
         accountStatusDate:currentDate,
         accountClosureReason:"",
         repaymentPeriod:obj.repaymentPeriod,
@@ -256,6 +300,10 @@ loanApps.each { obj ->
 
     ]
 
+    count = count + 1
+    }
+  
+   
     crbReportList.add(crbReportListBuilder);
 
 }
