@@ -2,6 +2,21 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
+
+    <!-- memberAccountsReportForm -->
+
+
+    <form name="activeMembers" type="single" target="branchMembers" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <field position="1" name="startDate" title="As at"  widget-style="required" required-field="true" size="10">
+            <date-time type="timestamp"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+
 	<!-- memberAccountsReportForm -->
     <form name="memberAccountsReportForm" type="single" target="memberAccountListPDF" title="" header-row-style="header-row"
         default-table-style="basic-table" target-window="_BLANK">
@@ -292,7 +307,29 @@
         </field>
     </form>
     
-    <form name="accountContributionExport" list-name="combinedList"  target="" title="" 
+    <form name="branchesTotals" list-name="totalsList"  target="" title="" 
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+       <field name="branchName" title="Branch Name"><display/></field>
+       <field name="branchTotal" title="Branch Total Membership"><display/></field>
+     </form>
+
+    <form name="branchesMembersData" list-name="memberStatusList"  target="" title="" 
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+       <field name="statusName" title="Status Name"><display/></field>
+       <field name="count" title="Total Count"><display/></field>
+     </form>        
+
+     <form name="branchesMembersData" list-name="memberStatusList"  target="" title="" 
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+       <field name="accountCode" title="Account Code"><display/></field>
+       <field name="accountName" title="Account Name"><display/></field>
+       <field name="accountTotal" title="Account Totals"><display/></field>
+     </form>    
+
+     <form name="accountContributionExport" list-name="combinedList"  target="" title="" 
          type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
          default-table-style="basic-table hover-bar" paginate="false"> 
        <field name="firstName" title="First Name"><display/></field>
