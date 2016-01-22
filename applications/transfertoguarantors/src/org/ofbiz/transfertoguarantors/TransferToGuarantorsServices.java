@@ -449,6 +449,39 @@ public class TransferToGuarantorsServices {
 			//		entrySequenceId, userLogin);
 		}
 		
+		
+		
+		//Credit Interest Receivabe  with total interest amount (loanInterest)
+		//INTERESTPAYMENT
+		postingType = "C";
+		sequence = sequence + 1;
+		entrySequenceId = sequence.toString();
+
+		accountHolderTransactionSetup = LoanRepayments.getAccountHolderTransactionSetupRecord(
+				"INTERESTPAYMENT", delegator);
+		accountId = accountHolderTransactionSetup
+				.getString("memberDepositAccId");
+		loanInterest = loanInterest.setScale(2, RoundingMode.HALF_UP);
+		if (loanInterest.compareTo(BigDecimal.ZERO) == 1) {
+			LoanRepayments.postTransactionEntry(delegator, loanInterest, partyId.toString(), accountId, postingType, acctgTransId, acctgTransType, entrySequenceId, userLogin);
+		}
+		
+		
+		//Credit Insurance Receivabe  with total insurance amount (loanInsurance)
+		//INSURANCEPAYMENT
+		postingType = "C";
+		sequence = sequence + 1;
+		entrySequenceId = sequence.toString();
+
+		accountHolderTransactionSetup = LoanRepayments.getAccountHolderTransactionSetupRecord(
+				"INSURANCEPAYMENT", delegator);
+		accountId = accountHolderTransactionSetup
+				.getString("memberDepositAccId");
+		loanInsurance = loanInsurance.setScale(2, RoundingMode.HALF_UP);
+		if (loanInsurance.compareTo(BigDecimal.ZERO) == 1) {
+			LoanRepayments.postTransactionEntry(delegator, loanInsurance, partyId.toString(), accountId, postingType, acctgTransId, acctgTransType, entrySequenceId, userLogin);
+		}		
+		
 		//Debit Loan to Members for each disbursement
 		
 
