@@ -3656,5 +3656,50 @@ Gender
 	        <field name="branchId" title="Branch"><display-entity entity-name="PartyGroup" description="${groupName}" key-field-name="partyId" /></field>
     </form>
     
+      
+    <!-- Member Withdrawal between Dates-->
+    <form name="MemberWithdrawalBTWDates" type="single" target="MemberWithdrawalBTWDates.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+
+        <!-- field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field -->
+        <field name="startDate" widget-style="required" required-field="true">
+            <!-- date-find default-option-from="greaterThanFromDayStart"/ -->
+            <date-time type="date"/>
+        </field>
+        
+        <field name="endDate" position="2" widget-style="required" required-field="true">
+            <!-- date-find default-option-thru="upThruDay"/ -->
+            <date-time type="date"/>
+        </field>
+        
+         <field name="withDrawalStatus" title="Status">
+            <drop-down allow-empty="true">
+               <option key="APPLIED" description="APPLIED"/>
+               <option key="APPROVED" description="APPROVED"/>
+            </drop-down>
+        </field>
+   
+        <field name="submitButton" title="Download Excel" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    
+        <form name="listWithDrawMembersByDate" list-name="membersList" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+            <field name="partyId" title="Names">
+                <display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName}" key-field-name="partyId"></display-entity>
+            </field>
+            <field name="idNumber" title="ID Number"><display/></field>
+            <field name="payrollNumber" title="Payroll Number"><display/></field>
+            <field name="mobilePhoneNumber" title="Mobile Number"><display/></field>
+            
+            <field name="dateApplied" title="Applied Date"><display type="date"/></field>
+            <field name="memberNumber" title="Member Number"><display/></field>
+            <field name="withdrawalstatus" title="Status"><display/></field> 
+             <field name="withdrawalreason" title="WithDrawal Reason"><display/></field>
+            
+      </form>
     
 </forms>

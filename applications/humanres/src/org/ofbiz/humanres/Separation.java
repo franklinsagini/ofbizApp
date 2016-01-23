@@ -193,7 +193,7 @@ public class Separation {
   
 		LocalDate effectiveDateConvertToLocalTime = new LocalDate(effectiveDate);
 		LocalDate effectiveDateMinusSomeMonths = effectiveDateConvertToLocalTime.minusMonths(2);
-		LocalDate plusFourMonths = effectiveDateConvertToLocalTime.plusMonths(4);
+		LocalDate plusFourMonths = effectiveDateConvertToLocalTime.plusMonths(3);
 		
 		log.info("--------## effectiveDate ------------#########"+effectiveDate);
 
@@ -675,6 +675,23 @@ public static BigDecimal grossTotal(BigDecimal basicSalary, BigDecimal leaveAllo
 	 log.info("########FINAL AMOUNT#######  "+finalAmount);
 	 
 	 return finalAmount;
+	 
+	 
+ }
+ 
+ public static BigDecimal totalDeductions(BigDecimal Payee,BigDecimal amountLostByEmployee, BigDecimal lienOfNotice){
+		
+	 BigDecimal deductions= BigDecimal.ZERO;
+	 try{
+		 
+		 deductions = Payee.add(amountLostByEmployee).add(lienOfNotice);
+		 
+	 }catch(Exception e){
+			e.printStackTrace();
+	 }
+	 log.info("########Total Deductions#######  "+deductions);
+	 
+	 return deductions;
 	 
 	 
  }

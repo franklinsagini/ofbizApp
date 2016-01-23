@@ -2879,10 +2879,24 @@
     <response name="success" type="view" value="memberBioDetailsExcelCsv"/>
 </request-map>
 
+  <request-map uri="MemberWithdrawalBTWDates">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="MemberWithdrawalBTWDates"/>
+    <response name="error" type="view" value="MemberWithdrawalBTWDates"></response>
+  </request-map>
+
+  <request-map uri="MemberWithdrawalBTWDates.csv">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="MemberWithdrawalBTWDatesExcel" save-home-view="true" />
+  </request-map>
 
 
 	<!-- View Mappings -->
 			<!-- Memeber Reports -->
+			
+	<view-map name="MemberWithdrawalBTWDatesExcel" type="screencsv" page="component://party/widget/partymgr/PartyScreens.xml#MemberWithdrawalBTWDatesExcel" content-type="text/csv" encoding="none"/>
+			
+  <view-map name="MemberWithdrawalBTWDates" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#MemberWithdrawalBTWDates"/>
 	<view-map name="MemberReports" type="screen" page="component://party/widget/partymgr/MemberReportScreens.xml#MemberReports"/>
   <view-map name="memberListingPDF" type="screenfop" page="component://party/widget/partymgr/MemberReportScreens.xml#memberListingPDF" content-type="application/pdf" encoding="none"/>
   <view-map name="loanDetailsPDF" type="screenfop" page="component://party/widget/partymgr/MemberReportScreens.xml#loanDetailsPDF" content-type="application/pdf" encoding="none"/>

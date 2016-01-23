@@ -99,7 +99,7 @@ under the License.
             Payable in ${rejectedLoan.repaymentPeriod} month(s) Installment.
             <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
                 <fo:block font-size="9pt" text-align="left">
-                    We hereby inform you that the loan was rejected ${loanStatusRejection}.
+                    We hereby inform you that the loan was rejected because ${loanStatusRejection}.
                 </fo:block>
         </fo:block>
          <fo:block font-size="9pt" text-align="left">

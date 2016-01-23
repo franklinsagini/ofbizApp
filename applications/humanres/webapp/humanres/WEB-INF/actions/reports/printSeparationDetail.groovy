@@ -18,6 +18,7 @@
                         context.goldenHandShake = separationItem.goldenHandShake
                         context.transportAllowance = separationItem.transportAllowance
                         context.servicePay = separationItem.servicePay
+                        context.lienOfNoticeAdminToEmpl = separationItem.lienOfNoticeAdminToEmpl
                         context.total = separationItem.total
                         
                          context.PAYE = separationItem.PAYE
@@ -26,7 +27,7 @@
                          context.lienOfNotice = separationItem.lienOfNotice
                          context.staffLoans = separationItem.staffLoans
                          context.amountPayableToChai = separationItem.amountPayableToChai
-                         
+                         context.totalDeductions = separationItem.totalDeductions
                    }
     
     context.separationDetail  = separationDetail
