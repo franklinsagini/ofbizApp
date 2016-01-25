@@ -4826,7 +4826,7 @@ under the License.
         </view-link>
     </view-entity>
 
-<view-entity entity-name="TBViewData"
+<!-- <view-entity entity-name="TBViewData"
         package-name="org.ofbiz.accounting.ledger"
         title="GlAccountOrganization, AcctgTransEntry, and AccTrans View Entity Group-By organizationPartyId, glAccountId, debitCreditFlag">
         <member-entity entity-alias="GAO" entity-name="GlAccount"/>
@@ -4838,6 +4838,25 @@ under the License.
         <alias entity-alias="ATE" name="ateAmount" field="amount" function="sum"/>
         <alias entity-alias="ATR" name="ateTransactionDate" field="transactionDate" group-by="true"/>
         <view-link entity-alias="GAO" rel-entity-alias="ATE">
+            <key-map field-name="glAccountId"/>
+        </view-link>
+        <view-link entity-alias="ATE" rel-entity-alias="ATR">
+            <key-map field-name="acctgTransId"/>
+        </view-link>
+</view-entity> -->
+
+<view-entity entity-name="TBViewData"
+        package-name="org.ofbiz.accounting.ledger"
+        title="GlAccountOrganization, AcctgTransEntry, and AccTrans View Entity Group-By organizationPartyId, glAccountId, debitCreditFlag">
+        <member-entity entity-alias="GAO" entity-name="GlAccount"/>
+        <member-entity entity-alias="ATE" entity-name="AcctgTransEntry"/>
+        <member-entity entity-alias="ATR" entity-name="AcctgTrans"/>
+        <alias entity-alias="GAO" name="gaoGlAccountId" field="glAccountId" group-by="true"/>
+        <alias entity-alias="ATE" name="ateOrganizationPartyId" field="organizationPartyId" group-by="true"/>
+        <alias entity-alias="ATE" name="atDebitCreditFlag" field="debitCreditFlag" group-by="true"/>
+        <alias entity-alias="ATE" name="ateAmount" field="amount" function="sum"/>
+        <alias entity-alias="ATE" name="ateTransactionDate" field="createdStamp" group-by="true"/>
+        applications/accountreports/widget/accountreportsScreens.xml<view-link entity-alias="GAO" rel-entity-alias="ATE">
             <key-map field-name="glAccountId"/>
         </view-link>
         <view-link entity-alias="ATE" rel-entity-alias="ATR">

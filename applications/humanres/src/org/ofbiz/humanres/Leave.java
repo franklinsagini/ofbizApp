@@ -403,8 +403,14 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
 		deleteExistingLeaveBalance(delegator);
 		Timestamp now = UtilDateTime.nowTimestamp();
 		String thisYear=LeaveServices.getCurrentYear(now);
+		
+		  EntityConditionList<EntityExpr> memberCoditions = EntityCondition
+					.makeCondition(UtilMisc.toList(
+						EntityCondition.makeCondition("isSeparated", EntityOperator.NOT_EQUAL, "Y")),
+							EntityOperator.AND);  
+		
 		try {
-			personsELI = delegator.findAll("LeaveBalancesView", true);
+			personsELI = delegator.findList("LeaveBalancesView",memberCoditions,null,null,null,false );
 			log.info("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&>>>>>>>>>>>>>>>>>>>"+personsELI);
 			
 		} catch (GenericEntityException e) {

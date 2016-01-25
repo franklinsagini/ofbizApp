@@ -1259,6 +1259,12 @@
 			</display-entity>
 		</field>
 		<field name="createdStamp" title="Time Created"><display></display></field>
+		<field name="printEachLeaveRecord" title="Print" widget-style="buttontext">
+		   <hyperlink target="printEachLeaveRecord" description="print Record" also-hidden="false">
+		      <parameter param-name="leaveId"/>
+		   </hyperlink>
+		</field>
+		
 		<field name="description">
 			<hidden />
 		</field>
@@ -1296,6 +1302,49 @@
 		<field name="accruedDayswe" title="Monthly Annual Leave accruals(Days)">
 		<display-entity entity-name="EmplLeaveType" key-field-name="leaveTypeId" description="${accrualRate}"></display-entity>
 		</field>
+		<field name="annualUsedLeaveDays" title="Annual Used Leave Days">
+			<display />
+		</field>
+				
+		<field name="annualLostLeaveDays" title="Annual Lost Leave Days">
+			<display />
+		</field>		
+		<field name="annualAvailableLeaveDays" title="Total Leave Balance">
+			<display />
+		</field>
+    </form>
+	
+	 <form name="LeaveBalancesAtTheProfileSide" target="" title="" list-name="listIt" type="list" paginate-target="LeaveApprovals"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+          <entity-condition entity-name="LeavesBalanceView">
+        			 <condition-expr field-name="partyId" operator="equals" from-field="userLogin.partyId"/> 
+        	</entity-condition> 
+        
+            <service result-map-list="listIt" result-map="result" service-name="performFind">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="LeavesBalanceView"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+         <set field="partyId" from-field="parameters.partyId" />
+        </actions>
+        <!-- <auto-fields-entity entity-name="EmplLeave" default-field-type="display"/> -->
+          
+		<field name="partyId" title="${uiLabelMap.HumanResStaff}">
+			<display-entity entity-name="Person" description="${lastName}, ${firstName}">
+			</display-entity>
+		</field>
+		<field name="annualCarriedOverDays" title="Annual Leave Balance Brought Forward">
+			<display />
+		</field>	
+		<field name="annualaccruedDays" title="Annual Accrued Leave Days">
+			<display />
+		</field>
+		<!-- <field name="accruedDayswe" title="Monthly Annual Leave accruals(Days)">
+		<display-entity entity-name="EmplLeaveType" key-field-name="leaveTypeId" description="${accrualRate}"></display-entity>
+		</field> -->
 		<field name="annualUsedLeaveDays" title="Annual Used Leave Days">
 			<display />
 		</field>

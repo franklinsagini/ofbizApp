@@ -2,6 +2,44 @@
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
+
+    <screen name="branchReports">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Branch Reports"/>
+                <set field="headerItem" value="branchReports"/>
+            </actions>
+            <widgets>
+                <section>
+                    <widgets>
+                        <screenlet>
+                            <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                            <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <container style="lefthalf">
+                                    <screenlet title="Active Members">
+                                        <include-form name="activeMembers" location="component://accountreports/widget/accountreportsForms.xml"/>
+                                    </screenlet>
+                                </container>
+                                 <container style="righthalf">                          
+                                    <screenlet title="Staff Statutory Report ">
+                                        <!-- <include-form name="staffListingFormCSV" location="component://humanres/widget/ReportForms.xml"/> -->
+                                    </screenlet>
+                                </container>
+                            </widgets>
+                        </section>
+                        </decorator-section>
+                        </decorator-screen>
+                    </screenlet>
+                    </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+
+
+
 	<screen name="main">
 		<section>
 			<actions>
@@ -263,6 +301,43 @@
            </actions>
            <widgets>
                 <include-form name="accountContributionExport" location="component://accountreports/widget/accountreportsForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+
+    <screen name="branchMembers">
+        <section>
+            <actions>
+                <set field="viewSize" value="99999"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                <set field="startDate" from-field="parameters.startDate" type="Timestamp"/>
+                <script location="component://accountreports/webapp/accountreports/WEB-INF/actions/reports/branchMembers.groovy"/>
+            </actions>
+            <widgets>
+                <label style="h3" text="INDIVIDUAL BRANCH MEMBERSHIP STATUS TOTAL "/>
+                <include-form name="branchesMembersData" location="component://accountreports/widget/accountreportsForms.xml"/>
+                <label style="h3" text="ALL BRANCHES TOTALS"/>
+                <include-form name="branchesTotals" location="component://accountreports/widget/accountreportsForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="branchAccountBalances">
+        <section>
+            <actions>
+                <set field="viewSize" value="99999"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                <set field="startDate" from-field="parameters.startDate" type="Timestamp"/>
+                <script location="component://accountreports/webapp/accountreports/WEB-INF/actions/reports/branchAccountBalances.groovy"/>
+            </actions>
+            <widgets>
+                <label style="h3" text="BRANCH MEMBER ACCOUNTS TOTALS"/>
+                <include-form name="branchAccountBalances" location="component://accountreports/widget/accountreportsForms.xml"/>
+                <label style="h3" text="ALL BRANCHES TOTALS"/>
+                <include-form name="branchAccountBalancesTotals" location="component://accountreports/widget/accountreportsForms.xml"/>
             </widgets>
         </section>
     </screen>

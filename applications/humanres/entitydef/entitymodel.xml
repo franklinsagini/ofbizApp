@@ -2236,6 +2236,7 @@ under the License.
        <alias entity-alias="PersonView" name="confirmationdate" field="confirmationdate"/>
       <alias entity-alias="PersonView" name="firstName" field="firstName"/>
       <alias entity-alias="PersonView" name="lastName" field="lastName"/>
+      <alias entity-alias="PersonView" name="isSeparated" field="isSeparated"/>
       <alias entity-alias="PartyRoleView" name="roleTypeId" field="roleTypeId"/>
 
       <view-link  entity-alias="PersonView" rel-entity-alias="PartyRoleView">
@@ -2477,6 +2478,7 @@ under the License.
     <field name="salary" type="currency-amount"></field>
     <field name="leaveAllowance" type="currency-amount"></field>
     <field name="total" type="currency-amount"></field>
+     <field name="totalDeductions" type="currency-amount"></field>
     <field name="leaveDaysAsAtEffect" type="currency-amount"></field> 
     <field name="lienOfNotice" type="currency-amount"></field> 
     <field name="lienOfNoticeAdminToEmpl" type="currency-amount"></field>
@@ -2550,6 +2552,15 @@ under the License.
         <field name="totaldays" type="currency-amount" enable-audit-log="true"></field>
         <field name="balance" type="currency-amount" enable-audit-log="true"></field>
         <prim-key field="partyId"/>
+    </entity>
+    
+    <entity entity-name="SMSMessages" package-name="org.ofbiz.humanres.employment" title="Table to hold SMS to be send">
+      <field name="SMSMessagesId" type="id-ne"></field>
+      <field name="phoneNumber" type="name"></field>
+      <field name="smsBody" type="comment"></field> 
+       <field name="timeDateSend" type="date-time"></field> 
+      <field name="sendStatus" type="name"></field>
+      <prim-key field="SMSMessagesId"/>
     </entity>
     
     
