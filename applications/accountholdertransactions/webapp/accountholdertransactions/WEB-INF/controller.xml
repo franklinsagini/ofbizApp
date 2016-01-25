@@ -935,14 +935,83 @@
 		<!-- response name="success" type="view" value="cashWithdrawal">
 			<redirect-parameter name="partyId"/>
 		</response -->
-		
-		
+	
+	</request-map>
+	<!--Teller Reports  -->
+	<request-map uri="tellerCashWithdrawal">
+	  <security https="true" auth="true"/>
+	  <response name="success" type="view" value="tellerCashWithdrawal"></response>
+	  <response name="error" type="view" value="tellerCashWithdrawal"></response>	  
+	</request-map>
+	
+	<request-map uri="tellerCashDeposit">
+	  <security https="true" auth="true"/>
+	  <response name="success" type="view" value="tellerCashDeposit"></response>
+	  <response name="error" type="view" value="tellerCashDeposit"></response>	  
+	</request-map>
+	
+	<request-map uri="tellerChequeWithdrawal">
+	  <security https="true" auth="true"/>
+	  <response name="success" type="view" value="tellerChequeWithdrawal"></response>
+	  <response name="error" type="view" value="tellerChequeWithdrawal"></response>	  
+	</request-map>
+	
+	<request-map uri="tellerChequeDeposit">
+	  <security https="true" auth="true"/>
+	  <response name="success" type="view" value="tellerChequeDeposit"></response>
+	  <response name="error" type="view" value="tellerChequeDeposit"></response>	  
+	</request-map>
+	
+	<!--  -->
+	
+	<request-map uri="tellerCashWithdrawalExcel.csv">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="tellerCashWithdrawalExcelcsv" />
+	</request-map>
+	
+	<request-map uri="tellerCashDepositExcel.csv">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="tellerCashDepositExcelcsv" />
+	</request-map>
+	
+	<request-map uri="tellerChequeWithdrawalExcel.csv">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="tellerChequeWithdrawalExcelcsv" />
+	</request-map>
+	
+	<request-map uri="tellerChequeDepositExcel.csv">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="tellerChequeDepositExcelcsv" />
 	</request-map>
 	
 	
 	<!-- end of request mappings -->
 
 	<!-- View Mappings -->
+	
+	<!-- Teller Reports View Mappings -->
+	
+	 <view-map name="tellerCashWithdrawal" type="screen"
+		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#tellerCashWithdrawal" />
+	 <view-map name="tellerCashDeposit" type="screen"
+		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#tellerCashDeposit" />
+	 <view-map name="tellerChequeWithdrawal" type="screen"
+		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#tellerChequeWithdrawal" />
+	 <view-map name="tellerChequeDeposit" type="screen"
+		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#tellerChequeDeposit" />
+	
+	 <view-map name="tellerCashWithdrawalExcelcsv" type="screencsv" 
+	 page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#tellerCashWithdrawalExcelcsv" content-type="text/csv" encoding="none" />
+	 <view-map name="tellerCashDepositExcelcsv" type="screencsv" 
+	 page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#tellerCashDepositExcelcsv" content-type="text/csv" encoding="none" />
+	 <view-map name="tellerChequeWithdrawalExcelcsv" type="screencsv"
+	  page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#tellerChequeWithdrawalExcelcsv" content-type="text/csv" encoding="none" />
+	 <view-map name="tellerChequeDepositExcelcsv" type="screencsv" 
+	 page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#tellerChequeDepositExcelcsv" content-type="text/csv" encoding="none" />
+	
+	<!--End of teller reports  -->	
+		
+		
 	<!-- view-map name="main" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/CommonScreens.xml#shareSetup"/ -->
 	<!-- view-map name="main" type="screen" page="component://accountholdertransactions/widget://sharemanagement/LoanScreens.xml#loanapplicationslist"/ -->
 	<!-- view-map name="main" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewCashWithdrawal"/ -->

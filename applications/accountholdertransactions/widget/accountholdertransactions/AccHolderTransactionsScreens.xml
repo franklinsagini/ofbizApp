@@ -2707,5 +2707,372 @@
     
 	
 	
+	<!-- Teller Report Screens-->
+	
+	<screen name="tellerCashWithdrawal">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Members" />
+				<set field="headerItem" value="tellerCashWithdrawal" />
+				<!-- <set field="tabButtonItem" value="findmember" /> -->
+				<set field="memberCtx" from-field="parameters" />
+
+				<!-- service service-name="listSaccoMembers" auto-field-map="parameters"/ -->
+				<set field="statusName" value="ACTIVE" />
+				<set field="statusId"
+					value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}" />
+
+			</actions>
+			<widgets>
+				<!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+				<decorator-screen name="CommonExpectedPaymentsDecorator"
+					location="${parameters.mainDecoratorLocation}">
+
+					<decorator-section name="body">
+						
+						<section>
+							<!-- do check for PARTYMGR, _VIEW permission -->
+							<condition>
+								<!-- if-service-permission service-name="partyBasePermissionCheck"
+									main-action="VIEW"/ -->
+								<if-has-permission permission="ACCOUNTHOLDER"
+									action="_VIEW" />
+							</condition>
+							<widgets>
+							
+							<label style="h1"> CASH WITHDRAWAL REPORT</label>
+							<!-- <horizontal-separator></horizontal-separator>
+							 -->
+							<!-- 	<screenlet title="Teller Cash Withdrawal Report  (PDF)">
+									<include-form name="accountTransactionReport"
+										location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml" />
+								</screenlet> -->
+								<screenlet title="Teller Cash Withdrawal Report (CSV)">
+									<include-form name="tellerCashWithdrawalExcel"
+										location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml" />
+								</screenlet>
+								
+							</widgets>
+							<fail-widgets>
+								<label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}" />
+							</fail-widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	
+	<screen name="tellerCashDeposit">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Members" />
+				<set field="headerItem" value="tellerCashDeposit" />
+				<!-- <set field="tabButtonItem" value="findmember" /> -->
+				<set field="memberCtx" from-field="parameters" />
+
+				<!-- service service-name="listSaccoMembers" auto-field-map="parameters"/ -->
+				<set field="statusName" value="ACTIVE" />
+				<set field="statusId"
+					value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}" />
+
+			</actions>
+			<widgets>
+				<!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+				<decorator-screen name="CommonExpectedPaymentsDecorator"
+					location="${parameters.mainDecoratorLocation}">
+
+					<decorator-section name="body">
+						
+						<section>
+							<!-- do check for PARTYMGR, _VIEW permission -->
+							<condition>
+								<!-- if-service-permission service-name="partyBasePermissionCheck"
+									main-action="VIEW"/ -->
+								<if-has-permission permission="ACCOUNTHOLDER"
+									action="_VIEW" />
+							</condition>
+							<widgets>
+								<label style="h1" text="TELLER CASH DEPOSIT"></label>
+								<screenlet title="TELLER CASH DEPOSIT">
+									<include-form name="tellerCashDepositExcel"
+										location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml" />
+								</screenlet>
+								
+							</widgets>
+							<fail-widgets>
+								<label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}" />
+							</fail-widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	
+	<screen name="tellerChequeWithdrawal">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Members" />
+				<set field="headerItem" value="tellerChequeWithdrawal" />
+				<!-- <set field="tabButtonItem" value="findmember" /> -->
+				<set field="memberCtx" from-field="parameters" />
+
+				<!-- service service-name="listSaccoMembers" auto-field-map="parameters"/ -->
+				<set field="statusName" value="ACTIVE" />
+				<set field="statusId"
+					value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}" />
+
+			</actions>
+			<widgets>
+				<!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+				<decorator-screen name="CommonExpectedPaymentsDecorator"
+					location="${parameters.mainDecoratorLocation}">
+
+					<decorator-section name="body">
+						
+						<section>
+							<!-- do check for PARTYMGR, _VIEW permission -->
+							<condition>
+								<!-- if-service-permission service-name="partyBasePermissionCheck"
+									main-action="VIEW"/ -->
+								<if-has-permission permission="ACCOUNTHOLDER"
+									action="_VIEW" />
+							</condition>
+							<widgets>
+								<label style="h1" text="CHEQUE WITHDRAWAL"></label>
+								<screenlet title="TELLER CHEQUE WITHDRAWAL">
+									<include-form name="tellerChequeWithdrawalExcel"
+										location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml" />
+								</screenlet>
+								
+							</widgets>
+							<fail-widgets>
+								<label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}" />
+							</fail-widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	
+	<screen name="tellerChequeDeposit">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Members" />
+				<set field="headerItem" value="tellerChequeDeposit" />
+				<!-- <set field="tabButtonItem" value="findmember" /> -->
+				<set field="memberCtx" from-field="parameters" />
+
+				<!-- service service-name="listSaccoMembers" auto-field-map="parameters"/ -->
+				<set field="statusName" value="ACTIVE" />
+				<set field="statusId"
+					value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}" />
+
+			</actions>
+			<widgets>
+				<!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+				<decorator-screen name="CommonExpectedPaymentsDecorator"
+					location="${parameters.mainDecoratorLocation}">
+
+					<decorator-section name="body">
+						
+						<section>
+							<!-- do check for PARTYMGR, _VIEW permission -->
+							<condition>
+								<!-- if-service-permission service-name="partyBasePermissionCheck"
+									main-action="VIEW"/ -->
+								<if-has-permission permission="ACCOUNTHOLDER"
+									action="_VIEW" />
+							</condition>
+							<widgets>
+								<label style="h1" text="CHEQUE DEPOSIT"></label>
+								<screenlet title="TELLER CHEQUE DEPOSIT">
+									<include-form name="tellerChequeDepositExcel"
+										location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml" />
+								</screenlet>
+								
+							</widgets>
+							<fail-widgets>
+								<label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}" />
+							</fail-widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<!-- TEller Screens CSV -->
+	
+	 <screen name="tellerCashWithdrawalExcelcsv">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="accTransactionType" from-field="parameters.transaction"/>
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+
+                <script location="component://accountholdertransactions/webapp/accountholdertransactions/WEB-INF/actions/reports/TellerCashWithdrawal.groovy"/>
+                			
+            </actions>
+            <widgets>
+                <container>
+                   <label style="h1" text="  CHAI CO-OPERATIVE SAVINGS AND CREDIT SOCIETY LIMITED	"/>
+                    <label></label>
+                     <label style="h1" text=" 	P.O. BOX 278 - 00200 CITY SQUARE- NAIROBI KENYA. KTDA PLAZA - MOI AVENUE	"/>
+                    <label></label>
+                     <label style="h1" text=" TEL: 254 (0) 20 214406 - FAX 254 (0) 20 214410. E-MAIL: info@chai-sacco.co.ke			"/>
+                    <label></label>
+                    <label style="h1" text=" TRANSACTION TYPE: CASH WITHDRAWAL"/>
+                    <label></label>
+                    <label style="h2" text="  CASHIER : (${treasuryIdName})"></label>
+                    <label></label>
+                </container>
+                <include-form name="tellerCashWithdrawalExcelcsvForm" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                <label></label>
+                <label></label>
+                <label style="h1" text="                                    TOTAL WITHDRAWAL:  ${totalAmountStr}"></label>
+                 <label></label>
+            
+            </widgets>
+        </section>
+    </screen>
+    
+	 <screen name="tellerCashDepositExcelcsv">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="accTransactionType" from-field="parameters.transaction"/>
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+
+                <script location="component://accountholdertransactions/webapp/accountholdertransactions/WEB-INF/actions/reports/TellerCashDeposit.groovy"/>
+                			
+            </actions>
+            <widgets>
+                <container>
+                   <label style="h1" text="  CHAI CO-OPERATIVE SAVINGS AND CREDIT SOCIETY LIMITED	"/>
+                    <label></label>
+                     <label style="h1" text=" 	P.O. BOX 278 - 00200 CITY SQUARE- NAIROBI KENYA. KTDA PLAZA - MOI AVENUE	"/>
+                    <label></label>
+                     <label style="h1" text=" TEL: 254 (0) 20 214406 - FAX 254 (0) 20 214410. E-MAIL: info@chai-sacco.co.ke			"/>
+                    <label></label>
+                    <label style="h1" text=" TRANSACTION TYPE: CASH DEPOSIT"/>
+                    <label></label>
+                    <label style="h2" text="  CASHIER : (${treasuryIdName})"></label>
+                    <label></label>
+                    <label style="h2" text="  AS AT : (${asChoosendate})"></label>
+                    <label></label>
+                </container>
+                <include-form name="tellerCashWithdrawalExcelcsvForm" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                <label></label>
+                <label></label>
+                <label style="h1" text="                                    TOTAL DEPOSIT:  ${totalAmountStr}"></label>
+                 <label></label>
+            
+            </widgets>
+        </section>
+    </screen>
+    
+	
+	 <screen name="tellerChequeWithdrawalExcelcsv">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="accTransactionType" from-field="parameters.transaction"/>
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                <script location="component://accountholdertransactions/webapp/accountholdertransactions/WEB-INF/actions/reports/TellerChequeWithdrawal.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                   <label style="h1" text="             CHAI CO-OPERATIVE SAVINGS AND CREDIT SOCIETY LIMITED	"/>
+                    <label></label>
+                     <label style="h1" text="        	P.O. BOX 278 - 00200 CITY SQUARE- NAIROBI KENYA. KTDA PLAZA - MOI AVENUE	"/>
+                    <label></label>
+                     <label style="h1" text="       TEL: 254 (0) 20 214406 - FAX 254 (0) 20 214410. E-MAIL: info@chai-sacco.co.ke			"/>
+                    <label></label>
+                    <label style="h1" text="                        CHEQUE WITHDRAWAL REGISTER"/>
+                    <label></label>
+                    <label style="h2" text="        BETWEEN  ${startDate}  AND  ${endDate}"></label>
+                    <label></label>
+                </container>
+                 <label></label>
+                  <label style="h1" text="                                   BANKERS CHECKS"></label>
+                <label></label>
+                <include-form name="tellerChequeWithdrawalExcelcsvForm" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                <label></label>
+                 <label></label>
+                  <label style="h1" text="                                    ORDINARY CHECKS"></label>
+                <label></label>
+                <include-form name="tellerChequeWithdrawalExcelcsvFormNormal" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                 <label></label>
+            
+            </widgets>
+        </section>
+    </screen>
+    
+	
+	 <screen name="tellerChequeDepositExcelcsv">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="accTransactionType" from-field="parameters.transaction"/>
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+
+                <script location="component://accountholdertransactions/webapp/accountholdertransactions/WEB-INF/actions/reports/TellerChequeDeposit.groovy"/>
+                			
+            </actions>
+            <widgets>
+                <container>
+                   <label style="h1" text="  CHAI CO-OPERATIVE SAVINGS AND CREDIT SOCIETY LIMITED	"/>
+                    <label></label>
+                     <label style="h1" text=" 	P.O. BOX 278 - 00200 CITY SQUARE- NAIROBI KENYA. KTDA PLAZA - MOI AVENUE	"/>
+                    <label></label>
+                     <label style="h1" text=" TEL: 254 (0) 20 214406 - FAX 254 (0) 20 214410. E-MAIL: info@chai-sacco.co.ke			"/>
+                    <label></label>
+                    <label style="h1" text=" TRANSACTION TYPE: CHEQUE DEPOSIT"/>
+                    <label></label>
+                    <label style="h2" text="  CASHIER : (${treasuryIdName})"></label>
+                    <label></label>
+                    <label style="h2" text="  AS AT : (${asChoosendate})"></label>
+                    <label></label>
+                </container>
+                <include-form name="tellerChequeDepositExcelcsvForm" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                <label></label>
+                <label></label>
+                <label style="h1" text="                                    TOTAL DEPOSITED:  ${totalAmountStr}"></label>
+                 <label></label>
+            
+            </widgets>
+        </section>
+    </screen>
+    
+	
+	
+	
+	
 	
 </screens>
