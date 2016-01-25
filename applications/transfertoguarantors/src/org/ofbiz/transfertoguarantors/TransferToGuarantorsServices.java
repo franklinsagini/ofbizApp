@@ -891,6 +891,7 @@ public class TransferToGuarantorsServices {
 		
 		//Credit Member Savings
 		if (bdTotalPaid.compareTo(BigDecimal.ZERO) == 1){
+		sequence = sequence + 1;
 		String posting = "C";
 		String accountId = LoanUtilities.getAccountProductGivenCodeId(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE).getString("glAccountId");
 		Long partyId = loanApplication.getLong("partyId");
