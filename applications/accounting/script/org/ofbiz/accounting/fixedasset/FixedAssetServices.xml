@@ -26,6 +26,36 @@ under the License.
     <!-- ================================================================ -->
 
     <!-- create a new Fixed Asset header record -->
+    <simple-method method-name="createAsset" short-description="Create an FixedAsset">
+          <!-- create new entity and create all the fields -->
+        <make-value value-field="newEntity" entity-name="Assets"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+
+        <!-- create a non existing ID if not supplied -->
+        <if-empty field="parameters.fixedAssetIdassetId">
+            <sequenced-id sequence-name="Assets" field="newEntity.assetId"/>
+        <else>
+            <!-- check the Duplicate ID> -->
+            <entity-one entity-name="Assets" value-field="fixedAsset"/>
+            <if-not-empty field="fixedAsset">
+                <add-error>
+                    <fail-property resource="AccountingUiLabels" property="AccountingFixedAssetIdAlreadyExists"/>
+                </add-error>
+                <log level="info" message="${AccountingUiLabels.AccountingFixedAssetIdAlreadyExists}"/>
+                <else>
+                    <check-id field="parameters.assetId"/>
+                </else>                
+            </if-not-empty>
+            <check-errors/>
+            <set from-field="parameters.assetId" field="newEntity.assetId"/>
+        </else>
+        </if-empty>
+        <field-to-result field="newEntity.assetId" result-name="assetId"/>
+
+        <!-- finally create the record (should not exist already)-->
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    <!-- create a new Fixed Asset header record -->
     <simple-method method-name="createFixedAsset" short-description="Create an FixedAsset">
           <!-- create new entity and create all the fields -->
         <make-value value-field="newEntity" entity-name="FixedAsset"/>
@@ -54,6 +84,13 @@ under the License.
 
         <!-- finally create the record (should not exist already)-->
         <create-value value-field="newEntity"/>
+    </simple-method>
+
+    <!-- update an existing Fixed Asset header Record -->
+    <simple-method method-name="updateAsset" short-description="Update an existing FixedAsset">
+        <entity-one entity-name="Assets" value-field="lookedUpValue"/>
+        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+        <store-value value-field="lookedUpValue"/>
     </simple-method>
 
     <!-- update an existing Fixed Asset header Record -->

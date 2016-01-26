@@ -33,6 +33,23 @@ under the License.
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="fixedAssetTypeId" optional="false"/>
     </service>
+    <!-- Fixed Asset  -->
+    <service name="createAsset" default-entity-name="Assets" engine="simple"
+                location="component://accounting/script/org/ofbiz/accounting/fixedasset/FixedAssetServices.xml" invoke="createAsset" auth="true">
+        <description>Create a Fixed Asset</description>
+        <permission-service service-name="fixedAssetPermissionCheck" main-action="CREATE"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fixedAssetTypeId" optional="false"/>
+    </service>
+    <service name="updateAsset" default-entity-name="Assets" engine="simple"
+                location="component://accounting/script/org/ofbiz/accounting/fixedasset/FixedAssetServices.xml" invoke="updateAsset" auth="true">
+        <description>Update a Fixed Asset</description>
+        <permission-service service-name="fixedAssetPermissionCheck" main-action="UPDATE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fixedAssetTypeId" optional="false"/>
+    </service>
     <service name="updateFixedAsset" default-entity-name="FixedAsset" engine="simple"
                 location="component://accounting/script/org/ofbiz/accounting/fixedasset/FixedAssetServices.xml" invoke="updateFixedAsset" auth="true">
         <description>Update a Fixed Asset</description>

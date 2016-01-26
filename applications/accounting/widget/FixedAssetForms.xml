@@ -62,11 +62,185 @@ under the License.
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="FixedAssetSearchResults"/>
     </form>
 
+    <form name="FindAssetOptions" target="ListAssets" title="" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+        <auto-fields-entity entity-name="Assets" default-field-type="hidden"/>
+        <field name="tagNumber"><text-find/></field>
+        <field name="assetName"><text-find/></field>
+        <field name="fixedAssetTypeId" title="${uiLabelMap.AccountingFixedAssetTypeId}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="FixedAssetType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+             </drop-down>
+        </field>        
+        <field name="assetConditionId" title="Asset Condition">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="AssetCondition" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+             </drop-down>
+        </field>
+        <field name="assetStatusId" title="Asset Status">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="AssetStatus" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+             </drop-down>
+        </field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+
+    <form name="AssetSearchResults" type="list" list-name="listIt" paginate-target="ListAssets"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="Assets"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+<!--         <row-actions>
+            <service service-name="calculateFixedAssetDepreciation" result-map="assetDepreciationResultMap">
+                <field-map field-name="fixedAssetId" from-field="fixedAssetId"/>
+            </service>
+        </row-actions> -->
+        <field name="assetId" widget-style="linktext" sort-field="true">
+            <hyperlink also-hidden="false" description="${assetId}" target="EditAsset">
+                <parameter param-name="assetId"/>
+            </hyperlink>
+        </field>
+        <field name="assetName" title="${uiLabelMap.AccountingFixedAssetName}" sort-field="true">
+            <display/>
+        </field>
+        <field name="description" title="Description" sort-field="true">
+            <display/>
+        </field>
+        <field name="fixedAssetTypeId" sort-field="true">
+            <display-entity entity-name="FixedAssetType"/>
+        </field>
+        <field name="assetStatusId" sort-field="true">
+            <display-entity entity-name="AssetStatus"/>
+        </field>
+        <field name="assetConditionId" sort-field="true">
+            <display-entity entity-name="AssetCondition"/>
+        </field>
+        <field name="dateAcquired" sort-field="true">
+            <display/>
+        </field>
+        <field name="expectedEndOfLife" sort-field="true">
+            <display/>
+        </field>
+        <field name="purchaseCost" sort-field="true">
+            <display type="currency" currency="${purchaseCostUomId}"/>
+        </field>
+        <field name="salvageValue" sort-field="true">
+            <display type="currency" currency="${purchaseCostUomId}"/>
+        </field>
+        <field name="depreciation" sort-field="true">
+            <display type="currency" currency="${purchaseCostUomId}"/>
+        </field>
+        <field name="plannedPastDepreciationTotal">
+            <display description="${assetDepreciationResultMap.plannedPastDepreciationTotal}"/>
+        </field>
+        <field name="assetAssignment" widget-style="linktext" sort-field="true">
+            <hyperlink also-hidden="false" description="Assignments" target="AssetAssignment">
+                <parameter param-name="assetId"/>
+            </hyperlink>
+        </field>
+    </form>
+
     <form name="FindFixedAssetOptions" extends="lookupFixedAsset" extends-resource="component://accounting/widget/FieldLookupForms.xml"
         target="ListFixedAssets">
         <field name="searchOptions_collapsed"><hidden value="true"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+
+    <!-- create and update a fixed asset -->
+    <form name="EditAsset" type="single" target="updateAsset" title="" default-map-name="assetObject"
+        header-row-style="header-row" default-table-style="basic-table">
+        <alt-target use-when="assetObject==null" target="createAsset"/>
+        <!-- <auto-fields-service service-name="updateFixedAsset" map-name="fixedAsset"/> -->
+
+        <field use-when="assetObject!=null" name="assetId" tooltip="${uiLabelMap.CommonNotModifRecreat}">
+            <display/>
+        </field>
+        <field use-when="assetObject==null&amp;&amp;assetId!=null" name="assetId" tooltip="${uiLabelMap.CommonCannotBeFound}:[${assetId}]">
+            <text size="20" maxlength="20"/>
+        </field>
+        <field name="tagNumber" title="Tag Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+            <text size="20"/>
+        </field>        
+        <field name="assetName" title="${uiLabelMap.AccountingFixedAssetName}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+            <text size="20"/>
+        </field>
+        <field name="model" title="Model" >
+            <text size="20"/>
+        </field>
+        <field name="brand" title="Brand" >
+            <text size="20"/>
+        </field>
+        <field name="manufacturer" title="Manufacturer" >
+            <text size="20"/>
+        </field>
+        <field name="location" title="Location" >
+            <text size="20"/>
+        </field>
+        <field name="serialNumber" title="Serial Number" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+            <text size="20"/>
+        </field>
+        <field name="fixedAssetTypeId" title="Fixed Asset Type">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="FixedAssetType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="assetConditionId" title="Asset Condition">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="AssetCondition" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="assetStatusId" title="Asset Status">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="AssetStatus" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="dateAcquired" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+            <date-time/>
+        </field>
+        <field name="expectedEndOfLife">
+            <date-time/>
+        </field>
+        <field name="locatedAtFacilityId" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true" title="Located At">
+            <lookup target-form-name="LookupFacility"/>
+        </field>
+        <field name="purchaseCost" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+            <text size="20"/>
+        </field>
+        <field name="salvageValue" >
+            <text size="20"/>
+        </field>
+        <field name="depreciation" tooltip="Depreciation Rate" widget-style="required" required-field="true">
+            <text size="20"/>
+        </field>
+        <field name="createButton" use-when="assetObject==null" widget-style="smallSubmit" title="Create">
+            <submit button-type="button"/>
+        </field>
+        <field name="submitButton" use-when="assetObject!=null" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+
 
     <!-- create and update a fixed asset -->
     <form name="EditFixedAsset" type="single" target="updateFixedAsset" title="" default-map-name="fixedAsset"
@@ -248,6 +422,8 @@ under the License.
     </form>
 
     <!-- List all fixed asset idents  -->
+    
+    <!-- List all fixed asset idents  -->
     <form name="ListFixedAssetIdents" type="list" list-name="fixedAssetIdents" target="updateFixedAssetIdent"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -268,6 +444,46 @@ under the License.
             </hyperlink>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <!-- create a fixed asset Idents-->
+    <form name="NewAssetAssignment" type="single" target="AssignAsset" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <!-- <auto-fields-service service-name="AssignAsset"/> -->
+        <field name="assetId"><hidden/></field>
+        <field name="partyIdTo" title="Employee"><lookup target-form-name="LookupEmployee"/></field>
+        <field name="submitButton" title="Assign" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+<form name="ListAssetAssignment" type="list" list-name="fixedAssetIdents" target="updateFixedAssetIdent"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="AssetAssignment">
+                <condition-expr field-name="assetId" from-field="assetId"/>
+            </entity-condition>
+        </actions>
+        <!-- <auto-fields-service service-name="updateFixedAssetIdent"/> -->
+        <field name="assetId"><hidden/></field>
+        <field name="assignedTo">
+            <display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName} "/>
+        </field>
+        <field name="dateAssigned">
+            <display />
+        </field>
+        <field name="assignedBy">
+            <display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName} "/>
+        </field>
+        <field name="assignedBy">
+            <display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName} "/>
+        </field>
+        <field name="assignmentStatus">
+            <display />
+        </field>
+        <field name="deleteLink" title=" " widget-style="buttontext">
+            <hyperlink target="surrenderAsset" description="Surrender Asset" also-hidden="false">
+                <parameter param-name="assetId"/>
+            </hyperlink>
+        </field>
     </form>
 
     <!-- create a fixed asset Idents-->

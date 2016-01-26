@@ -1409,6 +1409,10 @@ under the License.
     <request-map uri="ListFixedAssets">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListFixedAssets"/>
+    </request-map>    
+    <request-map uri="ListAssets">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListAssets"/>
     </request-map>
     <request-map uri="FixedAssetSearchResults">
         <security https="true" auth="false"/>
@@ -1417,6 +1421,14 @@ under the License.
     <request-map uri="EditFixedAsset">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditFixedAsset"/>
+    </request-map>    
+    <request-map uri="EditAsset">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditAsset"/>
+    </request-map>
+    <request-map uri="AssetAssignment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AssetAssignment"/>
     </request-map>
     <request-map uri="createFixedAsset">
         <security https="true" auth="true"/>
@@ -1424,11 +1436,29 @@ under the License.
         <response name="success" type="view" value="EditFixedAsset"/>
         <response name="error" type="view" value="EditFixedAsset"/>
     </request-map>
+    <request-map uri="AssignAsset">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="assignAsset"/>
+        <response name="success" type="view" value="AssetAssignment"/>
+        <response name="error" type="view" value="AssetAssignment"/>
+    </request-map>
     <request-map uri="updateFixedAsset">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateFixedAsset"/>
         <response name="success" type="view" value="EditFixedAsset"/>
         <response name="error" type="view" value="EditFixedAsset"/>
+    </request-map>
+    <request-map uri="createAsset">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createAsset"/>
+        <response name="success" type="view" value="EditAsset"/>
+        <response name="error" type="view" value="EditAsset"/>
+    </request-map>
+    <request-map uri="updateAsset">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateAsset"/>
+        <response name="success" type="view" value="EditAsset"/>
+        <response name="error" type="view" value="EditAsset"/>
     </request-map>
 
    <!-- ================ Fixed Asset to Product Requests ================= -->
@@ -3231,7 +3261,14 @@ under the License.
 
     <request-map uri="LookupPayment"><security auth="true" https="true"/><response name="success" type="view" value="LookupPayment"/></request-map>
     <request-map uri="LookupInvoice"><security auth="true" https="true"/><response name="success" type="view" value="LookupInvoice"/></request-map>
-    <request-map uri="LookupFixedAsset"><security auth="true" https="true"/><response name="success" type="view" value="LookupFixedAsset"/></request-map>
+    <request-map uri="LookupFixedAsset">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupFixedAsset"/>
+    </request-map>    
+    <request-map uri="LookupAsset">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupAsset"/>
+    </request-map>
     <request-map uri="LookupGlAccount"><security auth="true" https="true"/><response name="success" type="view" value="LookupGlAccount"/></request-map>
     <request-map uri="LookupBillingAccount"><security auth="true" https="true"/><response name="success" type="view" value="LookupBillingAccount"/></request-map>
     <request-map uri="LookupFacility"><security https="true" auth="true"/><response name="success" type="view" value="LookupFacility"/></request-map>
@@ -3791,7 +3828,10 @@ under the License.
         <response name="success" type="view" value="FindPayrollTotalsScreen" save-current-view="true" />
     </request-map>
 
-
+    <request-map uri="LookupEmployee">
+        <security auth="true" https="true" />
+        <response name="success" type="view" value="LookupEmployee" />
+    </request-map>
 
 
 
@@ -3953,8 +3993,10 @@ under the License.
 
     <!-- FixedAsset -->
     <view-map name="ListFixedAssets" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssets"/>
+    <view-map name="ListAssets" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListAssets"/>
     <view-map name="FixedAssetSearchResults" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#FixedAssetSearchResults"/>
     <view-map name="EditFixedAsset" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#EditFixedAsset"/>
+    <view-map name="EditAsset" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#EditAsset"/>
     <view-map name="ListFixedAssetProducts" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssetProducts"/>
 
     <!-- Budget -->
@@ -3998,6 +4040,7 @@ under the License.
     <view-map name="FixedAssetChildren" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#FixedAssetChildren"/>
 
     <view-map name="EditFixedAssetIdents" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#EditFixedAssetIdents"/>
+    <view-map name="AssetAssignment" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#AssetAssignment"/>
     <view-map name="EditFixedAssetRegistrations" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#EditFixedAssetRegistrations"/>
     <view-map name="EditFixedAssetMaint" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#EditFixedAssetMaint"/>
     <view-map name="ListFixedAssetMaints" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssetMaints"/>
@@ -4106,6 +4149,7 @@ under the License.
     <view-map name="LookupProductStore" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProductStore"/>
 
     <view-map name="LookupFixedAsset" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupFixedAsset"/>
+    <view-map name="LookupAsset" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupAsset"/>
     <view-map name="LookupGlAccount" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupGlAccount"/>
     <view-map name="LookupBillingAccount" page="component://accounting/widget/LookupScreens.xml#LookupBillingAccount" type="screen"/>
     <view-map name="LookupPayment" page="component://accounting/widget/LookupScreens.xml#LookupPayment" type="screen"/>
@@ -4228,6 +4272,9 @@ under the License.
     <view-map name="SasraGLAccounts" type="screen" page="component://accounting/widget/GlobalGlAccountsScreens.xml#SasraGLAccounts"/>
     <view-map name="GlAccountBalanceByCostCenter" type="screen" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#GlAccountBalanceByCostCenter"/>
     <view-map name="GlAccountBalanceByCostCenterPdf" type="screenfop" page="component://accounting/widget/ReportFinancialSummaryScreens.xml#GlAccountBalanceByCostCenterPdf" content-type="application/pdf" encoding="none"/>
+
+    <view-map name="LookupEmployee" type="screen"
+        page="component://humanres/widget/LookupScreens.xml#LookupEmployee" />
 
     <!-- end of view mappings -->
 </site-conf>
