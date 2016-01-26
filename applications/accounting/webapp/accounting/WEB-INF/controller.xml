@@ -1436,12 +1436,14 @@ under the License.
         <response name="success" type="view" value="EditFixedAsset"/>
         <response name="error" type="view" value="EditFixedAsset"/>
     </request-map>
-    <request-map uri="AssignAsset">
+    
+    <request-map uri="newAssetAssignment">
         <security https="true" auth="true"/>
-        <event type="service" invoke="assignAsset"/>
-        <response name="success" type="view" value="AssetAssignment"/>
+        <event type="service" invoke="newAssetAssignment"/>
+        <response name="success" type="request-redirect" value="AssetAssignment"/>
         <response name="error" type="view" value="AssetAssignment"/>
     </request-map>
+
     <request-map uri="updateFixedAsset">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateFixedAsset"/>

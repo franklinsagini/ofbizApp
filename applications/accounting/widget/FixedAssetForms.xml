@@ -81,10 +81,10 @@ under the License.
                 </entity-options>
              </drop-down>
         </field>
-        <field name="assetStatusId" title="Asset Status">
+        <field name="assetAssignmentStatusId" title="Asset Status">
             <drop-down allow-empty="true">
-                <entity-options entity-name="AssetStatus" description="${description}">
-                    <entity-order-by field-name="description"/>
+                <entity-options entity-name="AssetAssignmentStatus" description="${statusName}">
+                    <entity-order-by field-name="statusName"/>
                 </entity-options>
              </drop-down>
         </field>
@@ -207,13 +207,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="assetStatusId" title="Asset Status">
-            <drop-down allow-empty="false">
-                <entity-options entity-name="AssetStatus" description="${description}">
-                    <entity-order-by field-name="description"/>
-                </entity-options>
-            </drop-down>
-        </field>
+
         <field name="dateAcquired" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
             <date-time/>
         </field>
@@ -447,15 +441,15 @@ under the License.
     </form>
 
     <!-- create a fixed asset Idents-->
-    <form name="NewAssetAssignment" type="single" target="AssignAsset" title=""
+    <form name="NewAssetAssignment" type="single" target="newAssetAssignment" title=""
         header-row-style="header-row" default-table-style="basic-table">
         <!-- <auto-fields-service service-name="AssignAsset"/> -->
         <field name="assetId"><hidden/></field>
-        <field name="partyIdTo" title="Employee"><lookup target-form-name="LookupEmployee"/></field>
+        <field name="assignedTo" title="Employee"><lookup target-form-name="LookupEmployee"/></field>
         <field name="submitButton" title="Assign" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
-<form name="ListAssetAssignment" type="list" list-name="fixedAssetIdents" target="updateFixedAssetIdent"
+<form name="ListAssetAssignment" type="list" list-name="listIt" target="updateFixedAssetIdent"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="AssetAssignment">
