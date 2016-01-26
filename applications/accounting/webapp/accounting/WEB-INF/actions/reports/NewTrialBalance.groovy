@@ -34,6 +34,8 @@ finalTransList = []
 finalTransListBuilder = []
 postedDebitsTotal = 0
 postedCreditsTotal = 0
+totalCredits = 0
+totalDebits = 0
 summaryCondition = [];
 summaryCondition.add(EntityCondition.makeCondition("ateTransactionDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
 
@@ -80,6 +82,12 @@ glAccounts.each { glAccount ->
       }
     }
   }
+  if (endingBalanceCredit == 0) {
+    totalDebits = totalDebits+endingBalanceDebit
+  }
+  if (endingBalanceDebit == 0) {
+    totalCredits = totalCredits + endingBalanceCredit
+  }
   if (endingBalanceCredit != 0 || endingBalanceDebit != 0) {
     finalTransListBuilder = [
         accountCode:glAccount.accountCode,
@@ -92,8 +100,12 @@ glAccounts.each { glAccount ->
 
 }
 
+System.out.println("TOTAL CREDITS: "+totalCredits)
+System.out.println("TOTAL DEBITS: "+totalDebits)
 
 context.accountBalances = finalTransList
-context.postedDebitsTotal = postedDebitsTotal
-context.postedCreditsTotal = postedCreditsTotal
+//context.postedDebitsTotal = postedDebitsTotal
+context.postedDebitsTotal = totalDebits
+//context.postedCreditsTotal = postedCreditsTotal
+context.postedCreditsTotal = totalCredits
 
