@@ -46,7 +46,7 @@ if (organizationPartyId=="Company") {
 }
 
 tBViewData = delegator.findList('TBViewData',  EntityCondition.makeCondition(summaryCondition, EntityOperator.AND), null,["gaoGlAccountId"],null,false)
-glAccounts = delegator.findList('GlAccount',  null, null,["glAccountId"],null,false)
+glAccounts = delegator.findList('GlAccount',  null, null,["accountCode"],null,false)
 
 glAccounts.each { glAccount ->
   accountBalance = 0
