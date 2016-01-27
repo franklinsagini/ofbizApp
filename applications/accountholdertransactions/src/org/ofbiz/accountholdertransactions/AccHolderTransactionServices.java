@@ -8296,6 +8296,11 @@ public class AccHolderTransactionServices {
 		String exciseDutyAccountId = chargeDutyItem.getDutyAccountId();
 
 		GenericValue accountProduct = getAccountProductEntity(memberAccountId);
+		
+		//GenericValue accountProduct = getAccountProductEntity(memberAccountId);
+
+		String glLedgerAccountId = accountProduct.getString("glAccountId");
+		
 		String unclearedChequeAccountId = accountProduct
 				.getString("unclearedChequesAccountId");
 		BigDecimal bdUnclearedAmount = bdChequeAmount
@@ -8347,13 +8352,17 @@ public class AccHolderTransactionServices {
 				glAccountTypeId, entrySequenceId);
 
 		entrySequenceId = "3";
-		// CR Uncleared Cheque Amount
+		// CR  Account Ledger Account e.g. Savings Account with Uncleared Cheque Amount
 		postTransactionEntry(delegator, bdUnclearedAmount, employeeBranchId,
-				memberBranchId, unclearedChequeAccountId, "C", acctgTransId,
+				memberBranchId, glLedgerAccountId, "C", acctgTransId,
 				glAccountTypeId, entrySequenceId);
 
 		entrySequenceId = "4";
 		// Dr Bank A/C (Bank Cheque Account for this product)
+		String branchId = getEmployeeBranch(userLogin.get("partyId"));
+		//LoanUtilities.getMemberB
+		String bankglAccountId = LoanUtilities.getBranchBankAccount(branchId);
+		
 		postTransactionEntry(delegator, bdChequeAmount, employeeBranchId,
 				memberBranchId, unclearedChequeAccountId, "D", acctgTransId,
 				glAccountTypeId, entrySequenceId);
