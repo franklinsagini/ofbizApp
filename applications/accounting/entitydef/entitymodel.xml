@@ -1254,6 +1254,93 @@ under the License.
     <!-- org.ofbiz.accounting.fixedasset -->
     <!-- ========================================================= -->
 
+<entity entity-name="Assets" package-name="org.ofbiz.accounting.fixedasset" title="Asset Entity">
+        <field name="assetId" type="id-ne"></field>
+        <field name="fixedAssetTypeId" type="id"></field>
+        <field name="tagNumber" type="long-varchar"></field>
+        <field name="assetName" type="name"></field>
+        <field name="model" type="name"></field>
+        <field name="brand" type="name"></field>
+        <field name="manufacturer" type="name"></field>
+        <field name="assetConditionId" type="id-ne"></field>
+        <field name="assetAssignmentStatusId" type="id-ne"></field>
+        <field name="description" type="long-varchar"></field>
+        <field name="location" type="long-varchar"></field>
+        <field name="branchId" type="id-ne"></field>
+        <field name="dateAcquired" type="date-time"></field>
+        <field name="expectedEndOfLife" type="date"></field>
+        <field name="actualEndOfLife" type="date"></field>
+        <field name="serialNumber" type="long-varchar"></field>
+        <field name="salvageValue" type="currency-amount"/>
+        <field name="depreciation" type="currency-amount"/>
+        <field name="purchaseCost" type="currency-amount"/>
+        <field name="comments" type="comment"></field>
+        <prim-key field="assetId"/>
+        <relation type="one" fk-name="FIXEDAST_TYPE" rel-entity-name="FixedAssetType">
+            <key-map field-name="fixedAssetTypeId"/>
+        </relation>
+        <relation type="one" fk-name="ASSET_ASSIGN_STATUS" rel-entity-name="AssetAssignmentStatus">
+         <key-map field-name="assetAssignmentStatusId" />
+        </relation>
+        <relation type="one" fk-name="ASSET_COND" rel-entity-name="AssetCondition">
+         <key-map field-name="assetConditionId" />
+        </relation>
+        <relation type="one" fk-name="ASSET_BRANCH" rel-entity-name="PartyGroup">
+         <key-map field-name="branchId" rel-field-name="partyId"/>
+        </relation>
+        <index name="UNI_TAG_NO" unique="true">
+          <index-field name="tagNumber"/>
+        </index>
+    </entity>
+
+  <entity entity-name="AssetAssignment"
+            package-name="org.ofbiz.accounting.fixedasset"
+            default-resource-name="AccountingEntityLabels"
+            title="Fixed Asset Condition Entity">
+      <field name="assetAssignmentId" type="id-ne"></field>
+      <field name="assetId" type="id-ne"></field>
+      <field name="dateAssigned" type="date-time"></field>
+      <field name="assignedTo" type="id-ne"></field>
+      <field name="assignedBy" type="id-ne"></field>
+      <field name="surrenderDate" type="date-time"></field>
+      <field name="surrenderedTo" type="id-ne"></field>
+      <field name="assignmentStatus" type="name"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="assetAssignmentId"/>
+    </entity>   
+
+
+      <entity entity-name="AssetCondition"
+            package-name="org.ofbiz.accounting.fixedasset"
+            default-resource-name="AccountingEntityLabels"
+            title="Fixed Asset Condition Entity">
+      <field name="assetConditionId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="assetConditionId"/>
+    </entity>    
+
+    <entity entity-name="AssetAssignmentStatus"
+            package-name="org.ofbiz.accounting.fixedasset"
+            default-resource-name="AccountingEntityLabels"
+            title="Fixed Asset Condition Entity">
+      <field name="assetAssignmentStatusId" type="id-ne"></field>
+      <field name="statusName" type="name"></field>
+      <prim-key field="assetAssignmentStatusId"/>
+              <index name="UNI_STATUS_NAME" unique="true">
+          <index-field name="statusName"/>
+        </index>
+    </entity>    
+
+    <entity entity-name="AssetStatus"
+            package-name="org.ofbiz.accounting.fixedasset"
+            default-resource-name="AccountingEntityLabels"
+            title="Fixed Asset Condition Entity">
+      <field name="assetStatusId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="assetStatusId"/>
+    </entity>
+
+
     <entity entity-name="FixedAsset" package-name="org.ofbiz.accounting.fixedasset" title="Fixed Asset Entity">
         <field name="fixedAssetId" type="id-ne"></field>
         <field name="fixedAssetTypeId" type="id"></field>
