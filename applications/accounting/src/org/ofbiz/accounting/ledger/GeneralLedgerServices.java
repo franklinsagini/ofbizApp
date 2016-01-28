@@ -757,8 +757,9 @@ public class GeneralLedgerServices {
 				e.printStackTrace();
 			}
 			
-			accountTransactionsNoAmt = accountTransactionsNoAmtList.get(0);
-			
+			if (accountTransactionsNoAmtList.size() > 0) {
+				accountTransactionsNoAmt = accountTransactionsNoAmtList.get(0);
+			}
 			
 			
 			EntityConditionList<EntityExpr> parentCond = EntityCondition.makeCondition(UtilMisc.toList(
