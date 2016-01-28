@@ -658,38 +658,7 @@ public class GeneralLedgerServices {
 				sb.append(cardNo);
 			}
 			
-			if (accountTransaction.getString("transactionType").equals("Cheque Deposit Charge") || 
-					accountTransaction.getString("transactionType").equals("Cheque Deposit Excise") ||
-					accountTransaction.getString("transactionType").equals("Cheque Deposit Charge Reversed") ||
-					accountTransaction.getString("transactionType").equals("Cheque Deposit Excise Reversed") ||
-					accountTransaction.getString("transactionType").equals("CHEQUEDEPOSITREVERSED")) {
-	
-				//for this go for the parent
 
-				
-				EntityConditionList<EntityExpr> parentCond = EntityCondition.makeCondition(UtilMisc.toList(
-						EntityCondition.makeCondition("accountTransactionParentId", EntityOperator.EQUALS, accountTransaction.getString("accountTransactionParentId")),
-						EntityCondition.makeCondition("chequeNo", EntityOperator.NOT_EQUAL, null),
-						EntityCondition.makeCondition("drawer", EntityOperator.NOT_EQUAL, null)
-						), EntityOperator.AND);
-				List<GenericValue> parentAccountTransactionList = null;
-				try {
-					parentAccountTransactionList = delegator.findList("AccountTransaction", parentCond, null, null, null, false);
-				} catch (GenericEntityException e) {
-					e.printStackTrace();
-				}
-				
-				GenericValue parentAccountTransaction = parentAccountTransactionList.get(0);
-				
-				sb.append(" ");
-				sb.append("ChequeNo: ");
-				sb.append(" ");
-				sb.append(parentAccountTransaction.getString("chequeNo"));
-				sb.append(" ");
-				sb.append("Drawer: ");
-				sb.append(" ");
-				sb.append(parentAccountTransaction.getString("drawer"));
-			}
 			
 			
 
@@ -776,10 +745,49 @@ public class GeneralLedgerServices {
 		}
 
 		if (sb.length() < 1) {
-			if (acctgTransEntry.getString("glAccountTypeId") != null) {
-				sb.append(acctgTransEntry.getString("glAccountTypeId"));
-			}
+			List<GenericValue>accountTransactionsNoAmtList = null;
+			GenericValue accountTransactionsNoAmt = null;
+			EntityConditionList<EntityExpr> accountTransactionsCondNoAmt = EntityCondition.makeCondition(UtilMisc.toList(
+					EntityCondition.makeCondition("acctgTransId", EntityOperator.EQUALS, acctgTransEntry.getString("acctgTransId"))
+					), EntityOperator.AND);
 
+			try {
+				accountTransactionsNoAmtList = delegator.findList("AccountTransaction", accountTransactionsCondNoAmt, null, null, null, false);
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+			
+			accountTransactionsNoAmt = accountTransactionsNoAmtList.get(0);
+			
+			
+			
+			EntityConditionList<EntityExpr> parentCond = EntityCondition.makeCondition(UtilMisc.toList(
+					EntityCondition.makeCondition("accountTransactionParentId", EntityOperator.EQUALS, accountTransactionsNoAmt.getString("accountTransactionParentId")),
+					EntityCondition.makeCondition("transactionType", EntityOperator.EQUALS, "CHEQUEDEPOSIT")
+					), EntityOperator.AND);
+			List<GenericValue> parentAccountTransactionList = null;
+			try {
+				parentAccountTransactionList = delegator.findList("AccountTransaction", parentCond, null, null, null, false);
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+			
+			GenericValue parentAccountTransaction = parentAccountTransactionList.get(0);
+			
+			sb.append(" ");
+			sb.append("ChequeNo: ");
+			sb.append(" ");
+			sb.append(parentAccountTransaction.getString("chequeNo"));
+			sb.append(" ");
+			sb.append("Drawer: ");
+			sb.append(" ");
+			sb.append(parentAccountTransaction.getString("drawer"));
+		
+			if (sb.length() < 1) {
+				if (acctgTransEntry.getString("glAccountTypeId") != null) {
+					sb.append(acctgTransEntry.getString("glAccountTypeId"));
+				}
+			}
 		}
 
 		return sb.toString();
