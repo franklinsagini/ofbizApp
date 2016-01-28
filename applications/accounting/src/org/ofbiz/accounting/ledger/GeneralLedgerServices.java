@@ -773,16 +773,21 @@ public class GeneralLedgerServices {
 				e.printStackTrace();
 			}
 			
-			GenericValue parentAccountTransaction = parentAccountTransactionList.get(0);
+			GenericValue parentAccountTransaction = null;
 			
-			sb.append(" ");
-			sb.append("ChequeNo: ");
-			sb.append(" ");
-			sb.append(parentAccountTransaction.getString("chequeNo"));
-			sb.append(" ");
-			sb.append("Drawer: ");
-			sb.append(" ");
-			sb.append(parentAccountTransaction.getString("drawer"));
+			if (parentAccountTransactionList.size() > 0) {
+				parentAccountTransaction = parentAccountTransactionList.get(0);
+				sb.append(" ");
+				sb.append("ChequeNo: ");
+				sb.append(" ");
+				sb.append(parentAccountTransaction.getString("chequeNo"));
+				sb.append(" ");
+				sb.append("Drawer: ");
+				sb.append(" ");
+				sb.append(parentAccountTransaction.getString("drawer"));
+			}
+			
+			
 		
 			if (sb.length() < 1) {
 				if (acctgTransEntry.getString("glAccountTypeId") != null) {
