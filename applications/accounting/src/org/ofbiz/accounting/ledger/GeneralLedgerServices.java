@@ -759,33 +759,36 @@ public class GeneralLedgerServices {
 			
 			if (accountTransactionsNoAmtList.size() > 0) {
 				accountTransactionsNoAmt = accountTransactionsNoAmtList.get(0);
+				
+				EntityConditionList<EntityExpr> parentCond = EntityCondition.makeCondition(UtilMisc.toList(
+						EntityCondition.makeCondition("accountTransactionParentId", EntityOperator.EQUALS, accountTransactionsNoAmt.getString("accountTransactionParentId")),
+						EntityCondition.makeCondition("transactionType", EntityOperator.EQUALS, "CHEQUEDEPOSIT")
+						), EntityOperator.AND);
+				List<GenericValue> parentAccountTransactionList = null;
+				try {
+					parentAccountTransactionList = delegator.findList("AccountTransaction", parentCond, null, null, null, false);
+				} catch (GenericEntityException e) {
+					e.printStackTrace();
+				}
+				
+				GenericValue parentAccountTransaction = null;
+				
+				if (parentAccountTransactionList.size() > 0) {
+					parentAccountTransaction = parentAccountTransactionList.get(0);
+					sb.append(" ");
+					sb.append("ChequeNo: ");
+					sb.append(" ");
+					sb.append(parentAccountTransaction.getString("chequeNo"));
+					sb.append(" ");
+					sb.append("Drawer: ");
+					sb.append(" ");
+					sb.append(parentAccountTransaction.getString("drawer"));
+				}
+				
 			}
 			
 			
-			EntityConditionList<EntityExpr> parentCond = EntityCondition.makeCondition(UtilMisc.toList(
-					EntityCondition.makeCondition("accountTransactionParentId", EntityOperator.EQUALS, accountTransactionsNoAmt.getString("accountTransactionParentId")),
-					EntityCondition.makeCondition("transactionType", EntityOperator.EQUALS, "CHEQUEDEPOSIT")
-					), EntityOperator.AND);
-			List<GenericValue> parentAccountTransactionList = null;
-			try {
-				parentAccountTransactionList = delegator.findList("AccountTransaction", parentCond, null, null, null, false);
-			} catch (GenericEntityException e) {
-				e.printStackTrace();
-			}
-			
-			GenericValue parentAccountTransaction = null;
-			
-			if (parentAccountTransactionList.size() > 0) {
-				parentAccountTransaction = parentAccountTransactionList.get(0);
-				sb.append(" ");
-				sb.append("ChequeNo: ");
-				sb.append(" ");
-				sb.append(parentAccountTransaction.getString("chequeNo"));
-				sb.append(" ");
-				sb.append("Drawer: ");
-				sb.append(" ");
-				sb.append(parentAccountTransaction.getString("drawer"));
-			}
+	
 			
 			
 		
