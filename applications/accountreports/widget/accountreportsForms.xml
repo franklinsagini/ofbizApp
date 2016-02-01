@@ -14,8 +14,59 @@
         <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
+    </form>    
+
+    <form name="TotalLoanBook" type="single" target="branchLoanBook" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="startDate" title="From"  widget-style="required" required-field="true">
+            <date-time type="date"/>
+        </field>
+        
+        <field name="endDate" title="To" position="2"  widget-style="required" required-field="true">
+            <date-time type="date"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
     </form>
 
+    <form name="branchesMembersData" list-name="memberStatusList"  target="" title="" 
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+       <field name="statusName" title="Status Name"><display/></field>
+       <field name="count" title="Total Count"><display/></field>
+     </form>    
+
+    <form name="branchesTotals" list-name="totalsList"  target="" title="" 
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+       <field name="branchName" title="Branch Name"><display/></field>
+       <field name="branchTotal" title="Branch Total Membership"><display/></field>
+     </form>    
+
+    <form name="branchLoanBook" list-name="memberStatusList"  target="" title="" 
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+       <field name="granted" title="Total Granted"><display/></field>
+       <field name="repaid" title="Total Repaid"><display/></field>
+     </form>    
+
+    <form name="branchLoanBookTotals" list-name="totalsList"  target="" title="" 
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+       <field name="branchName" title="Branch"><display/></field>
+       <field name="grantedTotal" title="Total Granted"><display/></field>
+       <field name="repaidTotal" title="Total Repaid"><display/></field>
+     </form>    
+
+
+<!--      <form name="branchesMembersData" list-name="memberStatusList"  target="" title="" 
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+       <field name="accountCode" title="Account Code"><display/></field>
+       <field name="accountName" title="Account Name"><display/></field>
+       <field name="accountTotal" title="Account Totals"><display/></field>
+     </form>     -->
 
 	<!-- memberAccountsReportForm -->
     <form name="memberAccountsReportForm" type="single" target="memberAccountListPDF" title="" header-row-style="header-row"
@@ -306,28 +357,6 @@
             <submit button-type="button" />
         </field>
     </form>
-    
-    <form name="branchesTotals" list-name="totalsList"  target="" title="" 
-         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
-         default-table-style="basic-table hover-bar" paginate="false"> 
-       <field name="branchName" title="Branch Name"><display/></field>
-       <field name="branchTotal" title="Branch Total Membership"><display/></field>
-     </form>
-
-    <form name="branchesMembersData" list-name="memberStatusList"  target="" title="" 
-         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
-         default-table-style="basic-table hover-bar" paginate="false"> 
-       <field name="statusName" title="Status Name"><display/></field>
-       <field name="count" title="Total Count"><display/></field>
-     </form>        
-
-     <form name="branchesMembersData" list-name="memberStatusList"  target="" title="" 
-         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
-         default-table-style="basic-table hover-bar" paginate="false"> 
-       <field name="accountCode" title="Account Code"><display/></field>
-       <field name="accountName" title="Account Name"><display/></field>
-       <field name="accountTotal" title="Account Totals"><display/></field>
-     </form>    
 
      <form name="accountContributionExport" list-name="combinedList"  target="" title="" 
          type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
