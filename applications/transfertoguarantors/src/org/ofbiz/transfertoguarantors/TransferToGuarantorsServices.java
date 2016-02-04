@@ -795,7 +795,7 @@ public class TransferToGuarantorsServices {
 		
 		//Set the Interest due to the total interest charged
 		if (bdTotalInterestChargedOnGuarantors.compareTo(BigDecimal.ZERO) == 1){
-		setNewLoanInterest(bdTotalInterestChargedOnGuarantors, parentLoanApplicationId, userLogin, acctgTransId);
+			setNewLoanInterest(bdTotalInterestChargedOnGuarantors, parentLoanApplicationId, userLogin, acctgTransId);
 		}
 		//set the Insurance due to the total insurance charged
 		
@@ -877,8 +877,9 @@ public class TransferToGuarantorsServices {
 		}
 		
 		//Debit Insurance Receivable
-		
+		System.out.println("VVVVVVVVVVV The value of first insurance is "+bdInsurancePaid);
 		if (bdInsurancePaid.compareTo(BigDecimal.ZERO) != 0){
+			System.out.println("VVVVVVVVVVV will now add this insurance "+bdInsurancePaid);
 			sequence = sequence + 1;
 			String posting = "D";
 			accountHolderTransactionSetup = LoanRepayments.getAccountHolderTransactionSetupRecord(
@@ -886,6 +887,7 @@ public class TransferToGuarantorsServices {
 			Long partyId = loanApplication.getLong("partyId");
 			String accountId = accountHolderTransactionSetup
 					.getString("memberDepositAccId");
+			System.out.println("VVVVVVVVVVV will now post this insurance "+bdInsurancePaid);
 			LoanRepayments.postTransactionEntry(delegator, bdInsurancePaid.abs(), partyId.toString(), accountId, posting, acctgTransId, acctgTransType, sequence.toString(), userLogin);
 		}
 		
