@@ -46,7 +46,7 @@ currentDate = UtilDateTime.nowTimestamp();
 count = 0
 loanApps.each { obj ->
          //GET MEMBER
-    if (count < 5) {
+
 
                 member = delegator.findOne("Member", [partyId : obj.partyId], false);
      println("Generating CRB Report for Member "+ member.firstName+ " " +member.lastName)
@@ -300,8 +300,7 @@ loanApps.each { obj ->
 
     ]
 
-    count = count + 1
-    }
+
   
    
     crbReportList.add(crbReportListBuilder);
