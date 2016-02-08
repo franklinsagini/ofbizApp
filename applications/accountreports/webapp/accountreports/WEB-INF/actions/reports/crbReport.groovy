@@ -43,7 +43,7 @@ loanApps = delegator.findList('LoanApplication',  EntityCondition.makeCondition(
 currentDate = UtilDateTime.nowTimestamp();
 
 
-
+count = 0
 loanApps.each { obj ->
          //GET MEMBER
 
@@ -299,6 +299,9 @@ loanApps.each { obj ->
         typeofSecurity:"S"
 
     ]
+
+
+  
    
     crbReportList.add(crbReportListBuilder);
 
