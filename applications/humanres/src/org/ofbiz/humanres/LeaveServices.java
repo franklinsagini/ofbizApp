@@ -2492,4 +2492,63 @@ public class LeaveServices {
 		return stationNumber;
 	}
 
+	public static String getTotalQualitativeMarks(String perfrReviewId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> getTotalQualitativeMarksELI = null;
+		BigDecimal perReviewIdToBigDecimal = BigDecimal.ZERO;
+		EntityConditionList<EntityExpr> qualiCondition = EntityCondition.makeCondition(UtilMisc
+				.toList(EntityCondition.makeCondition("perfReviewDefId", EntityOperator.EQUALS, perfrReviewId)));
+		try {
+			getTotalQualitativeMarksELI = delegator.findList("PerfReviewsGroupObjectiveDefinition", qualiCondition,
+					null, null, null, false);
+		} catch (GenericEntityException ex) {
+			ex.printStackTrace();
+		}
+		for (GenericValue genericValue : getTotalQualitativeMarksELI) {
+			perReviewIdToBigDecimal = perReviewIdToBigDecimal.add(genericValue.getBigDecimal("percentage"));
+		}
+		Double perReviewIdToBigDecimalToInt = perReviewIdToBigDecimal.doubleValue();
+		String perReviewIdToBigDecimalToString =""+perReviewIdToBigDecimalToInt;
+
+		return perReviewIdToBigDecimalToString;
+	}
+
+	public static String getTotaMarks(String qualitative, String quantitative) {
+		BigDecimal qualitativeToBigDecimal = BigDecimal.ZERO;
+		BigDecimal quantitativeToBigDecimal = BigDecimal.ZERO;
+		BigDecimal sumTotal = BigDecimal.ZERO;
+		try {
+			sumTotal = qualitativeToBigDecimal.add(quantitativeToBigDecimal);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		String sumTotalToString = sumTotal.toString();
+
+		return sumTotalToString;
+	}
+	
+	public static String getTotalQuantitative() {
+
+		String sumTotalToString = "20";
+
+		return sumTotalToString;
+	}
+	
+	public static String deviation(String deviation) {
+		BigDecimal totalSum = new BigDecimal(deviation);
+		BigDecimal oneHundredPercent = new BigDecimal(100);
+		BigDecimal deviated = BigDecimal.ZERO;
+		try {
+			deviated = oneHundredPercent.subtract(totalSum);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		String deviatedToString = deviated.toString();
+
+		return deviatedToString;
+	}
+	
+	
+	
+
 } // close Class

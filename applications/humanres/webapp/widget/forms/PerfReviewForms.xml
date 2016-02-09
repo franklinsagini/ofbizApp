@@ -2552,7 +2552,7 @@
 
 	 <!-- =====================  STAFF WHOSE SCORES HAVE NOT BEEN SUBMITTED  ===================================== -->
 
-	        <form name="NotSubmittedScoresForm" type="multi" use-row-submit="true"
+	  <form name="NotSubmittedScoresForm" type="multi" use-row-submit="true"
 		title="Selected Monument" separate-columns="true" paginate-target=""
 		target="" default-table-style="basic-table hover-bar" odd-row-style="alternate-row">
 		<actions>
@@ -2594,6 +2594,134 @@
 			</hyperlink>
 		</field>
 	</form>
+
+
+	<!-- Percentage And Deviation -->
+	<!-- <form name="percentageAndDeviation" type="list" title=""
+		separate-columns="true" default-entity-name="PerfReviewsDefinition" list-name="listIt"
+		paginate-target="PerfReviewsDefinition" paginate="true" odd-row-style="alternate-row"
+		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		<actions>
+			<service service-name="performFind" result-map="result"
+				result-map-list="listIt">
+				<field-map field-name="inputFields" from-field="parameters" />
+				<field-map field-name="entityName" value="PerfReviewsDefinition" />
+				<field-map field-name="orderBy" value="perfReviewDefId" />
+				<field-map field-name="viewIndex" from-field="viewIndex" />
+				<field-map field-name="viewSize" from-field="viewSize" />
+			</service>
+		</actions>
+		
+		<field name="perfReviewDefId" title="Performance Review Id">
+			<hidden/>
+		</field>
+		<field name="perfReviewName" title="Performance Review Name">
+			<display></display>
+		</field> -->
+		
+	<!-- 	<field name="quantitative" title="Percentage">
+			 <display default-value="${bsh:org.ofbiz.registry.FileServices.getIsReadyToMoveToSemiActiveState(perfReviewDefId);}"/>
+		</field>
+		
+		<field name="qualitative" title="Qualitative Total">
+			 <display default-value="${bsh:org.ofbiz.registry.FileServices.getIsReadyToMoveToSemiActiveState(quantitative,qualitative);}"/>
+		</field>
+		
+		<field name="totalPercentage" title="Percentage">
+			 <display default-value="${bsh:org.ofbiz.registry.FileServices.getIsReadyToMoveToSemiActiveState(quantitative,qualitative);}"/>
+		</field>
+		
+		<field name="deviation" title="Appraiser Role">
+			 <display default-value="${bsh:org.ofbiz.registry.FileServices.getIsReadyToMoveToSemiActiveState(quantitative,qualitative);}"/>
+		</field>
+	 -->
+	<!-- </form> -->
+	
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ <form name="findPerfpercentage" target="percentageAndDeviation" title="" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+      <!-- <auto-fields-entity entity-name="EmplLeave" default-field-type="find"/>  -->
+        <actions>
+        <entity-condition entity-name="PerfReviewsDefinition">
+        <order-by field-name="perfReviewDefId DESC"/>
+        </entity-condition>
+        </actions>
+       
+        <field name="perfReviewDefId" title="perfReviewDefIdId"><hidden/></field>
+   
+        <field name="perfReviewName" title="Review Name"><text-find></text-find></field>
+        <field name="description" title="Description"><hidden/></field>
+        <field name="noConditionFind"><hidden value="Y"/>
+        <!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+
+     <form name="percentageAndDeviation" target="" title="" list-name="listIt" type="list" paginate-target="percentageAndDeviation"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        <entity-condition entity-name="PerfReviewsDefinition">
+        <order-by field-name="createdStamp DESC"/>
+        	</entity-condition> 
+        
+            <service result-map-list="listIt" result-map="result" service-name="performFind">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="PerfReviewsDefinition"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+          
+		<field name="perfReviewDefId"><hidden/></field>
+		<field name="perfReviewName" title="Review Name"><display></display>
+		</field>
+		 <field name="description" title="Description"><display></display></field>
+		<field name="quantitative" title="quantitative Total">
+			 <display default-value="${bsh:org.ofbiz.humanres.LeaveServices.getTotalQualitativeMarks(perfReviewDefId);}"/>
+		</field>
+		
+		<field name="qualitative" title="Qualitative Total">
+			 <display default-value="${bsh:org.ofbiz.humanres.LeaveServices.getTotalQuantitative();}"/>
+		</field>
+		
+		<!-- <field name="totalPercentage" title="Percentage">
+			 <display default-value="${bsh:org.ofbiz.humanres.LeaveServices.getTotaMarks(quantitative,qualitative);}"/>
+		</field>
+		
+		<field name="deviation" title="Deviation From 100%">
+			 <display default-value="${bsh:org.ofbiz.humanres.LeaveServices.deviationFromHundred(totalPercentage);}"/>
+		</field> -->
+	
+    </form>
+
+
+
+
+
+
+
+
+
 
 
 
