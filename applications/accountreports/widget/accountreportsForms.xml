@@ -16,7 +16,47 @@
         </field>
     </form>    
 
+    <form name="LoanLossReport" type="single" target="LoanLossReportCSV" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="startDate" title="From"  widget-style="required" required-field="true">
+            <date-time type="date"/>
+        </field>
+        
+        <field name="endDate" title="To" position="2"  widget-style="required" required-field="true">
+            <date-time type="date"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>    
     <form name="TotalLoanBook" type="single" target="branchLoanBook" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="startDate" title="From"  widget-style="required" required-field="true">
+            <date-time type="date"/>
+        </field>
+        
+        <field name="endDate" title="To" position="2"  widget-style="required" required-field="true">
+            <date-time type="date"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>    
+    <form name="ActiveLoans" type="single" target="branchActiveLoans" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="startDate" title="From"  widget-style="required" required-field="true">
+            <date-time type="date"/>
+        </field>
+        
+        <field name="endDate" title="To" position="2"  widget-style="required" required-field="true">
+            <date-time type="date"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <form name="DeliquentLoans" type="single" target="branchDeliquentLoans" title=""
         header-row-style="header-row" default-table-style="basic-table">
         <field name="startDate" title="From"  widget-style="required" required-field="true">
             <date-time type="date"/>
@@ -42,7 +82,7 @@
          default-table-style="basic-table hover-bar" paginate="false"> 
        <field name="branchName" title="Branch Name"><display/></field>
        <field name="branchTotal" title="Branch Total Membership"><display/></field>
-     </form>    
+     </form>        
 
     <form name="branchLoanBook" list-name="memberStatusList"  target="" title="" 
          type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
@@ -51,7 +91,32 @@
        <field name="repaid" title="Total Repaid"><display/></field>
      </form>    
 
+    <form name="LoanLossReportCSV" list-name="loansLossList"  target="" title="" 
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+       <field name="category" title="Category"><display/></field>
+       <field name="active" title="Active Loans"><display/></field>
+       <field name="watchLoans" title="0 - 30 Days"><display/></field>
+       <field name="substandardLoans" title="31 - 60 Days"><display/></field>
+       <field name="doubtfulLoans" title="61 - 90 Days"><display/></field>
+       <field name="lossLoans" title="Over 90 Days"><display/></field>
+     </form>    
+
     <form name="branchLoanBookTotals" list-name="totalsList"  target="" title="" 
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+       <field name="branchName" title="Branch"><display/></field>
+       <field name="grantedTotal" title="Total Granted"><display/></field>
+       <field name="repaidTotal" title="Total Repaid"><display/></field>
+     </form>        
+     <form name="branchActiveLoansTotals" list-name="totalsList"  target="" title="" 
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+       <field name="branchName" title="Branch"><display/></field>
+       <field name="grantedTotal" title="Total Granted"><display/></field>
+       <field name="repaidTotal" title="Total Repaid"><display/></field>
+     </form>        
+     <form name="branchDeliquentLoansTotals" list-name="totalsList"  target="" title="" 
          type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
          default-table-style="basic-table hover-bar" paginate="false"> 
        <field name="branchName" title="Branch"><display/></field>

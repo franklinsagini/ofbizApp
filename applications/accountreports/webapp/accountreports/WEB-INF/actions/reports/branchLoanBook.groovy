@@ -79,6 +79,7 @@ branches.each { branch ->
         }
     }
 
+ 
     myLoansList.each { loan ->
         //get members branch
         branchId = BranchUtilServices.getMembersBranch(delegator, loan.partyId)
@@ -86,8 +87,9 @@ branches.each { branch ->
             branchGranted = branchGranted + loan.loanAmt
         }
     }
+
     totalGranted = totalGranted+branchGranted
-    totalRepaid = totalRepaid+branchGranted
+    totalRepaid = totalRepaid+branchRepaid
 
      totalsBuilder = [
             branchName : branch.groupName,

@@ -6,6 +6,7 @@ package org.ofbiz.accounting.branchreports;
 import java.sql.Timestamp;
 import java.util.List;
 
+import org.ofbiz.accounting.ledger.CrbReportServices;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -83,5 +84,19 @@ public class BranchUtilServices {
 		
 		return repaymentsList;
 	}
+	
+	public static Boolean isDeliquentLoan(Long loanApplicationId){
+		boolean isDeliquent = false;
+		
+		int daysInArrears = CrbReportServices.lastRepaymentDurationToDateInDays(loanApplicationId);
+		
+		if(daysInArrears > 30){
+			isDeliquent = true;
+		}
+		
+		return isDeliquent;
+	}
+	
+	
 
 }

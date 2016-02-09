@@ -2801,7 +2801,7 @@ under the License.
         </response>
         <response name="error" type="view" value="reconciledItems" />
     </request-map>
-    <request-map uri="saveReconciliation">
+<!--     <request-map uri="saveReconciliation">
         <security https="true" auth="true" />
         <event type="service" invoke="saveReconciliation" />
         <response name="success" type="request-redirect" value="BankRecon" >
@@ -2811,7 +2811,20 @@ under the License.
             <redirect-parameter name="headerId"/>
         </response>
         <response name="error" type="view" value="BankReconTrans" />
+    </request-map> -->
+    
+    <request-map uri="saveReconciliation">
+        <security https="true" auth="true" />
+        <event type="service" invoke="saveReconciliation" />
+        <response name="success" type="request-redirect" value="BankRecon" >
+            <redirect-parameter name="finAccountId"/>
+            <redirect-parameter name="reconDate"/>
+            <redirect-parameter name="finAccountTransId"/>
+            <redirect-parameter name="headerId"/>
+        </response>
+        <response name="error" type="view" value="BankRecon" />
     </request-map>
+
     <request-map uri="unreconcileBankTrans">
         <security https="true" auth="true" />
         <event type="service-multi" invoke="unreconcileBankTrans" />
