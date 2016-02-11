@@ -349,7 +349,47 @@
             </widgets>
         </section>
     </screen>
-
+    
+    <!-- As AT -->
+	<screen name="memberAccountListDownloadAsAt">
+		<section>
+			<actions>
+				<set field="headerItem" value="memberAccountListDownloadAsAt" />
+				<set field="tabButtonItem" value="memberAccountListDownloadAsAt" />
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<container>
+							<screenlet title="Accounts Listing">
+								<include-form name="memberAccountListingDownloadFormAsAT"
+									location="component://accountreports/widget/accountreportsForms.xml" />
+							</screenlet>
+						</container>
+						<container style="clear" />
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<!-- memberAccountListDownloadAsAtexcel -->
+	<screen name="memberAccountListDownloadAsAtexcel">
+        <section>
+            <actions>
+                <set field="viewSize" value="9999999" />
+                <!-- script location="component://party/webapp/partymgr/WEB-INF/actions/reports/loanDetails.groovy"/ -->
+               <!-- memberAccountListExcel.groovy -->
+                <script
+                    location="component://accountreports/webapp/accountreports/WEB-INF/actions/reports/memberAccountListDownloadAsAtexcel.groovy" />
+            </actions>
+            <widgets>
+                <include-form name="memberAccountBalanceExport"
+                    location="component://accountreports/widget/accountreportsForms.xml" />
+            </widgets>
+        </section>
+    </screen>
 
     <screen name="crbReport">
         <section>
