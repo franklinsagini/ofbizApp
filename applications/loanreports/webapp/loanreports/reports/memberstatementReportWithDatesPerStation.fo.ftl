@@ -19,8 +19,7 @@ under the License.
 <#escape x as x?xml>
  <#if memberList?has_content>
      <#list memberList as member>
-               
-             <fo:block font-weight="bold" text-align="center" provisional-distance-between-starts="2in" font-size="10pt" margin-left="0.2in">--------------------------------------------------------------------------------------------------</fo:block>
+               <fo:block font-size="10pt" break-before="page">
         
              
                     <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
@@ -59,14 +58,14 @@ under the License.
                 </fo:list-item-label>
                 <fo:list-item-body start-indent="body-start()">
                     <fo:block>
-                    	       <#assign stationId = member.stationId />
+                               <#assign stationId = member.stationId />
                               <#assign stationIdString = stationId.toString() />
                               <#assign station = delegator.findOne("Station", Static["org.ofbiz.base.util.UtilMisc"].toMap("stationId", stationIdString), true)/>
                                 <#-- if (expectation.totalAmount??)>
-								    Kshs.  ${expectation.totalAmount?string(",##0.0000")} 
-								    ${station.stationNumber} 
-								</#if -->
-								${station.name}
+                                    Kshs.  ${expectation.totalAmount?string(",##0.0000")} 
+                                    ${station.stationNumber} 
+                                </#if -->
+                                ${station.name}
  
                     </fo:block>
                 </fo:list-item-body>
@@ -86,13 +85,13 @@ under the License.
             Member Statement
         </fo:block -->
                 
-		 <#list memberStatementList as statement>
+         <#list memberStatementList as statement>
  
-			 <#if statement.partyId == member.partyId>
-			 
-			 
-			  <#assign totalAmount = statement.itemTotal >
-		 
+             <#if statement.partyId == member.partyId>
+             
+             
+              <#assign totalAmount = statement.itemTotal >
+         
         <fo:list-block provisional-distance-between-starts="2in" font-size="10pt" margin-left="0.2in">
             <fo:list-item>
                 <fo:list-item-label>
@@ -194,29 +193,29 @@ under the License.
                 <fo:table-body>
                     <#list statement.listOfTransactions as transaction>
                     
-                    	
-                    	<#if (transaction.increaseDecrease = 'I') && (transaction.transactionAmount??)  >
+                        
+                        <#if (transaction.increaseDecrease = 'I') && (transaction.transactionAmount??)  >
                                 <#if !(transaction.isLoanTransaction??)>
-                                	<#assign totalAmount = totalAmount + transaction.transactionAmount >
+                                    <#assign totalAmount = totalAmount + transaction.transactionAmount >
                                 </#if>
                                 
                                <#if (transaction.isLoanTransaction??) && (transaction.isLoanTransaction == true)>
-                                	<#assign totalAmount = totalAmount - transaction.transactionAmount >
-                                </#if>	
-                                		
-						</#if>
-						
-						<#if (transaction.increaseDecrease = 'D') && (transaction.transactionAmount??)  >
+                                    <#assign totalAmount = totalAmount - transaction.transactionAmount >
+                                </#if>  
+                                        
+                        </#if>
+                        
+                        <#if (transaction.increaseDecrease = 'D') && (transaction.transactionAmount??)  >
                                 
                                 <#if !(transaction.isLoanTransaction??)>
-                                	 <#assign totalAmount = totalAmount - transaction.transactionAmount >
-                                </#if>	
+                                     <#assign totalAmount = totalAmount - transaction.transactionAmount >
+                                </#if>  
                                 
                                  <#if (transaction.isLoanTransaction??) && (transaction.isLoanTransaction == true)>
-                                	 <#assign totalAmount = totalAmount + transaction.transactionAmount >
+                                     <#assign totalAmount = totalAmount + transaction.transactionAmount >
                                 </#if>
-                                		
-						</#if>
+                                        
+                        </#if>
                         <fo:table-row>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>
@@ -230,11 +229,11 @@ under the License.
                                 <fo:block>
                                 
                                 <#if transaction.repaymentMode?? >
-                                	
-                                	${transaction.transactionDescription?if_exists} (${transaction.repaymentMode?if_exists})
+                                    
+                                    ${transaction.transactionDescription?if_exists} (${transaction.repaymentMode?if_exists})
                                 
                                 <#else>
-                                	${transaction.transactionDescription?if_exists}
+                                    ${transaction.transactionDescription?if_exists}
                                 </#if>
                                 
                                 
@@ -242,31 +241,31 @@ under the License.
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right">
                                 <fo:block >
-                                	<#if (transaction.increaseDecrease = 'D') && (transaction.transactionAmount??)  >
-                                	
-                                		
-                                		   ${transaction.transactionAmount?string(",##0.00")}
-								  
-								</#if>
+                                    <#if (transaction.increaseDecrease = 'D') && (transaction.transactionAmount??)  >
+                                    
+                                        
+                                           ${transaction.transactionAmount?string(",##0.00")}
+                                  
+                                </#if>
                                 </fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right">
                                 <fo:block>
-                                	
-                                	<#if (transaction.increaseDecrease = 'I') && (transaction.transactionAmount??)  >
-                                	
-                                		
-                                		 ${transaction.transactionAmount?string(",##0.00")}
-								  
-								</#if>
-								
+                                    
+                                    <#if (transaction.increaseDecrease = 'I') && (transaction.transactionAmount??)  >
+                                    
+                                        
+                                         ${transaction.transactionAmount?string(",##0.00")}
+                                  
+                                </#if>
+                                
                                 </fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right">
                                 <fo:block>
                               
-								    ${totalAmount?string(",##0.00")} 
-								
+                                    ${totalAmount?string(",##0.00")} 
+                                
                                </fo:block>
                             </fo:table-cell>
                             
@@ -274,9 +273,9 @@ under the License.
                                 <fo:block>
                               
                                 <#if (expectation.totalAmount??)>
-								    Kshs.  ${expectation.totalAmount?string(",##0.00")} 
-								</#if>
-								
+                                    Kshs.  ${expectation.totalAmount?string(",##0.00")} 
+                                </#if>
+                                
                                </fo:block>
                             </fo:table-cell -->
                             <#-- fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
@@ -312,12 +311,12 @@ under the License.
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right">
                                 <fo:block font-size="12pt" font-weight="italics" font-style="italic" color="green">
-                                	Available Balance
+                                    Available Balance
                                 </fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm" text-align="right">
                                 <fo:block  font-size="12pt" font-weight="italics" font-style="italic" color="green">
-                                	${statement.availableBalace?string(",##0.00")} 
+                                    ${statement.availableBalace?string(",##0.00")} 
                                </fo:block>
                             </fo:table-cell>
                         </fo:table-row>
@@ -325,15 +324,15 @@ under the License.
                 </fo:table-body>
             </fo:table>
         </fo:block>
-			 
-			 
-			 
-			 
-			 </#if>
-		
+             
+             
+             
+             
+             </#if>
+        
         </#list>
     </#if>
-    
+    </fo:block>
    </#list>
     <#else>
         <fo:block text-align="center">NO DATA FOUND</fo:block>

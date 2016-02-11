@@ -5928,12 +5928,12 @@ public class HumanResServices {
 							EntityCondition.makeCondition(whichScore, EntityOperator.LESS_THAN, one)),
 							EntityOperator.AND);
 			
-			EntityConditionList<EntityExpr> anyblankConditions = EntityCondition.makeCondition(UtilMisc.toList(
+			/*EntityConditionList<EntityExpr> anyblankConditions = EntityCondition.makeCondition(UtilMisc.toList(
 			        EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, party),
 			        EntityCondition.makeCondition("quarter", EntityOperator.EQUALS, openedQuarter),
 					EntityCondition.makeCondition(whichScore, EntityOperator.EQUALS, blank)),
-					EntityOperator.AND);
-
+					EntityOperator.AND);*/
+/*
 			try {
 				StaffScoresELI2 = delegator.findList("PerfPartyReview",
 						anyblankConditions, null, null, null, false);
@@ -5942,9 +5942,9 @@ public class HumanResServices {
 				e.printStackTrace();
 			}
 			if (StaffScoresELI2.size() > 0) {
-				state = "VALID";
+				state = "INVALID";
 				return state;
-			} 
+			} */
 			
 			try {
 				StaffScoresELI = delegator.findList("PerfPartyReview",
@@ -5957,7 +5957,7 @@ public class HumanResServices {
 			
 
 			if (StaffScoresELI.size() > 0) {
-				state = "VALID";
+				state = "INVALID";
 				return state;
 			} else {
 				state = "VALID";

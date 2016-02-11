@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
+    or more contributor license agreements.  See the NOTICE file    
     distributed with this work for additional information
     regarding copyright ownership.  The ASF licenses this file
     to you under the Apache License, Version 2.0 (the
@@ -1272,4 +1272,43 @@
             </widgets>
         </section>
     </screen>
+    
+     <screen name="percentageAndDeviation">
+    <section>
+            <actions>
+               <set field="titleProperty" value="Perf Goals Def"/> 
+                <set field="headerItem" value="PerfReview"/>
+                <set field="tabButtonItem" value="percentageAndDeviation"/>                
+                 <entity-one entity-name="PerfReviewsDefinition" value-field="PerfReviewsDefinitionContext"/> 
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section>
+                            <widgets>
+                                <screenlet title="Search Percentage And Deviation">
+                                 <include-form name="findPerfpercentage" location="component://humanres/webapp/widget/forms/PerfReviewForms.xml"/> 
+                                </screenlet>
+                                
+                                <screenlet title="Performance Goal Defintion List">
+                        			 <include-form name="percentageAndDeviation" location="component://humanres/webapp/widget/forms/PerfReviewForms.xml"/> 
+                         		</screenlet>
+                            </widgets>
+                        </section>
+                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    
+    
+    
+    
+    
+    
 </screens>

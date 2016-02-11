@@ -55,10 +55,27 @@
                             </screenlet>
                         </container>
                         <container>
+                            <screenlet title="Loan Loss Report">
+                                <include-form name="LoanLossReport" location="component://accountreports/widget/accountreportsForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container>
                             <screenlet title="Total Loan Book">
                                 <include-form name="TotalLoanBook" location="component://accountreports/widget/accountreportsForms.xml"/>
                             </screenlet>
                         </container>
+                        <container style="clear"/>
+<!--                         <container>
+                            <screenlet title="Active Loans">
+                                <include-form name="ActiveLoans" location="component://accountreports/widget/accountreportsForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                        <container>
+                            <screenlet title="Deliquent Loans">
+                                <include-form name="DeliquentLoans" location="component://accountreports/widget/accountreportsForms.xml"/>
+                            </screenlet>
+                        </container> -->
                         <container style="clear"/>
                     </decorator-section>
                 </decorator-screen>
@@ -96,10 +113,59 @@
                 <script location="component://accountreports/webapp/accountreports/WEB-INF/actions/reports/branchLoanBook.groovy"/>
             </actions>
             <widgets>
-<!--                 <label style="h3" text="BRANCHES LOAN BOOK"/>
-                <include-form name="branchLoanBook" location="component://accountreports/widget/accountreportsForms.xml"/> -->
                 <label style="h3" text="BRANCH LOAN BOOK FROM ${startDate} TO ${endDate}"/>
                 <include-form name="branchLoanBookTotals" location="component://accountreports/widget/accountreportsForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="LoanLossReportCSV">
+        <section>
+            <actions>
+                <set field="viewSize" value="99999"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                <set field="startDate" from-field="parameters.startDate" type="Timestamp"/>
+                <set field="endDate" from-field="parameters.startDate" type="Timestamp"/>
+                <script location="component://accountreports/webapp/accountreports/WEB-INF/actions/reports/loanLossReport.groovy"/>
+            </actions>
+            <widgets>
+                <label style="h2" text="LOAN LOSS ${startDate} TO ${endDate}"/>
+                <include-form name="LoanLossReportCSV" location="component://accountreports/widget/accountreportsForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="branchActiveLoans">
+        <section>
+            <actions>
+                <set field="viewSize" value="99999"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                <set field="startDate" from-field="parameters.startDate" type="Timestamp"/>
+                <set field="endDate" from-field="parameters.startDate" type="Timestamp"/>
+                <script location="component://accountreports/webapp/accountreports/WEB-INF/actions/reports/branchActiveLoans.groovy"/>
+            </actions>
+            <widgets>
+                <label style="h3" text="BRANCH ACTIVE LOANS FROM ${startDate} TO ${endDate}"/>
+                <include-form name="branchActiveLoansTotals" location="component://accountreports/widget/accountreportsForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="branchDeliquentLoans">
+        <section>
+            <actions>
+                <set field="viewSize" value="99999"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                <set field="startDate" from-field="parameters.startDate" type="Timestamp"/>
+                <set field="endDate" from-field="parameters.startDate" type="Timestamp"/>
+                <script location="component://accountreports/webapp/accountreports/WEB-INF/actions/reports/branchDeliquentLoans.groovy"/>
+            </actions>
+            <widgets>
+                <label style="h3" text="BRANCH DELIQUENT LOANS FROM ${startDate} TO ${endDate}"/>
+                <include-form name="branchDeliquentLoansTotals" location="component://accountreports/widget/accountreportsForms.xml"/>
             </widgets>
         </section>
     </screen>
