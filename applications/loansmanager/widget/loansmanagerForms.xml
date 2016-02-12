@@ -705,8 +705,9 @@
 	</form>
 
 
+
 	
-	<form name="ListLoansToTop" type="list" list-name="listIt" paginate-target="rejectedLoanApplications" default-entity-name="LoanApplication" separate-columns="true" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="loanApplication">
+	<form name="ListLoansToTop" type="list" list-name="listIt" paginate-target="loanTopUp" default-entity-name="LoanApplication" separate-columns="true" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" default-map-name="loanApplication">
 		<actions>
 			<set field="statusName" value="DISBURSED"/>
 			<set field="statusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getLoanStatusId(statusName);}" type="PlainString"/>
@@ -755,7 +756,7 @@
 		<field name="createdBy" title="Created By">
 			<display />
 		</field>
-		<field name="topUpLoan" title="Top up loan"  widget-style="buttontext" use-when="loanStatusId == ${statusId}">
+		<field name="topUpLoan" title="Top up loan"  widget-style="buttontext" use-when="loanStatusId == ${6}">
 			<hyperlink target="topUpLoan" description="Top Up Loan" link-type="anchor">
 				<parameter param-name="loanApplicationId"/>
 			</hyperlink>
@@ -804,9 +805,19 @@
         </actions>
         <field name="loanApplicationId"><hidden/></field>       
         <field name="amount" ><text/></field>
-        <field name="comments"><text size="30"/></field>
+        <field name="narration"><text size="30"/></field>
         <field name="submitButton" title="Request Top Up" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
+    <form name="RequestTopUpDetails" type="single" target="approveLoanTop" default-map-name="loanTopUp">
+        <alt-target use-when="loanTopUp!=null&amp;&amp;loanTopUp.getString(&quot;statusName&quot;).equals(&quot;APPROVED&quot;)" target="disburseLoanTop"/>
+        <field name="loanApplicationId"><hidden/></field>
+        <field name="loanTopUpId"><hidden/></field>
+        <field name="amount" ><display/></field>
+        <field name="narration"><display/></field>
+        <field name="statusName"><display/></field>
+        <field name="submitButton" use-when="loanTopUp!=null&amp;&amp;loanTopUp.getString(&quot;statusName&quot;).equals(&quot;CAPTURED&quot;)" title="Approve Top Up" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" use-when="loanTopUp!=null&amp;&amp;loanTopUp.getString(&quot;statusName&quot;).equals(&quot;APPROVED&quot;)" title="Disburse Top Up" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
 	
 </forms>

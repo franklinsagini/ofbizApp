@@ -18,10 +18,13 @@
  *******************************************************************************/
 package org.ofbiz.accounting.ledger;
 
+
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
@@ -43,8 +46,64 @@ import org.ofbiz.accounting.finaccount.FinAccountServices;
 public class GeneralLedgerServices {
 
 	public static final String module = GeneralLedgerServices.class.getName();
+	public static Logger log = Logger.getLogger(GeneralLedgerServices.class);
 
 	private static BigDecimal ZERO = BigDecimal.ZERO;
+	
+	public static String createGlTransactionHeader(Delegator delegator, String acctgTransTypeId, Timestamp transactionDate, String partyId, GenericValue userLogin){
+		String acctgTransId = null;
+		
+		GenericValue acctgTrans = delegator.makeValue("AcctgTrans");
+		acctgTransId = delegator.getNextSeqId("AcctgTrans");
+		acctgTrans.put("acctgTransId", acctgTransId);
+		acctgTrans.put("acctgTransTypeId", acctgTransTypeId);
+		acctgTrans.put("transactionDate", transactionDate);
+		acctgTrans.put("isPosted", "Y");
+		acctgTrans.put("isApproved", "Y");
+		acctgTrans.put("glFiscalTypeId", "ACTUAL");
+		acctgTrans.put("postedDate", UtilDateTime.nowTimestamp());
+		acctgTrans.put("partyId", partyId);
+		acctgTrans.put("createdByUserLogin", userLogin.getString("userLoginId"));
+		acctgTrans.put("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
+		
+		try {
+			acctgTrans.create();
+		} catch (Exception e) {
+
+		}
+		
+		return acctgTransId;
+	}
+	
+	public static BigDecimal createGlTransactionEntry(Delegator delegator, String acctgTransId, BigDecimal amount, String glAccountId, String branchId,
+			String glAccountTypeId, String debitCreditFlag, String partyId, String description){
+		
+		GenericValue acctgTransEntry = null;
+		String acctgTransEntrySeqId = null;
+		acctgTransEntry = delegator.makeValue("AcctgTransEntry");
+		acctgTransEntrySeqId = delegator.getNextSeqId("AcctgTransEntry");
+		acctgTransEntry.put("acctgTransId", acctgTransId);
+		acctgTransEntry.put("acctgTransEntrySeqId", acctgTransEntrySeqId);
+		acctgTransEntry.put("glAccountTypeId", glAccountTypeId);
+		acctgTransEntry.put("organizationPartyId", branchId);
+		acctgTransEntry.put("amount", amount);
+		acctgTransEntry.put("origAmount", amount);
+		acctgTransEntry.put("currencyUomId", "KES");
+		acctgTransEntry.put("origCurrencyUomId", "KES");
+		acctgTransEntry.put("debitCreditFlag", debitCreditFlag);
+		acctgTransEntry.put("reconcileStatusId", "AES_NOT_RECONCILED");
+		acctgTransEntry.put("partyId", partyId);
+		acctgTransEntry.put("glAccountId", glAccountId);
+		acctgTransEntry.put("description", description);
+
+		try {
+			acctgTransEntry.create();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return amount;
+	}
 
 	public static Map<String, Object> approveGLJV(DispatchContext dctx, Map<String, Object> context) {
 		Delegator delegator = dctx.getDelegator();
