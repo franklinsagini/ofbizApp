@@ -1053,8 +1053,11 @@ public class FinAccountServices {
 			if (transactions.size() > 0) {
 				for (GenericValue transaction : transactions) {
 					GenericValue finAccountTrans = delegator.findOne("FinAccountTrans", UtilMisc.toMap("finAccountTransId", transaction.getString("finAccountTransId")), false);
-					finAccountTrans.set("statusId", "FINACT_TRNS_APPROVED");
-					finAccountTrans.store();
+					if (finAccountTrans != null) {
+					    finAccountTrans.set("statusId", "FINACT_TRNS_APPROVED");
+					    finAccountTrans.store();
+					}
+					
 				}
 			}
 

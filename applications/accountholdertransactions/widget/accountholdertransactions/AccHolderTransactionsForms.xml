@@ -1931,6 +1931,15 @@ under the License.
         		<option key="12016" description="12016"/>
         		<option key="22016" description="22016"/>
         		<option key="32016" description="32016"/>
+        		<option key="42016" description="42016"/>
+        		<option key="52016" description="52016"/>
+        		<option key="62016" description="62016"/>
+        		<option key="72016" description="72016"/>
+        		<option key="82016" description="82016"/>
+        		<option key="92016" description="92016"/>
+        		<option key="102016" description="102016"/>
+        		<option key="112016" description="112016"/>
+        		<option key="122016" description="122016"/>
         	</drop-down>
         </field>
         <field name="chequeNumber" title="Cheque No"  widget-style="required" required-field="true"><text></text></field>
@@ -2385,6 +2394,19 @@ under the License.
         		<option key="102015" description="102015"/>
         		<option key="112015" description="112015"/>
         		<option key="122015" description="122015"/>
+        		
+        		<option key="12016" description="12016"/>
+        		<option key="22016" description="22016"/>
+        		<option key="32016" description="32016"/>
+        		<option key="42016" description="42016"/>
+        		<option key="52016" description="52016"/>
+        		<option key="62016" description="62016"/>
+        		<option key="72016" description="72016"/>
+        		<option key="82016" description="82016"/>
+        		<option key="92016" description="92016"/>
+        		<option key="102016" description="102016"/>
+        		<option key="112016" description="112016"/>
+        		<option key="122016" description="122016"/>
         	</drop-down>
         </field>
 
@@ -2685,6 +2707,18 @@ under the License.
         		<option key="102015" description="102015"/>
         		<option key="112015" description="112015"/>
         		<option key="122015" description="122015"/>
+        		<option key="12016" description="12016"/>
+        		<option key="22016" description="22016"/>
+        		<option key="32016" description="32016"/>
+        		<option key="42016" description="42016"/>
+        		<option key="52016" description="52016"/>
+        		<option key="62016" description="62016"/>
+        		<option key="72016" description="72016"/>
+        		<option key="82016" description="82016"/>
+        		<option key="92016" description="92016"/>
+        		<option key="102016" description="102016"/>
+        		<option key="112016" description="112016"/>
+        		<option key="122016" description="122016"/>
         	</drop-down>
         </field>
 
@@ -2826,10 +2860,191 @@ under the License.
 		<field name="reference" title="REFERENCE NUMBER"><display/></field>
         <field name="slipNumber" title="SLIP NUMBER"><display/></field>
         <field name="createdStamp" title="TRANSACTION DATE"><display/></field>
-        
-        
     </form>
     
     
+    
+    
+    
+    <!-- TELLER REPORT FORMS -->
+    
+    <!-- cash withdrawal -->
+    
+      <form name="tellerCashWithdrawalExcel" type="single" target="tellerCashWithdrawalExcel.csv" default-entity-name="AccountTransaction">
+
+          <field name="asAtDate" required-field="true">
+        	<date-time type="timestamp"/>
+        </field>
+      
+        <field name="transaction" title="Transaction Type" required-field="true" >
+          <drop-down allow-empty="false">
+           <option key="CASHWITHDRAWAL" description="CASH WITHDRWAL"/>
+          </drop-down>
+        </field>
+        
+          <field name="treasuryId" title="Teller">
+        	<!-- date-find default-option-from="greaterThanFromDayStart"/ -->
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name}" key-field-name="treasuryId" entity-name="Treasury">
+        			<entity-constraint name="treasuryTypeId" operator="equals" value="3"/>
+        		</entity-options>
+        	</drop-down>
+        </field>  
+        
+        
+       <field name="run" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- cash deposit -->
+    
+      <form name="tellerCashDepositExcel" type="single" target="tellerCashDepositExcel.csv" default-entity-name="AccountTransaction">
+        
+          <field name="asAtDate">
+        	<date-time type="timestamp"/>
+        </field>
+      
+        <field name="transaction" title="Transaction Type" required-field="true"  position="2">
+          <drop-down allow-empty="false">
+           <option key="CASHDEPOSIT" description="CASH DEPOSIT"/>
+          </drop-down>
+        </field>
+        
+          <field name="treasuryId" title="Teller">
+        	<!-- date-find default-option-from="greaterThanFromDayStart"/ -->
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name}" key-field-name="treasuryId" entity-name="Treasury">
+        			<entity-constraint name="treasuryTypeId" operator="equals" value="3"/>
+        		</entity-options>
+        	</drop-down>
+        </field>  
+        
+        
+       <field name="run" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- Cheque withdrawal -->
+
+  <form name="tellerChequeWithdrawalExcel" type="single" target="tellerChequeWithdrawalExcel.csv" default-entity-name="AccountTransaction">
+          <field name="startDate" title="From" >
+        	<date-time type="timestamp"/>
+           </field>
+        
+        <field name="endDate" title="To" position="2">
+        	<date-time type="timestamp"/>
+        </field> 
+      
+        <field name="transaction" title="Transaction Type" required-field="true"  position="2">
+          <drop-down allow-empty="false">
+           <option key="CHEQUEWITHDRAWAL" description="CHEQUE WITHDRAWAL"/>
+          </drop-down>
+        </field>
+        
+        <field name="amountToCheckGreaterThan" title="GREATER  THAN"><text/></field>
+       
+       <field name="run" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+
+<!-- cheque deposit -->
+
+  <form name="tellerChequeDepositExcel" type="single" target="tellerChequeDepositExcel.csv" default-entity-name="AccountTransaction">
+               <field name="asAtDate">
+        	<date-time type="timestamp"/>
+        </field>
+      
+        <field name="transaction" title="Transaction Type" required-field="true">
+          <drop-down allow-empty="false">
+           <option key="CHEQUEDEPOSIT" description="CHEQUE DEPOSIT"/>
+          </drop-down>
+        </field>
+        
+          <field name="treasuryId" title="Teller">
+        	<!-- date-find default-option-from="greaterThanFromDayStart"/ -->
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name}" key-field-name="treasuryId" entity-name="Treasury">
+        		</entity-options>
+        	</drop-down>
+        </field>  
+        
+        
+       <field name="run" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+            <!--  -->
+            <!--  -->
+            
+   <form name="tellerCashWithdrawalExcelcsvForm" list-name="transactionals" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+         
+        <field name="accountTransactionId" title="TRANSACTION ID"><display/></field>
+        <field name="accountNo" title="ACCOUNT NUMBER"><display/></field>
+        <field name="accountName" title="ACCOUNT NAME"><display/></field>
+        <field name="createdBy" title="POSTED BY"><display/></field>
+        <field name="transactionAmount" title="AMOUNT(KES)"><display/></field>
+		<field name="memberNumber" title="MEMBER NUMBER"><display/></field>
+        <field name="createdStamp" title="TRANSACTION DATE"><display/></field>
+    </form>
+    
+    
+      <form name="tellerCashDepositExcelcsvForm" list-name="transactionals" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+         
+        <field name="accountTransactionId" title="TRANSACTION ID"><display/></field>
+        <field name="accountNo" title="ACCOUNT NUMBER"><display/></field>
+        <field name="accountName" title="ACCOUNT NAME"><display/></field>
+        <field name="createdBy" title="POSTED BY"><display/></field>
+        <field name="transactionAmount" title="AMOUNT(KES)"><display/></field>
+		<field name="memberNumber" title="MEMBER NUMBER"><display/></field>
+        <field name="createdStamp" title="TRANSACTION DATE"><display/></field>
+    </form>
+    
+    
+      <form name="tellerChequeWithdrawalExcelcsvForm" list-name="transactionalsBankers" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+          <field name="accountTransactionId" title="TRANSACTION ID"><display/></field>
+        <field name="accountNo" title="ACCOUNT NUMBER"><display/></field>
+        <field name="accountName" title="ACCOUNT NAME"><display/></field>
+         <field name="chequeNo" title="CHEQUE NO#"><display/></field>
+        <field name="createdBy" title="POSTED BY"><display/></field>
+        <field name="payee" title="PAYEE"><display/></field>
+        <field name="transactionAmount" title="AMOUNT(KES)"><display/></field>
+		<field name="memberNumber" title="MEMBER NUMBER"><display/></field>
+        <field name="createdStamp" title="TRANSACTION DATE"><display/></field>
+    </form>
+    
+       <form name="tellerChequeWithdrawalExcelcsvFormNormal" list-name="transactionalsNormal" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+          <field name="accountTransactionId" title="TRANSACTION ID"><display/></field>
+        <field name="accountNo" title="ACCOUNT NUMBER"><display/></field>
+        <field name="accountName" title="ACCOUNT NAME"><display/></field>
+        <field name="chequeNo" title="CHEQUE NO#"><display/></field>
+        <field name="createdBy" title="POSTED BY"><display/></field>
+        <field name="payee" title="PAYEE"><display/></field>
+        <field name="transactionAmount" title="AMOUNT(KES)"><display/></field>
+		<field name="memberNumber" title="MEMBER NUMBER"><display/></field>
+        <field name="createdStamp" title="TRANSACTION DATE"><display/></field>
+    </form>
+    
+    
+      <form name="tellerChequeDepositExcelcsvForm" list-name="transactionals" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="accountTransactionId" title="TRANSACTION ID"><display/></field>
+		<field name="chequeNo" title="CHEQUE NUMBER"><display/></field>
+        <field name="accountNo" title="ACCOUNT NUMBER"><display/></field>
+        <field name="accountName" title="ACCOUNT NAME"><display/></field>
+        <field name="chequeNo" title="CHEQUE NO#"><display/></field>
+        <field name="createdBy" title="POSTED BY"><display/></field>
+        <field name="payee" title="PAYEE"><display/></field>
+        <field name="transactionAmount" title="AMOUNT(KES)"><display/></field>
+		<field name="memberNumber" title="MEMBER NUMBER"><display/></field>
+        <field name="createdStamp" title="TRANSACTION DATE"><display/></field>
+		
+    </form>
+               
 
 </forms>

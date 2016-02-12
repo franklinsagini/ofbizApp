@@ -8,5 +8,29 @@
     <description>None</description>
     <copyright></copyright>
     <version></version>
+    
+     <entity entity-name="TellerApprovalAssign" sequence-bank-size="1" package-name="org.ofbiz.tellerapproval" title="TellerApprovalAssign Entity">
+        <field name="tellerApprovalAssignId" type="id-vlong-int"><description>primary sequenced ID</description></field>
+		
+        <field name="isActive" type="indicator"   ></field>
+        <field name="createdBy" type="id"   ></field>
+        <field name="updatedBy" type="id"   ></field>
+      
+        <field name="telleruser" type="id"   ></field>
+        
+        <field name="aprover1" type="id"   ></field>
+        <field name="approver2" type="id"   ></field>
+        
+        <prim-key field="tellerApprovalAssignId"/>
+        
+        <relation type="one" fk-name="TellerApprovalSignApprover1_UserLogin" rel-entity-name="UserLogin">
+            <key-map  field-name="aprover1" rel-field-name="userLoginId"/>
+        </relation>
+        
+         <relation type="one" fk-name="TellerApprovalSignApprover2_UserLogin" rel-entity-name="UserLogin">
+            <key-map  field-name="approver2" rel-field-name="userLoginId"/>
+        </relation>
+ 
+    </entity>
 
 </entitymodel>

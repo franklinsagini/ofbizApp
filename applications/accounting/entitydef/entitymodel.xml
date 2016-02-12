@@ -1254,6 +1254,93 @@ under the License.
     <!-- org.ofbiz.accounting.fixedasset -->
     <!-- ========================================================= -->
 
+<entity entity-name="Assets" package-name="org.ofbiz.accounting.fixedasset" title="Asset Entity">
+        <field name="assetId" type="id-ne"></field>
+        <field name="fixedAssetTypeId" type="id"></field>
+        <field name="tagNumber" type="long-varchar"></field>
+        <field name="assetName" type="name"></field>
+        <field name="model" type="name"></field>
+        <field name="brand" type="name"></field>
+        <field name="manufacturer" type="name"></field>
+        <field name="assetConditionId" type="id-ne"></field>
+        <field name="assetAssignmentStatusId" type="id-ne"></field>
+        <field name="description" type="long-varchar"></field>
+        <field name="location" type="long-varchar"></field>
+        <field name="branchId" type="id-ne"></field>
+        <field name="dateAcquired" type="date-time"></field>
+        <field name="expectedEndOfLife" type="date"></field>
+        <field name="actualEndOfLife" type="date"></field>
+        <field name="serialNumber" type="long-varchar"></field>
+        <field name="salvageValue" type="currency-amount"/>
+        <field name="depreciation" type="currency-amount"/>
+        <field name="purchaseCost" type="currency-amount"/>
+        <field name="comments" type="comment"></field>
+        <prim-key field="assetId"/>
+        <relation type="one" fk-name="FIXEDAST_TYPE" rel-entity-name="FixedAssetType">
+            <key-map field-name="fixedAssetTypeId"/>
+        </relation>
+        <relation type="one" fk-name="ASSET_ASSIGN_STATUS" rel-entity-name="AssetAssignmentStatus">
+         <key-map field-name="assetAssignmentStatusId" />
+        </relation>
+        <relation type="one" fk-name="ASSET_COND" rel-entity-name="AssetCondition">
+         <key-map field-name="assetConditionId" />
+        </relation>
+        <relation type="one" fk-name="ASSET_BRANCH" rel-entity-name="PartyGroup">
+         <key-map field-name="branchId" rel-field-name="partyId"/>
+        </relation>
+        <index name="UNI_TAG_NO" unique="true">
+          <index-field name="tagNumber"/>
+        </index>
+    </entity>
+
+  <entity entity-name="AssetAssignment"
+            package-name="org.ofbiz.accounting.fixedasset"
+            default-resource-name="AccountingEntityLabels"
+            title="Fixed Asset Condition Entity">
+      <field name="assetAssignmentId" type="id-ne"></field>
+      <field name="assetId" type="id-ne"></field>
+      <field name="dateAssigned" type="date-time"></field>
+      <field name="assignedTo" type="id-ne"></field>
+      <field name="assignedBy" type="id-ne"></field>
+      <field name="surrenderDate" type="date-time"></field>
+      <field name="surrenderedTo" type="id-ne"></field>
+      <field name="assignmentStatus" type="name"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="assetAssignmentId"/>
+    </entity>   
+
+
+      <entity entity-name="AssetCondition"
+            package-name="org.ofbiz.accounting.fixedasset"
+            default-resource-name="AccountingEntityLabels"
+            title="Fixed Asset Condition Entity">
+      <field name="assetConditionId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="assetConditionId"/>
+    </entity>    
+
+    <entity entity-name="AssetAssignmentStatus"
+            package-name="org.ofbiz.accounting.fixedasset"
+            default-resource-name="AccountingEntityLabels"
+            title="Fixed Asset Condition Entity">
+      <field name="assetAssignmentStatusId" type="id-ne"></field>
+      <field name="statusName" type="name"></field>
+      <prim-key field="assetAssignmentStatusId"/>
+              <index name="UNI_STATUS_NAME" unique="true">
+          <index-field name="statusName"/>
+        </index>
+    </entity>    
+
+    <entity entity-name="AssetStatus"
+            package-name="org.ofbiz.accounting.fixedasset"
+            default-resource-name="AccountingEntityLabels"
+            title="Fixed Asset Condition Entity">
+      <field name="assetStatusId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="assetStatusId"/>
+    </entity>
+
+
     <entity entity-name="FixedAsset" package-name="org.ofbiz.accounting.fixedasset" title="Fixed Asset Entity">
         <field name="fixedAssetId" type="id-ne"></field>
         <field name="fixedAssetTypeId" type="id"></field>
@@ -2505,33 +2592,33 @@ under the License.
     <entity entity-name="AcctgTransEntry"
             package-name="org.ofbiz.accounting.ledger"
             title="Transaction Entry Entity">
-      <field name="acctgTransId" type="id-ne" enable-audit-log="true"></field>
-      <field name="acctgTransEntrySeqId" type="id-ne" enable-audit-log="true"></field>
-      <field name="acctgTransEntryTypeId" type="id-ne" enable-audit-log="true"></field>
-      <field name="description" type="description" enable-audit-log="true"></field>
-      <field name="voucherRef" type="short-varchar" enable-audit-log="true"></field>
-      <field name="partyId" type="id" enable-audit-log="true"></field>
-      <field name="roleTypeId" type="id" enable-audit-log="true"></field>
-      <field name="theirPartyId" type="id" enable-audit-log="true"></field>
-      <field name="productId" type="id" enable-audit-log="true"></field>
-      <field name="theirProductId" type="id" enable-audit-log="true"></field>
-      <field name="inventoryItemId" type="id" enable-audit-log="true"></field>
-      <field name="glAccountTypeId" type="id" enable-audit-log="true"></field>
-      <field name="glAccountId" type="id-ne" enable-audit-log="true"></field>
-      <field name="organizationPartyId" type="id-ne" enable-audit-log="true"></field>
-      <field name="owedByPartyId" type="id-ne" enable-audit-log="true"></field>
-      <field name="owesPartyId" type="id-ne" enable-audit-log="true"></field>
-      <field name="amount" type="currency-amount" enable-audit-log="true"></field>
-      <field name="currencyUomId" type="id" enable-audit-log="true"></field>
-      <field name="origAmount" type="currency-amount" enable-audit-log="true"></field>
-      <field name="origCurrencyUomId" type="id" enable-audit-log="true"></field>
-      <field name="debitCreditFlag" type="indicator" enable-audit-log="true"></field>
-      <field name="dueDate" type="date" enable-audit-log="true"></field>
-      <field name="groupId" type="id" enable-audit-log="true"></field>
-      <field name="taxId" type="id" enable-audit-log="true"></field>
-      <field name="reconcileStatusId" type="id" enable-audit-log="true"></field>
-      <field name="settlementTermId" type="id" enable-audit-log="true"></field>
-      <field name="isSummary" type="indicator" enable-audit-log="true"></field>
+      <field name="acctgTransId" type="id-ne" ></field>
+      <field name="acctgTransEntrySeqId" type="id-ne" ></field>
+      <field name="acctgTransEntryTypeId" type="id-ne" ></field>
+      <field name="description" type="description" ></field>
+      <field name="voucherRef" type="short-varchar" ></field>
+      <field name="partyId" type="id" ></field>
+      <field name="roleTypeId" type="id" ></field>
+      <field name="theirPartyId" type="id" ></field>
+      <field name="productId" type="id" ></field>
+      <field name="theirProductId" type="id" ></field>
+      <field name="inventoryItemId" type="id" ></field>
+      <field name="glAccountTypeId" type="id" ></field>
+      <field name="glAccountId" type="id-ne" ></field>
+      <field name="organizationPartyId" type="id-ne" ></field>
+      <field name="owedByPartyId" type="id-ne" ></field>
+      <field name="owesPartyId" type="id-ne" ></field>
+      <field name="amount" type="currency-amount" ></field>
+      <field name="currencyUomId" type="id" ></field>
+      <field name="origAmount" type="currency-amount" ></field>
+      <field name="origCurrencyUomId" type="id" ></field>
+      <field name="debitCreditFlag" type="indicator" ></field>
+      <field name="dueDate" type="date" ></field>
+      <field name="groupId" type="id" ></field>
+      <field name="taxId" type="id" ></field>
+      <field name="reconcileStatusId" type="id" ></field>
+      <field name="settlementTermId" type="id" ></field>
+      <field name="isSummary" type="indicator" ></field>
       <prim-key field="acctgTransId"/>
       <prim-key field="acctgTransEntrySeqId"/>
       <relation type="one" fk-name="ACCTTXENT_ATET" rel-entity-name="AcctgTransEntryType">
@@ -4826,7 +4913,7 @@ under the License.
         </view-link>
     </view-entity>
 
-<view-entity entity-name="TBViewData"
+<!-- <view-entity entity-name="TBViewData"
         package-name="org.ofbiz.accounting.ledger"
         title="GlAccountOrganization, AcctgTransEntry, and AccTrans View Entity Group-By organizationPartyId, glAccountId, debitCreditFlag">
         <member-entity entity-alias="GAO" entity-name="GlAccount"/>
@@ -4838,6 +4925,25 @@ under the License.
         <alias entity-alias="ATE" name="ateAmount" field="amount" function="sum"/>
         <alias entity-alias="ATR" name="ateTransactionDate" field="transactionDate" group-by="true"/>
         <view-link entity-alias="GAO" rel-entity-alias="ATE">
+            <key-map field-name="glAccountId"/>
+        </view-link>
+        <view-link entity-alias="ATE" rel-entity-alias="ATR">
+            <key-map field-name="acctgTransId"/>
+        </view-link>
+</view-entity> -->
+
+<view-entity entity-name="TBViewData"
+        package-name="org.ofbiz.accounting.ledger"
+        title="GlAccountOrganization, AcctgTransEntry, and AccTrans View Entity Group-By organizationPartyId, glAccountId, debitCreditFlag">
+        <member-entity entity-alias="GAO" entity-name="GlAccount"/>
+        <member-entity entity-alias="ATE" entity-name="AcctgTransEntry"/>
+        <member-entity entity-alias="ATR" entity-name="AcctgTrans"/>
+        <alias entity-alias="GAO" name="gaoGlAccountId" field="glAccountId" group-by="true"/>
+        <alias entity-alias="ATE" name="ateOrganizationPartyId" field="organizationPartyId" group-by="true"/>
+        <alias entity-alias="ATE" name="atDebitCreditFlag" field="debitCreditFlag" group-by="true"/>
+        <alias entity-alias="ATE" name="ateAmount" field="amount" function="sum"/>
+        <alias entity-alias="ATE" name="ateTransactionDate" field="createdStamp" group-by="true"/>
+        applications/accountreports/widget/accountreportsScreens.xml<view-link entity-alias="GAO" rel-entity-alias="ATE">
             <key-map field-name="glAccountId"/>
         </view-link>
         <view-link entity-alias="ATE" rel-entity-alias="ATR">

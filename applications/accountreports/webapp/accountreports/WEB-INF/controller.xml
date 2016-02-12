@@ -30,6 +30,35 @@
     <response name="success" type="view" value="crbReport" save-home-view="true" />
 </request-map>
 
+  <request-map uri="branchReports">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="branchReports" save-home-view="true" />
+  </request-map>
+
+  <request-map uri="branchMembers">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="branchMembers" save-home-view="true" />
+  </request-map>
+
+  <request-map uri="branchLoanBook">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="branchLoanBook" save-home-view="true" />
+  </request-map>
+  <request-map uri="LoanLossReportCSV">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="LoanLossReportCSV" save-home-view="true" />
+  </request-map>
+
+
+  <request-map uri="branchActiveLoans">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="branchActiveLoans" save-home-view="true" />
+  </request-map>
+  <request-map uri="branchDeliquentLoans">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="branchDeliquentLoans" save-home-view="true" />
+  </request-map>
+
 
 <request-map uri="memberAccountList">
     <security https="true" auth="true" />
@@ -55,6 +84,18 @@
     <response name="success" type="view" value="memberAccountListDownloadexcel" save-home-view="true" />
   </request-map>
 
+
+<!-- Member Listing as AT -->
+  <request-map uri="memberAccountListDownloadAsAt">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="memberAccountListDownloadAsAt" save-home-view="true" />
+  </request-map>
+
+  <request-map uri="memberAccountListDownloadAsAtexcel.csv">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="memberAccountListDownloadAsAtexcel" save-home-view="true" />
+  </request-map>
+  
 
 
 	<request-map uri="LookupActiveMember"><security https="true" auth="true"/><response name="success" type="view" value="LookupActiveMember"/></request-map>
@@ -118,6 +159,9 @@
 
 
     <!-- View Mappings -->
+  <view-map name="branchReports" type="screen" page="component://accountreports/widget/accountreportsScreens.xml#branchReports" />
+
+
     <view-map name="main" type="screen" page="component://accountreports/widget/accountreportsScreens.xml#main"/>
 
     <view-map name="memberAccountList" type="screen" page="component://accountreports/widget/accountreportsScreens.xml#memberAccountList"/>
@@ -125,6 +169,9 @@
 
     <view-map name="memberAccountListDownload" type="screen" page="component://accountreports/widget/accountreportsScreens.xml#memberAccountListDownload"/>
     <view-map name="memberAccountListDownloadexcel" type="screencsv" page="component://accountreports/widget/accountreportsScreens.xml#memberAccountListDownloadexcel" content-type="text/csv" encoding="none"/>
+    
+    <view-map name="memberAccountListDownloadAsAt" type="screen" page="component://accountreports/widget/accountreportsScreens.xml#memberAccountListDownloadAsAt"/>
+    <view-map name="memberAccountListDownloadAsAtexcel" type="screencsv" page="component://accountreports/widget/accountreportsScreens.xml#memberAccountListDownloadAsAtexcel" content-type="text/csv" encoding="none"/>
     
     <view-map name="crbReport" type="screencsv" page="component://accountreports/widget/accountreportsScreens.xml#crbReport" content-type="text/csv" encoding="none"/>
 
@@ -135,7 +182,17 @@
     <view-map name="accountsEntriesAudit" type="screen" page="component://accountreports/widget/accountreportsScreens.xml#accountsEntriesAudit"/>
     
     <view-map name="accountContribution" type="screen" page="component://accountreports/widget/accountreportsScreens.xml#accountContribution"/>
-	<view-map name="accountContributionExcel" type="screencsv" page="component://accountreports/widget/accountreportsScreens.xml#accountContributionExcel" content-type="text/csv" encoding="none"/>
+    <view-map name="accountContributionExcel" type="screencsv" page="component://accountreports/widget/accountreportsScreens.xml#accountContributionExcel" content-type="text/csv" encoding="none"/>
+    <view-map name="branchMembers" type="screencsv" page="component://accountreports/widget/accountreportsScreens.xml#branchMembers" content-type="text/csv" encoding="none"/>
+
+    <view-map name="branchLoanBook" type="screencsv" page="component://accountreports/widget/accountreportsScreens.xml#branchLoanBook" content-type="text/csv" encoding="none"/>
+
+    <view-map name="LoanLossReportCSV" type="screencsv" page="component://accountreports/widget/accountreportsScreens.xml#LoanLossReportCSV" content-type="text/csv" encoding="none"/>
+
+    <view-map name="branchActiveLoans" type="screencsv" page="component://accountreports/widget/accountreportsScreens.xml#branchActiveLoans" content-type="text/csv" encoding="none"/>
+    
+    <view-map name="branchDeliquentLoans" type="screencsv" page="component://accountreports/widget/accountreportsScreens.xml#branchDeliquentLoans" content-type="text/csv" encoding="none"/>
+
 
     <view-map name="memberTransactionsReport" type="screen" page="component://accountreports/widget/accountreportsScreens.xml#memberTransactionsReport"/>
 	<view-map name="memberTransactionsReportExcel" type="screencsv" page="component://accountreports/widget/accountreportsScreens.xml#memberTransactionsReportExcel" content-type="text/csv" encoding="none"/>

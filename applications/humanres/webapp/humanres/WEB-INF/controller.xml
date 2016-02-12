@@ -4444,6 +4444,33 @@
 	  <response name="error" type="view" value="scheduledLeave"></response>
 	</request-map>
 	
+	<request-map uri="printEachLeaveRecord">
+	 <security https="true" auth="true"/>
+	 <response name="success" type="view" value="printEachLeaveRecord"></response>
+	 <response name="error" type="view" value="printEachLeaveRecord"></response>
+	</request-map>
+
+	
+	<!-- testSMSing -->
+	<request-map uri="testSMSing">
+		<security https="true" auth="true" />
+		<event type="java" path="org.ofbiz.humanres.sendMessage"
+			invoke="senders"></event>
+		<response name="success" type="request-redirect-noparam"
+			value="separationApplication" />
+		<response name="error" type="request-redirect-noparam" value="separationApplication" />
+	</request-map>
+	
+	<request-map uri="percentageAndDeviation">
+	  <security auth="true" https="true"/>
+	  <response name="success" type="view" value="percentageAndDeviation"></response>
+	  <response name="error" type="view" value="percentageAndDeviation"></response>
+	</request-map>
+	
+	<!--  -->
+	
+	<view-map name="percentageAndDeviation" type="screen"  page="component://humanres/webapp/widget/PerfReviewScreens.xml#percentageAndDeviation"></view-map>
+	
 	<view-map name="selfAppraisalReportPDF" type="screenfop"
 		page="component://humanres/widget/ReportScreens.xml#selfAppraisalReportPDF"
 		content-type="application/pdf" encoding="none" />
@@ -5212,5 +5239,7 @@
     <view-map name="leaveAtCertainDateExcel" type="screencsv" page="component://humanres/widget/ReportScreens.xml#leaveAtCertainDateExcelScreen" 
               content-type="text/csv" encoding="none"></view-map>	
     <view-map name="scheduledLeave" type="screen" page="component://humanres/widget/EmplLeaveScreens.xml#scheduledLeave"></view-map>                 
+	<view-map name="printEachLeaveRecord" type="screenfop" page="component://humanres/widget/ReportScreens.xml#printEachLeaveRecord"
+		content-type="application/pdf" encoding="none" ></view-map>		
 			
 	</site-conf>

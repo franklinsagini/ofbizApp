@@ -2,6 +2,210 @@
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
+
+<!--     <screen name="branchReports">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Branch Reports"/>
+                <set field="headerItem" value="branchReports"/>
+            </actions>
+            <widgets>
+                <section>
+                    <widgets>
+                        <screenlet>
+                            <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                            <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <container style="lefthalf">
+                                    <screenlet title="Active Members">
+                                        <include-form name="activeMembers" location="component://accountreports/widget/accountreportsForms.xml"/>
+                                    </screenlet>
+                                </container>
+                                 <container style="righthalf">                          
+                                    <screenlet title="Total Loan Book">
+                                        <include-form name="TotalLoanBook" location="component://accountreports/widget/accountreportsForms.xml"/>
+                                    </screenlet>
+                                </container>
+                            </widgets>
+                        </section>
+                        </decorator-section>
+                        </decorator-screen>
+                    </screenlet>
+                    </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+ -->
+
+    <!-- accountContribution -->
+    <screen name="branchReports">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Branch Reports"/>
+                <set field="headerItem" value="branchReports"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container>
+                            <screenlet title="Active Members">
+                                <include-form name="activeMembers" location="component://accountreports/widget/accountreportsForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container>
+                            <screenlet title="Loan Loss Report">
+                                <include-form name="LoanLossReport" location="component://accountreports/widget/accountreportsForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container>
+                            <screenlet title="Total Loan Book">
+                                <include-form name="TotalLoanBook" location="component://accountreports/widget/accountreportsForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+<!--                         <container>
+                            <screenlet title="Active Loans">
+                                <include-form name="ActiveLoans" location="component://accountreports/widget/accountreportsForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                        <container>
+                            <screenlet title="Deliquent Loans">
+                                <include-form name="DeliquentLoans" location="component://accountreports/widget/accountreportsForms.xml"/>
+                            </screenlet>
+                        </container> -->
+                        <container style="clear"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+
+    <screen name="branchMembers">
+        <section>
+            <actions>
+                <set field="viewSize" value="99999"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                <set field="startDate" from-field="parameters.startDate" type="Timestamp"/>
+                <script location="component://accountreports/webapp/accountreports/WEB-INF/actions/reports/branchMembers.groovy"/>
+            </actions>
+            <widgets>
+                <label style="h3" text="INDIVIDUAL BRANCH MEMBERSHIP STATUS TOTAL "/>
+                <include-form name="branchesMembersData" location="component://accountreports/widget/accountreportsForms.xml"/>
+                <label style="h3" text="ALL BRANCHES TOTALS"/>
+                <include-form name="branchesTotals" location="component://accountreports/widget/accountreportsForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="branchLoanBook">
+        <section>
+            <actions>
+                <set field="viewSize" value="99999"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                <set field="startDate" from-field="parameters.startDate" type="Timestamp"/>
+                <set field="endDate" from-field="parameters.startDate" type="Timestamp"/>
+                <script location="component://accountreports/webapp/accountreports/WEB-INF/actions/reports/branchLoanBook.groovy"/>
+            </actions>
+            <widgets>
+                <label style="h3" text="BRANCH LOAN BOOK FROM ${startDate} TO ${endDate}"/>
+                <include-form name="branchLoanBookTotals" location="component://accountreports/widget/accountreportsForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="LoanLossReportCSV">
+        <section>
+            <actions>
+                <set field="viewSize" value="99999"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                <set field="startDate" from-field="parameters.startDate" type="Timestamp"/>
+                <set field="endDate" from-field="parameters.startDate" type="Timestamp"/>
+                <script location="component://accountreports/webapp/accountreports/WEB-INF/actions/reports/loanLossReport.groovy"/>
+            </actions>
+            <widgets>
+                <label style="h2" text="LOAN LOSS ${startDate} TO ${endDate}"/>
+                <include-form name="LoanLossReportCSV" location="component://accountreports/widget/accountreportsForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="branchActiveLoans">
+        <section>
+            <actions>
+                <set field="viewSize" value="99999"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                <set field="startDate" from-field="parameters.startDate" type="Timestamp"/>
+                <set field="endDate" from-field="parameters.startDate" type="Timestamp"/>
+                <script location="component://accountreports/webapp/accountreports/WEB-INF/actions/reports/branchActiveLoans.groovy"/>
+            </actions>
+            <widgets>
+                <label style="h3" text="BRANCH ACTIVE LOANS FROM ${startDate} TO ${endDate}"/>
+                <include-form name="branchActiveLoansTotals" location="component://accountreports/widget/accountreportsForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="branchDeliquentLoans">
+        <section>
+            <actions>
+                <set field="viewSize" value="99999"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                <set field="startDate" from-field="parameters.startDate" type="Timestamp"/>
+                <set field="endDate" from-field="parameters.startDate" type="Timestamp"/>
+                <script location="component://accountreports/webapp/accountreports/WEB-INF/actions/reports/branchDeliquentLoans.groovy"/>
+            </actions>
+            <widgets>
+                <label style="h3" text="BRANCH DELIQUENT LOANS FROM ${startDate} TO ${endDate}"/>
+                <include-form name="branchDeliquentLoansTotals" location="component://accountreports/widget/accountreportsForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="branchLoanBookCSV">
+        <section>
+            <actions>
+                <set field="viewSize" value="99999"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                <set field="startDate" from-field="parameters.startDate" type="Timestamp"/>
+                <script location="component://accountreports/webapp/accountreports/WEB-INF/actions/reports/branchLoanBook.groovy"/>
+            </actions>
+            <widgets>
+                <label style="h3" text="BRANCHES LOAN BOOK"/>
+                <include-form name="branchLoanBook" location="component://accountreports/widget/accountreportsForms.xml"/>
+                <label style="h3" text="ALL BRANCHES TOTALS"/>
+                <include-form name="branchLoanBookTotals" location="component://accountreports/widget/accountreportsForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="branchAccountBalances">
+        <section>
+            <actions>
+                <set field="viewSize" value="99999"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                <set field="startDate" from-field="parameters.startDate" type="Timestamp"/>
+                <script location="component://accountreports/webapp/accountreports/WEB-INF/actions/reports/branchAccountBalances.groovy"/>
+            </actions>
+            <widgets>
+                <label style="h3" text="BRANCH MEMBER ACCOUNTS TOTALS"/>
+                <include-form name="branchAccountBalances" location="component://accountreports/widget/accountreportsForms.xml"/>
+                <label style="h3" text="ALL BRANCHES TOTALS"/>
+                <include-form name="branchAccountBalancesTotals" location="component://accountreports/widget/accountreportsForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
 	<screen name="main">
 		<section>
 			<actions>
@@ -211,7 +415,47 @@
             </widgets>
         </section>
     </screen>
-
+    
+    <!-- As AT -->
+	<screen name="memberAccountListDownloadAsAt">
+		<section>
+			<actions>
+				<set field="headerItem" value="memberAccountListDownloadAsAt" />
+				<set field="tabButtonItem" value="memberAccountListDownloadAsAt" />
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<container>
+							<screenlet title="Accounts Listing">
+								<include-form name="memberAccountListingDownloadFormAsAT"
+									location="component://accountreports/widget/accountreportsForms.xml" />
+							</screenlet>
+						</container>
+						<container style="clear" />
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<!-- memberAccountListDownloadAsAtexcel -->
+	<screen name="memberAccountListDownloadAsAtexcel">
+        <section>
+            <actions>
+                <set field="viewSize" value="9999999" />
+                <!-- script location="component://party/webapp/partymgr/WEB-INF/actions/reports/loanDetails.groovy"/ -->
+               <!-- memberAccountListExcel.groovy -->
+                <script
+                    location="component://accountreports/webapp/accountreports/WEB-INF/actions/reports/memberAccountListDownloadAsAtexcel.groovy" />
+            </actions>
+            <widgets>
+                <include-form name="memberAccountBalanceExport"
+                    location="component://accountreports/widget/accountreportsForms.xml" />
+            </widgets>
+        </section>
+    </screen>
 
     <screen name="crbReport">
         <section>
@@ -266,6 +510,9 @@
             </widgets>
         </section>
     </screen>
+    
+
+
     
     <!-- 
     memberTransactionsReport

@@ -26,13 +26,6 @@
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <!-- include-menu name="MemberReportsTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/ -->
-                        <!-- container style="lefthalf">
-                            <screenlet title="Member Listing Report">
-                                <include-form name="memeberListingForm" location="component://party/widget/partymgr/MemberReportForms.xml"/>
-                            </screenlet>
-                        </container -->
-                        <!-- style="righthalf" -->
                         <container>
                             <screenlet title="Variance Report">
                                 <include-form name="varianceReportForm" location="component://remittancereports/widget/RemittanceReportsForms.xml"/>
@@ -166,5 +159,419 @@
             </widgets>
         </section>
     </screen>
+    
+    <!-- Report on Stations -->
+    
+        
+        <screen name="stationImportedList">
+        <section>
+            <actions>
+                <set field="headerItem" value="stationImportedList" />
+                <set field="tabButtonItem" value="stationImportedList" />
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container>
+                            <screenlet title="Stations Imported List">
+                                <include-form name="stationImportedList" location="component://remittancereports/widget/RemittanceReportsForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+  <screen name="stationImportedAndNotImported">
+        <section>
+            <actions>
+                <set field="headerItem" value="stationImportedAndNotImported" />
+                <set field="tabButtonItem" value="stationImportedAndNotImported" />
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container>
+                            <screenlet title="Stations Imported And Not Imported">
+                                <include-form name="stationImportedAndNotImported" location="component://remittancereports/widget/RemittanceReportsForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+      <screen name="stationPostedAndNotPosted">
+        <section>
+            <actions>
+                <set field="headerItem" value="stationPostedAndNotPosted" />
+                <set field="tabButtonItem" value="stationPostedAndNotPosted" />
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container>
+                            <screenlet title="Station Posted And Not Posted Report">
+                                <include-form name="stationPostedAndNotPosted" location="component://remittancereports/widget/RemittanceReportsForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+      <screen name="stationDataReceived">
+        <section>
+            <actions>
+                <set field="headerItem" value="varianceReport" />
+                <set field="tabButtonItem" value="varianceReport" />
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container>
+                            <screenlet title="Station Data Received Report">
+                                <include-form name="stationDataReceived" location="component://remittancereports/widget/RemittanceReportsForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	
+	
+	<!-- Station Posted Accoutn -->
+	
+	
+    <screen name="stationImportedListExcelcsv">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="accTransactionType" from-field="parameters.transaction"/>
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                <script location="component://remittancereports/webapp/remittancereports/WEB-INF/actions/reports/stationImportedListExcelcsv.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                   <label style="h1" text="  CHAI CO-OPERATIVE SAVINGS AND CREDIT SOCIETY LIMITED"/>
+                    <label></label>
+                     <label style="h1" text=" 	P.O. BOX 278 - 00200 CITY SQUARE- NAIROBI KENYA. KTDA PLAZA - MOI AVENUE"/>
+                    <label></label>
+                     <label style="h1" text=" TEL: 254 (0) 20 214406 - FAX 254 (0) 20 214410. E-MAIL: info@chai-sacco.co.ke"/>
+                    <label></label>
+                    <label style="h1" text="STATION IMPORTED LISTING"/>
+                    <label></label>
+                </container>
+                <include-form name="stationImportedListExcelcsvForm" location="component://remittancereports/widget/RemittanceReportsForms.xml"/>
+                <label></label>
+                <label></label>
+                <label style="h1" text="  TOTAL Count:  ${totalAmountStr}"></label>
+                 <label></label>
+            </widgets>
+        </section>
+    </screen>
+    
+	
+	
+    	 <screen name="stationImportedAndNotImportedExcelcsv">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="accTransactionType" from-field="parameters.transaction"/>
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                <script location="component://remittancereports/webapp/remittancereports/WEB-INF/actions/reports/stationImportedAndNotImportedListExcelcsv.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                   <label style="h1" text="  CHAI CO-OPERATIVE SAVINGS AND CREDIT SOCIETY LIMITED"/>
+                    <label></label>
+                     <label style="h1" text=" 	P.O. BOX 278 - 00200 CITY SQUARE- NAIROBI KENYA. KTDA PLAZA - MOI AVENUE"/>
+                    <label></label>
+                     <label style="h1" text=" TEL: 254 (0) 20 214406 - FAX 254 (0) 20 214410. E-MAIL: info@chai-sacco.co.ke"/>
+                    <label></label>
+                    <label style="h1" text="STATION IMPORTED LISTING"/>
+                    <label></label>
+                </container>
+                <label></label>
+                <label style="h1" text="Stations  Imported"></label>
+                <label></label>
+                <include-form name="stationImportedAndNotImportedExcelcsvForm" location="component://remittancereports/widget/RemittanceReportsForms.xml"/>
+                <label></label>
+                <label></label>
+                <label style="h1" text="Stations Not Imported"></label>
+                <label></label>
+                <include-form name="stationImportedAndNotImportedExcelcsvFormTwo" location="component://remittancereports/widget/RemittanceReportsForms.xml"/>
+                <label></label>
+                <label></label>
+                <label style="h1" text="  TOTAL Count: "></label>
+                 <label></label>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    	 <screen name="stationPostedAndNotPostedExcelcsv">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="accTransactionType" from-field="parameters.transaction"/>
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                <script location="component://remittancereports/webapp/remittancereports/WEB-INF/actions/reports/stationPostedAndNotPostedExcelcsv.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                   <label style="h1" text="  CHAI CO-OPERATIVE SAVINGS AND CREDIT SOCIETY LIMITED"/>
+                    <label></label>
+                     <label style="h1" text=" 	P.O. BOX 278 - 00200 CITY SQUARE- NAIROBI KENYA. KTDA PLAZA - MOI AVENUE"/>
+                    <label></label>
+                     <label style="h1" text=" TEL: 254 (0) 20 214406 - FAX 254 (0) 20 214410. E-MAIL: info@chai-sacco.co.ke"/>
+                    <label></label>
+                    <label style="h1" text="STATION POSTED LISTING"/>
+                    <label></label>
+                </container>
+                <include-form name="stationPostedAndNotPostedExcelcsvForm" location="component://remittancereports/widget/RemittanceReportsForms.xml"/>
+                <label></label>
+                <label></label>
+                <label style="h1" text="Not Posted"></label>
+                <label></label>
+                 <include-form name="stationPostedAndNotPostedExcelcsvFormTw" location="component://remittancereports/widget/RemittanceReportsForms.xml"/>
+                <label></label>
+                <label></label>
+                <label style="h1" text="  TOTAL COUNT:  ${totalAmountStr}"></label>
+                 <label></label>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    	 <screen name="stationDataReceivedExcelcsv">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="accTransactionType" from-field="parameters.transaction"/>
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                <script location="component://remittancereports/webapp/remittancereports/WEB-INF/actions/reports/stationImportedListExcelcsv.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                   <label style="h1" text="  CHAI CO-OPERATIVE SAVINGS AND CREDIT SOCIETY LIMITED"/>
+                    <label></label>
+                     <label style="h1" text=" 	P.O. BOX 278 - 00200 CITY SQUARE- NAIROBI KENYA. KTDA PLAZA - MOI AVENUE"/>
+                    <label></label>
+                     <label style="h1" text=" TEL: 254 (0) 20 214406 - FAX 254 (0) 20 214410. E-MAIL: info@chai-sacco.co.ke"/>
+                    <label></label>
+                    <label style="h1" text="STATION IMPORTED LISTING"/>
+                    <label></label>
+                </container>
+                <include-form name="stationDataReceivedExcelcsvForm" location="component://remittancereports/widget/RemittanceReportsForms.xml"/>
+                <label></label>
+                <label></label>
+                <label style="h1" text="  TOTAL DEPOSITED:  ${totalAmountStr}"></label>
+                 <label></label>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    
+                                    <!-- VAriance Added *********************************** -->
+                                    
+                                    
+                                    
+                                    
+                                    
+    
+	     <screen name="varianceReportExcel">
+        <section>
+            <actions>
+                <set field="headerItem" value="varianceReportExcel" />
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container>
+                            <screenlet title="Variance Report  (Excel)">
+                                <include-form name="varianceReportExcelForm" location="component://remittancereports/widget/RemittanceReportsForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	
+    
+     <screen name="stationExpectedReceivedReportExcel">
+        <section>
+            <actions>
+                <set field="headerItem" value="stationExpectedReceivedReportExcel" />
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                      
+                        <container>
+                            <screenlet title="Station Totals Variance Report (Excel)">
+                                <include-form name="stationExpectedReceivedReportExcelForm" location="component://remittancereports/widget/RemittanceReportsForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+           <screen name="detailedVarianceReportExcel">
+        <section>
+            <actions>
+                <set field="headerItem" value="detailedVarianceReportExcel" />
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                      
+                        <container>
+                            <screenlet title="Detailed Variance Report   (Excel)">
+                                <include-form name="detailedVarianceReportExcelForm" location="component://remittancereports/widget/RemittanceReportsForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    
+    <!-- repo  -->
+    
+    
+    	 <screen name="varianceReportExcelcsv">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="accTransactionType" from-field="parameters.transaction"/>
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                <script location="component://remittancereports/webapp/remittancereports/WEB-INF/actions/reports/varianceReportExcel.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                   <label style="h1" text="                                    CHAI SACCO"/>
+                    <label></label>
+                     <label style="h1" text="                EXPECTED VS RECEIVED SUMMARY "/>
+                    <label></label>
+                     <label style="h1" text=" ${stationName} :Expected Vs Received for ${month}"/>
+                    <label></label>
+                    <label></label>
+                </container>
+                <include-form name="varianceReportExcelcsvForm" location="component://remittancereports/widget/RemittanceReportsForms.xml"/>
+                <label></label>
+                <label></label>
+                <label style="h1" text="  TOTAL DEPOSITED:  ${totalAmountStr}"></label>
+                 <label></label>
+            </widgets>
+        </section>
+    </screen>
+    
+
+
+ <screen name="stationExpectedReceivedReportExcelcsv">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="accTransactionType" from-field="parameters.transaction"/>
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                <script location="component://remittancereports/webapp/remittancereports/WEB-INF/actions/reports/stationExpectedReceivedReportExcel.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                   <label style="h1" text="  CHAI CO-OPERATIVE SAVINGS AND CREDIT SOCIETY LIMITED"/>
+                    <label></label>
+                     <label style="h1" text=" 	P.O. BOX 278 - 00200 CITY SQUARE- NAIROBI KENYA. KTDA PLAZA - MOI AVENUE"/>
+                    <label></label>
+                     <label style="h1" text=" TEL: 254 (0) 20 214406 - FAX 254 (0) 20 214410. E-MAIL: info@chai-sacco.co.ke"/>
+                    <label></label>
+                    <label style="h1" text="STATION EXPECTED/RECEIVED REPORT"/>
+                    <label></label>
+                </container>
+                <include-form name="stationExpectedReceivedReportExcelcsvForm" location="component://remittancereports/widget/RemittanceReportsForms.xml"/>
+                <label></label>
+                <label></label>
+                <label style="h1" text="  TOTAL DEPOSITED:  ${totalAmountStr}"></label>
+                 <label></label>
+            </widgets>
+        </section>
+    </screen>
+    
+
+
+ <screen name="detailedVarianceReportExcelcsv">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="accTransactionType" from-field="parameters.transaction"/>
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                <script location="component://remittancereports/webapp/remittancereports/WEB-INF/actions/reports/detailedVarianceReportExcel.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                   <label style="h1" text="  CHAI CO-OPERATIVE SAVINGS AND CREDIT SOCIETY LIMITED"/>
+                    <label></label>
+                     <label style="h1" text=" 	P.O. BOX 278 - 00200 CITY SQUARE- NAIROBI KENYA. KTDA PLAZA - MOI AVENUE"/>
+                    <label></label>
+                     <label style="h1" text=" TEL: 254 (0) 20 214406 - FAX 254 (0) 20 214410. E-MAIL: info@chai-sacco.co.ke"/>
+                    <label></label>
+                    <label style="h1" text="DETAILED VARIANCE REPORT"/>
+                    <label></label>
+                </container>
+                <include-form name="detailedVarianceReportExcelcsvForm" location="component://remittancereports/widget/RemittanceReportsForms.xml"/>
+                <label></label>
+                <label></label>
+                <label style="h1" text="  TOTAL DEPOSITED:  ${totalAmountStr}"></label>
+                 <label></label>
+            </widgets>
+        </section>
+    </screen>
+    
 
 </screens>

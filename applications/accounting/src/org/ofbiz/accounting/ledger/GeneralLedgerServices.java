@@ -716,6 +716,10 @@ public class GeneralLedgerServices {
 				sb.append(" ");
 				sb.append(cardNo);
 			}
+			
+
+			
+			
 
 		} else if (payment != null) {
 			sb.append(payment.getString("comments"));
@@ -800,10 +804,58 @@ public class GeneralLedgerServices {
 		}
 
 		if (sb.length() < 1) {
-			if (acctgTransEntry.getString("glAccountTypeId") != null) {
-				sb.append(acctgTransEntry.getString("glAccountTypeId"));
-			}
+			List<GenericValue>accountTransactionsNoAmtList = null;
+			GenericValue accountTransactionsNoAmt = null;
+			EntityConditionList<EntityExpr> accountTransactionsCondNoAmt = EntityCondition.makeCondition(UtilMisc.toList(
+					EntityCondition.makeCondition("acctgTransId", EntityOperator.EQUALS, acctgTransEntry.getString("acctgTransId"))
+					), EntityOperator.AND);
 
+			try {
+				accountTransactionsNoAmtList = delegator.findList("AccountTransaction", accountTransactionsCondNoAmt, null, null, null, false);
+			} catch (GenericEntityException e) {
+				e.printStackTrace();
+			}
+			
+			if (accountTransactionsNoAmtList.size() > 0) {
+				accountTransactionsNoAmt = accountTransactionsNoAmtList.get(0);
+				
+				EntityConditionList<EntityExpr> parentCond = EntityCondition.makeCondition(UtilMisc.toList(
+						EntityCondition.makeCondition("accountTransactionParentId", EntityOperator.EQUALS, accountTransactionsNoAmt.getString("accountTransactionParentId")),
+						EntityCondition.makeCondition("transactionType", EntityOperator.EQUALS, "CHEQUEDEPOSIT")
+						), EntityOperator.AND);
+				List<GenericValue> parentAccountTransactionList = null;
+				try {
+					parentAccountTransactionList = delegator.findList("AccountTransaction", parentCond, null, null, null, false);
+				} catch (GenericEntityException e) {
+					e.printStackTrace();
+				}
+				
+				GenericValue parentAccountTransaction = null;
+				
+				if (parentAccountTransactionList.size() > 0) {
+					parentAccountTransaction = parentAccountTransactionList.get(0);
+					sb.append(" ");
+					sb.append("ChequeNo: ");
+					sb.append(" ");
+					sb.append(parentAccountTransaction.getString("chequeNo"));
+					sb.append(" ");
+					sb.append("Drawer: ");
+					sb.append(" ");
+					sb.append(parentAccountTransaction.getString("drawer"));
+				}
+				
+			}
+			
+			
+	
+			
+			
+		
+			if (sb.length() < 1) {
+				if (acctgTransEntry.getString("glAccountTypeId") != null) {
+					sb.append(acctgTransEntry.getString("glAccountTypeId"));
+				}
+			}
 		}
 
 		return sb.toString();

@@ -30,6 +30,12 @@ under the License.
          <fo:block font-size="10pt" text-align="center" border-bottom="thin solid black"></fo:block>
         
          <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
+                 <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
+         <fo:block font-size="12pt" text-align="center"  font-weight="bold">
+                        EMPLOYEE DETAILS
+        </fo:block>
+        
+         <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
          <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
          
          <fo:block font-size="9pt" text-align="left">
@@ -56,10 +62,15 @@ under the License.
                 Branch:  ${branchName?if_exists} 
         </fo:block>
         
+          <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
+                 <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
+         <fo:block font-size="9pt" text-align="left">
+                   Given Notice Period:  ${noticePeriod?if_exists} 
+        </fo:block>
          
          <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
                  <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
-         <fo:block font-size="12pt" text-align="center" border-bottom="thin solid black"   font-weight="bold">
+         <fo:block font-size="12pt" text-align="center"  font-weight="bold">
                           EARNING
         </fo:block>
         
@@ -92,14 +103,25 @@ under the License.
                    Service Pay:  ${servicePay?if_exists} 
         </fo:block>
         
+        <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
+                 <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
+         <fo:block font-size="9pt" text-align="left">
+                   Lieu Of Notice Against Administration :  ${lienOfNoticeAdminToEmpl?if_exists} 
+        </fo:block>
+        
                  <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
                  <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
-         <fo:block font-size="12pt" text-align="center" border-bottom="thin solid black"   font-weight="bold">
-              Gross Total:  ${total?if_exists}
+         <fo:block font-size="12pt" text-align="left"  font-weight="bold">
+              Total Earning:  ${total?if_exists}
         </fo:block>
         
         
-      
+        
+         <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
+                 <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
+         <fo:block font-size="12pt" text-align="center"  font-weight="bold">
+                         DEDUCTIONS
+        </fo:block>
         
          <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
                  <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
@@ -122,19 +144,25 @@ under the License.
          <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
                  <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
          <fo:block font-size="9pt" text-align="left">
-                   Lien Of Notice:  ${lienOfNotice?if_exists} 
+                   Lieu Of Notice Against Employee:  ${lienOfNotice?if_exists} 
+        </fo:block>
+        
+          <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
+                 <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
+         <fo:block font-size="12pt" text-align="left"  font-weight="bold">
+              Total Deductions:  ${totalDeductions?if_exists}
         </fo:block>
         
          <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
                  <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
-         <fo:block font-size="11pt" text-align="center">
+         <fo:block font-size="11pt" text-align="left"  font-weight="bold">
                   Total OutStanding Loans:  ${staffLoans?if_exists} 
         </fo:block>
         
                  <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
                  <fo:block font-size="6pt" text-align="left"><fo:leader/></fo:block>
-         <fo:block font-size="12pt" text-align="center" border-bottom="thin solid black">
-              Amount Payable To Chai:  ${amountPayableToChai?if_exists}
+         <fo:block font-size="12pt" text-align="left"  font-weight="bold">
+              Balance(Payable To Chai):  ${amountPayableToChai?if_exists}
         </fo:block>
         
         

@@ -22,6 +22,42 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
     <!-- list all assets in a tabular format -->
+    <screen name="ListAssets">
+        <section>
+            <actions>
+                <set field="titleProperty" value="AccountingFindFixedAssets"/>
+                <set field="headerItem" value="ListAssets"/>
+                <set field="tabButtonItem" value="ListAssets"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <section>
+                                    <condition>
+                                        <if-service-permission service-name="fixedAssetPermissionCheck" main-action="CREATE"/>
+                                    </condition>
+                                    <widgets>
+                                        <container style="button-bar">
+                                            <link target="EditAsset" text="New Fixed Asset" style="buttontext create"/>
+                                        </container>
+                                    </widgets>
+                                </section>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindAssetOptions" location="component://accounting/widget/FixedAssetForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="AssetSearchResults" location="component://accounting/widget/FixedAssetForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+   <!-- list all assets in a tabular format -->
     <screen name="ListFixedAssets">
         <section>
             <actions>
@@ -72,6 +108,55 @@ under the License.
             </widgets>
         </section>
     </screen>
+
+    <screen name="CommonAssetDecorator">
+        <section>
+            <actions>
+                <set field="headerItem" value="ListAssets"/>
+                <set field="assetId" from-field="assetsObject.assetId" default-value="${parameters.assetId}"/>
+                <entity-one entity-name="Assets" value-field="assetsObject"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="pre-body">
+                        <section>
+                            <condition>
+                                <not><if-empty field="assetId"/></not>
+                            </condition>
+                            <widgets>
+                                <!-- <include-menu name="FixedAssetTabBar" location="component://accounting/widget/AccountingMenus.xml"/> -->
+                            </widgets>
+                        </section>
+                        <decorator-section-include name="pre-body"/>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-service-permission service-name="fixedAssetPermissionCheck" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <not><if-empty field="assetId"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <label style="h1" text=" ${assetsObject.assetName} "/>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <label style="h1" text="${uiLabelMap[titleProperty]}"/>
+                                    </fail-widgets>
+                                </section>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3" text="${uiLabelMap.AccountingViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>    
 
     <screen name="CommonFixedAssetDecorator">
         <section>
@@ -143,6 +228,33 @@ under the License.
                             </widgets>
                         </section>
                         <include-form name="EditFixedAsset" location="component://accounting/widget/FixedAssetForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- create and/or update a fixed asset -->
+    <screen name="EditAsset">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditFixedAsset"/>
+                <set field="tabButtonItem" value="EditAsset"/>
+                <set field="assetId" from-field="parameters.assetId"/>
+                <entity-one entity-name="Assets" value-field="assetObject"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAssetDecorator" location="${parameters.fixedAssetDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-service-permission service-name="fixedAssetPermissionCheck" main-action="CREATE"/>
+                            </condition>
+                            <widgets>
+                                <!-- <container style="button-bar"><link target="EditFixedAsset" text="${uiLabelMap.AccountingNewFixedAsset}" style="buttontext create"/></container> -->
+                            </widgets>
+                        </section>
+                        <include-form name="EditAsset" location="component://accounting/widget/FixedAssetForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -239,6 +351,30 @@ under the License.
                             <include-form name="AddFixedAssetIdent" location="component://accounting/widget/FixedAssetForms.xml"/>
                         </screenlet>
                         <include-form name="ListFixedAssetIdents" location="component://accounting/widget/FixedAssetForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- Fixed Asset Idents -->
+    <screen name="AssetAssignment">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditFixedAssetIdents"/>
+                <set field="tabButtonItem" value="AssetAssignment"/>
+                <set field="labelTitleProperty" value="PageTitleEditFixedAssetIdents"/>
+                <set field="assetId" from-field="parameters.assetId"/>
+                <set field="fixedAssetIdentTypeId" from-field="parameters.fixedAssetIdentTypeId"/>
+                <entity-one entity-name="Assets" value-field="assetsObject"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAssetDecorator" location="${parameters.fixedAssetDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet id="edit-fixed-asset-idents" title="New Asset Assignment" collapsible="true">
+                            <include-form name="NewAssetAssignment" location="component://accounting/widget/FixedAssetForms.xml"/>
+                        </screenlet>
+                        <include-form name="ListAssetAssignment" location="component://accounting/widget/FixedAssetForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

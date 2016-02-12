@@ -101,14 +101,14 @@ public class CrbReportServices {
 	}
 
 	public static String getCRBPhoneFormat(String phone) {
+		String trimmedPhone = phone.trim();
 		String formattedPhone = "";
-//		//+254727059877
-//		String newText = phone.replace('+', '');
-//		token = phone.replace("+", "&amp;");
-//		String my_new_str = my_str.replaceAll("&", "&amp;");
-		char c = phone.charAt(0);
+
+		if (trimmedPhone.length()>0) {
+			char c = trimmedPhone.charAt(0);
 		if (c == '+') {
-			formattedPhone = phone.substring(phone.indexOf(c) + 1);
+			formattedPhone = trimmedPhone.substring(trimmedPhone.indexOf(c) + 1);
+		}
 		}
 		
 		return formattedPhone;

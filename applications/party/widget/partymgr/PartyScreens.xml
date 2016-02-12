@@ -3967,5 +3967,41 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	<screen name="MemberWithdrawalBTWDates">
+        <section>
+            <actions>
+                <set field="headerItem" value="MemberWithdrawalBTWDates" />
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                             <screenlet title="Members Withdrawals Captured Between dates">
+                                <include-form name="MemberWithdrawalBTWDates" location="component://party/widget/partymgr/PartyForms.xml"/>
+                             </screenlet>
+                        <container style="clear"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	
+ <screen name="MemberWithdrawalBTWDatesExcel">
+        <section>
+           <actions>
+                <set field="viewSize" value="99999"/>
+                <!-- script location="component://party/webapp/partymgr/WEB-INF/actions/reports/loanDetails.groovy"/ -->
+              <!--  <script location="component://party/webapp/partymgr/WEB-INF/actions/reports/memberRegistrationByDateReport.groovy"/> -->
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/reports/MemberWithdrawalBTWDatesExcel.groovy"/>
+           </actions>
+           <widgets>
+
+               <!--  <include-form name="listMembersByDate" location="component://party/widget/partymgr/PartyForms.xml"/> -->
+                <include-form name="listWithDrawMembersByDate" location="component://party/widget/partymgr/PartyForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+
 
 </screens>
