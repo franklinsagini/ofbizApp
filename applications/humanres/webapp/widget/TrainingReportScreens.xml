@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+    <screen name="TrainingSummaryReport">
+       <section>
+            <actions>
+                <set field="titleProperty" value="Training Summary Report"/>
+                <set field="headerItem" value="trainingSummaryReport"/>
+                <set field="tabButtonItem" value="trainingSummaryReport"/>
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="trainingSummaryReport"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <!-- entity-one entity-name="PayslipView" value-field="payslipViewContext"/ -->
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="TrainingTypeMenu" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="TrainingSummaryReportsTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>                                
+                                <screenlet>
+                                	<section>
+                                		<widgets>
+    										<container style="button-bar">                                                   
+                                                <link url-mode="inter-app" target="http://127.0.0.1:55740/viewer/preview?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fhumanres%2Fwebapp%2Fhumanres%2Freports%2FTrainingsReport.rptdesign&amp;__format=html&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;1794332249"  text="Training Summary HTML Report" style="buttontext create">
+                                                    <image url-mode="raw" src="${iconsLocation}/add.png" />
+                                                   
+                                                </link>
+                                                 <link url-mode="inter-app" target="http://127.0.0.1:55740/viewer/preview?__report=%2Fhome%2Fcharles%2FKTRepo%2Fapplications%2Fhumanres%2Fwebapp%2Fhumanres%2Freports%2FTrainingsReport.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=%2Fhome%2Fcharles%2FKTRepo&amp;__dpi=96&amp;1794332249"  text="Training Summary PDF Report" style="buttontext create">
+                                                    <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png" />                                                   
+                                                </link>                                               
+                                                </container>
+                                		</widgets>
+                                	</section>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>       
+       </screen>
+</screens>       

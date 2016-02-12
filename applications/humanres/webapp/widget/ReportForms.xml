@@ -1,0 +1,1116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+        <form name="StaffListGen" type="single" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="partyId">
+            <drop-down allow-empty="false">
+                <option key="" description="- ${uiLabelMap.CommonAny} -"/>
+                <entity-options entity-name="Person" description="${partyId}">
+                    <entity-order-by field-name="partyId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="birthDate"><date-time/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="listStaff" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="staffList" paginate-target="staffList"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="StaffListReport">
+            	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+            </entity-condition>
+
+        </actions>
+
+        <field name="employeeNumber" title="Employee Number"> <display/> </field>
+        <field name="salutation" title="Title"> <display/> </field>
+        <field name="firstName" title="First Name"> <display/> </field>
+        <field name="lastName" title="Surname"> <display/> </field>
+        <field name="gender" title="Gender"> <display/> </field>
+        <field name="nationalIDNumber" title="National ID No"> <display/> </field>
+        <field name="maritalStatus" title="Marital Status"> <display/> </field>
+        <field name="positionName" title="Job Position"> <display/> </field>
+        <field name="station" title="Station"> <display/> </field>
+        <field name="birthDate" title="Date of Birth"> <display type="date-time"/> </field>
+	    <field name="appointmentdate" title="Appointment Date"> <display type="date-time"/> </field>
+	    <field name="confirmationdate" title="Confirmation Date"> <display type="date"/> </field>
+	    <field name="retirementdate" title="Retirement Date"> <display type="date"/> </field>
+
+
+
+        <!--field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deletePayrollElement" description="${uiLabelMap.CommonDelete}" also-hidden="false">
+                <parameter param-name="payrollElementId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field-->
+    </form>
+
+    <form name="listEmployeeQualifications" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="employeeQualifications" paginate-target="employeeQualifications"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PersonAndPartyQual">
+            	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+            </entity-condition>
+        </actions>
+
+        <field name="employeeNumber" title="Employee Number"> <display/> </field>
+        <field name="firstName" title="First Name"> <display/> </field>
+        <field name="lastName" title="Surname"> <display/> </field>
+        <field name="partyQualType" title="Qualification Type"> <display/> </field>
+        <field name="qualTitle" title="Title"> <display/> </field>
+        <field name="specialization" title="Specialization"> <display/> </field>
+        <field name="qualInstitute" title="Institute"> <display/> </field>
+        <field name="qualfromDate" title="From"> <display/> </field>
+        <field name="qualthruDate" title="To"> <display/> </field>
+    </form>
+
+    <form name="listEmployeeSkills" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="employeeSkills" paginate-target="employeeSkills"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PersonAndPartySkills">
+            	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+            </entity-condition>
+        </actions>
+
+        <field name="employeeNumber" title="Employee Number"> <display/> </field>
+        <field name="firstName" title="First Name"> <display/> </field>
+        <field name="lastName" title="Surname"> <display/> </field>
+        <field name="skillType" title="Skill"> <display/> </field>
+        <field name="yearsExperience" title="Years of Experience"> <display/> </field>
+    </form>
+
+    <form name="listEmployeeSpouseDetails" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="employeeSpouseDetails" paginate-target="employeeSpouseDetails"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PartyAndSpouse">
+            	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+            </entity-condition>
+
+        </actions>
+
+        <field name="employeeNumber" title="Employee Number"> <display/> </field>
+        <field name="firstName" title="First Name"> <display/> </field>
+        <field name="lastName" title="Surname"> <display/> </field>
+        <field name="spouseName" title="Spouse Name"> <display/> </field>
+        <field name="relationship" title="Relationship"> <display/> </field>
+        <field name="dob" title="Date of Birth"> <display/> </field>
+        <field name="identificationType" title="Identification Type"> <display/> </field>
+        <field name="idno" title="Number"> <display/> </field>
+        <field name="phoneNo" title="Phone No."> <display/> </field>
+    </form>
+
+    <form name="listEmployeeDependantDetails" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="employeeDependantDetails" paginate-target="employeeDependantDetails"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PartyAndDependants">
+            	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+            </entity-condition>
+
+        </actions>
+
+        <field name="employeeNumber" title="Employee Number"> <display/> </field>
+        <field name="firstName" title="First Name"> <display/> </field>
+        <field name="lastName" title="Surname"> <display/> </field>
+        <field name="dependantName" title="Dependant Name"> <display/> </field>
+        <field name="relationship" title="Relationship"> <display/> </field>
+        <field name="dob" title="Date of Birth"> <display/> </field>
+        <field name="bloodGroup" title="Blood Group"> <display/> </field>
+        <field name="identificationType" title="Identification Type"> <display/> </field>
+        <field name="idno" title="Number"> <display/> </field>
+    </form>
+
+    <form name="listEmployeeNOKDetails" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="employeeNOKDetails" paginate-target="employeeNOKDetails"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PartyAndNextOfKin">
+            	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+            </entity-condition>
+        </actions>
+
+        <field name="employeeNumber" title="Employee Number"> <display/> </field>
+        <field name="firstName" title="First Name"> <display/> </field>
+        <field name="lastName" title="Surname"> <display/> </field>
+        <field name="nokName" title="Next Of Kin Name"> <display/> </field>
+        <field name="relationship" title="Relationship"> <display/> </field>
+        <field name="dob" title="Date of Birth"> <display/> </field>
+        <field name="identificationType" title="Identification Type"> <display/> </field>
+        <field name="idno" title="Number"> <display/> </field>
+        <field name="phoneNo" title="Phone No."> <display/> </field>
+    </form>
+    
+    
+    <form name="listPostingDetails" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="postingDetails" paginate-target="postingDetails"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="EmploymentAndPerson">
+            	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+            </entity-condition>
+        </actions>
+
+        <field name="employeeNumber" title="Employee Number"> <display/> </field>
+        <field name="firstName" title="First Name"> <display/> </field>
+
+        <field name="lastName" title="Surname"> <display/> </field>
+        <field name="BranchName" title="Branch"> <display/> </field>
+        <field name="departmentName" title="Department"> <display/> </field>
+        <field name="fromDate"> <display type="date"/> </field>
+        <field name="thruDate"> <display type="date"/> </field>
+    </form>
+    
+     <form name="staffPostingsList" type="single" target="postingDetailspdf" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+       
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+   
+    <form name="staffPostingsListCSV" type="single" target="postingDetailscsv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    
+     
+     <form name="staffPostingsByEmployee" type="single" target="postingByEmployeepdf" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="partyId"   title="Employee">
+            <lookup target-form-name="LookupEmployee"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    
+    
+     <form name="staffPostingsByEmployeeCSV" type="single" target="postingByEmployeecsv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="partyId"   title="Employee">
+            <lookup target-form-name="LookupEmployee"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    
+    
+    <form name="staffPostingsByEmployeeExport" list-name="nextOfKinlist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+       <field name="name" title="Kin's Name"><display/></field>
+        <field name="relationship" title="Relationship"><display/></field>
+        <field name="idNo" title="Id Number"><display/></field>
+        <field name="phone" title="Phone Number"><display/></field>
+        <field name="address" title="Postal Address"><display/></field>
+        
+    </form>
+    
+    
+    
+    
+    
+    
+    <form name="listPositionDetails" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="positionDetails" paginate-target="positionDetails"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="PersonAndEmplPositionAndFulfillment">
+            	<condition-expr field-name="employeeNumber" operator="not-equals" value=""/>
+            </entity-condition>
+        </actions>
+
+        <field name="employeeNumber" title="Employee Number"> <display/> </field>
+        <field name="firstName" title="First Name"> <display/> </field>
+        <field name="lastName" title="Surname"> <display/> </field>
+        <field name="emplPositionTypeId" title="Job Title ">
+        	<display-entity entity-name="EmplPositionType" key-field-name="emplPositionTypeId" description="${emplPositionType}"/>
+        </field>
+        <field name="positionName" title="Position Name"> <hidden/> </field>
+        <field name="employeefromDate" title="From Date"> <display type="date"/> </field>
+        <field name="employeethruDate" title="Through Date"> <display type="date"/> </field>
+    </form>
+
+    <form name="printbutton" type="single" separate-columns="true" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+    <field name="print" widget-style="button">
+    	<hyperlink target="http://127.0.0.1:58695/viewer/frameset?__report=F%3A\projects\web\ofbiz\applications\humanres\webapp\humanres\reports\staffOnLeaveReport.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=F%3A\projects\web\ofbiz&amp;__dpi=96&amp;-1580427331" description="Staff on Leave" target-type="intra-app" >
+    	</hyperlink>
+    </field>
+        <field name="printLink" title="Staff on Leave" widget-style="buttontext">
+           <hyperlink target="http://127.0.0.1:58695/viewer/frameset?__report=F%3A\projects\web\ofbiz\applications\humanres\webapp\humanres\reports\staffOnLeaveReport.rptdesign&amp;__format=pdf&amp;__svg=false&amp;__locale=en_US&amp;__timezone=Indian%2FMayotte&amp;__masterpage=true&amp;__rtl=false&amp;__cubememsize=10&amp;__resourceFolder=F%3A\projects\web\ofbiz&amp;__dpi=96&amp;-1580427331" description="Staff on Leave" also-hidden="false">
+
+            </hyperlink>
+       </field>
+    </form>
+
+    <form name="employeeSpouseDetailsFTL" type="single" target="employeeSpouseDetailsFTLPDF" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="partyId"   title="Employee">
+            <lookup target-form-name="LookupEmployee"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="employeeSpouseDetailCSV" type="single" target="employeeSpouseDetailCSV.csv" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="partyId"   title="Employee">
+            <lookup target-form-name="LookupEmployee"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="employeeSpouseExport" list-name="employeeSpouselist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+       <field name="name" title="Spouse Name"><display/></field>
+        <field name="relationship" title="Relationship"><display/></field>
+        <field name="idNo" title="Id Number"><display/></field>
+        <field name="gender" title="Gender"><display/></field>
+        <field name="dob" title="Date of Birth"><display/></field>
+        
+    </form>
+    
+    <form name="nextOfKinForm" type="single" target="nextOfKinPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="partyId"   title="Employee">
+            <lookup target-form-name="LookupEmployee"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="nextOfKinFormCSV" type="single" target="nextOfKinCSV.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="partyId"   title="Employee">
+            <lookup target-form-name="LookupEmployee"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="nextOfKinFormExport" list-name="nextOfKinlist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+       <field name="name" title="Kin's Name"><display/></field>
+        <field name="relationship" title="Relationship"><display/></field>
+        <field name="idNo" title="Id Number"><display/></field>
+        <field name="phone" title="Phone Number"><display/></field>
+        <field name="address" title="Postal Address"><display/></field>
+        
+    </form>
+    
+     <form name="dependentsForm" type="single" target="dependentsPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="partyId"   title="Employee">
+            <lookup target-form-name="LookupEmployee"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+      <form name="dependentsFormCSV" type="single" target="dependentsCSV.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="partyId"   title="Employee">
+            <lookup target-form-name="LookupEmployee"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="dependentsFormExport" list-name="dependentslist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="name" title="Dependant's Name"><display/></field>
+        <field name="relationship" title="Relationship"><display/></field>
+        <field name="idNo" title="Id Number"><display/></field>
+        <field name="gender" title="Gender"><display/></field>
+        <field name="dob" title="Date of Birth"><display/></field>
+        
+    </form>
+    
+     <form name="employmentHistoryForm" type="single" target="employmentHistoryPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="partyId"   title="Employee">
+            <lookup target-form-name="LookupEmployee"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="employmentHistoryFormCSV" type="single" target="employmentHistoryCSV.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="partyId"   title="Employee">
+            <lookup target-form-name="LookupEmployee"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="employmentHistoryExport" list-name="employmentHistorylist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="employer" title="Employer"><display/></field>
+        <field name="position" title="Position Held"><display/></field>
+        <field name="startDate" title="Start Date"><display/></field>
+        <field name="toDate" title="Through Date"><display/></field>
+        <field name="separateReason" title="Reason For Separation"><display/></field>
+        
+    </form>
+    
+    <form name="staffListingForm" type="single" target="staffListingPDF" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+		 <field name="isManagement" title="Select Type of Staff" tooltip="(Leave Blank if viewing ALL Staff)">
+            <drop-down allow-empty="true">
+                <option key="Management" description="Management"/>
+                <option key="Normal" description="Normal Staff"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+            <submit button-type="button"/>
+            
+        </field>
+    </form>
+    
+    <form name="staffListingFormCSV" type="single" target="staffListingCSV.csv" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+		 
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="staffListingExport" list-name="stafflist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="payrollNo" title="Payroll Number"><display/></field>
+        <field name="fname" title="First Name"><display/></field>
+        <field name="lname" title="Last Name"><display/></field>
+        <field name="IdNo" title="ID Number"><display/></field>
+        <field name="gender" title="Staff Gender"><display/></field>
+		<field name="pin" title="Pin Number"><display/></field>
+		<field name="nhif" title="NHIF Number"><display/></field>
+		<field name="nssf" title="NSSF Number"><display/></field>
+        <field name="appointmentDate" title="Employment Date"><display/></field>
+		<field name="isManagement" title="Type Of Staff"><display/></field>
+        
+    </form>
+	
+	 <form name="leaveCalendarForm" type="single" target="leaveCalendarPDF" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="leaveCalendarFormCSV" type="single" target="leaveCalendarCSV.csv" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="leaveCalendarExport" list-name="leaveCalendarlist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="payrollNo" title="Payroll Number"><display/></field>
+        <field name="name" title="Staff Name"><display/></field>
+        <field name="gender" title="Staff Gender"><display/></field>
+        <field name="branch" title="Branch"><display/></field>
+         <field name="department" title="Department"><display/></field>
+         <field name="leaveType" title="Leave Type"><display/></field>
+         <field name="duration" title="Leave Duration"><display/></field>
+		 <field name="startDate" title="Leave Start Date"><display/></field>
+        
+    </form>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+    
+    <form name="leaveBalanceForm" type="single" target="leaveBalancePDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="leaveType" title="Leave Type">
+            <drop-down allow-empty="false">
+                <option key="A" description="Annual Leave"/>
+            </drop-down>
+        </field>
+        <field name="partyId"   title="Employee" tooltip="(Leave Blank if viewing ALL Staff)">
+            <lookup target-form-name="LookupEmployee"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="leaveBalanceFormCSV" type="single" target="leaveBalanceCSV.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="leaveType" title="Leave Type">
+            <drop-down allow-empty="false">
+                <option key="ANNUAL" description="Annual Leave"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="leaveBalanceExport" list-name="leaveBalancelist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="Payroll" title="Payroll Number"><display/></field>
+        <field name="fname" title="First Name"><display/></field>
+        <field name="lname" title="Last Name"><display/></field>
+        <field name="broughtForward" title="Days Brought Forward"><display/></field>
+        <field name="acrued" title="Days Accrued"><display/></field>
+        <field name="taken" title="Days Taken"><display/></field>
+        <field name="lost" title="Days Lost"><display/></field>
+        <field name="balance" title="Leave Balances"><display/></field>
+    </form>
+    
+    <form name="staffOnLeaveForm" type="single" target="staffOnLeavePDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+	
+	 <form name="staffOnLeaveFormCSV" type="single" target="staffOnLeaveCSV.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+	
+	 <form name="staffOnLeaveFormExport" list-name="staffOnLeavelist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="Payroll" title="Payroll Number"><display/></field>
+        <field name="name" title="Name"><display/></field>
+        <field name="leaveType" title="Leave Type"><display/></field>
+        <field name="applicationDate" title="Application Date"><display/></field>
+        <field name="duration" title="Leave Duration"><display/></field>
+        <field name="resumeDate" title="Resumption Date"><display/></field>
+    </form>
+	
+    <form name="leaveActivityForm" type="single" target="leaveActivityPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="partyId"   title="Employee">
+            <lookup target-form-name="LookupEmployee"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+	 <form name="leaveActivityFormCSV" type="single" target="leaveActivityCSV.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="partyId"   title="Employee">
+            <lookup target-form-name="LookupEmployee"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="resumptionSummaryForm" type="single" target="resumptionSummaryPDF" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+	
+	<form name="resumptionSummaryFormCSV" type="single" target="resumptionSummaryCSV.csv" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+	
+	<form name="resumptionSummaryExport" list-name="resumptionSummarylist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="payrollNo" title="Payroll Number"><display/></field>
+        <field name="name" title="Staff Name"><display/></field>
+        <field name="leaveType" title="Leave Type"><display/></field>
+        <field name="leaveDuration" title="Leave Duration"><display/></field>
+         <field name="leaveEnd" title="Leave End"><display/></field>
+         <field name="resumptionDate" title="Resumption Date"><display/></field>
+    </form>
+    
+    <form name="scheduledLeavesForm" type="single" target="scheduledLeavesPDF" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+	
+	<form name="scheduledLeavesFormCSV" type="single" target="scheduledLeavesCSV.csv" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+	
+	<form name="scheduledLeavesExport" list-name="scheduledLeaveslist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="payrollNo" title="Payroll Number"><display/></field>
+        <field name="name" title="Staff Name"><display/></field>
+        <field name="leaveType" title="Leave Type"><display/></field>
+        <field name="start" title="Leave Start"><display/></field>
+         <field name="duration" title="Leave Duration"><display/></field>
+         <field name="end" title="Leave End"><display/></field>
+    </form>
+    
+     <form name="staffOnProbationForm" type="single" target="staffOnProbationPDF" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="staffOnProbationFormCSV" type="single" target="staffOnProbationCSV.csv" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="staffOnProbationExport" list-name="staffOnProbationlist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="payrollNo" title="Payroll Number"><display/></field>
+        <field name="fname" title="First Name"><display/></field>
+        <field name="lname" title="Last Name"><display/></field>
+        <field name="gender" title="Staff Gender"><display/></field>
+        <field name="branch" title="Branch"><display/></field>
+         <field name="department" title="Department"><display/></field>
+         <field name="appointmentDate" title="Employment Date"><display/></field>
+         <field name="confirmationDate" title="Confirmation Date"><display/></field>
+        
+    </form>
+    
+    <form name="staffQualificationsForm" type="single" target="staffQualificationsPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="partyId"   title="Employee">
+            <lookup target-form-name="LookupEmployee"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    <form name="staffWithThisQualificationsForm" type="single" target="staffWithThisQualificationsPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+       <field name="title" title="Select Course Title" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+            <drop-down allow-empty="true">
+                <entity-options description="${specialization}" key-field-name="specialization" entity-name="PartyCourseSpecialization">
+                    <entity-order-by field-name="specializationId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="staffQualificationsFormCSV" type="single" target="staffQualificationsCSV.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="partyId"   title="Employee">
+            <lookup target-form-name="LookupEmployee"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+     <form name="staffQualificationsExport" list-name="staffQualificationslist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="qualName" title="Qualification Name"><display/></field>
+        <field name="title" title="Title"><display/></field>
+        <field name="specialization" title="Specialization"><display/></field>
+        <field name="grade" title="Grade"><display/></field>
+        <field name="institution" title="Institution"><display/></field>
+         <field name="startDate" title="Start Date"><display/></field>
+         <field name="toDate" title="Through Date"><display/></field>
+        
+    </form>
+    
+    <form name="staffWithThisQualificationsFormCSV" type="single" target="staffWithThisQualificationsCSV.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+       <field name="title" title="Select Course Title" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
+            <drop-down allow-empty="true">
+                <entity-options description="${specialization}" key-field-name="specialization" entity-name="PartyCourseSpecialization">
+                    <entity-order-by field-name="specializationId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="staffWithThisQualificationsExport" list-name="staffWithThisQualificationslist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="payrollNo" title="Payroll Number"><display/></field>
+        <field name="fname" title="First Name"><display/></field>
+        <field name="lname" title="Last Name"><display/></field>
+        <field name="specialization" title="Specialization"><display/></field>
+        <field name="institution" title="Institution"><display/></field>
+         <field name="institutionLocation" title="Institution Location"><display/></field>
+         <field name="grade" title="Grade"><display/></field>
+        
+    </form>
+    
+     <form name="staffSkillsForm" type="single" target="staffSkillsPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="partyId"   title="Employee">
+            <lookup target-form-name="LookupEmployee"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="staffWithThisSkillsForm" type="single" target="staffWithThisSkillsPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+       <field name="skillTypeId" title="Skill Type">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="SkillType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     
+     <form name="staffSkillsFormCSV" type="single" target="staffSkillsCSV.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="partyId"   title="Employee">
+            <lookup target-form-name="LookupEmployee"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="staffSkillsFormExport" list-name="staffSkillslist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="skill" title="Skill Name"><display/></field>
+        <field name="experience" title="Experience In Years"><display/></field>
+        <field name="level" title="Skill Level"><display/></field>
+        
+    </form>
+    
+    
+     <form name="staffWithThisSkillsFormCSV" type="single" target="staffWithThisSkillsCSV.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+       <field name="skillTypeId" title="Skill Type">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="SkillType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="staffWithThisSkillsFormExport" list-name="staffWithThisSkillslist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="payrollNo" title="Payroll Number"><display/></field>
+        <field name="fname" title="First Name"><display/></field>
+        <field name="lname" title="Last Name"><display/></field>
+        <field name="experience" title="Experience In Years"><display/></field>
+        <field name="level" title="Skill Level"><display/></field>
+        
+    </form>
+    
+    
+     
+     <form name="staffOnTrainingReportForm" type="single" target="staffOnTrainingPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="staffOnTrainingCSV" type="single" target="staffOnTrainingCSV.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    <form name="staffOnTrainingExport" list-name="onTraininglist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+       
+        
+        <field name="name" title="Staff"><display/></field>
+        <field name="event" title="Training Event"><display/></field>
+        <field name="trainingType" title="Training Type"><display/></field>
+        <field name="start" title="Start Date"><display/></field>
+        <field name="end" title="Through Date"><display/></field>
+        
+    </form>
+    
+     <form name="scheduledTrainingReportForm" type="single" target="scheduledStaffOnTrainingPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="scheduledStaffOnTrainingCSV" type="single" target="scheduledStaffOnTrainingCSV.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    <form name="scheduledStaffOnTrainingExport" list-name="scheduledlist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+       
+        
+        <field name="name" title="Staff"><display/></field>
+        <field name="event" title="Training Event"><display/></field>
+        <field name="trainingType" title="Training Type"><display/></field>
+        <field name="start" title="Start Date"><display/></field>
+        <field name="end" title="Through Date"><display/></field>
+        
+    </form>
+    
+     <form name="staffTrainingHistoryReportForm" type="single" target="StaffTrainingHistoryPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="partyId"   title="Select Staff" required-field="true" widget-area-style="required">
+            <lookup target-form-name="LookupEmployee"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="StaffTrainingHistoryCSV" type="single" target="StaffTrainingHistoryCSV.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="partyId"   title="Select Staff" required-field="true" widget-area-style="required">
+            <lookup target-form-name="LookupEmployee"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    <form name="StaffTrainingHistoryExport" list-name="historylist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+       
+        
+        <field name="event" title="Training Event"><display/></field>
+        <field name="trainingType" title="Training Type"><display/></field>
+        <field name="start" title="Start Date"><display/></field>
+        <field name="end" title="Through Date"><display/></field>
+        
+    </form>
+    
+    
+    
+    
+    
+      									 <!--  SEPARATION OF STAFF REPORTS -->
+        
+        
+         <form name="staffSeparatedReportForm" type="single" target="staffSeparatedReportPDF" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+     <form name="staffSeparatedReportCSV" type="single" target="staffSeparatedReportCSV.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    <form name="staffSeparatedReportExport" list-name="recordList" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+       
+        
+        <field name="payroll" title="Staff Payroll"><display/></field>
+        <field name="name" title="Names"><display/></field>
+        <field name="bran" title="Branch"><display/></field>
+        <field name="depart" title="Department"><display/></field>
+        <field name="separateType" title="Separation Type"><display/></field>
+        <field name="separationReason" title="Separation Reason"><display/></field>
+        <field name="dateEffected" title="Effective Date"><display/></field>
+        
+    </form>
+     
+
+  <form name="staffListEmploymentTerms" type="single" target="employmentTermsPDF" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+		 <field name="employmentTerms" title="Terms Of Employment" tooltip="Select employment Type" required-field="true">
+            <drop-down allow-empty="true">
+                <option key="permanent" description="Permanent"/>
+                <option key="intern" description="Intern"/>
+                <option key="contract" description="Contract"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+            <submit button-type="button"/>
+            
+        </field>
+    </form>  
+     
+ <form name="staffBranch" type="single" target="staffBranch"
+        odd-row-style="header-row" default-table-style="basic-table">
+        <actions>
+	        <entity-condition entity-name="PartyGroup" list="partyGroups">
+	        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+	        </entity-condition>
+	        <entity-condition entity-name="Station" list="stationList" ></entity-condition>
+	        
+        </actions>
+        <field name="roleTypeIdFrom"><hidden value="INTERNAL_ORGANIZATIO"/></field>
+        <field name="roleTypeIdTo"><hidden value="EMPLOYEE"/></field>       
+        <field name="branchId" title="Branch" required-field="true">
+            <drop-down allow-empty="true" no-current-selected-key="${userLogin.partyId}" >
+                <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
+            </drop-down>
+        </field>
+        <!-- <field name="departmentId" title="Department" >
+            <drop-down allow-empty="false" >
+               <entity-options description="${departmentName}" entity-name="department" key-field-name="departmentId"></entity-options>
+            </drop-down>
+        </field>  -->
+        <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+            <submit button-type="button"/>
+            
+        </field>
+        </form>
+
+<form name="monthlyLeave" type="single" target="monthlyLeave" odd-row-style="header-row" default-table-style="basic-table">
+      <field name="fromDate" title="FROM" required-field="true"><date-time/></field> 
+      <field name="thruDate" title="TO" required-field="true"><date-time/></field> 
+      <!-- <field name="thruDate" title="AND"><date-time type="date"/></field> -->
+        <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+            <submit button-type="button"/>
+            
+        </field>
+
+</form>
+
+<form name="monthlyLeaveSCV" type="single" target="monthlyLeaveCSV.csv" odd-row-style="header-row" default-table-style="basic-table">
+      <field name="fromDate" title="FROM" required-field="true"><date-time/></field> 
+      <field name="thruDate" title="TO" required-field="true"><date-time/></field> 
+      <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+           <submit button-type="button"/>
+       </field>
+</form>
+
+<form name="leaveAtCertainDate" type="single" target="leaveAtCertainDate" odd-row-style="header-row" default-table-style="basic-table">
+      <field name="fromDate" title="FROM" required-field="true"><date-time/></field> 
+      <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+            <submit button-type="button"/>
+      </field>
+</form>
+
+<form name="leaveAtCertainDateExcel" type="single" target="leaveAtCertainDateExcel.csv" odd-row-style="header-row" default-table-style="basic-table">
+      <field name="fromDate" title="FROM" required-field="true"><date-time/></field> 
+      <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+            <submit button-type="button"/>
+      </field>
+</form>
+
+<form name="staffListAsAtCertainDate" type="single" target="staffListAsAtCertainDatePDF" odd-row-style="header-row" default-table-style="basic-table">
+      <field name="appointmentdate" title="LIST AS FROM" required-field="true"><date-time/></field> 
+        <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+            <submit button-type="button"/>
+            
+        </field>
+
+</form>
+
+ <form name="staffPostingsPerDate" type="single" target="postingDetailsPerDatepdf" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+        <field name="fromDate" required-field="true"><date-time type="date"/> </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+<form name="StaffOnProbationAsAtCertainDate" type="single" target="StaffOnProbationAsAtCertainDate" odd-row-style="header-row" default-table-style="basic-table">
+      <field name="asFromDate" title="LIST AS FROM" required-field="true"><date-time/></field> 
+        <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+            <submit button-type="button"/>
+            
+        </field>
+</form>    
+      
+<form name="leaveBalanceAtCertainDate" type="single" target="leaveBalanceAtCertainDate" odd-row-style="header-row" default-table-style="basic-table">
+       <field name="partyId"   title="Select Staff">
+            <lookup target-form-name="LookupEmployee"/>
+        </field>
+      <field name="fromDate" title="FROM" required-field="true"><date-time/></field> 
+       <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+            <submit button-type="button"/>
+            
+        </field>
+
+</form>
+
+<form name="empLeaveRecordPrint" type="single" target="empLeaveRecordPrint.csv" odd-row-style="header-row" default-table-style="basic-table">
+       <field name="partyId"   title="Select Staff">
+            <lookup target-form-name="LookupEmployee"/>
+        </field>
+       <field name="leaveTypeId" title="${uiLabelMap.HumanResLeaveType}" position="2">
+			<drop-down allow-empty="true">
+				<entity-options description="${description}"
+					key-field-name="leaveTypeId" entity-name="EmplLeaveType" />
+			</drop-down>
+	   </field>
+	   <field name="leaveStatus" title="Approval Status">
+            <drop-down allow-empty="true">
+                <option key="Rejected" description="Rejected Leave(s)"/>
+                <option key="Approved" description="Approved Leave(s)"/>
+                <option key="Cancelled" description="Cancelled Leave(s)"/>
+            </drop-down>
+        </field>
+       <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+</form>
+        
+ <form name="empLeaveRecordPrintCSVScreen" list-name="leaveBalancelist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="payrollNo" title="Payroll Number"><display/></field>
+        <field name="name" title="Staff Name"><display/></field>
+        <field name="leaveTypeId" title="Leave Type"><display/></field>
+        <field name="emplLeaveReasonTypeId" title="Reason For Leave"><display/></field>
+        <field name="fromDate" title="From"><display/></field>
+		<field name="thruDate" title="Through"><display/></field>
+		<field name="leaveDuration" title="Leave Duration"><display/></field>
+		<field name="approvalStatus" title="Approval Status"><display/></field>
+        <field name="rejectReason" title="Reason For Leave Rejection"><display/></field>
+		<field name="responsibleEmployee" title="Approver"><display/></field>
+		<field name="handedOverTo" title="Handed Over To"><display/></field>
+		<field name="createdDate" title="Created Time"><display/></field>
+ </form>  
+ 
+ <form name="empLeaveRecordPrintPdf" type="single" target="empLeaveRecordPrintPdf" odd-row-style="header-row" default-table-style="basic-table">
+       <field name="partyId"   title="Select Staff">
+            <lookup target-form-name="LookupEmployee"/>
+        </field>
+       <field name="leaveTypeId" title="${uiLabelMap.HumanResLeaveType}" position="2">
+			<drop-down allow-empty="true">
+				<entity-options description="${description}"
+					key-field-name="leaveTypeId" entity-name="EmplLeaveType" />
+			</drop-down>
+	   </field>
+	   <field name="leaveStatus" title="Approval Status">
+            <drop-down allow-empty="true">
+                <option key="Rejected" description="Rejected Leave(s)"/>
+                <option key="Approved" description="Approved Leave(s)"/>
+                <option key="Cancelled" description="Cancelled Leave(s)"/>
+            </drop-down>
+        </field>
+       <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+</form>      
+        
+ <form name="monthlyLeaveForm" list-name="leaveBalancelist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="payrollNo" title="Payroll Number"><display/></field>
+        <field name="name" title="Staff Name"><display/></field>
+        <field name="leaveTypeId" title="Leave Type"><display/></field>
+        <field name="emplLeaveReasonTypeId" title="Reason For Leave"><display/></field>
+        <field name="fromDate" title="From"><display/></field>
+		<field name="thruDate" title="Through"><display/></field>
+		<field name="leaveDuration" title="Leave Duration"><display/></field>
+		<field name="approvalStatus" title="Approval Status"><display/></field>
+		<field name="responsibleEmployee" title="Approver"><display/></field>
+		<field name="handedOverTo" title="Handed Over To"><display/></field>
+		<field name="createdDate" title="Created Time"><display/></field>
+ </form>  
+         
+ <form name="leaveAtCertainDateExcelForm" list-name="leaveBalancelist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="payrollNo" title="Payroll Number"><display/></field>
+        <field name="name" title="Staff Name"><display/></field>
+        <field name="leaveTypeId" title="Leave Type"><display/></field>
+        <field name="emplLeaveReasonTypeId" title="Reason For Leave"><display/></field>
+        <field name="fromDate" title="From"><display/></field>
+		<field name="thruDate" title="Through"><display/></field>
+		<field name="leaveDuration" title="Leave Duration"><display/></field>
+		<field name="approvalStatus" title="Approval Status"><display/></field>
+		<field name="responsibleEmployee" title="Approver"><display/></field>
+		<field name="handedOverTo" title="Handed Over To"><display/></field>
+		<field name="createdDate" title="Created Time"><display/></field>
+ </form>  
+         
+
+        
+        
+</forms>

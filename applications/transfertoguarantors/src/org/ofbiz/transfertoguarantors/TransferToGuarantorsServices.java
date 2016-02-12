@@ -1586,14 +1586,24 @@ public class TransferToGuarantorsServices {
 		
 		//Get all loans whose parent is parentLoanApplicationId
 		//parentLoanApplicationId
+		
+		Long loanStatusAttachmentReversalId = LoanUtilities.getLoanStatusId("ATTACHMENTREVERSAL");
+
+		EntityConditionList<EntityExpr> attachedLoansCondition = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"parentLoanApplicationId", EntityOperator.EQUALS, parentLoanApplicationId),
+						EntityCondition.makeCondition("loanStatusId",
+								EntityOperator.NOT_EQUAL, loanStatusAttachmentReversalId)),
+						EntityOperator.AND);
+		
+		
 		List<GenericValue> loanApplicationELI = null; 
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
 			loanApplicationELI = delegator.findList("LoanApplication",
-					EntityCondition.makeCondition("parentLoanApplicationId",
-							parentLoanApplicationId), null, null, null, false);
+					attachedLoansCondition, null, null, null, false);
 		} catch (GenericEntityException e) {
-			e.printStackTrace();
+			e.printStackTrace();	
 		}
 
 		return loanApplicationELI;

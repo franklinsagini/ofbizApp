@@ -360,31 +360,7 @@
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
-     <form name="emplLeaveBalancesForDisplay" type="single"  header-row-style="header-row" default-table-style="basic-table" default-map-name="leavebal">
-      <actions>
-        
-        <entity-condition entity-name="EmplLeave">
-        			 <condition-expr field-name="partyId" operator="equals" from-field="userLogin.partyId"/> 
-        	</entity-condition> 
-        
-            <service result-map-list="listIt" result-map="result" service-name="performFind">
-                <field-map field-name="inputFields" from-field="parameters"/>
-                <field-map field-name="entityName" value="EmplLeave"/>
-                <field-map field-name="orderBy" from-field="parameters.sortField"/>
-                <field-map field-name="viewIndex" from-field="viewIndex"/>
-                <field-map field-name="viewSize" from-field="viewSize"/>
-            </service>
-          
-            <set field="partyId" value="${userLogin.partyId}"/>
-        </actions>
-         <field position="1" name="annualaccruedDays" title="Annual Accrued Leave Days"><display/></field>
-	     <field  position="1" name="annualCarriedOverDays" title="Annual Leave Days Brought Forward"><display/></field>
-         <field  position="1" name="annualUsedLeaveDays" ><display/></field>
-         <field  position="1" name="annualLostLeaveDays" ><display/></field>
-         <field  position="1" name="annualAvailableLeaveDays" ><display/></field>
-    </form>
-    
-    <form name="ListEmplLeaves" target="" title="" list-name="listIt" type="list" paginate-target="FindEmplLeaves"
+     <form name="ListEmplLeaves" target="" title="" list-name="listIt" type="list" paginate-target="FindEmplLeaves"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
         

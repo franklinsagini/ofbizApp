@@ -1,0 +1,859 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+
+
+
+<menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
+    <menu name="HumanResAppBar" title="${uiLabelMap.HumanResManager}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="Employees" title="${uiLabelMap.HumanResEmployees}"><link target="findEmployees"/></menu-item>
+         <menu-item name="probationEmployees" title="Employees On Probation"><link target="findProbationEmployees"/></menu-item>
+        <menu-item name="Employment" title="Employee Postings"><link target="FindEmployments"/></menu-item>
+        <menu-item name="EmplPosition" title="${uiLabelMap.HumanResEmployeePosition}"><link target="FindEmplPositions"/></menu-item>
+       <!--  <menu-item name="PartyQual" title="${uiLabelMap.HumanResPartyQualification}"><link target="FindPartyQuals"/></menu-item>
+        <menu-item name="EmplSkills" title="${uiLabelMap.HumanResSkills}"><link target="FindPartySkills"/></menu-item> -->
+        <menu-item name="EmplRelations" title="Employee Relations"><link target="employeeRelations"/></menu-item>
+       <!--  <menu-item name="EmplBankDetails" title="Employee Bank Details"><link target="employeeBankDetails"/></menu-item>
+        <menu-item name="PartyResume" title="${uiLabelMap.HumanResPartyResume}"><link target="FindPartyResumes"/></menu-item> -->
+
+          <!--  <menu-item name="salaryAdvance" title="Salary Advance" selected-style="selected"><link target="salaryAdvance"/></menu-item> -->
+        <menu-item name="PerfReview" title="${uiLabelMap.HumanResPerfReview}"><link target="perfGoalsDef"/></menu-item>
+        <!-- <menu-item name="Training" title="${uiLabelMap.HumanResTraining}"><link target="TrainingCalendar"/></menu-item> -->
+        <menu-item name="staffTraining" title="${uiLabelMap.HumanResTraining}"><link target="staffTraining"/></menu-item>
+        <menu-item name="Leave" title="${uiLabelMap.HumanResEmplLeave}"><link target="CloseFinacialYear"/></menu-item>
+        <menu-item name="EmpSeparation" title="Separation Management"><link target="separationApplication"/></menu-item>
+        <menu-item name="employeeReports" title="Employee Reports"><link target="staffList"/></menu-item>
+        <menu-item name="GlobalHRSettings" title="${uiLabelMap.HumanResGlobalHRSettings}" selected-style="selected"><link target="globalHRSettings"/></menu-item>
+
+        <!-- menu-item name="Recruitment" title="${uiLabelMap.HumanResRecruitment}"><link target="FindJobRequisitions"/></menu-item -->
+        <!-- menu-item name="EmploymentApp" title="${uiLabelMap.HumanResEmploymentApp}"><link target="FindEmploymentApps"/></menu-item -->
+    </menu>
+    <menu name="EmploymentBar" default-menu-item-name="EditPartyBenefit" default-selected-style="selected"
+        type="simple" menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem">
+        <menu-item name="EditEmployment" title="Employee Postings">
+            <link target="EditEmployment" >
+                <parameter param-name="roleTypeIdFrom"/>
+                <parameter param-name="roleTypeIdTo"/>
+                <parameter param-name="partyIdFrom"/>
+                <parameter param-name="partyIdTo"/>
+                <parameter param-name="fromDate"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditPartyBenefit" title="Posting Benefits">
+            <link target="EditPartyBenefits" >
+                <parameter param-name="roleTypeIdFrom"/>
+                <parameter param-name="roleTypeIdTo"/>
+                <parameter param-name="partyIdFrom"/>
+                <parameter param-name="partyIdTo"/>
+                <parameter param-name="fromDate"/>
+            </link>
+        </menu-item>
+        <!-- menu-item name="EditPayrollPreference" title="${uiLabelMap.HumanResEditPayrollPreference}">
+            <link target="EditPayrollPreferences" >
+                <parameter param-name="roleTypeIdFrom"/>
+                <parameter param-name="roleTypeIdTo"/>
+                <parameter param-name="partyIdFrom"/>
+                <parameter param-name="partyIdTo"/>
+                <parameter param-name="fromDate"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditPayHistory" title="${uiLabelMap.HumanResEditPayHistory}">
+            <link target="ListPayHistories" >
+                <parameter param-name="roleTypeIdFrom"/>
+                <parameter param-name="roleTypeIdTo"/>
+                <parameter param-name="partyIdFrom"/>
+                <parameter param-name="partyIdTo"/>
+                <parameter param-name="fromDate"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditUnemploymentClaims" title="${uiLabelMap.HumanResEditUnemploymentClaim}">
+            <link target="EditUnemploymentClaims" >
+                <parameter param-name="roleTypeIdFrom"/>
+                <parameter param-name="roleTypeIdTo"/>
+                <parameter param-name="partyIdFrom"/>
+                <parameter param-name="partyIdTo"/>
+                <parameter param-name="fromDate"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditAgreementEmploymentAppls" title="${uiLabelMap.HumanResAgreementEmploymentAppl}">
+            <link target="EditAgreementEmploymentAppls">
+                <parameter param-name="agreementId"/>
+                <parameter param-name="agreementItemSeqId"/>
+                <parameter param-name="roleTypeIdFrom"/>
+                <parameter param-name="roleTypeIdTo"/>
+                <parameter param-name="partyIdFrom"/>
+                <parameter param-name="partyIdTo"/>
+                <parameter param-name="fromDate"/>
+            </link>
+    </menu-item -->
+    </menu>
+    <menu name="EmplPostionBar" default-menu-item-name="EmplPositionView" type="simple" menu-container-style="button-bar tab-bar" default-selected-style="selected" selected-menuitem-context-field-name="tabButtonItem">
+        <!-- menu-item name="EmplPositionView" title="${uiLabelMap.CommonSummary}">
+            <link target="emplPositionView">
+                <parameter param-name="emplPositionId"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditEmplPosition" title="${uiLabelMap.HumanResEmployeePosition}">
+            <link target="EditEmplPosition">
+                <parameter param-name="emplPositionId"/>
+            </link>
+        </menu-item -->
+        <menu-item name="EditEmplPositionFulfillments" title="${uiLabelMap.HumanResPositionFulfillments}">
+            <link target="EditEmplPositionFulfillments">
+                <parameter param-name="emplPositionId"/>
+            </link>
+        </menu-item>
+        <!-- menu-item name="EditEmplPositionResponsibilities" title="${uiLabelMap.HumanResEmplPositionResponsibilities}">
+            <link target="EditEmplPositionResponsibilities">
+                <parameter param-name="emplPositionId"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditEmplPositionReportingStructs" title="${uiLabelMap.HumanResEmplPositionReportingStruct}">
+            <link target="EditEmplPositionReportingStructs">
+                <parameter param-name="emplPositionId"/>
+            </link>
+        </menu-item -->
+    </menu>
+    
+    
+    <menu name="PerfReviewBar" type="simple" default-menu-item-name="perfGoalsDef"
+        menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">
+        
+        <menu-item name="perfGoalsDef" title="Setup">
+        	<link target="perfGoalsDef"/>
+        </menu-item>
+        
+         <menu-item name="SubmittedScores" title="Submitted Scores">
+        	<link target="SubmittedScores"/>
+        </menu-item>
+
+      <menu-item name="nonSubmitted" title="Scores Not Submitted">
+        	<link target="nonSubmitted"/>
+        </menu-item>
+        
+      <menu-item name="perfReviewReport" title="Performance Reports">
+        	<link target="perfReviewReport"/>
+        </menu-item> 
+        
+    </menu>
+
+
+    <menu name="PerfSetupBar" type="simple" default-menu-item-name="perfGoalsDef"
+        menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">
+    	 <!-- menu-item name="kpi sdefinition" title="KPI Definition">
+        	<link target="kpi definition"/>
+        </menu-item -->
+        <menu-item name="perfGoalsDef" title="Performance Goals Definition">
+        	<link target="perfGoalsDef"/>
+        </menu-item>
+        <menu-item name="PerfReviews" title="Setup Review Groups">
+        	<link target="PerfReviews"/>
+        </menu-item>
+         <menu-item name="addStaffToPerfReviewGroup" title="Add Staff To Review Group">
+        	<link target="addStaffToPerfReviewGroup"/>
+        </menu-item>
+        <menu-item name="reviewPeriod" title="Manage Review Periods">
+        	<link target="reviewPeriod"/>
+        </menu-item>
+        <menu-item name="perfRatingType" title="Performance Assessment Ratings">
+        	<link target="perfRatingType"/>
+        </menu-item>
+     </menu>
+
+     <menu name="PerfRatingBar" type="simple" default-menu-item-name="perfRatingType"
+        menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">
+    	 <menu-item name="perfRatingType" title="Quantitative Indicators">
+        	<link target="perfRatingType"/>
+        </menu-item>
+         <menu-item name="perfRatingTypeQTT" title="Qualitative Indicators">
+        	<link target="perfRatingTypeQTT"/>
+        </menu-item>
+    </menu>
+
+     <menu name="PerfPositionBar" type="simple" default-menu-item-name="perfGoalsDef"
+        menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">
+    	<menu-item name="positionObjectives" title="Manage Position Objectives" hide-if-selected="false">
+        	<link target="positionObjectives"/>
+        </menu-item>
+    </menu>
+    <menu name="PerfBranchBar" type="simple" default-menu-item-name="perfGoalsDef"
+        menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">
+    	<menu-item name="branchObjectives" title="Manage Branch Objectives" hide-if-selected="false">
+        	<link target="branchObjectives"/>
+        </menu-item>
+    </menu>
+    <menu name="PerfDepartmentBar" type="simple" default-menu-item-name="perfGoalsDef"
+        menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">
+        <menu-item name="departmentObjectives" title="Manage Department Objectives" hide-if-selected="false">
+        	<link target="departmentObjectives"/>
+        </menu-item>
+    </menu>
+    <menu name="PerfStaffBar" type="simple" default-menu-item-name="perfGoalsDef"
+        menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">
+        <menu-item name="staffObjectives" title="Manage Staff Objectives" hide-if-selected="false">
+        	<link target="departmentObjectives"/>
+        </menu-item>
+    </menu>
+
+    <menu name="PerfBar" type="simple" default-menu-item-name="EditPerfReview"
+        menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">
+        <menu-item name="Find" title="${uiLabelMap.CommonFind}">
+            <link target="FindPerfReviews">
+            	<parameter param-name="perfManagerId"/>
+            </link>
+     </menu-item>
+        <!-- menu-item name="EditPerfReview" title="${uiLabelMap.HumanResPerfReview}">
+            <link target="EditPerfReview">
+                <parameter param-name="employeePartyId"/>
+                <parameter param-name="employeeRoleTypeId"/>
+                <parameter param-name="perfReviewId"/>
+            </link>
+        </menu-item -->
+        <menu-item name="EditPerfReviewItems" title="Performance Review Scores">
+            <link target="EditPerfReviewItems">
+                <parameter param-name="employeePartyId"/>
+                <parameter param-name="employeeRoleTypeId"/>
+                <parameter param-name="perfReviewId"/>
+                <parameter param-name="perfManagerId"/>
+            </link>
+        </menu-item>
+    </menu>
+
+
+    <menu name="KPITargetManagementBar" type="simple" default-menu-item-name="PerfStaff"
+        menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">
+
+    	<menu-item name="PerfStaff" title="Objectives By Staff">
+        	<link target="PerfStaff"/>
+        </menu-item>
+        <menu-item name="FindPerfPositions" title="Objectives By Job Positions">
+        	<link target="FindPerfPositions"/>
+        </menu-item>
+        <menu-item name="PerfBranches" title="Objectives By Branch">
+        	<link target="PerfBranches"/>
+        </menu-item>
+        <menu-item name="PerfDepartments" title="Objectives By Department">
+        	<link target="PerfDepartments"/>
+        </menu-item>
+
+         <!--<menu-item name="kpibranchtargets" title="Objectives By Branch">
+        	<link target="kpibranchtargets"/>
+        </menu-item>
+         <menu-item name="kpidepartmenttargets" title="Objectives By Department">
+        	<link target="kpidepartmenttargets"/>
+        </menu-item>-->
+    </menu>
+
+    <menu name="SalaryBar" default-menu-item-name="EditSalaryStep" default-selected-style="selected"
+        type="simple" menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="subTabButtonItem">
+        <menu-item name="EditPayGrade" title="${uiLabelMap.HumanResPayGrade}">
+            <link target="EditPayGrade">
+                <parameter param-name="payGradeId"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditSalaryStep" title="Salary Scale">
+            <link target="EditSalarySteps">
+                <parameter param-name="payGradeId"/>
+            </link>
+        </menu-item>
+    </menu>
+    <menu name="SkillType" type="simple" id="app-navigation" default-selected-style="selected" selected-menuitem-context-field-name="tabButtonItem"/>
+
+    <menu name="GlobalHRSettingMenus" type="simple" default-menu-item-name="SkillType"
+        menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">
+
+        
+         <menu-item name="bloodgroup" title="Blood Group Defintion">
+            <link target="bloodgroup"/>
+        </menu-item>
+        <menu-item name="payrollPrefix" title="Change Payroll Prefix">
+            <link target="payrollPrefix"/>
+        </menu-item>
+        <menu-item name="county" title="County Definition">
+            <link target="county"/>
+        </menu-item>
+
+
+        <menu-item name="department" title="Departments Definition">
+            <link target="department"/>
+        </menu-item>
+        <menu-item name="EmplLeaveType" title="${uiLabelMap.HumanResEmplLeaveType}">
+            <link target="EditEmplLeaveTypes"/>
+        </menu-item>
+          <menu-item name="familyrelations" title="Family Relations Definition">
+            <link target="familyrelations"/>
+        </menu-item>
+        <menu-item name="PayGrade" title="Job Grade">
+            <link target="FindPayGrades"/>
+        </menu-item>
+        <!--  <menu-item name="JobInterviewType" title="${uiLabelMap.HumanResJobInterviewType}">
+            <link target="EditJobInterviewType"/>
+        </menu-item> -->
+        <menu-item name="EmplPositionTypes" title="Job Position Definition">
+            <link target="FindEmplPositionTypes"/>
+        </menu-item>
+         <!-- <menu-item name="partyIdentificationType" title="Identification Type">
+            <link target="partyIdentificationType"/>
+        </menu-item> -->
+        <!--  <menu-item name="partyContents" title="Party Content Types">
+        	<link target="partyContentTypes"/>
+        </menu-item> -->
+         <menu-item name="publicHoliday" title="${uiLabelMap.PageTitlePublicHoliday}">
+            <link target="PublicHoliday"/>
+        </menu-item>
+         <menu-item name="religion" title="Religion Definition">
+            <link target="religion"/>
+        </menu-item>
+        
+         <menu-item name="retirement" title="Retirement Age Setup">
+        	<link target="retirement"/>
+        </menu-item>
+       <!--  <menu-item name="ResponsibilityType" title="${uiLabelMap.HumanResResponsibilityType}">
+            <link target="EditResponsibilityTypes"/>
+        </menu-item> -->
+         <menu-item name="SkillType" title="${uiLabelMap.HumanResSkillType}">
+            <link target="EditSkillTypes"/>
+        </menu-item>
+
+		<!-- <menu-item name="officialEmails" title="Staff Emails Definition">
+            <link target="officialEmails"/>
+        </menu-item> -->
+
+          <menu-item name="enumStaffStatus" title="Staff Employment Status">
+            <link target="enumStaffStatus"/>
+        </menu-item>
+       <!--   <menu-item name="partyQualGroup" title="Staff Qualification Groups">
+            <link target="partyQualGroup"/>
+        </menu-item> -->
+        <menu-item name="partyQualType" title="Staff Qualification Types">
+            <link target="partyQualType"/>
+        </menu-item>
+         <!-- <menu-item name="station" title="Stations">
+        	<link target="station"/>
+        </menu-item> -->
+      <!--   <menu-item name="TerminationReason" title="${uiLabelMap.HumanResTerminationReason}">
+            <link target="EditTerminationReasons"/>
+        </menu-item>
+        <menu-item name="TerminationType" title="${uiLabelMap.HumanResTerminationTypes}">
+            <link target="EditTerminationTypes"/>
+        </menu-item> -->
+
+        <!-- <menu-item name="EditTrainingTypes" title="${uiLabelMap.HumanResTrainingClassType}">
+            <link target="EditTrainingTypes"/>
+        </menu-item>
+        <menu-item name="trainingCostType" title="Training Cost Type">
+            <link target="trainingCostType"/>
+        </menu-item> -->
+
+        <menu-item name="tribe" title="Tribe Definition">
+            <link target="tribe"/>
+        </menu-item>
+		
+		<menu-item name="leaveWorkflow" title="Leave Workflow Setup">
+            <link target="leaveWorkflow"/>
+        </menu-item>
+
+
+    </menu>
+
+    <menu name="EmplRelationsTabBar" type="simple" default-menu-item-name="spouse"
+		menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">
+			<menu-item name="spouse" title="Spouse Details">
+				<link target="spouse">
+					<parameter param-name="partyId"/>
+				</link>
+			</menu-item>
+			<menu-item name="dependant" title="Dependant Details">
+				<link target="dependant">
+					<parameter param-name="partyId"/>
+				</link>
+			</menu-item>
+			<menu-item name="nextofkin" title="Next Of Kin Details">
+				<link target="nextofkin">
+					<parameter param-name="partyId"/>
+				</link>
+			</menu-item>
+			<menu-item name="emmergencyContacts" title="Emergency Contacts">
+				<link target="emmergencyContacts">
+					<parameter param-name="partyId"/>
+				</link>
+			</menu-item>
+	</menu>
+
+	 <menu name="EmplQualificationTabBar" type="simple" default-menu-item-name="qual"
+		menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">
+			<menu-item name="partyQualType" title="Edit Qualification">
+				<link target="partyQualType">
+				</link>
+			</menu-item>
+			<menu-item name="courseSpecialization" title="Edit Course Title">
+				<link target="courseSpecialization">
+				</link>
+			</menu-item>
+			<!-- <menu-item name="courseGrades" title="Edit Course Grades">
+				<link target="courseGrades">
+				</link>
+			</menu-item>
+			<menu-item name="institute" title="Edit Institute">
+				<link target="institute">
+				</link>
+			</menu-item> -->
+	</menu>
+
+    <menu name="EmployeeProfileTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="EditEmployeeSkills">
+        <menu-item name="EmployeeProfile" title="${uiLabelMap.PartyProfile}">
+            <link target="EmployeeProfile">
+                <parameter param-name="partyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="ListEmployment" title="Postings">
+            <link target="ListEmployments">
+                <parameter param-name="partyId" from-field="parameters.partyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="ListEmplPositions" title="Job Positions">
+            <link target="ListEmplPositions">
+                <parameter param-name="partyId" from-field="parameters.partyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditEmployeeSkills" title="${uiLabelMap.HumanResSkills}">
+            <link target="EditEmployeeSkills">
+                <parameter param-name="partyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditEmployeeQuals" title="${uiLabelMap.HumanResPartyQualification}">
+            <link target="EditEmployeeQuals">
+                <parameter param-name="partyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditEmployeeTrainings" title="${uiLabelMap.HumanResTraining}">
+            <link target="EditEmployeeTrainings">
+                <parameter param-name="partyId"/>
+            </link>
+        </menu-item>
+        <!--  <menu-item name="viewidentifications" title="${uiLabelMap.PartyPartyIdentifications}">
+            <link target="viewidentifications">
+                <parameter param-name="partyId"/>
+            </link>
+        </menu-item>   -->
+
+
+        <!-- I think these don't belong here, I'll get to these in short while.
+        <menu-item name="EditEmployeeEmploymentApps" title="${uiLabelMap.HumanResEmploymentApp}">
+            <link target="EditEmployeeEmploymentApps">
+                <parameter param-name="partyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditEmployeeResumes" title="${uiLabelMap.HumanResPartyResume}">
+            <link target="EditEmployeeResumes">
+                <parameter param-name="partyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditEmployeePerformanceNotes" title="${uiLabelMap.HumanResPerfNote}">
+            <link target="EditEmployeePerformanceNotes">
+                <parameter param-name="partyId"/>
+            </link>
+        </menu-item> -->
+       <menu-item name="EditEmployeeLeaves" title="${uiLabelMap.HumanResEmplLeave}">
+            <link target="EditEmployeeLeaves">
+                <parameter param-name="partyId"/>
+            </link>
+        </menu-item>
+       <!--  <menu-item name="PayrollHistory" title="${uiLabelMap.HumanResPayRollHistory}">
+            <link target="PayrollHistory">
+                <parameter param-name="partyId"/>
+            </link>
+        </menu-item> -->
+        <!--  <menu-item name="EditPartyResumes" title="${uiLabelMap.HumanResPartyResume}">
+            <link target="EditPartyResumes">
+                <parameter param-name="partyId"/>
+            </link>
+        </menu-item> -->
+       <!--  <menu-item name="EditEmploymentApps" title="${uiLabelMap.HumanResEmploymentApp}">
+            <link target="EditEmploymentApps">
+                <parameter param-name="partyId"/>
+                <parameter param-name="referredByPartyId" from-field="partyId"/>
+            </link>
+        </menu-item>   -->
+	    <menu-item name="employmenthistory" title="Employment History">
+	            <link target="employmenthistory">
+	                <parameter param-name="partyId"/>
+	            </link>
+	    </menu-item>
+    </menu>
+
+    <menu name="EmplPositionTypeTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="EditEmplPositionType" selected-menuitem-context-field-name="tabButtonItem2">
+        <menu-item name="EditEmplPositionType" title="${uiLabelMap.HumanResEmplPositionType}">
+            <link target="EditEmplPositionTypes">
+                <parameter param-name="emplPositionTypeId"/>
+            </link>
+        </menu-item>
+        <!-- menu-item name="EditEmplPositionTypeRate" title="${uiLabelMap.HumanResEmplPositionTypeRate}">
+            <link target="EditEmplPositionTypeRates">
+                <parameter param-name="emplPositionTypeId"/>
+            </link>
+        </menu-item -->
+    </menu>
+
+    <menu name="RecruitmentTypeMenu" type="simple" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="JobRequisition">
+        <menu-item name="JobRequisition" title="${uiLabelMap.HumanResJobRequisition}">
+            <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
+            <link target="FindJobRequisitions"/>
+        </menu-item>
+        <menu-item name="InternalJobPosting" title="${uiLabelMap.HumanResInternalJobPosting}">
+            <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
+            <link target="FindInternalJobPosting"/>
+        </menu-item>
+    </menu>
+
+    <menu name="InternalJobPostingTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="InternalJobPosting" type="simple" menu-container-style="button-bar tab-bar"
+        default-selected-style="selected" selected-menuitem-context-field-name="tabButtonItem">
+        <menu-item name="InternalJobPosting" title="${uiLabelMap.HumanResInternalJobPosting} ${uiLabelMap.CommonApplications}">
+            <link target="FindInternalJobPosting"/>
+        </menu-item>
+        <menu-item name="JobInterview" title="${uiLabelMap.HumanResJobInterview}">
+            <condition><if-has-permission permission="HUMANRES" action="_ADMIN"/></condition>
+            <link target="FindJobInterview"/>
+        </menu-item>
+        <menu-item name="Approval" title="${uiLabelMap.HumanResApproval}">
+            <condition><if-has-permission permission="HUMANRES" action="_APPROVE"/></condition>
+            <link target="FindApprovals"/>
+        </menu-item>
+        <menu-item name="Relocation" title="${uiLabelMap.HumanResRelocation}">
+            <condition><if-has-permission permission="HUMANRES" action="_ADMIN"/></condition>
+            <link target="FindRelocation"/>
+        </menu-item>
+    </menu>
+
+    <menu name="TrainingTypeMenu" type="simple" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="FindTrainings">
+        <menu-item name="TrainingCalendar" title="${uiLabelMap.HumanResTraining} ${uiLabelMap.WorkEffortCalendar}">
+            <link target="TrainingCalendar"/>
+        </menu-item>
+        <menu-item name="FindTrainingStatus" title="${uiLabelMap.HumanResTrainingStatus}">
+            <condition><if-has-permission permission="EMPLOYEE" action="_VIEW"/></condition>
+            <link target="FindTrainingStatus"/>
+        </menu-item>
+        <menu-item name="FindTrainingApprovals" title="${uiLabelMap.HumanResTrainingApprovals}">
+            <condition><if-has-permission permission="HUMANRES" action="_ADMIN"/></condition>
+            <link target="FindTrainingApprovals"/>
+        </menu-item>
+        <menu-item name="trainingSummaryReport" title="Training Reports">
+            <condition><if-has-permission permission="HUMANRES" action="_ADMIN"/></condition>
+            <link target="trainingSummaryReport"/>
+        </menu-item>
+    </menu>
+    
+    
+     <menu name="TrainingNewMenu" type="simple" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="trainingSetup">
+        
+        <menu-item name="trainingSetup" title="Training Setup">
+            <link target="staffTraining"/>
+        </menu-item>
+         <menu-item name="trainingCalendar" title="Training Calendar">
+            <link target="trainingEvent"/>
+        </menu-item>
+        <menu-item name="trainingApprovals" title="Training Approvals">
+            <link target="trainingApprovals"/>
+        </menu-item>
+        <menu-item name="trainingReport" title="Training Reports">
+            <link target="trainingReport"/>
+        </menu-item>
+    </menu>
+    
+     <menu name="trainingSetupMenu" type="simple" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="trainingTypesSetup">
+        
+        <menu-item name="trainingSetup" title="Training Types">
+            <link target="staffTraining"/>
+        </menu-item>
+         <menu-item name="trainingCost" title="Cost Types">
+            <link target="trainingCost"/>
+        </menu-item>
+    </menu>
+    
+    <menu name="trainingCalenderSetupMenu" type="simple" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="trainingTypesSetup">
+        
+        <menu-item name="trainingEvent" title="Training Events">
+            <link target="trainingEvent"/>
+        </menu-item>
+        <menu-item name="staffWhoNeedTraining" title="Staff Who need Training (Forwarded by Staff Perfomance Reviewers)">
+            <link target="staffWhoNeedTraining"/>
+        </menu-item>
+         <menu-item name="AddStaffToTraining" title="Add Staff To Training">
+            <link target="AddStaffToTraining"/>
+        </menu-item>
+    </menu>
+
+     <menu name="TrainingSummaryReportsTabBar" type="simple" default-menu-item-name="trainingSummaryReport"
+        menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">
+        <menu-item name="trainingSummaryReport" title="Training Summary Report">
+            <condition><if-has-permission permission="HUMANRES" action="_ADMIN"/></condition>
+            <link target="trainingSummaryReport"/>
+        </menu-item>
+
+     </menu>
+
+    <menu name="EmplLeaveReasonTypeTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="Employee Leave Reason Type" type="simple" menu-container-style="button-bar tab-bar"
+        default-selected-style="selected" selected-menuitem-context-field-name="tabButtonItem">
+        <menu-item name="EmplLeaveType" title="${uiLabelMap.HumanResEmployeeLeaveType}">
+            <link target="EditEmplLeaveTypes"/>
+        </menu-item>
+        <menu-item name="EmplLeaveReasonType" title="${uiLabelMap.HumanResEmployeeType}">
+            <link target="EditEmplLeaveReasonTypes"/>
+        </menu-item>
+    </menu>
+
+    <menu name="EmplLeaveTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="Employee Leave" type="simple" menu-container-style="button-bar tab-bar"
+        default-selected-style="selected" selected-menuitem-context-field-name="tabButtonItem">
+       <!-- <menu-item name="EmployeeLeave" title="${uiLabelMap.HumanResEmployeeLeave}">
+            <link target="FindEmplLeaves"/>
+        </menu-item>
+        <menu-item name="Approval" title="${uiLabelMap.HumanResLeaveApproval}">
+            <condition><if-has-permission permission="HUMANRES" action="_APPROVE"/></condition>
+            <link target="FindLeaveApprovals"/>
+        </menu-item>
+          <menu-item name="leaveCalender" title="Leave Calendar">
+            <link target="leaveCalender"/>
+        </menu-item>  -->
+        <menu-item name="CloseFinacialYear" title="Close Finacial Year">
+            <condition><if-has-permission permission="HUMANRES" action="_APPROVE"/></condition>
+            <link target="CloseFinacialYear"/>
+        </menu-item>
+       <menu-item name="LeaveBalances" title="Leave Balances">
+            <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
+            <!-- <link target="LeaveBalances"/> -->
+            <link target="generateLeaveBalances"/>
+        </menu-item>
+        <menu-item name="ActiveEmplLeaves" title="Active Leaves">
+            <condition><if-has-permission permission="HUMANRES" action="_APPROVE"/></condition>
+            <link target="ActiveEmplLeaves"/>
+        </menu-item>
+
+      <!--   <menu-item name="schedule" title="schedule Leave Balances">
+            <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
+            <link target="LeaveBalances"/>
+            <link target="scheduleInterestCalculationsLeave"/>
+        </menu-item>
+
+        <menu-item name="scheduleMail" title="schedule Mail Email Notification">
+            <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
+            <link target="LeaveBalances"/>
+            <link target="scheduleSendEmailNotification"/>
+        </menu-item> 
+        
+        
+         <menu-item name="scheduleMail2" title="schedule Mail Email Notification non staff">
+            <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
+            <link target="LeaveBalances"/>
+            <link target="scheduleSendEmailNotificationNonStaff"/>
+        </menu-item>
+
+        <menu-item name="scheduleDisableLogins" title="schedule Login Disable">
+            <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
+            <link target="LeaveBalances"/>
+            <link target="scheduleDisableLogins"/>
+        </menu-item> 
+
+        <menu-item name="SaveEmail_ToBeSendafterwards" title="Save Scheduled Handover Mail">
+            <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
+            <link target="LeaveBalances"/>
+            <link target="SaveEmail_ToBeSendafterwards"/>
+        </menu-item -->
+       <menu-item name="openingLeaveBalance" title="Opening Leave Balances">
+       		<!-- condition><if-has-permission permission="HUMANRES" action="_APPROVE"/></condition -->
+            <link target="createOpeningLeaveBalances"/>
+        </menu-item>
+        
+        <menu-item name="leaveRecord" title="Leave Records">
+        <!--  <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition> -->
+          <link target="leaveRecord"></link>
+        </menu-item>
+         <menu-item name="leaveStaff" title="Leave Staff">
+        <!--  <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition> -->
+          <link target="leaveStaff"></link>
+        </menu-item>
+        
+         <menu-item name="callBack" title="Employee Call Back">
+          <link target="callBack"></link>
+        </menu-item>
+        
+        <menu-item name="scheduledLeave" title="Scheduled Leaves">
+          <link target="scheduledLeave"></link>
+        </menu-item>
+        
+    </menu>
+
+	<menu name="UniversalEmplLeaveTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="Employee Leave" type="simple" menu-container-style="button-bar tab-bar"
+        default-selected-style="selected" selected-menuitem-context-field-name="tabButtonItem">
+        <menu-item name="EmployeeLeave" title="Employee Leave">
+            <link target="FindEmplLeaves"/>
+        </menu-item>
+          <menu-item name="leaveCalender" title="Leave Calendar">
+            <link target="leaveCalender"/>
+        </menu-item>
+        
+        <menu-item name="LeaveApprovals" title="${uiLabelMap.HumanResLeaveApproval}">
+            <link target="LeaveApprovals"/>
+        </menu-item>
+
+
+    </menu>
+
+
+    <menu name="ApproveReject" menu-container-style="button-bar button-style-2" default-selected-style="selected">
+        <menu-item name="Approve" title="Approve Employee Leave">
+            <link target="forwardApplication">
+                <parameter param-name="partyId"/>
+                <parameter param-name="fromDate"/>
+                <parameter param-name="leaveTypeId"/>
+                <parameter param-name="leaveId" />
+            </link>
+        </menu-item>
+       <!--  <menu-item name="Reject" title="Reject Employee Leave">
+            <link target="rejectEmplLeaveStatus">
+                <parameter param-name="partyId"/>
+                <parameter param-name="fromDate"/>
+                <parameter param-name="leaveTypeId"/>
+                 <parameter param-name="leaveId" />
+            </link>
+        </menu-item> -->
+
+    </menu>
+
+    <menu name="EmployeeReportsTabBar" type="simple" default-menu-item-name="staffList"
+        menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">
+        <menu-item name="staffList" title="Staff List Report">
+            <link target="staffList"/>
+        </menu-item>
+        <menu-item name="postingDetails" title="Staff Postings Report">
+            <link target="postingDetails"/>
+        </menu-item>
+         <menu-item name="positionDetails" title="Staff Position Report">
+            <link target="positionDetails"/>
+        </menu-item>
+        <menu-item name="employeeQualifications" title="Staff Qualifications Report">
+            <link target="employeeQualifications"/>
+        </menu-item>
+        <menu-item name="employeeSkills" title="Staff Skills Report">
+            <link target="employeeSkills"/>
+        </menu-item>
+        <menu-item name="employeeSpouseDetails" title="Staff Employment History Report">
+            <link target="StaffEmploymentHistoryDetails"/>
+        </menu-item>
+        <menu-item name="employeeRelationDetails" title="Staff Relations Reports">
+            <link target="employeeRelationDetails"/>
+        </menu-item>
+        <menu-item name="employeeLeaveReports" title="Staff Leave Reports">
+            <link target="employeeLeaveReports"/>
+        </menu-item>
+      <!--   <menu-item name="employeeSpouseDetailsFTL" title="Staff Spouse Report">
+            <link target="employeeSpouseDetailsFTL"/>
+        </menu-item> -->
+    </menu>
+
+     <menu name="SeparationTabBar" type="simple" default-menu-item-name="separationApplication"
+        menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">
+        <menu-item name="separationTypes" title="Setup">
+            <link target="separationApplicationTypes"/>
+        </menu-item>
+        <menu-item name="separationApplication" title="Separation Application">
+            <link target="separationApplication"/>
+        </menu-item>
+        <menu-item name="separationSummaryReport" title="Reports">
+            <link target="separationSummaryReport"/>
+        </menu-item>
+        <menu-item name="lostItems" title="Employee (Uncleared) Records">
+         <link target="employeeLostItems"></link>
+        </menu-item>
+        <menu-item name="separationApplicationProcessing" title="Processed Applications">
+        <link target="separationApplicationList"></link>
+        </menu-item>
+        
+     </menu>
+
+     <menu name="SeparationSetupTabBar" type="simple" default-menu-item-name="separationTypes"
+        menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">
+       <!--  <menu-item name="separationTypes" title="Separation Types">
+            <link target="separationTypes"/>
+        </menu-item> -->
+        <menu-item name="typesOfSeparation" title="Types of separation">
+        <link target="separationApplicationTypes"/>
+        </menu-item>
+     </menu>
+
+     <menu name="SeparationReportsTabBar" type="simple" default-menu-item-name="separationTypes"
+        menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">
+        <menu-item name="separationSummaryReport" title="Separation Summary Report">
+            <link target="separationSummaryReport"/>
+        </menu-item>
+     </menu>
+     
+     
+   
+    
+    <menu name="personalReviewMenuBar" type="simple" default-menu-item-name="PersonalReview"
+        menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">
+		
+		 <menu-item name="PersonalReview" title="My Personal Reviews">
+            <link target="PersonalReview">
+            </link>
+        </menu-item>
+        <menu-item name="HODReview" title="Forwarded Reviews">
+            <link target="HODReview">
+            </link>
+        </menu-item>
+         <menu-item name="HarmonizedReview" title="Harmonized/Discussed Review">
+            <link target="HarmonizedReview">
+            </link>
+        </menu-item>
+         <menu-item name="staffTrainingNeeds" title="Staff Training Needs">
+            <link target="staffTrainingNeeds">
+            </link>
+        </menu-item>
+
+	</menu>
+	
+	 <menu name="leaveWorkFlowSettingsTabBar" type="simple" default-menu-item-name="qual"
+		menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem" default-selected-style="selected">
+			<menu-item name="leaveWorkflow" title="Workflow Identification">
+				<link target="leaveWorkflow">
+				</link>
+			</menu-item>
+			<menu-item name="workFlowResponsibleStaff" title="Workflow Responsible Staff">
+				<link target="workFlowResponsibleStaff">
+				</link>
+			</menu-item>
+			<menu-item name="WorkflowStaffMapping" title="Map Staff To Workflow">
+				<link target="WorkflowStaffMapping">
+				</link>
+			</menu-item>
+	</menu>
+	
+	
+
+
+
+</menus>

@@ -5260,13 +5260,16 @@
 	<set field="lostAmount" value="${bsh:org.ofbiz.humanres.Separation.EmployeeLostItemsAmount(party)}"/>
 	<set field="leaveAllowance" value="${bsh:org.ofbiz.humanres.Separation.leaveAllowanceAmount(separationTypeId,daysDifference,balanceActual,employeeBasicSalary)}" type="BigDecimal"/>
 	<set field="lienOfNotice" value="${bsh:org.ofbiz.humanres.Separation.lienOfNoticeMethod(separationTypeId,daysDifference,balanceActual,employeeBasicSalary,noticePreiod)}" type="BigDecimal"/>
-	<set field="grossTotal" value="${bsh:org.ofbiz.humanres.Separation.grossTotal(employeeBasicSalary,leaveAllowance,servicePaidEmpl,transportAll,golden)}"/>
+    <set field="lienOfNoticeAdminToEmpl" value="${bsh:org.ofbiz.humanres.Separation.lienOfNoticeMethodAdminToEmpl(separationTypeId,daysDifference,balanceActual,employeeBasicSalary,noticePreiod)}" type="BigDecimal"/>
+	
+	<set field="grossTotal" value="${bsh:org.ofbiz.humanres.Separation.grossTotal(employeeBasicSalary,leaveAllowance,servicePaidEmpl,transportAll,golden,lienOfNoticeAdminToEmpl)}"/>
     <set field="payeAmt" value="${bsh:org.ofbiz.humanres.Separation.amountPAYE(grossTotal,lienOfNotice)}"/>
     <set field="amtAfterPaye" value="${bsh:org.ofbiz.humanres.Separation.totalNetAmount(grossTotal,payeAmt)}"/> 
     <set field="finalAmount" value="${bsh:org.ofbiz.humanres.Separation.finalTotal(amtAfterPaye,lostAmount,lienOfNotice)}"/> 
     <set field="grossSubjectToPAYEE" value="${bsh:org.ofbiz.humanres.Separation.grossSubjectToPAYEE(grossTotal,lienOfNotice)}"/>
-   
+    <set field="noOfYearsWorked" from-field="yearsWorked" type="BigDecimal"/>
     
+     <log message="###lienOfNoticeAdminToEmpl***#####${lienOfNoticeAdminToEmpl}" level="info"/>
     <log message="###GROSS***#####${grossTotal}" level="info"/>
     <log message="###PAYE#####${payeAmt}" level="info"/>
     <log message="###AFTER PAYE#####${amtAfterPaye}" level="info"/>
@@ -5278,6 +5281,7 @@
 	<log message="#TRANSPORT_ALLOWANCE***#${transportAll}" level="info"/>
 	<log message="##SERVICE_PAY***########${servicePaidEmpl}" level="info"/>
 	<log message="##YEARS_WORKED***#######${yearsWorked}" level="info"/>
+	<log message="##YEARS_WORKED IN BIG_DCM***#######${noOfYearsWorked}" level="info"/>
 	<log message="##CREATED_DATE***#######${createdDate}" level="info"/>
 	<log message="##EFFECTIVE_DATE***####${effectiveDate}" level="info"/>
 	<log message="##DAYS_DIFFERENCE**####${daysDifference}" level="info"/>
@@ -5295,6 +5299,7 @@
 	<set field="newEntity.total" from-field="grossTotal"/>
 	 <set field="newEntity.lienOfNotice" from-field="lienOfNotice"/>
 	<!-- <set field="newEntity.lienToNotice"/> -->
+	 <set field="newEntity.lienOfNoticeAdminToEmpl" from-field="lienOfNoticeAdminToEmpl"/>
 	<set field="newEntity.PAYE" from-field="payeAmt"/>
     <set field="newEntity.staffLoans" from-field="employeeLoans"/> 
     <set field="newEntity.lostItemAmount" from-field="lostAmount"/>
@@ -5306,6 +5311,7 @@
 	<set field="newEntity.goldenHandShake" from-field="golden"/>
     <set field="newEntity.transportAllowance" from-field="transportAll"/>
     <set field="newEntity.servicePay" from-field="servicePaidEmpl"/>
+    <set field="newEntity.noOfYearsWorked" from-field="noOfYearsWorked"/>
     <set field="newEntity.noticePeriod" from-field="daysDifference" type="Long"/>
    <!--  <set field="newEntity.appointmentDate" from="appointmentdate"/> -->
     <set field="newEntity.dayLeftSaccoActivities" from-field="dayLeft"/> 

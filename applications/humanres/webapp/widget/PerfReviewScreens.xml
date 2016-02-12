@@ -1,0 +1,1275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+    <screen name="FindPerfReviews">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResFindPerfReview"/>                
+                <set field="tabButtonItem" value="PerfManagement"/>
+                <set field="headerItem" value="PerfReview"/>
+                <set field="employeePartyId" from-field="parameters.partyId"/>
+                <set field="perfManagerId" from-field="parameters.perfManagerId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"  default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <!--<include-menu name="PerfBar" location="component://humanres/widget/HumanresMenus.xml"/>-->
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <container style="button-bar">
+                                    <link target="EditPerfReview" text="New Perf Review" style="buttontext create">
+                                    	<parameter param-name="perfManagerId"/>
+                                    </link>
+                                </container>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindPerfReviews" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                            	<screenlet>
+                            		<section>
+                                		<widgets>
+    										<container style="button-bar">                                                   
+                                                <link target="generateTargets?perfManagerId=${parameters.perfManagerId}"  text="Generate Objectives" style="buttontext create">
+                                                    <image url-mode="raw" src="${iconsLocation}/add.png"/>                                                                                                       
+                                                </link>
+                                                </container>
+                                		</widgets>
+                                	</section>
+                            	</screenlet>
+                                <include-form name="ListPerfReviews" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="MyPerfReviews">
+        <section>
+            <actions>
+                <set field="titleProperty" value="My Performance Reviews"/>                
+                <set field="tabButtonItem" value="MyPerfReviews"/>
+                <set field="headerItem" value="MyPerfReviews"/>
+                <set field="employeePartyId" from-field="parameters.partyId"/>
+                <set field="perfManagerId" from-field="parameters.perfManagerId"/>
+                <set field="managerPartyId" value="${userLogin.partyId}"/>
+                <!--<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"  default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>-->
+                
+                <entity-condition entity-name="PerfReview" list="listIt">
+					<condition-expr field-name="managerPartyId"
+						operator="equals" from-field="${userLogin.partyId}" />
+				</entity-condition>
+                
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <!--<include-menu name="PerfBar" location="component://humanres/widget/HumanresMenus.xml"/>-->
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-results">
+                                <include-form name="ListMyPerfReviews" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="EditPerfReviews">
+        <section>
+            <actions>
+                <set field="headerItem" value="PerfReview"/>
+                <set field="tabButtonItem" value="EditPerfReview"/>
+                <set field="titleProperty" value="PageTitleListPartyReview"/>
+                <set field="perfReviewId" from-field="parameters.perfReviewId"/>
+                <set field="employeePartyId" from-field="parameters.employeePartyId"/>
+                <set field="employeeRoleTypeId" from-field="parameters.employeeRoleTypeId"/>
+                <set field="perfManagerId" from-field="parameters.perfManagerId"/>
+                <entity-one entity-name="PerfReview" value-field="perfReview"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPerfReviewDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="${uiLabelMap.CommonEdit} ${uiLabelMap.HumanResPerfReview}">
+                            <section>
+                                <widgets>
+                                    <include-form name="EditPerfReview" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                                </widgets>
+                            </section>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditPerfReviewItems">
+        <section>
+            <actions>
+                <set field="headerItem" value="PerfReview"/>
+                <set field="titleProperty" value="PageTitleEditPartyReviewItem"/>
+                <set field="tabButtonItem" value="EditPerfReviewItems"/>
+                <set field="perfReviewId" from-field="parameters.perfReviewId"/>
+                <set field="perfManagerId" from-field="parameters.perfManagerId"/>
+                <set field="employeePartyId" from-field="parameters.employeePartyId"/>
+                <set field="employeeRoleTypeId" from-field="parameters.employeeRoleTypeId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPerfReviewDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    	<screenlet>
+                    		<section>
+                    			<widgets>
+                    				<label style="h1" text="Quantitative Goals"></label>
+                    				<include-form name="ListQuantitativePerfReviewItems" location="component://humanres/widget/forms/PerfReviewForms.xml"/>	
+                    			</widgets>
+                    				
+                    		</section>
+                    	</screenlet>
+                    	<screenlet>
+                    		<section>
+                    			<widgets>
+                    				<label style="h1" text="Qualitative Goals"></label>
+                    				<include-form name="ListQualitativePerfReviewItems" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                    			</widgets>
+                    			
+                    		</section>
+                    	</screenlet>
+                        
+                        
+                        <!-- screenlet id="AddPerfReviewItemPanel" title="Scores" collapsible="true">
+                            <include-form name="AddPerfReviewItem" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        </screenlet -->                        
+                           <screenlet>
+                           	<section>
+                           		<widgets>
+									<container style="button-bar">                                                   
+                                           <link target="submitAppraisal?employeePartyId=${parameters.employeePartyId}&amp;employeeRoleTypeId=${parameters.employeeRoleTypeId}&amp;perfReviewId=${parameters.perfReviewId}&amp;perfManagerId=${parameters.perfManagerId}"  text="Submit Appraisal" style="buttontext create">
+                                               <image url-mode="raw" src="${iconsLocation}/add.png"/>                                                                                                       
+                                           </link>
+                                           </container>
+                           		</widgets>
+                           	</section>
+                           </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="NewPerfManagement">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Perf Manager"/>
+                <set field="headerItem" value="PerfManagement"/>
+                <set field="tabButtonItem" value="PerfManagement"/>                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPerfManager"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="PerfManager" value-field="kpidefinitionContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section>
+                            <widgets>
+                                <screenlet title="Performance Management">
+                                    <include-form name="NewPerfManagement" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Performance Management List (Open)">
+                        			<include-form name="listPerfManagement" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        		<screenlet title="Performance Management List (Closed)">
+                        			<include-form name="listClosedPerfManagement" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+   <!-- Perf Goal Definition -->    
+    <screen name="NewPerfGoalDef">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Perf Goals Def"/>
+                <set field="headerItem" value="PerfReview"/>
+                <set field="tabButtonItem" value="perfGoalsDef"/>                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPerfGoalsDef"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="PerfGoalsDef" value-field="perfGoalsDefContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section>
+                            <widgets>
+                                <screenlet title="New Performance Goal Defintion">
+                                    <include-form name="PerfGoalDef" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Performance Goal Defintion List">
+                        			<include-form name="listNewPerfGoalDef" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- Perf Goals -->    
+    <screen name="NewPerfGoal">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Perf Goals"/>
+                <set field="headerItem" value="perfGoals"/>
+                <set field="tabButtonItem" value="perfGoals"/>                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPerfGoals"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <set field="perfGoalsDefId" from-field="parameters.perfGoalsDefId"/>
+                
+                <entity-one entity-name="PerfGoals" value-field="perfGoalsContext"/>
+                
+              <entity-one entity-name="PerfGoalsDef" value-field="p">
+		 	<field-map field-name="perfGoalsDefId" from-field="perfGoalsDefId"/>
+		 </entity-one>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                   
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    
+                     <container style="leftclear">
+							<label style="h1"
+							text="Manage Perspective(s) For:- ${p.goalDef}" />
+					</container>
+					
+                        <section>
+                            <widgets>
+                                <screenlet title="New Performance Goal">
+                                    <include-form name="PerfGoal" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Performance Goal List">
+                        			<include-form name="listNewPerfGoal" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <!--======================= REVIEWS SETUP DEFINITION =================================== -->    
+    <screen name="NewPerfReviewScreen">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Perf Reviews"/>
+                <set field="headerItem" value="PerfReviews"/>
+                <set field="tabButtonItem" value="PerfReviews"/>                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPerfGoals"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="PerfReviewsDefinition" value-field="perfReviewsDefContext"/>
+                
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    
+                    <container style="leftclear">
+							<label style="h1"
+							text="Setup Review Groups" />
+					</container>
+					
+                        <section>
+                            <widgets>
+                                <screenlet title="New Review Group">
+                                    <include-form name="PerfReviewDefintionForm" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Review Groups List">
+                        			<include-form name="listPerfReviewDefintions" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+      <!--======================= REVIEWS OBJECTIVES SETUP DEFINITION =================================== -->    
+    <screen name="NewPerfReviewsObjectiveScreen">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Perf Reviews"/>
+                <set field="headerItem" value="PerfReviews"/>
+                <set field="tabButtonItem" value="PerfReviews"/>                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPerfGoals"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <set field="perfReviewDefId" from-field="parameters.perfReviewDefId"/>
+                
+                 <entity-one entity-name="PerfReviewsDefinition" value-field="p">
+		 	<field-map field-name="perfReviewDefId" from-field="perfReviewDefId"/>
+                </entity-one>
+                
+                <entity-one entity-name="PerfReviewsDefinition" value-field="perfReviewsDefContext"/>
+                
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                   
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    
+                    <container style="leftclear">
+							<label style="h1"
+							text="Manage Objective(s) For:- ${p.perfReviewName} Review Group" />
+					</container>
+					
+                        <section>
+                            <widgets>
+                                <screenlet title="New Review Group Objective">
+                                    <include-form name="PerfReviewGroupObjectivesForm" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Review Group Objectives List">
+                        			<include-form name="listPerfReviewGroupObjectives" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+     <!--======================= REVIEWS OBJECTIVE ACTION PLANS DEFINITION =================================== -->    
+    <screen name="NewPerfObjectiveActionPlansScreen">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Perf Reviews"/>
+                <set field="headerItem" value="PerfReviews"/>
+                <set field="tabButtonItem" value="PerfReviews"/>                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPerfGoals"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <set field="PerfReviewsGroupObjectiveDefinitionId" from-field="parameters.PerfReviewsGroupObjectiveDefinitionId"/>
+                
+                 <entity-one entity-name="PerfReviewsGroupObjectiveDefinition" value-field="p">
+		 	<field-map field-name="PerfReviewsGroupObjectiveDefinitionId" from-field="PerfReviewsGroupObjectiveDefinitionId"/>
+                </entity-one>
+                
+                <entity-one entity-name="PerfReviewsDefinition" value-field="perfReviewsDefContext"/>
+                
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                   
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    
+                    <container style="leftclear">
+							<label style="h1"
+							text="Manage Action Plans For:- [${p.objectiveDescription}] Objective" />
+					</container>
+					
+                        <section>
+                            <widgets>
+                                <screenlet title="New Objective Action Plan">
+                                    <include-form name="PerfObjectiveActionPlansForm" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Objective Action Plans List">
+                        			<include-form name="listPerfObjectiveActionPlans" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+      <!--======================= OBJECTIVE ACTION PLAN INDICATORS DEFINITION =================================== -->    
+    <screen name="NewPerfActionPlanIndicatorsScreen">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Perf Reviews"/>
+                <set field="headerItem" value="PerfReviews"/>
+                <set field="tabButtonItem" value="PerfReviews"/>                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPerfGoals"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <set field="PerfObjectiveActionPlanId" from-field="parameters.PerfObjectiveActionPlanId"/>
+                
+                 <entity-one entity-name="PerfObjectiveActionPlanDefinition" value-field="p">
+		 	<field-map field-name="PerfObjectiveActionPlanId" from-field="PerfObjectiveActionPlanId"/>
+                </entity-one>
+                
+                <entity-one entity-name="PerfReviewsDefinition" value-field="perfReviewsDefContext"/>
+                
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                  
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    
+                     <container style="leftclear">
+							<label style="h1" 
+							text="Manage Indicators For:- [${p.objectiveActionPlanDescription}] Action Plan" />
+					</container>
+					
+                        <section>
+                            <widgets>
+                                <screenlet title="New Objective Action Plan">
+                                    <include-form name="PerfActionPlanIndicatorsForm" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Objective Action Plans List">
+                        			<include-form name="listPerfActionPlanIndicators" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+     <!--======================= SHOW ALL REVIEW GROUPS SO AS TO ADD STAFF =================================== -->    
+    <screen name="PerfReviewGroupsViewScreen">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Perf Reviews"/>
+                <set field="headerItem" value="addStaffToPerfReviewGroup"/>
+                <set field="tabButtonItem" value="addStaffToPerfReviewGroup"/>                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPerfGoals"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                 
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                          <container style="leftclear">
+							<label style="h1" 
+							text="Manage Performance Review Groups" />
+					</container>
+                        <section name="search-results">
+                        	<widgets>
+                        	<screenlet title="Add Staff To Review Group">
+                        			<include-form name="StaffAdditionToReviewGroupsForm" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        		<screenlet title="Staff Review Groups Listing">
+                        			<include-form name="listPerfReviewGroupsForStaffAddition" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <!--======================= MANAGE REVIEW PERIODS =================================== -->    
+    <screen name="PerfReviewPeriodsScreen">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Perf Reviews"/>
+                <set field="headerItem" value="reviewPeriod"/>
+                <set field="tabButtonItem" value="reviewPeriod"/>                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPerfGoals"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                   
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <container style="leftclear">
+							<label style="h1" 
+							text="Manage Performance Review Periods" />
+					</container>
+                        <section name="search-results">
+                        	<widgets>
+                        	<screenlet title="Add New Review Period">
+                        			<include-form name="StaffReviewPeriodForm" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        		<screenlet title="Review Periods Listing">
+                        			<include-form name="listStaffReviewPeriod" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        		<screenlet></screenlet><screenlet></screenlet>
+                        		<screenlet title="Closed Review Periods Listing">
+                        			<include-form name="listClosedStaffReviewPeriod" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+      <!--======================= STAFF WHOSE SCORES HAVE NOT BEEN SUBMITTED =================================== -->    
+    <screen name="NotSubmittedScoresScreen">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Perf Reviews"/>
+                <set field="headerItem" value="PerfReviews"/>
+                <set field="tabButtonItem" value="nonSubmitted"/>                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPerfGoals"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <entity-one entity-name="StaffInPerfReviewGroup" value-field="StaffInPerfReviewGroupContext"/>
+                
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <!-- <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/> -->
+                        <container style="leftclear">
+							<label style="h1"
+							text="Staff Whose Performance Scores Have Not Been Submitted" />
+					</container>
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Staff List">
+                        			<include-form name="NotSubmittedScoresForm" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <!--======================= STAFF WHOSE SCORES HAVE BEEN SUBMITTED =================================== -->    
+    <screen name="SubmittedScoresScreen">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Perf Reviews"/>
+                <set field="headerItem" value="PerfReviews"/>
+                <set field="tabButtonItem" value="SubmittedScores"/>                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPerfGoals"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <entity-one entity-name="StaffInPerfReviewGroup" value-field="StaffInPerfReviewGroupContext"/>
+                
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <!-- <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/> -->
+                        <container style="leftclear">
+							<label style="h1"
+							text="Staff Whose Performance Scores Have Been Submitted" />
+					</container>
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Staff List">
+                        			<include-form name="SubmittedScoresForm" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+     
+    
+    
+    
+    <!-- Manage Perf Objectives -->    
+    <screen name="ManagePerfObjectives">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Manage Perf Objectives"/>
+                <set field="headerItem" value="ManagePerfObjectives"/>
+                <set field="tabButtonItem" value="ManagePerfObjectives"/>                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPerfGoals"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+
+                <set field="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="isBranch" from-field="parameters.isBranch"/>
+                <set field="isDepartment" from-field="parameters.isDepartment"/>
+                
+                <entity-one entity-name="PerfGoals" value-field="perfGoalsContext"/>
+            </actions>
+            <widgets>
+               <decorator-screen name="objectivesDecorator" location="component://humanres/widget/PerfReviewScreens.xml">
+                    <decorator-section name="body">
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <!-- <include-menu name="KPITargetManagementBar" location="component://humanres/widget/HumanresMenus.xml"/> -->
+                    <!-- include-menu name="PerfObjBar" location="component://humanres/widget/HumanresMenus.xml"/ -->
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Quantitative Goals">
+                        			<include-form name="listQNTGoals" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Qualitative Goals">
+                        			<include-form name="listQTTGoals" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+        <!-- KPI Definition -->    
+    <screen name="NewKPIDefinition">
+    <section>
+            <actions>
+                <set field="titleProperty" value="KPI Definition"/>
+                <set field="headerItem" value="kpidefinition"/>
+                <set field="tabButtonItem" value="kpidefinition"/>                
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createKPIDefinition"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="KeyPerformanceIndicators" value-field="kpidefinitionContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section>
+                            <widgets>
+                                <screenlet title="New KPI">
+                                    <include-form name="NewKPI" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="KPI List">
+                        			<include-form name="listKPI" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+         <!-- KPI Achievement Status -->    
+    <screen name="NewKPIAchievementStatus">
+    <section>
+            <actions>
+                <set field="titleProperty" value="KPI Achievement Status"/>
+                <set field="headerItem" value="kpiachievementstatus"/>
+                <set field="tabButtonItem" value="kpidefinition"/> 
+                <set field="tabButtonItem" value="kpiachievementstatus"/>  
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createKPIAchievementStatus"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="KPIAchievementStatus" value-field="kpiachievementstatusContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section>
+                            <widgets>
+                                <screenlet title="New KPI Achievement Status">
+                                    <include-form name="NewKPIAchievementStat" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="KPI Achievement Status List">
+                        			<include-form name="listKPIAchievementStat" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+  
+    <!-- New Position Objectives -->    
+    <screen name="NewPositionObjectives">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Position Objectives"/>
+                <set field="headerItem" value="positionObjectives"/>
+                <set field="tabButtonItem" value="positionObjectives"/>  
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPositionObjectives"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <set field="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="isBranch" from-field="parameters.isBranch"/>
+                <set field="isDepartment" from-field="parameters.isDepartment"/>
+                
+                <entity-one entity-name="KPITargets" value-field="positionObjectivesContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                   <!--  <include-menu name="KPITargetManagementBar" location="component://humanres/widget/HumanresMenus.xml"/> -->
+                    <include-menu name="PerfPositionBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section>
+                            <widgets>
+                                <screenlet title="New Position Objectives">
+                                    <include-form name="NewPositionObjectives" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Position Objectives List">
+                        			<include-form name="listPositionObjectives" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+   <!-- KPI Branch Targets -->
+    <screen name="NewBranchObjectives">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Branch Objectives"/>
+                <set field="headerItem" value="branchObjectives"/>
+                <set field="tabButtonItem" value="branchObjectives"/>  
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createBranchObjectives"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <set field="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="isBranch" from-field="parameters.isBranch"/>
+                <set field="isDepartment" from-field="parameters.isDepartment"/>
+                
+                <entity-one entity-name="KPITargets" value-field="branchObjectivesContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                   <!--  <include-menu name="KPITargetManagementBar" location="component://humanres/widget/HumanresMenus.xml"/> -->
+                    <include-menu name="PerfBranchBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section>
+                            <widgets>
+                                <screenlet title="New Branch Objectives">
+                                    <include-form name="NewBranchObjectives" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Branch Objectives List">
+                        			<include-form name="listBranchObjectives" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+
+    <screen name="NewDepartmentObjectives">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Department Objectives"/>
+                <set field="headerItem" value="departmentObjectives"/>
+                <set field="tabButtonItem" value="departmentObjectives"/>  
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createDepartmentObjectives"/>
+                 <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <set field="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="isBranch" from-field="parameters.isBranch"/>
+                <set field="isDepartment" from-field="parameters.isDepartment"/>
+                
+                <entity-one entity-name="KPITargets" value-field="departmentObjectivesContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                  <!--   <include-menu name="KPITargetManagementBar" location="component://humanres/widget/HumanresMenus.xml"/> -->
+                    <include-menu name="PerfDepartmentBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section>
+                            <widgets>
+                                <screenlet title="New Department Objectives">
+                                    <include-form name="NewDepartmentObjectives" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Department Objectives List">
+                        			<include-form name="listDepartmentObjectives" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	
+	<screen name="objectivesDecorator">
+		<section>
+			<actions>
+					<entity-one entity-name="KPITargets" value-field="staffObjectivesContext"/>
+					
+					 <entity-one entity-name="Person" value-field="p">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+		 </entity-one>
+					
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<section>
+								<condition>
+										<not>
+											<if-empty field="parameters.partyId" />
+										</not>
+									</condition>
+									<widgets>
+										<container style="leftclear">
+												<label style="h1"
+												text="Manage Performance Objective(s) For:- ${p.firstName} ${p.lastName}" />
+										</container>
+									</widgets>
+								</section>
+								<decorator-section-include name="body" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<screen name="StaffobjectivesDecorator">
+		<section>
+			<actions>
+					<entity-one entity-name="KPITargets" value-field="staffObjectivesContext"/>
+					
+					 <entity-one entity-name="Person" value-field="p">
+		 	<field-map field-name="partyId" from-field="partyId"/>
+			</entity-one>
+			
+			 <entity-one entity-name="PerfGoals" value-field="g">
+		 	<field-map field-name="perfGoalsId" from-field="perfGoalsId"/>
+		 </entity-one>
+					
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<section>
+								<condition>
+										<not>
+											<if-empty field="parameters.partyId" />
+										</not>
+									</condition>
+									<widgets>
+										<container style="leftclear">
+												<label style="h1"
+												text="Manage ${g.goal} Objective(s) For:- ${p.firstName} ${p.lastName}" />
+										</container>
+									</widgets>
+								</section>
+								<decorator-section-include name="body" />
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+    
+    
+    
+        <!-- New Staff Objectives -->  
+    
+    <!-- New Position Objectives -->    
+    <screen name="NewStaffObjectives">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Staff Objectives"/>
+                <set field="headerItem" value="staffObjectives"/>
+                <set field="tabButtonItem" value="staffObjectives"/>  
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createStaffObjectives"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                
+                <set field="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="isBranch" from-field="parameters.isBranch"/>
+                <set field="isDepartment" from-field="parameters.isDepartment"/>
+				<set field="perfGoalsId" from-field="parameters.perfGoalsId"/>
+				
+				 
+                
+                <entity-one entity-name="KPITargets" value-field="staffObjectivesContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="StaffobjectivesDecorator" location="component://humanres/widget/PerfReviewScreens.xml">
+                    <decorator-section name="body">
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                   <!--  <include-menu name="KPITargetManagementBar" location="component://humanres/widget/HumanresMenus.xml"/> -->
+                   <include-menu name="PerfStaffBar" location="component://humanres/widget/HumanresMenus.xml"/> 
+                        <section>
+                            <widgets>
+                                <screenlet title="New Staff Objectives">
+                                    <include-form name="NewStaffObjectives" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Staff Objectives List">
+                        			<include-form name="listStaffObjectives" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>     
+    
+    <screen name="PerformanceStaff">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Find Staff"/>
+                <set field="headerItem" value="PerfStaff"/>
+                <set field="tabButtonItem" value="PerfStaff"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <set field="perfStaffCtx" from-field="parameters"/>
+
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <!-- <include-menu name="KPITargetManagementBar" location="component://humanres/widget/HumanresMenus.xml"/> -->
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="FindStaff" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="StaffObjectivesResult" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	
+	     <!-- Performance Rating Types -->    
+    <screen name="NewPerfRatingTypes">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Performance Rating Types"/>
+                <set field="headerItem" value="perfRatingType"/>
+                <set field="tabButtonItem" value="perfRatingType"/>  
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPerfRatingType"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="PerfRatingType" value-field="perfRatingTypeContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfRatingBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section>
+                            <widgets>
+                                <screenlet title="New Performance Rating Type">
+                                    <include-form name="NewPerfRatingType" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Performance Rating Type List">
+                        			<include-form name="listperfRatingType" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+         <!-- Performance Rating Types Qualitative -->    
+    <screen name="NewPerfRatingTypesQTT">
+    <section>
+            <actions>
+                <set field="titleProperty" value="Qualitative Performance Rating Types"/>
+                <set field="headerItem" value="perfRatingTypeQTT"/>
+                <set field="tabButtonItem" value="perfRatingTypeQTT"/>  
+                <set field="displayPassword" value="Y"/>
+                <set field="target" value="createPerfRatingTypeQTT"/>
+                <set field="previousParams" from-field="sessionAttributes._PREVIOUS_PARAMS_"/>
+                <!-- property-to-field field="defaultCountryGeoId" resource="general" property="KEN" default="KEN"/ -->
+                <!-- set field="loanSecurityId" from-field="parameters.loanSecurityId"/ -->
+                
+                <entity-one entity-name="PerfRatingType_QTT" value-field="perfRatingTypeQTTContext"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfRatingBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section>
+                            <widgets>
+                                <screenlet title="New Qualitative Performance Rating Type">
+                                    <include-form name="NewPerfRatingTypeQTT" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                        
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Qualitative Performance Rating Type List">
+                        			<include-form name="listperfRatingTypeQTT" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="PerformanceBranches">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PerfBranches"/>
+                <set field="headerItem" value="PerfBranches"/>
+                <set field="tabButtonItem" value="PerfBranches"/>
+                <!--<set field="emplPositionTypeId" from-field="parameters.emplPositionTypeId"/>
+                <set field="payGradeId" from-field="parameters.payGradeId"/>
+                <set field="emplPositionTypeCtx" from-field="parameters"/>-->
+
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <!-- <include-menu name="KPITargetManagementBar" location="component://humanres/widget/HumanresMenus.xml"/> -->
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Branch List">
+                        			<include-form name="listPerfBranches" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section>                        
+                        
+                        <!-- decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <include-form name="FindPerfPositions" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-form name="ListPerfPositions" location="component://humanres/widget/forms/GlobalHRSettingForms.xml"/>
+                            </decorator-section>
+                        </decorator-screen -->
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+
+
+    <screen name="PerformanceDepartments">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Perf Departments"/>
+                <set field="headerItem" value="PerfDepartments"/>
+                <set field="tabButtonItem" value="PerfDepartments"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    <include-menu name="PerfReviewBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <include-menu name="PerfSetupBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    <!-- <include-menu name="KPITargetManagementBar" location="component://humanres/widget/HumanresMenus.xml"/> -->
+                        <section name="search-results">
+                        	<widgets>
+                        		<screenlet title="Department List">
+                        			<include-form name="listPerfDepartments" location="component://humanres/widget/forms/PerfReviewForms.xml"/>
+                        		</screenlet>
+                        	</widgets>
+                        </section> 
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+</screens>
