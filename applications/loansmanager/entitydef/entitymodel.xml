@@ -9,17 +9,38 @@
     <copyright></copyright>
     <version></version>
 
-      <entity entity-name="LoanTopUp"
+ <entity entity-name="LoanTopUp"
             package-name="org.ofbiz.loansmanager.loantopup"
             title="Loan Top Up Entity">
       <field name="loanApplicationId" type="id-vlong-int"   enable-audit-log="true"></field>
       <field name="loanTopUpId" type="id-ne" enable-audit-log="true"></field>
       <field name="amount" type="currency-amount" enable-audit-log="true"></field>
        <field name="narration" type="comment" enable-audit-log="true"></field>
+       <field name="statusName" type="name" enable-audit-log="true"></field>
       <prim-key field="loanApplicationId"/>
       <prim-key field="loanTopUpId"/>
     <relation type="one" fk-name="LoanTopUp_FK" rel-entity-name="LoanApplication">
         <key-map field-name="loanApplicationId"/>
+    </relation>
+    </entity>
+
+    <entity entity-name="LoanTopUpLog"
+            package-name="org.ofbiz.loansmanager.loantopup"
+            title="Loan Top Up Entity">
+      <field name="loanApplicationId" type="id-vlong-int"   enable-audit-log="true"></field>
+      <field name="loanTopUpLogId" type="id-ne" enable-audit-log="true"></field>
+      <field name="loanTopUpId" type="id-ne" enable-audit-log="true"></field>
+      <field name="topUpAmount" type="currency-amount" enable-audit-log="true"></field>
+      <field name="originalAppliedamount" type="currency-amount" enable-audit-log="true"></field>
+      <field name="originalDisbursedamount" type="currency-amount" enable-audit-log="true"></field>
+      <field name="disbursedBy" type="id" enable-audit-log="true"></field>
+      <prim-key field="loanTopUpLogId"/>
+      <prim-key field="loanTopUpId"/>
+    <relation type="one" fk-name="LoanTopUpLog_FK" rel-entity-name="LoanApplication">
+        <key-map field-name="loanApplicationId"/>
+    </relation>
+    <relation type="one" fk-name="LoanTopUpLogToTop_FK" rel-entity-name="LoanTopUp">
+        <key-map field-name="loanTopUpId"/>
     </relation>
     </entity>
 
