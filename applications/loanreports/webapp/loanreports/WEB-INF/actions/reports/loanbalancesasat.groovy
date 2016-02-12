@@ -54,70 +54,313 @@ disburseLoanStatusId = 6.toLong();
 overpayedLoanStatusId = 7.toLong();
 defaultedLoanStatusId = 10030.toLong();
 claimedLoanStatusId = 10013.toLong();
+attachmentReversalStatusId = 10016.toLong();
+deceasedId = 10018.toLong();
 
 //6,10030,10013,7
+exprBldr = new org.ofbiz.entity.condition.EntityConditionBuilder();
+EntityFindOptions findOptions = new EntityFindOptions();
 
 if ((partyId != null) && (partyId != "")){
-	myLoansList = delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: disburseLoanStatusId], null, false);
-	overpayedList = delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: overpayedLoanStatusId], null, false);
-	defaultedList = delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: defaultedLoanStatusId], null, false);
-	claimedLoansList =  delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: claimedLoanStatusId], null, false);
+	
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(partyId: lpartyId)
+		EQUALS(loanStatusId: disburseLoanStatusId)
+	}
+	myLoansList = delegator.findList("LoanApplication", expr, null, null, findOptions, false);
+	//delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: disburseLoanStatusId], null, false);
+	
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(partyId: lpartyId)
+		EQUALS(loanStatusId: overpayedLoanStatusId)
+	}
+	overpayedList = delegator.findList("LoanApplication", expr, null, null, findOptions, false);
+	//delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: overpayedLoanStatusId], null, false);
+	
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(partyId: lpartyId)
+		EQUALS(loanStatusId: defaultedLoanStatusId)
+	}
+	defaultedList = delegator.findList("LoanApplication", expr, null, null, findOptions, false);
+	
+	//delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: defaultedLoanStatusId], null, false);
+	
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(partyId: lpartyId)
+		EQUALS(loanStatusId: claimedLoanStatusId)
+	}
+	claimedLoansList =  delegator.findList("LoanApplication", expr, null, null, findOptions, false);
+	//delegator.findByAnd("LoanApplication",  [partyId : lpartyId, loanStatusId: claimedLoanStatusId], null, false);
+	
+	
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(partyId: lpartyId)
+		EQUALS(loanStatusId: attachmentReversalStatusId)
+	}
+	reversalList =  delegator.findList("LoanApplication", expr, null, null, findOptions, false);
+	
+	
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(partyId: lpartyId)
+		EQUALS(loanStatusId: deceasedId)
+	}
+	deceasedList =  delegator.findList("LoanApplication", expr, null, null, findOptions, false);
+	
 	myLoansList =  overpayedList + myLoansList;
 	myLoansList =  myLoansList + defaultedList;
 	myLoansList =  myLoansList + claimedLoansList;
+	myLoansList =  myLoansList + reversalList;
+	myLoansList =  myLoansList + deceasedList;
+	
+	
+	
 	
 }
-if ((loanProductId != null) && (loanProductId != "")){
-	myLoansList = delegator.findByAnd("LoanApplication",  [loanProductId : lloanProductId, loanStatusId: disburseLoanStatusId], null, false);
-	overpayedList = delegator.findByAnd("LoanApplication",  [loanProductId : lloanProductId, loanStatusId: overpayedLoanStatusId], null, false);
 
-	defaultedList = delegator.findByAnd("LoanApplication",  [loanProductId : lloanProductId, loanStatusId: defaultedLoanStatusId], null, false);
+if ((loanProductId != null) && (loanProductId != "")){
 	
-	claimedLoanList = delegator.findByAnd("LoanApplication",  [loanProductId : lloanProductId, loanStatusId: claimedLoanStatusId], null, false);
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(loanProductId: lloanProductId)
+		EQUALS(loanStatusId: disburseLoanStatusId)
+	}
+	
+	
+	myLoansList = delegator.findList("LoanApplication", expr, null, null, findOptions, false);
+	//delegator.findByAnd("LoanApplication",  [loanProductId : lloanProductId, loanStatusId: disburseLoanStatusId], null, false);
+	
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(loanProductId: lloanProductId)
+		EQUALS(loanStatusId: overpayedLoanStatusId)
+	}
+	overpayedList = delegator.findList("LoanApplication", expr, null, null, findOptions, false);
+	//delegator.findByAnd("LoanApplication",  [loanProductId : lloanProductId, loanStatusId: overpayedLoanStatusId], null, false);
+
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(loanProductId: lloanProductId)
+		EQUALS(loanStatusId: defaultedLoanStatusId)
+	}
+	defaultedList = delegator.findList("LoanApplication", expr, null, null, findOptions, false);
+	//delegator.findByAnd("LoanApplication",  [loanProductId : lloanProductId, loanStatusId: defaultedLoanStatusId], null, false);
+	
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(loanProductId: lloanProductId)
+		EQUALS(loanStatusId: claimedLoanStatusId)
+	}
+	claimedLoanList = delegator.findList("LoanApplication", expr, null, null, findOptions, false);
+	//delegator.findByAnd("LoanApplication",  [loanProductId : lloanProductId, loanStatusId: claimedLoanStatusId], null, false);
 	// = 10013.toLong();
+	
+	
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(loanProductId: lloanProductId)
+		EQUALS(loanStatusId: attachmentReversalStatusId)
+	}
+	reversalList = delegator.findList("LoanApplication", expr, null, null, findOptions, false);
+	
+	
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(loanProductId: lloanProductId)
+		EQUALS(loanStatusId: deceasedId)
+	}
+	deceasedList = delegator.findList("LoanApplication", expr, null, null, findOptions, false);
+	
 	myLoansList =  overpayedList + myLoansList;
 	myLoansList =  myLoansList + defaultedList;
 	myLoansList =  myLoansList + claimedLoanList;
 	
+	myLoansList =  myLoansList + reversalList;
+	
+	myLoansList =  myLoansList + deceasedList;
 }
 
 if ((stationId != null) && (stationId != "")){
-	myLoansList = delegator.findByAnd("LoansByStation",  [stationId : lstationId, loanStatusId: disburseLoanStatusId], null, false);
-	overpayedList = delegator.findByAnd("LoansByStation",  [stationId : lstationId, loanStatusId: overpayedLoanStatusId], null, false);
-	defaultedList = delegator.findByAnd("LoansByStation",  [stationId : lstationId, loanStatusId: defaultedLoanStatusId], null, false);
-	claimedLoanList = delegator.findByAnd("LoansByStation",  [stationId : lstationId, loanStatusId: claimedLoanStatusId], null, false);
+	
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(stationId: lstationId)
+		EQUALS(loanStatusId: disburseLoanStatusId)
+	}
+	myLoansList = delegator.findList("LoansByStation", expr, null, null, findOptions, false);
+	//delegator.findByAnd("LoansByStation",  [stationId : lstationId, loanStatusId: disburseLoanStatusId], null, false);
+	
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(stationId: lstationId)
+		EQUALS(loanStatusId: overpayedLoanStatusId)
+	}
+	overpayedList =  delegator.findList("LoansByStation", expr, null, null, findOptions, false);
+	//delegator.findByAnd("LoansByStation",  [stationId : lstationId, loanStatusId: overpayedLoanStatusId], null, false);
+	
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(stationId: lstationId)
+		EQUALS(loanStatusId: defaultedLoanStatusId)
+	}
+	defaultedList = delegator.findList("LoansByStation", expr, null, null, findOptions, false);
+	//delegator.findByAnd("LoansByStation",  [stationId : lstationId, loanStatusId: defaultedLoanStatusId], null, false);
+	
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(stationId: lstationId)
+		EQUALS(loanStatusId: claimedLoanStatusId)
+	}
+	claimedLoanList = delegator.findList("LoansByStation", expr, null, null, findOptions, false);
+	//delegator.findByAnd("LoansByStation",  [stationId : lstationId, loanStatusId: claimedLoanStatusId], null, false);
+	
+	
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(stationId: lstationId)
+		EQUALS(loanStatusId: attachmentReversalStatusId)
+	}
+	reversalList = delegator.findList("LoansByStation", expr, null, null, findOptions, false);
+	
+	
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(stationId: lstationId)
+		EQUALS(loanStatusId: deceasedId)
+	}
+	deceasedList = delegator.findList("LoansByStation", expr, null, null, findOptions, false);
 	
 	myLoansList =  overpayedList + myLoansList;
 	myLoansList =  myLoansList + defaultedList;
 	myLoansList =  myLoansList + claimedLoanList;
+	
+	myLoansList =  myLoansList + reversalList;
+	
+	myLoansList =  myLoansList + deceasedList;
 	
 }
 
 
 
 if ((branchId != null) && (branchId != "")){
-	myLoansList = delegator.findByAnd("LoansByStation",  [branchId : branchId, loanStatusId: disburseLoanStatusId], null, false);
-	overpayedList = delegator.findByAnd("LoansByStation",  [branchId : branchId, loanStatusId: overpayedLoanStatusId], null, false);
-	defaultedList = delegator.findByAnd("LoansByStation",  [branchId : branchId, loanStatusId: defaultedLoanStatusId], null, false);
-	claimedLoanList = delegator.findByAnd("LoansByStation",  [branchId : branchId, loanStatusId: claimedLoanStatusId], null, false);
+	
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(branchId: branchId)
+		EQUALS(loanStatusId: disburseLoanStatusId)
+	}
+	myLoansList = delegator.findList("LoansByStation", expr, null, null, findOptions, false);
+	//delegator.findByAnd("LoansByStation",  [branchId : branchId, loanStatusId: disburseLoanStatusId], null, false);
+	
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(branchId: branchId)
+		EQUALS(loanStatusId: overpayedLoanStatusId)
+	}
+	overpayedList = delegator.findList("LoansByStation", expr, null, null, findOptions, false);
+	//delegator.findByAnd("LoansByStation",  [branchId : branchId, loanStatusId: overpayedLoanStatusId], null, false);
+	
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(branchId: branchId)
+		EQUALS(loanStatusId: defaultedLoanStatusId)
+	}
+	defaultedList = delegator.findList("LoansByStation", expr, null, null, findOptions, false);
+	//delegator.findByAnd("LoansByStation",  [branchId : branchId, loanStatusId: defaultedLoanStatusId], null, false);
+	
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(branchId: branchId)
+		EQUALS(loanStatusId: claimedLoanStatusId)
+	}
+	claimedLoanList = delegator.findList("LoansByStation", expr, null, null, findOptions, false);
+	//delegator.findByAnd("LoansByStation",  [branchId : branchId, loanStatusId: claimedLoanStatusId], null, false);
+	
+	
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(branchId: branchId)
+		EQUALS(loanStatusId: attachmentReversalStatusId)
+	}
+	reversalList = delegator.findList("LoansByStation", expr, null, null, findOptions, false);
+	
+	
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(branchId: branchId)
+		EQUALS(loanStatusId: deceasedId)
+	}
+	deceasedList = delegator.findList("LoansByStation", expr, null, null, findOptions, false);
 	
 	myLoansList =  overpayedList + myLoansList;
 	myLoansList =  myLoansList + defaultedList;
 	myLoansList =  myLoansList + claimedLoanList;
+	
+	myLoansList =  myLoansList + reversalList;
+	myLoansList =  myLoansList + deceasedList;
 	
 }
 
 
 if ((partyId == "") && (loanProductId == "") && (stationId == "") && (branchId == "")){
-	myLoansList = delegator.findByAnd("LoanApplication",  [loanStatusId: disburseLoanStatusId], null, false);
-	overpayedList = delegator.findByAnd("LoanApplication",  [loanStatusId: overpayedLoanStatusId], null, false);
-	defaultedList = delegator.findByAnd("LoanApplication",  [loanStatusId: defaultedLoanStatusId], null, false);
-	claimedLoanList = delegator.findByAnd("LoanApplication",  [loanStatusId: claimedLoanStatusId], null, false);
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(loanStatusId: disburseLoanStatusId)
+	}
+	myLoansList = delegator.findList("LoanApplication", expr, null, null, findOptions, false);
+	
+	//delegator.findByAnd("LoanApplication",  [loanStatusId: disburseLoanStatusId], null, false);
+	
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(loanStatusId: overpayedLoanStatusId)
+	}
+	overpayedList = delegator.findList("LoanApplication", expr, null, null, findOptions, false);
+	//delegator.findByAnd("LoanApplication",  [loanStatusId: overpayedLoanStatusId], null, false);
+	
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(loanStatusId: defaultedLoanStatusId)
+	}
+	defaultedList =  delegator.findList("LoanApplication", expr, null, null, findOptions, false);
+	//delegator.findByAnd("LoanApplication",  [loanStatusId: defaultedLoanStatusId], null, false);
+	
+	
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(loanStatusId: claimedLoanStatusId)
+	}
+	claimedLoanList =  delegator.findList("LoanApplication", expr, null, null, findOptions, false);
+	//delegator.findByAnd("LoanApplication",  [loanStatusId: claimedLoanStatusId], null, false);
+	
+	
+	
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(loanStatusId: attachmentReversalStatusId)
+	}
+	reversalList =  delegator.findList("LoanApplication", expr, null, null, findOptions, false);
+	
+	
+	expr = exprBldr.AND() { //Timestamp
+		LESS_THAN_EQUAL_TO(disbursementDate: endDateTimestamp)
+		EQUALS(loanStatusId: deceasedId)
+	}
+	deceasedList =  delegator.findList("LoanApplication", expr, null, null, findOptions, false);
 	
 	
 	myLoansList =  overpayedList + myLoansList;
 	myLoansList =  myLoansList + defaultedList;
 	myLoansList =  myLoansList + claimedLoanList;
+	
+	myLoansList =  myLoansList + reversalList;
+	
+	myLoansList =  myLoansList + deceasedList;
 	
 }
 
