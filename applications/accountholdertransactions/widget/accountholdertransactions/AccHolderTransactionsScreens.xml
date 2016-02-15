@@ -3071,6 +3071,89 @@
     </screen>
     
 	
+	<!--  ACC HOL  -->
+	
+		
+	<screen name="stationAccountReport">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Members" />
+				<set field="headerItem" value="stationAccountReport" />
+				<!-- <set field="tabButtonItem" value="findmember" /> -->
+				<set field="memberCtx" from-field="parameters" />
+
+				<!-- service service-name="listSaccoMembers" auto-field-map="parameters"/ -->
+				<set field="statusName" value="ACTIVE" />
+				<set field="statusId"
+					value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}" />
+
+			</actions>
+			<widgets>
+				<!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+				<decorator-screen name="CommonExpectedPaymentsDecorator"
+					location="${parameters.mainDecoratorLocation}">
+
+					<decorator-section name="body">
+						
+						<section>
+							<!-- do check for PARTYMGR, _VIEW permission -->
+							<condition>
+								<!-- if-service-permission service-name="partyBasePermissionCheck"
+									main-action="VIEW"/ -->
+								<if-has-permission permission="ACCOUNTHOLDER"
+									action="_VIEW" />
+							</condition>
+							<widgets>
+							<label style="h1"> STATION ACCOUNT REPORT</label>
+								<screenlet title="Station Account Report">
+									<include-form name="stationAccountReport"
+										location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml" />
+								</screenlet>
+								
+							</widgets>
+							<fail-widgets>
+								<label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}" />
+							</fail-widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	 <screen name="stationAccountReportcsv">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                <script location="component://accountholdertransactions/webapp/accountholdertransactions/WEB-INF/actions/reports/stationAccountReportcsv.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                   <label style="h1" text="  CHAI CO-OPERATIVE SAVINGS AND CREDIT SOCIETY LIMITED	"/>
+                    <label></label>
+                     <label style="h1" text=" 	P.O. BOX 278 - 00200 CITY SQUARE- NAIROBI KENYA. KTDA PLAZA - MOI AVENUE	"/>
+                    <label></label>
+                     <label style="h1" text=" TEL: 254 (0) 20 214406 - FAX 254 (0) 20 214410. E-MAIL: info@chai-sacco.co.ke			"/>
+                    <label></label>
+                    <label style="h1" text=" STATION POSTINGS"/>
+                    <label></label>
+                    <label style="h2" text="Station Code  :   ${stationCode}     Station Name :  ${nameOfStation}"></label>
+                    <label></label>
+                </container>
+                <include-form name="stationAccountReportcsvForm" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                <label></label>
+                <label></label>
+                <label style="h1" text="                                                                      Total  ${totalAmountStr}"></label>
+                 <label></label>
+            </widgets>
+        </section>
+    </screen>
+    
+	
 	
 	
 	

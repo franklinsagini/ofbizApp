@@ -984,11 +984,26 @@
 		<response name="success" type="view" value="tellerChequeDepositExcelcsv" />
 	</request-map>
 	
+	<request-map uri="stationAccountReport">
+	   <security auth="true" https="true"/>
+	   <response name="success" type="view" value="stationAccountReport"></response>
+	   <response name="error" type="view" value="stationAccountReport"></response>
+	</request-map>
+	
+	<request-map uri="stationAccount.csv">
+	  <security auth="true" https="true"/>
+	  <response name="success" type="view" value="stationAccountReportcsv"></response>
+	</request-map>
+	
 	
 	<!-- end of request mappings -->
 
 	<!-- View Mappings -->
-	
+	<view-map name="stationAccountReport" type="screen"
+	 page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#stationAccountReport"></view-map>
+	 
+	 	 <view-map name="stationAccountReportcsv" type="screencsv" 
+	 page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#stationAccountReportcsv" content-type="text/csv" encoding="none" />
 	<!-- Teller Reports View Mappings -->
 	
 	 <view-map name="tellerCashWithdrawal" type="screen"

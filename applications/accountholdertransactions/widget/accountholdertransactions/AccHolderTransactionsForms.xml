@@ -3045,6 +3045,32 @@ under the License.
         <field name="createdStamp" title="TRANSACTION DATE"><display/></field>
 		
     </form>
-               
+              
+              
+   
+    <form name="stationAccountReport" type="single" target="stationAccount.csv" header-row-style="header-row"
+	default-table-style="basic-table">
+      <field name="stationId" title="Station">
+            <drop-down allow-empty="true" current-description="">
+                <entity-options description="${name}" key-field-name="stationId" entity-name="Station">
+                    <entity-order-by field-name="name"/>
+                </entity-options>
+            </drop-down>
+        </field>
+         <field name="run" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form> 
+    
+ 
+  <form name="stationAccountReportcsvForm" list-name="collectorResults" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="transactionId" title="TRANSACTION NO"><display/></field>
+		<field name="transactionDate" title="TRANSACTION DATE"><display/></field>
+        <field name="chequeNo" title="CHEQUE NUMBER#"><display/></field>
+        <field name="description" title="DESCRIPTION"><display/></field>
+        <field name="transactionAmount" title="TRANSACTION AMOUNT"><display/></field>
+  </form>
+    
+            
 
 </forms>
