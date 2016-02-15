@@ -32,7 +32,8 @@ context.guaranteedAmt = guaranteedAmt
 salutation = delegator.findOne("Salutation", [salutationId : member.salutationId], false);
 context.salutation = salutation;
 
-startDate = loanApplication.repaymentStartDate;
+//startDate = loanApplication.repaymentStartDate;
+startDate = org.ofbiz.loans.LoanServices.calculateLoanRepaymentStartDate(loanApplication.loanApplicationId);
 duration = loanApplication.repaymentPeriod;
 use(TimeCategory) {
 	lastDate = startDate  + duration.toInteger().month;

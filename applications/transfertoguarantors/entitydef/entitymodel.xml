@@ -44,7 +44,43 @@
      
 	</entity>
 	
-		<entity entity-name="LoanStatusLog" package-name="org.ofbiz.loans"
+	
+	<!-- Guarantor Notice -->
+	<entity entity-name="GuarantorNotice" package-name="org.ofbiz.transfertoguarantors"
+		title="GuarantorNotice Entity">
+		<field name="guarantorNoticeId" type="id-vlong-int" ></field>
+		<field name="loanApplicationId" type="id-vlong-int" ></field>
+		<field name="guarantorId" type="id-vlong-int"   ></field>
+		
+		<field name="isActive" type="indicator"  ></field>
+		<field name="createdBy" type="name"   ></field>
+		<field name="updatedBy" type="name"   ></field>
+		
+		
+		
+			
+		<!-- Attaching Loan Details -->
+		<field name="noticeDate" type="date-time" ></field>
+		<field name="loanBalance" type="fixed-point" ></field>
+		<field name="interestAmount" type="fixed-point" ></field>
+		<field name="insuranceAmount" type="fixed-point" ></field>
+		
+		<prim-key field="guarantorNoticeId"/>
+		<!-- relation type="one" fk-name="LoanStatusLog_MemberCreate" title="Parent" rel-entity-name="Member">
+        <key-map field-name="createdBy" rel-field-name="partyId"/>
+      </relation>
+      
+      <relation type="one" fk-name="LoanStatusLog_MemberUpdate" title="Parent" rel-entity-name="Member">
+        <key-map field-name="updatedBy" rel-field-name="partyId"/>
+      </relation -->
+      
+       <relation type="one" fk-name="GuarantorNotice_LoanApp" rel-entity-name="LoanApplication">
+        <key-map field-name="loanApplicationId"/>
+      </relation>
+     
+	</entity>
+	
+	<entity entity-name="LoanStatusLog" package-name="org.ofbiz.loans"
 		title="LoanStatusLog Entity">
 		<field name="loanStatusLogId" type="id-vlong-int"   enable-audit-log="true"></field>
 		<field name="loanApplicationId" type="id-vlong-int"   enable-audit-log="true"></field>

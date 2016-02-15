@@ -45,6 +45,7 @@ context.loanRepayment = loanDeductionAmt;
 totalDeduction = newMemberDepostContributionAmt + loanDeductionAmt;
 context.totalDeduction = totalDeduction;
 
+String notice = org.ofbiz.loansprocessing.LoansProcessingServices.createGuarantorNotice(lloanApplicationId);
 
 myGuarantorList = delegator.findByAnd("LoanGuarantor",  [loanApplicationId : lloanApplicationId], null, false);
 context.myGuarantorList = myGuarantorList
