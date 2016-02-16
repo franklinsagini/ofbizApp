@@ -44,7 +44,43 @@
      
 	</entity>
 	
-		<entity entity-name="LoanStatusLog" package-name="org.ofbiz.loans"
+	
+	<!-- Guarantor Notice -->
+	<entity entity-name="GuarantorNotice" package-name="org.ofbiz.transfertoguarantors"
+		title="GuarantorNotice Entity">
+		<field name="guarantorNoticeId" type="id-vlong-int" ></field>
+		<field name="loanApplicationId" type="id-vlong-int" ></field>
+		<field name="guarantorId" type="id-vlong-int"   ></field>
+		
+		<field name="isActive" type="indicator"  ></field>
+		<field name="createdBy" type="name"   ></field>
+		<field name="updatedBy" type="name"   ></field>
+		
+		
+		
+			
+		<!-- Attaching Loan Details -->
+		<field name="noticeDate" type="date-time" ></field>
+		<field name="loanBalance" type="fixed-point" ></field>
+		<field name="interestAmount" type="fixed-point" ></field>
+		<field name="insuranceAmount" type="fixed-point" ></field>
+		
+		<prim-key field="guarantorNoticeId"/>
+		<!-- relation type="one" fk-name="LoanStatusLog_MemberCreate" title="Parent" rel-entity-name="Member">
+        <key-map field-name="createdBy" rel-field-name="partyId"/>
+      </relation>
+      
+      <relation type="one" fk-name="LoanStatusLog_MemberUpdate" title="Parent" rel-entity-name="Member">
+        <key-map field-name="updatedBy" rel-field-name="partyId"/>
+      </relation -->
+      
+       <relation type="one" fk-name="GuarantorNotice_LoanApp" rel-entity-name="LoanApplication">
+        <key-map field-name="loanApplicationId"/>
+      </relation>
+     
+	</entity>
+	
+	<entity entity-name="LoanStatusLog" package-name="org.ofbiz.loans"
 		title="LoanStatusLog Entity">
 		<field name="loanStatusLogId" type="id-vlong-int"   enable-audit-log="true"></field>
 		<field name="loanApplicationId" type="id-vlong-int"   enable-audit-log="true"></field>
@@ -101,5 +137,60 @@
       </relation>
 	</entity>
 	
+	<!-- Guarantor Notices -->
+	<view-entity entity-name="GuarantorNoticesByDates" package-name="org.ofbiz.transfertoguarantors">
+    	
+    	<member-entity entity-alias="GN" entity-name="GuarantorNotice"></member-entity>
+    	
+    	<member-entity entity-alias="LA" entity-name="LoanApplication"></member-entity>
+    	
+    	
+    	<member-entity entity-alias="LP" entity-name="LoanProduct"></member-entity>
+    	
+    	<member-entity entity-alias="M" entity-name="Member"></member-entity>
+    	<member-entity entity-alias="S" entity-name="Station"></member-entity>
+    	
+    	
+    	<alias entity-alias="LA" name="loanApplicationId" group-by="true"></alias>
+    	<alias entity-alias="LA" name="loanNo" group-by="true"></alias>
+    	<alias entity-alias="LA" name="disbursementDate" group-by="true"></alias>
+    	<alias entity-alias="LA" name="loanProductId" group-by="true"></alias>
+    	<alias entity-alias="LA" name="loanAmt" group-by="true"></alias>
+    	<alias entity-alias="LA" name="loanStatusId" group-by="true"></alias>
+    	
+    	<alias entity-alias="LA" name="repaymentPeriod" group-by="true"></alias>
+    	<alias entity-alias="LA" name="interestRatePM" group-by="true"></alias>
+    	
+    	<alias entity-alias="M" name="partyId" group-by="true"></alias>
+    	<alias entity-alias="M" name="memberNumber" group-by="true"></alias>
+    	<alias entity-alias="M" name="payrollNumber" group-by="true"></alias>
+    	<alias entity-alias="M" name="idNumber" group-by="true"></alias>
+    	
+    	<alias entity-alias="M" name="stationId" group-by="true"></alias>
+    	<alias entity-alias="M" name="branchId" group-by="true"></alias>
+    	<alias entity-alias="LP" name="name" group-by="true"></alias>
+    	<alias entity-alias="GN" name="noticeDate" group-by="true"></alias>
+    	<alias entity-alias="GN" name="loanBalance" group-by="true"></alias>
+    	<alias entity-alias="GN" name="interestAmount" group-by="true"></alias>
+    	<alias entity-alias="GN" name="insuranceAmount" group-by="true"></alias>
+    	
+    	
+    	
+    	<view-link entity-alias="GN" rel-entity-alias="LA"> 
+            <key-map field-name="loanApplicationId" rel-field-name="loanApplicationId"/> 
+        </view-link>
+    	
+    	<view-link entity-alias="LA" rel-entity-alias="LP"> 
+            <key-map field-name="loanProductId" rel-field-name="loanProductId"/> 
+        </view-link>
+        
+        <view-link entity-alias="GN" rel-entity-alias="M"> 
+            <key-map field-name="guarantorId" rel-field-name="partyId"/> 
+        </view-link>
+        
+        <view-link entity-alias="M" rel-entity-alias="S"> 
+            <key-map field-name="stationId" rel-field-name="stationId"/> 
+        </view-link> 
+    </view-entity>
 
 </entitymodel>

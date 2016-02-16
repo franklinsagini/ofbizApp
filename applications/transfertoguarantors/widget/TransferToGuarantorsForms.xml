@@ -669,4 +669,61 @@
 		
 	</form>
 
+	<!-- Guarantor Notices Forms -->
+	   <form name="guarantorNoticeBetweenDatesForm" type="single" target="guarantorNoticeBetweenDatesexcel.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+		<actions>
+			<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+
+		</actions>
+		<field name="startDate" title="To" position="1"  widget-style="required" required-field="true">
+        	<date-time type="timestamp" clock="12"/>
+        </field>
+		<field name="endDate" title="To" position="2"  widget-style="required" required-field="true">
+        	<date-time type="timestamp" clock="12"/>
+        </field>
+        
+        
+        <field name="submitButton" title="Generate Excel" widget-style="smallSubmit">
+            <submit button-type="button" />
+        </field>
+    </form>
+    
+    <form name="guarantorNoticeBetweenDatesExport" list-name="combinedList" target="" title="" 
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="loanNo" title="Loan No."><display/></field>
+        
+        <field name="noticeDate" title="Date Issued"><display/></field>
+        
+        <field name="partyId" title="Name"><display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName}" key-field-name="partyId"/></field>
+        
+         <field name="payrollNumber" title="Payroll Number"><display/></field>
+         <field name="memberNumber" title="Member No"><display/></field>
+         <field name="idNumber" title="ID No"><display/></field>
+        
+        <field name="disbursementDate" title="Date Disbursed"><display/></field>
+        
+        
+        
+        <field name="loanStatusId" title="Loan Status"><display-entity entity-name="LoanStatus" description="${name}" key-field-name="loanStatusId"/></field>
+        
+        <field name="loanProductId" title="Product Name"><display-entity entity-name="LoanProduct" description="${name}" key-field-name="loanProductId"/></field>
+        
+        
+        <field name="repaymentPeriod" title="Repayment Period"><display/></field>
+
+		<field name="interestRatePM" title="Interest Rate P.M"><display/></field>        
+        
+        <field name="loanAmt" title="Loaned Amount"><display/></field>
+        <field name="stationId" title="Station"><display-entity entity-name="Station" description="${name}" key-field-name="stationId"/></field>
+        
+        <field name="loanBalance" title="Loan Balance"><display/></field>
+        <field name="interestAmount" title="Interest Amount"><display/></field>
+        <field name="insuranceAmount" title="Insurance Amount"><display/></field>
+        
+        
+    </form>
 </forms>

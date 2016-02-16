@@ -46,6 +46,7 @@ import org.ofbiz.webapp.event.EventHandlerException;
 import com.google.gson.Gson;
 
 //org.ofbiz.loans.LoanServices.updateLoanApplicationToSelfGuaranteed
+//org.ofbiz.loans.LoanServices.calculateLoanRepaymentStartDate(loanApplicationId)
 public class LoanServices {
 	public static Logger log = Logger.getLogger(LoanServices.class);
 	public static Long ONEHUNDRED = 100L;
@@ -1061,6 +1062,53 @@ public class LoanServices {
 		result.put("repaymentStartDate", repaymentStartDate);
 		return repaymentStartDate;
 	}
+	
+	//calculateLoanRepaymentStartDate(loanApplicationId)
+	//Loan Repayment start date taking loan application id
+	public static Timestamp calculateLoanRepaymentStartDate(
+			Long loanApplicationIdL) {
+
+		Map<String, Object> result = FastMap.newInstance();
+		String loanApplicationId = loanApplicationIdL.toString();
+				//loanApplication
+		//		.getString("loanApplicationId");// (String)context.get("loanApplicationId");
+		GenericValue loanApplication = LoanUtilities.getEntityValue("LoanApplication", "loanApplicationId", loanApplicationIdL);
+		log.info("What we got is ############ " + loanApplicationId);
+
+		Delegator delegator;
+		// delegator = D
+		// ctx.getDelegator();
+
+		// delegator = DelegatorFactoryImpl.getDelegator("delegator");
+		delegator = DelegatorFactoryImpl.getDelegator(null);
+		// GenericValue accountTransaction = null;
+		loanApplicationId = loanApplicationId.replaceAll(",", "");
+		try {
+			loanApplication = delegator.findOne(
+					"LoanApplication",
+					UtilMisc.toMap("loanApplicationId",
+							Long.valueOf(loanApplicationId)), false);
+		} catch (GenericEntityException e2) {
+			e2.printStackTrace();
+		}
+
+		// Get Salary processing day
+		Timestamp repaymentStartDate = getProcessingDate(delegator, loanApplicationId);
+
+		// loanApplication.set("monthlyRepayment", paymentAmount);
+		loanApplication.set("repaymentStartDate", repaymentStartDate);
+		log.info("##### End Date is ######## " + repaymentStartDate);
+		log.info("##### ID is  ######## " + loanApplicationId);
+		loanApplication.set("repaymentStartDate", repaymentStartDate);
+
+		try {
+			delegator.createOrStore(loanApplication);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		result.put("repaymentStartDate", repaymentStartDate);
+		return repaymentStartDate;
+	}
 
 	public static Timestamp getProcessingDate(Delegator delegator, String loanApplicationId) {
 		
@@ -1070,6 +1118,7 @@ public class LoanServices {
 		
 		List<GenericValue> salaryProcessingDateELI = null; // =
 		Long processingDay = 0l;
+		delegator = DelegatorFactoryImpl.getDelegator(null);
 		try {
 			salaryProcessingDateELI = delegator.findList(
 					"SalaryProcessingDate", null, null, null, null, false);
