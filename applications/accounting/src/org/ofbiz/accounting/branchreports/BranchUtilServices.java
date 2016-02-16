@@ -50,6 +50,18 @@ public class BranchUtilServices {
 		return member.getString("branchId");
 	}
 	
+	public static String getMembersStations(Delegator delegator, Long memberpartyId) {
+		GenericValue member = null;
+		
+		try {
+			member = delegator.findOne("Member", UtilMisc.toMap("partyId", memberpartyId), false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		return member.getString("stationId");
+	}
+	
 	public static List<GenericValue>getLoansForPeriod(Delegator delegator,Timestamp startDate, Timestamp endDate, Long loanStatusId){
 		List<GenericValue>loansList = null;
 		
