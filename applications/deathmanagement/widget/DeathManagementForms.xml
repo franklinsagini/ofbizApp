@@ -140,10 +140,23 @@
     <form name="NewFuneralExpensePayment" type="single" target="createFuneralExpensePayment"
         focus-field-name="amountPayable" header-row-style="header-row" default-table-style="basic-table">
         
+        <actions>
+        
+        <set field="partyId" from-field="parameters.partyId" type="Long"/>
+				<entity-one value-field="member" entity-name="Member">
+					<field-map field-name="partyId" from-field="partyId"/>
+				</entity-one>
+				<set field="stationId" from-field="member.stationId" global="true"/></actions>
+        <field name="partyId">
+        	<hidden value="${parameters.partyId}"/>
+        </field>
         <field name="funeralExpensePaymentId"><hidden/></field>
         <field name="deathNotificationId" title="Death Notification" widget-style="required" required-field="true">
         	<drop-down allow-empty="true">
-        		<entity-options description="${notificationNo}  - ${firstName} ${middleName} ${lastName} - ${burialPermitNo}" key-field-name="deathNotificationId"  entity-name="NotificationMemberView"></entity-options>
+        		
+        		<entity-options description="${notificationNo}  - ${firstName} ${middleName} ${lastName} - ${burialPermitNo}" key-field-name="deathNotificationId"  entity-name="NotificationMemberView">
+        			<entity-constraint name="deathNotificationId" operator="equals" value="${parameters.deathNotificationId}"/>
+        		</entity-options>
         	</drop-down>
         </field>
 
@@ -165,14 +178,16 @@
          	<drop-down allow-empty="true">
          		<entity-options description="${firstName} ${middleName} ${lastName}" key-field-name="memberNomineeId" entity-name="MemberNominee">
          			<!-- entity-constraint name=""/ -->
-         			<!-- entity-constraint name="partyId" operator="equals" / -->
+         			<entity-constraint name="partyId" operator="equals" value="${parameters.partyId}" />
          			<entity-order-by field-name="firstName"/>
          		</entity-options>
          	</drop-down>
          </field>
           <field name="stationId" title="Station" widget-style="required" required-field="true">
           	<drop-down allow-empty="true">
-          		<entity-options description="${name} - ${stationNumber}" entity-name="Station"></entity-options>
+          		<entity-options description="${name} - ${stationNumber}" entity-name="Station">
+          			<entity-constraint name="stationId" operator="equals" value="${stationId}"/>
+          		</entity-options>
           	</drop-down>
           </field>
        
@@ -188,6 +203,7 @@
         <actions>
         	
             <entity-condition entity-name="FuneralExpensePayment">
+            	<condition-expr field-name="deathNotificationId" operator="equals" from-field="parameters.deathNotificationId"/>
             </entity-condition>
         </actions>
          <field name="funeralExpensePaymentId"><hidden/></field>
@@ -204,6 +220,15 @@
         <field name="comment" title="Comment"><textarea></textarea></field>
 
          <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+         
+         
+         <field name="payTheExpense" title="Pay the Expense"
+			widget-style="buttontext">
+			<hyperlink target="payTheExpense" description="Pay the Expense"
+				also-hidden="false" confirmation-message="Are you sure you want to pay the expense?">
+				<parameter param-name="funeralExpensePaymentId"/>
+			</hyperlink>
+		</field>
     </form>
     
     
@@ -231,6 +256,69 @@
         <auto-fields-service default-field-type="hidden" service-name="updateFuneralExpenseAmount"/>
 		<field name="amount" title="Amount"  widget-style="required" required-field="true"><text></text></field>
 		<field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- listDeathNotificationForExpense -->
+        <form name="listDeathNotificationForExpense" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateDeathNotification" paginate-target="deathNotifications"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	
+            <entity-condition entity-name="DeathNotification">
+            	<order-by field-name="-deathNotificationId"/>
+            </entity-condition>
+        </actions>
+        <!-- auto-fields-service default-field-type="hidden" service-name="updateRelationships"/ -->
+        <field name="deathNotificationId"><hidden/></field>
+        <field name="partyId" title="Member">
+        	<!-- drop-down>
+        		<entity-options description="${firstName} ${middleName} ${lastName}" entity-name="Member">
+        			<entity-constraint name="partyId" operator="equals" value="${partyId}"/>
+        		</entity-options>
+        	</drop-down -->
+        	<display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName} Member Number - ${memberNumber}"></display-entity>
+        </field>
+
+        <field name="notificationNo" title="Death No">
+        	<display></display>
+        </field>
+        <field name="dateReported" title="Date Reported">
+        	<display type="date"></display>
+        	<!--  date-time type="date"/ -->
+        </field>
+        
+        <field name="dateofDeath" title="Date of Death">
+        <display type="date"></display>
+        	<!--  date-time type="date"/ -->
+        </field>
+        
+        <field name="causeOfDeath" title="Cause of Death">
+        	<display></display>
+        </field>
+        <field name="burialPermitNo" title="Burial Permit No.">
+        	<display></display>
+        </field>
+        <field name="reportedBy" title="Reported By">
+        	<display></display>
+        </field>
+        <field name="relationship" title="Relationship">
+        	<display></display>
+        </field>
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+        <field name="createdBy" title="Created By">
+        	<display></display>
+        </field>
+        <field name="createdStamp" title="When Created">
+        	<display></display>
+        </field>
+        
+         <field name="expensePayment" title="Expense Payment" widget-style="buttontext">
+            <hyperlink target="funeralExpensePayment" description=" ${notificationNo} - Expense Payment" also-hidden="false">
+            	<parameter param-name="partyId"/>
+            	<parameter param-name="deathNotificationId"/>
+               
+            </hyperlink>
+        </field>
+
     </form>
     
 </forms>

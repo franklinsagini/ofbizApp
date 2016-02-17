@@ -146,14 +146,36 @@
                 <response name="success" type="request-redirect"
                         value="funeralExpenseAmount"></response>
         </request-map> 
-
+        
+        <!-- deathNotificationsForExpense -->
+        <!-- deathNotifications -->
+        <request-map uri="deathNotificationsForExpense">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="deathNotificationsForExpense">
+		</response>
+	</request-map>
+	
+	<!--  -->
+	<request-map uri="payTheExpense">
+		<security https="true" auth="true" />
+		<event type="service" invoke="payTheExpense" />
+		<response name="success" type="request-redirect" value="funeralExpensePayment">
+			<redirect-parameter name="partyId"/>
+			<redirect-parameter name="deathNotificationId"/>
+	</response>
+		
 	<!-- View Mappings -->
 	<view-map name="LookupActiveMember" type="screen"
 		page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember" />
 	<view-map name="main" type="screen"
 		page="component://deathmanagement/widget/DeathManagementScreens.xml#main" />
+		
 	<view-map name="deathNotifications" type="screen"
 		page="component://deathmanagement/widget/DeathManagementScreens.xml#deathNotifications" />
+		
+		<!-- deathNotificationsForExpense -->
+		<view-map name="deathNotificationsForExpense" type="screen"
+		page="component://deathmanagement/widget/DeathManagementScreens.xml#deathNotificationsForExpense" />
 		
 	
 		<view-map name="deathInsuranceClaim" type="screen"

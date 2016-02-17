@@ -94,5 +94,34 @@ public class DeathManagement {
 			e.printStackTrace();
 		}
 	}
+	
+	//org.ofbiz.deathmanagement.DeathManagement.payFuneralExpense(funeralExpensePaymentId)
+	public static String payFuneralExpense(Map<String, String> userLogin, Long funeralExpensePaymentId){
+		
+		GenericValue funeralExpensePayment = LoanUtilities.getEntityValue("FuneralExpensePayment", "funeralExpensePaymentId", funeralExpensePaymentId);
+		Long deathNotificationId = funeralExpensePayment.getLong("deathNotificationId");
+		
+		GenericValue deathNotification = LoanUtilities.getEntityValue("DeathNotification", "deathNotificationId", deathNotificationId);
+		
+		Long partyId  = deathNotification.getLong("partyId");
+		GenericValue member = LoanUtilities.getEntityValue("Member", "partyId", partyId);
+		
+		String paymentDescription = member.getString("firstName")+" "+member.getString("middleName")+" "+member.getString("lastName")+" Funeral Expenses ";
+		String paymentId = "";
+		funeralExpensePayment.set("paymentId", paymentId);
+		funeralExpensePayment.set("paidDate", new Timestamp(Calendar.getInstance().getTimeInMillis()));
+		funeralExpensePayment.set("paid", "Y");
+		//paidDate
+		
+		Delegator delegator =  DelegatorFactoryImpl.getDelegator(null);
+		try {
+			delegator.createOrStore(funeralExpensePayment);
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return "success";
+	}
 
 }

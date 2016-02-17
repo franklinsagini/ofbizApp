@@ -95,4 +95,13 @@
         <description>Delete FuneralExpenseAmount</description>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
+    
+    <!-- payTheExpense -->
+    <service name="payTheExpense" engine="simple" default-entity-name="FuneralExpensePayment"
+             location="component://deathmanagement/script/org/ofbiz/deathmanagement/DeathManagementServices.xml" invoke="pullTheStationWithNewLoanNo" auth="true">
+        <description>pullTheStationWithNewLoanNo</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
 </services>

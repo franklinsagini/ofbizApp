@@ -131,4 +131,28 @@ under the License.
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     
+    
+    <!--  payTheExpense -->	
+	<simple-method method-name="payTheExpense" short-description="Pay the Expense">
+         <set field="funeralExpensePaymentId" from-field="parameters.funeralExpensePaymentId" type="Long"/>
+        <set field="paymentStatus" value="${bsh:org.ofbiz.deathmanagement.DeathManagement.payFuneralExpense(userLogin, funeralExpensePaymentId);}"></set>
+        <!-- store-value value-field="lookedUpValue"/ -->
+        <log message="NNNNNNNNNNNNNNN Payment" level="info"/>
+    	<log message="${funeralExpensePaymentId}" level="info"/>
+		<if>
+			 <condition> 
+			 		<if-compare operator="equals" value="success" field="paymentStatus"></if-compare>
+            </condition> 
+            <then> 
+				<property-to-field resource="DeathManagementUiLabels.xml" 
+            	property="Successfully created payment" field="successMessage" />
+            </then>
+		<else>
+			<add-error> 
+                    <fail-message message="${paymentStatus}"/>
+                </add-error> 
+                <check-errors /> 		
+        </else>
+        </if>       
+    </simple-method>
 </simple-methods>
