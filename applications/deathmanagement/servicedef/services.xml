@@ -96,6 +96,31 @@
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
     
+    <!-- InsuranceClaimPayment -->
+    <service name="createInsuranceClaimPayment" engine="simple" default-entity-name="InsuranceClaimPayment"
+             location="component://deathmanagement/script/org/ofbiz/deathmanagement/DeathManagementServices.xml" invoke="createInsuranceClaimPayment" auth="true">
+        <description>Create InsuranceClaimPayment</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="updateInsuranceClaimPayment" engine="simple" default-entity-name="InsuranceClaimPayment"
+             location="component://deathmanagement/script/org/ofbiz/deathmanagement/DeathManagementServices.xml" invoke="updateInsuranceClaimPayment" auth="true">
+        <description>Update InsuranceClaimPayment</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+	
+	<service name="deleteInsuranceClaimPayment" engine="simple" default-entity-name="InsuranceClaimPayment"
+             location="component://deathmanagement/script/org/ofbiz/deathmanagement/DeathManagementServices.xml" invoke="deleteInsuranceClaimPayment" auth="true">
+        <description>Delete InsuranceClaimPayment</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    
+    
+    
+    
     <!-- payTheExpense -->
     <service name="payTheExpense" engine="simple" default-entity-name="FuneralExpensePayment"
              location="component://deathmanagement/script/org/ofbiz/deathmanagement/DeathManagementServices.xml" invoke="payTheExpense" auth="true">

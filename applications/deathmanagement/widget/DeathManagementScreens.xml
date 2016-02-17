@@ -141,6 +141,84 @@
 		</section>
 	</screen>
 	
+	<!-- receiveClaimPayment -->
+		   <screen name="receiveClaimPayment">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Receive Claim Payment" />
+				<set field="tabButtonItem" value="receiveClaimPayment" />
+				<set field="headerItem" value="receiveClaimPayment"/>
+				<set field="labelTitleProperty" value="Receive Insurance Claim" />
+				<set field="cancelPage" from-field="parameters.CANCEL_PAGE"
+					default-value="InsuranceClaimPayment" />
+				<set field="createUserLoginURI" value="ProfileCreateUserLogin" />
+
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<!-- screenlet>
+									<label style="h3">${member.firstName} ${member.middleName} ${member.lastName}
+								</label>
+								</screenlet -->
+								<screenlet title="Insurance Claim Payment">
+									<include-form name="NewInsuranceClaimPayment"
+										location="component://deathmanagement/widget/DeathManagementForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="Insurance Claim Payment List">
+									<include-form name="listInsuranceClaimPayment"
+										location="component://deathmanagement/widget/DeathManagementForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<!-- insuranceClaims -->
+	<screen name="insuranceClaims">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Insurance Claims" />
+				<set field="tabButtonItem" value="insuranceClaims" />
+				<set field="headerItem" value="insuranceClaims"/>
+				<set field="labelTitleProperty" value="Insurance Claim" />
+				<set field="cancelPage" from-field="parameters.CANCEL_PAGE"
+					default-value="DeathNotification" />
+				<set field="createUserLoginURI" value="ProfileCreateUserLogin" />
+
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						
+						<section name="search-results">
+							<widgets>
+								<screenlet title="Insurance Claims List">
+									<include-form name="listDeathInsuranceClaimListing"
+										location="component://deathmanagement/widget/DeathManagementForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	
 	<!-- Funeral Expense Payment -->
 		   <screen name="funeralExpensePayment">
 		<section>

@@ -91,6 +91,7 @@
         
         <field name="deathInsuranceClaimId"><hidden/></field>
         <!-- deathNotificationId -->
+        <field name="partyId"><hidden value="${partyId}"/></field>
         <field name="deathNotificationId" title="Death Notification">
         	<drop-down>
         		<!-- entity-options description="${notificationNo}" entity-name="DeathNotification"></entity-options -->
@@ -147,6 +148,56 @@
         <field name="accruedInsurance" title="Accrued Insurance"><text></text></field>
         <field name="funeralFee" title="Funeral Fee"><text></text></field>
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+
+    </form>
+    
+    <!-- listDeathInsuranceClaimListing -->
+     <form name="listDeathInsuranceClaimListing" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateDeathInsuranceClaim" paginate-target="deathInsuranceClaim"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	
+            <entity-condition entity-name="DeathInsuranceClaim">
+            	<!-- condition-expr field-name="deathNotificationId" operator="equals" value="${parameters.deathNotificationId}"/ -->
+            </entity-condition>
+        </actions>
+                <field name="deathInsuranceClaimId"><hidden/></field>
+        <!-- deathNotificationId -->
+        <field name="deathNotificationId" title="Death Notification">
+        	<drop-down>
+        		<!-- entity-options description="${notificationNo}" entity-name="DeathNotification" key-field-name="deathNotificationId"></entity-options -->
+        		<entity-options description="${notificationNo}  - ${firstName} ${middleName} ${lastName} - ${burialPermitNo}" key-field-name="deathNotificationId"  entity-name="NotificationMemberView">
+        			<entity-constraint name="deathNotificationId" operator="equals" value="${parameters.deathNotificationId}"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        
+        <field name="partyId" title="Member" widget-style="required" required-field="true">
+         	
+         	<display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName}"></display-entity>
+         	
+         </field>
+
+        <field name="totalDeposit" title="Total Deposit" widget-style="required" required-field="true"><display></display> </field>
+        <!-- field name="insuranceCompanyId" title="Insurance Company">
+        	<drop-down>
+        		<entity-options description="${name}" entity-name="InsuranceCompany" key-field-name="insuranceCompanyId"></entity-options>
+        	</drop-down>
+        </field -->
+        <field name="companyName" title="Company Name"><display></display></field>
+        <field name="totalLoanBalance" title="Total Loan Balance"><display></display></field>
+        <field name="accruedInterest" title="Accrued Interest"><display></display></field>
+        <field name="accruedInsurance" title="Accrued Insurance"><display></display></field>
+        <field name="funeralFee" title="Funeral Fee"><display></display></field>
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+        
+        <field name="receiveClaimPayment" title="Receive Claim Payment" widget-style="buttontext">
+            <hyperlink target="receiveClaimPayment" description=" ${notificationNo} - Insurance Claim" also-hidden="false">
+            	<parameter param-name="deathInsuranceClaimId"/>
+            	<parameter param-name="partyId"/>
+            	<parameter param-name="deathNotificationId"/>
+               
+            </hyperlink>
+        </field>
 
     </form>
     
@@ -346,4 +397,92 @@
         </field>
     </form>
     
+    <!-- NewInsuranceClaimPayment -->
+        <form name="NewInsuranceClaimPayment" type="single" target="createInsuranceClaimPayment"
+        focus-field-name="partyId" header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+        				<!-- redirect-parameter name="partyId"/>
+			<redirect-parameter name="deathNotificationId"/ -->
+			<set field="partyId" from-field="parameters.partyId" type="Long"/>
+			<set field="deathNotificationId" from-field="parameters.deathNotificationId"/>
+			<set field="deathInsuranceClaimId" from-field="parameters.deathInsuranceClaimId"/>
+        </actions>
+        
+        <field name="insuranceClaimPaymentId"><hidden/></field>
+        <!-- deathNotificationId -->
+        <field name="partyId"><hidden value="${partyId}"/></field>
+        <field name="deathInsuranceClaimId"><hidden value="${deathInsuranceClaimId}"/></field>
+        <field name="deathNotificationId" title="Death Notification">
+        	<drop-down>
+        		<!-- entity-options description="${notificationNo}" entity-name="DeathNotification"></entity-options -->
+        		<entity-options description="${notificationNo}  - ${firstName} ${middleName} ${lastName} - ${burialPermitNo} - Member Number (${memberNumber})" key-field-name="deathNotificationId"  entity-name="NotificationMemberView">
+        			<entity-constraint name="deathNotificationId" operator="equals" value="${parameters.deathNotificationId}"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        
+        <field name="amountPaid" title="Amount Paid" widget-style="required" required-field="true"><text></text></field>
+        <field name="chequeNo" title="Cheque No." widget-style="required" required-field="true"><text></text></field>
+        <field name="bankName" title="Bank Name" widget-style="required" required-field="true"><text></text></field>
+        <field name="bankBranch" title="Bank Branch" widget-style="required" required-field="true"><text></text></field>
+        <field name="Drawer" title="Drawer" widget-style="required" required-field="true"><text></text></field>
+        
+
+        <field name="totalDeposit" title="Total Deposit" widget-style="required" required-field="true"><text default-value="${bsh:org.ofbiz.deathmanagement.DeathManagement.getMemberDepositsTotal(partyId)}"></text></field>
+        <!-- field name="insuranceCompanyId" title="Insurance Company">
+        	<drop-down>
+        		<entity-options description="${name}" entity-name="InsuranceCompany" key-field-name="insuranceCompanyId"></entity-options>
+        	</drop-down>
+        </field -->
+        
+        <field name="companyName" title="Company Name"><text></text></field>
+        <field name="totalLoanBalance" title="Total Loan Balance" widget-style="required" required-field="true"><text default-value="${bsh:org.ofbiz.deathmanagement.DeathManagement.getLoanBalance(partyId)}"></text></field>
+        <field name="accruedInterest" title="Accrued Interest" widget-style="required" required-field="true"><text default-value="${bsh:org.ofbiz.deathmanagement.DeathManagement.getInterestBalance(partyId)}"></text></field>
+        <field name="accruedInsurance" title="Accrued Insurance" widget-style="required" required-field="true"><text default-value="${bsh:org.ofbiz.deathmanagement.DeathManagement.getInsuranceBalance(partyId)}"></text></field>
+        <field name="funeralFee" title="Funeral Fee" widget-style="required" required-field="true"><text default-value="${bsh:org.ofbiz.deathmanagement.DeathManagement.getFuneralExpenseAmount()}"></text></field>
+        
+         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <!-- listInsuranceClaimPayment -->
+     <form name="listInsuranceClaimPayment" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateInsuranceClaimPayment" paginate-target="receiveClaimPayment"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+        	
+            <entity-condition entity-name="InsuranceClaimPayment">
+            	<condition-expr field-name="deathNotificationId" operator="equals" value="${parameters.deathNotificationId}"/>
+            </entity-condition>
+        </actions>
+        		<field name="deathInsuranceClaimId"><hidden/></field>
+                <field name="insuranceClaimPaymentId"><hidden/></field>
+        <!-- deathNotificationId -->
+        <field name="deathNotificationId" title="Death Notification">
+        	<drop-down>
+        		<!-- entity-options description="${notificationNo}" entity-name="DeathNotification" key-field-name="deathNotificationId"></entity-options -->
+        		<entity-options description="${notificationNo}  - ${firstName} ${middleName} ${lastName} - ${burialPermitNo}" key-field-name="deathNotificationId"  entity-name="NotificationMemberView">
+        			<entity-constraint name="deathNotificationId" operator="equals" value="${parameters.deathNotificationId}"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        
+        <field name="amountPaid" title="Amount Paid" widget-style="required" required-field="true"><display></display></field>
+        <field name="chequeNo" title="Cheque No."><display></display></field>
+        <field name="bankName" title="Bank Name"><display></display></field>
+        <field name="bankBranch" title="Bank Branch"><display></display></field>
+        <field name="Drawer" title="Drawer"><display></display></field>
+
+        <field name="totalDeposit" title="Total Deposit" widget-style="required" required-field="true"><display></display></field>
+        <!-- field name="insuranceCompanyId" title="Insurance Company">
+        	<drop-down>
+        		<entity-options description="${name}" entity-name="InsuranceCompany" key-field-name="insuranceCompanyId"></entity-options>
+        	</drop-down>
+        </field -->
+        <field name="companyName" title="Company Name"><display></display></field>
+        <field name="totalLoanBalance" title="Total Loan Balance"><display></display></field>
+        <field name="accruedInterest" title="Accrued Interest"><display></display></field>
+        <field name="accruedInsurance" title="Accrued Insurance"><display></display></field>
+        <field name="funeralFee" title="Funeral Fee"><display></display></field>
+        <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field -->
+
+    </form>
 </forms>
