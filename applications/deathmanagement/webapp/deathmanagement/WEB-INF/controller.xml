@@ -87,6 +87,8 @@
 		<security https="true" auth="true" />
 		<event type="service" invoke="createFuneralExpensePayment" />
 		<response name="success" type="request-redirect" value="funeralExpensePayment">
+			<redirect-parameter name="partyId"/>
+			<redirect-parameter name="deathNotificationId"/>
 		</response>
 		<response name="error" type="view" value="funeralExpensePayment" />
 	</request-map>
@@ -95,6 +97,8 @@
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateFuneralExpensePayment" />
 		<response name="success" type="request-redirect" value="funeralExpensePayment">
+			<redirect-parameter name="partyId"/>
+			<redirect-parameter name="deathNotificationId"/>
 		</response>
 		<response name="error" type="view" value="funeralExpensePayment" />
 	</request-map>
@@ -103,6 +107,8 @@
 		<security https="true" auth="true" />
 		<event type="service" invoke="deleteFuneralExpensePayment" />
 		<response name="success" type="request-redirect" value="funeralExpensePayment">
+			<redirect-parameter name="partyId"/>
+			<redirect-parameter name="deathNotificationId"/>
 		</response>
 	</request-map>
 
@@ -155,14 +161,16 @@
 		</response>
 	</request-map>
 	
-	<!--  -->
+	
 	<request-map uri="payTheExpense">
 		<security https="true" auth="true" />
 		<event type="service" invoke="payTheExpense" />
-		<response name="success" type="request-redirect" value="funeralExpensePayment">
+		<response name="success" type="view" value="funeralExpensePayment">
 			<redirect-parameter name="partyId"/>
 			<redirect-parameter name="deathNotificationId"/>
 	</response>
+	
+	</request-map>
 		
 	<!-- View Mappings -->
 	<view-map name="LookupActiveMember" type="screen"

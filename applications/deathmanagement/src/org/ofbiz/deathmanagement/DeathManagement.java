@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.accountholdertransactions.LoanUtilities;
+import org.ofbiz.accounting.payment.PaymentWorker;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactoryImpl;
@@ -101,6 +102,10 @@ public class DeathManagement {
 		GenericValue funeralExpensePayment = LoanUtilities.getEntityValue("FuneralExpensePayment", "funeralExpensePaymentId", funeralExpensePaymentId);
 		Long deathNotificationId = funeralExpensePayment.getLong("deathNotificationId");
 		
+		if (funeralExpensePayment.getString("paymentId") != null){
+			return "The Payment has already been done ! ";
+		}
+		
 		GenericValue deathNotification = LoanUtilities.getEntityValue("DeathNotification", "deathNotificationId", deathNotificationId);
 		
 		Long partyId  = deathNotification.getLong("partyId");
@@ -108,12 +113,16 @@ public class DeathManagement {
 		
 		String paymentDescription = member.getString("firstName")+" "+member.getString("middleName")+" "+member.getString("lastName")+" Funeral Expenses ";
 		String paymentId = "";
+		Delegator delegator =  DelegatorFactoryImpl.getDelegator(null);
+		
+		paymentId = PaymentWorker.createPayment(delegator, member.getString("branchId"), member.getString("branchId"), partyId.toString(), funeralExpensePayment.getBigDecimal("amountPayable"), paymentDescription);
+		
 		funeralExpensePayment.set("paymentId", paymentId);
 		funeralExpensePayment.set("paidDate", new Timestamp(Calendar.getInstance().getTimeInMillis()));
 		funeralExpensePayment.set("paid", "Y");
 		//paidDate
 		
-		Delegator delegator =  DelegatorFactoryImpl.getDelegator(null);
+		
 		try {
 			delegator.createOrStore(funeralExpensePayment);
 		} catch (GenericEntityException e) {
