@@ -383,8 +383,16 @@ public class PaymentWorker {
 
 
 	
-	public static String createPayment(Delegator delegator, String fromPartyId, String toPartyId, BigDecimal amount, String desc){
+	public static String createPayment(Delegator delegator, String branchId, String fromPartyId, String toPartyId, BigDecimal amount, String desc){
 		String paymentId = null;
+		
+		//create payment
+		
+		//create fin_account
+		
+		//Create accounting transactions
+		
+		
 		
 		return paymentId;
 	}
