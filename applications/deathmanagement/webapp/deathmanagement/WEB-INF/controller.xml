@@ -50,6 +50,8 @@
 	<request-map uri="deathInsuranceClaim">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="deathInsuranceClaim">
+			<redirect-parameter name="partyId"/>
+			<redirect-parameter name="deathNotificationId"/>
 		</response>
 	</request-map>
 	
@@ -161,6 +163,13 @@
 		</response>
 	</request-map>
 	
+	<!-- deathInsuranceClaimListing -->
+	<request-map uri="deathInsuranceClaimListing">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="deathInsuranceClaimListing">
+		</response>
+	</request-map>
+	
 	
 	<request-map uri="payTheExpense">
 		<security https="true" auth="true" />
@@ -185,7 +194,10 @@
 		<view-map name="deathNotificationsForExpense" type="screen"
 		page="component://deathmanagement/widget/DeathManagementScreens.xml#deathNotificationsForExpense" />
 		
-	
+	<!-- deathInsuranceClaimListing -->
+		<view-map name="deathInsuranceClaimListing" type="screen"
+		page="component://deathmanagement/widget/DeathManagementScreens.xml#deathInsuranceClaimListing" />
+
 		<view-map name="deathInsuranceClaim" type="screen"
 		page="component://deathmanagement/widget/DeathManagementScreens.xml#deathInsuranceClaim" />	
 		

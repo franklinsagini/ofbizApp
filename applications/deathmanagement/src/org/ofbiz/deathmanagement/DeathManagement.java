@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
+import org.ofbiz.accountholdertransactions.LoanRepayments;
 import org.ofbiz.accountholdertransactions.LoanUtilities;
 import org.ofbiz.accounting.payment.PaymentWorker;
 import org.ofbiz.base.util.UtilMisc;
@@ -17,7 +18,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.loansprocessing.LoansProcessingServices;
 
-
+//org.ofbiz.deathmanagement.DeathManagement
 public class DeathManagement {
 	
 	public static BigDecimal getFuneralExpenseAmount(){
@@ -165,7 +166,40 @@ public class DeathManagement {
 			e.printStackTrace();
 		}
 		
+		
+		
 		return "success";
 	}
+	
+	
+	public static BigDecimal getMemberDepositsTotal(Long partyId){
+		BigDecimal bdTotalDeposit =  null;
+		String memberAccountId = LoanUtilities.getMemberAccountIdGivenMemberAndAccountCode(partyId, AccHolderTransactionServices.MEMBER_DEPOSIT_CODE);
+		bdTotalDeposit = AccHolderTransactionServices.getTotalBalanceNow(memberAccountId);
+		
+		return bdTotalDeposit;
+	}
+	
+	public static BigDecimal getLoanBalance(Long partyId){
+		BigDecimal bdLoanBalance = BigDecimal.ZERO;
+		
+		//calculateExistingLoansTotalDeceased
+		bdLoanBalance = LoansProcessingServices.getTotalLoansDeceased(partyId);
+		return bdLoanBalance;
+	}
+	
+	public static BigDecimal getInterestBalance(Long partyId){
+		BigDecimal bdInterest = BigDecimal.ZERO;
+		bdInterest = LoanRepayments.getTotalInterestDue(partyId.toString());
+		return bdInterest;
+	}
+	
+	public static BigDecimal getInsuranceBalance(Long partyId){
+		BigDecimal insurance = BigDecimal.ZERO;
+		insurance = LoanRepayments.getTotalInsuranceDue(partyId.toString());
+		return insurance;
+	}
+	
+	
 
 }

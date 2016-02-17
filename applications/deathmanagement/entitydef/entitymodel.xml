@@ -41,6 +41,7 @@
      		<field name="partyId" type="id-vlong-int"></field>
 	     	<field name="isActive" type="indicator"></field>
 			<field name="createdBy" type="name"></field>
+			<field name="companyName" type="name"></field>
 			<field name="updatedBy" type="name"></field>
      		<field name="totalDeposit" type="fixed-point"></field>
      		<field name="insuranceCompanyId" type="id-vlong-int"></field>
@@ -59,6 +60,44 @@
             <key-map field-name="deathNotificationId"/>
         </relation>
      </entity>
+     
+     
+     <entity entity-name="InsuranceClaimPayment" package-name="org.ofbiz.deathmanagement" title="InsuranceClaimPayment Entity">
+     		
+     		<field name="insuranceClaimPaymentId" type="id-vlong-int"></field>
+     		
+     		<field name="deathInsuranceClaimId" type="id-vlong-int"></field>
+     		<field name="deathNotificationId" type="id-vlong-int"></field>
+     		<field name="partyId" type="id-vlong-int"></field>
+	     	<field name="isActive" type="indicator"></field>
+			<field name="createdBy" type="name"></field>
+			<field name="companyName" type="name"></field>
+			<field name="updatedBy" type="name"></field>
+			
+			<field name="amountPaid" type="fixed-point"></field>
+			<field name="chequeNo" type="name"></field>
+			<field name="bankName" type="name"></field>
+			<field name="bankBranch" type="name"></field>
+			<field name="drawer" type="name"></field>
+			
+     		<field name="totalDeposit" type="fixed-point"></field>
+     		<field name="insuranceCompanyId" type="id-vlong-int"></field>
+     		<field name="totalLoanBalance" type="fixed-point"></field>
+     		<field name="loanBalance" type="fixed-point"></field>
+     		<field name="accruedInterest" type="fixed-point"></field>
+     		<field name="accruedInsurance" type="fixed-point"></field>
+     		<field name="funeralFee" type="fixed-point"></field>
+     		
+			<prim-key field="insuranceClaimPaymentId"/>
+
+    	<relation type="one" fk-name="DeathInsuranceClaim_MEMBER" rel-entity-name="Member">
+            <key-map field-name="partyId"/>
+        </relation>
+        <relation type="one" fk-name="DeathInsuranceClaim_DeathNotification" rel-entity-name="DeathNotification">
+            <key-map field-name="deathNotificationId"/>
+        </relation>
+     </entity>
+     
      
      <!-- Funeral Expense Payment -->
 	     <entity entity-name="FuneralExpensePayment" package-name="org.ofbiz.deathmanagement" title="FuneralExpensePayment Entity">
@@ -163,6 +202,8 @@
     	<alias entity-alias="M" name="firstName" /> 
     	<alias entity-alias="M" name="middleName" /> 
     	<alias entity-alias="M" name="lastName" /> 
+    	
+    	<alias entity-alias="M" name="memberNumber" /> 
     	
     	<view-link entity-alias="DN" rel-entity-alias="M"> 
             <key-map field-name="partyId" rel-field-name="partyId"/> 

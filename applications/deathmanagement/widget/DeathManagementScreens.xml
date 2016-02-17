@@ -231,5 +231,44 @@
             </widgets>
         </section>
     </screen>
+    
+    <!-- deathInsuranceClaimListing -->
+    <screen name="deathInsuranceClaimListing">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Death Notification For Claims" />
+				<set field="tabButtonItem" value="deathInsuranceClaimListing" />
+				<set field="headerItem" value="deathInsuranceClaimListing"/>
+				<set field="labelTitleProperty" value="Death Notifications for Claims" />
+				<set field="cancelPage" from-field="parameters.CANCEL_PAGE"
+					default-value="DeathNotification" />
+					
+				<set field="partyId" from-field="parameters.partyId" type="Long"/>
+				<entity-one value-field="member" entity-name="Member">
+					<field-map field-name="partyId" from-field="partyId"/>
+				</entity-one>
+				<set field="stationId" from-field="member.stationId" global="true"/>
+
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						
+						<section name="search-results">
+							<widgets>
+								<screenlet title="Death Notification List (For Expense Payment)">
+									<include-form name="listDeathNotificationForExpense"
+										location="component://deathmanagement/widget/DeathManagementForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+    
 
 </screens>

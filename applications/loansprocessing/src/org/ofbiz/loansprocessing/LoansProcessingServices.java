@@ -249,6 +249,15 @@ public class LoansProcessingServices {
 
 		return bdTotalLoansWithAccountAmount;
 	}
+	
+	public static BigDecimal getTotalLoansDeceased(Long memberId) {
+		BigDecimal bdTotalLoansWithAccountAmount = LoanServices
+				.calculateExistingLoansTotalDeceased(memberId);
+
+		return bdTotalLoansWithAccountAmount;
+	}
+	
+	
 
 	public static BigDecimal getGruaduatedScaleContribution(BigDecimal bdAmount, Long memberId) {
 		BigDecimal bdContributedAmount = BigDecimal.ZERO;

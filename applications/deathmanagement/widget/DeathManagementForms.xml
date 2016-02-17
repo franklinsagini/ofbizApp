@@ -82,26 +82,36 @@
     <!-- DeathInsuranceClaim -->
     <form name="NewDeathInsuranceClaim" type="single" target="createDeathInsuranceClaim"
         focus-field-name="partyId" header-row-style="header-row" default-table-style="basic-table">
+        <actions>
+        				<!-- redirect-parameter name="partyId"/>
+			<redirect-parameter name="deathNotificationId"/ -->
+			<set field="partyId" from-field="parameters.partyId" type="Long"/>
+			<set field="deathNotificationId" from-field="parameters.deathNotificationId"/>
+        </actions>
         
         <field name="deathInsuranceClaimId"><hidden/></field>
         <!-- deathNotificationId -->
         <field name="deathNotificationId" title="Death Notification">
         	<drop-down>
-        		<entity-options description="${notificationNo}" entity-name="DeathNotification"></entity-options>
+        		<!-- entity-options description="${notificationNo}" entity-name="DeathNotification"></entity-options -->
+        		<entity-options description="${notificationNo}  - ${firstName} ${middleName} ${lastName} - ${burialPermitNo} - Member Number (${memberNumber})" key-field-name="deathNotificationId"  entity-name="NotificationMemberView">
+        			<entity-constraint name="deathNotificationId" operator="equals" value="${parameters.deathNotificationId}"/>
+        		</entity-options>
         	</drop-down>
         </field>
 
-        <field name="totalDeposit" title="Total Deposit" widget-style="required" required-field="true"><text></text></field>
-        <field name="insuranceCompanyId" title="Insurance Company">
+        <field name="totalDeposit" title="Total Deposit" widget-style="required" required-field="true"><text default-value="${bsh:org.ofbiz.deathmanagement.DeathManagement.getMemberDepositsTotal(partyId)}"></text></field>
+        <!-- field name="insuranceCompanyId" title="Insurance Company">
         	<drop-down>
         		<entity-options description="${name}" entity-name="InsuranceCompany" key-field-name="insuranceCompanyId"></entity-options>
         	</drop-down>
-        </field>
+        </field -->
         
-        <field name="totalLoanBalance" title="Total Loan Balance"><text></text></field>
-        <field name="accruedInterest" title="Accrued Interest"><text></text></field>
-        <field name="accruedInsurance" title="Accrued Insurance"><text></text></field>
-        <field name="funeralFee" title="Funeral Fee"><text></text></field>
+        <field name="companyName" title="Company Name"><text></text></field>
+        <field name="totalLoanBalance" title="Total Loan Balance"><text default-value="${bsh:org.ofbiz.deathmanagement.DeathManagement.getLoanBalance(partyId)}"></text></field>
+        <field name="accruedInterest" title="Accrued Interest"><text default-value="${bsh:org.ofbiz.deathmanagement.DeathManagement.getInterestBalance(partyId)}"></text></field>
+        <field name="accruedInsurance" title="Accrued Insurance"><text default-value="${bsh:org.ofbiz.deathmanagement.DeathManagement.getInsuranceBalance(partyId)}"></text></field>
+        <field name="funeralFee" title="Funeral Fee"><text default-value="${bsh:org.ofbiz.deathmanagement.DeathManagement.getFuneralExpenseAmount()}"></text></field>
         
          <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -111,23 +121,27 @@
         <actions>
         	
             <entity-condition entity-name="DeathInsuranceClaim">
+            	<condition-expr field-name="deathNotificationId" operator="equals" value="${parameters.deathNotificationId}"/>
             </entity-condition>
         </actions>
                 <field name="deathInsuranceClaimId"><hidden/></field>
         <!-- deathNotificationId -->
         <field name="deathNotificationId" title="Death Notification">
         	<drop-down>
-        		<entity-options description="${notificationNo}" entity-name="DeathNotification" key-field-name="deathNotificationId"></entity-options>
+        		<!-- entity-options description="${notificationNo}" entity-name="DeathNotification" key-field-name="deathNotificationId"></entity-options -->
+        		<entity-options description="${notificationNo}  - ${firstName} ${middleName} ${lastName} - ${burialPermitNo}" key-field-name="deathNotificationId"  entity-name="NotificationMemberView">
+        			<entity-constraint name="deathNotificationId" operator="equals" value="${parameters.deathNotificationId}"/>
+        		</entity-options>
         	</drop-down>
         </field>
 
         <field name="totalDeposit" title="Total Deposit" widget-style="required" required-field="true"><text></text></field>
-        <field name="insuranceCompanyId" title="Insurance Company">
+        <!-- field name="insuranceCompanyId" title="Insurance Company">
         	<drop-down>
         		<entity-options description="${name}" entity-name="InsuranceCompany" key-field-name="insuranceCompanyId"></entity-options>
         	</drop-down>
-        </field>
-        
+        </field -->
+        <field name="companyName" title="Company Name"><text></text></field>
         <field name="totalLoanBalance" title="Total Loan Balance"><text></text></field>
         <field name="accruedInterest" title="Accrued Interest"><text></text></field>
         <field name="accruedInsurance" title="Accrued Insurance"><text></text></field>
@@ -160,7 +174,7 @@
         	</drop-down>
         </field>
 
-        <field name="amountPayable" title="Amount Payable" widget-style="required" required-field="true"><text default-value="${bsh: org.ofbiz.deathmanagement.DeathManagement.getFuneralExpenseAmount()}"></text></field>
+        <field name="amountPayable" title="Amount Payable" widget-style="required" required-field="true"><text default-value="${bsh:org.ofbiz.deathmanagement.DeathManagement.getFuneralExpenseAmount()}"></text></field>
         <!-- field name="authorizedBy" title="Authorized By"><text></text></field -->
        
        <field name="payeeOptions" title="Payee Options" widget-style="required" required-field="true">
@@ -321,6 +335,15 @@
             </hyperlink>
         </field>
 
+
+		
+		<field name="deathInsuranceClaim" title="Insurance Claim" widget-style="buttontext">
+            <hyperlink target="deathInsuranceClaim" description=" ${notificationNo} - Insurance Claim" also-hidden="false">
+            	<parameter param-name="partyId"/>
+            	<parameter param-name="deathNotificationId"/>
+               
+            </hyperlink>
+        </field>
     </form>
     
 </forms>

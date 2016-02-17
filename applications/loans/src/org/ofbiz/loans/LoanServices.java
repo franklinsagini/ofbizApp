@@ -922,6 +922,50 @@ public class LoanServices {
 				+ loanApplicationELI.size());
 		return existingLoansTotal;
 	}
+	
+	/****
+	 * Calculate DEASED member loans
+	 * 
+	 * */
+	public static BigDecimal calculateExistingLoansTotalDeceased(Long partyId) {
+		BigDecimal existingLoansTotal = BigDecimal.ZERO;
+
+		Long loanStatusId = getLoanStatusId("DECEASED");
+		List<GenericValue> loanApplicationELI = null; // =
+		EntityConditionList<EntityExpr> loanApplicationsConditions = EntityCondition
+				.makeCondition(UtilMisc.toList(EntityCondition.makeCondition(
+						"partyId", EntityOperator.EQUALS, partyId),
+
+				EntityCondition.makeCondition("loanStatusId",
+						EntityOperator.EQUALS, loanStatusId)
+
+				), EntityOperator.AND);
+
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			loanApplicationELI = delegator.findList("LoanApplication",
+					loanApplicationsConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		// List<GenericValue> loansList = new LinkedList<GenericValue>();
+		if (loanApplicationELI != null)
+			for (GenericValue genericValue : loanApplicationELI) {
+				// toDeleteList.add(genericValue);
+
+				BigDecimal bdLoanRepaid = getLoansRepaidByLoanApplicationId(genericValue
+						.getLong("loanApplicationId"));
+				BigDecimal bdLoanBalance = genericValue
+						.getBigDecimal("loanAmt").subtract(bdLoanRepaid);
+				existingLoansTotal = existingLoansTotal.add(bdLoanBalance);
+			}
+		log.info("##########MMMMMMMMMMM Member #######" + partyId);
+		log.info("##########SSSSSSSSSSS Status ID #######" + loanStatusId);
+		log.info("########## Counting Existing Loans #######"
+				+ loanApplicationELI.size());
+		return existingLoansTotal;
+	}
 
 	public static BigDecimal getTotalDisbursedLoans(Long partyId) {
 		BigDecimal bdDisbursedLoansTotal = BigDecimal.ZERO;
