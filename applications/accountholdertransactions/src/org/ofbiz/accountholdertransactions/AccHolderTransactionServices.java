@@ -1047,6 +1047,25 @@ public class AccHolderTransactionServices {
 
 	// return "POSTED";
 	// }
+	
+	
+	public static GenericValue getCashAccountEntity(GenericValue accountTransaction,
+			String setUpId) {
+		GenericValue accountHolderTransactionSetup = null;
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		try {
+			accountHolderTransactionSetup = delegator.findOne(
+					"AccountHolderTransactionSetup",
+					UtilMisc.toMap("accountHolderTransactionSetupId", setUpId),
+					false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("######## Could not get member deposit account ");
+		}
+
+		
+		return accountHolderTransactionSetup;
+	}
 
 	public static String getCashAccount(GenericValue accountTransaction,
 			String setUpId) {
@@ -2460,6 +2479,10 @@ public class AccHolderTransactionServices {
 
 					|| ((transactionType != null) && (transactionType
 							.equals("MSACCODEPOSIT")))
+							
+					|| ((transactionType != null) && (transactionType
+							.equals("FUNERALPAYMENT")))	
+							
 
 					|| ((transactionType != null) && (transactionType
 							.equals("SALARYPROCESSING")))
@@ -6487,7 +6510,7 @@ public class AccHolderTransactionServices {
 		String acctgTransId = creatAccountTransRecord(accountTransaction,
 				userLogin);
 
-		String employeeBranchId = getEmployeeBranch(userLogin.get("partyUd"));
+		String employeeBranchId = getEmployeeBranch(userLogin.get("partyId"));
 		createMemberDepositEntry(amount, acctgTransId, "C", employeeBranchId);
 		createMemberCashEntry(amount, acctgTransId, "D", employeeBranchId);
 		return acctgTransId;
@@ -8631,6 +8654,56 @@ public class AccHolderTransactionServices {
 		// update the transactionId to the new id
 		// create the record for each
 		return "success";
+
+	}
+	
+	
+	/*****
+	 * @author Japheth Odonya
+	 * @When Feb 17, 2016 9:50:52 PM
+	 * 
+	 *This is how I will post money to member account for instance to savings account from funeral 
+	 * */
+	public static void postToMemberAccount(Long memberAccountId,
+			Long  partyId,
+			BigDecimal bdAmount, Map<String, String> userLogin, String debitGLAccountId, String creditGLAccountId) {
+
+
+		// Get tha acctgTransId
+		String acctgTransId = creatAccountTransRecordVer2(null, userLogin);
+		String glAccountTypeId = "MEMBER_DEPOSIT";
+
+		// LoanUtilities.getE
+		String employeeBranchId = getEmployeeBranch(userLogin.get("partyId"));
+		String memberBranchId = LoanUtilities.getMemberBranchId(partyId.toString());
+		String entrySequenceId = "1";
+		// Post Entries - DR source and CR destination
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		postTransactionEntry(delegator, bdAmount,
+				employeeBranchId, memberBranchId, debitGLAccountId, "D",
+				acctgTransId, glAccountTypeId, entrySequenceId);
+
+		entrySequenceId = "2";
+		postTransactionEntry(delegator, bdAmount,
+				employeeBranchId, memberBranchId, creditGLAccountId, "C",
+				acctgTransId, glAccountTypeId, entrySequenceId);
+
+		// Create Transactions for the same (Member Statement)
+
+		// Source
+		// cashDepositVersion4(bdShareCapitalDeficit,
+		// Long.valueOf(sourceMemberAccountId), userLogin, "TRANSFERFROM",
+		// acctgTransId);
+//		memberTransactionDeposit(bdAmount,
+//				memberAccountId, userLogin, "TRANSFERFROM",
+//				null, null, acctgTransId,
+//				destAccountProduct.getLong("accountProductId"), null);
+		// Destination
+		Long accountProductId = LoanUtilities.getAccountProductGivenMemberAccountId(memberAccountId).getLong("accountProductId");
+		memberTransactionDeposit(bdAmount,
+				memberAccountId, userLogin,
+				"FUNERALPAYMENT", null, null, acctgTransId,
+				accountProductId, null);
 
 	}
 

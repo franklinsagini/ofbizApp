@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.accountholdertransactions.AccHolderTransactionServices;
 import org.ofbiz.accountholdertransactions.LoanUtilities;
 import org.ofbiz.accounting.payment.PaymentWorker;
 import org.ofbiz.base.util.UtilMisc;
@@ -102,8 +103,13 @@ public class DeathManagement {
 		GenericValue funeralExpensePayment = LoanUtilities.getEntityValue("FuneralExpensePayment", "funeralExpensePaymentId", funeralExpensePaymentId);
 		Long deathNotificationId = funeralExpensePayment.getLong("deathNotificationId");
 		
-		if (funeralExpensePayment.getString("paymentId") != null){
+		if (funeralExpensePayment.getString("paid") != null){
 			return "The Payment has already been done ! ";
+		}
+		
+		if (AccHolderTransactionServices.getCashAccountEntity(null, "FUNERALPAYMENT") == null)
+		{
+			return "Please create FUNERALPAYMENT in the accounts setup menu to determine which accounts will be posted to !! ideally we need to credit Funeral Claims";
 		}
 		
 		GenericValue deathNotification = LoanUtilities.getEntityValue("DeathNotification", "deathNotificationId", deathNotificationId);
@@ -115,7 +121,36 @@ public class DeathManagement {
 		String paymentId = "";
 		Delegator delegator =  DelegatorFactoryImpl.getDelegator(null);
 		
-		paymentId = PaymentWorker.createPayment(delegator, member.getString("branchId"), member.getString("branchId"), partyId.toString(), funeralExpensePayment.getBigDecimal("amountPayable"), paymentDescription);
+		//paymentId = PaymentWorker.createPayment(delegator, member.getString("branchId"), member.getString("branchId"), partyId.toString(), funeralExpensePayment.getBigDecimal("amountPayable"), paymentDescription);
+		//Post to member savings account
+		//Transaction type funeral payment
+		//AccHolderTransactionServices.cashDeposit(transactionAmount, memberAccountId, userLogin, withdrawalType)
+		BigDecimal transactionAmount = funeralExpensePayment.getBigDecimal("amountPayable");
+		Long memberAccountId = AccHolderTransactionServices.getMemberSavingsAccountId(member.getString("payrollNumber"));
+		
+		//Credit Member Savings Account
+//		String postingType = "C";
+//		AccHolderTransactionServices.postTransactionEntry(delegator, transactionAmount, employeeBranchId, memberBranchId, loanReceivableAccount, postingType, acctgTransId, acctgTransType, entrySequenceId);
+//		//Debit Funeral Payment
+//		postingType = "D";
+//		AccHolderTransactionServices.postTransactionEntry(delegator, transactionAmount, employeeBranchId, memberBranchId, loanReceivableAccount, postingType, acctgTransId, acctgTransType, entrySequenceId);
+//		
+//		AccHolderTransactionServices.cashDepositFromStationProcessing(transactionAmount, memberAccountId, userLogin, withdrawalType, acctgTransId)
+//		AccHolderTransactionServices.cashDepositVersion4(transactionAmount, memberAccountId, userLogin, withdrawalType, acctgTransId)
+//		AccHolderTransactionServices.cashDepositVer2(accountTransaction, userLogin)
+//		AccHolderTransactionServices.cashDeposit(transactionAmount, memberAccountId, userLogin, "FUNERALPAYMENT");
+		
+		//Funeral Expenses
+		String debitGLAccountId = "";
+		//FUNERALPAYMENT
+		debitGLAccountId = AccHolderTransactionServices.getCashAccount(null, "FUNERALPAYMENT");
+		
+		
+		//Member Savings
+		String creditGLAccountId = "";
+		creditGLAccountId = LoanUtilities.getGLAccountIDForAccountProduct(AccHolderTransactionServices.SAVINGS_ACCOUNT_CODE);
+		
+		AccHolderTransactionServices.postToMemberAccount(memberAccountId, partyId, transactionAmount, userLogin, debitGLAccountId, creditGLAccountId);
 		
 		funeralExpensePayment.set("paymentId", paymentId);
 		funeralExpensePayment.set("paidDate", new Timestamp(Calendar.getInstance().getTimeInMillis()));
