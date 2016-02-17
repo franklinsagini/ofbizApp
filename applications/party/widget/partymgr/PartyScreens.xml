@@ -4002,6 +4002,168 @@
         </section>
     </screen>
 
+<!-- Vijana Tuinvest Screen -->
 
+	<screen name="vijanaTuinvest">
+		<section>
+			<actions>
+				<set field="titleProperty" value="List Sacco Members" />
+				<set field="headerItem" value="vijanaTuinvest" />
+<!-- 				<set field="tabButtonItem" value="findparty" />
+ -->				
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<!-- do check for PARTYMGR, _VIEW permission -->
+							<condition>
+								<if-service-permission service-name="partyBasePermissionCheck"
+									main-action="VIEW" />
+							</condition>
+							<widgets>
+							<screenlet>
+							<container>
+							     <link target="PrintMembers"></link>
+                               </container>
+							</screenlet>
+							
+						  <screenlet title="Print Members">
+							      <container>
+							         <include-form name="printMembers"
+										location="component://party/widget/partymgr/PartyForms.xml" />
+							      </container>
+							    </screenlet> 
+							<label style="h1" text="Vijana Tu-Invest"></label>
+							<screenlet title="Search Vijana Tu-invest">
+							  <include-form location="component://party/widget/partymgr/PartyForms.xml" name="findVijanaTuinvest"/>
+							</screenlet>
+								  <include-form location="component://party/widget/partymgr/PartyForms.xml" name="vijanaTuinvestForm"/>
+							</widgets>
+							<fail-widgets>
+								<label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}" />
+							</fail-widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	
+	<screen name="addVijanaTiunvestMember">
+		<section>
+			<actions>
+				<set field="headerItem" value="vijanaTuinvest"/>
+				<set field="tabButtonItem" value="vijanaTuinvest" />
+				<set field="displayPassword" value="Y" />
+				<set field="partyId" from-field="parameters.partyId" />
+				<entity-one value-field="party" entity-name="Member">
+					<field-map field-name="partyId" value="${partyId}" />
+				</entity-one>
+			   <entity-one entity-name="VijanaTuinvest" value-field="vijanaTuinvestContext" />
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<!-- do check for PARTYMGR, _VIEW permission -->
+							<condition>
+								<if-service-permission service-name="partyBasePermissionCheck"
+									main-action="VIEW" />
+							</condition>
+							<widgets>
+									<label style="h1">Add Members For ${party.firstName} ${party.lastName} </label>
+								<screenlet title="Adding Members">
+                                      <include-form location="component://party/widget/partymgr/PartyForms.xml" name="addMembersTovijanaTuinvestForm"/>
+								</screenlet>
+								<label style="h1" text="Members"></label>
+								<screenlet title="Adding Members">
+                                      <include-form location="component://party/widget/partymgr/PartyForms.xml" name="listMembersForijanaTuinvest"/>
+								</screenlet>
+							</widgets>
+							<fail-widgets>
+								<label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}
+								</label>
+							</fail-widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	
+	
+	<!-- view signitaries -->
+	
+		<screen name="viewSignitaries">
+		<section>
+			<actions>
+				<set field="headerItem" value="vijanaTuinvest"/>
+				<set field="tabButtonItem" value="vijanaTuinvest" />
+				<set field="displayPassword" value="Y" />
+				<set field="partyId" from-field="parameters.partyId" />
+				<entity-one value-field="party" entity-name="Member">
+					<field-map field-name="partyId" value="${partyId}" />
+				</entity-one>
+			   <entity-one entity-name="VijanaTuinvest" value-field="vijanaTuinvestContext" />
+			  <!--  <entity-condition list="VijanaTuinvestList" entity-name="VijanaTuinvest"><condition-expr field-name="isSignitary" operator="equals" value="Y"/></entity-condition>
+			   <entity-condition list="memberLi" entity-name="Member"><condition-expr field-name="partyId" operator="equals" from-field="partyId"/></entity-condition> -->
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<!-- do check for PARTYMGR, _VIEW permission -->
+							<condition>
+								<if-service-permission service-name="partyBasePermissionCheck"
+									main-action="VIEW" />
+							</condition>
+							<widgets>
+									<label style="h1">Signatories  For ${party.firstName} ${party.lastName} </label>
+								
+								<screenlet title="Signatories ">
+                                      <include-form location="component://party/widget/partymgr/PartyForms.xml" name="signatoriesMembersForijanaTuinvest"/>
+								</screenlet>
+							</widgets>
+							<fail-widgets>
+								<label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}
+								</label>
+							</fail-widgets>
+						</section>
+						<section>
+							<widgets>
+								
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	
+	 <screen name="printMemberVijanaCSV">
+        <section>
+           <actions>
+                <set field="viewSize" value="99999"/>
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/reports/printMemberVijanaCSV.groovy"/>
+           </actions>
+           <widgets>
+
+               <!--  <include-form name="listMembersByDate" location="component://party/widget/partymgr/PartyForms.xml"/> -->
+                <include-form name="printMemberVijanaCSVForm" location="component://party/widget/partymgr/PartyForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
 
 </screens>

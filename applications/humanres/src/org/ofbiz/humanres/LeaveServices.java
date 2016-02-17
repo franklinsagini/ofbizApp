@@ -886,6 +886,17 @@ public class LeaveServices {
 		return currentYear;
 	}
 
+	public static String getPresentAge(String yearOfBirth) {
+		int yrOfBirth = Integer.parseInt(yearOfBirth); 
+		Calendar now = Calendar.getInstance();
+		int year = now.get(Calendar.YEAR);
+		String yearInString = String.valueOf(year);
+		int currentAge = year - yrOfBirth;
+		String currentAgeToString = ""+currentAge;
+		return currentAgeToString;
+	}
+	
+	
 	public static String getYearOfParameterisedDate(Date fromDate) {
 		LocalDateTime today = new LocalDateTime(fromDate);
 		int thisYear = today.getYear();
@@ -2548,7 +2559,7 @@ public class LeaveServices {
 		return deviatedToString;
 	}
 	
-	
+ 	
 	
 
 } // close Class

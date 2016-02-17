@@ -120,7 +120,17 @@ under the License.
                          <screenlet title="Staff on Probation As At Certain Date">
                         <include-form location="component://humanres/widget/ReportForms.xml" name="StaffOnProbationAsAtCertainDate"/>
                         </screenlet>
-                        	</widgets>
+                        <container style="lefthalf">
+                        <screenlet title="Staff Age and Gender(PDF)">
+                            <include-form name="staffAgeAndGenderPDF" location="component://humanres/widget/ReportForms.xml"/>
+                        </screenlet>
+                        </container>
+                         <container style="righthalf">
+                       <screenlet title="Staff Age and Gender(CSV)">
+                            <include-form name="staffAgeAndGenderCSV" location="component://humanres/widget/ReportForms.xml"/>
+                       </screenlet>
+                       </container>
+                        </widgets>
                         </section>
 	                    </decorator-section>
 	                	</decorator-screen>
@@ -2693,6 +2703,27 @@ under the License.
                     <label style="h1" text="Leave At Certain Date AS AT ${fromToDate} "/>
                 </container>
                 <include-form name="leaveAtCertainDateExcelForm" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="staffAgeAndGenderPDF">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="viewSize" value="99999"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffAgeAndGenderPDF.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <xsl-fo><html-template location="component://humanres/webapp/humanres/reports/staffAgeAndGenderPDF.fo.ftl"/></xsl-fo>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>

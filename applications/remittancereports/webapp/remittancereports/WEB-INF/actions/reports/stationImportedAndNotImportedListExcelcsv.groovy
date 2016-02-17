@@ -15,8 +15,12 @@
 	now = Calendar.getInstance().getTime().toString();
 	context.now = now
 	
-
+	
 	def importedListExp = []
+	
+	def importedListExpp = []
+	
+	def importedListExppp = []
 	
 	stationList = delegator.findList("Station", null, null,null,null,false)
 	
@@ -24,62 +28,63 @@
 	
 		selectOrder = ["createdStamp DESC"];
 		
-	    selectEntityCondition = EntityCondition.makeCondition([ EntityCondition.makeCondition("isActive", EntityOperator.EQUALS, "Y"),
+	    selectEntityCondition = EntityCondition.makeCondition([
 	     														 EntityCondition.makeCondition("stationNumber", EntityOperator.EQUALS, station.stationNumber),
 	                                                             EntityCondition.makeCondition("month", EntityOperator.EQUALS, monthYear)],EntityOperator.AND);
 
 		tempImportedListELI = delegator.findList("ExpectedPaymentReceived", selectEntityCondition, null, selectOrder, null, false);
 		
-        stationCount = 0;
-        tempImportedListELI.each { epr ->
-            stationCount = stationCount + 1;
-            if (stationCount==1) {
-				eprBuilder = [
-	            stationNumber : epr.stationNumber,
-	            stationName : epr.stationName,
-	            createdBy : epr.createdBy,
-	            dateImported : epr.createdStamp
-				                                    ]            
-		    	importedListExp.add(eprBuilder);
+           stationCount = 0;
+               tempImportedListELI.each { epr ->
+                 if(epr.stationNumber != station.stationNumber){
+                   stationCount = stationCount + 1;
+		            if (stationCount==1) {
+						eprBuilder = [
+						            stationNumber : epr.stationNumber,
+						            stationName : epr.stationName,
+						            createdBy : epr.createdBy,
+						            dateImported : epr.createdStamp
+						        ]            
+				    	importedListExp.add(eprBuilder);
+		         }
             }
         }
-		
 	}
 	
-	context.importedListExp = importedListExp
-
-
-    def importedListExpp = []
-
-/// 	Not Imported
-	stationListNImported = delegator.findList("Station", null, null,null,null,false)
+	def  Ids = []
 	
-	stationListNImported.each { stationNim ->
+	Ids.add(importedListExp);
 	
-		selectOrderr = ["createdStamp DESC"];
-		
-	    selectEntityConditionOne= EntityCondition.makeCondition([ EntityCondition.makeCondition("isActive", EntityOperator.EQUALS, "Y"),
-	     														 EntityCondition.makeCondition("stationNumber", EntityOperator.NOT_EQUAL, stationNim.stationNumber),
-	                                                             EntityCondition.makeCondition("month", EntityOperator.EQUALS, monthYear)],EntityOperator.AND);
+	println("*********************## my IDS  ##************"+Ids.stationNumber);
 
-		tempImportedListELINImported = delegator.findList("ExpectedPaymentReceived", selectEntityConditionOne, null, selectOrderr, null, false);
-		
-        stationCountt = 0;
-        tempImportedListELINImported.each { eprr ->
-            stationCountt = stationCountt + 1;
-            if (stationCountt==1) {
-				eprBuilderr = [
-	            stationNumberr : eprr.stationNumber,
-	            stationNamee : eprr.stationName,
-	            createdByy : eprr.createdBy,
-	            dateImportedd : eprr.createdStamp
-				]            
-		    	importedListExpp.add(eprBuilderr);
-            }
-        }
-		
-	}
+	   // selectEntityConditionLI = EntityCondition.makeCondition([EntityCondition.makeCondition("stationNumber", EntityOperator.NOT_EQUAL, id)]);
+   
+    stationListRwo = delegator.findList("Station",null,null,null,null,false)
+                //stationCountt = 0;
+	             stationListRwo.each{ stationCo ->
+	                //if(Ids.contains(stationCo.stationNumber)){
+	                //   stationCountt = stationCountt + 1;
+	                             eprBuilderr = [
+				              stationNumberr : stationCo.stationNumber,
+				              stationNamee : stationCo.name
+				            ]            
+				    	importedListExpp.add(eprBuilderr);
+	        // }
+	  }
 	
-	context.importedListExpp = importedListExpp
+	def remList = []
+	
+	if(importedListExp.stationNumber != importedListExpp.stationNumberr ){
+	       eprBuilderrr = [
+				            stationNo : importedListExpp.stationNumberr,
+				            stationN : importedListExpp.stationNamee
+				          ]        
+	                      remList.add(eprBuilderrr)       
+	   }   
+	
+	println("*******************REM LIST************"+remList.stationNo);
+	  	 
+    context.importedListExp = importedListExp
+   context.importedListExpp = remList
 	
 	
