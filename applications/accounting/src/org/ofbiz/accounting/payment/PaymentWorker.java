@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +35,7 @@ import javolution.util.FastMap;
 
 import org.apache.log4j.Logger;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilNumber;
@@ -42,6 +44,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
@@ -385,15 +388,212 @@ public class PaymentWorker {
 	
 	public static String createPayment(Delegator delegator, String branchId, String fromPartyId, String toPartyId, BigDecimal amount, String desc){
 		String paymentId = null;
+		String transactionType = "WITHDRAWAL";
+		String statusId = "FINACT_TRNS_CREATED";
+		Timestamp transactionDate = UtilDateTime.nowTimestamp();
+		String finAccountId=null;
+		String creditGlAccount = "";
+		
+		finAccountId = getFinAccountIdGivenBranchId(delegator, fromPartyId);
+		creditGlAccount = getPostingGlAccount(delegator, finAccountId);
 		
 		//create payment
+		paymentId = createConfirmedPayment(delegator,fromPartyId,toPartyId,amount,desc,transactionDate);
 		
 		//create fin_account
+		String finAccountTransId = createFinAccountTrans(delegator, amount, desc, transactionType,statusId,transactionDate,finAccountId);
+				
+
+		
 		
 		//Create accounting transactions
+		String acctgTransId = createAccountTransHeader(delegator,transactionDate, paymentId, fromPartyId);
 		
+		createDebitEntry(delegator, transactionDate, fromPartyId,amount,acctgTransId);
+		createCreditEntry(delegator, transactionDate, fromPartyId,amount,acctgTransId, creditGlAccount);
 		
 		
 		return paymentId;
 	}
+
+	private static String getPostingGlAccount(Delegator delegator, String finAccountId) {
+		String creditGlAccount = "";
+		GenericValue finAccount = null;
+		try {
+			finAccount = delegator.findOne("FinAccount", UtilMisc.toMap("finAccountId", finAccountId), false);
+			creditGlAccount = finAccount.getString("postToGlAccountId");
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		return creditGlAccount;
+	}
+
+	private static String getFinAccountIdGivenBranchId(Delegator delegator, String fromPartyId) {
+		String finAccountId=null;
+		List<GenericValue>finAccounts = null;
+		
+		EntityConditionList<EntityExpr> finAccountCond = EntityCondition.makeCondition(UtilMisc.toList(
+				EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, fromPartyId)
+				), EntityOperator.AND);
+
+		try {
+			finAccounts = delegator.findList("FinAccount", finAccountCond, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		for (GenericValue account : finAccounts) {
+			if (account.getString("finAccountId").equals("20")) {
+				//HQ
+				finAccountId = account.getString("finAccountId");
+			}else if (account.getString("finAccountId").equals("21")) {
+				//LITEIN
+				finAccountId = account.getString("finAccountId");
+			}else if (account.getString("finAccountId").equals("22")) {
+				//NAIROBI
+				finAccountId = account.getString("finAccountId");
+			}
+		}
+		
+		return finAccountId;
+	}
+
+	private static void createDebitEntry(Delegator delegator, Timestamp transactionDate, String fromPartyId, BigDecimal amount, String acctgTransId) {
+		String debitCreditFlag = "D";
+		String glAccountId = "33000001";
+		
+		GenericValue acctgTransEntry = null;
+		
+
+		acctgTransEntry = delegator.makeValue("AcctgTransEntry");
+		String acctgTransEntrySeqId = delegator.getNextSeqId("AcctgTransEntry");
+		acctgTransEntry.put("acctgTransId", acctgTransId);
+		acctgTransEntry.put("acctgTransEntrySeqId", acctgTransEntrySeqId);
+		acctgTransEntry.put("organizationPartyId", fromPartyId);
+		acctgTransEntry.put("amount", amount);
+		acctgTransEntry.put("origAmount", amount);
+		acctgTransEntry.put("currencyUomId", "KES");
+		acctgTransEntry.put("origCurrencyUomId", "KES");
+		acctgTransEntry.put("debitCreditFlag", debitCreditFlag);
+		acctgTransEntry.put("reconcileStatusId", "AES_NOT_RECONCILED");
+		acctgTransEntry.put("glAccountId", glAccountId);
+		acctgTransEntry.put("createdStamp", transactionDate);
+
+		try {
+			acctgTransEntry.create();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		
+	}
+
+	private static void createCreditEntry(Delegator delegator, Timestamp transactionDate, String fromPartyId, BigDecimal amount, String acctgTransId, String creditGlAccount) {
+		String debitCreditFlag = "C";
+		
+		GenericValue acctgTransEntry = null;
+
+		acctgTransEntry = delegator.makeValue("AcctgTransEntry");
+		String acctgTransEntrySeqId = delegator.getNextSeqId("AcctgTransEntry");
+		acctgTransEntry.put("acctgTransId", acctgTransId);
+		acctgTransEntry.put("acctgTransEntrySeqId", acctgTransEntrySeqId);
+		acctgTransEntry.put("organizationPartyId", fromPartyId);
+		acctgTransEntry.put("amount", amount);
+		acctgTransEntry.put("origAmount", amount);
+		acctgTransEntry.put("currencyUomId", "KES");
+		acctgTransEntry.put("origCurrencyUomId", "KES");
+		acctgTransEntry.put("debitCreditFlag", debitCreditFlag);
+		acctgTransEntry.put("reconcileStatusId", "AES_NOT_RECONCILED");
+		acctgTransEntry.put("glAccountId", creditGlAccount);
+		acctgTransEntry.put("createdStamp", transactionDate);
+
+		try {
+			acctgTransEntry.create();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		
+	}
+
+	
+	private static String createAccountTransHeader(Delegator delegator, Timestamp transactionDate, String paymentId, String fromPartyId) {
+		String acctgTransTypeId = "OUTGOING_PAYMENT";
+		String newAcctgTransId = delegator.getNextSeqId("AcctgTrans");
+		GenericValue acctgTrans = null;
+		acctgTrans = delegator.makeValue("AcctgTrans");
+		acctgTrans.put("acctgTransId", newAcctgTransId);
+		acctgTrans.put("acctgTransTypeId", acctgTransTypeId);
+		acctgTrans.put("transactionDate", transactionDate);
+		acctgTrans.put("isPosted", "Y");
+		acctgTrans.put("isApproved", "Y");
+		acctgTrans.put("postedDate", UtilDateTime.nowTimestamp());
+		acctgTrans.put("glFiscalTypeId", "ACTUAL");
+		acctgTrans.put("partyId", fromPartyId);
+		acctgTrans.put("paymentId", paymentId);
+		
+		
+		try {
+			acctgTrans.create();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return newAcctgTransId;
+	}
+
+	private static String createFinAccountTrans(Delegator delegator, BigDecimal amount, String desc, String transactionType, String statusId, Timestamp transactionDate, String finAccountId) {
+		String finAccountTransId = null;
+		GenericValue finAccountTrans = null;
+		finAccountTrans = delegator.makeValue("FinAccountTrans");
+		finAccountTransId = delegator.getNextSeqId("FinAccountTrans");
+		finAccountTrans.put("finAccountTransId", finAccountTransId);
+		finAccountTrans.put("amount", amount);
+		finAccountTrans.put("comments", desc);
+		finAccountTrans.put("finAccountId", finAccountId);
+		finAccountTrans.put("finAccountTransTypeId", transactionType);
+		finAccountTrans.put("statusId", statusId);
+		finAccountTrans.put("transactionDate", transactionDate);
+		
+		try {
+			finAccountTrans.create();
+		} catch (Exception e) {
+
+		}
+		
+		return finAccountTransId;
+	}
+
+	private static String createConfirmedPayment(Delegator delegator, String fromPartyId, String toPartyId, BigDecimal amount, String desc, Timestamp date) {
+		String paymentId = null;
+		GenericValue confirmedPayment = null;
+		
+		confirmedPayment = delegator.makeValue("Payment");
+		paymentId = delegator.getNextSeqId("Payment");
+		confirmedPayment.put("paymentId", paymentId);
+		confirmedPayment.put("paymentTypeId", "FUM");
+		confirmedPayment.put("paymentMethodTypeId", "COMPANY_CHECK");
+		confirmedPayment.put("paymentMethodId", "CHEQUE_FOSA_ACCOUNT");
+		confirmedPayment.put("partyIdFrom", fromPartyId);
+		confirmedPayment.put("partyIdTo", toPartyId);
+		confirmedPayment.put("statusId", "PMNT_CONFIRMED");
+		confirmedPayment.put("effectiveDate", UtilDateTime.nowTimestamp());
+		confirmedPayment.put("amount", amount);
+		confirmedPayment.put("comments",desc);
+		confirmedPayment.put("currencyUomId", "KES");
+		confirmedPayment.put("paymentRefNum", desc);
+
+		try {
+			confirmedPayment.create();
+		} catch (Exception e) {
+
+		}
+		
+		
+		return paymentId;
+	}
+	
+
+	
 }
