@@ -2890,8 +2890,60 @@
     <response name="success" type="view" value="MemberWithdrawalBTWDatesExcel" save-home-view="true" />
   </request-map>
 
+<request-map uri="vijanaTuinvest">
+  <security auth="true" https="true"/>
+  <response name="success" type="view" value="vijanaTuinvest"></response>
+  <response name="error"  type="view" value="vijanaTuinvest"></response>
+</request-map>
+
+<request-map uri="addVijanaTiunvestMember">
+  <security auth="true" https="true"/>
+  <response name="success" type="view" value="addVijanaTiunvestMember"
+			save-home-view="true" />
+</request-map>
+
+<request-map uri="addMembersTovijanaTuinvestForm">
+ <security auth="true" https="true"/>
+ <event type="service" invoke="addMembersTovijanaTuinvestForm"></event>
+ <response name="success" type="view" value="addVijanaTiunvestMember"></response>
+ <response name="error" type="view" value="addVijanaTiunvestMember"></response>
+</request-map>
+
+<request-map uri="updateMembersTovijanaTuinvestForm">
+ <security auth="true" https="true"/>
+ <event type="service" invoke="updateMembersTovijanaTuinvestForm"></event>
+ <response name="success" type="view" value="addVijanaTiunvestMember"></response>
+</request-map>
+
+<request-map uri="deleteMembersTovijanaTuinvestForm">
+ <security auth="true" https="true"/>
+ <event type="service" invoke="deleteMembersTovijanaTuinvestForm"></event>
+ <response name="success" type="view" value="addVijanaTiunvestMember"></response>
+ <response name="error" type="view" value="addVijanaTiunvestMember"></response>
+</request-map>
+
+<request-map uri="viewSignitaries">
+  <security auth="true" https="true"/>
+  <response name="success" type="view" value="viewSignitaries"></response>
+  <response name="error" type="view" value="viewSignitaries"></response>
+</request-map>
+
+<request-map uri="printMemberVijana.csv">
+ <security auth="true" https="true"/>
+ <response name="success" type="view" value="printMemberVijana"></response>
+  <response name="error" type="view" value="printMemberVijana"></response>
+</request-map>
 
 	<!-- View Mappings -->
+	
+	<!--Vijana Tuinvest  -->
+	
+<view-map name="printMemberVijana" type="screencsv" page="component://party/widget/partymgr/PartyScreens.xml#printMemberVijanaCSV" content-type="text/csv" encoding="none"/>
+ <view-map name="viewSignitaries" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#viewSignitaries"></view-map>	
+	
+  <view-map name="addVijanaTiunvestMember" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#addVijanaTiunvestMember"></view-map>
+  <view-map name="vijanaTuinvest" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#vijanaTuinvest"></view-map>
+	
 			<!-- Memeber Reports -->
 			
 	<view-map name="MemberWithdrawalBTWDatesExcel" type="screencsv" page="component://party/widget/partymgr/PartyScreens.xml#MemberWithdrawalBTWDatesExcel" content-type="text/csv" encoding="none"/>

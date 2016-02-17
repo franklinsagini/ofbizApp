@@ -3699,7 +3699,254 @@ Gender
             <field name="memberNumber" title="Member Number"><display/></field>
             <field name="withdrawalstatus" title="Status"><display/></field> 
              <field name="withdrawalreason" title="WithDrawal Reason"><display/></field>
+      </form>
+    
+    
+    <!-- Vijana Tu-invest -->  
+   
+    <form name="findVijanaTuinvest" type="single" target="vijanaTuinvest" default-entity-name="Member">
+        <actions>
+       		
+           <entity-condition entity-name="Member">
+        		<condition-expr field-name="stationId" operator="equals" value="10069"/>
+        	</entity-condition>
+       	
+       	</actions>
+        <field name="noConditionFind"><hidden value="Y"/></field>
+        <field name="firstName" title="First Name"><text-find/></field>
+
+        <field name="idNumber" title="ID Number" position="2"><text-find/></field>
+
+        <field name="middleName" title="Middle Name"><text-find/></field>
+
+        <field name="payrollNumber" title="Payroll Number" position="2"><text-find/></field>
+
+        <field name="lastName" title="Last Name"><text-find/></field>
+
+        <field name="memberNumber" title="Member No." position="2"><text-find/></field>
+        
+        <field name="employeeNumber" title="Employee No." position="1"><text-find/></field>
+
+        <!-- field name="memberStatus" title="Status" ><hidden value="ACTIVE"/></field -->
+        <field name="memberStatusId" title="Status">
+        	<hidden value="${memberStatusId}"/>
+        	
+        </field>
+        <field name="mobileNumber" title="Phone Number" position="2">
+        	<text-find></text-find>
+        </field>
+     
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
+    </form>
+    
+    
+    
+      
+      
+      
+    <form name="vijanaTuinvestForm" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="vijanaTuinvestTarget" paginate-target="vijanaTuinvest"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		<!-- condition-expr field-name="memberStatusId" operator="equals" value="${memberStatusId}"/ -->
+        <actions>
+
+           <entity-condition entity-name="Member">
+        		<condition-expr field-name="stationId" operator="equals" value="10069"/>
+        	</entity-condition>
+        	
+         <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="Member"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service> 
+        </actions>
+        
+        <field name="Member Names">
+        	<hyperlink target="viewmemberprofile" description="${firstName} ${middleName} ${lastName}">
+        		<parameter param-name="partyId"/>
+        	</hyperlink>
+        </field>
+        <field name="idNumber" title="${uiLabelMap.MemberIDNumber}"><display also-hidden="false"></display></field>
+
+       <!-- field name="memberType" title="${uiLabelMap.MemberType}" tooltip="${uiLabelMap.CommonRequired}" widget-style="required"><text size="30" maxlength="60"/></field -->
+
+       <field name="payrollNumber" title="${uiLabelMap.MemberPayrollNumber}"><display also-hidden="false"></display></field>
+        <field name="mobileNumber" title="Mobile"><display also-hidden="false"></display></field>
+
+        <field name="memberNumber" title="${uiLabelMap.MemberNumber}"><display></display></field>
+        
+        <field name="employeeNumber" title="Employee No."><display></display></field>
+        <field name="memberStatusId" title="Status">
+        	<display-entity entity-name="MemberStatus" description="${name}" key-field-name="memberStatusId">
+        		
+        	</display-entity>
+        </field>
+        
+        <field name="stationId" title="Station">
+        	<display-entity entity-name="Station" description="${name}" key-field-name="stationId">
+        		
+        	</display-entity>
+        </field>
+        
+        <field name="memberTypeId" title="Member Type">
+        	<display-entity entity-name="MemberType" description="${name}" key-field-name="memberTypeId">
+        	</display-entity>
+        </field>
+        
+         <field name="memberCategory" title="Member Category" >
+            <display></display>
+        </field>
+        
+        <field name="joinDate" title="Joined">
+        	<display type="date"></display>
+        </field>
+ <!--        
+         <field name="recruitingAgentId" title="Recruiting Agent">
+         	<display-entity entity-name="RecruitingAgent" description="${name}" key-field-name="recruitingAgentId"></display-entity>
+		</field>
+    	<field name="introducingMember" title="Introducing Member">
+    		<display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName}" key-field-name="partyId"></display-entity>
+    	</field>
+         -->
+
+        <field name="addMember" widget-style="buttontext">
+        	<hyperlink target="addVijanaTiunvestMember" description="Add Member">
+        		<parameter param-name="partyId" from-field="partyId"/>
+        	</hyperlink>
+        </field>
+        
+                <field name="viewSignataries">
+        	<hyperlink target="viewSignitaries" description="View Signitories">
+        		<parameter param-name="partyId"/>
+        	</hyperlink>
+        </field>
+        
+         <field name="Details">
+        	<hyperlink target="viewmemberprofile" description="Details">
+        		<parameter param-name="partyId" from-field="partyId"/>
+        	</hyperlink>
+           </field>
+ </form>
+ 
+ 
+     <form name="addMembersTovijanaTuinvestForm" type="single" target="addMembersTovijanaTuinvestForm"
+        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="vijanaTuinvestContext">
+        <actions>
+        <set field="partyId" from-field="parameters.partyId"/>
+        
+        </actions>        
+        
+        <field name="vijanaTuinvestId" title="idForVijanaTuinvest"><hidden/></field>
+         <field name="partyId"><hidden value="${partyId}"/></field>
+        <field name="firstName" title="First Name" required-field="true"><text/></field>
+        <field name="lastName" title="Last Name" required-field="true"><text/></field>
+       <field name="idNumber" title="ID Number" required-field="true"><text/></field>
+        <field name="mobileNumber" title="Mobile Number"><text default-value="+254"/></field>
+        <field name="idSaccoMember" title="Is Chai Sacco Member ?">
+        <drop-down allow-empty="false"> 
+        	<option key="Y" description="Yes"/>
+        	<option key="N" description="No"/>
+        </drop-down>
+        </field>
+         <field name="isSignitary" title="Is Signitary ?">
+        <drop-down allow-empty="false"> 
+        	<option key="Y" description="Yes"/>
+        	<option key="N" description="No"/>
+        </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        </form>
+ 
+        <form name="listMembersForijanaTuinvest" target="" title="" list-name="listIt" separate-columns="true" type="list" paginate-target="addVijanaTiunvestMember"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+          <set field="party" from-field="parameters.partyId"/>
+          <entity-condition entity-name="VijanaTuinvest">
+              <condition-expr field-name="partyId" operator="equals" from-field="party"/>
+          </entity-condition>
+        </actions>
+           <!--  <field name="partyId" title="Group Name">
+                <display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName}" key-field-name="partyId"></display-entity>
+            </field> -->
+             <field name="vijanaTuinvestId"><hidden/></field>
+             <field name="firstName" title="First Name"><text></text></field>
+              <field name="lastName" title="Last Name"><text></text></field>
+            <field name="idNumber" title="ID Number"><text></text></field>
+            <field name="mobileNumber" title="Mobile Number"><text></text></field>
+            
+            <field name="idSaccoMember" title="Is Sacco Member">
+               <drop-down> 
+              <option key="Y" description="Yes"/>
+        	  <option key="N" description="No"/>
+            </drop-down>
+            </field>
+            <field name="isSignitary" title="Is Signitary">
+            <drop-down> 
+              <option key="Y" description="Yes"/>
+        	  <option key="N" description="No"/>
+            </drop-down>
+            </field>
+            <field name="update" title="Update" widget-style="submit"><submit/></field>
+              <field name="update" title="Update" widget-style="buttontext">
+              <hyperlink  target="updateMembersTovijanaTuinvestForm" also-hidden="false"  description="Update Member">
+               <parameter param-name="vijanaTuinvestId"/>
+              </hyperlink>
+            </field>
+            <field name="delete" title="Delete" widget-style="buttontext">
+              <hyperlink  target="deleteMembersTovijanaTuinvestForm" also-hidden="false" confirmation-message="Do you want to Delete?" request-confirmation="true" description="Delete Member">
+               <parameter param-name="vijanaTuinvestId"/>
+              </hyperlink>
+            </field>
+      </form>
+ 
+ <!-- Signatories -->
+ 
+  <form name="signatoriesMembersForijanaTuinvest" target="" title="" list-name="listIt" separate-columns="true" type="list" paginate-target="viewSignitaries"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+          <set field="party" from-field="parameters.partyId"/>
+          <entity-condition entity-name="VijanaTuinvest">
+          <condition-list>
+          <condition-expr field-name="partyId" operator="equals" value="${party}"/>
+          <condition-expr field-name="isSignitary" operator="equals" value="Y"/>
+          </condition-list>
+          </entity-condition>
+        </actions>
+        
+             <field name="vijanaTuinvestId"><hidden/></field>
+             <field name="firstName" title="First Name"><display></display></field>
+              <field name="lastName" title="Last Name"><display></display></field>
+            <field name="idNumber" title="ID Number"><display></display></field>
+            <field name="mobileNumber" title="Mobile Number"><display></display></field>
+            
+            <field name="idSaccoMember" title="Is Sacco Member">
+            <display></display>
+            </field>
+            <field name="isSignitary" title="Is Signitary">
+           <display></display>
+            </field>
+      </form>
+ 
+ 
+    <form name="printMembers" type="single" target="printMemberVijana.csv" default-entity-name="Member">
+        <field name="printMember" title="Run Vijana Tuinvest Groups" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
+    </form>
+ 
+ 
+ 
+        <form name="printMemberVijanaCSVForm" list-name="listOutMembers" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+           <!--  <field name="partyId" title="Group Names">
+                <display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName}" key-field-name="partyId"></display-entity>
+            </field> -->
+             <field name="groupName" title="GROUP NAME"><display/></field>
+            <field name="memberNumber" title="MEMBER NUMBER"><display/></field>
+            <field name="numberOfMembers" title="NUMBER OF GROUP MEMBERS"><display/></field>
+            <field name="chaiMembers" title="MEMBERS REGISTERED IN CHAI"><display/></field>
             
       </form>
+    
     
 </forms>
