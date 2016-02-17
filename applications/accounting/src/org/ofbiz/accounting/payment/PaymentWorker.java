@@ -46,7 +46,7 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.webapp.event.EventHandlerException;
-import org.ofbiz.workflow.WorkflowServices;
+
 
 /**
  * Worker methods for Payments
@@ -380,105 +380,20 @@ public class PaymentWorker {
 				.setScale(decimals, rounding);
 	}
 
-	/***
-	 * @author Japheth Odonya @when Aug 16, 2014 12:27:33 AM Forward Loan
-	 *         Application
-	 * */
-	public static String forwardApplication(HttpServletRequest request, HttpServletResponse response) {
-		Map<String, Object> result = FastMap.newInstance();
-		// Delegator delegator = dctx.getDelegator();
-		Delegator delegator = (Delegator) request.getAttribute("delegator");
-		// request.getParameter(arg0)
-		String paymentId = (String) request.getParameter("invoiceId");
 
-		log.info("Retrived Payment ID:>>>>>>>>>>>>>>> ############ " + paymentId);
 
-		GenericValue payment = null;
-		try {
-			payment = delegator.findOne("Payment", UtilMisc.toMap("paymentId", paymentId), false);
-		} catch (GenericEntityException e) {
-			// UtilMisc.toMap("errMessage", e.getMessage()), locale));
-			return "Cannot Get Payment";
-		}
-
-		// Get Unit and Document
-		String organizationUnitId = payment.getString("organizationUnitId");
-		log.info("Retrived organizationUnitId :>>>>>>>>>>>>>>> ############ " + organizationUnitId);
-		String workflowDocumentTypeId = payment.getString("workflowDocumentTypeId");
-		log.info("Retrived workflowDocumentTypeId:>>>>>>>>>>>>>>> ############ " + workflowDocumentTypeId);
-		String documentApprovalId = null;
-		documentApprovalId = payment.getString("documentApprovalId");
-
-		GenericValue documentApproval = WorkflowServices.doFoward(delegator, organizationUnitId,
-				workflowDocumentTypeId, documentApprovalId);
-
-		if (documentApproval == null) {
-			// Loan Approved
-			result.put("fowardMessage", "");
-		} else {
-			// Foward Loan Application by setting the documentApprovalId
-			payment.set("documentApprovalId", documentApproval.getString("documentApprovalId"));
-
-			if ((documentApproval.getString("nextLevel") == null)
-					|| (documentApproval.getString("nextLevel").equals(""))) {
-				payment.set("approvalStatus", documentApproval.getString("stageAction"));
-
-			} else {
-				payment.set("approvalStatus", documentApproval.getString("stageAction") );
-			}
-
-			log.info("approvalStatus:>>>>>>>>>>>>>>> ############ " + documentApproval.getString("stageAction"));
-
-			// Set Responsible
-			// responsibleEmployee
-			payment.set("responsibleEmployee", documentApproval.getString("responsibleEmployee"));
-
-			try {
-				delegator.createOrStore(payment);
-			} catch (GenericEntityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			result.put("fowardMessage", documentApproval.getString("stageAction"));
-
-		}
-
-		// return JSONBuilder.class.
-		// JSONObject root = new JSONObject();
-
-		// Gson gson = new Gson();
-		// String json = gson.toJson(result);
-
-		// System.out.println("json = " + json);
-
-		// set the X-JSON content type
-		// response.setContentType("application/x-json");
-		// jsonStr.length is not reliable for unicode characters
-		// try {
-		// response.setContentLength(json.getBytes("UTF8").length);
-		// } catch (UnsupportedEncodingException e) {
-		// try {
-		// throw new EventHandlerException("Problems with Json encoding",
-		// e);
-		// } catch (EventHandlerException e1) {
-		// e1.printStackTrace();
-		// }
-		// }
-		// return the JSON String
-		Writer out;
-		try {
-			out = response.getWriter();
-			out.write(result.get("fowardMessage").toString());
-			out.flush();
-		} catch (IOException e) {
-			try {
-				throw new EventHandlerException("Unable to get response writer", e);
-			} catch (EventHandlerException e1) {
-				e1.printStackTrace();
-			}
-		}
-		return "";// result.get("fowardMessage").toString();
-
+	
+	public static String createPayment(Delegator delegator, String branchId, String fromPartyId, String toPartyId, BigDecimal amount, String desc){
+		String paymentId = null;
+		
+		//create payment
+		
+		//create fin_account
+		
+		//Create accounting transactions
+		
+		
+		
+		return paymentId;
 	}
 }

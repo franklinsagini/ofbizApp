@@ -140,6 +140,47 @@ under the License.
 
 
 
+    <screen name="Budgets">
+        <section>
+            <actions>
+                <set field="titleProperty" value="Budgets"/>
+                <set field="headerItem" value="ListBudgets"/>
+                <set field="tabButtonBudgetItemTop" value="BudgetSetup"/>
+                <set field="tabButtonItem" value="ListBudgets"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <!-- <include-menu name="BudgetMainTabBar" location="component://accounting/widget/AccountingMenus.xml"/> -->
+                        <!-- <include-menu name="BudgetSetupTabBar" location="component://accounting/widget/AccountingMenus.xml"/> -->
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="menu-bar">
+                                <section>
+                                    <condition>
+                                        <if-service-permission service-name="fixedAssetPermissionCheck" main-action="CREATE"/>
+                                    </condition>
+                                    <widgets>
+                                        <container style="button-bar">
+                                            <link target="EditBudget" text="New Budget" style="buttontext create"/>
+                                        </container>
+                                    </widgets>
+                                </section>
+                            </decorator-section>
+                            <decorator-section name="search-options">
+                                <include-form name="FindBudgets" location="component://accounting/widget/BudgetForms.xml"/>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <include-screen name="BudgetSearchResults"/>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+
+
+
     <screen name="BudgetActivity">
         <section>
             <actions>
