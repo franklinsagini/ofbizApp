@@ -3,6 +3,7 @@ package org.ofbiz.party.party;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -264,6 +265,66 @@ public class MemberServices {
 		statusIdString = statusIdString.replaceAll(",", "");
 		memberStatusId = Long.valueOf(statusIdString);
 		return memberStatusId;
+	}
+
+	public static String createMemberFileInRegistry(String partyId, String payrollNum, String membeNo, String fName,
+			String lName, String idNumber, String userLogin, java.sql.Timestamp dateTimestamp) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String success = "File Successfully Created";
+		GenericValue saveMemberToRegistry = null;
+		try {
+			saveMemberToRegistry = delegator.makeValue("RegistryFiles");
+			// String smsId = delegator.getNextSeqId("RegistryFiles");
+			saveMemberToRegistry.put("partyId", partyId);
+			saveMemberToRegistry.put("payrollNumber", payrollNum);
+			saveMemberToRegistry.put("memberNumber", membeNo);
+			saveMemberToRegistry.put("firstName", fName);
+			saveMemberToRegistry.put("lastName", lName);
+			saveMemberToRegistry.put("idNumber", idNumber);
+			saveMemberToRegistry.put("fileLocation", "REGISTRY");
+			saveMemberToRegistry.put("status", "AVAILABLE");
+			saveMemberToRegistry.put("stageStatus", "ACTIVE");
+			saveMemberToRegistry.put("isMemberInactive", "N");
+			saveMemberToRegistry.put("isReadyForSemiActive", "N");
+			saveMemberToRegistry.put("isReadyForArchive", "N");
+			saveMemberToRegistry.put("isReadyForDisposal", "N");
+			saveMemberToRegistry.put("creator", userLogin);
+			saveMemberToRegistry.put("creationDate", dateTimestamp);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			saveMemberToRegistry.create();
+			System.out.println("File Created ** : " + saveMemberToRegistry);
+		} catch (GenericEntityException ex) {
+			ex.printStackTrace();
+			System.out.println(" ! File Not Created  !!!: " + saveMemberToRegistry);
+		}
+		return success;
+	}
+
+	public static String createMemberFileVolume(String partyId) {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		String success = "File Volume  Created";
+		GenericValue saveMemberToRegistryVolume = null;
+		try {
+			saveMemberToRegistryVolume = delegator.makeValue("RegistryFileVolume");
+			String volumeId = delegator.getNextSeqId("RegistryFileVolume");
+			saveMemberToRegistryVolume.put("volumeId", volumeId);
+			saveMemberToRegistryVolume.put("partyId", partyId);
+			saveMemberToRegistryVolume.put("volumeStatus", "OPEN");
+			saveMemberToRegistryVolume.put("volumeIdentifier", "Volume 1");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			saveMemberToRegistryVolume.create();
+			System.out.println("File Volume Created Successfully ");
+		} catch (GenericEntityException ex) {
+			ex.printStackTrace();
+			System.out.println(" ! File Volume  Not Created  !!!: ");
+		}
+		return success;
 	}
 
 }
