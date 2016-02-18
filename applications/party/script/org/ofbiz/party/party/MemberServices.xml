@@ -758,10 +758,30 @@
         	
         	<set field="memberNumberThis" value="${newEntity.partyId}"/> 
         	<set field="phoneNumber" value="${newEntity.mobileNumber}" type="String"/> 
-        	<log message="*****THE PHONE NUMBER____##*** ${phoneNumber}" level="info"/>
-        	<log message="*****Member No____##*** ${memberNumberThis}" level="info"/>
-        	<log message="*****Member No____memberNo##*** ${memberNo}" level="info"/>
-        	<log message="****newEntity.memberNumber___memberNo##*** ${newEntity.memberNumber}" level="info"/>
+        	
+        	<now-timestamp field="nowTimestamp"/>
+        	<set field="memberNumber" value="${newEntity.partyId}" type="String"/>
+        	<set field="payrollNo" value="${newEntity.payrollNumber}"  type="String"/>
+        	<set field="fname" value="${newEntity.firstName}"  type="String"/>
+        	<set field="lname" value="${newEntity.lastName}"  type="String"/>
+        	<set field="idNumber" value="${newEntity.idNumber}"  type="String"/>
+        	<!-- <set from-field="nowTimestamp" field="newEntity.creationDate"/> -->
+        	<!-- <set field="userLogiN" value="${userLogin.partyId}"  type="String"/> -->
+            <set field="userLogiN" from-field="userLogin.userLoginId"/>
+        	
+        	<log message="****---------------MEMBER NO----------" level="info"/>
+        	<log message="*****---------------PAYROL NO----------${newEntity.memberNumber}" level="info"/>
+        	<log message="****---------------fname--------- ${fname}" level="info"/>
+        	<log message="****-------------lname--------- ${lname}" level="info"/>
+        	<log message="****--------------idNumber--------- ${idNumber}" level="info"/>
+        	<log message="****-------------userLogiN-------- ${userLogiN}" level="info"/>
+        	<log message="****-------------nowTimestamp-------- ${nowTimestamp}" level="info"/>
+        	
+        	
+        	<set field="createMemberRegistryFile" value="${bsh:org.ofbiz.party.party.MemberServices.createMemberFileInRegistry(memberNo,payrollNo,
+        	                                                memberNo,fname,lname,idNumber,userLogiN,nowTimestamp)}"/>
+        	                                                
+        	<set field="createMemberRegistryFileVolume" value="${bsh:org.ofbiz.party.party.MemberServices.createMemberFileVolume(memberNo)}"/>                                               
         	
         	<!-- <set field="sendSuccess" value="${bsh:org.ofbiz.humanres.sendMessage.sendMyMessage(phoneNumber,memberNo)}"/> -->
         	
