@@ -304,6 +304,94 @@ under the License.
         <field name="searchOptions_collapsed"><hidden value="true"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+    <form name="FindBudgetOptions" extends="lookupBudget" extends-resource="component://accounting/widget/FieldLookupForms.xml" target="ListBudgets">
+        <field name="searchOptions_collapsed"><hidden value="true"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="FindBudgetOptions" target="ListAssets" title="" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+        <auto-fields-entity entity-name="Assets" default-field-type="hidden"/>
+        <field name="tagNumber"><text-find/></field>
+        <field name="assetName"><text-find/></field>
+        <field name="fixedAssetTypeId" title="${uiLabelMap.AccountingFixedAssetTypeId}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="FixedAssetType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+             </drop-down>
+        </field>        
+        <field name="assetConditionId" title="Asset Condition">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="AssetCondition" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+             </drop-down>
+        </field>
+        <field name="assetAssignmentStatusId" title="Asset Status">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="AssetAssignmentStatus" description="${statusName}">
+                    <entity-order-by field-name="statusName"/>
+                </entity-options>
+             </drop-down>
+        </field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="BudgetSearchResults" type="list" list-name="listIt" paginate-target="ListAssets"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="Assets"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+<!--         <row-actions>
+            <service service-name="calculateFixedAssetDepreciation" result-map="assetDepreciationResultMap">
+                <field-map field-name="fixedAssetId" from-field="fixedAssetId"/>
+            </service>
+        </row-actions> -->
+        <field name="assetId" widget-style="linktext" sort-field="true">
+            <hyperlink also-hidden="false" description="${assetId}" target="EditAsset">
+                <parameter param-name="assetId"/>
+            </hyperlink>
+        </field>
+        <field name="assetName" title="${uiLabelMap.AccountingFixedAssetName}" sort-field="true">
+            <display/>
+        </field>
+        <field name="tagNumber" title="Tag No." sort-field="true">
+            <display/>
+        </field>
+        <field name="comments" title="Description" sort-field="true">
+            <display/>
+        </field>
+        <field name="fixedAssetTypeId" sort-field="true">
+            <display-entity entity-name="FixedAssetType"/>
+        </field>
+        <field name="assetStatusId" sort-field="true">
+            <display-entity entity-name="AssetStatus"/>
+        </field>
+        <field name="assetConditionId" sort-field="true">
+            <display-entity entity-name="AssetCondition"/>
+        </field>
+         <field name="branchId" title="Branch"> <display-entity entity-name="PartyGroup" key-field-name="partyId" description="${groupName}"/>
+         </field>
+        <field name="location" title="Located" sort-field="true">
+            <display/>
+        </field>
+        <field name="purchaseCost" sort-field="true">
+            <display  />
+        </field>
+        <field name="assetAssignment" widget-style="linktext" sort-field="true">
+            <hyperlink also-hidden="false" description="Assignments" target="AssetAssignment">
+                <parameter param-name="assetId"/>
+            </hyperlink>
+        </field>
+    </form>
 
     <!-- create and update a fixed asset -->
     <form name="EditBudget" type="single" target="updateBudget" title="" default-map-name="budget"
