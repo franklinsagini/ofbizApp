@@ -117,7 +117,8 @@ public class LoanDisbursement {
 	
 	public static void createMPATransactionsAppraisal(Delegator delegator, GenericValue loan, BigDecimal topUpAmount, GenericValue userLogin, String acctgTransId) {
 		String accountTransactionParentId = getAccountTransactionParentId(delegator, loan, userLogin);
-		createLoanDisbursementAccountingTransaction(loan, topUpAmount, userLogin, accountTransactionParentId, acctgTransId, delegator);
+//		createLoanDisbursementAccountingTransaction(loan, topUpAmount, userLogin, accountTransactionParentId, acctgTransId, delegator);
+		createLoanDisbursementAccountingTransactionCharge(loan, topUpAmount, userLogin, accountTransactionParentId, acctgTransId, delegator);
 	}
 	
 
@@ -184,7 +185,7 @@ public class LoanDisbursement {
 			String accountTransactionParentId, String acctgTransId, Delegator delegator) {
 		// Create an Account Holder Transaction for this disbursement
 
-		BigDecimal transactionAmount = topUpAmount;
+		BigDecimal transactionAmount = getChargeAmountGivenLoanApp(delegator, loanApplication, topUpAmount);
 
 		Long savingsAccountProductId = getAccountProductGivenCodeId("999", delegator);
 
@@ -192,49 +193,39 @@ public class LoanDisbursement {
 				savingsAccountProductId, delegator);
 		String transactionType = "Appraisal Fee";
 
-		// Retention
-		GenericValue loanProduct = LoanUtilities.getLoanProduct(loanApplication
-				.getLong("loanProductId"));
-		// Check if the Loan Retains BOSA
-		if ((loanProduct.getString("retainBOSADeposit") != null)
-				&& (loanProduct.getString("retainBOSADeposit").equals("Yes"))) {
-			// This loan retains for BOSA deposit e.g JEKI LOAN, lets get the
-			// percentage retained and add it to the
-			// member deposits
-			// BigDecimal percentageOfMemberNetSalaryAmt =
 
-			BigDecimal percentageDepositRetained = loanProduct
-					.getBigDecimal("percentageDepositRetained");
-			if (percentageDepositRetained != null) {
-				// Process the Retention
-				BigDecimal bdBosaRetainedAmount = (percentageDepositRetained
-						.divide(new BigDecimal(100), 4, RoundingMode.HALF_UP))
-						.multiply(transactionAmount).setScale(4,
-								RoundingMode.HALF_UP);
-
-				Long memberDepositProductId = getAccountProductGivenCodeId("901", delegator);
-				String memberDepositAccountId = getMemberAccountId(
-						loanApplication, memberDepositProductId, delegator);
-
-				String retentionTransactionType = "RETAINEDASDEPOSIT";
-
-				createTransaction(loanApplication, retentionTransactionType,
-						userLogin, memberDepositAccountId,
-						bdBosaRetainedAmount, null, accountTransactionParentId, acctgTransId);
-
-				transactionAmount = transactionAmount
-						.subtract(bdBosaRetainedAmount);
-
-			} else {
-				log.error(" percentageDepositRetained ########### The Retention Value is not specified #####333");
-			}
-
-			// tt
+		
+		
+		GenericValue accountTransaction;
+		String accountTransactionId = delegator
+				.getNextSeqId("AccountTransaction");
+		String createdBy = (String) userLogin.get("userLoginId");
+		String updatedBy = (String) userLogin.get("userLoginId");
+		String branchId = (String) userLogin.get("partyId");
+		Long partyId = loanApplication.getLong("partyId");
+		String increaseDecrease = "D";
+		
+		memberAccountId = memberAccountId.replaceAll(",", "");
+		accountTransaction = delegator.makeValidValue("AccountTransaction",
+				UtilMisc.toMap("accountTransactionId", accountTransactionId,
+						"accountTransactionParentId",
+						accountTransactionParentId, "isActive", "Y",
+						"createdBy", createdBy, "updatedBy", updatedBy,
+						"branchId", branchId, "partyId", partyId,
+						"increaseDecrease", increaseDecrease, "slipNumber",
+						AccHolderTransactionServices.getNextSlipNumber(),
+						"memberAccountId", Long.valueOf(memberAccountId),
+						"productChargeId", Long.valueOf("10001"),
+						"transactionAmount", transactionAmount,
+						"transactionType", transactionType, "acctgTransId", acctgTransId, "loanApplicationId", loanApplication.getLong("loanApplicationId")));
+		try {
+			delegator.createOrStore(accountTransaction);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+			log.error("Could not create Transaction");
 		}
 
-		createTransaction(loanApplication, transactionType, userLogin,
-				memberAccountId, transactionAmount, null,
-				accountTransactionParentId, acctgTransId);
+		
 	}
 
 	private static void createTransaction(GenericValue loanApplication,
