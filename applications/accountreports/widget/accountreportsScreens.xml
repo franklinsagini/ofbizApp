@@ -65,7 +65,13 @@
                             </screenlet>
                         </container>
                         <container style="clear"/>
-<!--                         <container>
+                        <container>
+                            <screenlet title="Share Capital">
+                                <include-form name="ShareCapital" location="component://accountreports/widget/accountreportsForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                        <container>
                             <screenlet title="Active Loans">
                                 <include-form name="ActiveLoans" location="component://accountreports/widget/accountreportsForms.xml"/>
                             </screenlet>
@@ -75,7 +81,7 @@
                             <screenlet title="Deliquent Loans">
                                 <include-form name="DeliquentLoans" location="component://accountreports/widget/accountreportsForms.xml"/>
                             </screenlet>
-                        </container> -->
+                        </container>
                         <container style="clear"/>
                     </decorator-section>
                 </decorator-screen>
@@ -132,6 +138,23 @@
             <widgets>
                 <label style="h2" text="LOAN LOSS ${startDate} TO ${endDate}"/>
                 <include-form name="LoanLossReportCSV" location="component://accountreports/widget/accountreportsForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="branchShareCapital">
+        <section>
+            <actions>
+                <set field="viewSize" value="99999"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                <set field="startDate" from-field="parameters.startDate" type="Timestamp"/>
+                <set field="endDate" from-field="parameters.startDate" type="Timestamp"/>
+                <script location="component://accountreports/webapp/accountreports/WEB-INF/actions/reports/branchShareCapital.groovy"/>
+            </actions>
+            <widgets>
+                <label style="h3" text="BRANCH SHARE CAPITAL FROM ${startDate} TO ${endDate}"/>
+                <include-form name="branchShareCapitalCSV" location="component://accountreports/widget/accountreportsForms.xml"/>
             </widgets>
         </section>
     </screen>
