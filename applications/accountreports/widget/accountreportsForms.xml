@@ -59,6 +59,38 @@
         </field>
     </form>
 
+    <form name="MemberDeposit" type="single" target="branchMemberDeposit" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        
+        <field name="startDate" title="From"  widget-style="required" required-field="true">
+            <date-time type="date"/>
+        </field>
+        
+        <field name="endDate" title="To" position="2"  widget-style="required" required-field="true">
+            <date-time type="date"/>
+        </field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <form name="WithdrawableDeposit" type="single" target="branchWithdrawableDeposit" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        
+        <field name="startDate" title="From"  widget-style="required" required-field="true">
+            <date-time type="date"/>
+        </field>
+        
+        <field name="endDate" title="To" position="2"  widget-style="required" required-field="true">
+            <date-time type="date"/>
+        </field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
     <form name="ActiveLoans" type="single" target="branchActiveLoans" title=""
         header-row-style="header-row" default-table-style="basic-table">
         <field name="startDate" title="From"  widget-style="required" required-field="true">
@@ -125,6 +157,26 @@
        <field name="branchName" title="Branch"><display/></field>
        <field name="shareCapitalAmount" title="Total Share Capital"><display/></field>
        <field name="repaidTotal" title="Correction if any"><display/></field>
+    </form>       
+
+    <form name="branchMemberDepositCSV" list-name="totalsList"  target="" title="" 
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+       <field name="branchName" title="Branch"><display/></field>
+       <field name="memberDepositAmount" title="Total Member Deposit"><display/></field>
+       <field name="repaidTotal" title="Refunded During the Period"><display/></field>
+    </form>       
+
+    <form name="branchWithdrawableDepositCSV" list-name="totalsList"  target="" title="" 
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+       <field name="branchName" title="Branch"><display/></field>
+       <field name="savingsAccount" title="Savings Account"><display/></field>
+       <field name="chaiAngelsJuniorAccount" title="Chai Angels Junior Account"><display/></field>
+       <field name="chaiPremierHolidayAccount" title="Chai Premier Holiday Account"><display/></field>
+       <field name="fixedDeposit" title="Fixed Deposit"><display/></field>
+       <field name="medical" title="Medical"><display/></field>
+       <field name="biashara" title="Biashara Account"><display/></field>
     </form>       
 
     <form name="branchLoanBookTotals" list-name="totalsList"  target="" title="" 
