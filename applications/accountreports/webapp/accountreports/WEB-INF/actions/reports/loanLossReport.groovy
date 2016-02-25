@@ -65,14 +65,14 @@ myLoansList.each { loan ->
     daysInArrears = CrbReportServices.lastRepaymentDurationToDateInDays(loan.loanApplicationId)
     currentLoanBalance = org.ofbiz.loansprocessing.LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loan.loanApplicationId)
 
-    if (daysInArrears.toInteger()<31) {
+    if (daysInArrears.toInteger()<60) {
         //Watchful
         totalWatchful = totalWatchful + currentLoanBalance
         totalActive = totalActive + currentLoanBalance
-    }else if( daysInArrears.toInteger()>30 && daysInArrears.toInteger() < 61) {
+    }else if( daysInArrears.toInteger()>60 && daysInArrears.toInteger() < 91) {
         //Substandard
         totalSubstandard = totalSubstandard + currentLoanBalance
-    }else if( daysInArrears.toInteger()>60 && daysInArrears.toInteger() < 91) {
+    }else if( daysInArrears.toInteger()>90 && daysInArrears.toInteger() < 121) {
         //DOUBTFULL LOANS
         totalDoubtFull = totalDoubtFull + currentLoanBalance
     }else{

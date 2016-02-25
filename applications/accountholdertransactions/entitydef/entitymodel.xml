@@ -152,6 +152,47 @@ under the License.
         </relation>
     </entity>
     
+    <entity entity-name="TellerLimitApprovals" sequence-bank-size="1" package-name="org.ofbiz.accountholdertransactions" title="AccountTransaction Entity">
+        <field name="tellerLimitApprovalsId" type="id-ne" enable-audit-log="true"></field>
+        <field name="tellerId" type="id"   ></field>
+        <field name="branchId" type="name"   ></field>
+        <field name="memberAccountId" type="id-vlong-int"   ></field>
+        <field name="approvedBy" type="name"   ></field>
+        <field name="dateApproved" type="date-time"   ></field>
+        <field name="rejectedBy" type="name"   ></field>
+        <field name="dateRejected" type="date-time"   ></field>
+        <field name="comments" type="name"   ></field>
+        <field name="statusName" type="description"></field>
+        <field name="amount" type="currency-amount" enable-audit-log="true"></field>
+
+        <prim-key field="tellerLimitApprovalsId"/>
+        <relation fk-name="TELLER_LIMIT_ACC" rel-entity-name="MemberAccount" type="one">
+            <key-map field-name="memberAccountId"/>
+        </relation>
+     </entity>
+     
+
+    <entity entity-name="TellerLimitApprovers" sequence-bank-size="1" package-name="org.ofbiz.accountholdertransactions" title="AccountTransaction Entity">
+        <field name="tellerLimitApproversId" type="id-ne" enable-audit-log="true"></field>
+        <field name="partyId" type="id"   ></field>
+        <field name="amount" type="currency-amount" enable-audit-log="true"></field>
+
+        <prim-key field="tellerLimitApproversId"/>
+        <relation fk-name="TELLER_LIMIT_TELLER" rel-entity-name="Person" type="one">
+            <key-map field-name="partyId" rel-field-name="partyId"/>
+        </relation>
+     </entity>
+
+    <entity entity-name="TellerLimitAmount" sequence-bank-size="1" package-name="org.ofbiz.accountholdertransactions" title="AccountTransaction Entity">
+        <field name="tellerLimitAmountId" type="id-ne" enable-audit-log="true"></field>
+        <field name="amount" type="currency-amount" enable-audit-log="true"></field>
+        <prim-key field="tellerLimitAmountId"/>
+        <relation fk-name="TELLER_LIMIT_TELLER" rel-entity-name="Person" type="one">
+            <key-map field-name="tellerId" rel-field-name="partyId"/>
+        </relation>
+     </entity>
+
+
     <entity entity-name="AccountTransactionParent" sequence-bank-size="1" package-name="org.ofbiz.accountholdertransactions" title="AccountTransaction Entity">
         <field name="accountTransactionParentId" type="id" ><description>primary sequenced ID</description></field>
         <field name="isActive" type="indicator"   ></field>

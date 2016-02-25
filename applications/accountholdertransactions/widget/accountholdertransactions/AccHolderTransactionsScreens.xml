@@ -1061,6 +1061,99 @@
 		</section>
 	</screen>
 
+    <screen name="TellerLimitsApprovals">
+        <section>
+            <actions>
+                <set field="headerItem" value="TellerLimitsApprovals" />
+                <set field="titleProperty" value="Teller Limit Approvals"/>
+                <set field="assignee"
+					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTelleAssignee(userLogin);}"
+					type="String" />
+				<set field="assignedteller"
+					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerName(userLogin);}"
+					type="String" />
+				<set field="bdTotalAllocated"
+					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalAllocated(userLogin);}"
+					type="BigDecimal" />
+
+
+				<set field="bdTotalDeAllocated"
+					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalDeAllocatedToday(userLogin);}"
+					type="BigDecimal" />
+				<!-- set name="fromDate"><date-time> default-value="${nowTimestamp}"/></field -->
+				<set field="transferDate" default-value="${nowTimestamp}"/>
+				<set field="tellerBalance"
+					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerBalanceWithOpeningBalance(userLogin);}"
+					type="BigDecimal" />
+				<!-- set field="tellerBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryReconciliation.getTotalBalanceForDestinationTreasury(destinationTreasury, transferDate);}" type="BigDecimal"/>
+          		<set field="bdTotalOpeningBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getOpeningBalance(destinationTreasury, transferDate);}" type="BigDecimal"/-->
+
+
+				<set field="totalCashWithdrawal"
+					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalCashWithdrawalToday(userLogin);}"
+					type="BigDecimal" />
+				<set field="totalCashDeposit"
+					value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalCashDepositToday(userLogin);}"
+					type="BigDecimal" />
+
+
+				<set field="totalLoanCashPayment" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTotalLoanCashDepositToday(userLogin);}" type="BigDecimal"/>
+					<set field="bdTotalOpeningBalance" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getOpeningBalance(userLogin);}" type="BigDecimal"/>
+
+				<set field="amTeller" value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.hasTellerAssigned(userLogin);}" type="Boolean"/>
+
+
+				<set field="treasuryId"	value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTreasuryId(userLogin);}" type="String" />
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonTransactionsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <label style="h1" text="Teller Limits Approvals"></label>
+                                <screenlet  title="Teller Limits Approvals">
+                                   <include-form name="TellerLimitsApprovals" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+         </section>
+    </screen>
+
+<screen name="approveLimit">
+        <section>
+            <actions>
+            	    <set field="headerItem" value="TellerLimitsApprovals" />
+                <set field="titleProperty" value="Teller Limit Approvals"/>
+                <set field="tellerLimitApprovalsId" from-field="parameters.tellerLimitApprovalsId"/>
+                <entity-one entity-name="TellerLimitApprovals" value-field="tellerLimitApproval"/>
+                <set field="memberAccountId" from-field="tellerLimitApproval.memberAccountId"/>
+                <entity-one entity-name="MemberAccount" value-field="memberAcc" />
+                <set field="teller" from-field="tellerLimitApproval.tellerId"/>
+                <set field="amount" from-field="tellerLimitApproval.amount"/>
+                <set field="accountName" from-field="memberAcc.accountName" />
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonTransactionsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                <screenlet title="Teller Limit Approval">
+                                	<label style="h3" text="Account For : ${accountName}"></label>
+                            	<label style="h3" text="Amount : ${amount}"></label>
+                            	<label style="h3" text="Done By Teller : ${teller}"></label>
+                                    <include-form name="approveLimitForm" location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml" />
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
 	<!-- NewChequeType -->
 	<screen name="NewChequeType">
 		<section>

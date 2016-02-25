@@ -24,9 +24,41 @@ under the License.
     <vendor>Verge Interactive</vendor>
     <version>1.0</version>
 	
+    <!-- CashWithdrawalApproval -->
+    <service name="approveLimitTransaction" engine="simple" default-entity-name="TellerLimitApprovals"
+             location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="approveLimitTransaction" auth="true">
+        <description>Approve Limit Withdrawal</description>
+        <attribute type="String" mode="IN" name="tellerLimitApprovalsId" optional="false"/>
+        <attribute type="Long" mode="IN" name="memberAccountId" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <service name="completeLimitTransaction" engine="simple" default-entity-name="TellerLimitApprovals"
+             location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="completeLimitTransaction" auth="true">
+        <description>Approve Limit Withdrawal</description>
+        <attribute type="String" mode="IN" name="tellerLimitApprovalsId" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
     <!-- CashWithdrawal -->
     <service name="createCashWithdrawal" engine="simple" default-entity-name="AccountTransaction"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="createCashWithdrawal" auth="true">
+        <description>Create CashWithdrawal</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="accountTransactionParentId" mode="OUT" type="String"></attribute>
+        <!-- override name="partyId" optional="false"></override>
+        <override name="memberAccountId" optional="false"></override>
+        <override name="transactionAmount" optional="false"></override>
+        <override name="slipNumber" optional="false"></override -->
+    </service>
+
+    <!-- CashWithdrawal -->
+    <service name="createCashWithdrawalAfterApproval" engine="simple" default-entity-name="AccountTransaction"
+             location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="createCashWithdrawalAfterApproval" auth="true">
         <description>Create CashWithdrawal</description>
         <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
         <auto-attributes mode="IN" include="pk" optional="true"/>
