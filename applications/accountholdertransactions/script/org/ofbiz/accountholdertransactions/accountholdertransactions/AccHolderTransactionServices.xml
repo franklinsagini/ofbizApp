@@ -13,8 +13,37 @@
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
-	<!-- CashWithdrawal -->
-	<simple-method method-name="createCashWithdrawal"
+	<simple-method method-name="approveLimitTransaction" short-description="Member Transaction Entry" use-transaction="true">
+
+	        <entity-one entity-name="TellerLimitApprovals" value-field="lookedUpValue"/>
+	        <now-timestamp field="createdDate" />
+	        <set field="lookedUpValue.dateApproved" from-field="createdDate" />
+	        <set field="lookedUpValue.approvedBy" from-field="userLogin.userLoginId"/>
+	        <set field="lookedUpValue.statusName" value="APPROVED"/>
+	        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+	        <store-value value-field="lookedUpValue"/>
+
+	</simple-method>
+
+
+	<simple-method method-name="completeLimitTransaction" short-description="Member Transaction Entry" use-transaction="true">
+
+	        <entity-one entity-name="TellerLimitApprovals" value-field="lookedUpValue"/>
+<!-- 	        <now-timestamp field="createdDate" />
+	        <set field="lookedUpValue.dateApproved" from-field="createdDate" />
+	        <set field="lookedUpValue.approvedBy" from-field="userLogin.userLoginId"/> -->
+	        <set field="lookedUpValue.statusName" value="COMPLETED"/>
+	        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+	        <store-value value-field="lookedUpValue"/>
+
+            <set-service-fields service-name="createCashWithdrawalAfterApproval" map="lookedUpValue" to-map="checkAndCreateBatchForValidPaymentsMap"/>
+            <set field="checkAndCreateBatchForValidPaymentsMap.memberAccountId" from-field="lookedUpValue.memberAccountId"/>
+            <call-service service-name="createCashWithdrawalAfterApproval" in-map-name="checkAndCreateBatchForValidPaymentsMap"/>
+
+	
+	</simple-method>
+
+<simple-method method-name="createCashWithdrawalAfterApproval"
 		short-description="Create CashWithdrawal">
 
 		<make-value entity-name="AccountTransaction" value-field="newEntity" />
@@ -164,6 +193,218 @@
 
 												<property-to-field resource="AccountHolderTransactionsUILabels.xml"
 													property="commissionChargeSetupSuccess" field="successMessage" />
+													</else>
+												</if>
+												
+												
+
+											</else>
+										</if>
+
+
+
+									</else>
+								</if>
+
+
+
+							</else>
+						</if>
+
+
+					</else>
+				</if>
+
+
+
+			</else>
+		</if>
+
+	</simple-method>
+
+
+	<!-- CashWithdrawal -->
+	<simple-method method-name="createCashWithdrawal"
+		short-description="Create CashWithdrawal">
+
+		<make-value entity-name="AccountTransaction" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+
+		<!-- Check if the commission charges are set otherwise scream and dont 
+			allow a withdrawal to happen -->
+
+		<set field="commissionSetup"
+			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.commissionChargeIsSetup();}"
+			type="Boolean" />
+
+
+		<set field="ledgerAccountSetup"
+			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.legerAccountSetUp(newEntity);}"
+			type="Boolean" />
+		<set field="commissionAccountSetup"
+			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.commissionAccountSetUp(newEntity);}"
+			type="Boolean" />
+		<set field="exciseDutyAccountSetup"
+			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.exciseDutyAccountSetUp(newEntity);}"
+			type="Boolean" />
+
+		<set field="exciseDutyRateSetup"
+			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.exciseDutyRateSetUp();}"
+			type="Boolean" />
+			
+		<set field="enoughmoney"
+			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.checkHasEnoughMoney(newEntity);}" />
+
+		<set field="tellerLimit"
+			value="${bsh:org.ofbiz.accounting.teller.TellerUtilServices.needsApproval(newEntity, delegator);}" type="Boolean"/>
+org.ofbiz.accounting.teller.TellerUtilServices.needsApproval
+		<set field="falseField" value="false" type="Boolean" />
+		<set field="trueField" value="true" type="Boolean" />
+		
+		<if> <!-- commissionSetup -->
+			<condition>
+				<if-compare-field to-field="commissionSetup"
+					operator="equals" field="falseField"></if-compare-field>
+			</condition>
+			<then>
+
+				<add-error>
+					<fail-property resource="AccountHolderTransactionsUILabels.xml"
+						property="commissionChargeSetupError" />
+				</add-error>
+				<check-errors />
+
+			</then>
+
+			<else>
+
+
+				<if> <!-- ledgerAccountSetup -->
+					<condition>
+						<if-compare-field to-field="ledgerAccountSetup"
+							operator="equals" field="falseField"></if-compare-field>
+					</condition>
+					<then>
+						<add-error>
+							<fail-property resource="AccountHolderTransactionsUILabels.xml"
+								property="ledgerAccountSetupError" />
+						</add-error>
+						<check-errors />
+					</then>
+					<else>
+
+						<if> <!-- commissionAccountSetup -->
+							<condition>
+								<if-compare-field to-field="commissionAccountSetup"
+									operator="equals" field="falseField"></if-compare-field>
+							</condition>
+							<then>
+								<add-error>
+									<fail-property resource="AccountHolderTransactionsUILabels.xml"
+										property="commissionAccountSetupError" />
+								</add-error>
+								<check-errors />
+							</then>
+							<else>
+
+								<if> <!-- exciseDutyAccountSetup -->
+									<condition>
+										<if-compare-field to-field="exciseDutyAccountSetup"
+											operator="equals" field="falseField"></if-compare-field>
+									</condition>
+									<then>
+										<add-error>
+											<fail-property resource="AccountHolderTransactionsUILabels.xml"
+												property="exciseDutyAccountSetupError" />
+										</add-error>
+										<check-errors />
+									</then>
+									<else>
+
+										<if> <!-- exciseDutyRateSetup -->
+											<condition>
+												<if-compare-field to-field="exciseDutyRateSetup"
+													operator="equals" field="falseField"></if-compare-field>
+											</condition>
+											<then>
+												<add-error>
+													<fail-property resource="AccountHolderTransactionsUILabels.xml"
+														property="exciseDutyRateSetupError" />
+												</add-error>
+												<check-errors />
+											</then>
+											<else>
+												<if>
+													<condition>
+														<if-compare operator="not-equals" value="yes" field="enoughmoney"></if-compare>
+													</condition>
+													<then>
+														<set field="accountTransactionParentId"
+													value="NOTRANSACTION"
+													type="String" />
+													<field-to-result field="accountTransactionParentId"
+													result-name="accountTransactionParentId" />
+														<add-error>
+															<fail-message message="${enoughmoney}"/>
+														</add-error>
+														<check-errors />
+													</then>
+													<else>
+													
+														<!-- Finally Do the saving -->
+
+
+
+    <if>
+        <condition>
+            <if-compare field="tellerLimit" operator="equals" value="true"/>
+        </condition>
+        <then>
+            <!-- THEN DO TELLLER LIMITS HERE -->
+            <set field="createCashWithdrawalApprovalDoc" value="${bsh:org.ofbiz.accounting.teller.TellerUtilServices.createCashWithdrawalApprovalDoc(newEntity,delegator,userLogin)}" type="Boolean"/>
+            <set field="accountTransactionParentId" value="NOTRANSACTION" type="String" />
+            <field-to-result field="accountTransactionParentId" result-name="accountTransactionParentId" />
+             <log message="############################## INSIDE THE LIMITS AREA"></log>
+        </then>
+        <else-if>
+            <condition>
+                <if-compare field="tellerLimit" operator="equals" value="false"/>
+            </condition>
+            <then>
+                <!-- THEN DO NORMAL CASH WITHDRAWAL FROM HERE -->
+                <log message="############################## INSIDE NORMAL WITHDRAWAL AREA"></log>
+                <set field="newEntity.treasuryId"
+													value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerId(userLogin);}"
+													type="String" />
+												<!-- withdrawalStatus -->
+												<!-- set field="accountTransactionParentId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.cashWithdrawal(newEntity, 
+													userLogin);}" type="String"/ -->
+												<!-- set field="cashWithdrawalVer2"/ -->
+												<!-- Without Interbranch -->
+												<!-- set field="accountTransactionParentId"
+													value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.cashWithdrawalVer2(newEntity, userLogin);}"
+													type="String" / -->
+													
+												<!-- With Interbranch -->
+												<set field="accountTransactionParentId"
+													value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.cashWithdrawalInterbranch(newEntity, userLogin);}"
+													type="String" />	
+													
+												<field-to-result field="accountTransactionParentId"
+													result-name="accountTransactionParentId" />
+												<!-- call-simple-method method-name="cashWithdrawalSave" scope="inline"></call-simple-method -->
+												<!-- set field="transactionStatus" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.addChargesToTransaction(newEntity, 
+													userLogin, transactionType);}" type="String"/ -->
+
+												<property-to-field resource="AccountHolderTransactionsUILabels.xml"
+													property="commissionChargeSetupSuccess" field="successMessage" />
+            </then>
+        </else-if>
+    </if>														
+
+
+												
 													</else>
 												</if>
 												

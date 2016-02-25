@@ -34,11 +34,36 @@
 	<!-- Request Mappings -->
 	<!-- request-map uri="main"><security https="true" auth="true"/><response 
 		name="success" type="view" value="main"/></request-map -->
+	<request-map uri="TellerLimitsApprovals">
+		<security https="true" auth="true"/>
+		<response name="success" type="view" value="TellerLimitsApprovals"/>
+	</request-map>
+
+	<request-map uri="approveLimit">
+		<security https="true" auth="true"/>
+		<response name="success" type="view" value="approveLimit"/>
+	</request-map>
+
+	<request-map uri="approveLimitTransaction">
+		<security https="true" auth="true"/>
+		<event type="service" invoke="approveLimitTransaction"/>
+		<response name="success" type="view" value="TellerLimitsApprovals" />
+		<response name="error" type="view" value="TellerLimitsApprovals"/>
+	</request-map>
+	
+	<request-map uri="completeLimitTransaction">
+		<security https="true" auth="true"/>
+		<event type="service" invoke="completeLimitTransaction"/>
+		<response name="success" type="view" value="TellerLimitsApprovals" />
+		<response name="error" type="view" value="TellerLimitsApprovals"/>
+	</request-map>
+
+
 	<request-map uri="main">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="main" />
 	</request-map>
-	
+
 	<request-map uri="accReports">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="accReports" />
@@ -1088,6 +1113,10 @@
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewApplyStandingOrder" />
 	<view-map name="chequeType" type="screen"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewChequeType" />
+	
+	<view-map name="TellerLimitsApprovals" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#TellerLimitsApprovals" />
+
+	<view-map name="approveLimit" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#approveLimit" />
 	
 	<view-map name="atmServiceLogs" type="screen"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#atmServiceLogs" />

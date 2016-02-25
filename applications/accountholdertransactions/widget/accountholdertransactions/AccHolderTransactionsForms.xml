@@ -21,6 +21,57 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
+<form name="TellerLimitsApprovals" type="list" list-name="listIt" paginate-target="BankRecon"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="TellerLimitApprovals">
+                <condition-list combine="or">
+                    <condition-expr field-name="statusName" operator="equals" value="DRAFTED"/>
+                    <condition-expr field-name="statusName" operator="equals" value="APPROVED"/>
+                </condition-list>
+                <order-by field-name="-createdStamp"/>
+            </entity-condition>
+        </actions>
+        <field name="tellerLimitApprovalsId"><hidden/></field>
+        <field name="memberAccountId"><hidden/></field>
+        <field name="tellerId" title="Teller"><display/></field>
+        <field name="memberAccountId" title="Member Account"> 
+            <display-entity entity-name="MemberAccount" 
+                          key-field-name="memberAccountId" description="${accountName}">
+            </display-entity>
+        </field>
+        <field name="createdStamp" title="Date"><display/></field>
+        <field name="amount" title="Transaction Amount"><display/></field>
+        <field name="approveButton"  use-when="&quot;DRAFTED&quot;.equals(&quot;${statusName}&quot;)" title="Approve Transaction" widget-style="buttontext">
+            <hyperlink target="approveLimit" description="Approve Transaction" also-hidden="false">
+                <parameter param-name="tellerLimitApprovalsId"/>
+            </hyperlink>
+        </field>
+        <field name="completeTransactionButton" use-when="&quot;APPROVED&quot;.equals(&quot;${statusName}&quot;)" title="Complete Transaction" widget-style="buttontext">
+            <hyperlink target="completeLimitTransaction" description="Complete Transaction" also-hidden="false">
+                <parameter param-name="tellerLimitApprovalsId"/>
+            </hyperlink>
+        </field>
+    </form>
+
+
+    <form name="approveLimitForm" target="approveLimitTransaction" title="" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="tellerLimitApprovalsId" >
+            <hidden/>
+        </field>
+        <field name="memberAccountId" >
+            <hidden/>
+        </field>
+        <field name="comments" title="Aproval Comments (Optional)">
+            <textarea/>
+        </field>
+        <field name="submitButton" title="Aprove Withdrawal Transaction" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+
     <form name="TransactionForm">
     	 <actions>
     	     <set field="slipNumber" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.getNextSlipNumber();}"/>

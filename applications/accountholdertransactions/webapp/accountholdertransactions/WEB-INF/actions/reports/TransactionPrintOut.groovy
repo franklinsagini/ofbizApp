@@ -1,6 +1,8 @@
 import groovy.time.*
 accountTransactionParentId = parameters.accountTransactionParentId
-
+if(accountTransactionParentId == "NOTRANSACTION") {
+	return;
+} else {
 context.title = "Chai Sacco"
 
 accountTransactionParent = delegator.findOne("AccountTransactionParent", [accountTransactionParentId : accountTransactionParentId], false);
@@ -73,3 +75,5 @@ context.transactionTypeWithdrawal = transactionTypeWithdrawal
 
 if (transactionType != null)
 	context.transactionType = transactionType
+
+}
