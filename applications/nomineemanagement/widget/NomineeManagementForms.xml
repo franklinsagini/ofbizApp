@@ -29,5 +29,62 @@
         <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
+      
     </form>
+    
+    <form name="nomineeReportFormExcel" type="single" target="nomineeReportExcel.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+
+
+        <field name="startDate" title="From" >
+        	<date-time type="timestamp"/>
+           </field>
+        
+        <field name="endDate" title="To" position="2">
+        	<date-time type="timestamp"/>
+        </field>
+        
+
+		<field name="partyId" title="Member" ><lookup target-form-name="LookupActiveMember"/></field>
+
+        <!-- field name="partyId" title="Member" widget-style="required" required-field="true"><lookup target-form-name="LookupActiveMember"/></field -->
+        <field name="stationId" title="Station / Employer">
+         
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name} - ${stationNumber} - ${employerCode}" key-field-name="stationId" entity-name="Station">
+        			<entity-order-by field-name="name"/>
+        		</entity-options>
+        	</drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+<!--      <form name="runNomineeReportExcelForm" list-name="memList" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="firstName" title="FIRST NAME" entry-name="memList"><display/></field>
+        <field name="middleName" title="MIDDLE NAME" entry-name="memList"><display/></field>
+        <field name="lastName" title="LAST NAME"><display/></field>
+        <field name="percentage" title="PERCENTAGE"><display/></field>
+		<field name="relationship" title="RELATIONSHIP"><display/></field>
+		<field name="leaveDuration" title="Leave Duration"><display/></field>
+		<field name="approvalStatus" title="Approval Status"><display/></field>
+		<field name="responsibleEmployee" title="Approver"><display/></field>
+		<field name="handedOverTo" title="Handed Over To"><display/></field>
+		<field name="createdDate" title="Created Time"><display/></field>
+ </form>  --> 
+       
+     <form name="runNomineeReportExcelForm" list-name="memList" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row"  header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="firstName" title="."><display/></field>
+        <field name="middleName" title="MIDDLE NAME" ><display/></field>
+        <field name="lastName" title="LAST NAME"><display/></field>
+        <field name="percentage" title="PERCENTAGE"><display/></field>
+		<field name="relationship" title="RELATIONSHIP"><display/></field>
+ </form> 
+   
+    
 </forms>
