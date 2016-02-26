@@ -38,8 +38,12 @@
 
             <set-service-fields service-name="createCashWithdrawalAfterApproval" map="lookedUpValue" to-map="checkAndCreateBatchForValidPaymentsMap"/>
             <set field="checkAndCreateBatchForValidPaymentsMap.memberAccountId" from-field="lookedUpValue.memberAccountId"/>
-            <call-service service-name="createCashWithdrawalAfterApproval" in-map-name="checkAndCreateBatchForValidPaymentsMap"/>
+            <set field="checkAndCreateBatchForValidPaymentsMap.transactionAmount" from-field="lookedUpValue.amount"/>
+            <call-service service-name="createCashWithdrawalAfterApproval" in-map-name="checkAndCreateBatchForValidPaymentsMap">
+            	<result-to-field result-name="accountTransactionParentId"/>
+            </call-service>
 
+	<field-to-result field="accountTransactionParentId" result-name="accountTransactionParentId" />
 	
 	</simple-method>
 
@@ -258,7 +262,7 @@
 
 		<set field="tellerLimit"
 			value="${bsh:org.ofbiz.accounting.teller.TellerUtilServices.needsApproval(newEntity, delegator);}" type="Boolean"/>
-org.ofbiz.accounting.teller.TellerUtilServices.needsApproval
+
 		<set field="falseField" value="false" type="Boolean" />
 		<set field="trueField" value="true" type="Boolean" />
 		
@@ -365,7 +369,7 @@ org.ofbiz.accounting.teller.TellerUtilServices.needsApproval
             <set field="createCashWithdrawalApprovalDoc" value="${bsh:org.ofbiz.accounting.teller.TellerUtilServices.createCashWithdrawalApprovalDoc(newEntity,delegator,userLogin)}" type="Boolean"/>
             <set field="accountTransactionParentId" value="NOTRANSACTION" type="String" />
             <field-to-result field="accountTransactionParentId" result-name="accountTransactionParentId" />
-             <log message="############################## INSIDE THE LIMITS AREA"></log>
+             
         </then>
         <else-if>
             <condition>
@@ -373,7 +377,7 @@ org.ofbiz.accounting.teller.TellerUtilServices.needsApproval
             </condition>
             <then>
                 <!-- THEN DO NORMAL CASH WITHDRAWAL FROM HERE -->
-                <log message="############################## INSIDE NORMAL WITHDRAWAL AREA"></log>
+               
                 <set field="newEntity.treasuryId"
 													value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerId(userLogin);}"
 													type="String" />

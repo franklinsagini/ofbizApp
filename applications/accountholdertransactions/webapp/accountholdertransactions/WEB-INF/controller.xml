@@ -54,8 +54,10 @@
 	<request-map uri="completeLimitTransaction">
 		<security https="true" auth="true"/>
 		<event type="service" invoke="completeLimitTransaction"/>
-		<response name="success" type="view" value="TellerLimitsApprovals" />
-		<response name="error" type="view" value="TellerLimitsApprovals"/>
+		<response name="success" type="request-redirect" value="transactionPrintOut">
+			<redirect-parameter name="accountTransactionParentId" />
+		</response>
+		<response name="error" type="view" value="cashWithdrawalFail" />
 	</request-map>
 
 
