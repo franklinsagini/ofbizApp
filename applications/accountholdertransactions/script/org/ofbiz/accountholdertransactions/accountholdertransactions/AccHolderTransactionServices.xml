@@ -16,22 +16,46 @@
 	<simple-method method-name="approveLimitTransaction" short-description="Member Transaction Entry" use-transaction="true">
 
 	        <entity-one entity-name="TellerLimitApprovals" value-field="lookedUpValue"/>
-	        <now-timestamp field="createdDate" />
-	        <set field="lookedUpValue.dateApproved" from-field="createdDate" />
-	        <set field="lookedUpValue.approvedBy" from-field="userLogin.userLoginId"/>
-	        <set field="lookedUpValue.statusName" value="APPROVED"/>
 	        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
-	        <store-value value-field="lookedUpValue"/>
+	        
+	        
+	        <set field="isApprover" value="${bsh:org.ofbiz.accounting.teller.TellerUtilServices.isApprover(userLogin, delegator,lookedUpValue);}" type="Boolean"/>
 
+		<if>
+			<condition>
+				<if-compare field="isApprover" operator="equals" value="true"/>
+			</condition>
+			<then>
+				<set field="lookedUpValue.approvedBy" from-field="userLogin.userLoginId"/>
+	        			<set field="lookedUpValue.statusName" value="APPROVED"/>
+	        			<now-timestamp field="createdDate" />
+	        			<set field="lookedUpValue.dateApproved" from-field="createdDate" />
+	        			<store-value value-field="lookedUpValue"/>
+			</then>
+			<else-if>
+				<condition>
+					<if-compare field="isApprover" operator="equals" value="false"/>
+				</condition>
+				<then>
+					<add-error>
+						<fail-property resource="AccountHolderTransactionsUILabels.xml" property="approvalLimitNotApprover" />
+					</add-error>
+					<check-errors />
+				</then>
+			</else-if>
+		</if>
 	</simple-method>
 
 
 	<simple-method method-name="completeLimitTransaction" short-description="Member Transaction Entry" use-transaction="true">
+<!-- TO DO -->
+<!-- CHECK PREVIOUS TRANSACTIONS STATUS HERE IF COMPLTED IGNORE -->
+
+<!-- CHECK IF ITS THE SAME TELLER THAT RAISED THIS DOCUMENT. SHE/HE SHOULD THE SAME TO COMPLETE THE TRANSACTION -->
+
 
 	        <entity-one entity-name="TellerLimitApprovals" value-field="lookedUpValue"/>
-<!-- 	        <now-timestamp field="createdDate" />
-	        <set field="lookedUpValue.dateApproved" from-field="createdDate" />
-	        <set field="lookedUpValue.approvedBy" from-field="userLogin.userLoginId"/> -->
+
 	        <set field="lookedUpValue.statusName" value="COMPLETED"/>
 	        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
 	        <store-value value-field="lookedUpValue"/>
@@ -365,17 +389,15 @@
     <if>
         <condition>
             <if-compare field="tellerLimit" operator="equals" value="true"/>
+
         </condition>
         <then>
+            <property-to-field resource="AccountHolderTransactionsEntityLabels.xml"  property="This transaction is over 50,000 and needs Approval. Kindly let your supervisor approve before you complete the transaction " field="successMessage" />
             <!-- THEN DO TELLLER LIMITS HERE -->
             <set field="createCashWithdrawalApprovalDoc" value="${bsh:org.ofbiz.accounting.teller.TellerUtilServices.createCashWithdrawalApprovalDoc(newEntity,delegator,userLogin)}" type="Boolean"/>
             <set field="accountTransactionParentId" value="NOTRANSACTION" type="String" />
             <field-to-result field="accountTransactionParentId" result-name="accountTransactionParentId" />
-<<<<<<< HEAD
-             
-=======
-             <log message="############################## INSIDE THE LIMITS AREA" level="info"></log>
->>>>>>> 5a79ebc87976ed9198dca2b61c84f5acd0b9067e
+            
         </then>
         <else-if>
             <condition>
@@ -383,11 +405,9 @@
             </condition>
             <then>
                 <!-- THEN DO NORMAL CASH WITHDRAWAL FROM HERE -->
-<<<<<<< HEAD
+
                
-=======
-                <log message="############################## INSIDE NORMAL WITHDRAWAL AREA" level="info"></log>
->>>>>>> 5a79ebc87976ed9198dca2b61c84f5acd0b9067e
+
                 <set field="newEntity.treasuryId"
 													value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerId(userLogin);}"
 													type="String" />

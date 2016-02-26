@@ -1,7 +1,8 @@
 import groovy.time.*
 accountTransactionParentId = parameters.accountTransactionParentId
 if(accountTransactionParentId == "NOTRANSACTION") {
-	return;
+	context.title = "This transaction is over 50,000 and needs Approval. Kindly let your supervisor approve before you can complete the transaction"
+	
 } else {
 context.title = "Chai Sacco"
 

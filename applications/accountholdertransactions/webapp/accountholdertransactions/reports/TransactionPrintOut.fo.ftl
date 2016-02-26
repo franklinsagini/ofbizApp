@@ -29,8 +29,10 @@ under the License.
     <fo:block><fo:leader/></fo:block>
     
     <fo:block font-size="12pt" text-align="center" font-weight="bold" space-after="0.04in" text-decoration="underline">
-      
+
+       ${title?if_exists}
        Branch : ${branch.groupName?if_exists}
+
     </fo:block>
     <fo:block font-size="12pt" text-align="left" margin-left="20%" margin-bottom="0.2in">
       Date: ${accountTransactionParent.createdStamp?date}  Ref:  ${referenceNo?if_exists}
