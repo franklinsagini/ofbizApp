@@ -3,6 +3,7 @@ package org.ofbiz.registry;
 import java.io.IOException;
 import java.io.Writer;
 import java.security.Security;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1738,34 +1739,23 @@ public class FileServices {
 					return null;
 				}
 				
-				
-				
-		public static Date  calculateIssuedReturnDate(String theFileDuration){
-		 
-			int fileDuration = Integer.parseInt(theFileDuration);
-			
-			java.sql.Date date =  new java.sql.Date(0);
-			
-			LocalDate localDateEndDate = new LocalDate(date.getTime());
+	public static java.sql.Timestamp calculateIssuedReturnDate(String theFileDuration, java.sql.Timestamp issuedDate) {
 
-			int count = 1 ;
-			
-			    while (count < fileDuration) {
-				
-				    localDateEndDate = localDateEndDate.plusDays(1);
+	    int fileDuration = Integer.parseInt(theFileDuration.trim());
+	  //  String f = theFileDuration.valueOf(fileDuration);
+		java.sql.Timestamp today = new java.sql.Timestamp(issuedDate.getTime());
+		LocalDate todayLocalDate = new LocalDate(today);
+		LocalDate givenDatePlusDuration = todayLocalDate.plusDays(fileDuration);
+		Timestamp finaldate = new Timestamp(givenDatePlusDuration.toDateTimeAtStartOfDay().getMillis());
 
-				   count++;
-		     	}
-   
-			log.info("########DATE TO RETURN THE FILE"+localDateEndDate);
-			return localDateEndDate.toDate();
-			
-			
-			
-		}		
+		log.info("--###########----FINAL DATE RETURN--##########---" + finaldate);
+
+		return finaldate;
+
+	}
 				
 		
-	  public static String  getactivityName(String reasonId){
+	public static String  getactivityName(String reasonId){
 		  Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		  GenericValue activityELI = null;
 		  String activityname = null;

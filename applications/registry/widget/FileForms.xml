@@ -1315,6 +1315,57 @@
     </form>
 
     <!-- List Memeber Files -->
+    
+    
+    
+     <form name="listInactiveMemberfilesReady" target="" title="" list-name="listIt" type="list" paginate-target="findRegFileInactive"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+         <set field="readyStatus" value="MOVE-TO-SEMI-ACTIVE"/>
+         <set field="ready" value="${bsh:org.ofbiz.registry.FileServices.getIsReadyToMoveToSemiActiveState(inactiveStartDate);}"/>
+        
+         <entity-condition entity-name="RegistryFiles" >
+              <condition-list>
+                   <condition-expr field-name="stageStatus" operator="equals" value="INACTIVE"/> 
+                   <!-- <condition-expr field-name="ready" operator="equals" from-field="readyStatus"/> -->
+             </condition-list>
+        </entity-condition>
+          
+        </actions>
+       <field name="partyId" title="Member Name"><display-entity entity-name="Member" description="${firstName}  ${lastName}"></display-entity></field>
+         <field name="payrollNumber"><display/></field>
+         <field name="memberNumber"><display/></field>
+		 <field name="status"><hidden/></field>
+		 <field name="currentPossesser"><hidden/></field>
+		 
+        <field name="moveStatus" title="FILE ACTION"><display default-value="${bsh:org.ofbiz.registry.FileServices.getIsReadyToMoveToSemiActiveState(inactiveStartDate);}"/></field>
+       <field name="fileoverview" title="Overview" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="File Overview" target="fileoverviewURL">
+				<parameter param-name="partyId" />
+			</hyperlink>
+		</field>
+		 <field name="activateFile" title="-" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Activate File" target="activateFile">
+				<parameter param-name="partyId" />
+				<parameter param-name="status" /> 
+				<parameter param-name="currentPossesser" /> 
+			</hyperlink>
+		</field>
+		 <field name="filesReturn" title="-" widget-style="buttontext">
+			<hyperlink also-hidden="false" description="Move To Semi-Active Status" target="goSaveSemiActiveFile">
+				<parameter param-name="partyId" />
+				<parameter param-name="status" /> 
+				<parameter param-name="currentPossesser" /> 
+				<parameter param-name="stageStatus" /> 
+			</hyperlink>
+		</field>
+    </form>
+    
+    
+    
+    
+    
+    <!-- Ready Inactive Files To Semi - Archive -->
 
     <form name="listInactiveMemberfiles" target="" title="" list-name="listIt" type="list" paginate-target="findRegFileInactive"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">

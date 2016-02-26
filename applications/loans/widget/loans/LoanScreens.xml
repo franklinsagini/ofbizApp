@@ -776,6 +776,17 @@ under the License.
                </entity-one>
                 
                 <entity-one entity-name="LoanStatusLog" value-field="loanStatusLogContext"/>
+                
+                 <set field="memberNumber" from-field="loanApplication.memberNumber"/>
+                 <set field="partyIdString" from-field="loanApplication.partyId" type="Integer"/>
+                 <set field="loggedInUser" from-field="userLogin.userLoginId" type="String"/>
+                 <set field="logUser" value="${bsh:org.ofbiz.loansprocessing.LoansToRegistryServices.getLoggedInUserPartyId(loggedInUser);}"/>
+                <set field="hasFile" value="${bsh:org.ofbiz.loansprocessing.LoansToRegistryServices.checkIfUserHasFile(partyIdString,logUser);}"/> 
+                
+                <set field="theloanApplicationId" from-field="parameters.loanApplicationId" type="Long"/> 
+                 <set field="theloanApplicationIdString" from-field="parameters.loanApplicationId" type="String"/> 
+                <set field="memberNames" value="${bsh:org.ofbiz.loansprocessing.LoansToRegistryServices.getMemberNameGivenLoanAppId(theloanApplicationId);}"/>
+                
             </actions>
             <widgets>
             
@@ -809,7 +820,19 @@ under the License.
                         			<include-form name="listDisbursementLoanApplicationCharge" location="component://loans/widget/loans/LoanForms.xml"/>
                         		</screenlet>
                                 <screenlet title="Disburse Loan">
+                                 <section>
+                                    <condition>
+                                       <if-compare operator="equals" value="true" field="hasFile"/>
+                                   </condition>
+                                    <widgets>
                                     <include-form name="disburseLoan" location="component://loans/widget/loans/LoanForms.xml"/>
+                                    </widgets>
+                                           <fail-widgets>
+                                             <container>
+                                                <label style="h2" text="YOU CANNOT DISBURSE: YOU DON'THAVE THE FILE FOR ${memberNames} -MEMBER NO: ${memberNumber} Kindly RECEIVE THE FILE OR REQUEST FOR IT "></label>
+                                             </container>
+                                            </fail-widgets>
+                                  </section>  
                                 </screenlet>
                                 <screenlet>
                                 	<section>

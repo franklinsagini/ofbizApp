@@ -3130,6 +3130,49 @@ under the License.
         <field name="runningBalance" title="Running Balance"><display/></field>
   </form>
     
+ 
+   <form name="tellerLimitSetup" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="tellerLimitSetupCont" paginate-target="tellerLimitSetup"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" >
+           <actions>
+              <set field="bigIntOne" value="1" type="BigDecimal"/>
+              <entity-condition entity-name="TellerLimitAmount">
+              <!--  <condition-expr field-name="tellerLimitAmountId" operator="equals" from-field="bigIntOne"/> -->
+           </entity-condition>
+          </actions>
+		<field name="tellerLimitAmountId"><hidden/></field>
+		<field name="amount" title=""><text/></field>
+		<field name="createdStamp" title=""><display also-hidden="false"></display></field>
+		<field name="submit" title="update"><submit button-type="button"/></field>
+   </form>
+   
+  <form name="telerLimitApprovers" type="single" target="createTellerLimitApprover"
+	focus-field-name="name" header-row-style="header-row"
+	default-table-style="basic-table" default-map-name="telerLimitApprovers">
+       
+         <field name="tellerLimitApproversId"><hidden/></field>
+         <field name="partyId" title="Teller Limit Approver"><lookup target-form-name="LookupEmployee"/></field>
+         <field name="amount" title="Amount"  widget-style="required" required-field="true"><text></text></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    
+     </form>
+        
+        
+  <form name="telerLimitApproversList" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateTellerLimitApprover" paginate-target="telerLimitApprovers"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <entity-condition entity-name="TellerLimitApprovers">
+            </entity-condition>
+        </actions>
+          <field name="tellerLimitApproversId"><hidden/></field>
+         <field name="partyId" title="Staff" widget-style="required" required-field="true" ><display-entity entity-name="Person" key-field-name="partyId" description="${firstName} ${lastName} "></display-entity></field>
+        <field name="amount" title="Amount" widget-style="required" required-field="true"><text></text></field>
+        <field name="submitButton" title="Update"> <submit button-type="button"/></field>
+         <field name="deleteLink" title="${uiLabelMap.CommonDelete}" widget-style="buttontext">
+            <hyperlink target="deleteTellerLimitApprover" description="${uiLabelMap.CommonDelete}" also-hidden="false" request-confirmation="true" confirmation-message="Delete Approver?">
+                <parameter param-name="tellerLimitApproversId"/>
+            </hyperlink>
+        </field>
+    </form>
             
 
 </forms>

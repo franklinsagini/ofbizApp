@@ -1139,22 +1139,11 @@
 	<!-- ==========================FILE ISSUE================================== -->
 
 	<simple-method method-name="issuefiles" short-description="request File ">
-
-
-
-
-
 		 <set field="partyId" value="${parameters.partyId}"/>
-
 
 		 <entity-one entity-name="RegistryFiles" value-field="registryFile">
 		 	<field-map field-name="partyId" from-field="partyId"/>
 		 </entity-one>
-
-
-
-
-
 
 		 <set field="userReq" value="ISSUED"/>
 		  <set field="valid" value="INVALID"/>
@@ -1193,6 +1182,8 @@
 		 </entity-one>
 
 		 <!-- Get status -->
+		 <set field="dur" from-field="parameters.Reason"/>
+		 
 		 <set value="${userLogin.partyId}" field="registryFile.actionBy" />
 		 <set field="registryFile.status" value="ISSUED"/>
 		 <set field="registryFile.selectedToBeMoved" value="ISSUED"/>
@@ -1200,15 +1191,20 @@
 
 		  <set field="start" from-field="nowTimestamp"/>
 		  <set field="duration" from-field="activity.activityDuration"/>
+		  
+		  <set field="durationInt" from-field="activity.activityDuration" type="String"/>
 
            <!-- calculate the return issue date -->
+           <log message="------####################---The DURATION---- ${duration}" level="info"/>
          
-         <set field="retunDate" value="${bsh:org.ofbiz.registry.FileServices.calculateIssuedReturnDate(duration);}"/>
+         <set field="retunDate" value="${bsh:org.ofbiz.registry.FileServices.calculateIssuedReturnDate(durationInt,nowTimestamp);}"/>
           <log message="#######XML DATE #### ${retunDate}" level="info"/>
 		 <set field="registryFile.activityDuration" from-field="activity.activityDuration" />
 
-		 <set field="registryFile.issueDate" from-field="nowTimestamp" />
-
+		 <set field="registryFile.issueDate" from-field="nowTimestamp"/>
+		 
+          <set field="registryFile.issuedReturnDate" from-field="retunDate"/>
+          
 		  <set field="registryFile.recieptStatus" value="NOTRECEIVED"/>
 		  <set field="registryFile.currentPossesser" from-field="parameters.actionBy" />
 		 <set field="email_party" from-field="parameters.actionBy"/>

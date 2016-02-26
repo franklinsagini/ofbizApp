@@ -66,5 +66,90 @@
             </widgets>
         </section>
     </screen>
+    
+             <screen name="nomineeReportExcel">
+        <section>
+            <actions>
+                <set field="headerItem" value="nomineeReportExcel" />
+                <set field="tabButtonItem" value="nomineeReport" />
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                    
+                        <container>
+                            <screenlet title="Nominee Report Excel">
+                                <include-form name="nomineeReportFormExcel" location="component://nomineemanagement/widget/NomineeManagementForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="empLeaveRecordPrintCSVScreen">
+        <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                <script location="component://humanres/webapp/humanres/WEB-INF/actions/reports/empLeaveRecordPrintCSVScreen.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label style="h1" text="STAFF (S) LEAVE RECORDS "/>
+                </container>
+                <include-form name="empLeaveRecordPrintCSVScreen" location="component://humanres/widget/ReportForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+<!--      <screen name="runNomineeReportExcel">
+        <section>
+            <actions>
+                <set field="viewSize" value="99999"/>
+                <script location="component://nomineemanagement/webapp/nomineemanagement/WEB-INF/actions/reports/nomineeReportExport.groovy"/>
+            </actions>
+            <widgets>
+               <iterate-section entry="memList" list="memList" view-size="10000">
+                 <section>
+                   <widgets>
+                      <screenlet>
+                         <label></label>
+                          <label style="h1" text="payRoll No:  ${memList.memPayrollNo}"></label>
+                          <label style="h1" text="Name:  ${memList.memFirtsName} ${memList.memlastName}  ${memList.memMiddleName}"></label>
+                         <label style="h1" text="Member Number:  ${memList.memMemberNo} :"></label>
+                         <include-form location="component://nomineemanagement/widget/NomineeManagementForms.xml" name="runNomineeReportExcelForm"/>
+                        <label></label>
+                      </screenlet>
+                   </widgets>
+                 </section>
+               </iterate-section> 
+                  <label style="h2" text="First Name: ${firstN}"></label>
+                  <label style="h2" text="Last Name: ${lastN}"></label>
+                  <label style="h2" text="Middle Name:${middleN}"></label>
+                  <label style="h2" text="Member No:${memberNr}"></label>
+               <include-form location="component://nomineemanagement/widget/NomineeManagementForms.xml" name="runNomineeReportExcelForm"/>
+            </widgets>
+        </section>
+    </screen> -->
+    
+     <screen name="runNomineeReportExcel">
+        <section>
+            <actions>
+                <set field="viewSize" value="99999"/>
+                <script location="component://nomineemanagement/webapp/nomineemanagement/WEB-INF/actions/reports/nominee.groovy"/>
+            </actions>
+                   <widgets>
+                         <include-form location="component://nomineemanagement/widget/NomineeManagementForms.xml" name="runNomineeReportExcelForm"/>
+                   </widgets>
+        </section>
+    </screen>
 
 </screens>

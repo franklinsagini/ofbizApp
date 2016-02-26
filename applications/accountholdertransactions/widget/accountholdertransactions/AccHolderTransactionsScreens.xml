@@ -3234,7 +3234,89 @@
             </widgets>
         </section>
     </screen>
-    
+
+
+<screen name="tellerLimitSetup">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Teller Limit Setup" />
+				<set field="headerItem" value="tellerLimitSetup"/>
+				<set field="displayPassword" value="Y" />
+			</actions>
+			<widgets>
+				<!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+				<decorator-screen name="CommonExpectedPaymentsDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<!-- do check for PARTYMGR, _VIEW permission -->
+							<condition>
+								<!-- if-service-permission service-name="partyBasePermissionCheck"
+									main-action="VIEW"/ -->
+								<if-has-permission permission="ACCOUNTHOLDER"
+									action="_VIEW" />
+							</condition>
+							<widgets>
+								<label style="h1" text="Teller Limit Setup"></label>
+								<screenlet title="Teller Limit Setup">
+									 <include-form name="tellerLimitSetup"
+										location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml" /> 
+								</screenlet>
+								
+							</widgets>
+							<fail-widgets>
+								<label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}" />
+							</fail-widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	    
+<screen name="tellerLimitApprovers">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Teller Limit Approvers" />
+				<set field="headerItem" value="tellerLimitApprovers"/>
+				<set field="displayPassword" value="Y" />
+			</actions>
+			<widgets>
+				<!-- decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}" -->
+				<decorator-screen name="CommonExpectedPaymentsDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<!-- do check for PARTYMGR, _VIEW permission -->
+							<condition>
+								<!-- if-service-permission service-name="partyBasePermissionCheck"
+									main-action="VIEW"/ -->
+								<if-has-permission permission="ACCOUNTHOLDER"
+									action="_VIEW" />
+							</condition>
+							<widgets>
+								<label style="h1" text="Teller Limit Approvers"></label>
+								<screenlet title="Teller Limit Approvers">
+									 <include-form name="telerLimitApprovers"
+										location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml" /> 
+								</screenlet>
+								<screenlet title="Approvers List">
+								   <include-form name="telerLimitApproversList"
+										location="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsForms.xml" />
+								</screenlet>
+								
+							</widgets>
+							<fail-widgets>
+								<label style="h3" text="${uiLabelMap.PartyMgrViewPermissionError}" />
+							</fail-widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	    	    
+	    
 	
 	
 	
