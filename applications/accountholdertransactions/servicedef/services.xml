@@ -583,4 +583,30 @@ under the License.
         
     </service>
     
+    <!-- Update Teller Limit Setup -->
+    <service name="tellerLimitSetupUpdate" engine="simple" location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml"
+     auth="true" invoke="tellerLimitSetupUpdate" default-entity-name="TellerLimitAmount">
+       <description>Update Teller Limit Amount</description>
+       <auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
+       <auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
+     </service>
+     
+    <service name="createTellerLimitApprover" engine="simple" location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml"
+     auth="true" default-entity-name="TellerLimitApprovers" invoke="createTellerLimitApprover">
+      <auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
+      <auto-attributes mode="IN" include="pk" optional="true"></auto-attributes>
+     </service> 
+     
+     <service name="updateTellerLimitApprover" engine="simple" location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml"
+     auth="true" default-entity-name="TellerLimitApprovers" invoke="updateTellerLimitApprover">
+       <auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
+       <auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
+     </service>
+     
+     <service name="deleteTellerLimitApprover" engine="simple"  location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml"
+     auth="true" default-entity-name="TellerLimitApprovers" invoke="deleteTellerLimitApprover">
+       <auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
+     </service>
+    
+    
 </services>

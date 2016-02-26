@@ -1021,9 +1021,62 @@
 	</request-map>
 	
 	
+	<request-map uri="tellerLimitSetup">
+	  <security auth="true" https="true"/>
+	  <response name="success" type="view" value="tellerLimitSetup"></response>
+	  <response name="error" type="view" value="tellerLimitSetup"></response>
+	</request-map>
+	
+	<request-map uri="tellerLimitSetupCont">
+	 <security auth="true" https="true"/>
+	 <event type="service" invoke="tellerLimitSetupUpdate"></event>
+	 <response name="success" type="view" value="tellerLimitSetup"></response>
+	 <response name="error" type="view" value="tellerLimitSetup"></response>
+	</request-map>
+	
+	<request-map uri="tellerLimitApprovers">
+	 <security https="true" auth="true"/>
+	 <response name="success" type="view" value="tellerLimitApprovers"></response>
+	  <response name="error" type="view" value="tellerLimitApprovers"></response>
+	</request-map>
+	
+	<request-map uri="LookupEmployee">
+		<security auth="true" https="true" />
+		<response name="success" type="view" value="LookupEmployee" />
+	</request-map>
+	
+	<request-map uri="createTellerLimitApprover">
+	 <security auth="true" https="true"/>
+	 <event type="service" invoke="createTellerLimitApprover"></event>
+	 <response name="success" type="view" value="tellerLimitApprovers"></response>
+	 <response name="error" type="view" value="tellerLimitApprovers"></response>
+	</request-map>
+	
+	<request-map uri="updateTellerLimitApprover">
+	 <security auth="true" https="true"/>
+	 <event type="service" invoke="updateTellerLimitApprover"></event>
+	 <response name="success" type="view" value="tellerLimitApprovers"></response>
+	 <response name="error" type="view" value="tellerLimitApprovers"></response>
+	</request-map>
+	
+	<request-map uri="deleteTellerLimitApprover">
+	 <security auth="true" https="true"/>
+	 <event type="service" invoke="deleteTellerLimitApprover"></event>
+	 <response name="success" type="view" value="tellerLimitApprovers"></response>
+	 <response name="error" type="view" value="tellerLimitApprovers"></response>
+	</request-map>
+	
 	<!-- end of request mappings -->
 
 	<!-- View Mappings -->
+	<view-map name="LookupEmployee" type="screen"
+		page="component://humanres/widget/LookupScreens.xml#LookupEmployee" />
+	
+	<view-map name="tellerLimitApprovers" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#tellerLimitApprovers"
+	 type="screen"></view-map>
+	
+	 <view-map name="tellerLimitSetup" type="screen"
+		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#tellerLimitSetup" />
 	<view-map name="stationAccountReport" type="screen"
 	 page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#stationAccountReport"></view-map>
 	 

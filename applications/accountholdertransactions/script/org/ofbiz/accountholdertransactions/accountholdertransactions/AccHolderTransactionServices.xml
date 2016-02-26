@@ -38,6 +38,10 @@
 
             <set-service-fields service-name="createCashWithdrawalAfterApproval" map="lookedUpValue" to-map="checkAndCreateBatchForValidPaymentsMap"/>
             <set field="checkAndCreateBatchForValidPaymentsMap.memberAccountId" from-field="lookedUpValue.memberAccountId"/>
+            <set field="checkAndCreateBatchForValidPaymentsMap.transactionAmount" from-field="lookedUpValue.amount"/>
+            
+            <log message="#########---checkAndCreateBatchForValidPaymentsMap ----${checkAndCreateBatchForValidPaymentsMap}" level="info"/>
+            
             <call-service service-name="createCashWithdrawalAfterApproval" in-map-name="checkAndCreateBatchForValidPaymentsMap"/>
 
 	
@@ -258,7 +262,7 @@
 
 		<set field="tellerLimit"
 			value="${bsh:org.ofbiz.accounting.teller.TellerUtilServices.needsApproval(newEntity, delegator);}" type="Boolean"/>
-org.ofbiz.accounting.teller.TellerUtilServices.needsApproval
+
 		<set field="falseField" value="false" type="Boolean" />
 		<set field="trueField" value="true" type="Boolean" />
 		
@@ -365,7 +369,7 @@ org.ofbiz.accounting.teller.TellerUtilServices.needsApproval
             <set field="createCashWithdrawalApprovalDoc" value="${bsh:org.ofbiz.accounting.teller.TellerUtilServices.createCashWithdrawalApprovalDoc(newEntity,delegator,userLogin)}" type="Boolean"/>
             <set field="accountTransactionParentId" value="NOTRANSACTION" type="String" />
             <field-to-result field="accountTransactionParentId" result-name="accountTransactionParentId" />
-             <log message="############################## INSIDE THE LIMITS AREA"></log>
+             <log message="############################## INSIDE THE LIMITS AREA" level="info"></log>
         </then>
         <else-if>
             <condition>
@@ -373,7 +377,7 @@ org.ofbiz.accounting.teller.TellerUtilServices.needsApproval
             </condition>
             <then>
                 <!-- THEN DO NORMAL CASH WITHDRAWAL FROM HERE -->
-                <log message="############################## INSIDE NORMAL WITHDRAWAL AREA"></log>
+                <log message="############################## INSIDE NORMAL WITHDRAWAL AREA" level="info"></log>
                 <set field="newEntity.treasuryId"
 													value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerId(userLogin);}"
 													type="String" />
@@ -1771,5 +1775,48 @@ org.ofbiz.accounting.teller.TellerUtilServices.needsApproval
 			</else>
 		</if>
 	</simple-method>
+
+	
+	<simple-method method-name="tellerLimitSetupUpdate"
+		short-description="Update Teller Limit Amount setup">
+		<entity-one entity-name="TellerLimitAmount" value-field="lookedUpValue"/>
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue"/>
+		<property-to-field resource="AccountHolderTransactionsEntityLabels.xml" 
+            				property="Successfully updated Teller Limit Amount " field="successMessage" />
+	</simple-method>
+	
+  <simple-method method-name="createTellerLimitApprover" short-description="Create Teller Approver">
+		  <make-value value-field="newEntity" entity-name="TellerLimitApprovers"/>
+		  <set-nonpk-fields value-field="newEntity" map="parameters"/>
+		  <set-pk-fields value-field="newEntity" map="parameters"/>
+		    <sequenced-id sequence-name="TellerLimitApprovers" field="tellerLimitApproversId"/>
+		    <set field="newEntity.tellerLimitApproversId" from-field="tellerLimitApproversId"/>
+		  <create-value value-field="newEntity"/>
+		  <property-to-field resource="AccountHolderTransactionsEntityLabels.xml" property="New Teller Approver Created" field="successMessage"/>
+  </simple-method>
+  
+ <!--  <simple-method method-name="updateTellerLimitApprover">
+     <entity-one value-field="lookedUpValue" entity-name="TellerLimitApprovers"/>
+     <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+     <store-value value-field="lookedUpValue"/>
+      <property-to-field resource="AccountHolderTransactionsEntityLabels.xml" property="Teller Approver Updated" field="successMessage"/>
+  </simple-method> -->
+  
+  <simple-method method-name="updateTellerLimitApprover"
+		short-description="Update Teller Approver">
+		<entity-one entity-name="TellerLimitApprovers" value-field="lookedUpValue"/>
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue"/>
+		<property-to-field resource="AccountHolderTransactionsEntityLabels.xml" 
+            				property="Successfully updated Teller Limit Approver " field="successMessage" />
+	</simple-method>
+  
+  <simple-method method-name="deleteTellerLimitApprover">
+    <entity-one value-field="lookedUpValue" entity-name="TellerLimitApprovers"/>
+    <set-pk-fields value-field="lookedUpValue" map="parameters"/>
+    <remove-value value-field="lookedUpValue"/>
+      <property-to-field resource="AccountHolderTransactionsEntityLabels.xml" property="Teller Approver Deleted" field="successMessage"/>
+  </simple-method>	
 	
 </simple-methods>
