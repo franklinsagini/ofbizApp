@@ -30,11 +30,11 @@
                 <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
                 
                 <entity-one entity-name="LoanApplication" value-field="applicationContext">
-                	<field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
+                    <field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
                 </entity-one>
                 
               <entity-condition entity-name="LoanProduct" list="productsList">
-             	 <!-- condition-expr field-name="productType" operator="equals" value="Loan"/ -->
+                 <!-- condition-expr field-name="productType" operator="equals" value="Loan"/ -->
             </entity-condition>
             <entity-condition entity-name="PaymentMethodType" list="paymentMethodsList">
             </entity-condition>
@@ -46,15 +46,15 @@
                     <decorator-section name="body">
 
                         <section name="search-results">
-                        	<widgets>
-                        		<screenlet title="Search Appraised Loans">
-                        			
-                        			<include-form name="FindLoansAppraised" location="component://loansmanager/widget/loansmanagerForms.xml"/>
-                        		</screenlet>
-                        		<screenlet title="Loan Applications">
-                        			<include-form name="listAppraisedLoanApplications" location="component://loansmanager/widget/loansmanagerForms.xml"/>
-                        		</screenlet>
-                        	</widgets>
+                            <widgets>
+                                <screenlet title="Search Appraised Loans">
+                                    
+                                    <include-form name="FindLoansAppraised" location="component://loansmanager/widget/loansmanagerForms.xml"/>
+                                </screenlet>
+                                <screenlet title="Loan Applications">
+                                    <include-form name="listAppraisedLoanApplications" location="component://loansmanager/widget/loansmanagerForms.xml"/>
+                                </screenlet>
+                            </widgets>
                         </section>
                     </decorator-section>
                 </decorator-screen>
@@ -75,11 +75,11 @@
                 <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
                 
                 <entity-one entity-name="LoanApplication" value-field="applicationContext">
-                	<field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
+                    <field-map field-name="loanApplicationId" from-field="loanApplicationId"/>
                 </entity-one>
-			 <!-- condition-expr field-name="productType" operator="equals" value="Loan"/ -->
+             <!-- condition-expr field-name="productType" operator="equals" value="Loan"/ -->
              <entity-condition entity-name="LoanProduct" list="productsList">
-             	
+                
             </entity-condition>
             <entity-condition entity-name="PaymentMethodType" list="paymentMethodsList">
             </entity-condition>
@@ -91,15 +91,15 @@
                     <decorator-section name="body">
 
                         <section name="search-results">
-                        	<widgets>
-                        		<screenlet>
-                        			
-                        			<include-form name="FindLoansApproved" location="component://loansmanager/widget/loansmanagerForms.xml"/>
-                        		</screenlet>
-                        		<screenlet title="Loan Applications">
-                        			<include-form name="listApprovedLoanApplications" location="component://loansmanager/widget/loansmanagerForms.xml"/>
-                        		</screenlet>
-                        	</widgets>
+                            <widgets>
+                                <screenlet>
+                                    
+                                    <include-form name="FindLoansApproved" location="component://loansmanager/widget/loansmanagerForms.xml"/>
+                                </screenlet>
+                                <screenlet title="Loan Applications">
+                                    <include-form name="listApprovedLoanApplications" location="component://loansmanager/widget/loansmanagerForms.xml"/>
+                                </screenlet>
+                            </widgets>
                         </section>
                     </decorator-section>
                 </decorator-screen>
@@ -276,7 +276,7 @@
                                 <not><if-empty field="loanApplication"/></not>
                             </condition>
                             <widgets>
-                           	<include-portal-page id="ApplicationProfile"/>
+                            <include-portal-page id="ApplicationProfile"/>
                             </widgets>
                             <fail-widgets>
                                 <container>
@@ -308,7 +308,7 @@
                 </entity-one>
                 
                 <entity-one value-field="lookupLoanStatus" entity-name="LoanStatus">
-                	<field-map field-name="name" value="${loanApplication.applicationStatus}"/>
+                    <field-map field-name="name" value="${loanApplication.applicationStatus}"/>
                 </entity-one>
                 
                 <!-- entity-one entity-name="SaccoProduct" value-field="lookupLoanType">
@@ -358,9 +358,9 @@
                 <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
                 
                 <set field="collateralsAvailable" value="${bsh:org.ofbiz.loans.LoanServices.loanHasCollateral(loanApplicationId);}" type="String"   />
-				<set field="guarantorsAvailable" value="${bsh:org.ofbiz.loans.LoanServices.loanHasGuarantors(loanApplicationId);}" type="String"   />
-				<set field="guarantorsTotalDepositsEnough" value="${bsh:org.ofbiz.loans.LoanServices.guarantorTotalsEqualLoanTotal(loanApplicationId);}" type="String"   />
-				<!-- set field="eacherGuarantorGreaterThanAverage" value="${bsh:org.ofbiz.loans.LoanServices.checkEachGuarantorDepositGreaterThanAverage(loanApplicationId);}" type="String"   /-->
+                <set field="guarantorsAvailable" value="${bsh:org.ofbiz.loans.LoanServices.loanHasGuarantors(loanApplicationId);}" type="String"   />
+                <set field="guarantorsTotalDepositsEnough" value="${bsh:org.ofbiz.loans.LoanServices.guarantorTotalsEqualLoanTotal(loanApplicationId);}" type="String"   />
+                <!-- set field="eacherGuarantorGreaterThanAverage" value="${bsh:org.ofbiz.loans.LoanServices.checkEachGuarantorDepositGreaterThanAverage(loanApplicationId);}" type="String"   /-->
                 
             </actions>
             <widgets>
@@ -377,61 +377,61 @@
                                 </or>
                             </condition -->
                             <widgets>
-                            	<!-- section>
-									<condition>
-										<and>
-											<if-compare operator="equals" value="N" field="collateralsAvailable"/>
-											<if-compare operator="equals" value="N" field="guarantorsAvailable"/>
-										</and>
-										
-									</condition>
-									<widgets>
-										<container>
-									
-												<label  style="h3"> Loan Application must have Collateral or Guarantors - Please Add</label>
-										</container>
-									</widgets>
-								</section -->
-								
-								<section>
-									<condition>
-										<and>
-											<if-compare operator="equals" value="N" field="collateralsAvailable"/>
-											<if-compare operator="equals" value="N" field="guarantorsAvailable"/>
-										</and>
-									</condition>
-									<widgets>
-										<container>
-									
-												<label style="h3"> Please provide Guarantors or Collateral</label>
-										</container>
-									</widgets>
-								</section>
-								
-								<section>
-									<condition>
-										<if-compare operator="equals" value="N" field="guarantorsTotalDepositsEnough"/>
-									</condition>
-									<widgets>
-										<container>
-									
-												<label style="h3"> Guarantors total deposit is not enough (Sum of Guarantor deposits must be more or equal to the loan amount)</label>
-										</container>
-									</widgets>
-								</section>
-								
-								
-								<!-- section>
-									<condition>
-										<if-compare operator="equals" value="N" field="eacherGuarantorGreaterThanAverage"/>
-									</condition>
-									<widgets>
-										<container>
-									
-												<label style="h3"> Each Guarantor must have enough deposit for his/her share of the loan guaranteed </label>
-										</container>
-									</widgets>
-								</section -->
+                                <!-- section>
+                                    <condition>
+                                        <and>
+                                            <if-compare operator="equals" value="N" field="collateralsAvailable"/>
+                                            <if-compare operator="equals" value="N" field="guarantorsAvailable"/>
+                                        </and>
+                                        
+                                    </condition>
+                                    <widgets>
+                                        <container>
+                                    
+                                                <label  style="h3"> Loan Application must have Collateral or Guarantors - Please Add</label>
+                                        </container>
+                                    </widgets>
+                                </section -->
+                                
+                                <section>
+                                    <condition>
+                                        <and>
+                                            <if-compare operator="equals" value="N" field="collateralsAvailable"/>
+                                            <if-compare operator="equals" value="N" field="guarantorsAvailable"/>
+                                        </and>
+                                    </condition>
+                                    <widgets>
+                                        <container>
+                                    
+                                                <label style="h3"> Please provide Guarantors or Collateral</label>
+                                        </container>
+                                    </widgets>
+                                </section>
+                                
+                                <section>
+                                    <condition>
+                                        <if-compare operator="equals" value="N" field="guarantorsTotalDepositsEnough"/>
+                                    </condition>
+                                    <widgets>
+                                        <container>
+                                    
+                                                <label style="h3"> Guarantors total deposit is not enough (Sum of Guarantor deposits must be more or equal to the loan amount)</label>
+                                        </container>
+                                    </widgets>
+                                </section>
+                                
+                                
+                                <!-- section>
+                                    <condition>
+                                        <if-compare operator="equals" value="N" field="eacherGuarantorGreaterThanAverage"/>
+                                    </condition>
+                                    <widgets>
+                                        <container>
+                                    
+                                                <label style="h3"> Each Guarantor must have enough deposit for his/her share of the loan guaranteed </label>
+                                        </container>
+                                    </widgets>
+                                </section -->
                             
                                 <screenlet title="Loan Information" navigation-menu-name="personUpdate" id="PartyPersonalInformationPanel">
                                            <!-- include-menu name="personUpdate" location="component://party/widget/partymgr/PartyMenus.xml"/ -->
@@ -446,31 +446,31 @@
                                         <widgets>
                                             <!-- include-form name="ViewPartyPersonHistory" location="component://party/widget/partymgr/PartyForms.xml"/ -->
                                             <screenlet title="Add Loan Security">
-                                            	<include-form name="NewLoanApplicationSecurity" location="component://loans/widget/loans/LoanForms.xml"/>
+                                                <include-form name="NewLoanApplicationSecurity" location="component://loans/widget/loans/LoanForms.xml"/>
                                             </screenlet>
                                             <screenlet title="Loan Security List">
-                                            	<include-form name="ViewLoanSecurityList" location="component://loans/widget/loans/LoanForms.xml"/>
+                                                <include-form name="ViewLoanSecurityList" location="component://loans/widget/loans/LoanForms.xml"/>
                                             </screenlet>
                                             
                                              <screenlet title="Add Collateral">
-                                            	<include-form name="NewCollateral" location="component://loans/widget/loans/LoanForms.xml"/>
+                                                <include-form name="NewCollateral" location="component://loans/widget/loans/LoanForms.xml"/>
                                             </screenlet>
                                             <screenlet title="Collateral List">
-                                            	<include-form name="ViewLoanCollateralList" location="component://loans/widget/loans/LoanForms.xml"/>
+                                                <include-form name="ViewLoanCollateralList" location="component://loans/widget/loans/LoanForms.xml"/>
                                             </screenlet>
                                             
                                              <screenlet title="Add Guarantor">
-                                            	<include-form name="NewGuarantor" location="component://loans/widget/loans/LoanForms.xml"/>
+                                                <include-form name="NewGuarantor" location="component://loans/widget/loans/LoanForms.xml"/>
                                             </screenlet>
                                             <screenlet title="Guarantors List">
-                                            	<include-form name="ViewLoanGuarantorsList" location="component://loans/widget/loans/LoanForms.xml"/>
+                                                <include-form name="ViewLoanGuarantorsList" location="component://loans/widget/loans/LoanForms.xml"/>
                                             </screenlet>
                                             
                                              <screenlet title="Add Charge">
-                                            	<include-form name="NewLoanApplicationCharge" location="component://loans/widget/loans/LoanForms.xml"/>
+                                                <include-form name="NewLoanApplicationCharge" location="component://loans/widget/loans/LoanForms.xml"/>
                                             </screenlet>
                                             <screenlet title="Charges List">
-                                            	<include-form name="listLoanApplicationCharge" location="component://loans/widget/loans/LoanForms.xml"/>
+                                                <include-form name="listLoanApplicationCharge" location="component://loans/widget/loans/LoanForms.xml"/>
                                             </screenlet>
                                             
                                             </widgets>
@@ -537,10 +537,10 @@
     </screen>
     
     <!-- 
-    	reviewLoan
-    	appraiseLoan
-    	approveLoan
-    	disburseLoan
+        reviewLoan
+        appraiseLoan
+        approveLoan
+        disburseLoan
      -->
      <!-- reviewLoan -->
      <screen name="reviewLoan">
@@ -574,11 +574,11 @@
                         </section>
                         
                         <section name="search-results">
-                        	<widgets>
-                        		<screenlet title="Review Log">
-                        			<include-form name="listReviewLoan" location="component://loans/widget/loans/LoanForms.xml"/>
-                        		</screenlet>
-                        	</widgets>
+                            <widgets>
+                                <screenlet title="Review Log">
+                                    <include-form name="listReviewLoan" location="component://loans/widget/loans/LoanForms.xml"/>
+                                </screenlet>
+                            </widgets>
                         </section>
                     </decorator-section>
                 </decorator-screen>
@@ -619,11 +619,11 @@
                         </section>
                         
                         <section name="search-results">
-                        	<widgets>
-                        		<screenlet title="Appraisal Log">
-                        			<include-form name="listAppraiseLoan" location="component://loans/widget/loans/LoanForms.xml"/>
-                        		</screenlet>
-                        	</widgets>
+                            <widgets>
+                                <screenlet title="Appraisal Log">
+                                    <include-form name="listAppraiseLoan" location="component://loans/widget/loans/LoanForms.xml"/>
+                                </screenlet>
+                            </widgets>
                         </section>
                     </decorator-section>
                 </decorator-screen>
@@ -652,11 +652,11 @@
                 </entity-one>
                 
                 <entity-one value-field="lookupLoanStatus" entity-name="LoanStatus">
-                	<field-map field-name="name" value="${loanApplication.applicationStatus}"/>
+                    <field-map field-name="name" value="${loanApplication.applicationStatus}"/>
                 </entity-one>
                 
                 <entity-one value-field="member" entity-name="Member">
-                	<field-map field-name="partyId" value="${loanApplication.partyId}"/>
+                    <field-map field-name="partyId" value="${loanApplication.partyId}"/>
                 </entity-one>
                 <set field="loanApplicationId" from-field="parameters.loanApplicationId"/>
             </actions>
@@ -670,64 +670,64 @@
                             </condition>
                             <widgets>
 
-								<screenlet>
-									<include-form name="ViewLoanApplicationDetails" location="component://loans/widget/loans/LoanForms.xml"/>
-								</screenlet>
-								<!-- LoanStatusChange -->
-								<screenlet title="Change Loan Status for Loan No - ${loanApplication.loanNo} for  ${member.firstName} ${member.lastName}">
-									<include-form name="LoanStatusChange"
-										location="component://loans/widget/loans/LoanForms.xml" />
-								</screenlet>
-								<screenlet title="List">
-									<include-form name="listLoanStatusChange"
-										location="component://loans/widget/loans/LoanForms.xml" />
-								</screenlet>
-								<!-- LoanInterestChange -->
-								<screenlet title="Change Interest Rate for Loan No - ${loanApplication.loanNo} for  ${member.firstName} ${member.lastName}">
-									<include-form name="LoanInterestChange"
-										location="component://loans/widget/loans/LoanForms.xml" />
-								</screenlet>
-								<screenlet title="List">
-									<include-form name="listLoanInterestChange"
-										location="component://loans/widget/loans/LoanForms.xml" />
-								</screenlet>
-								<!-- LoanAmountChange -->
-								<screenlet title="Change Loan Amount for Loan No - ${loanApplication.loanNo} for  ${member.firstName} ${member.lastName}">
-									<include-form name="LoanAmountChange"
-										location="component://loans/widget/loans/LoanForms.xml" />
-								</screenlet>
-								<screenlet title="List">
-									<include-form name="listLoanAmountChange"
-										location="component://loans/widget/loans/LoanForms.xml" />
-								</screenlet>
-								<!-- LoanRepaymentPeriodChange -->
-								<screenlet title="Change Repayment Period for Loan No - ${loanApplication.loanNo} for  ${member.firstName} ${member.lastName}">
-									<include-form name="LoanRepaymentPeriodChange"
-										location="component://loans/widget/loans/LoanForms.xml" />
-								</screenlet>
-								<screenlet title="List">
-									<include-form name="listLoanRepaymentPeriodChange"
-										location="component://loans/widget/loans/LoanForms.xml" />
-								</screenlet>
-								
-								<!--  LoanSalaryAmount -->
-								<screenlet title="Change Salary Amount for Loan No - ${loanApplication.loanNo} for  ${member.firstName} ${member.lastName}">
-									<include-form name="LoanSalaryAmount"
-										location="component://loans/widget/loans/LoanForms.xml" />
-								</screenlet>
-								<screenlet title="List">
-									<include-form name="listLoanSalaryAmount"
-										location="component://loans/widget/loans/LoanForms.xml" />
-								</screenlet>
-									<!-- LoanGuarantorChange -->
-								<screenlet title="Change Guarantors for Loan No - ${loanApplication.loanNo} for  ${member.firstName} ${member.lastName}">
-									<include-form name="LoanGuarantorChange"
-										location="component://loans/widget/loans/LoanForms.xml" />
-								</screenlet>
-								<screenlet title="List">
-									<include-form name="listLoanGuarantorChange"
-										location="component://loans/widget/loans/LoanForms.xml" />
-								</screenlet>
+                                <screenlet>
+                                    <include-form name="ViewLoanApplicationDetails" location="component://loans/widget/loans/LoanForms.xml"/>
+                                </screenlet>
+                                <!-- LoanStatusChange -->
+                                <screenlet title="Change Loan Status for Loan No - ${loanApplication.loanNo} for  ${member.firstName} ${member.lastName}">
+                                    <include-form name="LoanStatusChange"
+                                        location="component://loans/widget/loans/LoanForms.xml" />
+                                </screenlet>
+                                <screenlet title="List">
+                                    <include-form name="listLoanStatusChange"
+                                        location="component://loans/widget/loans/LoanForms.xml" />
+                                </screenlet>
+                                <!-- LoanInterestChange -->
+                                <screenlet title="Change Interest Rate for Loan No - ${loanApplication.loanNo} for  ${member.firstName} ${member.lastName}">
+                                    <include-form name="LoanInterestChange"
+                                        location="component://loans/widget/loans/LoanForms.xml" />
+                                </screenlet>
+                                <screenlet title="List">
+                                    <include-form name="listLoanInterestChange"
+                                        location="component://loans/widget/loans/LoanForms.xml" />
+                                </screenlet>
+                                <!-- LoanAmountChange -->
+                                <screenlet title="Change Loan Amount for Loan No - ${loanApplication.loanNo} for  ${member.firstName} ${member.lastName}">
+                                    <include-form name="LoanAmountChange"
+                                        location="component://loans/widget/loans/LoanForms.xml" />
+                                </screenlet>
+                                <screenlet title="List">
+                                    <include-form name="listLoanAmountChange"
+                                        location="component://loans/widget/loans/LoanForms.xml" />
+                                </screenlet>
+                                <!-- LoanRepaymentPeriodChange -->
+                                <screenlet title="Change Repayment Period for Loan No - ${loanApplication.loanNo} for  ${member.firstName} ${member.lastName}">
+                                    <include-form name="LoanRepaymentPeriodChange"
+                                        location="component://loans/widget/loans/LoanForms.xml" />
+                                </screenlet>
+                                <screenlet title="List">
+                                    <include-form name="listLoanRepaymentPeriodChange"
+                                        location="component://loans/widget/loans/LoanForms.xml" />
+                                </screenlet>
+                                
+                                <!--  LoanSalaryAmount -->
+                                <screenlet title="Change Salary Amount for Loan No - ${loanApplication.loanNo} for  ${member.firstName} ${member.lastName}">
+                                    <include-form name="LoanSalaryAmount"
+                                        location="component://loans/widget/loans/LoanForms.xml" />
+                                </screenlet>
+                                <screenlet title="List">
+                                    <include-form name="listLoanSalaryAmount"
+                                        location="component://loans/widget/loans/LoanForms.xml" />
+                                </screenlet>
+                                    <!-- LoanGuarantorChange -->
+                                <screenlet title="Change Guarantors for Loan No - ${loanApplication.loanNo} for  ${member.firstName} ${member.lastName}">
+                                    <include-form name="LoanGuarantorChange"
+                                        location="component://loans/widget/loans/LoanForms.xml" />
+                                </screenlet>
+                                <screenlet title="List">
+                                    <include-form name="listLoanGuarantorChange"
+                                        location="component://loans/widget/loans/LoanForms.xml" />
+                                </screenlet>
                                
                             </widgets>
                             <fail-widgets>
@@ -763,26 +763,15 @@
                 <set field="approvedAmt" value="${loanApplication.loanAmt}"/>
                 <set field="loanAmt" value="${loanApplication.loanAmt}"/>
                 
-                 <set field="partyIdString" from-field="loanApplication.partyId" type="Integer"/>
-                 <set field="loggedInUser" from-field="userLogin.userLoginId" type="String"/>
-                 <set field="logUser" value="${bsh:org.ofbiz.loansprocessing.LoansToRegistryServices.getLoggedInUserPartyId(loggedInUser);}"/>
-                <set field="hasFile" value="${bsh:org.ofbiz.loansprocessing.LoansToRegistryServices.checkIfUserHasFile(partyIdString,logUser);}"/> 
-                
                 <set field="theloanApplicationId" from-field="parameters.loanApplicationId" type="Long"/> 
-                 <set field="theloanApplicationIdString" from-field="parameters.loanApplicationId" type="String"/> 
-                <set field="memberNames" value="${bsh:org.ofbiz.loansprocessing.LoansToRegistryServices.getMemberNameGivenLoanAppId(theloanApplicationId);}"/>
-                
             </actions>
             <widgets>
                 <decorator-screen name="CommonLoanApplicationDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                       <section>
                        
-                          <!--   <condition>
-                                <not><if-empty field="loanApplication"/></not>
-                            </condition> -->
+                        <section>
                             <condition>
-                                <if-compare operator="equals" value="true" field="hasFile"/>
+                                <not><if-empty field="loanApplication"/></not>
                             </condition>
                             <widgets>
                             <screenlet title="Approval">
@@ -791,23 +780,18 @@
                                <screenlet title="List">
                                        <include-form name="loanLogs" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
                                  </screenlet>
+                               
                             </widgets>
-                             <fail-widgets>
-                               <container>
-                                   <label style="h2" text="YOU DONT HAVE THE FILE FOR ${memberNames} -MEMBER NO: ${memberNumber} Kindly RECEIVE THE FILE OR REQUEST FOR IT "></label>
-                               </container>
-                            </fail-widgets>
-                           <!--  <fail-widgets>
+                            <fail-widgets>
                                 <container>
                                     <label style="h3">${uiLabelMap.PartyNoPartyFoundWithPartyId}: ${parameters.partyId}</label>
                                 </container>
-                            </fail-widgets> -->
+                            </fail-widgets>
                         </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
-       
     </screen>
     
     <!-- returnToLoans -->
