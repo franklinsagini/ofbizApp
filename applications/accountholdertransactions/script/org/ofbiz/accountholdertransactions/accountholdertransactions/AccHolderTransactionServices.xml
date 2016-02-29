@@ -50,26 +50,56 @@
 	<simple-method method-name="completeLimitTransaction" short-description="Member Transaction Entry" use-transaction="true">
 <!-- TO DO -->
 <!-- CHECK PREVIOUS TRANSACTIONS STATUS HERE IF COMPLTED IGNORE -->
+<entity-one entity-name="TellerLimitApprovals" value-field="lookedUpValue"/>
+	<if>
+		<condition>
+			<if-compare field="lookedUpValue.statusName" value="COMPLETED" operator="equals"/>
+		</condition>
+		<then>
 
+			<add-error>
+				<fail-property resource="AccountHolderTransactionsUILabels.xml" property="transactionAlreadyCompleted" />
+			</add-error>
+			<check-errors />
+
+		</then>
+		<else>
 <!-- CHECK IF ITS THE SAME TELLER THAT RAISED THIS DOCUMENT. SHE/HE SHOULD THE SAME TO COMPLETE THE TRANSACTION -->
 
-
-	        <entity-one entity-name="TellerLimitApprovals" value-field="lookedUpValue"/>
-
-	        <set field="lookedUpValue.statusName" value="COMPLETED"/>
+	<if>
+		<condition>
+			<if-compare-field to-field="lookedUpValue.tellerId" operator="equals" field="userLogin.userLoginId"></if-compare-field>
+		</condition>
+		<then>
+			<set field="lookedUpValue.statusName" value="COMPLETED"/>
 	        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
 	        <store-value value-field="lookedUpValue"/>
 
-            <set-service-fields service-name="createCashWithdrawalAfterApproval" map="lookedUpValue" to-map="checkAndCreateBatchForValidPaymentsMap"/>
-            <set field="checkAndCreateBatchForValidPaymentsMap.memberAccountId" from-field="lookedUpValue.memberAccountId"/>
-            <set field="checkAndCreateBatchForValidPaymentsMap.transactionAmount" from-field="lookedUpValue.amount"/>
+            <set-service-fields service-name="createCashWithdrawalAfterApproval" map="lookedUpValue" to-map="params"/>
+            <set field="params.memberAccountId" from-field="lookedUpValue.memberAccountId"/>
+            <set field="params.transactionAmount" from-field="lookedUpValue.amount"/>
 
-            <call-service service-name="createCashWithdrawalAfterApproval" in-map-name="checkAndCreateBatchForValidPaymentsMap">
+            <call-service service-name="createCashWithdrawalAfterApproval" in-map-name="params">
             	<result-to-field result-name="accountTransactionParentId"/>
             </call-service>
 
 
 	<field-to-result field="accountTransactionParentId" result-name="accountTransactionParentId" />
+		</then>
+		<else>
+			<add-error>
+			<fail-property resource="AccountHolderTransactionsUILabels.xml" property="wrongTellerTransaction" />
+			</add-error>
+			<check-errors />
+		</else>
+	</if>
+
+	        
+
+	        
+		</else>
+	</if>
+
 	
 	</simple-method>
 
