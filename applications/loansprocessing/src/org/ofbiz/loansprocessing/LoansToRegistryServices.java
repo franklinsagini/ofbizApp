@@ -14,18 +14,20 @@ public class LoansToRegistryServices {
 
 	public static Logger log = Logger.getLogger(LoansToRegistryServices.class);
 
-	public static String checkIfUserHasFile(int memberPartyId, String userPartyId) {
+	public static String checkIfUserHasFile(String memberPartyId, String userPartyId) {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 
-		log.info("-------------######### memberPartyId-----" + memberPartyId);
-		log.info("-------------#########__userPartyId----" + userPartyId);
-		String meString = "" + memberPartyId;
-		log.info("-------------########----meString---" + meString);
+		String plainPartyId =  memberPartyId.replace(",", "");
+		log.info("-------------Plain memberPartyId-----" + plainPartyId);
+		log.info("------------- memberPartyId-----" + memberPartyId);
+		log.info("--------------------LoggedInuserPartyId----" + userPartyId);
+		//String meString = "" + memberPartyId;
+		//log.info("-------------########----meString---" + meString);
 		List<GenericValue> checkUserELE = null;
 		String trueValue = "true";
 		String falseValue = "false";
 		try {
-			checkUserELE = delegator.findList("RegistryFiles", EntityCondition.makeCondition("partyId", meString), null,
+			checkUserELE = delegator.findList("RegistryFiles", EntityCondition.makeCondition("partyId", plainPartyId), null,
 					null, null, false);
 		} catch (GenericEntityException ex) {
 			ex.printStackTrace();
@@ -33,17 +35,21 @@ public class LoansToRegistryServices {
 		String currentPossessor = null;
 		for (GenericValue genericValue : checkUserELE) {
 			currentPossessor = genericValue.getString("currentPossesser");
+			
+			if(currentPossessor != null || currentPossessor != "" ){
+			
 			if (currentPossessor.equalsIgnoreCase(userPartyId)) {
 				log.info("------------THEY ARE EQAUL--------------");
-				log.info("-------------__CURENT POSSESSER TRUE-----" + currentPossessor);
+				log.info("-------------CURENT POSSESSER TRUE-----" + currentPossessor);
 				return trueValue;
-			} else {
-
+			}
+			
+			}else{
+				log.info("------------THEY ARE NOT EQUAL --------------");
+				log.info("-------------CURENT POSSESSER FALSE-----" + currentPossessor);
 			}
 		}
-		log.info("------------THEY ARE NOT EQAUL--------------");
-		log.info("-------------!!!!!!!!!!!!__CURENT POSSESSER FALSE-----" + currentPossessor);
-
+		
 		return falseValue;
 	}
 

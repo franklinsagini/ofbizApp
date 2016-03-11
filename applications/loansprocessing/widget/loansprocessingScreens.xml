@@ -81,15 +81,17 @@
                 
                 <!--Check if user has file  -->
                  
+                <set field="LoggedInpartyId" from-field="userLogin.partyId" />
+                 
                 <set field="memberNumber" from-field="loanApplication.memberNumber"/>
-                <set field="partyIdString" from-field="loanApplication.partyId" type="Integer"/>
-                <set field="loggedInUser" from-field="userLogin.userLoginId" type="String"/>
-                <set field="logUser" value="${bsh:org.ofbiz.loansprocessing.LoansToRegistryServices.getLoggedInUserPartyId(loggedInUser);}"/>
-                <set field="hasFile" value="${bsh:org.ofbiz.loansprocessing.LoansToRegistryServices.checkIfUserHasFile(partyIdString,logUser);}"/> 
+                <set field="partyIdToString" from-field="loanApplication.partyId" type="String"/>
+              <!--   <set field="loggedInUser" from-field="userLogin.userLoginId" type="String"/>
+                <set field="logUser" value="${bsh:org.ofbiz.loansprocessing.LoansToRegistryServices.getLoggedInUserPartyId(loggedInUser);}"/> -->
+                <set field="hasFile" value="${bsh:org.ofbiz.loansprocessing.LoansToRegistryServices.checkIfUserHasFile(partyIdToString,LoggedInpartyId);}"/> 
                 <set field="theloanApplicationId" from-field="parameters.loanApplicationId" type="Long"/> 
                 <set field="theloanApplicationIdString" from-field="parameters.loanApplicationId" type="String"/> 
                 <set field="memberNames" value="${bsh:org.ofbiz.loansprocessing.LoansToRegistryServices.getMemberNameGivenLoanAppId(theloanApplicationId);}"/>
-                   
+                
                  <!-- End Of Modification  -->
                  
             </actions>
@@ -105,21 +107,21 @@
                             <widgets>
                               
 
-                                   <!-- <section>
+                                   <section>
                                     <condition>
                                        <if-compare operator="equals" value="true" field="hasFile"/>
                                       </condition>
-                                      <widgets> -->
+                                      <widgets>
                                       
                                           <include-portal-page id="ApplicationProfile"/>
                                           
-                                       <!--  </widgets>
+                                        </widgets>
                                            <fail-widgets>
                                              <container>
                                                 <label style="h2" text="Kindly Request or Receive the File for ${memberNames} -MEMBER NO: ${memberNumber}  In Order to Continue."></label>
                                              </container>
                                             </fail-widgets>
-                                  </section>   -->
+                                  </section>  
 
 
                                 <!-- section>
