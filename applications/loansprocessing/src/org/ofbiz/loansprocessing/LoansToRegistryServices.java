@@ -35,14 +35,14 @@ public class LoansToRegistryServices {
 			currentPossessor = genericValue.getString("currentPossesser");
 			if (currentPossessor.equalsIgnoreCase(userPartyId)) {
 				log.info("------------THEY ARE EQAUL--------------");
-				log.info("-------------#########__CURENT POSSESSER TRUE-----" + currentPossessor);
+				log.info("-------------__CURENT POSSESSER TRUE-----" + currentPossessor);
 				return trueValue;
 			} else {
 
 			}
 		}
 		log.info("------------THEY ARE NOT EQAUL--------------");
-		log.info("-------------#########__CURENT POSSESSER FALSE-----" + currentPossessor);
+		log.info("-------------!!!!!!!!!!!!__CURENT POSSESSER FALSE-----" + currentPossessor);
 
 		return falseValue;
 	}
