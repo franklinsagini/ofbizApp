@@ -30,18 +30,18 @@ public class sendMessage {
 	public static String senders(HttpServletRequest request, HttpServletResponse response) {
 
 		log.info("-------SEND SMSs----------SENDERS() METHOD;");
-		String suc = "Successesese";
+		String suc = "Success Msg";
 		Delegator delegator = (Delegator) request.getAttribute("delegator");
 		try {
-		  String saveManyGuys = sendMessage.send_Defaulter_SMS_Non_Payment_For_Three_Months();
-		 // String sendManyDef = sendMessage.send_Defaulter_SMS_Non_Payment_For_Three_Months();
-			System.out.println("____-------send_Defaulter_SMS_Non_Payment_For_Three_Month-----");
+
+			String sendToNewMemberWithdwawal = Loan_NonPayment_ToLoaneeOneMonth();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("______POULD NOT SEND TO MANY _-----");
 		}
 
-		log.info("&**************#senders Really Done##************####");
+		log.info(" **************   SEND MESSAGE  *********** ");
 
 		return suc;
 	}
@@ -57,6 +57,42 @@ public class sendMessage {
 		// getSavedSMSMessagesAndSend();
 
 		return recipients;
+	}
+
+	/*
+	 * ====send Messages to New registered Members In Chai Sacco
+	 * Limited---------------------
+	 */
+	public static String getNewSaccoMembersMobileNumbers() {
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> newMemberELI = null;
+		String mobileNumber = null;
+		String MemberNo = null;
+		String message = null;
+
+		EntityConditionList<EntityExpr> newMemberCondition = EntityCondition.makeCondition(
+				UtilMisc.toList(EntityCondition.makeCondition("notificationStatus", EntityOperator.EQUALS, "N")),
+				EntityOperator.AND);
+		try {
+			newMemberELI = delegator.findList("Member", newMemberCondition, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		for (GenericValue genericValue : newMemberELI) {
+			// --------------message Body to send
+			mobileNumber = genericValue.getString("mobileNumber");
+			MemberNo = genericValue.getString("memberNumber");
+			message = "You have been successfully registered as Chai Sacco Member.Your Member No is " + MemberNo
+					+ ".Thank You";
+			String saveMessage = sendMessage.sendAndStroreRegistrationMessage(mobileNumber, message);
+			genericValue.set("notificationStatus", "Y");
+			try {
+				delegator.createOrStore(genericValue);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return message;
 	}
 
 	public static String sendAndStroreRegistrationMessage(String phoneNo, String Body) {
@@ -364,7 +400,7 @@ public class sendMessage {
 		String mobileNumber = null;
 		try {
 			guarantorsELE = delegator.findOne("Member", UtilMisc.toMap("partyId", partyIdAsGuarantor), false);
-			
+
 		} catch (GenericEntityException e) {
 			e.printStackTrace();
 		}
@@ -398,11 +434,12 @@ public class sendMessage {
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		List<GenericValue> memberWithdraw = null;
 		String memberPhoneNumber = null;
+		String memberFirstName = null;
 		String msgToBeSent = null;
 
 		EntityConditionList<EntityExpr> withdrawalConditions = EntityConditionList.makeCondition(
 				UtilMisc.toList(EntityCondition.makeCondition("withdrawalstatus", EntityOperator.EQUALS, "APPLIED"),
-						EntityCondition.makeCondition("smsSendStatus", EntityOperator.EQUALS, "")),
+						EntityCondition.makeCondition("smsSendStatus", EntityOperator.EQUALS, null)),
 				EntityOperator.AND);
 
 		try {
@@ -412,7 +449,9 @@ public class sendMessage {
 		}
 		for (GenericValue genericValue : memberWithdraw) {
 			memberPhoneNumber = genericValue.getString("mobilePhoneNumber");
-			msgToBeSent = "We have received your withdrawal request from the Society for Processing.";
+			memberFirstName = genericValue.getString("firstName");
+			msgToBeSent = "Dear " + memberFirstName
+					+ " We have received your withdrawal request from the Society for Processing.";
 			String saveMessage = sendMessage.sendAndStroreRegistrationMessage(memberPhoneNumber, msgToBeSent);
 			System.out.println("" + saveMessage);
 			genericValue.set("smsSendStatus", "SEND");
@@ -537,13 +576,12 @@ public class sendMessage {
 		return success;
 	}
 
-	
-	
-	//---------------TO Loanee And Guaranteers--------------------
-	
+	// ---------------TO Loanee And Guaranteers--------------------
+
 	public static String send_Defaulter_SMS_Non_Payment_For_Three_Months() {
 
-		//log.info("Your Loan of Kshs **sendDefaulterSMS** has not been in service for 3 months.It's due for attachment");
+		// log.info("Your Loan of Kshs **sendDefaulterSMS** has not been in
+		// service for 3 months.It's due for attachment");
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
 		int numberOfDays = 90;
 		int numberControl = numberOfDays + 5;
@@ -568,17 +606,21 @@ public class sendMessage {
 		log.info("--------------TIMESTAMP FOR DEFAULTER SMS---------------" + timestamp);
 		log.info("--------------TIMESTAMP FOR DEFAULTER SMS ADDED DAYS---------------" + timestampAddition);
 
-		EntityConditionList<EntityExpr> listConditionsForThree_Month_Non_Payment = EntityCondition.makeCondition(
-				UtilMisc.toList(//EntityCondition.makeCondition("msgSendStatus", EntityOperator.EQUALS, ""),
-						//EntityCondition.makeCondition("msgStatusControl", EntityOperator.EQUALS, statusControl),
+		EntityConditionList<EntityExpr> listConditionsForThree_Month_Non_Payment = EntityCondition
+				.makeCondition(UtilMisc.toList(// EntityCondition.makeCondition("msgSendStatus",
+												// EntityOperator.EQUALS, ""),
+						// EntityCondition.makeCondition("msgStatusControl",
+						// EntityOperator.EQUALS, statusControl),
 						EntityCondition.makeCondition("outstandingBalance", EntityOperator.GREATER_THAN,
 								zeroOutStandingBalance),
-				EntityCondition.makeCondition("mobileNumber", EntityOperator.NOT_EQUAL, ""),
-				EntityCondition.makeCondition("lastRepaymentDate", EntityOperator.LESS_THAN, timestamp),
-				EntityCondition.makeCondition("lastRepaymentDate", EntityOperator.GREATER_THAN, timestampAddition)),
-				EntityOperator.AND);
+						EntityCondition.makeCondition("mobileNumber", EntityOperator.NOT_EQUAL, ""),
+						EntityCondition.makeCondition("lastRepaymentDate", EntityOperator.LESS_THAN, timestamp),
+						EntityCondition.makeCondition("lastRepaymentDate", EntityOperator.GREATER_THAN,
+								timestampAddition)),
+						EntityOperator.AND);
 		try {
-			ListNotInServeForThreeMonths = delegator.findList("LoanApplication", listConditionsForThree_Month_Non_Payment, null, null, null, false);
+			ListNotInServeForThreeMonths = delegator.findList("LoanApplication",
+					listConditionsForThree_Month_Non_Payment, null, null, null, false);
 		} catch (GenericEntityException ex) {
 			ex.printStackTrace();
 		}
@@ -587,11 +629,11 @@ public class sendMessage {
 		BigDecimal loanAmt = BigDecimal.ZERO;
 		int loanAmtStr = 0;
 		String saveToTable = null;
-		
+
 		int sizeOfReturnedValues = ListNotInServeForThreeMonths.size();
-		
-		log.info("----------sizeOfReturnedValues-ListNotInServeForThreeMonths------"+sizeOfReturnedValues);
-		
+
+		log.info("----------sizeOfReturnedValues-ListNotInServeForThreeMonths------" + sizeOfReturnedValues);
+
 		for (GenericValue genericValue : ListNotInServeForThreeMonths) {
 			long loanApplicationId = genericValue.getLong("loanApplicationId");
 			phoneNumber = genericValue.getString("mobileNumber");
@@ -601,7 +643,7 @@ public class sendMessage {
 			loanAmtStr = loanAmt.intValue();
 			String msgBody = "Your Loan of Kshs " + appliedAmt
 					+ " has not been in service for 3 months.It's due for attachment";
-			
+
 			log.info("---------------APPLIED___DEFAULTERSMS__LOAN_AMT" + loanAmt);
 			log.info("---------------MOBILE NUMBER" + phoneNumber);
 
@@ -628,14 +670,15 @@ public class sendMessage {
 				guarantorsPartyId = genericGuarantor.getLong("guarantorId");
 				mobileNo = getGuarantorPhoneNumber(guarantorsPartyId);
 				fname = getGuarantorName(guarantorsPartyId);
-				messageToSentToGuarantor = "Dear " + fname + ", Loan of Loan No: "+loanNo+" has not been paid for 3 months and has been attached to you.";
+				messageToSentToGuarantor = "Dear " + fname + ", Loan of Loan No: " + loanNo
+						+ " has not been paid for 3 months and has been attached to you.";
 				String saveGuarantorMessage = sendMessage.sendAndStroreRegistrationMessage(mobileNo,
 						messageToSentToGuarantor);
 				System.out.println("" + saveGuarantorMessage);
 			}
 
 			genericValue.set("msgSendStatus", SaveString);
-			//genericValue.set("msgStatusControl", SaveString);
+			// genericValue.set("msgStatusControl", SaveString);
 			try {
 				delegator.createOrStore(genericValue);
 			} catch (Exception e) {
@@ -648,14 +691,15 @@ public class sendMessage {
 
 	}
 
-	//---------------------------------
-	//---------------TO Loanee And Guaranteers--------------------
-	
+	// ---------------------------------
+	// ---------------TO Loanee And Guaranteers--------------------
+
 	public static String send_Defaulter_SMS_Non_Payment_For_Two_Months() {
 
-		//log.info("Your Loan of Kshs **sendDefaulterSMS** has not been in service for 3 months.It's due for attachment");
+		// log.info("Your Loan of Kshs **sendDefaulterSMS** has not been in
+		// service for 3 months.It's due for attachment");
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		int numberOfDays = 60;
+		int numberOfDays = 90;
 		int numberControl = numberOfDays + 2;
 		String sendStatus = "SendForNonPayment";
 		String statusControl = "SendForNonPayment";
@@ -680,15 +724,19 @@ public class sendMessage {
 
 		EntityConditionList<EntityExpr> listConditionsForTwo_Month_Non_Payment = EntityCondition.makeCondition(
 				UtilMisc.toList(EntityCondition.makeCondition("msgSendStatus", EntityOperator.EQUALS, sendStatus),
-						//EntityCondition.makeCondition("msgStatusControl", EntityOperator.EQUALS, statusControl),
+						// EntityCondition.makeCondition("msgStatusControl",
+						// EntityOperator.EQUALS, statusControl),
 						EntityCondition.makeCondition("outstandingBalance", EntityOperator.GREATER_THAN,
 								zeroOutStandingBalance),
-				EntityCondition.makeCondition("mobileNumber", EntityOperator.NOT_EQUAL, ""),
-				EntityCondition.makeCondition("lastRepaymentDate", EntityOperator.LESS_THAN, timestamp),
-				EntityCondition.makeCondition("lastRepaymentDate", EntityOperator.GREATER_THAN, timestampAddition)),
+						//EntityCondition.makeCondition("mobileNumber", EntityOperator.NOT_EQUAL, ""),
+						EntityCondition.makeCondition("msgSendStatus", EntityOperator.NOT_EQUAL, "ONE"),
+						EntityCondition.makeCondition("lastRepaymentDate", EntityOperator.LESS_THAN, timestamp),
+						EntityCondition.makeCondition("lastRepaymentDate", EntityOperator.GREATER_THAN,
+								timestampAddition)),
 				EntityOperator.AND);
 		try {
-			ListNotInServeForTwoMonths = delegator.findList("LoanApplication", listConditionsForTwo_Month_Non_Payment, null, null, null, false);
+			ListNotInServeForTwoMonths = delegator.findList("LoanApplication", listConditionsForTwo_Month_Non_Payment,
+					null, null, null, false);
 		} catch (GenericEntityException ex) {
 			ex.printStackTrace();
 		}
@@ -706,7 +754,7 @@ public class sendMessage {
 			loanAmtStr = loanAmt.intValue();
 			String msgBody = "Your Loan of Kshs " + loanAmtStr
 					+ " has not been in service for 2 months.Kindly repay Your Loan Promptly";
-			
+
 			log.info("---------------APPLIED___DEFAULTERSMS__LOAN_AMT--TWO MONTHS" + loanAmt);
 
 			saveToTable = sendMessage.sendAndStroreRegistrationMessage(phoneNumber, msgBody);
@@ -732,14 +780,15 @@ public class sendMessage {
 				guarantorsPartyId = genericGuarantor.getLong("guarantorId");
 				mobileNo = getGuarantorPhoneNumber(guarantorsPartyId);
 				fname = getGuarantorName(guarantorsPartyId);
-				messageToSentToGuarantor = "Dear " + fname + ", Loan of Loan No: "+loanNo+" has not been Paid for 2 Months. Chai Sacco";
+				messageToSentToGuarantor = "Dear " + fname + ", Loan of Loan No: " + loanNo
+						+ " has not been Paid for 2 Months. Chai Sacco";
 				String saveGuarantorMessage = sendMessage.sendAndStroreRegistrationMessage(mobileNo,
 						messageToSentToGuarantor);
 				System.out.println("" + saveGuarantorMessage);
 			}
 
 			genericValue.set("msgSendStatus", "DEFAULTEDLOANSMS2MONTHSEND");
-			//genericValue.set("msgStatusControl", SaveString);
+			// genericValue.set("msgStatusControl", SaveString);
 			try {
 				delegator.createOrStore(genericValue);
 			} catch (Exception e) {
@@ -752,17 +801,16 @@ public class sendMessage {
 
 	}
 
-	
-	
-	// ---------------SMS Notification on LOan Non Payment For More than One
+	// ---------------SMS Notification on Loan Non Payment For More than One
 	// Month------------------------
 
-	public static String SMS_OnLoanNonPayment_ToLoanee_One_Month() {
+	public static String Loan_NonPayment_ToLoaneeOneMonth() {
 
 		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
-		int numberOfDays = 30;
-		int numberControl = numberOfDays + 2;
-		String msgReturn = "---Send For Non Payment For Thirty Days Method Succes --------";
+		int numberOfDays = 60;
+		int numberControl = numberOfDays + 10;
+		log.info("---Send For Non Payment For ONE MONTH Method Succes --------");
+		String msgReturn = "---Send For Non Payment For ONE MONTH Method Succes --------";
 
 		java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
 		LocalDate todayToLocalTime = new LocalDate(date);
@@ -775,13 +823,18 @@ public class sendMessage {
 
 		List<GenericValue> ListNotInServeForOneMonth = null;
 		BigDecimal zeroOutStandingBalance = BigDecimal.ZERO;
+		
+		log.info("---TimeStamp 1--------"+timestamp);
+		
+		log.info("---TimeStamp 2--------"+timestampAdditionMinusThirtyDays);
 
 		EntityConditionList<EntityExpr> listConditionsFotLoanNonPaymentThirtyDays = EntityCondition.makeCondition(
 				UtilMisc.toList(EntityCondition.makeCondition("msgSendStatus", EntityOperator.EQUALS, null),
 						EntityCondition.makeCondition("msgStatusControl", EntityOperator.EQUALS, null),
 						EntityCondition.makeCondition("outstandingBalance", EntityOperator.GREATER_THAN,
 								zeroOutStandingBalance),
-						EntityCondition.makeCondition("mobileNumber", EntityOperator.NOT_EQUAL, ""),
+						// EntityCondition.makeCondition("mobileNumber",
+						// EntityOperator.NOT_EQUAL, ""),
 						EntityCondition.makeCondition("lastRepaymentDate", EntityOperator.LESS_THAN, timestamp),
 						EntityCondition.makeCondition("lastRepaymentDate", EntityOperator.GREATER_THAN,
 								timestampAdditionMinusThirtyDays)),
@@ -812,17 +865,15 @@ public class sendMessage {
 
 			saveTheMessageOfNonPayment = sendMessage.sendAndStroreRegistrationMessage(phoneNumber, msgBody);
 
-			genericValueNonPayment.set("msgSendStatus", "SendForNonPayment");
-			//genericValueNonPayment.set("msgStatusControl", "SendForNonPayment");
+			genericValueNonPayment.set("msgSendStatus", "ONE");
+			genericValueNonPayment.set("msgStatusControl", "ONE");
 			try {
 				delegator.createOrStore(genericValueNonPayment);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-
 		return msgReturn;
-
 	}
 
 }

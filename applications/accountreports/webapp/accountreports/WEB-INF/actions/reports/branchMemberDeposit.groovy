@@ -64,14 +64,27 @@ branches = delegator.findList('PartyGroup',  EntityCondition.makeCondition(summa
 
 
 shareCapital = BranchUtilServices.getBranchAccountProductTotals(delegator, startDate, endDate, "10041".toLong())
+shareCapitalTotaling = BranchUtilServices.getBranchAccountProductTotalsTotal(delegator, startDate, "10041".toLong())
 
+Closings = 0
+memberDepositBroughForward = 0
 totalMemberDeposits = 0
 totalRepaid = 0
+
 branches.each { branch ->
+
+    totalMemberDepBF = 0
+    branchMemberDepositAmountTotal = 0
     branchMemberDepositAmount = 0
     branchRepaid = 0
 
- 
+     shareCapitalTotaling.each { capitalTotal->
+
+        if (capitalTotal.branchId == branch.partyId) {
+            branchMemberDepositAmountTotal = branchMemberDepositAmountTotal + capitalTotal.transactionAmount
+        }
+    }
+   
     shareCapital.each { contribution ->
 
         if (contribution.branchId == branch.partyId) {
@@ -81,10 +94,15 @@ branches.each { branch ->
 
     totalMemberDeposits = totalMemberDeposits+branchMemberDepositAmount
     totalRepaid = totalRepaid+branchRepaid
-
+    memberDepositBroughForward = memberDepositBroughForward + branchMemberDepositAmountTotal
+    totalMemberDepBF =  branchMemberDepositAmountTotal + branchMemberDepositAmount
+    Closings = Closings +  totalMemberDepBF
+     
      totalsBuilder = [
             branchName : branch.groupName,
+            branchMemberDepBF : branchMemberDepositAmountTotal,
             memberDepositAmount : branchMemberDepositAmount,
+            Closings : totalMemberDepBF,
             repaidTotal : branchRepaid
         ]
     totalsList.add(totalsBuilder)
@@ -92,7 +110,7 @@ branches.each { branch ->
 }
 
 
-totalsList.add(UtilMisc.toMap("branchName", "GRAND TOTALS", "memberDepositAmount",  totalMemberDeposits, "repaidTotal",  totalRepaid))
+totalsList.add(UtilMisc.toMap("branchName", "GRAND TOTALS", "memberDepositAmount", totalMemberDeposits, "branchMemberDepBF",memberDepositBroughForward,"Closings",Closings, "repaidTotal",  totalRepaid))
 context.startDate = parameters.startDate
 context.endDate = parameters.endDate
 context.totalsList = totalsList

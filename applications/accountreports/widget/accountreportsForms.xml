@@ -8,9 +8,15 @@
 
     <form name="activeMembers" type="single" target="branchMembers.csv" title=""
         header-row-style="header-row" default-table-style="basic-table">
-        <field position="1" name="startDate" title="As at"  widget-style="required" required-field="true">
-            <date-time type="timestamp"/>
+        
+        <field position="1" name="startDate" title="From"  widget-style="required" required-field="true">
+           <date-time type="date"/>
         </field>
+        
+         <field position="2" name="endDate" title="To"  widget-style="required" required-field="true">
+           <date-time type="date"/>
+        </field>
+        
         <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
@@ -155,7 +161,9 @@
          type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2"
          default-table-style="basic-table hover-bar" paginate="false">
        <field name="branchName" title="Branch"><display/></field>
+       <field name="balanceBroughtForward" title="Brought Forward"><display/></field>
        <field name="shareCapitalAmount" title="Total Share Capital"><display/></field>
+        <field name="closingBalance" title="Closing Balance"><display/></field>
        <field name="repaidTotal" title="Correction if any"><display/></field>
     </form>
 
@@ -163,7 +171,9 @@
          type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2"
          default-table-style="basic-table hover-bar" paginate="false">
        <field name="branchName" title="Branch"><display/></field>
+        <field name="branchMemberDepBF" title="Member Deposit Brought Forward"><display/></field>
        <field name="memberDepositAmount" title="Total Member Deposit"><display/></field>
+       <field name="Closings" title="Closing Balance"><display/></field>
        <field name="repaidTotal" title="Refunded During the Period"><display/></field>
     </form>
 

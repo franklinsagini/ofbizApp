@@ -15,6 +15,13 @@ member = delegator.findOne("Member", [partyId : partyId], false);
 
 context.member = member
 
+payrollNumber = member.payrollNumber
+payrollNumberString = payrollNumber.toString()
+
+deposits = org.ofbiz.accountholdertransactions.LoanUtilities.getMemberDepositsBalance(payrollNumberString);
+
+println("-------------Member deposits  --------"+deposits)
+
 def clearingList = []
 
 

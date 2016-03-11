@@ -1206,18 +1206,7 @@
 	
 
 <!-- ============================================ RETURN FILE TO REGISTRY =============================================== -->
- <form name="FindMemberfilesForReturn" default-map-name="FindMemberfilesForReturnContext" target="regFileReturn" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
-        <actions>
-        	 <set field="recieptStatus" value="RELEASED"/>
-        </actions>
-       <field name="payrollNumber"><text-find/></field>
-		<field name="memberNumber"><text-find/></field>
-		<field name="idNumber"><text-find/></field>
-		<field name="firstName"><text-find/></field>
-		<field name="lastName"><text-find/></field>
-        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
-    </form>
+
 
     <!-- List Memeber Files -->
 
@@ -1260,9 +1249,23 @@
 			</hyperlink>
 		</field>
     </form>
+    
+     <form name="FindMemberfilesForReturn"  target="regFileReturn" title="" type="single"  header-row-style="header-row" default-table-style="basic-table" >
+        <actions>
+        	 <set field="recieptStatus" value="RELEASED"/>
+        </actions>
+       <field name="payrollNumber"><text-find/></field>
+		<field name="memberNumber"><text-find/></field>
+		<field name="idNumber"><text-find/></field>
+		<field name="firstName"><text-find/></field>
+		<field name="lastName"><text-find/></field>
+		 <field name="currentPossessor" title="File From"><lookup target-form-name="LookupEmployee"></lookup></field> 
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
 
     <form name="listMemberfilesForReturn" type="multi" use-row-submit="true" title="Selected Monument" separate-columns="true"  paginate-target="regFileReturn"
-                 target="returnfiles" default-table-style="basic-table hover-bar">
+                 target="returnfiles" default-table-style="basic-table hover-bar" default-map-name="FindMemberfilesForReturnContext">
                 <actions>
          <entity-condition entity-name="RegistryFiles" >
          <condition-list>
@@ -1286,7 +1289,9 @@
          <field name="payrollNumber"><display/></field>
          <field name="memberNumber"><display/></field>
 		 <field name="status"><hidden/></field>
-		 <field name="currentPossesser"><hidden/></field>
+		 <field name="currentPossesser" title="File From">
+		   <display-entity entity-name="Person" key-field-name="partyId" description="${firstName}  ${lastName}"></display-entity>
+		 </field>
 		 <field name="Reason"><hidden/></field>
 		 
        <field name="fileoverview" title="Overview" widget-style="buttontext">
