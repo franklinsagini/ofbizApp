@@ -123,6 +123,23 @@ public class BranchUtilServices {
 		return accountProductList;
 	}
 	
+	public static List<GenericValue> getBranchAccountProductTotalsTotal(Delegator delegator,Timestamp startDate, Long accountProductId) {
+		List<GenericValue> accountProductList = null;
+		
+
+		EntityConditionList<EntityExpr> productTotalsConditions = EntityCondition.makeCondition(UtilMisc.toList(
+				EntityCondition.makeCondition("createdStamp", EntityOperator.LESS_THAN, startDate),
+				EntityCondition.makeCondition("accountProductId", EntityOperator.EQUALS, accountProductId)
+				), EntityOperator.AND);
+		try {
+			accountProductList = delegator.findList("AccountContributionCreditAmounts", productTotalsConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		return accountProductList;
+	}
+	
 	public static List<GenericValue> getBranchAccountProductTotals(Delegator delegator, Timestamp startDate, Timestamp endDate) {
 		List<GenericValue> accountProductList = null;
 		

@@ -17,6 +17,28 @@ import org.ofbiz.base.util.UtilMisc;
  import org.ofbiz.entity.model.ModelEntity;
  import org.ofbiz.entity.model.ModelReader;
  import  org.ofbiz.accounting.ledger.CrbReportServices
+ import java.text.SimpleDateFormat; 
+
+
+// --- date modification
+java.sql.Date sqlEndDate = null;
+java.sql.Date sqlStartDate = null;
+
+if ((parameters.startDate?.trim())){
+    dateStartDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(parameters.startDate);
+    
+    sqlStartDate = new java.sql.Date(dateStartDate.getTime());
+}
+//(endDate != null) || 
+if ((parameters.endDate?.trim())){
+    dateEndDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(parameters.endDate);
+    sqlEndDate = new java.sql.Date(dateEndDate.getTime());
+}
+
+startDateTimestamp = new Timestamp(sqlStartDate.getTime());
+endDateTimestamp = new Timestamp(sqlEndDate.getTime());
+
+// ---End  date modification
 
 totalsBuilder = []
 totalsList = [];
@@ -41,6 +63,11 @@ branches.each { branch ->
         memberCondition = [];
         memberCondition.add(EntityCondition.makeCondition("branchId", EntityOperator.EQUALS, branch.partyId));
         memberCondition.add(EntityCondition.makeCondition("memberStatusId", EntityOperator.EQUALS, status.memberStatusId));
+        
+        memberCondition.add(EntityCondition.makeCondition("joinDate", EntityOperator.GREATER_THAN_EQUAL_TO, sqlStartDate));
+        memberCondition.add(EntityCondition.makeCondition("joinDate", EntityOperator.LESS_THAN_EQUAL_TO, sqlEndDate));
+        
+        
         members = delegator.findList('Member',  EntityCondition.makeCondition(memberCondition, EntityOperator.AND), null,null,null,false)
         branchStatusCount = 0;
         members.each { member ->

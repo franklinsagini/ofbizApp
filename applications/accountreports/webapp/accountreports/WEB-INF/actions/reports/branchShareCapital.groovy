@@ -64,13 +64,25 @@ branches = delegator.findList('PartyGroup',  EntityCondition.makeCondition(summa
 
 
 shareCapital = BranchUtilServices.getBranchAccountProductTotals(delegator, startDate, endDate, "10040".toLong())
+shareCapitalTotaling = BranchUtilServices.getBranchAccountProductTotalsTotal(delegator, startDate, "10040".toLong())
 
+shareCapitalBroughForw = 0
+closingBalance= 0
 totalShareCapital = 0
+shareCapitalBroughForward = 0
+shareCapitalBroughForwardTotali = 0
 totalRepaid = 0
 branches.each { branch ->
     branchShareCapitalAmount = 0
+    branchShareCapitalAmountToThatDate = 0
     branchRepaid = 0
 
+      shareCapitalTotaling.each { branchTotalB4StartDate ->
+
+        if (branchTotalB4StartDate.branchId == branch.partyId) {
+            branchShareCapitalAmountToThatDate = branchShareCapitalAmountToThatDate + branchTotalB4StartDate.transactionAmount
+        }
+    }
  
     shareCapital.each { contribution ->
 
@@ -78,13 +90,22 @@ branches.each { branch ->
             branchShareCapitalAmount = branchShareCapitalAmount + contribution.transactionAmount
         }
     }
-
+    
     totalShareCapital = totalShareCapital+branchShareCapitalAmount
     totalRepaid = totalRepaid+branchRepaid
+    
+    branchShareCapitalAmountToThatDateCal = branchShareCapitalAmountToThatDate
+    branchShareCapitalAmountCal = branchShareCapitalAmount
+    shareCapitalBroughForward = branchShareCapitalAmountToThatDateCal - branchShareCapitalAmountCal
+    shareCapitalBroughForwardTotali = shareCapitalBroughForwardTotali + branchShareCapitalAmountToThatDateCal
+    shareCapitalBroughForw = shareCapitalBroughForw + branchShareCapitalAmountToThatDate
+    closingBalance = shareCapitalBroughForw +  totalShareCapital
 
      totalsBuilder = [
             branchName : branch.groupName,
             shareCapitalAmount : branchShareCapitalAmount,
+            balanceBroughtForward : branchShareCapitalAmountToThatDate,
+            closingBalance: branchShareCapitalAmount + branchShareCapitalAmountToThatDate,
             repaidTotal : branchRepaid
         ]
     totalsList.add(totalsBuilder)
@@ -92,7 +113,7 @@ branches.each { branch ->
 }
 
 
-totalsList.add(UtilMisc.toMap("branchName", "GRAND TOTALS", "shareCapitalAmount",  totalShareCapital, "repaidTotal",  totalRepaid))
+totalsList.add(UtilMisc.toMap("branchName", "GRAND TOTALS","balanceBroughtForward", shareCapitalBroughForw, "shareCapitalAmount",  totalShareCapital, "closingBalance", closingBalance, "repaidTotal",  totalRepaid))
 context.startDate = parameters.startDate
 context.endDate = parameters.endDate
 context.totalsList = totalsList

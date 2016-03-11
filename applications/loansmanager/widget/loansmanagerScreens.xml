@@ -744,7 +744,7 @@
     
     <!-- approveLoan -->
      <screen name="approveLoan">
-       <section>
+        <section>
             <actions>
                 <set field="titleProperty" value="Approval"/>
                 <set field="tabButtonItem" value="approveLoan"/>
@@ -763,15 +763,26 @@
                 <set field="approvedAmt" value="${loanApplication.loanAmt}"/>
                 <set field="loanAmt" value="${loanApplication.loanAmt}"/>
                 
+                 <set field="partyIdString" from-field="loanApplication.partyId" type="Integer"/>
+                 <set field="loggedInUser" from-field="userLogin.userLoginId" type="String"/>
+                 <set field="logUser" value="${bsh:org.ofbiz.loansprocessing.LoansToRegistryServices.getLoggedInUserPartyId(loggedInUser);}"/>
+                <set field="hasFile" value="${bsh:org.ofbiz.loansprocessing.LoansToRegistryServices.checkIfUserHasFile(partyIdString,logUser);}"/> 
+                
                 <set field="theloanApplicationId" from-field="parameters.loanApplicationId" type="Long"/> 
+                 <set field="theloanApplicationIdString" from-field="parameters.loanApplicationId" type="String"/> 
+                <set field="memberNames" value="${bsh:org.ofbiz.loansprocessing.LoansToRegistryServices.getMemberNameGivenLoanAppId(theloanApplicationId);}"/>
+                
             </actions>
             <widgets>
                 <decorator-screen name="CommonLoanApplicationDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                       <section>
                        
-                        <section>
-                            <condition>
+                          <!--   <condition>
                                 <not><if-empty field="loanApplication"/></not>
+                            </condition> -->
+                            <condition>
+                                <if-compare operator="equals" value="true" field="hasFile"/>
                             </condition>
                             <widgets>
                             <screenlet title="Approval">
@@ -780,18 +791,23 @@
                                <screenlet title="List">
                                        <include-form name="loanLogs" location="component://loansprocessing/widget/loansprocessingForms.xml"/>
                                  </screenlet>
-                               
                             </widgets>
-                            <fail-widgets>
+                             <fail-widgets>
+                               <container>
+                                   <label style="h2" text="YOU DONT HAVE THE FILE FOR ${memberNames} -MEMBER NO: ${memberNumber} Kindly RECEIVE THE FILE OR REQUEST FOR IT "></label>
+                               </container>
+                            </fail-widgets>
+                           <!--  <fail-widgets>
                                 <container>
                                     <label style="h3">${uiLabelMap.PartyNoPartyFoundWithPartyId}: ${parameters.partyId}</label>
                                 </container>
-                            </fail-widgets>
+                            </fail-widgets> -->
                         </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
+       
     </screen>
     
     <!-- returnToLoans -->
