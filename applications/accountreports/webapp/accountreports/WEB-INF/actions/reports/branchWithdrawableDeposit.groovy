@@ -33,10 +33,10 @@ java.sql.Date sqlStartDate = null;
 
 if ((parameters.startDate?.trim())){
     dateStartDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(parameters.startDate);
-    
+
     sqlStartDate = new java.sql.Date(dateStartDate.getTime());
 }
-//(endDate != null) || 
+//(endDate != null) ||
 if ((parameters.endDate?.trim())){
     dateEndDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(parameters.endDate);
     sqlEndDate = new java.sql.Date(dateEndDate.getTime());
@@ -66,6 +66,15 @@ biashara = BranchUtilServices.getBranchAccountProductTotals(delegator, startDate
 
 totalMemberDeposits = 0
 totalRepaid = 0
+
+savingsAccountTotal = 0
+chaiAngelsJuniorAccountTotal = 0
+chaiPremierHolidayAccountTotal = 0
+fixedDepositTotal = 0
+medicalTotal = 0
+biasharaTotal = 0
+grandTotal = 0
+
 branches.each { branch ->
     branchSavingsAccountAmount = 0
     branchChaiJuniorAmount = 0
@@ -74,26 +83,31 @@ branches.each { branch ->
     branchMedicalAccountAmount = 0
     branchBiasharaAccountAmount = 0
     branchRepaid = 0
+    branchTotals = 0
 
- 
+
+
     savingsAccount.each { contribution ->
 
         if (contribution.branchId == branch.partyId) {
             branchSavingsAccountAmount = branchSavingsAccountAmount + contribution.transactionAmount
         }
-    }    
+
+    }
+
+
     chaiJunior.each { contribution ->
 
         if (contribution.branchId == branch.partyId) {
             branchChaiJuniorAmount = branchChaiJuniorAmount + contribution.transactionAmount
         }
-    }    
+    }
     chaiPremierHoliday.each { contribution ->
 
         if (contribution.branchId == branch.partyId) {
             branchChaiPremierHolidayAmount = branchChaiPremierHolidayAmount + contribution.transactionAmount
         }
-    }    
+    }
     fixedDeposit.each { contribution ->
 
         if (contribution.branchId == branch.partyId) {
@@ -117,7 +131,7 @@ branches.each { branch ->
 
 //    totalMemberDeposits = totalMemberDeposits+branchMemberDepositAmount
 //    totalRepaid = totalRepaid+branchRepaid
-
+    branchTotals = branchSavingsAccountAmount + branchChaiJuniorAmount + branchChaiPremierHolidayAmount + branchFixedDepositAmount + branchMedicalAccountAmount + branchBiasharaAccountAmount
      totalsBuilder = [
             branchName : branch.groupName,
             savingsAccount : branchSavingsAccountAmount,
@@ -125,12 +139,30 @@ branches.each { branch ->
             chaiPremierHolidayAccount : branchChaiPremierHolidayAmount,
             fixedDeposit : branchFixedDepositAmount,
             medical : branchMedicalAccountAmount,
-            biashara : branchBiasharaAccountAmount
+            biashara : branchBiasharaAccountAmount,
+            branchTotals : branchTotals
         ]
     totalsList.add(totalsBuilder)
-
+    savingsAccountTotal = savingsAccountTotal + branchSavingsAccountAmount
+    chaiAngelsJuniorAccountTotal = chaiAngelsJuniorAccountTotal + branchChaiJuniorAmount
+    chaiPremierHolidayAccountTotal = chaiPremierHolidayAccountTotal + branchChaiPremierHolidayAmount
+    fixedDepositTotal = fixedDepositTotal + branchFixedDepositAmount
+    medicalTotal = medicalTotal + branchMedicalAccountAmount
+    biasharaTotal = biasharaTotal + branchBiasharaAccountAmount
+    grandTotal = grandTotal + branchTotals
 }
-
+context.totalsList = totalsList
+context.totalsList.add(UtilMisc.toMap(
+                                      "branchName", "Account Totals",
+                                      "savingsAccount",  savingsAccountTotal,
+                                      "chaiAngelsJuniorAccount", chaiAngelsJuniorAccountTotal,
+                                      "chaiPremierHolidayAccount", chaiPremierHolidayAccountTotal,
+                                      "fixedDeposit", fixedDepositTotal,
+                                      "medical", medicalTotal,
+                                      "biashara", biasharaTotal,
+                                      "branchTotals", grandTotal
+                                      )
+                                )
 
 context.startDate = parameters.startDate
 context.endDate = parameters.endDate
