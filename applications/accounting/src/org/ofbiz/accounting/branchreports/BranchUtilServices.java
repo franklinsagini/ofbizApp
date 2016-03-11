@@ -76,6 +76,22 @@ public class BranchUtilServices {
 
 		return loansList;
 	}
+	
+	public static List<GenericValue> getLoansForPeriod(Delegator delegator, Timestamp startDate, Long loanStatusId) {
+		List<GenericValue> loansList = null;
+
+		EntityConditionList<EntityExpr> loansConditions = EntityCondition.makeCondition(UtilMisc.toList(
+				EntityCondition.makeCondition("disbursementDate", EntityOperator.LESS_THAN, startDate),
+				EntityCondition.makeCondition("loanStatusId", EntityOperator.EQUALS, loanStatusId)
+				), EntityOperator.AND);
+		try {
+			loansList = delegator.findList("LoanApplication", loansConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		return loansList;
+	}
 
 	public static List<GenericValue> getRepaymentForPeriod(Delegator delegator, Timestamp startDate, Timestamp endDate) {
 		List<GenericValue> repaymentsList = null;
@@ -93,6 +109,22 @@ public class BranchUtilServices {
 		return repaymentsList;
 	}
 
+	
+	public static List<GenericValue> getRepaymentForPeriod(Delegator delegator, Timestamp startDate) {
+		List<GenericValue> repaymentsList = null;
+
+		EntityConditionList<EntityExpr> repaymentConditions = EntityCondition.makeCondition(UtilMisc.toList(
+				EntityCondition.makeCondition("createdStamp", EntityOperator.LESS_THAN, startDate)
+				), EntityOperator.AND);
+		try {
+			repaymentsList = delegator.findList("LoanRepayment", repaymentConditions, null, null, null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		return repaymentsList;
+	}
+	
 	public static Boolean isDeliquentLoan(Long loanApplicationId) {
 		boolean isDeliquent = false;
 

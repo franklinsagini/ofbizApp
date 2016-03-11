@@ -33,10 +33,10 @@ java.sql.Date sqlStartDate = null;
 
 if ((parameters.startDate?.trim())){
     dateStartDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(parameters.startDate);
-    
+
     sqlStartDate = new java.sql.Date(dateStartDate.getTime());
 }
-//(endDate != null) || 
+//(endDate != null) ||
 if ((parameters.endDate?.trim())){
     dateEndDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(parameters.endDate);
     sqlEndDate = new java.sql.Date(dateEndDate.getTime());
@@ -54,7 +54,7 @@ summaryCondition.add(EntityCondition.makeCondition("isBranch", EntityOperator.EQ
 summaryCondition.add(EntityCondition.makeCondition("partyId", EntityOperator.NOT_EQUAL, "Company"));
 branches = delegator.findList('PartyGroup',  EntityCondition.makeCondition(summaryCondition, EntityOperator.AND), null,null,null,false)
 
-// GET THE LOAN GRANTED 
+// GET THE LOAN GRANTED
 //loansDisbursedConditions = []
 //loansDisbursedConditions.add(EntityCondition.makeCondition("disbursementDate", EntityOperator.GREATER_THAN_EQUAL_TO, startDate))
 //loansDisbursedConditions.add(EntityCondition.makeCondition("disbursementDate", EntityOperator.LESS_THAN_EQUAL_TO, endDate))
@@ -64,12 +64,20 @@ branches = delegator.findList('PartyGroup',  EntityCondition.makeCondition(summa
 
 myLoansList = BranchUtilServices.getLoansForPeriod(delegator, startDate, endDate,"6".toLong())
 myRepaymentsList = BranchUtilServices.getRepaymentForPeriod(delegator, startDate, endDate)
+broughtForwardGrantedList = BranchUtilServices.getLoansForPeriod(delegator, startDate,"6".toLong())
+broughtForwardRepaidList = BranchUtilServices.getRepaymentForPeriod(delegator, startDate)
 
 totalGranted = 0
 totalRepaid = 0
+totalbranchGrantedCL = 0
+totalBranchGrantedBF = 0
+totalbranchRepaidBF = 0
+totalBranchRepaidCL = 0
 branches.each { branch ->
     branchGranted = 0
+    branchGrantedBF = 0
     branchRepaid = 0
+    branchRepaidBF = 0
 
     myRepaymentsList.each { repayment ->
         //get members branch
@@ -79,7 +87,14 @@ branches.each { branch ->
         }
     }
 
- 
+    broughtForwardRepaidList.each { repayment ->
+        //get members branch
+        branchId = BranchUtilServices.getMembersBranch(delegator, repayment.partyId)
+        if (branchId == branch.partyId) {
+            branchRepaidBF = branchRepaidBF + repayment.totalPrincipalDue
+        }
+    }
+
     myLoansList.each { loan ->
         //get members branch
         branchId = BranchUtilServices.getMembersBranch(delegator, loan.partyId)
@@ -88,20 +103,50 @@ branches.each { branch ->
         }
     }
 
+
+    broughtForwardGrantedList.each { loan ->
+        //get members branch
+        branchId = BranchUtilServices.getMembersBranch(delegator, loan.partyId)
+        if (branchId == branch.partyId) {
+            branchGrantedBF = branchGrantedBF + loan.loanAmt
+        }
+    }
+
     totalGranted = totalGranted+branchGranted
     totalRepaid = totalRepaid+branchRepaid
+    branchGrantedCL = branchGrantedBF + branchGranted
+    totalBranchGrantedBF = totalBranchGrantedBF + branchGrantedBF
+    totalbranchGrantedCL = totalbranchGrantedCL + branchGrantedCL
+    branchRepaidCL = branchRepaidBF + branchRepaid
+    totalbranchRepaidBF = totalbranchRepaidBF + branchRepaidBF
+    totalBranchRepaidCL = totalBranchRepaidCL + branchRepaidCL
 
-     totalsBuilder = [
+    totalsBuilder = [
             branchName : branch.groupName,
+            broughtForwardGranted : branchGrantedBF,
             grantedTotal : branchGranted,
-            repaidTotal : branchRepaid
+            closingBalanceGranted : branchGrantedCL,
+            broughtForwardRepaid : branchRepaidBF,
+            repaidTotal : branchRepaid,
+            closingBalanceRepaid : branchRepaidCL
         ]
+
     totalsList.add(totalsBuilder)
+
+
 
 }
 
 
-totalsList.add(UtilMisc.toMap("branchName", "GRAND TOTALS", "grantedTotal",  totalGranted, "repaidTotal",  totalRepaid))
+totalsList.add(UtilMisc.toMap("branchName", "GRAND TOTALS",
+                                            "broughtForwardGranted",  totalBranchGrantedBF,
+                                            "grantedTotal",  totalGranted,
+                                            "closingBalanceGranted",  totalbranchGrantedCL,
+                                            "broughtForwardRepaid",  totalbranchRepaidBF,
+                                            "repaidTotal",  totalRepaid,
+                                            "closingBalanceRepaid",  totalBranchRepaidCL
+                                            )
+                    )
 context.startDate = parameters.startDate
 context.endDate = parameters.endDate
 context.totalsList = totalsList
