@@ -80,10 +80,11 @@ branches.each { branch ->
 
 
         openingMembers = delegator.findList('MemberStatusLog',  EntityCondition.makeCondition(openingMemberCondition, EntityOperator.AND), null,null,null,false)
+
         closingMembers = delegator.findList('MemberStatusLog',  EntityCondition.makeCondition(closingMemberCondition, EntityOperator.AND), null,null,null,false)
 
         openingBranchStatusCount = 0;
-        members.each { member ->
+        openingMembers.each { member ->
             branchId = BranchUtilServices.getMembersBranch(delegator, member.partyId)
             if (branchId == branch.partyId) {
                 openingBranchStatusCount = openingBranchStatusCount + 1;
@@ -91,7 +92,7 @@ branches.each { branch ->
         }
 
         closingBranchStatusCount = 0;
-        members.each { member ->
+        closingMembers.each { member ->
             branchId = BranchUtilServices.getMembersBranch(delegator, member.partyId)
             if (branchId == branch.partyId) {
                 closingBranchStatusCount = closingBranchStatusCount + 1;
