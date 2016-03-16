@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import org.ofbiz.accounting.ledger.CrbReportServices;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -46,6 +47,31 @@ public class BranchUtilServices {
 		}
 
 		return member.getString("branchId");
+	}
+	
+	public static String saveNewMembersStatusLog(Delegator delegator, Long memberpartyId, String userLoginId) {
+		GenericValue statusLog = null;
+		String sucess = "Success";
+		int statusLong = 4;
+		Long.valueOf(statusLong);
+		String memberStatusLogId = null;
+		
+		statusLog = delegator.makeValue("MemberStatusLog");
+		memberStatusLogId = delegator.getNextSeqId("MemberStatusLog");
+		statusLog.put("memberStatusLogId", Long.valueOf(memberStatusLogId));
+		statusLog.put("isActive", "Y");
+		statusLog.put("createdBy", userLoginId);
+		statusLog.put("branchId", getMembersBranch(delegator, memberpartyId));
+		statusLog.put("partyId", memberpartyId);
+		statusLog.put("memberStatusId", Long.valueOf(statusLong));
+		statusLog.put("comment", "STATUS DURING REGISTRATION");
+		
+		try {
+			statusLog.create();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return sucess;
 	}
 
 	public static String getMembersStations(Delegator delegator, Long memberpartyId) {
