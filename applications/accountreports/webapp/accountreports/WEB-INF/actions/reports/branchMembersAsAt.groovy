@@ -127,7 +127,7 @@ branches.each { branch ->
         ]
     totalsList.add(totalsBuilder)
     context.memberStatusList = memberStatusList
-    context.memberStatusList.add(UtilMisc.toMap("statusName", "Total Membership", "count",  totalMembership))
+    //context.memberStatusList.add(UtilMisc.toMap("statusName", "Total Membership", "count",  totalMembership))
     context.memberStatusList.add(UtilMisc.toMap("statusName", "", "count",  ""))
 
 }
