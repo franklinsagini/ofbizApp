@@ -74,7 +74,7 @@ branches.each { branch ->
 
         closingMemberCondition = [];
         closingMemberCondition.add(EntityCondition.makeCondition("memberStatusId", EntityOperator.EQUALS, status.memberStatusId));
-        closingMemberCondition.add(EntityCondition.makeCondition("createdStamp", EntityOperator.LESS_THAN_EQUAL_TO, startDateTimestamp));
+        closingMemberCondition.add(EntityCondition.makeCondition("createdStamp", EntityOperator.LESS_THAN_EQUAL_TO, endDateTimestamp));
 
         members = delegator.findList('MemberStatusLog',  EntityCondition.makeCondition(memberCondition, EntityOperator.AND), null,null,null,false)
 
