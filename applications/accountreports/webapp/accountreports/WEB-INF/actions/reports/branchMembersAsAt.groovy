@@ -68,36 +68,7 @@ branches.each { branch ->
         memberCondition.add(EntityCondition.makeCondition("createdStamp", EntityOperator.GREATER_THAN_EQUAL_TO, startDateTimestamp));
         memberCondition.add(EntityCondition.makeCondition("createdStamp", EntityOperator.LESS_THAN_EQUAL_TO, endDateTimestamp));
 
-        openingMemberCondition = [];
-        openingMemberCondition.add(EntityCondition.makeCondition("memberStatusId", EntityOperator.EQUALS, status.memberStatusId));
-        openingMemberCondition.add(EntityCondition.makeCondition("createdStamp", EntityOperator.LESS_THAN, startDateTimestamp));
-
-        closingMemberCondition = [];
-        closingMemberCondition.add(EntityCondition.makeCondition("memberStatusId", EntityOperator.EQUALS, status.memberStatusId));
-        closingMemberCondition.add(EntityCondition.makeCondition("createdStamp", EntityOperator.LESS_THAN_EQUAL_TO, endDateTimestamp));
-
         members = delegator.findList('MemberStatusLog',  EntityCondition.makeCondition(memberCondition, EntityOperator.AND), null,null,null,false)
-
-
-        openingMembers = delegator.findList('MemberStatusLog',  EntityCondition.makeCondition(openingMemberCondition, EntityOperator.AND), null,null,null,false)
-
-        closingMembers = delegator.findList('MemberStatusLog',  EntityCondition.makeCondition(closingMemberCondition, EntityOperator.AND), null,null,null,false)
-
-        openingBranchStatusCount = 0;
-        openingMembers.each { member ->
-            branchId = BranchUtilServices.getMembersBranch(delegator, member.partyId)
-            if (branchId == branch.partyId) {
-                openingBranchStatusCount = openingBranchStatusCount + 1;
-            }
-        }
-
-        closingBranchStatusCount = 0;
-        closingMembers.each { member ->
-            branchId = BranchUtilServices.getMembersBranch(delegator, member.partyId)
-            if (branchId == branch.partyId) {
-                closingBranchStatusCount = closingBranchStatusCount + 1;
-            }
-        }
 
         branchStatusCount = 0;
         members.each { member ->
@@ -106,6 +77,38 @@ branches.each { branch ->
                 branchStatusCount = branchStatusCount + 1;
             }
 
+        }
+
+
+
+
+        openingMemberCondition = [];
+        openingMemberCondition.add(EntityCondition.makeCondition("branchId", EntityOperator.EQUALS, branch.partyId));
+        openingMemberCondition.add(EntityCondition.makeCondition("memberStatusId", EntityOperator.EQUALS, status.memberStatusId));
+
+        openingMemberCondition.add(EntityCondition.makeCondition("joinDate", EntityOperator.LESS_THAN, sqlStartDate));
+
+
+        openingMembers = delegator.findList('Member',  EntityCondition.makeCondition(openingMemberCondition, EntityOperator.AND), null,null,null,false)
+        openingBranchStatusCount = 0;
+        openingMembers.each { member ->
+            openingBranchStatusCount = openingBranchStatusCount + 1;
+        }
+
+
+        closingMemberCondition = [];
+        closingMemberCondition.add(EntityCondition.makeCondition("branchId", EntityOperator.EQUALS, branch.partyId));
+        closingMemberCondition.add(EntityCondition.makeCondition("memberStatusId", EntityOperator.EQUALS, status.memberStatusId));
+        closingMemberCondition.add(EntityCondition.makeCondition("joinDate", EntityOperator.LESS_THAN_EQUAL_TO, sqlEndDate));
+
+        closingMembers = delegator.findList('Member',  EntityCondition.makeCondition(closingMemberCondition, EntityOperator.AND), null,null,null,false)
+
+        closingBranchStatusCount = 0;
+        closingMembers.each { member ->
+            branchId = BranchUtilServices.getMembersBranch(delegator, member.partyId)
+            if (branchId == branch.partyId) {
+                closingBranchStatusCount = closingBranchStatusCount + 1;
+            }
         }
 
 
