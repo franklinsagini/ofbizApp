@@ -420,7 +420,7 @@ under the License.
          default-table-style="basic-table hover-bar" paginate="false"> 
         <field name="payrollNo" title="Payroll Number"><display/></field>
         <field name="fname" title="First Name"><display/></field>
-        <field name="lname" title="Last Name"><display/></field>
+        <!-- <field name="lname" title="Last Name"><display/></field> -->
         <field name="IdNo" title="ID Number"><display/></field>
         <field name="gender" title="Staff Gender"><display/></field>
 		<field name="pin" title="Pin Number"><display/></field>
@@ -1112,6 +1112,16 @@ under the License.
     
  <form name="staffAgeAndGenderPDF" type="single" target="staffAgeAndGenderPDF" title=""
         header-row-style="header-row" default-table-style="basic-table">
+        <field name="typeSelect" title="SELECT">
+          <drop-down allow-empty="true">
+             <option key="dob" description="Date Of Birth"/>
+             <option key="age" description="Age"/>
+             <option key="gender" description="Gender"/>
+             <option key="comparison" description="Age Comparison"/>
+          </drop-down>
+        </field>
+        
+        
         <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
             <submit button-type="button"/>
             
@@ -1127,6 +1137,29 @@ under the License.
         </field>
  </form>     
 
+ 
+ <form name="dateOfEmploymentPDF" type="single" target="dateOfEmploymentPDF" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="typeSelect" title="SELECT">
+          <drop-down allow-empty="true">
+             <option key="withBranch" description="With Branch And Department"/>
+          </drop-down>
+        </field>
         
+        
+        <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+            <submit button-type="button"/>
+            
+        </field>
+ </form>     
+
+    
+ <form name="dateOfEmploymentCSV" type="single" target="dateOfEmploymentCSV" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+            <submit button-type="button"/>
+            
+        </field>
+ </form>            
         
 </forms>

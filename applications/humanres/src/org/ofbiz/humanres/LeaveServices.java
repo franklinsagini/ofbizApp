@@ -886,17 +886,39 @@ public class LeaveServices {
 		return currentYear;
 	}
 
+	public static String getCurrentYearDate(Date fromDate) {
+		LocalDateTime today = new LocalDateTime(fromDate);
+		String currentYear = null;
+
+		if (!(fromDate == null)) {
+			int thisYear = today.getYear();
+			currentYear = Integer.toString(thisYear);
+			log.info("==================CURRENT YEAR THERE ############ " + currentYear);
+			return currentYear;
+		}else
+
+		log.info("==================CURRENT YEAR NOT THERE ############  " + currentYear);
+		return currentYear;
+	}
+	
+	public static String ageAfterYears(String currentAge, int numberIncrement) {
+		int age = Integer.parseInt(currentAge);
+		int thatAge = age + numberIncrement;
+		String returnAge = ""+thatAge;
+		
+		return returnAge;
+	}
+
 	public static String getPresentAge(String yearOfBirth) {
-		int yrOfBirth = Integer.parseInt(yearOfBirth); 
+		int yrOfBirth = Integer.parseInt(yearOfBirth);
 		Calendar now = Calendar.getInstance();
 		int year = now.get(Calendar.YEAR);
 		String yearInString = String.valueOf(year);
 		int currentAge = year - yrOfBirth;
-		String currentAgeToString = ""+currentAge;
+		String currentAgeToString = "" + currentAge;
 		return currentAgeToString;
 	}
-	
-	
+
 	public static String getYearOfParameterisedDate(Date fromDate) {
 		LocalDateTime today = new LocalDateTime(fromDate);
 		int thisYear = today.getYear();
@@ -2519,7 +2541,7 @@ public class LeaveServices {
 			perReviewIdToBigDecimal = perReviewIdToBigDecimal.add(genericValue.getBigDecimal("percentage"));
 		}
 		Double perReviewIdToBigDecimalToInt = perReviewIdToBigDecimal.doubleValue();
-		String perReviewIdToBigDecimalToString =""+perReviewIdToBigDecimalToInt;
+		String perReviewIdToBigDecimalToString = "" + perReviewIdToBigDecimalToInt;
 
 		return perReviewIdToBigDecimalToString;
 	}
@@ -2537,14 +2559,14 @@ public class LeaveServices {
 
 		return sumTotalToString;
 	}
-	
+
 	public static String getTotalQuantitative() {
 
 		String sumTotalToString = "20";
 
 		return sumTotalToString;
 	}
-	
+
 	public static String deviation(String deviation) {
 		BigDecimal totalSum = new BigDecimal(deviation);
 		BigDecimal oneHundredPercent = new BigDecimal(100);
@@ -2558,8 +2580,5 @@ public class LeaveServices {
 
 		return deviatedToString;
 	}
-	
- 	
-	
 
 } // close Class

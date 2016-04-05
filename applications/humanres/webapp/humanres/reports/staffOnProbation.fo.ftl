@@ -33,27 +33,27 @@ under the License.
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
             <fo:table-column column-width="20pt"/>
-             <fo:table-column column-width="65pt"/>
             <fo:table-column column-width="80pt"/>
-            <fo:table-column column-width="100pt"/>
+            <fo:table-column column-width="65pt"/>
             <fo:table-column column-width="70pt"/>
             <fo:table-column column-width="100pt"/>
-             <fo:table-column column-width="70pt"/>
-              <fo:table-column column-width="70pt"/>
+            <fo:table-column column-width="100pt"/>
+            <fo:table-column column-width="70pt"/>
+            <fo:table-column column-width="70pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block></fo:block>
+                        <fo:block>S/No</fo:block>
                     </fo:table-cell>
+                    
+                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block>Name</fo:block>
+                    </fo:table-cell>
+                    
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block>Payroll Number</fo:block>
                     </fo:table-cell>
-                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block>Staff Name</fo:block>
-                    </fo:table-cell>
-                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block>Designation</fo:block>
-                    </fo:table-cell>
+                    
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block>Branch</fo:block>
                     </fo:table-cell>
@@ -61,10 +61,13 @@ under the License.
                         <fo:block>Department</fo:block>
                     </fo:table-cell>
                      <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block>Employment Date</fo:block>
+                        <fo:block>Position</fo:block>
                     </fo:table-cell>
                      <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block>Confirmation Date</fo:block>
+                        <fo:block>Date of Employment</fo:block>
+                    </fo:table-cell>
+                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block>Date of Confirmation</fo:block>
                     </fo:table-cell>
                 </fo:table-row>
             </fo:table-header>
@@ -82,14 +85,22 @@ under the License.
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                 <fo:block>${count}</fo:block>
                             </fo:table-cell>
-                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${dep.employeeNumber?if_exists}</fo:block>
-                        </fo:table-cell>
+                       
                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${dep.firstName?if_exists} ${dep.lastName?if_exists}</fo:block>
                         </fo:table-cell>
                         
-                       <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${dep.employeeNumber?if_exists}</fo:block>
+                        </fo:table-cell>
+                        
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${branch.groupName?if_exists}</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${department.departmentName?if_exists}</fo:block>
+                        </fo:table-cell>
+                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                <#if dep.emplPositionTypeId?has_content> 
                                    <#assign position = delegator.findOne("EmplPositionType", {"emplPositionTypeId",dep.emplPositionTypeId },false) /> 
                                 <fo:block> ${position.emplPositionType?if_exists}</fo:block>
@@ -97,13 +108,6 @@ under the License.
                                <fo:block> </fo:block>
                                 </#if>
                             </fo:table-cell>
-                       
-                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${branch.groupName?if_exists}</fo:block>
-                        </fo:table-cell>
-                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${department.departmentName?if_exists}</fo:block>
-                        </fo:table-cell>
                          <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${dep.appointmentdate?if_exists}</fo:block>
                         </fo:table-cell>

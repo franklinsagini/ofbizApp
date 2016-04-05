@@ -176,13 +176,13 @@ under the License.
         <fo:block text-align="center"> </fo:block>
     </#if>
 
-        <#if employeeList?has_content>
+    <#if employeeList?has_content>
         <#-- REPORT TITLE -->
         <fo:block font-size="18pt" font-weight="bold" text-align="center">
             CHAI SACCO
         </fo:block>
         <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
-            STAFF LISTING REPORT
+            Statutory Records Report
         </fo:block>
         <fo:block><fo:leader/></fo:block>
         <#-- Employee Details -->
@@ -195,12 +195,12 @@ under the License.
                 <fo:table-column column-width="70pt"/>
                 <#--fo:table-column column-width="90pt"/-->
                 <fo:table-column column-width="70pt"/>
-                <fo:table-column column-width="60pt"/>
+                <fo:table-column column-width="100pt"/>
                 <fo:table-column column-width="80pt"/>
                 <#--fo:table-column column-width="100pt"/-->
                 <#--fo:table-column column-width="50pt"/-->
                 <#-- <fo:table-column column-width="60pt"/>  -->
-                <fo:table-column column-width="120pt"/>
+                <fo:table-column column-width="70pt"/>
                 
                 <fo:table-header>
                     <fo:table-row font-weight="bold">
@@ -221,7 +221,7 @@ under the License.
                         </fo:table-cell>
                         
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                            <fo:block>Gender</fo:block>
+                            <fo:block>PIN No</fo:block>
                         </fo:table-cell>
                         
                         <#--fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
@@ -232,11 +232,11 @@ under the License.
                         </fo:table-cell-->
 
                           <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                            <fo:block>Date of Employment</fo:block>
+                            <fo:block>NSSF</fo:block>
                         </fo:table-cell>
                         
                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                            <fo:block>Current Position</fo:block>
+                            <fo:block>NHIF</fo:block>
                         </fo:table-cell>
 
                         <#--fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
@@ -271,7 +271,7 @@ under the License.
                             </fo:table-cell>
                             
                              <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>${employee.gender?if_exists}</fo:block>
+                                <fo:block>${employee.pinNumber?if_exists}</fo:block>
                             </fo:table-cell>
                             
                             
@@ -294,17 +294,21 @@ under the License.
                             </fo:table-cell-->
                             
                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                                <fo:block>${employee.appointmentdate?if_exists}</fo:block>
+                                <fo:block>${employee.socialSecurityNumber?if_exists}</fo:block>
                             </fo:table-cell>
                             
                              <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${employee.nhifNumber?if_exists}</fo:block>
+                            </fo:table-cell>
+                            
+                             <#--fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                                <#if employee.emplPositionTypeId?has_content> 
                                    <#assign position = delegator.findOne("EmplPositionType", {"emplPositionTypeId",employee.emplPositionTypeId },false) /> 
-                                <fo:block> ${position.emplPositionType?if_exists}</fo:block>
+                                <fo:block> ${position.nhifNumber?if_exists}</fo:block>
                                <#else>
                                <fo:block> </fo:block>
                                 </#if>
-                            </fo:table-cell>
+                            </fo:table-cell-->
                             
                             
                              <#--fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
@@ -326,12 +330,293 @@ under the License.
                 </fo:table-body>
             </fo:table>
         </fo:block>
-
     <#else>
         <fo:block text-align="center"> </fo:block>
     </#if>
 
 
+
+  // NHIF
+  
+  
+      <#if nhifList?has_content>
+        <#-- REPORT TITLE -->
+        <fo:block font-size="18pt" font-weight="bold" text-align="center">
+            CHAI SACCO
+        </fo:block>
+        <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
+            NHIF Records 
+        </fo:block>
+        <fo:block><fo:leader/></fo:block>
+        <#-- Employee Details -->
+
+        <fo:block space-after.optimum="10pt" font-size="10pt">
+            <fo:table table-layout="fixed" width="100%">
+                
+                <fo:table-column column-width="30pt"/>
+                <fo:table-column column-width="180pt"/>
+                <fo:table-column column-width="120pt"/>
+                <fo:table-column column-width="80pt"/>
+                <fo:table-column column-width="120pt"/>
+                
+                <fo:table-header>
+                    <fo:table-row font-weight="bold">
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>S/No</fo:block>
+                        </fo:table-cell>
+                         
+                        
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Name</fo:block>
+                        </fo:table-cell>
+                        
+                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Payroll No</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>ID Number</fo:block>
+                        </fo:table-cell>
+                        
+                        <#--fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>PIN No</fo:block>
+                        </fo:table-cell>
+                        
+                       
+
+                          <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>NSSF</fo:block>
+                        </fo:table-cell-->
+                        
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>NHIF</fo:block>
+                        </fo:table-cell>
+
+                        
+                    </fo:table-row>
+                </fo:table-header>
+                <fo:table-body>
+                <#assign count=0>
+                    <#list nhifList as employee>
+         
+                        <fo:table-row>
+                         <#assign count = count + 1>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${count}</fo:block>
+                            </fo:table-cell>
+                            
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${employee.firstName?if_exists}  ${employee.lastName?if_exists}</fo:block>
+                            </fo:table-cell>
+                            
+                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${employee.employeeNumber?if_exists}</fo:block>
+                            </fo:table-cell>
+                            
+                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${employee.nationalIDNumber?if_exists}</fo:block>
+                            </fo:table-cell>
+                            
+                             <#--fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${employee.pinNumber?if_exists}</fo:block>
+                            </fo:table-cell>
+                            
+                            
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${employee.socialSecurityNumber?if_exists}</fo:block>
+                            </fo:table-cell-->
+                            
+                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${employee.nhifNumber?if_exists}</fo:block>
+                            </fo:table-cell>
+                            
+                           
+                        </fo:table-row>
+                    </#list>
+                </fo:table-body>
+            </fo:table>
+        </fo:block>
+    <#else>
+        <fo:block text-align="center"> </fo:block>
+    </#if>
+
+
+
+
+
+  // NSSF
+  
+  
+      <#if nssfList?has_content>
+        <#-- REPORT TITLE -->
+        <fo:block font-size="18pt" font-weight="bold" text-align="center">
+            CHAI SACCO
+        </fo:block>
+        <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
+            NSSF Records 
+        </fo:block>
+        <fo:block><fo:leader/></fo:block>
+        <#-- Employee Details -->
+
+        <fo:block space-after.optimum="10pt" font-size="10pt">
+            <fo:table table-layout="fixed" width="100%">
+                
+                <fo:table-column column-width="30pt"/>
+                <fo:table-column column-width="180pt"/>
+                <fo:table-column column-width="120pt"/>
+                <fo:table-column column-width="80pt"/>
+                <fo:table-column column-width="120pt"/>
+                
+                <fo:table-header>
+                    <fo:table-row font-weight="bold">
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>S/No</fo:block>
+                        </fo:table-cell>
+                         
+                        
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Name</fo:block>
+                        </fo:table-cell>
+                        
+                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Payroll No</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>ID Number</fo:block>
+                        </fo:table-cell>
+                        
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>NSSF</fo:block>
+                        </fo:table-cell>
+
+                        
+                    </fo:table-row>
+                </fo:table-header>
+                <fo:table-body>
+                <#assign count=0>
+                    <#list nssfList as employee>
+         
+                        <fo:table-row>
+                         <#assign count = count + 1>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${count}</fo:block>
+                            </fo:table-cell>
+                            
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${employee.firstName?if_exists}  ${employee.lastName?if_exists}</fo:block>
+                            </fo:table-cell>
+                            
+                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${employee.employeeNumber?if_exists}</fo:block>
+                            </fo:table-cell>
+                            
+                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${employee.nationalIDNumber?if_exists}</fo:block>
+                            </fo:table-cell>
+                            
+                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${employee.socialSecurityNumber?if_exists}</fo:block>
+                            </fo:table-cell>
+                            
+                           
+                        </fo:table-row>
+                    </#list>
+                </fo:table-body>
+            </fo:table>
+        </fo:block>
+    <#else>
+        <fo:block text-align="center"> </fo:block>
+    </#if>
+
+   
+   
+   
+
+
+  // PIN NUMBER
+  
+  
+      <#if pinList?has_content>
+        <#-- REPORT TITLE -->
+        <fo:block font-size="18pt" font-weight="bold" text-align="center">
+            CHAI SACCO
+        </fo:block>
+        <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
+           PIN NO. Records 
+        </fo:block>
+        <fo:block><fo:leader/></fo:block>
+        <#-- Employee Details -->
+
+        <fo:block space-after.optimum="10pt" font-size="10pt">
+            <fo:table table-layout="fixed" width="100%">
+                
+                <fo:table-column column-width="30pt"/>
+                <fo:table-column column-width="180pt"/>
+                <fo:table-column column-width="120pt"/>
+                <fo:table-column column-width="80pt"/>
+                <fo:table-column column-width="120pt"/>
+                
+                <fo:table-header>
+                    <fo:table-row font-weight="bold">
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>S/No</fo:block>
+                        </fo:table-cell>
+                         
+                        
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Name</fo:block>
+                        </fo:table-cell>
+                        
+                         <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>Payroll No</fo:block>
+                        </fo:table-cell>
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>ID Number</fo:block>
+                        </fo:table-cell>
+                        
+                        <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                            <fo:block>PIN No</fo:block>
+                        </fo:table-cell>
+
+                        
+                    </fo:table-row>
+                </fo:table-header>
+                <fo:table-body>
+                <#assign count=0>
+                    <#list pinList as employee>
+         
+                        <fo:table-row>
+                         <#assign count = count + 1>
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${count}</fo:block>
+                            </fo:table-cell>
+                            
+                            <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${employee.firstName?if_exists}  ${employee.lastName?if_exists}</fo:block>
+                            </fo:table-cell>
+                            
+                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${employee.employeeNumber?if_exists}</fo:block>
+                            </fo:table-cell>
+                            
+                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${employee.nationalIDNumber?if_exists}</fo:block>
+                            </fo:table-cell>
+                         
+                             <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                                <fo:block>${employee.pinNumber?if_exists}</fo:block>
+                            </fo:table-cell>
+                            
+                           
+                        </fo:table-row>
+                    </#list>
+                </fo:table-body>
+            </fo:table>
+        </fo:block>
+    <#else>
+        <fo:block text-align="center"> </fo:block>
+    </#if>
+
+   
    
 </#escape>
 
