@@ -23,13 +23,22 @@ under the License.
     <description>AccountHolder Transactions Services</description>
     <vendor>Verge Interactive</vendor>
     <version>1.0</version>
-	
+
     <!-- CashWithdrawalApproval -->
     <service name="approveLimitTransaction" engine="simple" default-entity-name="TellerLimitApprovals"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="approveLimitTransaction" auth="true">
         <description>Approve Limit Withdrawal</description>
         <attribute type="String" mode="IN" name="tellerLimitApprovalsId" optional="false"/>
         <attribute type="Long" mode="IN" name="memberAccountId" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <service name="deleteLimitTransaction" engine="java" default-entity-name="TellerLimitApprovals"
+             location="org.ofbiz.accounting.finaccount.FinAccountServices" invoke="deleteLimitTransaction" auth="true">
+        <description>Delete Limit Withdrawal</description>
+        <attribute type="String" mode="IN" name="tellerLimitApprovalsId" optional="false"/>
+        <!-- <attribute type="Long" mode="IN" name="memberAccountId" optional="false"/> -->
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
@@ -70,7 +79,7 @@ under the License.
         <override name="transactionAmount" optional="false"></override>
         <override name="slipNumber" optional="false"></override -->
     </service>
-    
+
     <service name="updateCashWithdrawal" engine="simple" default-entity-name="AccountTransaction"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="updateCashWithdrawal" auth="true">
         <description>Update CashWithdrawal</description>
@@ -89,8 +98,8 @@ under the License.
         <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
-    
-  	<!-- CashDeposit -->														
+
+  	<!-- CashDeposit -->
   	<service name="createCashDeposit" engine="simple" default-entity-name="AccountTransaction"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="createCashDeposit" auth="true">
         <description>Create CashDeposit</description>
@@ -102,7 +111,7 @@ under the License.
         <override name="slipNumber" optional="false"></override>
         <override name="transactionAmount" optional="false"></override -->
     </service>
-    
+
     <!-- createDirectDebit -->
     <service name="createDirectDebit" engine="simple" default-entity-name="AccountTransaction"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="createDirectDebit" auth="true">
@@ -115,7 +124,7 @@ under the License.
         <override name="slipNumber" optional="false"></override>
         <override name="transactionAmount" optional="false"></override -->
     </service>
-    
+
     <service name="updateCashDeposit" engine="simple" default-entity-name="AccountTransaction"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="updateCashDeposit" auth="true">
         <description>Update CashDeposit</description>
@@ -133,7 +142,7 @@ under the License.
         <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
-    
+
      <!-- ChequeWithdrawal -->
          <service name="createChequeWithdrawal" engine="simple" default-entity-name="AccountTransaction"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="createChequeWithdrawal" auth="true">
@@ -143,7 +152,7 @@ under the License.
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
          <attribute name="accountTransactionParentId" mode="OUT" type="String"></attribute>
     </service>
-    
+
     <service name="updateChequeWithdrawal" engine="simple" default-entity-name="AccountTransaction"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="updateChequeWithdrawal" auth="true">
         <description>Update ChequeWithdrawal</description>
@@ -170,21 +179,21 @@ under the License.
         <override name="chequeNo" optional="false"></override>
         <override name="payee" optional="false"></override>
         <override name="chequeAmount" optional="false"></override -->
-        
+
     </service>
-    
+
     <service name="updateChequeDeposit" engine="simple" default-entity-name="AccountTransaction"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="updateChequeDeposit" auth="true">
         <description>Update ChequeDeposit</description>
         <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        
+
         <!--override name="partyId" optional="false"></override>
         <override name="chequeNo" optional="false"></override>
         < override name="payee" optional="false"></override>
         <override name="chequeAmount" optional="false"></override -->
-        
+
     </service>
 
     <service name="deleteChequeDeposit" engine="simple" default-entity-name="AccountTransaction"
@@ -200,10 +209,10 @@ under the License.
         <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        
+
         <attribute name="acctgTransId" mode="OUT" type="String"></attribute>
     </service>
-    
+
     <!-- createLoanRepaymentFromMemberAccount -->
      <service name="createLoanRepaymentFromMemberAccount" engine="simple" default-entity-name="LoanRepayment"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="createLoanRepaymentFromMemberAccount" auth="true">
@@ -211,10 +220,10 @@ under the License.
         <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        
+
         <attribute name="acctgTransId" mode="OUT" type="String"></attribute>
     </service>
-    
+
     <service name="updateLoanRepayment" engine="simple" default-entity-name="LoanRepayment"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="updateLoanRepayment" auth="true">
         <description>Update LoanRepayment</description>
@@ -237,7 +246,7 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
-    
+
     <service name="updateApplyStandingOrder" engine="simple" default-entity-name="ApplyStandingOrder"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="updateApplyStandingOrder" auth="true">
         <description>Update ApplyStandingOrder</description>
@@ -260,7 +269,7 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
-    
+
     <service name="updateChequeType" engine="simple" default-entity-name="ChequeType"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="updateChequeType" auth="true">
         <description>Update ChequeType</description>
@@ -275,7 +284,7 @@ under the License.
         <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
-    
+
     <!-- ChequeSetup -->
     <!-- Start -->
     	<service name="createChequeSetup" engine="simple" default-entity-name="ChequeSetup"
@@ -285,7 +294,7 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
-    
+
     <service name="updateChequeSetup" engine="simple" default-entity-name="ChequeSetup"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="updateChequeSetup" auth="true">
         <description>Update ChequeSetup</description>
@@ -301,7 +310,7 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
     <!-- End -->
-    
+
     <!-- AccountHolderTransactionSetup -->
      <service name="createAccountHolderTransactionSetup" engine="simple" default-entity-name="AccountHolderTransactionSetup"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="createAccountHolderTransactionSetup" auth="true">
@@ -310,7 +319,7 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
-    
+
     <service name="updateAccountHolderTransactionSetup" engine="simple" default-entity-name="AccountHolderTransactionSetup"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="updateAccountHolderTransactionSetup" auth="true">
         <description>Update AccountHolderTransactionSetup</description>
@@ -325,18 +334,18 @@ under the License.
         <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
-    
+
     <service name="calculateChequeClearDate" engine="java"
             location="org.ofbiz.accountholdertransactions.AccHolderTransactionServices" invoke="calculateChequeClearance" auth="false" >
         <description>Calculate Cheque Clearance</description>
-        
-        
+
+
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="OUT" include="pk" optional="false"/>
-        <auto-attributes mode="IN" include="nonpk" optional="true"/> 
-        <attribute name="accountTransactionId" type="String" mode="IN" optional="true"/>  
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="accountTransactionId" type="String" mode="IN" optional="true"/>
  </service>
- 
+
  <!-- Expected Payment -->
  <service name="createExpectedPayment" engine="simple" default-entity-name="ExpectedPayment"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="createExpectedPayment" auth="true">
@@ -344,26 +353,26 @@ under the License.
         <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        
+
         <!-- override name="partyId" optional="false"></override>
         <override name="chequeNo" optional="false"></override>
         <override name="payee" optional="false"></override>
         <override name="chequeAmount" optional="false"></override -->
-        
+
     </service>
-    
+
     <service name="updateExpectedPayment" engine="simple" default-entity-name="ExpectedPayment"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="updateExpectedPayment" auth="true">
         <description>Update ExpectedPayment</description>
         <!-- permission-service service-name="humanResManagerPermission" main-action="UPDATE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        
+
         <!--override name="partyId" optional="false"></override>
         <override name="chequeNo" optional="false"></override>
         < override name="payee" optional="false"></override>
         <override name="chequeAmount" optional="false"></override -->
-        
+
     </service>
 
     <service name="deleteExpectedPayment" engine="simple" default-entity-name="ExpectedPayment"
@@ -372,16 +381,16 @@ under the License.
         <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
-    
+
     <!-- Create Station Account Transaction -->
      <service name="createStationAccountTransaction" engine="simple" default-entity-name="StationAccountTransaction"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="createStationAccountTransaction" auth="true">
         <description>Create StationAccountTransaction</description>
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        
+
     </service>
-    
+
     <service name="updateStationAccountTransaction" engine="simple" default-entity-name="StationAccountTransaction"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="updateStationAccountTransaction" auth="true">
         <description>Update StationAccountTransaction</description>
@@ -399,7 +408,7 @@ under the License.
         <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
-    
+
     <!-- StationExpectation -->
     <service name="createStationExpectation" engine="simple" default-entity-name="StationExpectation"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="createStationExpectation" auth="true">
@@ -408,7 +417,7 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
-    
+
     <service name="updateStationExpectation" engine="simple" default-entity-name="StationExpectation"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="updateStationExpectation" auth="true">
         <description>Update StationExpectation</description>
@@ -423,7 +432,7 @@ under the License.
         <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
-    
+
     <!-- Expected Payment Sent -->
     <service name="createExpectedPaymentSent" engine="simple" default-entity-name="ExpectedPaymentSent"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="createExpectedPaymentSent" auth="true">
@@ -432,7 +441,7 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
-    
+
     <service name="updateExpectedPaymentSent" engine="simple" default-entity-name="ExpectedPaymentSent"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="updateExpectedPaymentSent" auth="true">
         <description>Update ExpectedPaymentSent</description>
@@ -447,7 +456,7 @@ under the License.
         <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
-    
+
     <!-- Expected Payment Received -->
     <service name="createExpectedPaymentReceived" engine="simple" default-entity-name="ExpectedPaymentReceived"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="createExpectedPaymentReceived" auth="true">
@@ -456,7 +465,7 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
-    
+
     <service name="updateExpectedPaymentReceived" engine="simple" default-entity-name="ExpectedPaymentReceived"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="updateExpectedPaymentReceived" auth="true">
         <description>Update ExpectedPaymentReceived</description>
@@ -471,7 +480,7 @@ under the License.
         <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
-    
+
     <!-- CodesSetup -->
      <service name="createCodesSetup" engine="simple" default-entity-name="CodesSetup"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="createCodesSetup" auth="true">
@@ -480,7 +489,7 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
-    
+
     <service name="updateCodesSetup" engine="simple" default-entity-name="CodesSetup"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="updateCodesSetup" auth="true">
         <description>Update CodesSetup</description>
@@ -495,8 +504,8 @@ under the License.
         <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
-    
-    
+
+
     <!-- MissingMemberLog -->
          <service name="createMissingMemberLog" engine="simple" default-entity-name="MissingMemberLog"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="createMissingMemberLog" auth="true">
@@ -505,7 +514,7 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
-    
+
     <service name="updateMissingMemberLog" engine="simple" default-entity-name="MissingMemberLog"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="updateMissingMemberLog" auth="true">
         <description>Update MissingMemberLog</description>
@@ -520,70 +529,70 @@ under the License.
         <!-- permission-service service-name="humanResManagerPermission" main-action="DELETE"/ -->
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
-    
-    <service name="AccountWebService" engine="java"  auth="false" 
+
+    <service name="AccountWebService" engine="java"  auth="false"
             location="org.ofbiz.accountholdertransactions.AccHolderTransactionServices" invoke="getTotalBalanceNow"  export="true" >
-            
+
         <description>Account Web Services </description>
-        
+
         <attribute name="memberAccountId" form-label="Member Account" type="String" mode="IN" optional="false"/>
         <attribute name="balance" type="BigDecimal" mode="OUT" optional="true"/>
-        
+
     </service>
-    
-     <service name="ATMTransactionMemberBalance" engine="java"  auth="false" 
+
+     <service name="ATMTransactionMemberBalance" engine="java"  auth="false"
             location="org.ofbiz.accountholdertransactions.ATMTransactionServices" invoke="getMemberBalance"  export="true" >
-            
+
         <description>Member Balance </description>
-        
+
         <attribute name="cardNumber" form-label="Card Number" type="String" mode="IN" optional="false"/>
         <attribute name="balance" type="BigDecimal" mode="OUT" optional="true"/>
         <attribute name="status" type="String" mode="OUT" optional="false"/>
-        
+
     </service>
-    
-    <service name="ATMTransactionWithdrawMemberCash" engine="java"  auth="false" 
+
+    <service name="ATMTransactionWithdrawMemberCash" engine="java"  auth="false"
             location="org.ofbiz.accountholdertransactions.ATMTransactionServices" invoke="withdrawMemberCash"  export="true" >
-            
+
         <description>Withdraw Member Cash </description>
-        
+
         <attribute name="cardNumber" form-label="Card Number" type="String" mode="IN" optional="false"/>
         <attribute name="amount" type="BigDecimal" mode="IN" optional="false"/>
         <attribute name="status" type="String" mode="OUT" optional="false"/>
-        
-    </service>
-    
 
-    
-     <service name="ATMTransactionMemberStatement" engine="java"  auth="false" 
+    </service>
+
+
+
+     <service name="ATMTransactionMemberStatement" engine="java"  auth="false"
             location="org.ofbiz.accountholdertransactions.ATMTransactionServices" invoke="getMemberStatement"  export="true" >
-            
+
         <description>Member Statement </description>
-        
+
         <attribute name="cardNumber" form-label="Card Number" type="String" mode="IN" optional="false"/>
          <attribute name="statementList" type="List" mode="OUT" optional="false"/>
         <attribute name="status" type="String" mode="OUT" optional="false"/>
-        
+
     </service>
-    
+
     <!-- processReceivedPaymentBreakdown -->
     <service name="processReceivedPaymentBreakdown" engine="simple" default-entity-name="ExpectedPaymentReceived"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="processReceivedPaymentBreakdown" auth="true">
         <description>processReceivedPaymentBreakdown</description>
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        
+
     </service>
-    
+
     <!-- removeReceivedImportedPaymentBreakdown -->
         <service name="removeReceivedImportedPaymentBreakdown" engine="simple" default-entity-name="ExpectedPaymentReceived"
              location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml" invoke="removeReceivedImportedPaymentBreakdown" auth="true">
         <description>processReceivedPaymentBreakdown</description>
         <auto-attributes mode="IN" include="pk" optional="true"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
-        
+
     </service>
-    
+
     <!-- Update Teller Limit Setup -->
     <service name="tellerLimitSetupUpdate" engine="simple" location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml"
      auth="true" invoke="tellerLimitSetupUpdate" default-entity-name="TellerLimitAmount">
@@ -591,23 +600,23 @@ under the License.
        <auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
        <auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
      </service>
-     
+
     <service name="createTellerLimitApprover" engine="simple" location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml"
      auth="true" default-entity-name="TellerLimitApprovers" invoke="createTellerLimitApprover">
       <auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
       <auto-attributes mode="IN" include="pk" optional="true"></auto-attributes>
-     </service> 
-     
+     </service>
+
      <service name="updateTellerLimitApprover" engine="simple" location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml"
      auth="true" default-entity-name="TellerLimitApprovers" invoke="updateTellerLimitApprover">
        <auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
        <auto-attributes mode="IN" include="nonpk" optional="true"></auto-attributes>
      </service>
-     
+
      <service name="deleteTellerLimitApprover" engine="simple"  location="component://accountholdertransactions/script/org/ofbiz/accountholdertransactions/accountholdertransactions/AccHolderTransactionServices.xml"
      auth="true" default-entity-name="TellerLimitApprovers" invoke="deleteTellerLimitApprover">
        <auto-attributes mode="IN" include="pk" optional="false"></auto-attributes>
      </service>
-    
-    
+
+
 </services>

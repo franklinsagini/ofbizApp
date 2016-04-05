@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
-	license agreements. See the NOTICE file distributed with this work for additional 
-	information regarding copyright ownership. The ASF licenses this file to 
-	you under the Apache License, Version 2.0 (the "License"); you may not use 
-	this file except in compliance with the License. You may obtain a copy of 
-	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
-	by applicable law or agreed to in writing, software distributed under the 
-	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
-	OF ANY KIND, either express or implied. See the License for the specific 
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor
+	license agreements. See the NOTICE file distributed with this work for additional
+	information regarding copyright ownership. The ASF licenses this file to
+	you under the Apache License, Version 2.0 (the "License"); you may not use
+	this file except in compliance with the License. You may obtain a copy of
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required
+	by applicable law or agreed to in writing, software distributed under the
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
+	OF ANY KIND, either express or implied. See the License for the specific
 	language governing permissions and limitations under the License. -->
 
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
-	<!-- The controller elements that are common to all OFBiz components can 
-		be found in the following xml file. A component can override the elements 
+	<!-- The controller elements that are common to all OFBiz components can
+		be found in the following xml file. A component can override the elements
 		found in the common-controller.xml file. -->
 	<include location="component://common/webcommon/WEB-INF/common-controller.xml" />
 	<include location="component://common/webcommon/WEB-INF/portal-controller.xml" />
 
 	<description>Account Holder Transactions Component Site Configuration File</description>
 
-	<!-- These can be used to return the reports as views; make sure the classes 
-		are compiled and available <handler name="datavision" type="view" class="org.ofbiz.webapp.view.DataVisionViewHandler"/> 
-		<handler name="jasperreportspdf" type="view" class="org.ofbiz.webapp.view.JasperReportsPdfViewHandler"/> 
+	<!-- These can be used to return the reports as views; make sure the classes
+		are compiled and available <handler name="datavision" type="view" class="org.ofbiz.webapp.view.DataVisionViewHandler"/>
+		<handler name="jasperreportspdf" type="view" class="org.ofbiz.webapp.view.JasperReportsPdfViewHandler"/>
 		<handler name="jasperreportsxml" type="view" class="org.ofbiz.webapp.view.JasperReportsXmlViewHandler"/> -->
 
 	<!-- Events to run on every request before security (chains exempt) -->
 	<!-- <preprocessor> </preprocessor> -->
 	<!-- Events to run on every request after all other processing (chains exempt) -->
-	<!-- <postprocessor> <event name="test" type="java" path="org.ofbiz.webapp.event.TestEvent" 
+	<!-- <postprocessor> <event name="test" type="java" path="org.ofbiz.webapp.event.TestEvent"
 		invoke="test"/> </postprocessor> -->
 
 	<!-- Request Mappings -->
-	<!-- request-map uri="main"><security https="true" auth="true"/><response 
+	<!-- request-map uri="main"><security https="true" auth="true"/><response
 		name="success" type="view" value="main"/></request-map -->
 	<request-map uri="TellerLimitsApprovals">
 		<security https="true" auth="true"/>
@@ -50,7 +50,22 @@
 		<response name="success" type="view" value="TellerLimitsApprovals" />
 		<response name="error" type="view" value="TellerLimitsApprovals"/>
 	</request-map>
-	
+
+	<request-map uri="deleteLimitTransaction">
+		<security https="true" auth="true"/>
+		<event type="service" invoke="deleteLimitTransaction"/>
+		<response name="success" type="view" value="TellerLimitsApprovals" />
+		<response name="error" type="view" value="TellerLimitsApprovals"/>
+	</request-map>
+
+	<request-map uri="completeLimitTransaction">
+		<security https="true" auth="true"/>
+		<event type="service" invoke="completeLimitTransaction"/>
+		<response name="success" type="request-redirect" value="transactionPrintOut">
+			<redirect-parameter name="accountTransactionParentId" />
+		</response>
+		<response name="error" type="view" value="TellerLimitsApprovals" />
+	</request-map>
 	<request-map uri="completeLimitTransaction">
 		<security https="true" auth="true"/>
 		<event type="service" invoke="completeLimitTransaction"/>
@@ -70,17 +85,17 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="accReports" />
 	</request-map>
-	
+
 	<request-map uri="accountTransactionReport">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="accountTransactionReport" />
 	</request-map>
-	
+
 	<request-map uri="accountTransactionReportExcel.csv">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="accountTransactionReportExcel" />
 	</request-map>
-	
+
 	<request-map uri="remittanceByMember">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="remittanceByMember" />
@@ -98,7 +113,7 @@
 		<response name="success" type="view" value="cashDeposit"
 			save-current-view="true" />
 	</request-map>
-	
+
 	<!-- directDebit -->
 	<request-map uri="directDebit">
 		<security https="true" auth="true" />
@@ -129,14 +144,14 @@
 		<response name="success" type="view" value="loanRepayment"
 			save-current-view="true" />
 	</request-map>
-	
+
 	<!-- loanRepaymentFromMemberAccount -->
 	<request-map uri="loanRepaymentFromMemberAccount">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="loanRepaymentFromMemberAccount"
 			save-current-view="true" />
 	</request-map>
-	
+
 	<request-map uri="loanAccountsPayment">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="loanAccountsPayment"
@@ -159,15 +174,15 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="atmServiceLogs"
 			save-current-view="true" />
-	</request-map>	
-	
-	
+	</request-map>
+
+
 	<request-map uri="msaccoTransactionLogs">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="msaccoTransactionLogs"
 			save-current-view="true" />
 	</request-map>
-	
+
 
 	<request-map uri="chequeSetup">
 		<security https="true" auth="true" />
@@ -203,7 +218,7 @@
 		</response>
 		<response name="error" type="view" value="chequedepositposting" />
 	</request-map>
-	
+
 	<!-- Generate AMortization Schedules Mostly for imported Loan Applications -->
 	<request-map uri="generateLoansAmortizationSchedules">
 		<security auth="true" https="true" />
@@ -258,7 +273,7 @@
 	<request-map uri="createDirectDebit">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createDirectDebit">
-			
+
 		</event>
 		<response name="success" type="request-redirect" value="transactionPrintOutDirectDebit">
 			<redirect-parameter name="accountTransactionParentId" />
@@ -278,7 +293,7 @@
 		</response>
 		<response name="error" type="view" value="cashDeposit" />
 	</request-map>
-	
+
 	<request-map uri="updateCashDeposit">
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateCashDeposit" />
@@ -304,9 +319,9 @@
 		</response>
 		<response name="error" type="view" value="chequeWithdrawal" />
 	</request-map>
-	
-	
-		
+
+
+
 
 	<request-map uri="updateChequeWithdrawal">
 		<security https="true" auth="true" />
@@ -357,15 +372,15 @@
 		<!--response name="success" type="request-redirect" value="loanRepayment">
 			<redirect-parameter name="partyId" />
 		</response -->
-		
+
 		<response name="success" type="request-redirect" value="loanRepaymentPrintOut">
 			<redirect-parameter name="acctgTransId" />
 		</response>
-		
+
 		<response name="error" type="view" value="loanRepayment" />
 	</request-map>
-	
-	
+
+
 	<!-- createLoanRepaymentFromMemberAccount -->
 	<request-map uri="createLoanRepaymentFromMemberAccount">
 		<security https="true" auth="true" />
@@ -373,14 +388,14 @@
 		<!--response name="success" type="request-redirect" value="loanRepayment">
 			<redirect-parameter name="partyId" />
 		</response -->
-		
+
 		<response name="success" type="request-redirect" value="loanRepaymentPrintOut">
 			<redirect-parameter name="acctgTransId" />
 		</response>
-		
+
 		<response name="error" type="view" value="loanRepaymentFromMemberAccount" />
 	</request-map>
-	
+
 
 	<request-map uri="updateLoanRepayment">
 		<security https="true" auth="true" />
@@ -397,8 +412,8 @@
 			value="loanRepayment"></response>
 		<response name="error" type="view" value="loanRepayment" />
 	</request-map>
-	
-	
+
+
 		<request-map uri="receiveLoanAccountRepayment">
 		<security https="true" auth="true" />
 		<event type="multi-service" invoke="receiveLoanAccountRepayment" />
@@ -530,7 +545,7 @@
 		<response name="success" type="none">
 		</response>
 	</request-map>
-	
+
 	<request-map uri="glaccount">
 		<!-- event type="java" path="org.ofbiz.loans.events.LoanEvent" invoke="getMember"/ -->
 		<event type="java"
@@ -539,7 +554,7 @@
 		<response name="success" type="none">
 		</response>
 	</request-map>
-	
+
 		<request-map uri="glloanaccount">
 		<!-- event type="java" path="org.ofbiz.loans.events.LoanEvent" invoke="getMember"/ -->
 		<event type="java"
@@ -597,7 +612,7 @@
 		<response name="success" type="none">
 		</response>
 	</request-map>
-	
+
 	<request-map uri="isTellerBalanceEnough">
 		<event type="java"
 			path="org.ofbiz.accountholdertransactions.AccHolderTransactionServices"
@@ -605,7 +620,7 @@
 		<response name="success" type="none">
 		</response>
 	</request-map>
-	
+
 	<!-- isTellerOverLimit -->
 	<request-map uri="isTellerOverLimit">
 		<event type="java"
@@ -772,7 +787,7 @@
 		</response>
 		<response name="error" type="view" value="receivedPaymentBreakdownFailed" />
 	</request-map -->
-	
+
 	<request-map uri="processReceivedPaymentBreakdown">
 		<security https="true" auth="true" />
 		<event type="service" invoke="processReceivedPaymentBreakdown" />
@@ -782,7 +797,7 @@
 		</response>
 		<response name="error" type="view" value="receivedPaymentBreakdown" />
 	</request-map>
-	
+
 	<!-- removeReceivedImportedPaymentBreakdown -->
 		<request-map uri="removeReceivedImportedPaymentBreakdown">
 		<security https="true" auth="true" />
@@ -793,7 +808,7 @@
 		</response>
 		<response name="error" type="view" value="receivedPaymentBreakdown" />
 	</request-map>
-	
+
 
 	<request-map uri="codesSetup">
 		<security https="true" auth="true" />
@@ -824,7 +839,7 @@
 			value="codesSetup"></response>
 		<response name="error" type="view" value="codesSetup" />
 	</request-map>
-	
+
 	<!-- MissingMemberLog -->
 		<request-map uri="missingMemberLog">
 		<security https="true" auth="true" />
@@ -886,57 +901,57 @@
 		<!-- response name="success" type="view" value="transactionPrintOut">
 			<redirect-parameter name="accountTransactionParentId"/>
 		</response -->
-		
+
 		<response name="success" type="view" value="transactionPrintOut">
 			<redirect-parameter name="accountTransactionParentId"/>
 		</response>
 		<!-- response name="success" type="view" value="cashWithdrawal">
 			<redirect-parameter name="partyId"/>
 		</response -->
-		
-		
+
+
 	</request-map>
-	
-	
+
+
 	<request-map uri="transactionPrintOutDirectDebit">
 		<security auth="true" https="true" />
-		
+
 		<response name="success" type="view" value="transactionPrintOutDirectDebit">
 			<redirect-parameter name="accountTransactionParentId"/>
 		</response>
-		
+
 	</request-map>
-	
+
 	<!-- transactionPrintOutChequeWithdrawal -->
 	<request-map uri="transactionPrintOutChequeWithdrawal">
 		<security auth="true" https="true" />
-		
+
 		<response name="success" type="view" value="transactionPrintOut">
 			<redirect-parameter name="accountTransactionParentId"/>
 		</response>
-		
+
 	</request-map>
-	
+
 	<request-map uri="printMiniStatement">
 		<security auth="true" https="true" />
 		<response name="success" type="view" value="printMiniStatement">
 			<redirect-parameter name="partyId"/>
 		</response>
 	</request-map>
-	
+
 	<request-map uri="generatedTransactionPrintout">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="generatedTransactionPrintout"
 			save-current-view="true">
 		</response>
 	</request-map>
-	
+
 	<request-map uri="LookupActiveMember">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="LookupActiveMember" />
 	</request-map>
-	
-	
+
+
 		<!-- processReceivedPaymentBreakdown -->
 	<request-map uri="removeImportedPaymentBreakdown">
 		<security auth="true" https="true" />
@@ -948,144 +963,144 @@
 		</response>
 		<response name="error" type="view" value="receivedPaymentBreakdownFailed" />
 	</request-map>
-	
+
 	<!-- Loan Repayment Printout -->
 	<request-map uri="loanRepaymentPrintOut">
 		<security auth="true" https="true" />
 		<!-- response name="success" type="view" value="transactionPrintOut">
 			<redirect-parameter name="accountTransactionParentId"/>
 		</response -->
-		
+
 		<response name="success" type="view" value="loanRepaymentPrintOut">
 			<redirect-parameter name="acctgTransId"/>
 		</response>
 		<!-- response name="success" type="view" value="cashWithdrawal">
 			<redirect-parameter name="partyId"/>
 		</response -->
-	
+
 	</request-map>
 	<!--Teller Reports  -->
 	<request-map uri="tellerCashWithdrawal">
 	  <security https="true" auth="true"/>
 	  <response name="success" type="view" value="tellerCashWithdrawal"></response>
-	  <response name="error" type="view" value="tellerCashWithdrawal"></response>	  
+	  <response name="error" type="view" value="tellerCashWithdrawal"></response>
 	</request-map>
-	
+
 	<request-map uri="tellerCashDeposit">
 	  <security https="true" auth="true"/>
 	  <response name="success" type="view" value="tellerCashDeposit"></response>
-	  <response name="error" type="view" value="tellerCashDeposit"></response>	  
+	  <response name="error" type="view" value="tellerCashDeposit"></response>
 	</request-map>
-	
+
 	<request-map uri="tellerChequeWithdrawal">
 	  <security https="true" auth="true"/>
 	  <response name="success" type="view" value="tellerChequeWithdrawal"></response>
-	  <response name="error" type="view" value="tellerChequeWithdrawal"></response>	  
+	  <response name="error" type="view" value="tellerChequeWithdrawal"></response>
 	</request-map>
-	
+
 	<request-map uri="tellerChequeDeposit">
 	  <security https="true" auth="true"/>
 	  <response name="success" type="view" value="tellerChequeDeposit"></response>
-	  <response name="error" type="view" value="tellerChequeDeposit"></response>	  
+	  <response name="error" type="view" value="tellerChequeDeposit"></response>
 	</request-map>
-	
+
 	<!--  -->
-	
+
 	<request-map uri="tellerCashWithdrawalExcel.csv">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="tellerCashWithdrawalExcelcsv" />
 	</request-map>
-	
+
 	<request-map uri="tellerCashDepositExcel.csv">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="tellerCashDepositExcelcsv" />
 	</request-map>
-	
+
 	<request-map uri="tellerChequeWithdrawalExcel.csv">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="tellerChequeWithdrawalExcelcsv" />
 	</request-map>
-	
+
 	<request-map uri="tellerChequeDepositExcel.csv">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="tellerChequeDepositExcelcsv" />
 	</request-map>
-	
+
 	<request-map uri="stationAccountReport">
 	   <security auth="true" https="true"/>
 	   <response name="success" type="view" value="stationAccountReport"></response>
 	   <response name="error" type="view" value="stationAccountReport"></response>
 	</request-map>
-	
+
 	<request-map uri="stationAccount.csv">
 	  <security auth="true" https="true"/>
 	  <response name="success" type="view" value="stationAccountReportcsv"></response>
 	</request-map>
-	
-	
+
+
 	<request-map uri="tellerLimitSetup">
 	  <security auth="true" https="true"/>
 	  <response name="success" type="view" value="tellerLimitSetup"></response>
 	  <response name="error" type="view" value="tellerLimitSetup"></response>
 	</request-map>
-	
+
 	<request-map uri="tellerLimitSetupCont">
 	 <security auth="true" https="true"/>
 	 <event type="service" invoke="tellerLimitSetupUpdate"></event>
 	 <response name="success" type="view" value="tellerLimitSetup"></response>
 	 <response name="error" type="view" value="tellerLimitSetup"></response>
 	</request-map>
-	
+
 	<request-map uri="tellerLimitApprovers">
 	 <security https="true" auth="true"/>
 	 <response name="success" type="view" value="tellerLimitApprovers"></response>
 	  <response name="error" type="view" value="tellerLimitApprovers"></response>
 	</request-map>
-	
+
 	<request-map uri="LookupEmployee">
 		<security auth="true" https="true" />
 		<response name="success" type="view" value="LookupEmployee" />
 	</request-map>
-	
+
 	<request-map uri="createTellerLimitApprover">
 	 <security auth="true" https="true"/>
 	 <event type="service" invoke="createTellerLimitApprover"></event>
 	 <response name="success" type="view" value="tellerLimitApprovers"></response>
 	 <response name="error" type="view" value="tellerLimitApprovers"></response>
 	</request-map>
-	
+
 	<request-map uri="updateTellerLimitApprover">
 	 <security auth="true" https="true"/>
 	 <event type="service" invoke="updateTellerLimitApprover"></event>
 	 <response name="success" type="view" value="tellerLimitApprovers"></response>
 	 <response name="error" type="view" value="tellerLimitApprovers"></response>
 	</request-map>
-	
+
 	<request-map uri="deleteTellerLimitApprover">
 	 <security auth="true" https="true"/>
 	 <event type="service" invoke="deleteTellerLimitApprover"></event>
 	 <response name="success" type="view" value="tellerLimitApprovers"></response>
 	 <response name="error" type="view" value="tellerLimitApprovers"></response>
 	</request-map>
-	
+
 	<!-- end of request mappings -->
 
 	<!-- View Mappings -->
 	<view-map name="LookupEmployee" type="screen"
 		page="component://humanres/widget/LookupScreens.xml#LookupEmployee" />
-	
+
 	<view-map name="tellerLimitApprovers" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#tellerLimitApprovers"
 	 type="screen"></view-map>
-	
+
 	 <view-map name="tellerLimitSetup" type="screen"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#tellerLimitSetup" />
 	<view-map name="stationAccountReport" type="screen"
 	 page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#stationAccountReport"></view-map>
-	 
-	 	 <view-map name="stationAccountReportcsv" type="screencsv" 
+
+	 	 <view-map name="stationAccountReportcsv" type="screencsv"
 	 page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#stationAccountReportcsv" content-type="text/csv" encoding="none" />
 	<!-- Teller Reports View Mappings -->
-	
+
 	 <view-map name="tellerCashWithdrawal" type="screen"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#tellerCashWithdrawal" />
 	 <view-map name="tellerCashDeposit" type="screen"
@@ -1094,19 +1109,19 @@
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#tellerChequeWithdrawal" />
 	 <view-map name="tellerChequeDeposit" type="screen"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#tellerChequeDeposit" />
-	
-	 <view-map name="tellerCashWithdrawalExcelcsv" type="screencsv" 
+
+	 <view-map name="tellerCashWithdrawalExcelcsv" type="screencsv"
 	 page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#tellerCashWithdrawalExcelcsv" content-type="text/csv" encoding="none" />
-	 <view-map name="tellerCashDepositExcelcsv" type="screencsv" 
+	 <view-map name="tellerCashDepositExcelcsv" type="screencsv"
 	 page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#tellerCashDepositExcelcsv" content-type="text/csv" encoding="none" />
 	 <view-map name="tellerChequeWithdrawalExcelcsv" type="screencsv"
 	  page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#tellerChequeWithdrawalExcelcsv" content-type="text/csv" encoding="none" />
-	 <view-map name="tellerChequeDepositExcelcsv" type="screencsv" 
+	 <view-map name="tellerChequeDepositExcelcsv" type="screencsv"
 	 page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#tellerChequeDepositExcelcsv" content-type="text/csv" encoding="none" />
-	
-	<!--End of teller reports  -->	
-		
-		
+
+	<!--End of teller reports  -->
+
+
 	<!-- view-map name="main" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/CommonScreens.xml#shareSetup"/ -->
 	<!-- view-map name="main" type="screen" page="component://accountholdertransactions/widget://sharemanagement/LoanScreens.xml#loanapplicationslist"/ -->
 	<!-- view-map name="main" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewCashWithdrawal"/ -->
@@ -1119,16 +1134,16 @@
 	<!-- Payroll -->
 	<view-map name="cashWithdrawal" type="screen"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewCashWithdrawal" />
-		
+
 	<view-map name="cashWithdrawalFail" type="screen"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewCashWithdrawal" />
 	<view-map name="cashDeposit" type="screen"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewCashDeposit" />
-	
-	
+
+
 	<view-map name="directDebit" type="screen"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewDirectDebit" />
-	
+
 	<view-map name="chequeWithdrawal" type="screen"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewChequeWithdrawal" />
 	<view-map name="chequeDeposit" type="screen"
@@ -1155,37 +1170,37 @@
 
 	<view-map name="loanRepayment" type="screen"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewLoanRepayment" />
-	
+
 	<!-- loanRepaymentFromMemberAccount -->
 	<view-map name="loanRepaymentFromMemberAccount" type="screen"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewLoanRepaymentFromMemberAccount" />
-	
-	
+
+
 	<view-map name="loanAccountsPayment" type="screen"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#loanAccountsPayment" />
-	
+
 	<view-map name="applyStandingOrder" type="screen"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewApplyStandingOrder" />
 	<view-map name="chequeType" type="screen"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewChequeType" />
-	
+
 	<view-map name="TellerLimitsApprovals" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#TellerLimitsApprovals" />
 
 	<view-map name="approveLimit" type="screen" page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#approveLimit" />
-	
+
 	<view-map name="atmServiceLogs" type="screen"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#atmServiceLogs" />
-	
+
 	<view-map name="msaccoTransactionLogs" type="screen"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#msaccoTransactionLogs" />
-	
-	
+
+
 	<view-map name="chequeSetup" type="screen"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewChequeSetup" />
 	<!-- missingMemberLog -->
 	<view-map name="missingMemberLog" type="screen"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#missingMemberLog" />
-	
+
 	<view-map name="accountHolderTransactionSetup" type="screen"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#NewAccountHolderTransactionSetup" />
 	<view-map name="chequedepositposting" type="screen"
@@ -1225,15 +1240,15 @@
 	<!-- loanRepaymentPrintOut -->
 		<view-map name="loanRepaymentPrintOut" type="screenfop"
 		page="component://accountholdertransactions/widget/accountholdertransactions/AccHolderTransactionsScreens.xml#loanRepaymentPrintOut" content-type="application/pdf" encoding="none"  />
-	
-	
+
+
 	<view-map name="printMiniStatement" type="screenfop"
 		page="component://loanreports/widget/LoanReportsScreens.xml#memberstatementreportPDF" content-type="application/pdf" encoding="none"  />
 
 
 	<!-- for printing  generatedTransactionPrintout -->
 	<view-map name="generatedTransactionPrintout" type="screenfop" page="component://loanreports/widget/LoanReportsScreens.xml#loansummaryreportPDF" content-type="application/pdf" encoding="none"/>
-	
+
 	<view-map name="LookupActiveMember" type="screen"
 		page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember" />
 	<!-- end of view mappings -->

@@ -35,8 +35,8 @@ under the License.
         <field name="tellerLimitApprovalsId"><hidden/></field>
         <field name="memberAccountId"><hidden/></field>
         <field name="tellerId" title="Teller"><display/></field>
-        <field name="memberAccountId" title="Member Account"> 
-            <display-entity entity-name="MemberAccount" 
+        <field name="memberAccountId" title="Member Account">
+            <display-entity entity-name="MemberAccount"
                           key-field-name="memberAccountId" description="${accountName}">
             </display-entity>
         </field>
@@ -49,6 +49,11 @@ under the License.
         </field>
         <field name="completeTransactionButton" use-when="&quot;APPROVED&quot;.equals(&quot;${statusName}&quot;)" title="Complete Transaction" widget-style="buttontext">
             <hyperlink target="completeLimitTransaction" description="Complete Transaction" also-hidden="false">
+                <parameter param-name="tellerLimitApprovalsId"/>
+            </hyperlink>
+        </field>
+        <field name="deleteTransactionButton" title="Delete Transaction" widget-style="buttontext">
+            <hyperlink target="deleteLimitTransaction" description="Delete Transaction" also-hidden="false">
                 <parameter param-name="tellerLimitApprovalsId"/>
             </hyperlink>
         </field>
@@ -845,7 +850,7 @@ under the License.
         </field >
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
     </form>
-    
+
     <!-- NewLoanRepaymentFromMemberAccount -->
     <form name="NewLoanRepaymentFromMemberAccount" type="single" target="createLoanRepaymentFromMemberAccount"
 	focus-field-name="loanNo" header-row-style="header-row"
@@ -882,7 +887,7 @@ under the License.
         </actions>
         <field name="loanRepaymentId"><hidden/></field>
         <field name="partyId"><hidden/></field>
-        
+
         <field name="memberAccountId" title="Member Account"  widget-style="required" required-field="true">
             <drop-down allow-empty="true">
                 <list-options list-name="memberAccountList" key-name="memberAccountId" description="${accountNo} - ${accountName} - ${code} - ${name}" />
@@ -935,7 +940,7 @@ under the License.
 
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
        </form>
-    
+
 
     <!-- combinedList -->
     <!-- NewLoanAccountRepayment -->
@@ -1250,9 +1255,9 @@ under the License.
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="orderBy" value="-createdStamp"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
-                
+
             </service>
-            
+
         </actions>
         <field name="cardNumber" title="Card Number"><display></display></field>
         <field name="transactionType" title="Transaction Type"><display></display></field>
@@ -1350,12 +1355,12 @@ under the License.
         <field name="memberStatusId" title="Member Status">
 			<drop-down allow-empty="true">
 				<entity-options description="${name}" entity-name="MemberStatus">
-				
+
 				</entity-options>
 			</drop-down>
-			
+
 		</field>
-		
+
 		<!-- drop-down allow-empty="true">
 				<entity-options description="${name}" entity-name="MemberStatus"
 					key-field-name="memberStatusId">
@@ -1391,7 +1396,7 @@ under the License.
 
         	<set field="withdrawnMember" value="WITHDRAWN"/>
 	   		<set field="withdrawnMemberStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(withdrawnMember);}"/>
-        	
+
 			<!-- entity-condition entity-name="Member" list="membersList"></entity-condition -->
         	<entity-condition entity-name="PartyGroup" list="partyGroups">
         		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
@@ -1406,7 +1411,7 @@ under the License.
                 <field-map field-name="orderBy" from-field="parameters.sortField"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
-				
+
             </service>
 
 
@@ -1414,7 +1419,7 @@ under the License.
           <field name="Member" use-when="(memberStatusId==${activememberStatusId}) || (memberStatusId==${withdrawnMemberStatusId})">
         	<hyperlink target="cashWithdrawal?partyId=${partyId}" description="Transactions for ${firstName} ${middleName} ${lastName}"></hyperlink>
         </field>
-        
+
         <field name="Member" use-when="(memberStatusId!=${activememberStatusId}) &amp;&amp; (memberStatusId!=${withdrawnMemberStatusId})">
         	<display description="Member is not active , should be activated first or status resolved!"></display>
         </field>
@@ -2445,7 +2450,7 @@ under the License.
         		<option key="102015" description="102015"/>
         		<option key="112015" description="112015"/>
         		<option key="122015" description="122015"/>
-        		
+
         		<option key="12016" description="12016"/>
         		<option key="22016" description="22016"/>
         		<option key="32016" description="32016"/>
@@ -2829,11 +2834,11 @@ under the License.
             </hyperlink>
         </field>
     </form>
-    
-    
+
+
      <form name="accountTransactionReport" type="single" target="accountTransactionReport" default-entity-name="AccountTransaction">
         <actions>
-         
+
           <entity-condition entity-name="AccountProductCharge" >
             	<condition-list>
             		<condition-expr field-name="isFixed" operator="equals" value="N"/>
@@ -2841,7 +2846,7 @@ under the License.
             	<order-by field-name="accountProductChargeId"></order-by>
             </entity-condition>
         </actions>
-        
+
         <field name="asDate" title="Date"><date-time type="date"/></field>
         <field name="transaction" title="Transaction Type" required-field="true">
           <drop-down allow-empty="true">
@@ -2850,14 +2855,14 @@ under the License.
             </entity-options>
           </drop-down>
         </field>
-        
+
        <field name="run" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    
-    
+
+
       <form name="accountTransactionReportExcel" type="single" target="accountTransactionReportExcel.csv" default-entity-name="AccountTransaction">
         <actions>
-         
+
           <entity-condition entity-name="AccountProductCharge" >
             	<condition-list>
             		<condition-expr field-name="isFixed" operator="equals" value="N"/>
@@ -2865,15 +2870,15 @@ under the License.
             	<order-by field-name="accountProductChargeId"></order-by>
             </entity-condition>
         </actions>
-    
+
                <field name="startDate" title="From" >
         	<date-time type="timestamp"/>
            </field>
-        
+
         <field name="endDate" title="To" position="2">
         	<date-time type="timestamp"/>
         </field>
-        
+
            <field name="branchId" title="Branch">
         	<!-- date-find default-option-from="greaterThanFromDayStart"/ -->
         	<drop-down allow-empty="true">
@@ -2881,8 +2886,8 @@ under the License.
         			<entity-constraint name="isBranch" operator="equals" value="Y"/>
         		</entity-options>
         	</drop-down>
-        </field>  
-        
+        </field>
+
         <field name="transaction" title="Transaction Type" required-field="true" position="2">
           <drop-down allow-empty="true">
             <entity-options entity-name="AccountProductCharge" description="${transactionType}" key-field-name="accountProductChargeId" >
@@ -2890,15 +2895,15 @@ under the License.
             </entity-options>
           </drop-down>
         </field>
-        
+
        <field name="run" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    
-    
-    <form name="accountTransactionReportExcelCSV" list-name="transactionals" target="" title="" 
-         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
-         default-table-style="basic-table hover-bar" paginate="false"> 
-         
+
+
+    <form name="accountTransactionReportExcelCSV" list-name="transactionals" target="" title=""
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2"
+         default-table-style="basic-table hover-bar" paginate="false">
+
         <field name="accountTransactionId" title="TRANSACTION ID"><display/></field>
         <field name="accountNo" title="ACCOUNT NUMBER"><display/></field>
         <field name="accountName" title="ACCOUNT NAME"><display/></field>
@@ -2912,27 +2917,27 @@ under the License.
         <field name="slipNumber" title="SLIP NUMBER"><display/></field>
         <field name="createdStamp" title="TRANSACTION DATE"><display/></field>
     </form>
-    
-    
-    
-    
-    
+
+
+
+
+
     <!-- TELLER REPORT FORMS -->
-    
+
     <!-- cash withdrawal -->
-    
+
       <form name="tellerCashWithdrawalExcel" type="single" target="tellerCashWithdrawalExcel.csv" default-entity-name="AccountTransaction">
 
           <field name="asAtDate" required-field="true">
         	<date-time type="timestamp"/>
         </field>
-      
+
         <field name="transaction" title="Transaction Type" required-field="true" >
           <drop-down allow-empty="false">
            <option key="CASHWITHDRAWAL" description="CASH WITHDRWAL"/>
           </drop-down>
         </field>
-        
+
           <field name="treasuryId" title="Teller">
         	<!-- date-find default-option-from="greaterThanFromDayStart"/ -->
         	<drop-down allow-empty="true">
@@ -2940,26 +2945,26 @@ under the License.
         			<entity-constraint name="treasuryTypeId" operator="equals" value="3"/>
         		</entity-options>
         	</drop-down>
-        </field>  
-        
-        
+        </field>
+
+
        <field name="run" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    
+
     <!-- cash deposit -->
-    
+
       <form name="tellerCashDepositExcel" type="single" target="tellerCashDepositExcel.csv" default-entity-name="AccountTransaction">
-        
+
           <field name="asAtDate">
         	<date-time type="timestamp"/>
         </field>
-      
+
         <field name="transaction" title="Transaction Type" required-field="true"  position="2">
           <drop-down allow-empty="false">
            <option key="CASHDEPOSIT" description="CASH DEPOSIT"/>
           </drop-down>
         </field>
-        
+
           <field name="treasuryId" title="Teller">
         	<!-- date-find default-option-from="greaterThanFromDayStart"/ -->
         	<drop-down allow-empty="true">
@@ -2967,31 +2972,31 @@ under the License.
         			<entity-constraint name="treasuryTypeId" operator="equals" value="3"/>
         		</entity-options>
         	</drop-down>
-        </field>  
-        
-        
+        </field>
+
+
        <field name="run" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    
+
     <!-- Cheque withdrawal -->
 
   <form name="tellerChequeWithdrawalExcel" type="single" target="tellerChequeWithdrawalExcel.csv" default-entity-name="AccountTransaction">
           <field name="startDate" title="From" >
         	<date-time type="timestamp"/>
            </field>
-        
+
         <field name="endDate" title="To" position="2">
         	<date-time type="timestamp"/>
-        </field> 
-      
+        </field>
+
         <field name="transaction" title="Transaction Type" required-field="true"  position="2">
           <drop-down allow-empty="false">
            <option key="CHEQUEWITHDRAWAL" description="CHEQUE WITHDRAWAL"/>
           </drop-down>
         </field>
-        
+
         <field name="amountToCheckGreaterThan" title="GREATER  THAN"><text/></field>
-       
+
        <field name="run" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
@@ -3002,32 +3007,32 @@ under the License.
                <field name="asAtDate">
         	<date-time type="timestamp"/>
         </field>
-      
+
         <field name="transaction" title="Transaction Type" required-field="true">
           <drop-down allow-empty="false">
            <option key="CHEQUEDEPOSIT" description="CHEQUE DEPOSIT"/>
           </drop-down>
         </field>
-        
+
           <field name="treasuryId" title="Teller">
         	<!-- date-find default-option-from="greaterThanFromDayStart"/ -->
         	<drop-down allow-empty="true">
         		<entity-options description="${name}" key-field-name="treasuryId" entity-name="Treasury">
         		</entity-options>
         	</drop-down>
-        </field>  
-        
-        
+        </field>
+
+
        <field name="run" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
             <!--  -->
             <!--  -->
-            
-   <form name="tellerCashWithdrawalExcelcsvForm" list-name="transactionals" target="" title="" 
-         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
-         default-table-style="basic-table hover-bar" paginate="false"> 
-         
+
+   <form name="tellerCashWithdrawalExcelcsvForm" list-name="transactionals" target="" title=""
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2"
+         default-table-style="basic-table hover-bar" paginate="false">
+
         <field name="accountTransactionId" title="TRANSACTION ID"><display/></field>
         <field name="accountNo" title="ACCOUNT NUMBER"><display/></field>
         <field name="accountName" title="ACCOUNT NAME"><display/></field>
@@ -3036,12 +3041,12 @@ under the License.
 		<field name="memberNumber" title="MEMBER NUMBER"><display/></field>
         <field name="createdStamp" title="TRANSACTION DATE"><display/></field>
     </form>
-    
-    
-      <form name="tellerCashDepositExcelcsvForm" list-name="transactionals" target="" title="" 
-         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
-         default-table-style="basic-table hover-bar" paginate="false"> 
-         
+
+
+      <form name="tellerCashDepositExcelcsvForm" list-name="transactionals" target="" title=""
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2"
+         default-table-style="basic-table hover-bar" paginate="false">
+
         <field name="accountTransactionId" title="TRANSACTION ID"><display/></field>
         <field name="accountNo" title="ACCOUNT NUMBER"><display/></field>
         <field name="accountName" title="ACCOUNT NAME"><display/></field>
@@ -3050,11 +3055,11 @@ under the License.
 		<field name="memberNumber" title="MEMBER NUMBER"><display/></field>
         <field name="createdStamp" title="TRANSACTION DATE"><display/></field>
     </form>
-    
-    
-      <form name="tellerChequeWithdrawalExcelcsvForm" list-name="transactionalsBankers" target="" title="" 
-         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
-         default-table-style="basic-table hover-bar" paginate="false"> 
+
+
+      <form name="tellerChequeWithdrawalExcelcsvForm" list-name="transactionalsBankers" target="" title=""
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2"
+         default-table-style="basic-table hover-bar" paginate="false">
           <field name="accountTransactionId" title="TRANSACTION ID"><display/></field>
         <field name="accountNo" title="ACCOUNT NUMBER"><display/></field>
         <field name="accountName" title="ACCOUNT NAME"><display/></field>
@@ -3065,10 +3070,10 @@ under the License.
 		<field name="memberNumber" title="MEMBER NUMBER"><display/></field>
         <field name="createdStamp" title="TRANSACTION DATE"><display/></field>
     </form>
-    
-       <form name="tellerChequeWithdrawalExcelcsvFormNormal" list-name="transactionalsNormal" target="" title="" 
-         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
-         default-table-style="basic-table hover-bar" paginate="false"> 
+
+       <form name="tellerChequeWithdrawalExcelcsvFormNormal" list-name="transactionalsNormal" target="" title=""
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2"
+         default-table-style="basic-table hover-bar" paginate="false">
           <field name="accountTransactionId" title="TRANSACTION ID"><display/></field>
         <field name="accountNo" title="ACCOUNT NUMBER"><display/></field>
         <field name="accountName" title="ACCOUNT NAME"><display/></field>
@@ -3079,11 +3084,11 @@ under the License.
 		<field name="memberNumber" title="MEMBER NUMBER"><display/></field>
         <field name="createdStamp" title="TRANSACTION DATE"><display/></field>
     </form>
-    
-    
-      <form name="tellerChequeDepositExcelcsvForm" list-name="transactionals" target="" title="" 
-         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
-         default-table-style="basic-table hover-bar" paginate="false"> 
+
+
+      <form name="tellerChequeDepositExcelcsvForm" list-name="transactionals" target="" title=""
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2"
+         default-table-style="basic-table hover-bar" paginate="false">
         <field name="accountTransactionId" title="TRANSACTION ID"><display/></field>
 		<field name="chequeNo" title="CHEQUE NUMBER"><display/></field>
         <field name="accountNo" title="ACCOUNT NUMBER"><display/></field>
@@ -3094,11 +3099,11 @@ under the License.
         <field name="transactionAmount" title="AMOUNT(KES)"><display/></field>
 		<field name="memberNumber" title="MEMBER NUMBER"><display/></field>
         <field name="createdStamp" title="TRANSACTION DATE"><display/></field>
-		
+
     </form>
-              
-              
-   
+
+
+
 <form name="stationAccountReport" type="single" target="stationAccount.csv" header-row-style="header-row" default-table-style="basic-table">
     <field name="startDate" title="From"  widget-style="required" required-field="true">
         <date-time type="date"/>
@@ -3115,12 +3120,12 @@ under the License.
         </drop-down>
     </field>
      <field name="run" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit"><submit button-type="button"/></field>
-</form> 
-    
- 
-  <form name="stationAccountReportcsvForm" list-name="collectorResults" target="" title="" 
-         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
-         default-table-style="basic-table hover-bar" paginate="false"> 
+</form>
+
+
+  <form name="stationAccountReportcsvForm" list-name="collectorResults" target="" title=""
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2"
+         default-table-style="basic-table hover-bar" paginate="false">
         <field name="transactionId" title="TRANSACTION NO"><display/></field>
 		<field name="transactionDate" title="TRANSACTION DATE"><display/></field>
         <field name="chequeNo" title="CHEQUE NUMBER#"><display/></field>
@@ -3129,8 +3134,8 @@ under the License.
         <field name="creditAmount" title="Credit"><display/></field>
         <field name="runningBalance" title="Running Balance"><display/></field>
   </form>
-    
- 
+
+
    <form name="tellerLimitSetup" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="tellerLimitSetupCont" paginate-target="tellerLimitSetup"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" >
            <actions>
@@ -3144,19 +3149,19 @@ under the License.
 		<field name="createdStamp" title=""><display also-hidden="false"></display></field>
 		<field name="submit" title="update"><submit button-type="button"/></field>
    </form>
-   
+
   <form name="telerLimitApprovers" type="single" target="createTellerLimitApprover"
 	focus-field-name="name" header-row-style="header-row"
 	default-table-style="basic-table" default-map-name="telerLimitApprovers">
-       
+
          <field name="tellerLimitApproversId"><hidden/></field>
          <field name="partyId" title="Teller Limit Approver"><lookup target-form-name="LookupEmployee"/></field>
          <field name="amount" title="Amount"  widget-style="required" required-field="true"><text></text></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
-    
+
      </form>
-        
-        
+
+
   <form name="telerLimitApproversList" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateTellerLimitApprover" paginate-target="telerLimitApprovers"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -3173,6 +3178,6 @@ under the License.
             </hyperlink>
         </field>
     </form>
-            
+
 
 </forms>

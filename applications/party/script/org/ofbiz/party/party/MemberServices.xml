@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
-	license agreements. See the NOTICE file distributed with this work for additional 
-	information regarding copyright ownership. The ASF licenses this file to 
-	you under the Apache License, Version 2.0 (the "License"); you may not use 
-	this file except in compliance with the License. You may obtain a copy of 
-	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
-	by applicable law or agreed to in writing, software distributed under the 
-	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
-	OF ANY KIND, either express or implied. See the License for the specific 
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor
+	license agreements. See the NOTICE file distributed with this work for additional
+	information regarding copyright ownership. The ASF licenses this file to
+	you under the Apache License, Version 2.0 (the "License"); you may not use
+	this file except in compliance with the License. You may obtain a copy of
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required
+	by applicable law or agreed to in writing, software distributed under the
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
+	OF ANY KIND, either express or implied. See the License for the specific
 	language governing permissions and limitations under the License. -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -21,31 +21,31 @@
 		<set-nonpk-fields map="parameters" value-field="newEntity" />
 		<set field="entityName" value="Relationship"></set>
         <set field="newEntity.relationshipId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
-		
+
 		<set field="fieldName" value="name"/>
 		<set field="value" from-field="newEntity.name"/>
 		<set field="exists" value="${bsh:org.ofbiz.party.party.SaccoUtility.itemExists(value, fieldName, entityName);}" type="Boolean" />
 		<set field="trueField" value="true" type="Boolean"/>
-		
-		
-		<if> 
-            <condition> 
+
+
+		<if>
+            <condition>
                         <!-- if-compare operator="equals" value="true" field="exists"></if-compare -->
                         <if-compare-field to-field="trueField" operator="equals" field="exists"></if-compare-field>
-            </condition> 
-            <then> 
-                <add-error> 
-                    <fail-property resource="PartyUiLabels.xml"  
-                        property="relationShipSaveError" /> 
-                </add-error> 
-                <check-errors /> 
-            </then> 
-             
+            </condition>
+            <then>
+                <add-error>
+                    <fail-property resource="PartyUiLabels.xml"
+                        property="relationShipSaveError" />
+                </add-error>
+                <check-errors />
+            </then>
+
             <else>
-            	<create-value value-field="newEntity" /> 
-                <property-to-field resource="PartyUiLabels.xml" 
-            property="relationShipSaveSuccess" field="successMessage" /> 
-            </else> 
+            	<create-value value-field="newEntity" />
+                <property-to-field resource="PartyUiLabels.xml"
+            property="relationShipSaveSuccess" field="successMessage" />
+            </else>
         </if>
 	</simple-method>
 
@@ -53,35 +53,35 @@
 		short-description="Update Relationship">
 		<entity-one entity-name="Relationship" value-field="relationship" />
 		<set-nonpk-fields value-field="relationship" map="parameters" />
-		
-		
+
+
 		<set field="entityName" value="Relationship"/>
 		<set field="fieldName" value="name"/>
 		<set field="value" from-field="relationship.name"/>
 		<set field="exists" value="${bsh:org.ofbiz.party.party.SaccoUtility.itemExists(value, fieldName, entityName);}" type="Boolean" />
 		<set field="trueField" value="true" type="Boolean"/>
-		
-		
-		<if> 
-            <condition> 
+
+
+		<if>
+            <condition>
                         <!-- if-compare operator="equals" value="true" field="exists"></if-compare -->
                         <if-compare-field to-field="trueField" operator="equals" field="exists"></if-compare-field>
-            </condition> 
-            <then> 
-                <add-error> 
-                    <fail-property resource="PartyUiLabels.xml"  
-                        property="relationShipSaveError" /> 
-                </add-error> 
-                <check-errors /> 
-            </then> 
-             
+            </condition>
+            <then>
+                <add-error>
+                    <fail-property resource="PartyUiLabels.xml"
+                        property="relationShipSaveError" />
+                </add-error>
+                <check-errors />
+            </then>
+
             <else>
             	<store-value value-field="relationship" />
-                <property-to-field resource="PartyUiLabels.xml" 
-            property="relationShipSaveSuccess" field="successMessage" /> 
-            </else> 
+                <property-to-field resource="PartyUiLabels.xml"
+            property="relationShipSaveSuccess" field="successMessage" />
+            </else>
         </if>
-		
+
 	</simple-method>
 
 	<simple-method method-name="deleteRelationships"
@@ -92,9 +92,9 @@
 
 	<!-- employmentDetails -->
 
-	
-	
-	
+
+
+
 	 <simple-method method-name="createEmploymentDetails" short-description="Create Employment Details">
         <make-value entity-name="EmploymentDetails" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
@@ -103,13 +103,13 @@
         <set field="newEntity.employmentDetailsId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <create-value value-field="newEntity"/>
     </simple-method>
-    
+
     <simple-method method-name="updateEmploymentDetails" short-description="Update EmploymentDetails">
         <entity-one entity-name="EmploymentDetails" value-field="employmentDetails"/>
         <set-nonpk-fields value-field="employmentDetails" map="parameters"/>
         <store-value value-field="employmentDetails"/>
     </simple-method>
-    
+
     <simple-method method-name="deleteEmploymentDetails" short-description="Delete EmploymentDetails">
         <entity-one entity-name="EmploymentDetails" value-field="employmentDetails"/>
         <remove-value value-field="employmentDetails"/>
@@ -125,22 +125,22 @@
 		<set field="newEntity.businessDetailsId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <create-value value-field="newEntity"/>
     </simple-method>
-    
+
     <simple-method method-name="updateBusinessDetails" short-description="Update Business Details">
         <entity-one entity-name="BusinessDetails" value-field="businessDetails"/>
         <set-nonpk-fields value-field="businessDetails" map="parameters"/>
         <store-value value-field="businessDetails"/>
     </simple-method>
-    
+
     <simple-method method-name="deleteBusinessDetails" short-description="Delete BusinessDetails">
         <entity-one entity-name="BusinessDetails" value-field="businessDetails"/>
         <remove-value value-field="businessDetails"/>
     </simple-method>
 
 	<!-- memberContribution -->
-	
-	
-	
+
+
+
 	 <simple-method method-name="createMemberContribution" short-description="Create Member Contributions">
         <make-value entity-name="MemberContribution" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
@@ -149,22 +149,22 @@
 		<set field="newEntity.memberContributionId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <create-value value-field="newEntity"/>
     </simple-method>
-    
+
     <simple-method method-name="updateMemberContribution" short-description="Update Member Contribution">
         <entity-one entity-name="MemberContribution" value-field="memberContribution"/>
         <set-nonpk-fields value-field="memberContribution" map="parameters"/>
         <store-value value-field="memberContribution"/>
     </simple-method>
-    
+
     <simple-method method-name="deleteMemberContribution" short-description="Delete Member Contribution">
         <entity-one entity-name="MemberContribution" value-field="memberContribution"/>
         <remove-value value-field="memberContribution"/>
     </simple-method>
 
 	<!-- memberAccount -->
-	
-	
-	
+
+
+
 	 <simple-method method-name="createMemberAccount" short-description="Create Member Account">
         <make-value entity-name="MemberAccount" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
@@ -173,28 +173,28 @@
         <!-- sequenced-id sequence-name="MemberAccount" field="memberAccountId"/>
         <now-timestamp field="newEntity.createdDate"/ -->
         <set field="entityName" value="MemberAccount"></set>
-        
+
         <set field="newEntity.memberAccountId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
-        
+
         <!-- set from-field="memberAccountId" field="newEntity.memberAccountId"/ -->
         <create-value value-field="newEntity"/>
     </simple-method>
-    
+
     <simple-method method-name="updateMemberAccount" short-description="Update MemberAccount">
         <entity-one entity-name="MemberAccount" value-field="memberAccount"/>
         <set-nonpk-fields value-field="memberAccount" map="parameters"/>
         <store-value value-field="memberAccount"/>
     </simple-method>
-    
+
     <simple-method method-name="deleteMemberAccount" short-description="Delete MemberAccount">
         <entity-one entity-name="MemberAccount" value-field="memberAccount"/>
         <remove-value value-field="memberAccount"/>
     </simple-method>
 
 	<!-- memberReferee -->
-	
-	
-	
+
+
+
 	 <simple-method method-name="createMemberReferee" short-description="Create Member Referee">
         <make-value entity-name="MemberReferee" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
@@ -204,22 +204,22 @@
         <set field="newEntity.memberRefereeId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <create-value value-field="newEntity"/>
     </simple-method>
-    
+
     <simple-method method-name="updateMemberReferee" short-description="Update MemberReferee">
         <entity-one entity-name="MemberReferee" value-field="memberReferee"/>
         <set-nonpk-fields value-field="memberReferee" map="parameters"/>
         <store-value value-field="memberReferee"/>
     </simple-method>
-    
+
     <simple-method method-name="deleteMemberReferee" short-description="Delete Member Referee">
         <entity-one entity-name="MemberReferee" value-field="memberReferee"/>
         <remove-value value-field="memberReferee"/>
     </simple-method>
 
 	<!-- memberNominee -->
-	
-	
-	
+
+
+
 	 <simple-method method-name="createMemberNominee" short-description="Create Nominee">
         <make-value entity-name="MemberNominee" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
@@ -231,7 +231,7 @@
 		<!-- Check that
 			Total percentage is not greater than 100
 		 -->
-		 
+
 		<set field="fieldName" value="percentage"/>
 		<set field="percentage" from-field="newEntity.percentage"  type="BigDecimal"/>
 		<set field="memberId" from-field="newEntity.partyId" type="Long"/>
@@ -239,32 +239,32 @@
 		<set field="isInExcess" value="${bsh:org.ofbiz.party.party.SaccoUtility.isInExcess(memberNomineeId, percentage, fieldName, entityName, memberId);}" type="Boolean" />
 		<set field="trueField" value="true" type="Boolean"/>
 
-		<if> 
-            <condition> 
+		<if>
+            <condition>
                         <if-compare-field to-field="trueField" operator="equals" field="isInExcess"></if-compare-field>
-            </condition> 
-            <then> 
-                <add-error> 
-                    <fail-property resource="PartyUiLabels.xml"  
-                        property="memberNomineeSaveError" /> 
-                </add-error> 
-                <check-errors /> 
-            </then> 
-             
+            </condition>
+            <then>
+                <add-error>
+                    <fail-property resource="PartyUiLabels.xml"
+                        property="memberNomineeSaveError" />
+                </add-error>
+                <check-errors />
+            </then>
+
             <else>
-            	<create-value value-field="newEntity" /> 
-                <property-to-field resource="PartyUiLabels.xml" 
-            property="relationShipSaveSuccess" field="successMessage" /> 
-            </else> 
+            	<create-value value-field="newEntity" />
+                <property-to-field resource="PartyUiLabels.xml"
+            property="relationShipSaveSuccess" field="successMessage" />
+            </else>
         </if>
-		 
+
     </simple-method>
-    
+
     <simple-method method-name="updateMemberNominee" short-description="Update Nominee">
         <entity-one entity-name="MemberNominee" value-field="memberNominee"/>
         <set-nonpk-fields value-field="memberNominee" map="parameters"/>
         <set field="entityName" value="MemberNominee"/>
-        
+
       	<set field="fieldName" value="percentage"/>
 		<set field="percentage" from-field="memberNominee.percentage"  type="BigDecimal"/>
 		<set field="memberId" from-field="memberNominee.partyId" type="Long"/>
@@ -272,28 +272,28 @@
 		<set field="isInExcess" value="${bsh:org.ofbiz.party.party.SaccoUtility.isInExcess(memberNomineeId, percentage, fieldName, entityName, memberId);}" type="Boolean" />
 		<set field="trueField" value="true" type="Boolean"/>
 
-		<if> 
-            <condition> 
+		<if>
+            <condition>
                         <!-- if-compare operator="equals" value="true" field="exists"></if-compare -->
                         <if-compare-field to-field="trueField" operator="equals" field="isInExcess"></if-compare-field>
-            </condition> 
-            <then> 
-                <add-error> 
-                    <fail-property resource="PartyUiLabels.xml"  
-                        property="memberNomineeSaveError" /> 
-                </add-error> 
-                <check-errors /> 
-            </then> 
-             
+            </condition>
+            <then>
+                <add-error>
+                    <fail-property resource="PartyUiLabels.xml"
+                        property="memberNomineeSaveError" />
+                </add-error>
+                <check-errors />
+            </then>
+
             <else>
-            	<store-value value-field="memberNominee"/> 
-                <property-to-field resource="PartyUiLabels.xml" 
-            property="relationShipSaveSuccess" field="successMessage" /> 
-            </else> 
+            	<store-value value-field="memberNominee"/>
+                <property-to-field resource="PartyUiLabels.xml"
+            property="relationShipSaveSuccess" field="successMessage" />
+            </else>
         </if>
-        
+
     </simple-method>
-    
+
     <simple-method method-name="deleteMemberNominee" short-description="Delete Member Nominee">
         <entity-one entity-name="MemberNominee" value-field="memberNominee"/>
         <remove-value value-field="memberNominee"/>
@@ -311,20 +311,20 @@
 
         <create-value value-field="newEntity"/>
     </simple-method>
-    
+
     <simple-method method-name="updateTermsAndConditions" short-description="Update Terms and Conditions">
         <entity-one entity-name="TermsAndConditions" value-field="termsAndConditions"/>
         <set-nonpk-fields value-field="termsAndConditions" map="parameters"/>
         <store-value value-field="termsAndConditions"/>
     </simple-method>
-    
+
     <simple-method method-name="deleteTermsAndConditions" short-description="Delete Terms and Conditions">
         <entity-one entity-name="TermsAndConditions" value-field="termsAndConditions"/>
         <remove-value value-field="termsAndConditions"/>
     </simple-method>
 
 	<!-- sourceOfFunds -->
-	
+
 	 <simple-method method-name="createSourceOfFunds" short-description="Create SourceOfFunds">
         <make-value entity-name="SourceOfFund" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
@@ -334,20 +334,20 @@
         <set field="newEntity.sourceOfFundId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextStringSequence(entityName);}"></set>
         <create-value value-field="newEntity"/>
     </simple-method>
-    
+
     <simple-method method-name="updateSourceOfFunds" short-description="Update Source Of Funds">
         <entity-one entity-name="SourceOfFunds" value-field="sourceOfFunds"/>
         <set-nonpk-fields value-field="sourceOfFunds" map="parameters"/>
         <store-value value-field="sourceOfFunds"/>
     </simple-method>
-    
+
     <simple-method method-name="deleteSourceOfFunds" short-description="Delete Source Of Funds">
         <entity-one entity-name="SourceOfFunds" value-field="sourceOfFunds"/>
         <remove-value value-field="sourceOfFunds"/>
     </simple-method>
 
 	<!-- employers -->
-	
+
 	 <simple-method method-name="createEmployers" short-description="Create Employer">
         <make-value entity-name="Employer" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
@@ -355,21 +355,21 @@
         <!-- set field="saccoProductId" value="newEntity.saccoProductId"/ -->
 		<set field="entityName" value="Employer"></set>
 		<set field="newEntity.employerId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
-        
+
         <create-value value-field="newEntity"/>
     </simple-method>
-    
+
     <simple-method method-name="updateEmployers" short-description="Update Employer">
         <entity-one entity-name="Employer" value-field="employer"/>
         <set-nonpk-fields value-field="employer" map="parameters"/>
         <store-value value-field="employer"/>
     </simple-method>
-    
+
     <simple-method method-name="deleteEmployers" short-description="Delete Employer">
         <entity-one entity-name="Employer" value-field="employer"/>
         <remove-value value-field="employer"/>
     </simple-method>
-    
+
     <!--  openingBalance     -->
     <simple-method method-name="createOpeningBalance" short-description="Create Opening Balance">
         <make-value entity-name="MemberAccountDetails" value-field="newEntity"/>
@@ -381,18 +381,18 @@
 
         <create-value value-field="newEntity"/>
     </simple-method>
-    
+
     <simple-method method-name="updateOpeningBalance" short-description="Update MemberAccountDetails">
         <entity-one entity-name="MemberAccountDetails" value-field="memberAccountDetails"/>
         <set-nonpk-fields value-field="memberAccountDetails" map="parameters"/>
         <store-value value-field="memberAccountDetails"/>
     </simple-method>
-    
+
     <simple-method method-name="deleteOpeningBalance" short-description="Delete MemberAccountDetails">
         <entity-one entity-name="MemberAccountDetails" value-field="memberAccountDetails"/>
         <remove-value value-field="memberAccountDetails"/>
     </simple-method>
-    
+
      <!-- memberLoanBalance -->
      <simple-method method-name="createLoanBalance" short-description="Create LoanApplication">
         <make-value entity-name="LoanApplication" value-field="newEntity"/>
@@ -403,13 +403,13 @@
 		<set field="newEntity.loanApplicationId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <create-value value-field="newEntity"/>
     </simple-method>
-    
+
     <simple-method method-name="updateLoanBalance" short-description="Update LoanApplication">
         <entity-one entity-name="LoanApplication" value-field="loanApplication"/>
         <set-nonpk-fields value-field="loanApplication" map="parameters"/>
         <store-value value-field="loanApplication"/>
     </simple-method>
-    
+
     <simple-method method-name="deleteLoanBalance" short-description="Delete LoanApplication">
         <entity-one entity-name="LoanApplication" value-field="loanApplication"/>
         <remove-value value-field="loanApplication"/>
@@ -423,18 +423,18 @@
 		<set field="newEntity.memberShareId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <create-value value-field="newEntity"/>
     </simple-method>
-    
+
     <simple-method method-name="updateShareBalance" short-description="Update Share Balance">
         <entity-one entity-name="MemberShare" value-field="memberShare"/>
         <set-nonpk-fields value-field="memberShare" map="parameters"/>
         <store-value value-field="memberShare"/>
     </simple-method>
-    
+
     <simple-method method-name="deleteShareBalance" short-description="Delete Share Balance">
         <entity-one entity-name="MemberShare" value-field="memberShare"/>
         <remove-value value-field="memberShare"/>
     </simple-method>
-    
+
     <!-- Account Status -->
      <simple-method method-name="createAccountStatus" short-description="Create Account Status">
         <make-value entity-name="AccountStatus" value-field="newEntity"/>
@@ -444,18 +444,18 @@
 		<set field="newEntity.accountStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <create-value value-field="newEntity"/>
     </simple-method>
-    
+
     <simple-method method-name="updateAccountStatus" short-description="Update Account Status">
         <entity-one entity-name="AccountStatus" value-field="accountStatus"/>
         <set-nonpk-fields value-field="accountStatus" map="parameters"/>
         <store-value value-field="accountStatus"/>
     </simple-method>
-    
+
     <simple-method method-name="deletAccountStatus" short-description="Delete Account Status">
         <entity-one entity-name="AccountStatus" value-field="accountStatus"/>
         <remove-value value-field="accountStatus"/>
     </simple-method>
-    
+
     <!-- Approve Member -->
     <simple-method method-name="createApproveMemberLog" short-description="Create Member Status Log">
         <make-value entity-name="MemberStatusLog" value-field="newEntity"/>
@@ -463,10 +463,10 @@
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
 		<set field="entityName" value="MemberStatusLog"></set>
 		<set field="newEntity.memberStatusLogId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
-        
+
        <set field="statusName" value="ACTIVE"/>
-	   <set field="memberStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/> 
-        
+	   <set field="memberStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/>
+
         <set field="newEntity.memberStatusId" value="${memberStatusId}"/>
         <!--  set field="entity.loanStatus" value="DRAFT"/ -->
         <!-- set field="productType" value="Loan"/ -->
@@ -474,7 +474,7 @@
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <set field="newEntity.branchId" from-field="userLogin.partyId"/>
         <create-value value-field="newEntity"/>
-        
+
         <set field="partyId" from-field="newEntity.partyId"/>
         <entity-one entity-name="Member" value-field="member">
         	 <field-map field-name="partyId" from-field="partyId"/>
@@ -483,24 +483,24 @@
         <store-value value-field="member"/>
         <set field="memberNo" value="${member.memberNumber}"/>
         <set field="msaccoatmstatus" value="${bsh:org.ofbiz.party.party.SaccoUtility.createMSaccoATMRecords(memberNo, userLogin)}"/>
-        
-						  <property-to-field resource="PartyUiLabels.xml" 
+
+						  <property-to-field resource="PartyUiLabels.xml"
             				property="Successfully approved a member " field="successMessage" />
-						
-					
+
+
     </simple-method>
-    
+
     <simple-method method-name="updateApproveMemberLog" short-description="Update Member Status Log">
         <entity-one entity-name="MemberStatusLog" value-field="memberStatusLog"/>
         <set-nonpk-fields value-field="memberStatusLog" map="parameters"/>
         <store-value value-field="memberStatusLog"/>
     </simple-method>
-    
+
     <simple-method method-name="deleteApproveMemberLog" short-description="Delete Member Status Log">
         <entity-one entity-name="MemberStatusLog" value-field="memberStatusLog"/>
         <remove-value value-field="memberStatusLog"/>
     </simple-method>
-    
+
     <!-- Reject Member -->
     <simple-method method-name="createRejectMemberLog" short-description="Create Member Status Log">
         <make-value entity-name="MemberStatusLog" value-field="newEntity"/>
@@ -510,35 +510,35 @@
 		<set field="newEntity.memberStatusLogId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
 
 	    <set field="statusName" value="REJECTED"/>
-	  	<set field="memberStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/> 
-        
+	  	<set field="memberStatusId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getMemberStatusID(statusName);}"/>
+
         <set field="newEntity.memberStatusId" value="${memberStatusId}"/>
 
         <set field="newEntity.isActive" value="Y"/>
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <set field="newEntity.branchId" from-field="userLogin.partyId"/>
         <create-value value-field="newEntity"/>
-        
+
         <set field="partyId" from-field="newEntity.partyId"/>
         <entity-one entity-name="Member" value-field="member">
         	 <field-map field-name="partyId" from-field="partyId"/>
         </entity-one>
         <set value="${memberStatusId}" field="member.memberStatusId"/>
         <store-value value-field="member"/>
-        
+
     </simple-method>
-    
+
     <simple-method method-name="updateRejectMemberLog" short-description="Update Member Status Log">
         <entity-one entity-name="MemberStatusLog" value-field="memberStatusLog"/>
         <set-nonpk-fields value-field="memberStatusLog" map="parameters"/>
         <store-value value-field="memberStatusLog"/>
     </simple-method>
-    
+
     <simple-method method-name="deleteRejectMemberLog" short-description="Delete Member Status Log">
         <entity-one entity-name="MemberStatusLog" value-field="memberStatusLog"/>
         <remove-value value-field="memberStatusLog"/>
     </simple-method>
-    
+
     <!-- Change Member Status -->
     <simple-method method-name="createChangeMemberStatus" short-description="Create Change Member Status">
         <make-value entity-name="MemberStatusLog" value-field="newEntity"/>
@@ -550,7 +550,7 @@
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
         <set field="newEntity.branchId" from-field="userLogin.partyId"/>
         <create-value value-field="newEntity"/>
-        
+
         <set field="partyId" from-field="newEntity.partyId"/>
         <entity-one entity-name="Member" value-field="member">
         	 <field-map field-name="partyId" from-field="partyId"/>
@@ -558,18 +558,18 @@
         <set from-field="newEntity.memberStatusId" field="member.memberStatusId"/>
         <store-value value-field="member"/>
     </simple-method>
-    
+
     <simple-method method-name="updateChangeMemberStatus" short-description="Update Change Member Status">
         <entity-one entity-name="MemberStatusLog" value-field="memberStatusLog"/>
         <set-nonpk-fields value-field="memberStatusLog" map="parameters"/>
         <store-value value-field="memberStatusLog"/>
     </simple-method>
-    
+
     <simple-method method-name="deleteChangeMemberStatus" short-description="Delete Change Member Status">
         <entity-one entity-name="MemberStatusLog" value-field="memberStatusLog"/>
         <remove-value value-field="memberStatusLog"/>
     </simple-method>
-    
+
     <!-- ChangeMemberStation -->
      <simple-method method-name="createChangeMemberStation" short-description="Create ChangeMemberStation">
 		<call-simple-method method-name="saveMemberStation" scope="inline"></call-simple-method>
@@ -589,20 +589,20 @@
         <set field="newEntity.changedBy" from-field="userLogin.userLoginId"/>
         <create-value value-field="newEntity"/>
     </simple-method>
-    
+
     <simple-method method-name="updateChangeMemberStation" short-description="Update ChangeMemberStation">
         <entity-one entity-name="ChangeMemberStation" value-field="lookUpValue"/>
         <set-nonpk-fields value-field="lookUpValue" map="parameters"/>
         <store-value value-field="lookUpValue"/>
     </simple-method>
-    
+
     <simple-method method-name="deleteChangeMemberStation" short-description="Delete ChangeMemberStation">
         <entity-one entity-name="ChangeMemberStation" value-field="lookUpValue"/>
         <remove-value value-field="lookUpValue"/>
     </simple-method>
     <!-- ChangeMemberEmploymentType -->
      <simple-method method-name="createChangeMemberEmploymentType" short-description="Create ChangeMemberEmploymentType">
-        
+
         <call-simple-method method-name="saveEmployeeType" scope="inline"></call-simple-method>
 		<!-- Update Member with new station -->
 		<entity-one value-field="member" entity-name="Member">
@@ -611,7 +611,7 @@
 		<set field="member.employeeType" value="${newEntity.toEmploymentType}"/>
 		<store-value value-field="member"/>
     </simple-method>
-    
+
     <simple-method method-name="saveEmployeeType">
     	<make-value entity-name="ChangeMemberEmploymentType" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
@@ -621,13 +621,13 @@
         <set field="newEntity.changedBy" from-field="userLogin.userLoginId"/>
         <create-value value-field="newEntity"/>
     </simple-method>
-    
+
     <simple-method method-name="updateChangeMemberEmploymentType" short-description="Update ChangeMemberEmploymentType">
         <entity-one entity-name="ChangeMemberEmploymentType" value-field="lookUpValue"/>
         <set-nonpk-fields value-field="lookUpValue" map="parameters"/>
         <store-value value-field="lookUpValue"/>
     </simple-method>
-    
+
     <simple-method method-name="deleteChangeMemberEmploymentType" short-description="Delete ChangeMemberEmploymentType">
         <entity-one entity-name="ChangeMemberEmploymentType" value-field="lookUpValue"/>
         <remove-value value-field="lookUpValue"/>
@@ -651,18 +651,18 @@
         	<set field="newEntity.changedBy" from-field="userLogin.userLoginId"/>
         	<create-value value-field="newEntity"/>
     </simple-method>
-    
+
     <simple-method method-name="updateChangeMemberEmployeeNumber" short-description="Update ChangeMemberEmployeeNumber">
         <entity-one entity-name="ChangeMemberEmployeeNumber" value-field="lookUpValue"/>
         <set-nonpk-fields value-field="lookUpValue" map="parameters"/>
         <store-value value-field="lookUpValue"/>
     </simple-method>
-    
+
     <simple-method method-name="deleteChangeMemberEmployeeNumber" short-description="Delete ChangeMemberEmployeeNumber">
         <entity-one entity-name="ChangeMemberEmployeeNumber" value-field="lookUpValue"/>
         <remove-value value-field="lookUpValue"/>
     </simple-method>
-    
+
     <!-- ChangeMemberBranch -->
      <simple-method method-name="createChangeMemberBranch" short-description="Create ChangeMemberBranch">
      	<call-simple-method method-name="saveMemberBranch" scope="inline"></call-simple-method>
@@ -673,7 +673,7 @@
 		<set field="member.branchId" value="${newEntity.toBranch}"/>
 		<store-value value-field="member"/>
     </simple-method>
-    
+
     <simple-method method-name="saveMemberBranch">
     	<make-value entity-name="ChangeMemberBranch" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
@@ -681,19 +681,19 @@
 		<!-- set field="entityName" value="ChangeMemberBranch"></set>
 		<set field="newEntity.changeMemberBranchId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set -->
 		<sequenced-id sequence-name="ChangeMemberBranch" field="newEntity.changeMemberBranchId" />
-        
+
         <!-- sequenced-id sequence-name="MemberType" field="memberTypeId" /-->
         <!-- set from-field="memberTypeId" field="newEntity.memberTypeId" / -->
         <set field="newEntity.changedBy" from-field="userLogin.userLoginId"/>
         <create-value value-field="newEntity"/>
     </simple-method>
-    
+
     <simple-method method-name="updateChangeMemberBranch" short-description="Update ChangeMemberBranch">
         <entity-one entity-name="ChangeMemberBranch" value-field="lookUpValue"/>
         <set-nonpk-fields value-field="lookUpValue" map="parameters"/>
         <store-value value-field="lookUpValue"/>
     </simple-method>
-    
+
     <simple-method method-name="deleteChangeMemberBranch" short-description="Delete ChangeMemberBranch">
         <entity-one entity-name="ChangeMemberBranch" value-field="lookUpValue"/>
         <remove-value value-field="lookUpValue"/>
@@ -708,7 +708,7 @@
 		<set field="member.shareAmount" value="${newEntity.toShareAmount}"/>
 		<store-value value-field="member"/>
     </simple-method>
-    
+
     <simple-method method-name="saveShareAmount">
     	<make-value entity-name="ChangeMemberShareAmount" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
@@ -718,25 +718,25 @@
         <set field="newEntity.changedBy" from-field="userLogin.userLoginId"/>
         <create-value value-field="newEntity"/>
     </simple-method>
-    
+
     <simple-method method-name="updateChangeMemberShareAmount" short-description="Update ChangeMemberShareAmount">
         <entity-one entity-name="ChangeMemberShareAmount" value-field="lookUpValue"/>
         <set-nonpk-fields value-field="lookUpValue" map="parameters"/>
         <store-value value-field="lookUpValue"/>
     </simple-method>
-    
+
     <simple-method method-name="deleteChangeMemberShareAmount" short-description="Delete ChangeMemberShareAmount">
         <entity-one entity-name="ChangeMemberShareAmount" value-field="lookUpValue"/>
         <remove-value value-field="lookUpValue"/>
     </simple-method>
-    
+
     <!-- Member -->
     <simple-method method-name="createMember" short-description="Add Member">
-    	
+
         <make-value entity-name="Member" value-field="newEntity"/>
         <set-pk-fields map="parameters" value-field="newEntity"/>
         <set-nonpk-fields map="parameters" value-field="newEntity"/>
-        
+
         <if-not-empty field="newEntity.partyId">
         	<!-- Get the dateJoined and update the member with it joinDate -->
         	<set field="memberId" from-field="newEntity.partyId" type="Long"/>
@@ -745,9 +745,9 @@
         	<!-- call-simple-method method-name="updateMember"></call-simple-method -->
         	<store-value value-field="newEntity"/>
         </if-not-empty>
-        
+
         <if-empty field="newEntity.partyId">
-        
+
         	<set field="entityName" value="Party"></set>
         	<set field="newEntity.partyId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextPartySequence(entityName);}"></set>
 			<set field="statusName" value="NEW"/>
@@ -755,12 +755,13 @@
 			<set field="memberNo" value="${newEntity.partyId}"/>
 			<to-string field="memberNo"/>
         	<set field="newEntity.memberNumber" value="${memberNo}"></set>
-        	
-        	<set field="memberNumberThis" value="${newEntity.partyId}"/> 
-        	<set field="phoneNumber" value="${newEntity.mobileNumber}" type="String"/> 
-        	
+
+        	<set field="memberNumberThis" value="${newEntity.partyId}"/>
+        	<set field="phoneNumber" value="${newEntity.mobileNumber}" type="String"/>
+
         	<now-timestamp field="nowTimestamp"/>
         	<set field="memberNumber" value="${newEntity.partyId}" type="String"/>
+            <set field="memberNumberLong" value="${newEntity.partyId}" type="Long"/>
         	<set field="payrollNo" value="${newEntity.payrollNumber}"  type="String"/>
         	<set field="fname" value="${newEntity.firstName}"  type="String"/>
         	<set field="lname" value="${newEntity.lastName}"  type="String"/>
@@ -768,7 +769,7 @@
         	<!-- <set from-field="nowTimestamp" field="newEntity.creationDate"/> -->
         	<!-- <set field="userLogiN" value="${userLogin.partyId}"  type="String"/> -->
             <set field="userLogiN" from-field="userLogin.userLoginId"/>
-        	
+
         	<log message="****---------------MEMBER NO----------" level="info"/>
         	<log message="*****---------------PAYROL NO----------${newEntity.memberNumber}" level="info"/>
         	<log message="****---------------fname--------- ${fname}" level="info"/>
@@ -776,34 +777,46 @@
         	<log message="****--------------idNumber--------- ${idNumber}" level="info"/>
         	<log message="****-------------userLogiN-------- ${userLogiN}" level="info"/>
         	<log message="****-------------nowTimestamp-------- ${nowTimestamp}" level="info"/>
-        	
-        	
+
+
         	<!-- <set field="createMemberRegistryFile" value="${bsh:org.ofbiz.party.party.MemberServices.createMemberFileInRegistry(memberNo,payrollNo,
         	                                                memberNo,fname,lname,idNumber,userLogiN,nowTimestamp)}"/>
-        	                                                
-        	<set field="createMemberRegistryFileVolume" value="${bsh:org.ofbiz.party.party.MemberServices.createMemberFileVolume(memberNo)}"/>  -->                                              
-        	
+
+        	<set field="createMemberRegistryFileVolume" value="${bsh:org.ofbiz.party.party.MemberServices.createMemberFileVolume(memberNo)}"/>  -->
+
         	<!-- <set field="sendSuccess" value="${bsh:org.ofbiz.humanres.sendMessage.sendMyMessage(phoneNumber,memberNo)}"/> -->
-        	
+
         <!-- sequenced-id sequence-name="MemberType" field="newEntity.memberTypeId" / -->
-        
+
         <!-- sequenced-id sequence-name="MemberType" field="memberTypeId" />
         <set from-field="memberTypeId" field="newEntity.memberTypeId" /-->
-        
+
         <call-simple-method method-name="saveParty" scope="inline">
         </call-simple-method>
         <create-value value-field="newEntity"/>
-        
-        
+
+        <set field="newMemberStatusLog" value="${bsh:org.ofbiz.accounting.branchreports.BranchUtilServices.saveNewMembersStatusLog(delegator,memberNumberLong,userLogiN)}"/>
+
+ <log message="------------newMemberStatusLog------${newMemberStatusLog}" level="info" />
+
+    <!--       registry file -->
+<!--      <set field="createMemberRegistryFile" value="${bsh:org.ofbiz.party.party.MemberServices.createMemberFileInRegistry(memberNo,payrollNo,
+                                                            memberNo,fname,lname,idNumber,userLogiN,nowTimestamp)}"/>
+
+            <set field="createMemberRegistryFileVolume" value="${bsh:org.ofbiz.party.party.MemberServices.createMemberFileVolume(memberNo)}"/> -->
+
+<!--   close    registry file -->
+
+
         <!-- Report that a member has successfully been created -->
-         <property-to-field resource="PartyUiLabels.xml" 
+         <property-to-field resource="PartyUiLabels.xml"
             			property="Successfully registered new member with Member No : ${memberNo} , please add extra details like Nominees, Attachments, Referee and others !"	default="Successfully registered new member with Member No : ${memberNo} , please add extra details like Nominees, Attachments, Referee and others !" field="successMessage" />
         </if-empty>
-       
-      <!--  <call-simple-method method-name="saveMemberForFiling" scope="inline"></call-simple-method> --> 
-        
+
+      <!--  <call-simple-method method-name="saveMemberForFiling" scope="inline"></call-simple-method> -->
+
     </simple-method>
-    
+
     <simple-method method-name="saveParty">
     	<make-value entity-name="Party" value-field="partyEntity"/>
         <set-pk-fields map="parameters" value-field="partyEntity"/>
@@ -813,7 +826,7 @@
         <set field="partyEntity.statusId" from-field="PARTY_ENABLED"/>
         <create-value value-field="partyEntity"/>
     </simple-method>
-    
+
     <!--   <simple-method method-name="saveMemberForFiling">
     	<make-value entity-name="memberPlusPerson" value-field="partyEntity"/>
         <set-pk-fields map="parameters" value-field="partyEntity"/>
@@ -833,7 +846,7 @@
     <simple-method method-name="updateMember" short-description="Update Member">
         <entity-one entity-name="Member" value-field="lookedUpValue"/>
         <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
-        
+
         <set field="memberId" from-field="lookedUpValue.partyId" type="Long"/>
         	<set field="oldJoinDate" value="${bsh:org.ofbiz.party.party.SaccoUtility.getJoinDate(memberId);}" type="Date"/>
         <set field="lookedUpValue.joinDate" from-field="oldJoinDate"/>
@@ -844,7 +857,7 @@
         <entity-one entity-name="Member" value-field="lookedUpValue"/>
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
-    
+
     <!-- MemberNetSalary -->
     <simple-method method-name="createMemberNetSalary" short-description="Create MemberNetSalary">
         <make-value entity-name="MemberNetSalary" value-field="newEntity"/>
@@ -855,20 +868,20 @@
         <!-- set from-field="memberAccountId" field="newEntity.memberAccountId"/ -->
         <create-value value-field="newEntity"/>
     </simple-method>
-    
+
     <simple-method method-name="updateMemberNetSalary" short-description="Update MemberNetSalary">
         <entity-one entity-name="MemberNetSalary" value-field="memberNetSalary"/>
         <set-nonpk-fields value-field="memberNetSalary" map="parameters"/>
         <store-value value-field="memberNetSalary"/>
     </simple-method>
-    
+
     <simple-method method-name="deleteMemberNetSalary" short-description="Delete MemberNetSalary">
         <entity-one entity-name="MemberNetSalary" value-field="memberNetSalary"/>
         <remove-value value-field="memberNetSalary"/>
     </simple-method>
-    
+
     <!--vijana Tu-invest  -->
-    
+
     <simple-method method-name="addMembersTovijanaTuinvestForm">
 	<make-value value-field="newEntity" entity-name="VijanaTuinvest"/>
 	<set-pk-fields value-field="newEntity" map="parameters"/>
@@ -878,8 +891,8 @@
 	<create-value value-field="newEntity"/>
 	<property-to-field resource="HumanResUiLabels" property="Member Saved" field="successMessage"/>
 	</simple-method>
-	
-    
+
+
   <!--    <simple-method method-name="addMembersTovijanaTuinvestForm" short-description="Add Members to vijana tuinvest group">
         <make-value entity-name="VijanaTuinvest" value-field="newEntity"/>
          <set-pk-fields map="parameters" value-field="newEntity"/>
@@ -888,18 +901,18 @@
 		<set field="newEntity.vijanaTuinvestId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
         <create-value value-field="newEntity"/>
     </simple-method> -->
-    
+
    <simple-method method-name="updateMembersTovijanaTuinvestForm" short-description="Update Member Vijana Tuinvest">
         <entity-one entity-name="VijanaTuinvest" value-field="vijanaTuinvest"/>
         <set-nonpk-fields value-field="vijanaTuinvest" map="parameters"/>
         <store-value value-field="vijanaTuinvest"/>
         <property-to-field resource="HumanResUiLabels" property="Member Updated" field="successMessage"/>
     </simple-method>
-    
+
     <simple-method method-name="deleteMembersTovijanaTuinvestForm" short-description="Delete Member Vijana Tuinvest">
         <entity-one entity-name="VijanaTuinvest" value-field="vijanaTuinvest"/>
         <remove-value value-field="vijanaTuinvest"/>
          <property-to-field resource="HumanResUiLabels" property="Member Deleted" field="successMessage"/>
-    </simple-method> 
+    </simple-method>
 
 </simple-methods>

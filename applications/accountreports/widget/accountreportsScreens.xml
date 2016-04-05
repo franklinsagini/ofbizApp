@@ -18,16 +18,10 @@
                             </screenlet>
                         </container>
                         <container>
-                            <screenlet title="Loan Loss Report">
-                                <include-form name="LoanLossReport" location="component://accountreports/widget/accountreportsForms.xml"/>
+                            <screenlet title="Withdrawable Deposits">
+                                <include-form name="WithdrawableDeposit" location="component://accountreports/widget/accountreportsForms.xml"/>
                             </screenlet>
                         </container>
-                        <container>
-                            <screenlet title="Total Loan Book">
-                                <include-form name="TotalLoanBook" location="component://accountreports/widget/accountreportsForms.xml"/>
-                            </screenlet>
-                        </container>
-                        <container style="clear"/>
                         <container>
                             <screenlet title="Share Capital">
                                 <include-form name="ShareCapital" location="component://accountreports/widget/accountreportsForms.xml"/>
@@ -41,8 +35,14 @@
                         </container>
                         <container style="clear"/>
                         <container>
-                            <screenlet title="Withdrawable Deposits">
-                                <include-form name="WithdrawableDeposit" location="component://accountreports/widget/accountreportsForms.xml"/>
+                            <screenlet title="Total Loan Book">
+                                <include-form name="TotalLoanBook" location="component://accountreports/widget/accountreportsForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                       <container>
+                            <screenlet title="Loan Loss Report">
+                                <include-form name="LoanLossReport" location="component://accountreports/widget/accountreportsForms.xml"/>
                             </screenlet>
                         </container>
 <!--                       <container style="clear"/>
@@ -72,7 +72,7 @@
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
                 <set field="startDate" from-field="parameters.startDate" type="Timestamp"/>
-                <script location="component://accountreports/webapp/accountreports/WEB-INF/actions/reports/branchMembers.groovy"/>
+                <script location="component://accountreports/webapp/accountreports/WEB-INF/actions/reports/branchMembersAsAt.groovy"/>
             </actions>
             <widgets>
                 <label style="h3" text="INDIVIDUAL BRANCH MEMBERSHIP STATUS TOTAL "/>
@@ -449,7 +449,7 @@
             </widgets>
         </section>
     </screen>
-    
+
     <!-- As AT -->
 	<screen name="memberAccountListDownloadAsAt">
 		<section>
@@ -473,7 +473,7 @@
 			</widgets>
 		</section>
 	</screen>
-	
+
 	<!-- memberAccountListDownloadAsAtexcel -->
 	<screen name="memberAccountListDownloadAsAtexcel">
         <section>
@@ -502,7 +502,7 @@
             </widgets>
         </section>
     </screen>
-	
+
 	<!-- accountContribution -->
 	    <screen name="accountContribution">
         <section>
@@ -531,7 +531,7 @@
             </widgets>
         </section>
     </screen>
-    
+
        <screen name="accountContributionExcel">
         <section>
            <actions>
@@ -544,11 +544,11 @@
             </widgets>
         </section>
     </screen>
-    
 
 
-    
-    <!-- 
+
+
+    <!--
     memberTransactionsReport
 memberTransactionsReportExcel
      -->
@@ -579,7 +579,7 @@ memberTransactionsReportExcel
             </widgets>
         </section>
     </screen>
-    
+
        <screen name="memberTransactionsReportExcel">
         <section>
            <actions>
@@ -592,7 +592,7 @@ memberTransactionsReportExcel
            		<container>
 					<label style="h3">Transactions From ${dateStartDate} to ${dateEndDate}</label>
 				</container>
-				
+
            		<container>
 					<label style="h3">Credits</label>
 				</container>
@@ -604,9 +604,9 @@ memberTransactionsReportExcel
             </widgets>
         </section>
     </screen>
-    
+
     <!-- accountContributionExpected -->
-    
+
         	    <screen name="accountContributionExpected">
         <section>
             <actions>
@@ -634,10 +634,10 @@ memberTransactionsReportExcel
             </widgets>
         </section>
     </screen>
-    
+
     <!-- accountContributionExpectedExcel -->
 
-    
+
        <screen name="accountContributionExpectedExcel">
         <section>
            <actions>
@@ -650,8 +650,8 @@ memberTransactionsReportExcel
             </widgets>
         </section>
     </screen>
-    
-    
+
+
     <screen name="accountTransactionReport">
 		<section>
 			<actions>
@@ -675,7 +675,7 @@ memberTransactionsReportExcel
 			</widgets>
 		</section>
 	</screen>
-    
-    
-    
+
+
+
 </screens>
