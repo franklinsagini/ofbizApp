@@ -945,4 +945,55 @@
     </screen>
     
     
+       <screen name="documentPortal">
+        <section>
+            <actions>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <entity-condition entity-name="PartyContentType" list="partyContentTypes">
+			<condition-list combine="or">
+                		<condition-expr field-name="partyContentTypeId" operator="equals" value="INTERNAL"/>
+                		<condition-expr field-name="partyContentTypeId" operator="equals" value="LGOIMGURL"/>
+                	</condition-list>
+			 <order-by field-name="description"/>
+                </entity-condition>
+                <entity-condition entity-name="MimeType" list="mimeTypes">
+                    <order-by field-name="description"/>
+                    <order-by field-name="mimeTypeId"/>
+                </entity-condition>
+                <entity-condition entity-name="RoleType" list="roles">
+                    <order-by field-name="description"/>
+                    <order-by field-name="roleTypeId"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html>
+                        <html-template location="component://party/webapp/partymgr/party/profileblocks/ContentPortal.ftl"/>
+                    </html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    
+    <screen name="ContentListPortal">
+        <section>
+            <actions>
+                <set field="partyId" value="public"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
+                <entity-and entity-name="PartyContent" list="partyContent">
+                    <field-map field-name="partyId" from-field="partyId"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html>
+                        <html-template location="component://party/webapp/partymgr/party/profileblocks/ContentListPortal.ftl"/>
+                    </html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

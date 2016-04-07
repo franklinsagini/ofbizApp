@@ -1154,6 +1154,23 @@
 		<response name="success" type="view" value="EditPartyContents" />
 	</request-map>
 	
+	<request-map uri="makePublicPartyContent">
+		<security auth="true" https="true" />
+		<event type="service" invoke="makePublicPartyContent" />
+		<response name="success" type="request-redirect" value="partyContentListPortal" save-home-view="true">
+		 <redirect-parameter name="documentPortal"/>
+		</response>
+		<response name="error" type="view" value="EventMessages" />
+	</request-map>
+	
+	<request-map uri="removePartyContentt">
+		<security auth="true" https="true" />
+		<event type="service" invoke="removePartyContent" />
+		<response name="success" type="request-redirect" value="partyContentListPortal" save-home-view="true">
+		 <redirect-parameter name="documentPortal"/>
+		</response>
+	</request-map>
+	
 
 	<request-map uri="uploadPartyContent">
 		<security auth="true" https="true" />
@@ -1161,10 +1178,24 @@
 		<response name="success" type="view" value="partyContentList" />
 		<response name="error" type="view" value="EventMessages" />
 	</request-map>
+	
+	<request-map uri="uploadPartyContentt">
+		<security auth="true" https="true" />
+		<event type="service" invoke="uploadPartyContentFile" />
+		<response name="success" type="request-redirect" value="partyContentListPortal" save-home-view="true">
+		 <redirect-parameter name="documentPortal"/>
+		</response>
+		<response name="error" type="view" value="EventMessages" />
+	</request-map>
 
 	<request-map uri="partyContentList">
 		<security auth="true" https="true" />
 		<response name="success" type="view" value="partyContentList" />
+	</request-map>
+	
+	<request-map uri="partyContentListPortal">
+		<security auth="true" https="true" />
+		<response name="success" type="view" value="partyContentListPortal" />
 	</request-map>
 
 	<request-map uri="img">
@@ -2973,6 +3004,8 @@
 		page="component://party/widget/partymgr/PartyScreens.xml#viewprofile" />
 	<view-map name="partyContentList" type="screen"
 		page="component://party/widget/partymgr/ProfileScreens.xml#ContentList" />
+	<view-map name="partyContentListPortal" type="screen"
+		page="component://humanres/widget/EmployeeScreens.xml#documentPortal"/>
 	<view-map name="viewroles" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#viewroles" />
 	<view-map name="addsecondaryroles" type="screen"

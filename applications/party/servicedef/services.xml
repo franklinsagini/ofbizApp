@@ -1032,6 +1032,13 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="false"/>
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
+    
+     <service name="makePublicPartyContent" engine="simple" default-entity-name="PartyContent"
+            location="component://party/script/org/ofbiz/party/content/PartyContentServices.xml" invoke="makePublicPartyContent" auth="true">
+        <description>Make public PartyContent record</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
 
     <service name="removePartyContent" engine="simple" default-entity-name="PartyContent"
             location="component://party/script/org/ofbiz/party/content/PartyContentServices.xml" invoke="removePartyContent" auth="true">
@@ -1048,6 +1055,14 @@ under the License.
     </service>
 
     <service name="uploadPartyContentFile" engine="group" transaction-timeout="300">
+        <description>Upload and attach a file to a party</description>
+        <group>
+            <invoke name="createContentFromUploadedFile" result-to-context="true"/>
+            <invoke name="createPartyContent"/>
+        </group>
+    </service>
+    
+     <service name="uploadPartyContentFileContent" engine="group" transaction-timeout="300">
         <description>Upload and attach a file to a party</description>
         <group>
             <invoke name="createContentFromUploadedFile" result-to-context="true"/>
