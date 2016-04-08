@@ -42,7 +42,6 @@ under the License.
            <br class="clear" />
          
         <select name="partyContentTypeId" class="required error">
-           <#-- <option value="">${uiLabelMap.PartySelectPurpose}</option>  -->
           <#list partyContentTypes as partyContentType>
             <option value="${partyContentType.partyContentTypeId}">${partyContentType.get("description", locale)?default(partyContentType.partyContentTypeId)}</option>
           </#list>
@@ -50,17 +49,10 @@ under the License.
         </div>
           <br class="clear" />
           <br class="clear" />
-        <#-- <div class="label">${uiLabelMap.PartyIsPublic}</div> -->
         <select name="isPublic" hidden="true">
-            <#-- <option value="N">${uiLabelMap.CommonNo}</option> -->
             <option value="Y">${uiLabelMap.CommonYes}</option>
         </select>
-        <#-- <select name="roleTypeId">
-          <option value="">${uiLabelMap.PartySelectRole}</option>
-          <#list roles as role>
-            <option value="${role.roleTypeId}" <#if role.roleTypeId == "_NA_">selected="selected"</#if>>${role.get("description", locale)?default(role.roleTypeId)}</option>
-          </#list>
-        </select> -->
+       
         <input type="submit" value="${uiLabelMap.CommonUpload}" />
       </form>
        
