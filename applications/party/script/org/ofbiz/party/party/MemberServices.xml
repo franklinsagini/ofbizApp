@@ -883,24 +883,15 @@
     <!--vijana Tu-invest  -->
 
     <simple-method method-name="addMembersTovijanaTuinvestForm">
-	<make-value value-field="newEntity" entity-name="VijanaTuinvest"/>
-	<set-pk-fields value-field="newEntity" map="parameters"/>
-	<set-nonpk-fields value-field="newEntity" map="parameters"/>
-	<sequenced-id sequence-name="VijanaTuinvest" field="vijanaTuinvestId"/>
-	<set field="newEntity.vijanaTuinvestId" from="vijanaTuinvestId"/>
-	<create-value value-field="newEntity"/>
-	<property-to-field resource="HumanResUiLabels" property="Member Saved" field="successMessage"/>
+		<make-value value-field="newEntity" entity-name="VijanaTuinvest" />
+		<set-pk-fields value-field="newEntity" map="parameters" />
+		<set-nonpk-fields value-field="newEntity" map="parameters" />
+		<sequenced-id sequence-name="VijanaTuinvest" field="vijanaTuinvestId" />
+		<set field="newEntity.vijanaTuinvestId" from="vijanaTuinvestId" />
+		<create-value value-field="newEntity" />
+		<property-to-field resource="HumanResUiLabels"
+			property="Member Saved" field="successMessage" />
 	</simple-method>
-
-
-  <!--    <simple-method method-name="addMembersTovijanaTuinvestForm" short-description="Add Members to vijana tuinvest group">
-        <make-value entity-name="VijanaTuinvest" value-field="newEntity"/>
-         <set-pk-fields map="parameters" value-field="newEntity"/>
-        <set-nonpk-fields map="parameters" value-field="newEntity"/>
-		<set field="entityName" value="VijanaTuinvest"></set>
-		<set field="newEntity.vijanaTuinvestId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
-        <create-value value-field="newEntity"/>
-    </simple-method> -->
 
    <simple-method method-name="updateMembersTovijanaTuinvestForm" short-description="Update Member Vijana Tuinvest">
         <entity-one entity-name="VijanaTuinvest" value-field="vijanaTuinvest"/>
@@ -910,8 +901,35 @@
     </simple-method>
 
     <simple-method method-name="deleteMembersTovijanaTuinvestForm" short-description="Delete Member Vijana Tuinvest">
-        <entity-one entity-name="VijanaTuinvest" value-field="vijanaTuinvest"/>
-        <remove-value value-field="vijanaTuinvest"/>
+         <entity-one entity-name="VijanaTuinvest" value-field="vijanaTuinvest"/>
+         <remove-value value-field="vijanaTuinvest"/>
+         <property-to-field resource="HumanResUiLabels" property="Member Deleted" field="successMessage"/>
+    </simple-method>
+    
+    
+    <!--  GROUPS MODIFICATION  -->
+    
+    <simple-method method-name="createNewwGroupMember" short-description="Create New Member">
+		<make-value value-field="newEntity" entity-name="ChaiGroup" />
+		<set-pk-fields value-field="newEntity" map="parameters" />
+		<set-nonpk-fields value-field="newEntity" map="parameters" />
+		<sequenced-id sequence-name="ChaiGroup" field="chaiGroupId" />
+		<set field="newEntity.chaiGroupId" from="chaiGroupId" />
+		<create-value value-field="newEntity" />
+		<property-to-field resource="HumanResUiLabels"
+			property="Member Successfully Saved" field="successMessage" />
+	</simple-method>
+
+   <simple-method method-name="updateNewwGroupMember" short-description="Update  Member  Group">
+        <entity-one entity-name="ChaiGroup" value-field="chaiGroup"/>
+        <set-nonpk-fields value-field="chaiGroup" map="parameters"/>
+        <store-value value-field="chaiGroup"/>
+        <property-to-field resource="HumanResUiLabels" property="Member Updated" field="successMessage"/>
+    </simple-method>
+
+    <simple-method method-name="deleteNewwGroupMember" short-description="Delete Member Group">
+         <entity-one entity-name="ChaiGroup" value-field="chaiGroup"/>
+         <remove-value value-field="chaiGroup"/>
          <property-to-field resource="HumanResUiLabels" property="Member Deleted" field="successMessage"/>
     </simple-method>
 

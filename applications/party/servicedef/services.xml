@@ -1597,6 +1597,15 @@ under the License.
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
 
+     <service name="createMemberG" engine="simple" default-entity-name="Member"
+             location="component://party/script/org/ofbiz/party/party/MemberServices.xml" invoke="createMemberG" auth="true">
+        <description>Create Group</description>
+        <!--  permission-service service-name="humanResManagerPermission" main-action="CREATE"/ -->
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    
+
      <service name="updateMember" engine="simple" default-entity-name="Member"
              location="component://party/script/org/ofbiz/party/party/MemberServices.xml" invoke="updateMember" auth="true">
         <description>Update Member</description>
@@ -2381,6 +2390,28 @@ under the License.
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
     
+
+    <service name="createNewwGroupMember" engine="simple" default-entity-name="ChaiGroup"
+             location="component://party/script/org/ofbiz/party/party/MemberServices.xml" invoke="createNewwGroupMember" auth="true">
+        <description>Create new Group Member</description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+     <service name="updateNewwGroupMember" engine="simple" default-entity-name="ChaiGroup"
+             location="component://party/script/org/ofbiz/party/party/MemberServices.xml" invoke="updateNewwGroupMember" auth="true">
+        <description>Update Group member</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="deleteNewwGroupMember" engine="simple" default-entity-name="ChaiGroup"
+             location="component://party/script/org/ofbiz/party/party/MemberServices.xml" invoke="deleteNewwGroupMember" auth="true">
+        <description>Delete Group member</description>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+    </service>
+    
+
 
 
 </services>

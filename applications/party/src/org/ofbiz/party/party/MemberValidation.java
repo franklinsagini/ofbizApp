@@ -94,7 +94,7 @@ public class MemberValidation {
 			idNumberSize = "LESS";
 		}
 		
-		if (idNumber.length() > 8){
+		if (idNumber.length() > 14){
 			idNumberSize = "MORE";
 		}
 
