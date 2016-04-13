@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor
-	license agreements. See the NOTICE file distributed with this work for additional
-	information regarding copyright ownership. The ASF licenses this file to
-	you under the Apache License, Version 2.0 (the "License"); you may not use
-	this file except in compliance with the License. You may obtain a copy of
-	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required
-	by applicable law or agreed to in writing, software distributed under the
-	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
-	OF ANY KIND, either express or implied. See the License for the specific
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+	license agreements. See the NOTICE file distributed with this work for additional 
+	information regarding copyright ownership. The ASF licenses this file to 
+	you under the Apache License, Version 2.0 (the "License"); you may not use 
+	this file except in compliance with the License. You may obtain a copy of 
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
+	by applicable law or agreed to in writing, software distributed under the 
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. See the License for the specific 
 	language governing permissions and limitations under the License. -->
 
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -26,7 +26,7 @@
 	<!-- Events to run on every request before security (chains exempt) -->
 	<!-- <preprocessor> </preprocessor> -->
 	<!-- Events to run on every request after all other processing (chains exempt) -->
-	<!-- <postprocessor> <event name="test" type="java" path="org.ofbiz.webapp.event.TestEvent"
+	<!-- <postprocessor> <event name="test" type="java" path="org.ofbiz.webapp.event.TestEvent" 
 		invoke="test"/> </postprocessor> -->
 
 	<!-- Request Mappings -->
@@ -467,18 +467,19 @@
 	</request-map>
 
 	<request-map uri="createChaiBranch">
-        <security https="true" auth="true" />
-        <event type="service" invoke="createChaiBranch" />
-       <response name="success" type="view" value="branches" />
-	    <response name="error" type="view" value="branches" />
-    </request-map>
+		<security https="true" auth="true" />
+		<event type="service" invoke="createChaiBranch" />
+		<response name="success" type="view" value="branches" />
+		<response name="error" type="view" value="branches" />
+	</request-map>
 
-	 <request-map uri="generateAccountNumber">
-        <!--  event type="java" path="org.ofbiz.loans.events.LoanEvent" invoke="getMember"/ -->
-        <event type="java" path="org.ofbiz.party.party.MemberServices" invoke="generateAccountNumber" />
-                <response name="success" type="none">
-        </response>
-    </request-map>
+	<request-map uri="generateAccountNumber">
+		<!-- event type="java" path="org.ofbiz.loans.events.LoanEvent" invoke="getMember"/ -->
+		<event type="java" path="org.ofbiz.party.party.MemberServices"
+			invoke="generateAccountNumber" />
+		<response name="success" type="none">
+		</response>
+	</request-map>
 
 
 	<request-map uri="createPartyGroup">
@@ -493,7 +494,7 @@
 		<response name="success" type="request" value="viewprofile" />
 		<response name="error" type="view" value="EditPartyGroup" />
 	</request-map>
-	
+
 	<request-map uri="updateBranchesPartyGroup">
 		<security https="true" auth="true" />
 		<event type="service" path="" invoke="updatePartyGroup" />
@@ -962,7 +963,7 @@
 		<response name="success" type="view" value="ListPartyCommEvents" />
 	</request-map>
 
-	<!-- TODO <request-map uri="ListCommCustRequests"><security https="true"
+	<!-- TODO <request-map uri="ListCommCustRequests"><security https="true" 
 		auth="true"/><response name="success" type="view" value="ListCommCustRequests"/></request-map> -->
 
 	<request-map uri="showclassgroups">
@@ -1153,24 +1154,26 @@
 		<event type="service" invoke="removePartyContent" />
 		<response name="success" type="view" value="EditPartyContents" />
 	</request-map>
-	
+
 	<request-map uri="makePublicPartyContent">
 		<security auth="true" https="true" />
 		<event type="service" invoke="makePublicPartyContent" />
-		<response name="success" type="request-redirect" value="partyContentListPortal" save-home-view="true">
-		 <redirect-parameter name="documentPortal"/>
+		<response name="success" type="request-redirect" value="partyContentListPortal"
+			save-home-view="true">
+			<redirect-parameter name="documentPortal" />
 		</response>
 		<response name="error" type="view" value="EventMessages" />
 	</request-map>
-	
+
 	<request-map uri="removePartyContentt">
 		<security auth="true" https="true" />
 		<event type="service" invoke="removePartyContent" />
-		<response name="success" type="request-redirect" value="partyContentListPortal" save-home-view="true">
-		 <redirect-parameter name="documentPortal"/>
+		<response name="success" type="request-redirect" value="partyContentListPortal"
+			save-home-view="true">
+			<redirect-parameter name="documentPortal" />
 		</response>
 	</request-map>
-	
+
 
 	<request-map uri="uploadPartyContent">
 		<security auth="true" https="true" />
@@ -1178,12 +1181,13 @@
 		<response name="success" type="view" value="partyContentList" />
 		<response name="error" type="view" value="EventMessages" />
 	</request-map>
-	
+
 	<request-map uri="uploadPartyContentt">
 		<security auth="true" https="true" />
 		<event type="service" invoke="uploadPartyContentFile" />
-		<response name="success" type="request-redirect" value="partyContentListPortal" save-home-view="true">
-		 <redirect-parameter name="documentPortal"/>
+		<response name="success" type="request-redirect" value="partyContentListPortal"
+			save-home-view="true">
+			<redirect-parameter name="documentPortal" />
 		</response>
 		<response name="error" type="view" value="EventMessages" />
 	</request-map>
@@ -1192,7 +1196,7 @@
 		<security auth="true" https="true" />
 		<response name="success" type="view" value="partyContentList" />
 	</request-map>
-	
+
 	<request-map uri="partyContentListPortal">
 		<security auth="true" https="true" />
 		<response name="success" type="view" value="partyContentListPortal" />
@@ -1585,18 +1589,12 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="NewMember" />
 	</request-map>
-	<!-- request-map uri="createMember">
-		<security https="true" auth="true" />
-		<event type="simple"
-			path="component://party/script/org/ofbiz/party/user/UserEvents.xml"
-			invoke="createSaccoMember"/>
-
-		<response name="success" type="request-redirect-noparam"
-			value="listsaccomembers"></response>
-
-		<response name="error" type="view" value="NewMember" />
-	</request-map -->
-		<request-map uri="createMember">
+	<!-- request-map uri="createMember"> <security https="true" auth="true" 
+		/> <event type="simple" path="component://party/script/org/ofbiz/party/user/UserEvents.xml" 
+		invoke="createSaccoMember"/> <response name="success" type="request-redirect-noparam" 
+		value="listsaccomembers"></response> <response name="error" type="view" value="NewMember" 
+		/> </request-map -->
+	<request-map uri="createMember">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createMember" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
@@ -1609,14 +1607,14 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="listsaccomembers" />
 	</request-map>
-	
+
 	<request-map uri="memberPrintout">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="memberPrintout">
-			<redirect-parameter name="partyId"/>
+			<redirect-parameter name="partyId" />
 		</response>
 	</request-map>
-	
+
 
 	<request-map uri="reviewmembers">
 		<security https="true" auth="true" />
@@ -1627,7 +1625,7 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="activemembers" />
 	</request-map>
-		<request-map uri="allmembers">
+	<request-map uri="allmembers">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="allmembers" />
 	</request-map>
@@ -1683,13 +1681,13 @@
 	<request-map uri="memberNominee">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="memberNominee"
-			save-current-view="true" >
-				<redirect-parameter name="partyId"/>
+			save-current-view="true">
+			<redirect-parameter name="partyId" />
 		</response>
-		
+
 		<response name="error" type="view" value="memberNominee"
-			save-current-view="true" >
-				<redirect-parameter name="partyId"/>
+			save-current-view="true">
+			<redirect-parameter name="partyId" />
 		</response>
 	</request-map>
 	<request-map uri="termsAndConditions">
@@ -1705,18 +1703,17 @@
 
 	<request-map uri="employers">
 		<security https="true" auth="true" />
-		<response name="success" type="view" value="employers"
-			/>
+		<response name="success" type="view" value="employers" />
 	</request-map>
 
 	<request-map uri="branches">
 		<security https="true" auth="true" />
-		<response name="success" type="view" value="branches"/>
+		<response name="success" type="view" value="branches" />
 	</request-map>
 
 	<request-map uri="viewstations">
 		<security https="true" auth="true" />
-		<response name="success" type="view" value="viewstations"/>
+		<response name="success" type="view" value="viewstations" />
 	</request-map>
 
 	<!-- viewstations -->
@@ -1752,7 +1749,7 @@
 		<response name="success" type="view" value="memberAttachments"
 			save-current-view="true" />
 	</request-map>
-	
+
 	<!-- MemberNetSalary -->
 	<request-map uri="memberNetSalary">
 		<security https="true" auth="true" />
@@ -1768,7 +1765,8 @@
 		<security https="true" auth="true" />
 		<event type="service" invoke="createRelationships" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect-noparam" value="relationships">
+		<response name="success" type="request-redirect-noparam"
+			value="relationships">
 			<redirect-parameter name="partyId" />
 		</response>
 		<response name="error" type="view" value="relationships" />
@@ -1812,8 +1810,7 @@
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateEmployers" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect"
-			value="employers"></response>
+		<response name="success" type="request-redirect" value="employers"></response>
 		<response name="error" type="view" value="employers" />
 	</request-map>
 
@@ -1920,7 +1917,7 @@
 			value="memberContribution"></response>
 		<response name="error" type="view" value="memberContribution" />
 	</request-map>
-	
+
 	<!-- CRUD MemberNetSalary -->
 	<request-map uri="createMemberNetSalary">
 		<security https="true" auth="true" />
@@ -2232,7 +2229,7 @@
 		<response name="error" type="view" value="accountStatus" />
 	</request-map>
 
-	<!--  -->
+	<!-- -->
 	<request-map uri="approveMember">
 		<security https="true" auth="true" />
 		<event type="service" invoke="approveMember" />
@@ -2243,7 +2240,7 @@
 	</request-map>
 
 
-	<!-- ChangeMemberStation  -->
+	<!-- ChangeMemberStation -->
 	<request-map uri="createChangeMemberStation">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createChangeMemberStation" />
@@ -2271,7 +2268,7 @@
 		<response name="error" type="view" value="changeMember" />
 	</request-map>
 
-	<!-- ChangeMemberEmploymentType  -->
+	<!-- ChangeMemberEmploymentType -->
 	<request-map uri="createChangeMemberEmploymentType">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createChangeMemberEmploymentType" />
@@ -2298,7 +2295,7 @@
 			value="changeMember"></response>
 		<response name="error" type="view" value="changeMember" />
 	</request-map>
-	<!-- ChangeMemberEmployeeNumber  -->
+	<!-- ChangeMemberEmployeeNumber -->
 	<request-map uri="createChangeMemberEmployeeNumber">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createChangeMemberEmployeeNumber" />
@@ -2325,7 +2322,7 @@
 			value="changeMember"></response>
 		<response name="error" type="view" value="changeMember" />
 	</request-map>
-	<!-- ChangeMemberBranch  -->
+	<!-- ChangeMemberBranch -->
 	<request-map uri="createChangeMemberBranch">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createChangeMemberBranch" />
@@ -2352,7 +2349,7 @@
 			value="changeMember"></response>
 		<response name="error" type="view" value="changeMember" />
 	</request-map>
-	<!-- ChangeMemberShareAmount  -->
+	<!-- ChangeMemberShareAmount -->
 	<request-map uri="createChangeMemberShareAmount">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createChangeMemberShareAmount" />
@@ -2381,18 +2378,15 @@
 	</request-map>
 
 	<!-- Change Member -->
-	<!-- request-map uri="changeMember">
-		<security https="true" auth="true" />
-		<event type="service" invoke="createChangeMemberStation" />
-		<response name="success" type="request-redirect" value="changeMember">
-			<redirect-parameter name="partyId" />
-		</response>
-		<response name="error" type="view" value="changeMember" />
-	</request-map -->
+	<!-- request-map uri="changeMember"> <security https="true" auth="true" 
+		/> <event type="service" invoke="createChangeMemberStation" /> <response 
+		name="success" type="request-redirect" value="changeMember"> <redirect-parameter 
+		name="partyId" /> </response> <response name="error" type="view" value="changeMember" 
+		/> </request-map -->
 
-		<request-map uri="changeMember">
+	<request-map uri="changeMember">
 		<security https="true" auth="true" />
-		<response name="success" type="view" value="changeMember"/>
+		<response name="success" type="view" value="changeMember" />
 	</request-map>
 
 
@@ -2494,42 +2488,42 @@
 
 
 	<request-map uri="partyIdentificationType">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="partyIdentificationType"/>
-    </request-map>
-    <request-map uri="createPartyIdentificationType">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="createPartyIdentificationType"/>
-        <response name="success" type="view" value="partyIdentificationType"/>
-    </request-map>
-    <request-map uri="updatePartyIdentificationType">
-        <security https="true" auth="true"/>
-        <event type="service-multi" invoke="updatePartyIdentificationType"/>
-        <response name="success" type="request" value="partyIdentificationType"/>
-        <response name="error" type="view" value="partyIdentificationType"/>
-    </request-map>
-    <request-map uri="deletePartyIdentificationType">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="deletePartyIdentificationType"/>
-        <response name="success" type="view" value="partyIdentificationType"/>
-    </request-map>
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="partyIdentificationType" />
+	</request-map>
+	<request-map uri="createPartyIdentificationType">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createPartyIdentificationType" />
+		<response name="success" type="view" value="partyIdentificationType" />
+	</request-map>
+	<request-map uri="updatePartyIdentificationType">
+		<security https="true" auth="true" />
+		<event type="service-multi" invoke="updatePartyIdentificationType" />
+		<response name="success" type="request" value="partyIdentificationType" />
+		<response name="error" type="view" value="partyIdentificationType" />
+	</request-map>
+	<request-map uri="deletePartyIdentificationType">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deletePartyIdentificationType" />
+		<response name="success" type="view" value="partyIdentificationType" />
+	</request-map>
 
-    <!-- Staff Status -->
-    <request-map uri="enumStaffStatus">
+	<!-- Staff Status -->
+	<request-map uri="enumStaffStatus">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="enumStaffStatus"
 			save-home-view="true">
-			</response>
+		</response>
 	</request-map>
 
-    <request-map uri="createEnumStaffStatus">
+	<request-map uri="createEnumStaffStatus">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createEnumStaffStatus" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
 		<response name="success" type="request-redirect-noparam"
 			value="enumStaffStatus">
-				<!--redirect-parameter name="staffPayrollId"/-->
-			</response>
+			<!--redirect-parameter name="staffPayrollId"/ -->
+		</response>
 		<response name="error" type="view" value="enumStaffStatus" />
 	</request-map>
 
@@ -2537,9 +2531,10 @@
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateEnumStaffStatus" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect-noparam" value="enumStaffStatus">
-			<!-- redirect-parameter name="staffPayrollId"/-->
-			</response>
+		<response name="success" type="request-redirect-noparam"
+			value="enumStaffStatus">
+			<!-- redirect-parameter name="staffPayrollId"/ -->
+		</response>
 		<response name="error" type="view" value="enumStaffStatus" />
 	</request-map>
 
@@ -2547,10 +2542,9 @@
 		<security https="true" auth="true" />
 		<event type="service" invoke="deleteEnumStaffStatus" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="view"
-			value="enumStaffStatus">
-			<!-- redirect-parameter name="staffPayrollId"/-->
-			</response>
+		<response name="success" type="view" value="enumStaffStatus">
+			<!-- redirect-parameter name="staffPayrollId"/ -->
+		</response>
 		<response name="error" type="view" value="enumStaffStatus" />
 	</request-map>
 
@@ -2569,10 +2563,19 @@
 		<security https="true" auth="true" />
 		<event type="service" invoke="createStation" />
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
-		<response name="success" type="request-redirect"
-			value="viewstations">
-				<redirect-parameter name="partyId"/>
-			</response>
+		<response name="success" type="request-redirect" value="viewstations">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="view" value="viewstations" />
+	</request-map>
+
+	<request-map uri="createStationG">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createStation" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect" value="viewstations">
+			<redirect-parameter name="partyId" />
+		</response>
 		<response name="error" type="view" value="viewstations" />
 	</request-map>
 
@@ -2582,7 +2585,7 @@
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
 		<response name="success" type="request-redirect-noparam"
 			value="viewstations">
-			</response>
+		</response>
 		<response name="error" type="view" value="viewstations" />
 	</request-map>
 
@@ -2592,14 +2595,14 @@
 		<!-- response name="success" type="view" value="savingsproductsetup" / -->
 		<response name="success" type="request-redirect-noparam"
 			value="viewstations">
-			</response>
+		</response>
 		<response name="error" type="view" value="viewstations" />
 	</request-map>
 
-		<request-map uri="memberTypes">
-	<security https="true" auth="true" />
-	<response name="success" type="view" value="memberTypes"
-		save-home-view="true" />
+	<request-map uri="memberTypes">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="memberTypes"
+			save-home-view="true" />
 	</request-map>
 
 	<!-- MemberType CRUD -->
@@ -2631,13 +2634,14 @@
 	</request-map>
 
 	<request-map uri="memberRegistrationFormValidation">
-        <event type="java" path="org.ofbiz.party.party.MemberValidation" invoke="uniqueFieldsValidation" />
-       	<response name="success" type="none">
-        </response>
-    </request-map>
+		<event type="java" path="org.ofbiz.party.party.MemberValidation"
+			invoke="uniqueFieldsValidation" />
+		<response name="success" type="none">
+		</response>
+	</request-map>
 
-    <!-- MemberClass -->
-    <request-map uri="MemberClass">
+	<!-- MemberClass -->
+	<request-map uri="MemberClass">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="MemberClass" />
 	</request-map>
@@ -2657,11 +2661,7 @@
 		<response name="success" type="view" value="MaritalStatus" />
 	</request-map>
 
-	<!--
-		RecruitingAgent
-		EmploymentType
-		Gender
-	-->
+	<!-- RecruitingAgent EmploymentType Gender -->
 	<request-map uri="RecruitingAgent">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="RecruitingAgent" />
@@ -2703,7 +2703,7 @@
 	</request-map>
 
 	<!-- MemberStatus -->
-		<request-map uri="createMemberStatus">
+	<request-map uri="createMemberStatus">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createMemberStatus" />
 		<response name="success" type="request-redirect" value="MemberStatus">
@@ -2727,7 +2727,7 @@
 		<response name="error" type="view" value="MemberStatus" />
 	</request-map>
 	<!-- Salutation -->
-		<request-map uri="createSalutation">
+	<request-map uri="createSalutation">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createSalutation" />
 		<response name="success" type="request-redirect" value="Salutation">
@@ -2751,7 +2751,7 @@
 		<response name="error" type="view" value="Salutation" />
 	</request-map>
 	<!-- MaritalStatus -->
-		<request-map uri="createMaritalStatus">
+	<request-map uri="createMaritalStatus">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createMaritalStatus" />
 		<response name="success" type="request-redirect" value="MaritalStatus">
@@ -2824,7 +2824,7 @@
 	</request-map>
 
 
-		<request-map uri="createGender">
+	<request-map uri="createGender">
 		<security https="true" auth="true" />
 		<event type="service" invoke="createGender" />
 		<response name="success" type="request-redirect" value="Gender">
@@ -2850,140 +2850,281 @@
 
 	<!-- MemberType -->
 
-	<request-map uri="LookupActiveMember"><security https="true" auth="true"/><response name="success" type="view" value="LookupActiveMember"/></request-map>
-	
-	
-	<request-map uri="LookupSourceMember"><security https="true" auth="true"/><response name="success" type="view" value="LookupSourceMember"/></request-map>
-	<request-map uri="LookupDestinationMember"><security https="true" auth="true"/><response name="success" type="view" value="LookupDestinationMember"/></request-map>
+	<request-map uri="LookupActiveMember">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="LookupActiveMember" />
+	</request-map>
+
+
+	<request-map uri="LookupSourceMember">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="LookupSourceMember" />
+	</request-map>
+	<request-map uri="LookupDestinationMember">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="LookupDestinationMember" />
+	</request-map>
 
 	<!-- Memeber Reports -->
-  <request-map uri="MemberReports">
-    <security https="true" auth="true" />
-    <response name="success" type="view" value="MemberReports" save-home-view="true" />
-  </request-map>
-
-  <request-map uri="memberListingPDF">
-    <security https="true" auth="true" />
-    <response name="success" type="view" value="memberListingPDF" save-home-view="true" />
-  </request-map>
-
-  <request-map uri="loanDetailsPDF">
-    <security https="true" auth="true" />
-    <response name="success" type="view" value="loanDetailsPDF" save-home-view="true" />
-  </request-map>
-
-  <request-map uri="loanDetails.csv">
-      <security https="true" auth="true"/>
-      <response name="success" type="view" value="loanDetailsCSV"/>
-  </request-map>
-
-  <request-map uri="memberRegistrationByDate">
-    <security https="true" auth="true" />
-    <response name="success" type="view" value="memberRegistrationByDate" save-home-view="true" />
-  </request-map>
-
-  <request-map uri="memberRegistrationByDatePDF">
-    <security https="true" auth="true" />
-    <response name="success" type="view" value="memberRegistrationByDatePDF" save-home-view="true" />
-  </request-map>
-  
-   <request-map uri="memberRegistrationByDateExcelForm">
-    <security https="true" auth="true" />
-    <response name="success" type="view" value="memberRegistrationByDateExcelForm" save-home-view="true" />
-  </request-map>
-   <request-map uri="MemberStatusByDate">
-    <security https="true" auth="true" />
-    <response name="success" type="view" value="MemberStatusByDate" save-home-view="true" />
-  </request-map>
-  <request-map uri="MemberStatusByDate.csv">
-    <security https="true" auth="true" />
-    <response name="success" type="view" value="MemberStatusByDateCSV" save-home-view="true" />
-  </request-map>
-  
-   <request-map uri="memberRegistrationByDateExcel.csv">
-    <security https="true" auth="true" />
-    <response name="success" type="view" value="memberRegistrationByDateExcel" save-home-view="true" />
-  </request-map>
-
-  <request-map uri="memberBioDetailsExcel.csv">
-    <security https="true" auth="true"/>
-    <response name="success" type="view" value="memberBioDetailsExcelCsv"/>
-</request-map>
-
-  <request-map uri="MemberWithdrawalBTWDates">
-    <security https="true" auth="true" />
-    <response name="success" type="view" value="MemberWithdrawalBTWDates"/>
-    <response name="error" type="view" value="MemberWithdrawalBTWDates"></response>
-  </request-map>
-
-  <request-map uri="MemberWithdrawalBTWDates.csv">
-    <security https="true" auth="true" />
-    <response name="success" type="view" value="MemberWithdrawalBTWDatesExcel" save-home-view="true" />
-  </request-map>
-
-<request-map uri="vijanaTuinvest">
-  <security auth="true" https="true"/>
-  <response name="success" type="view" value="vijanaTuinvest"></response>
-  <response name="error"  type="view" value="vijanaTuinvest"></response>
-</request-map>
-
-<request-map uri="addVijanaTiunvestMember">
-  <security auth="true" https="true"/>
-  <response name="success" type="view" value="addVijanaTiunvestMember"
+	<request-map uri="MemberReports">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="MemberReports"
 			save-home-view="true" />
-</request-map>
+	</request-map>
 
-<request-map uri="addMembersTovijanaTuinvestForm">
- <security auth="true" https="true"/>
- <event type="service" invoke="addMembersTovijanaTuinvestForm"></event>
- <response name="success" type="view" value="addVijanaTiunvestMember"></response>
- <response name="error" type="view" value="addVijanaTiunvestMember"></response>
-</request-map>
+	<request-map uri="memberListingPDF">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="memberListingPDF"
+			save-home-view="true" />
+	</request-map>
 
-<request-map uri="updateMembersTovijanaTuinvestForm">
- <security auth="true" https="true"/>
- <event type="service" invoke="updateMembersTovijanaTuinvestForm"></event>
- <response name="success" type="view" value="addVijanaTiunvestMember"></response>
-</request-map>
+	<request-map uri="loanDetailsPDF">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="loanDetailsPDF"
+			save-home-view="true" />
+	</request-map>
 
-<request-map uri="deleteMembersTovijanaTuinvestForm">
- <security auth="true" https="true"/>
- <event type="service" invoke="deleteMembersTovijanaTuinvestForm"></event>
- <response name="success" type="view" value="addVijanaTiunvestMember"></response>
- <response name="error" type="view" value="addVijanaTiunvestMember"></response>
-</request-map>
+	<request-map uri="loanDetails.csv">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="loanDetailsCSV" />
+	</request-map>
 
-<request-map uri="viewSignitaries">
-  <security auth="true" https="true"/>
-  <response name="success" type="view" value="viewSignitaries"></response>
-  <response name="error" type="view" value="viewSignitaries"></response>
-</request-map>
+	<request-map uri="memberRegistrationByDate">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="memberRegistrationByDate"
+			save-home-view="true" />
+	</request-map>
 
-<request-map uri="printMemberVijana.csv">
- <security auth="true" https="true"/>
- <response name="success" type="view" value="printMemberVijana"></response>
-  <response name="error" type="view" value="printMemberVijana"></response>
-</request-map>
+	<request-map uri="memberRegistrationByDatePDF">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="memberRegistrationByDatePDF"
+			save-home-view="true" />
+	</request-map>
 
+	<request-map uri="memberRegistrationByDateExcelForm">
+		<security https="true" auth="true" />
+		<response name="success" type="view"
+			value="memberRegistrationByDateExcelForm" save-home-view="true" />
+	</request-map>
+	<request-map uri="MemberStatusByDate">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="MemberStatusByDate"
+			save-home-view="true" />
+	</request-map>
+	<request-map uri="MemberStatusByDate.csv">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="MemberStatusByDateCSV"
+			save-home-view="true" />
+	</request-map>
+
+	<request-map uri="memberRegistrationByDateExcel.csv">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="memberRegistrationByDateExcel"
+			save-home-view="true" />
+	</request-map>
+
+	<request-map uri="memberBioDetailsExcel.csv">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="memberBioDetailsExcelCsv" />
+	</request-map>
+
+	<request-map uri="MemberWithdrawalBTWDates">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="MemberWithdrawalBTWDates" />
+		<response name="error" type="view" value="MemberWithdrawalBTWDates"></response>
+	</request-map>
+
+	<request-map uri="MemberWithdrawalBTWDates.csv">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="MemberWithdrawalBTWDatesExcel"
+			save-home-view="true" />
+	</request-map>
+
+	<request-map uri="vijanaTuinvest">
+		<security auth="true" https="true" />
+		<response name="success" type="view" value="vijanaTuinvest"></response>
+		<response name="error" type="view" value="vijanaTuinvest"></response>
+	</request-map>
+
+	<request-map uri="addVijanaTiunvestMember">
+		<security auth="true" https="true" />
+		<response name="success" type="view" value="addVijanaTiunvestMember"
+			save-home-view="true" />
+	</request-map>
+
+	<request-map uri="addMembersTovijanaTuinvestForm">
+		<security auth="true" https="true" />
+		<event type="service" invoke="addMembersTovijanaTuinvestForm"></event>
+		<response name="success" type="view" value="addVijanaTiunvestMember"></response>
+		<response name="error" type="view" value="addVijanaTiunvestMember"></response>
+	</request-map>
+
+	<request-map uri="updateMembersTovijanaTuinvestForm">
+		<security auth="true" https="true" />
+		<event type="service" invoke="updateMembersTovijanaTuinvestForm"></event>
+		<response name="success" type="view" value="addVijanaTiunvestMember"></response>
+	</request-map>
+
+	<request-map uri="deleteMembersTovijanaTuinvestForm">
+		<security auth="true" https="true" />
+		<event type="service" invoke="deleteMembersTovijanaTuinvestForm"></event>
+		<response name="success" type="view" value="addVijanaTiunvestMember"></response>
+		<response name="error" type="view" value="addVijanaTiunvestMember"></response>
+	</request-map>
+
+	<request-map uri="viewSignitaries">
+		<security auth="true" https="true" />
+		<response name="success" type="view" value="viewSignitaries"></response>
+		<response name="error" type="view" value="viewSignitaries"></response>
+	</request-map>
+
+	<request-map uri="printMemberVijana.csv">
+		<security auth="true" https="true" />
+		<response name="success" type="view" value="printMemberVijana"></response>
+		<response name="error" type="view" value="printMemberVijana"></response>
+	</request-map>
+
+
+	<request-map uri="groupsToStation">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="groupsToStation" />
+	</request-map>
+
+	<request-map uri="createStationG">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createStation" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect" value="groupsToStation">
+			<redirect-parameter name="partyId" />
+		</response>
+		<response name="error" type="view" value="viewstations" />
+	</request-map>
+
+	<request-map uri="updateStationG">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateStation" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="groupsToStation">
+		</response>
+		<response name="error" type="view" value="viewstations" />
+	</request-map>
+
+	<request-map uri="deleteStationG">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteStation" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect-noparam"
+			value="groupsToStation">
+		</response>
+		<response name="error" type="view" value="viewstations" />
+	</request-map>
+	
+	<request-map uri="chaiGroups">
+	  <security auth="true" https="true"/>
+	  <response name="success" type="view" value="chaiGroups"></response>
+	  <response name="error" type="view" value="chaiGroups"></response>
+	</request-map>
+	
+	<request-map uri="newGroupRegistration">
+	  <security auth="true" https="true"/>
+	  <response name="success" type="view" value="newGroupRegistration"></response>
+	  <response name="error" type="view" value="newGroupRegistration"></response>
+	</request-map>
+	
+	
+	<request-map uri="createGroupMember">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createMember" />
+		<!-- response name="success" type="view" value="savingsproductsetup" / -->
+		<response name="success" type="request-redirect" value="newGroupRegistration">
+		</response>
+		<response name="error" type="view" value="newGroupRegistration" />
+	</request-map>
+	
+	
+	<request-map uri="addNewGroupMember">
+		<security auth="true" https="true" />
+		<response name="success" type="view" value="addNewGroupMember"
+			save-home-view="true" />
+	</request-map>
+	
+	<request-map uri="createNewGroupMember">
+		<security auth="true" https="true" />
+		<event type="service" invoke="createNewwGroupMember"></event>
+		<response name="success" type="request-redirect" value="addNewGroupMember" save-home-view="true">
+	    <redirect-parameter name="partyId"/></response>
+	</request-map>
+
+	<request-map uri="updateNewGroupMember">
+		<security auth="true" https="true" />
+		<event type="service" invoke="updateNewwGroupMember"></event>
+		<response name="success" type="request-redirect" value="addNewGroupMember" save-home-view="true">
+	  <redirect-parameter name="partyId"/></response>
+	</request-map>
+
+	<request-map uri="deleteNewGroupMember">
+		<security auth="true" https="true" />
+		<event type="service" invoke="deleteNewwGroupMember"></event>
+		<response name="success" type="request-redirect" value="addNewGroupMember" save-home-view="true">
+	  <redirect-parameter name="partyId"/></response>
+		<response name="error" type="view" value="addNewGroupMember"></response>
+	</request-map>
+	
+	<request-map uri="viewGroupSignitaries">
+		<security auth="true" https="true" />
+		<response name="success" type="view" value="viewGroupSignitaries"></response>
+		<response name="error" type="view" value="viewGroupSignitaries"></response>
+	</request-map>
+	
 	<!-- View Mappings -->
+
+   <view-map name="chaiGroups" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#chaiGroups"></view-map>
 	
-	<!--Vijana Tuinvest  -->
+	<view-map name="viewGroupSignitaries" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#viewGroupSignitaries"></view-map>
 	
-<view-map name="printMemberVijana" type="screencsv" page="component://party/widget/partymgr/PartyScreens.xml#printMemberVijanaCSV" content-type="text/csv" encoding="none"/>
- <view-map name="viewSignitaries" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#viewSignitaries"></view-map>	
+	<view-map name="groupsToStation" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#groupsToStation" />
 	
-  <view-map name="addVijanaTiunvestMember" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#addVijanaTiunvestMember"></view-map>
-  <view-map name="vijanaTuinvest" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#vijanaTuinvest"></view-map>
-	
-			<!-- Memeber Reports -->
-			
-	<view-map name="MemberWithdrawalBTWDatesExcel" type="screencsv" page="component://party/widget/partymgr/PartyScreens.xml#MemberWithdrawalBTWDatesExcel" content-type="text/csv" encoding="none"/>
-			
-  <view-map name="MemberWithdrawalBTWDates" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#MemberWithdrawalBTWDates"/>
-	<view-map name="MemberReports" type="screen" page="component://party/widget/partymgr/MemberReportScreens.xml#MemberReports"/>
-  <view-map name="memberListingPDF" type="screenfop" page="component://party/widget/partymgr/MemberReportScreens.xml#memberListingPDF" content-type="application/pdf" encoding="none"/>
-  <view-map name="loanDetailsPDF" type="screenfop" page="component://party/widget/partymgr/MemberReportScreens.xml#loanDetailsPDF" content-type="application/pdf" encoding="none"/>
- 	<view-map name="loanDetailsCSV" type="screencsv" page="component://party/widget/partymgr/MemberReportScreens.xml#loanDetailsCSV" content-type="text/csv" encoding="none"/>
+	<view-map name="newGroupRegistration" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#newGroupRegistration" />
+	<!--Vijana Tuinvest -->
+
+	<view-map name="printMemberVijana" type="screencsv"
+		page="component://party/widget/partymgr/PartyScreens.xml#printMemberVijanaCSV"
+		content-type="text/csv" encoding="none" />
+	<view-map name="viewSignitaries" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#viewSignitaries"></view-map>
+
+	<view-map name="addVijanaTiunvestMember" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#addVijanaTiunvestMember"></view-map>
+   
+    <view-map name="addNewGroupMember" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#addNewGroupMember"></view-map>		
+	<view-map name="vijanaTuinvest" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#vijanaTuinvest"></view-map>
+
+	<!-- Memeber Reports -->
+
+	<view-map name="MemberWithdrawalBTWDatesExcel" type="screencsv"
+		page="component://party/widget/partymgr/PartyScreens.xml#MemberWithdrawalBTWDatesExcel"
+		content-type="text/csv" encoding="none" />
+
+	<view-map name="MemberWithdrawalBTWDates" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#MemberWithdrawalBTWDates" />
+	<view-map name="MemberReports" type="screen"
+		page="component://party/widget/partymgr/MemberReportScreens.xml#MemberReports" />
+	<view-map name="memberListingPDF" type="screenfop"
+		page="component://party/widget/partymgr/MemberReportScreens.xml#memberListingPDF"
+		content-type="application/pdf" encoding="none" />
+	<view-map name="loanDetailsPDF" type="screenfop"
+		page="component://party/widget/partymgr/MemberReportScreens.xml#loanDetailsPDF"
+		content-type="application/pdf" encoding="none" />
+	<view-map name="loanDetailsCSV" type="screencsv"
+		page="component://party/widget/partymgr/MemberReportScreens.xml#loanDetailsCSV"
+		content-type="text/csv" encoding="none" />
 
 
 	<view-map name="main" type="screen"
@@ -3005,7 +3146,7 @@
 	<view-map name="partyContentList" type="screen"
 		page="component://party/widget/partymgr/ProfileScreens.xml#ContentList" />
 	<view-map name="partyContentListPortal" type="screen"
-		page="component://humanres/widget/EmployeeScreens.xml#documentPortal"/>
+		page="component://humanres/widget/EmployeeScreens.xml#documentPortal" />
 	<view-map name="viewroles" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#viewroles" />
 	<view-map name="addsecondaryroles" type="screen"
@@ -3038,7 +3179,8 @@
 	<view-map name="EditPartyGroup" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#EditPartyGroup" />
 
-	<view-map name="addBranch" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#addBranch" />
+	<view-map name="addBranch" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#addBranch" />
 
 	<view-map name="EditPartyAttribute" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#EditPartyAttribute" />
@@ -3234,8 +3376,8 @@
 	<!-- Member -->
 	<view-map name="NewMember" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#NewMember" />
-	<!--view-map name="listsaccomembers" type="screen"
-		page="component://party/widget/partymgr/PartyScreens.xml#listsaccomembers" /-->
+	<!--view-map name="listsaccomembers" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#listsaccomembers" 
+		/ -->
 	<view-map name="listsaccomembers" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#reviewmembers" />
 
@@ -3246,7 +3388,7 @@
 	<view-map name="activemembers" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#activemembers" />
 
-		<view-map name="allmembers" type="screen"
+	<view-map name="allmembers" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#allmembers" />
 
 	<view-map name="ApproveMember" type="screen"
@@ -3277,13 +3419,13 @@
 
 	<view-map name="memberContribution" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#memberContribution" />
-		
+
 	<view-map name="memberAccount" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#memberAccount" />
-		
+
 	<view-map name="memberNetSalary" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#memberNetSalary" />
-		
+
 	<view-map name="memberReferee" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#memberReferee" />
 	<view-map name="memberNominee" type="screen"
@@ -3313,65 +3455,80 @@
 	<view-map name="memberAttachments" type="screen"
 		page="component://party/widget/partymgr/PartyScreens.xml#memberAttachments" />
 
-	<view-map name="partyIdentificationType" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#NewPartyIdentificationType"/>
-	<view-map name="enumStaffStatus" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#NewenumStaffStatus"/>
+	<view-map name="partyIdentificationType" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#NewPartyIdentificationType" />
+	<view-map name="enumStaffStatus" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#NewenumStaffStatus" />
 
 	<!-- PDF and CSV -->
 	<view-map name="memberslistcsv" type="screencsv" content-type="text/csv"
-                page="component://party/widget/partymgr/PartyScreens.xml#memberslistcsv" />
+		page="component://party/widget/partymgr/PartyScreens.xml#memberslistcsv" />
 
-        <view-map name="memberslistpdf" type="screenfop"
+	<view-map name="memberslistpdf" type="screenfop"
 		page="component://party/widget/partymgr/PartyScreens.xml#memberslistpdf"
 		content-type="application/pdf" encoding="none" />
 
-		<view-map name="memberTypes" type="screen"
-                page="component://party/widget/partymgr/PartyScreens.xml#memberTypes" />
+	<view-map name="memberTypes" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#memberTypes" />
 
-        <!-- MemberClass -->
-        		<view-map name="MemberClass" type="screen"
-                page="component://party/widget/partymgr/PartyScreens.xml#MemberClass" />
+	<!-- MemberClass -->
+	<view-map name="MemberClass" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#MemberClass" />
 
 
-        		<view-map name="MemberStatus" type="screen"
-                page="component://party/widget/partymgr/PartyScreens.xml#MemberStatus" />
+	<view-map name="MemberStatus" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#MemberStatus" />
 
-        		<view-map name="Salutation" type="screen"
-                page="component://party/widget/partymgr/PartyScreens.xml#Salutation" />
+	<view-map name="Salutation" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#Salutation" />
 
-        		<view-map name="MaritalStatus" type="screen"
-                page="component://party/widget/partymgr/PartyScreens.xml#MaritalStatus" />
+	<view-map name="MaritalStatus" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#MaritalStatus" />
 
-                <!--
-		RecruitingAgent
-		EmploymentType
-		Gender
-	-->
-	        		<view-map name="RecruitingAgent" type="screen"
-                page="component://party/widget/partymgr/PartyScreens.xml#RecruitingAgent" />
+	<!-- RecruitingAgent EmploymentType Gender -->
+	<view-map name="RecruitingAgent" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#RecruitingAgent" />
 
-                        		<view-map name="EmploymentType" type="screen"
-                page="component://party/widget/partymgr/PartyScreens.xml#EmploymentType" />
+	<view-map name="EmploymentType" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#EmploymentType" />
 
-                        		<view-map name="Gender" type="screen"
-                page="component://party/widget/partymgr/PartyScreens.xml#Gender" />
-	<view-map name="LookupActiveMember" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember"/>
-	
-	<view-map name="LookupSourceMember" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupSourceMember"/>
-	<view-map name="LookupDestinationMember" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupDestinationMember"/>
-	
+	<view-map name="Gender" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#Gender" />
+	<view-map name="LookupActiveMember" type="screen"
+		page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember" />
 
-	<view-map name="memberRegistrationByDate" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#memberRegistrationByDate"/>
-	<view-map name="memberRegistrationByDatePDF" type="screenfop" page="component://party/widget/partymgr/PartyScreens.xml#memberRegistrationByDatePDF" content-type="application/pdf" encoding="none"/>
+	<view-map name="LookupSourceMember" type="screen"
+		page="component://party/widget/partymgr/LookupScreens.xml#LookupSourceMember" />
+	<view-map name="LookupDestinationMember" type="screen"
+		page="component://party/widget/partymgr/LookupScreens.xml#LookupDestinationMember" />
 
-	<view-map name="memberRegistrationByDateExcelForm" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#memberRegistrationByDateExcelForm"/>
-	<view-map name="MemberStatusByDate" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#MemberStatusByDate"/>
-	<view-map name="MemberStatusByDateCSV" type="screen" page="component://party/widget/partymgr/PartyScreens.xml#MemberStatusByDateCSV"/>
-	<view-map name="memberRegistrationByDateExcel" type="screencsv" page="component://party/widget/partymgr/PartyScreens.xml#memberRegistrationByDateExcel" content-type="text/csv" encoding="none"/>
-	<view-map name="MemberStatusByDateCSV" type="screencsv" page="component://party/widget/partymgr/PartyScreens.xml#MemberStatusByDateCSV" content-type="text/csv" encoding="none"/>
-	
-	<view-map name="memberPrintout" type="screenfop" page="component://party/widget/partymgr/PartyScreens.xml#memberPrintout" content-type="application/pdf" encoding="none"/>
-	
-	    <view-map name="memberBioDetailsExcelCsv" type="screencsv" page="component://loanmanagementreports/widget/LoanManagementReportsScreens.xml#memberBioDetailsExcelCsv" content-type="text/csv" encoding="none"/>
-	
-	<!-- end of view mappings -->
+
+	<view-map name="memberRegistrationByDate" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#memberRegistrationByDate" />
+	<view-map name="memberRegistrationByDatePDF" type="screenfop"
+		page="component://party/widget/partymgr/PartyScreens.xml#memberRegistrationByDatePDF"
+		content-type="application/pdf" encoding="none" />
+
+	<view-map name="memberRegistrationByDateExcelForm" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#memberRegistrationByDateExcelForm" />
+	<view-map name="MemberStatusByDate" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#MemberStatusByDate" />
+	<view-map name="MemberStatusByDateCSV" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#MemberStatusByDateCSV" />
+	<view-map name="memberRegistrationByDateExcel" type="screencsv"
+		page="component://party/widget/partymgr/PartyScreens.xml#memberRegistrationByDateExcel"
+		content-type="text/csv" encoding="none" />
+	<view-map name="MemberStatusByDateCSV" type="screencsv"
+		page="component://party/widget/partymgr/PartyScreens.xml#MemberStatusByDateCSV"
+		content-type="text/csv" encoding="none" />
+
+	<view-map name="memberPrintout" type="screenfop"
+		page="component://party/widget/partymgr/PartyScreens.xml#memberPrintout"
+		content-type="application/pdf" encoding="none" />
+
+	<view-map name="memberBioDetailsExcelCsv" type="screencsv"
+		page="component://loanmanagementreports/widget/LoanManagementReportsScreens.xml#memberBioDetailsExcelCsv"
+		content-type="text/csv" encoding="none" />
+
+   <!-- end of view mappings -->
 </site-conf>

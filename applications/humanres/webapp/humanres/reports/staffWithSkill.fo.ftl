@@ -26,22 +26,35 @@ under the License.
     <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
         STAFF WITH 
          <#assign partyskill = delegator.findOne("SkillType", {"skillTypeId" : skillTypeId}, false)/>   
-          [${partyskill.description}]
-        SKILLS 
+          ${partyskill.description}
+         
     </fo:block>
     <fo:block><fo:leader/></fo:block> 
 <#if employee?has_content>
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
-            <fo:table-column column-width="150pt"/>
-            <fo:table-column column-width="150pt"/>
-            <fo:table-column column-width="150pt"/>
+            <fo:table-column column-width="20pt"/>
+            <fo:table-column column-width="140pt"/>
+            <fo:table-column column-width="80pt"/>
+            <fo:table-column column-width="110pt"/>
+            <fo:table-column column-width="70pt"/>
+            <fo:table-column column-width="70pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block>S/No</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block>Staff Names</fo:block>
                     </fo:table-cell>
+                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block>Payroll</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block>Skill Name</fo:block>
+                    </fo:table-cell>
+
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block>Years in Experience</fo:block>
                     </fo:table-cell>
@@ -51,13 +64,28 @@ under the License.
                 </fo:table-row>
             </fo:table-header>
             <fo:table-body>
+             <#assign count=0>
                   <#list employee as dep>
                     <#if dep.partyId?has_content>
                         <#assign staff = delegator.findOne("Person", {"partyId" : dep.partyId}, false)/>
                     </#if>
                      <fo:table-row>
+                        <#assign count = count + 1>
+                        
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
-                            <fo:block>${staff.firstName?if_exists} ${staff.firstName?if_exists}</fo:block>
+                                <fo:block font-size="8pt">${count}</fo:block>
+                         </fo:table-cell>
+                         
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${staff.firstName?if_exists} ${staff.lastName?if_exists}</fo:block>
+                        </fo:table-cell>
+                        
+                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${staff.employeeNumber?if_exists}</fo:block>
+                        </fo:table-cell>
+                        
+                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+                            <fo:block>${partyskill.description?if_exists} </fo:block>
                         </fo:table-cell>
                         <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
                             <fo:block>${dep.yearsExperience?if_exists}</fo:block>
