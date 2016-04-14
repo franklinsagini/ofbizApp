@@ -50,6 +50,8 @@
 	<request-map uri="deathInsuranceClaim">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="deathInsuranceClaim">
+			<redirect-parameter name="partyId"/>
+			<redirect-parameter name="deathNotificationId"/>
 		</response>
 	</request-map>
 	
@@ -77,6 +79,41 @@
 		</response>
 	</request-map>
 	
+	<!-- InsuranceClaimPayment starts here -->
+	<request-map uri="receiveClaimPayment">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="receiveClaimPayment">
+			<redirect-parameter name="deathInsuranceClaimId"/>
+			<redirect-parameter name="partyId"/>
+			<redirect-parameter name="deathNotificationId"/>
+		</response>
+	</request-map>
+	
+	<request-map uri="createInsuranceClaimPayment">
+		<security https="true" auth="true" />
+		<event type="service" invoke="createInsuranceClaimPayment" />
+		<response name="success" type="request-redirect" value="receiveClaimPayment">
+		</response>
+		<response name="error" type="view" value="deathInsuranceClaim" />
+	</request-map>
+
+	<request-map uri="updateInsuranceClaimPayment">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateInsuranceClaimPayment" />
+		<response name="success" type="request-redirect" value="receiveClaimPayment">
+		</response>
+		<response name="error" type="view" value="receiveClaimPayment" />
+	</request-map>
+
+	<request-map uri="deleteInsuranceClaimPayment">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteInsuranceClaimPayment" />
+		<!-- response name="success" type="view" value="FindPartySkills"/ -->
+		<response name="success" type="request-redirect" value="receiveClaimPayment">
+		</response>
+	</request-map>
+	<!-- ends here -->
+	
 	<request-map uri="funeralExpensePayment">
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="funeralExpensePayment">
@@ -87,6 +124,8 @@
 		<security https="true" auth="true" />
 		<event type="service" invoke="createFuneralExpensePayment" />
 		<response name="success" type="request-redirect" value="funeralExpensePayment">
+			<redirect-parameter name="partyId"/>
+			<redirect-parameter name="deathNotificationId"/>
 		</response>
 		<response name="error" type="view" value="funeralExpensePayment" />
 	</request-map>
@@ -95,6 +134,8 @@
 		<security https="true" auth="true" />
 		<event type="service" invoke="updateFuneralExpensePayment" />
 		<response name="success" type="request-redirect" value="funeralExpensePayment">
+			<redirect-parameter name="partyId"/>
+			<redirect-parameter name="deathNotificationId"/>
 		</response>
 		<response name="error" type="view" value="funeralExpensePayment" />
 	</request-map>
@@ -103,6 +144,8 @@
 		<security https="true" auth="true" />
 		<event type="service" invoke="deleteFuneralExpensePayment" />
 		<response name="success" type="request-redirect" value="funeralExpensePayment">
+			<redirect-parameter name="partyId"/>
+			<redirect-parameter name="deathNotificationId"/>
 		</response>
 	</request-map>
 
@@ -146,18 +189,71 @@
                 <response name="success" type="request-redirect"
                         value="funeralExpenseAmount"></response>
         </request-map> 
-
+        
+        <!-- deathNotificationsForExpense -->
+        <!-- deathNotifications -->
+        <request-map uri="deathNotificationsForExpense">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="deathNotificationsForExpense">
+		</response>
+	</request-map>
+	
+	<!-- deathInsuranceClaimListing -->
+	<request-map uri="deathInsuranceClaimListing">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="deathInsuranceClaimListing">
+		</response>
+	</request-map>
+	
+	
+	<request-map uri="payTheExpense">
+		<security https="true" auth="true" />
+		<event type="service" invoke="payTheExpense" />
+		<response name="success" type="view" value="funeralExpensePayment">
+			<redirect-parameter name="partyId"/>
+			<redirect-parameter name="deathNotificationId"/>
+	</response>
+	
+	</request-map>
+	
+	
+	<!-- insuranceClaims -->
+	
+	<request-map uri="insuranceClaims">
+		<security https="true" auth="true" />
+		<response name="success" type="view" value="insuranceClaims">
+			
+		</response>
+	</request-map>
+		
 	<!-- View Mappings -->
 	<view-map name="LookupActiveMember" type="screen"
 		page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember" />
 	<view-map name="main" type="screen"
 		page="component://deathmanagement/widget/DeathManagementScreens.xml#main" />
+		
 	<view-map name="deathNotifications" type="screen"
 		page="component://deathmanagement/widget/DeathManagementScreens.xml#deathNotifications" />
 		
-	
+		<!-- deathNotificationsForExpense -->
+		<view-map name="deathNotificationsForExpense" type="screen"
+		page="component://deathmanagement/widget/DeathManagementScreens.xml#deathNotificationsForExpense" />
+		
+	<!-- deathInsuranceClaimListing -->
+		<view-map name="deathInsuranceClaimListing" type="screen"
+		page="component://deathmanagement/widget/DeathManagementScreens.xml#deathInsuranceClaimListing" />
+
 		<view-map name="deathInsuranceClaim" type="screen"
 		page="component://deathmanagement/widget/DeathManagementScreens.xml#deathInsuranceClaim" />	
+		
+		<!-- receiveClaimPayment -->
+		<view-map name="receiveClaimPayment" type="screen"
+		page="component://deathmanagement/widget/DeathManagementScreens.xml#receiveClaimPayment" />
+		
+		<!-- insuranceClaims -->
+		<view-map name="insuranceClaims" type="screen"
+		page="component://deathmanagement/widget/DeathManagementScreens.xml#insuranceClaims" />	
+
 		
 				<view-map name="funeralExpensePayment" type="screen"
 		page="component://deathmanagement/widget/DeathManagementScreens.xml#funeralExpensePayment" />

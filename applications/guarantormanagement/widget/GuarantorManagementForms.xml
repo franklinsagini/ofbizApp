@@ -288,4 +288,24 @@
 		<field name="guaranteedValue" title="Guaranteed Amount"><text size="20" maxlength="60"/></field -->        
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit" event="onclick" action="javascript: return guarantorValidation(${loanApplicationId});"><submit button-type="button"/></field>
     </form>
+    
+    <form name="freedGuarantorForm" type="single" target="freedGuarantorForm.csv" odd-row-style="header-row" default-table-style="basic-table">
+      <field name="fromDate" title="BETWEEN" required-field="true"><date-time/></field> 
+      <field name="thruDate" title="AND" required-field="true" position="2"><date-time/></field> 
+      <!-- <field name="thruDate" title="AND"><date-time type="date"/></field> -->
+        <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    
+    <form name="freedGuarantorFormF" list-name="freedGuarantorBetwween" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="loanNo" title="LOAN NO"><display/></field>
+		<field name="loanee" title="LOANEE NAME"><display/></field>
+        <field name="guarantorName" title="GUARANTOR NAME"><display/></field>
+        <field name="dateFreed" title="DATE FREED"><display/></field>
+        <field name="freedBy" title="FREED BY"><display/></field>
+  </form>
+    
 </forms>

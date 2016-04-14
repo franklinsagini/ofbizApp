@@ -124,6 +124,17 @@
 		<response name="success" type="view" value="printDefaulterNotice" />
 	</request-map>
 	
+	<!-- Defaulter Noticices Between Dates -->
+    <request-map uri="guarantorNoticeBetweenDates">
+    	<security https="true" auth="true" />
+    	<response name="success" type="view" value="guarantorNoticeBetweenDates" save-home-view="true" />
+  	</request-map>
+  
+  <request-map uri="guarantorNoticeBetweenDatesexcel.csv">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="guarantorNoticeBetweenDatesexcel" save-home-view="true" />
+  </request-map>
+	
 	
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://transfertoguarantors/widget/TransferToGuarantorsScreens.xml#main"/>
@@ -142,5 +153,9 @@
 	<!-- printDefaulterNotice -->
 		<view-map name="printDefaulterNotice" type="screenfop"
 		page="component://transfertoguarantors/widget/TransferToGuarantorsScreens.xml#printDefaulterNotice"  content-type="application/pdf" encoding="none" />
+	
+		<!-- Guarantor Notices Between Dates -->
+	<view-map name="guarantorNoticeBetweenDates" type="screen" page="component://transfertoguarantors/widget/TransferToGuarantorsScreens.xml#guarantorNoticeBetweenDates"/>
+    <view-map name="guarantorNoticeBetweenDatesexcel" type="screencsv" page="component://transfertoguarantors/widget/TransferToGuarantorsScreens.xml#guarantorNoticeBetweenDatesexcel" content-type="text/csv" encoding="none"/>
 	
 </site-conf>

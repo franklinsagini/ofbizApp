@@ -3,51 +3,106 @@
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
 
-    <!-- memberAccountsReportForm -->
+    <!-- BRANCH REPORTS -->
 
 
-    <form name="activeMembers" type="single" target="branchMembers" title=""
+    <form name="activeMembers" type="single" target="branchMembers.csv" title=""
         header-row-style="header-row" default-table-style="basic-table">
-        <field position="1" name="startDate" title="As at"  widget-style="required" required-field="true">
-            <date-time type="timestamp"/>
+
+        <field position="1" name="startDate" title="From"  widget-style="required" required-field="true">
+           <date-time type="date"/>
         </field>
+
+         <field position="2" name="endDate" title="To"  widget-style="required" required-field="true">
+           <date-time type="date"/>
+        </field>
+
         <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
-    </form>    
+    </form>
 
-    <form name="LoanLossReport" type="single" target="LoanLossReportCSV" title=""
+    <form name="LoanLossReport" type="single" target="LoanLossReportCSV.csv" title=""
         header-row-style="header-row" default-table-style="basic-table">
         <field name="startDate" title="From"  widget-style="required" required-field="true">
             <date-time type="date"/>
         </field>
-        
+
         <field name="endDate" title="To" position="2"  widget-style="required" required-field="true">
             <date-time type="date"/>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
-    </form>    
-    <form name="TotalLoanBook" type="single" target="branchLoanBook" title=""
+    </form>
+    <form name="TotalLoanBook" type="single" target="branchLoanBook.csv" title=""
         header-row-style="header-row" default-table-style="basic-table">
         <field name="startDate" title="From"  widget-style="required" required-field="true">
             <date-time type="date"/>
         </field>
-        
+
         <field name="endDate" title="To" position="2"  widget-style="required" required-field="true">
             <date-time type="date"/>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
-    </form>    
+    </form>
+
+    <form name="ShareCapital" type="single" target="branchShareCapital.csv" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+
+        <field name="startDate" title="From"  widget-style="required" required-field="true">
+            <date-time type="date"/>
+        </field>
+
+        <field name="endDate" title="To" position="2"  widget-style="required" required-field="true">
+            <date-time type="date"/>
+        </field>
+
+        <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <form name="MemberDeposit" type="single" target="branchMemberDeposit.csv" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+
+        <field name="startDate" title="From"  widget-style="required" required-field="true">
+            <date-time type="date"/>
+        </field>
+
+        <field name="endDate" title="To" position="2"  widget-style="required" required-field="true">
+            <date-time type="date"/>
+        </field>
+
+        <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <form name="WithdrawableDeposit" type="single" target="branchWithdrawableDeposit.csv" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+
+        <field name="startDate" title="From"  widget-style="required" required-field="true">
+            <date-time type="date"/>
+        </field>
+
+        <field name="endDate" title="To" position="2"  widget-style="required" required-field="true">
+            <date-time type="date"/>
+        </field>
+
+        <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
     <form name="ActiveLoans" type="single" target="branchActiveLoans" title=""
         header-row-style="header-row" default-table-style="basic-table">
         <field name="startDate" title="From"  widget-style="required" required-field="true">
             <date-time type="date"/>
         </field>
-        
+
         <field name="endDate" title="To" position="2"  widget-style="required" required-field="true">
             <date-time type="date"/>
         </field>
@@ -61,7 +116,7 @@
         <field name="startDate" title="From"  widget-style="required" required-field="true">
             <date-time type="date"/>
         </field>
-        
+
         <field name="endDate" title="To" position="2"  widget-style="required" required-field="true">
             <date-time type="date"/>
         </field>
@@ -70,64 +125,104 @@
         </field>
     </form>
 
-    <form name="branchesMembersData" list-name="memberStatusList"  target="" title="" 
-         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
-         default-table-style="basic-table hover-bar" paginate="false"> 
+    <form name="branchesMembersData" list-name="memberStatusList"  target="" title=""
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2"
+         default-table-style="basic-table hover-bar" paginate="false">
        <field name="statusName" title="Status Name"><display/></field>
-       <field name="count" title="Total Count"><display/></field>
-     </form>    
+       <field name="balanceBroughtForward" title="As at ${startDate}"><display/></field>
+       <field name="count" title="Status Count For the Period between ${startDate} AND ${endDate}"><display/></field>
+       <field name="closingBalance" title="As at ${endDate}"><display/></field>
+     </form>
 
-    <form name="branchesTotals" list-name="totalsList"  target="" title="" 
-         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
-         default-table-style="basic-table hover-bar" paginate="false"> 
+    <form name="branchesTotals" list-name="totalsList"  target="" title=""
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2"
+         default-table-style="basic-table hover-bar" paginate="false">
        <field name="branchName" title="Branch Name"><display/></field>
        <field name="branchTotal" title="Branch Total Membership"><display/></field>
-     </form>        
+     </form>
 
-    <form name="branchLoanBook" list-name="memberStatusList"  target="" title="" 
-         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
-         default-table-style="basic-table hover-bar" paginate="false"> 
+    <form name="branchLoanBook" list-name="memberStatusList"  target="" title=""
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2"
+         default-table-style="basic-table hover-bar" paginate="false">
        <field name="granted" title="Total Granted"><display/></field>
        <field name="repaid" title="Total Repaid"><display/></field>
-     </form>    
+     </form>
 
-    <form name="LoanLossReportCSV" list-name="loansLossList"  target="" title="" 
-         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
-         default-table-style="basic-table hover-bar" paginate="false"> 
+    <form name="LoanLossReportCSV" list-name="loansLossList"  target="" title=""
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2"
+         default-table-style="basic-table hover-bar" paginate="false">
        <field name="category" title="Category"><display/></field>
        <field name="active" title="Active Loans"><display/></field>
        <field name="watchLoans" title="0 - 30 Days"><display/></field>
        <field name="substandardLoans" title="31 - 60 Days"><display/></field>
        <field name="doubtfulLoans" title="61 - 90 Days"><display/></field>
        <field name="lossLoans" title="Over 90 Days"><display/></field>
-     </form>    
+     </form>
 
-    <form name="branchLoanBookTotals" list-name="totalsList"  target="" title="" 
-         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
-         default-table-style="basic-table hover-bar" paginate="false"> 
+    <form name="branchShareCapitalCSV" list-name="totalsList"  target="" title=""
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2"
+         default-table-style="basic-table hover-bar" paginate="false">
+       <field name="branchName" title="Branch"><display/></field>
+       <field name="balanceBroughtForward" title="As at ${startDate}"><display/></field>
+       <field name="shareCapitalAmount" title="Paid up between ${startDate} AND ${endDate}"><display/></field>
+       <field name="repaidTotal" title="Correction if any"><display/></field>
+        <field name="closingBalance" title="As at ${endDate}"><display/></field>
+    </form>
+
+    <form name="branchMemberDepositCSV" list-name="totalsList"  target="" title=""
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2"
+         default-table-style="basic-table hover-bar" paginate="false">
+       <field name="branchName" title="Branch"><display/></field>
+        <field name="branchMemberDepBF" title="As at ${startDate}"><display/></field>
+       <field name="memberDepositAmount" title="Contribution between ${startDate} AND ${endDate}"><display/></field>
+       <field name="repaidTotal" title="Refunded between ${startDate} AND ${endDate}"><display/></field>
+       <field name="Closings" title="As at ${endDate}"><display/></field>
+    </form>
+
+    <form name="branchWithdrawableDepositCSV" list-name="totalsList"  target="" title=""
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2"
+         default-table-style="basic-table hover-bar" paginate="false">
+       <field name="branchName" title="Branch"><display/></field>
+       <field name="savingsAccount" title="Savings Account"><display/></field>
+       <field name="chaiAngelsJuniorAccount" title="Chai Angels Junior Account"><display/></field>
+       <field name="chaiPremierHolidayAccount" title="Chai Premier Holiday Account"><display/></field>
+       <field name="fixedDeposit" title="Fixed Deposit"><display/></field>
+       <field name="medical" title="Medical"><display/></field>
+       <field name="biashara" title="Biashara Account"><display/></field>
+       <field name="branchTotals" title="Branch Totals"><display/></field>
+    </form>
+
+    <form name="branchLoanBookTotals" list-name="totalsList"  target="" title=""
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2"
+         default-table-style="basic-table hover-bar" paginate="false">
+       <field name="branchName" title="Branch"><display/></field>
+       <field name="broughtForwardGranted" title="Granted Brought Forward"><display/></field>
+       <field name="grantedTotal" title="Total Granted"><display/></field>
+       <field name="closingBalanceGranted" title="Granted Closing Balance"><display/></field>
+       <field name="broughtForwardRepaid" title="Repaid Brought Forward"><display/></field>
+       <field name="repaidTotal" title="Total Repaid"><display/></field>
+       <field name="closingBalanceRepaid" title="Repaid Closing Balance"><display/></field>
+    </form>
+
+     <form name="branchActiveLoansTotals" list-name="totalsList"  target="" title=""
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2"
+         default-table-style="basic-table hover-bar" paginate="false">
        <field name="branchName" title="Branch"><display/></field>
        <field name="grantedTotal" title="Total Granted"><display/></field>
        <field name="repaidTotal" title="Total Repaid"><display/></field>
-     </form>        
-     <form name="branchActiveLoansTotals" list-name="totalsList"  target="" title="" 
-         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
-         default-table-style="basic-table hover-bar" paginate="false"> 
+     </form>
+     <form name="branchDeliquentLoansTotals" list-name="totalsList"  target="" title=""
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2"
+         default-table-style="basic-table hover-bar" paginate="false">
        <field name="branchName" title="Branch"><display/></field>
        <field name="grantedTotal" title="Total Granted"><display/></field>
        <field name="repaidTotal" title="Total Repaid"><display/></field>
-     </form>        
-     <form name="branchDeliquentLoansTotals" list-name="totalsList"  target="" title="" 
-         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
-         default-table-style="basic-table hover-bar" paginate="false"> 
-       <field name="branchName" title="Branch"><display/></field>
-       <field name="grantedTotal" title="Total Granted"><display/></field>
-       <field name="repaidTotal" title="Total Repaid"><display/></field>
-     </form>    
+     </form>
 
 
-<!--      <form name="branchesMembersData" list-name="memberStatusList"  target="" title="" 
-         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
-         default-table-style="basic-table hover-bar" paginate="false"> 
+<!--      <form name="branchesMembersData" list-name="memberStatusList"  target="" title=""
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2"
+         default-table-style="basic-table hover-bar" paginate="false">
        <field name="accountCode" title="Account Code"><display/></field>
        <field name="accountName" title="Account Name"><display/></field>
        <field name="accountTotal" title="Account Totals"><display/></field>
@@ -155,13 +250,13 @@
         		<entity-options description="${code} - ${name}" entity-name="AccountProduct" key-field-name="accountProductId"></entity-options>
         	</drop-down>
         </field>
-        
+
         <field name="branchId" title="Branch">
             <drop-down allow-empty="true" no-current-selected-key="${userLogin.partyId}" >
                 <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
             </drop-down>
         </field>
-        
+
         <field name="submitButton" title="${uiLabelMap.CommonRun}" widget-style="smallSubmit">
             <submit button-type="button"/>
         </field>
@@ -191,18 +286,18 @@
         		<entity-options description="${code} - ${name}" entity-name="AccountProduct" key-field-name="accountProductId"></entity-options>
         	</drop-down>
         </field>
-        
+
         <field name="branchId" title="Branch">
             <drop-down allow-empty="true" no-current-selected-key="${userLogin.partyId}" >
                 <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
             </drop-down>
         </field>
-        
+
         <field name="submitButton" title="Generate Excel" widget-style="smallSubmit" >
             <submit button-type="button" />
         </field>
     </form>
-    
+
     <!-- Account Listing As At -->
         <form name="memberAccountListingDownloadFormAsAT" type="single" target="memberAccountListDownloadAsAtexcel.csv" title="" header-row-style="header-row"
         default-table-style="basic-table" target-window="_BLANK">
@@ -212,11 +307,11 @@
         	</entity-condition>
 
 		</actions>
-		
+
 		<field name="endDate" title="To" position="2"  widget-style="required" required-field="true">
         	<date-time type="timestamp" clock="12"/>
         </field>
-        
+
         <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
         <field name="stationId" title="Station">
         	<drop-down allow-empty="true">
@@ -231,13 +326,13 @@
         		<entity-options description="${code} - ${name}" entity-name="AccountProduct" key-field-name="accountProductId"></entity-options>
         	</drop-down>
         </field>
-        
+
         <field name="branchId" title="Branch">
             <drop-down allow-empty="true" no-current-selected-key="${userLogin.partyId}" >
                 <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
             </drop-down>
         </field>
-        
+
         <field name="submitButton" title="Generate Excel" widget-style="smallSubmit" >
             <submit button-type="button" />
         </field>
@@ -381,7 +476,7 @@
         <field name="acctgTransId" title="Account Trans">
         	<display></display>
          </field>
-         
+
          <field name="createdStamp"><display type="date-time" /></field>
 
          <field name="glAccountId" title="Account">
@@ -393,7 +488,7 @@
             </hyperlink>
         </field>
      </form>
-     
+
      <!-- accountContributionForm -->
      <form name="accountContributionForm" type="single" target="accountContributionExcel.csv" title="" header-row-style="header-row"
         default-table-style="basic-table">
@@ -403,17 +498,17 @@
         	</entity-condition>
 
 		</actions>
-		
+
         <!-- field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field -->
-        
+
         <field name="startDate" title="From"  widget-style="required" required-field="true">
         	<date-time type="date"/>
         </field>
-        
+
         <field name="endDate" title="To" position="2"  widget-style="required" required-field="true">
         	<date-time type="date"/>
         </field>
-        
+
         <!-- field name="stationId" title="Station">
         	<drop-down allow-empty="true">
         		<entity-options description="${name} - ${stationNumber}" key-field-name="stationId" entity-name="Station">
@@ -421,51 +516,51 @@
         		</entity-options>
         	</drop-down>
         </field>
-        
+
         <field name="branchId" title="Branch">
             <drop-down allow-empty="true" >
                 <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
             </drop-down>
         </field -->
-        
+
         <field name="accountProductId" title="Account Product"   widget-style="required" required-field="true">
         	<drop-down allow-empty="true">
         		<entity-options description="${code} - ${name}" entity-name="AccountProduct" key-field-name="accountProductId"></entity-options>
         	</drop-down>
         </field>
-        
+
         <field name="branchId" title="Branch">
             <drop-down allow-empty="true" >
                 <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
             </drop-down>
         </field>
-        
+
          <field name="stationId" title="Station">
         	<drop-down allow-empty="true">
         		<entity-options description="${name} - ${stationNumber}" entity-name="Station" key-field-name="stationId"></entity-options>
         	</drop-down>
         </field>
-        
+
          <field name="employmentTypeId" title="Employment Type">
         	<drop-down allow-empty="true">
         		<entity-options description="${name}" entity-name="EmploymentType" key-field-name="employmentTypeId"></entity-options>
         	</drop-down>
         </field>
-        
+
          <!-- field name="loanStatusId" title="Loan Status">
         	<drop-down allow-empty="true">
         		<entity-options description=" ${name}" entity-name="LoanStatus" key-field-name="loanStatusId"></entity-options>
         	</drop-down>
         </field -->
-        
+
         <field name="submitButton" title="Generate Excel" widget-style="smallSubmit">
             <submit button-type="button" />
         </field>
     </form>
 
-     <form name="accountContributionExport" list-name="combinedList"  target="" title="" 
-         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
-         default-table-style="basic-table hover-bar" paginate="false"> 
+     <form name="accountContributionExport" list-name="combinedList"  target="" title=""
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2"
+         default-table-style="basic-table hover-bar" paginate="false">
        <field name="firstName" title="First Name"><display/></field>
         <field name="middleName" title="Middle Name"><display/></field>
         <field name="lastName" title="Last Name"><display/></field>
@@ -481,18 +576,18 @@
 
         <field name="accountNo" title="Account No"><display/></field>
         <field name="accountName" title="Account Name"><display/></field>
-        
+
         <field name="createdStamp" title="Date Contributed"><display type="date-time"/></field>
 
         <field name="transactionAmount" title="Amount"><display/></field>
      </form>
-     
+
      <!-- memberTransactionsCreditExport -->
-    <form name="memberTransactionsCreditExport" list-name="creditsList"  target="" title="" 
-         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
-         default-table-style="basic-table hover-bar" paginate="false"> 
+    <form name="memberTransactionsCreditExport" list-name="creditsList"  target="" title=""
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2"
+         default-table-style="basic-table hover-bar" paginate="false">
       <field name="accountNo" title="Account No"><display/></field>
-      
+
        <field name="firstName" title="First Name"><display/></field>
         <field name="middleName" title="Middle Name"><display/></field>
         <field name="lastName" title="Last Name"><display/></field>
@@ -500,7 +595,7 @@
          <field name="payrollNumber" title="Payroll Number"><display/></field>
          <field name="memberNumber" title="Member No"><display/></field>
          <field name="idNumber" title="ID No"><display/></field>
-         
+
           <field name="transactionType" title="Description"><display/></field>
 
         <field name="stationId" title="Station"><display-entity entity-name="Station" description="${name}"></display-entity></field>
@@ -512,13 +607,13 @@
 
         <field name="transactionAmount" title="Amount"><display/></field>
      </form>
-     
+
      <!-- memberTransactionsDebitExport -->
-         <form name="memberTransactionsDebitExport" list-name="debitsList"  target="" title="" 
-         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
-         default-table-style="basic-table hover-bar" paginate="false"> 
+         <form name="memberTransactionsDebitExport" list-name="debitsList"  target="" title=""
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2"
+         default-table-style="basic-table hover-bar" paginate="false">
       <field name="accountNo" title="Account No"><display/></field>
-      
+
        <field name="firstName" title="First Name"><display/></field>
         <field name="middleName" title="Middle Name"><display/></field>
         <field name="lastName" title="Last Name"><display/></field>
@@ -526,21 +621,21 @@
          <field name="payrollNumber" title="Payroll Number"><display/></field>
          <field name="memberNumber" title="Member No"><display/></field>
          <field name="idNumber" title="ID No"><display/></field>
-         
+
           <field name="transactionType" title="Description"><display/></field>
 
         <field name="stationId" title="Station"><display-entity entity-name="Station" description="${name}"></display-entity></field>
         <field name="branchId" title="Branch"><display-entity entity-name="PartyGroup" description="${groupName}" key-field-name="partyId"></display-entity></field>
        <field name="memberStatusId" title="Member Status"><display-entity entity-name="MemberStatus" description="${name}" key-field-name="memberStatusId"></display-entity></field>
        <field name="employmentTypeId" title="Employment Type"><display-entity entity-name="EmploymentType" description="${name}"></display-entity></field>
-		
+
 		<field name="acctgTransId" title="Transaction Number"><display/></field>
         <field name="createdStamp" title="Date Contributed"><display type="date-time"/></field>
 
         <field name="transactionAmount" title="Amount"><display/></field>
      </form>
-     
-     
+
+
      <!-- Member Transaction -->
      <form name="memberTransactionsReportForm" type="single" target="memberTransactionsReportExcel.csv" title="" header-row-style="header-row"
         default-table-style="basic-table">
@@ -550,22 +645,22 @@
         	</entity-condition>
 
 		</actions>
-		
+
         <field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field>
-        
+
         <field name="startDate" title="From" >
         	<date-time type="timestamp"/>
         </field>
-        
+
         <field name="endDate" title="To" position="2">
         	<date-time type="timestamp"/>
         </field>
-        
+
         <field name="submitButton" title="Generate Excel" widget-style="smallSubmit">
             <submit button-type="button" />
         </field>
     </form>
-    
+
     <!-- accountContributionExpectedForm -->
              <form name="accountContributionExpectedForm" type="single" target="accountContributionExpectedExcel.csv" title="" header-row-style="header-row"
         default-table-style="basic-table">
@@ -575,49 +670,49 @@
         	</entity-condition>
 
 		</actions>
-		
+
         <!-- field name="partyId" title="Member"><lookup target-form-name="LookupActiveMember"/></field -->
-        
+
         <field name="startDate" title="From"  widget-style="required" required-field="true">
         	<date-time type="timestamp"/>
         </field>
-        
+
         <field name="endDate" title="To" position="2"  widget-style="required" required-field="true">
         	<date-time type="timestamp"/>
         </field>
-        
+
         <field name="accountProductId" title="Account Product"   widget-style="required" required-field="true">
         	<drop-down allow-empty="true">
         		<entity-options description="${code} - ${name}" entity-name="AccountProduct" key-field-name="accountProductId"></entity-options>
         	</drop-down>
         </field>
-        
+
         <field name="branchId" title="Branch">
             <drop-down allow-empty="true" >
                 <list-options list-name="partyGroups" key-name="partyId"  description="${groupName}" />
             </drop-down>
         </field>
-        
+
          <field name="stationId" title="Station">
         	<drop-down allow-empty="true">
         		<entity-options description="${name} - ${stationNumber}" entity-name="Station" key-field-name="stationId"></entity-options>
         	</drop-down>
         </field>
-        
+
          <field name="employmentTypeId" title="Employment Type">
         	<drop-down allow-empty="true">
         		<entity-options description="${name}" entity-name="EmploymentType" key-field-name="employmentTypeId"></entity-options>
         	</drop-down>
         </field>
-        
+
         <field name="submitButton" title="Generate Excel" widget-style="smallSubmit">
             <submit button-type="button" />
         </field>
     </form>
     <!-- accountContributionExpectedExport -->
-    <form name="accountContributionExpectedExport" list-name="combinedList"  target="" title="" 
-         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
-         default-table-style="basic-table hover-bar" paginate="false"> 
+    <form name="accountContributionExpectedExport" list-name="combinedList"  target="" title=""
+         type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2"
+         default-table-style="basic-table hover-bar" paginate="false">
        <field name="firstName" title="First Name"><display/></field>
         <field name="middleName" title="Middle Name"><display/></field>
         <field name="lastName" title="Last Name"><display/></field>
@@ -634,7 +729,7 @@
 
         <field name="accountNo" title="Account No"><display/></field>
         <field name="accountName" title="Account Name"><display/></field>
-        
+
         <!-- field name="createdStamp" title="Date Contributed"><display type="date-time"/></field -->
 
         <field name="minimumExpectedAmount" title="Amount Expected"><display/></field>

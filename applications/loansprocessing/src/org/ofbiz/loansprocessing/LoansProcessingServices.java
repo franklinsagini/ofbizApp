@@ -44,6 +44,7 @@ import com.ibm.icu.util.Calendar;
  * @author Japheth Odonya @when Nov 7, 2014 5:30:47 PM
  * 
  *         Loans Processing Methods
+ *         org.ofbiz.loansprocessing.LoansProcessingServices.createGuarantorNotice(loanApplicationId)
  * */
 public class LoansProcessingServices {
 
@@ -248,6 +249,15 @@ public class LoansProcessingServices {
 
 		return bdTotalLoansWithAccountAmount;
 	}
+	
+	public static BigDecimal getTotalLoansDeceased(Long memberId) {
+		BigDecimal bdTotalLoansWithAccountAmount = LoanServices
+				.calculateExistingLoansTotalDeceased(memberId);
+
+		return bdTotalLoansWithAccountAmount;
+	}
+	
+	
 
 	public static BigDecimal getGruaduatedScaleContribution(BigDecimal bdAmount, Long memberId) {
 		BigDecimal bdContributedAmount = BigDecimal.ZERO;
@@ -1366,6 +1376,64 @@ public class LoansProcessingServices {
 		}
 
 		return listApplicationIds;
+	}
+	
+	
+	public static String createGuarantorNotice(Long loanApplicationId){
+		
+		//Create Guarantor Notices for this Loan Application
+		Delegator delegator = DelegatorFactoryImpl.getDelegator(null);
+		List<GenericValue> 	loanGuarantorList = null;
+				//delegator.findByAnd("LoanGuarantor",  [loanApplicationId : lloanApplicationId], null, false);
+		EntityConditionList<EntityExpr> loanGuarantorConditions = EntityCondition
+				.makeCondition(
+						UtilMisc.toList(EntityCondition.makeCondition(
+								"loanApplicationId", EntityOperator.EQUALS,
+								loanApplicationId)
+								), EntityOperator.AND);
+		
+		try {
+			loanGuarantorList = delegator.findList("LoanGuarantor",
+					loanGuarantorConditions, null, null,
+					null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+
+		GenericValue guarantorNotice = null;
+		Long guarantorNoticeId;
+		BigDecimal bdLoanBalance = null;
+		bdLoanBalance = LoansProcessingServices.getTotalLoanBalancesByLoanApplicationId(loanApplicationId);
+		BigDecimal interestAmount = null;
+		
+//		bdTotalBalance = bdTotalBalance.add(LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString()));
+//		bdTotalBalance = bdTotalBalance.add(LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString()));
+		interestAmount = LoanRepayments.getTotalInterestByLoanDue(loanApplicationId.toString());
+				
+				//LoansProcessingServices.
+		BigDecimal insuranceAmount = null;
+		insuranceAmount = LoanRepayments.getTotalInsurancByLoanDue(loanApplicationId.toString());
+		//List<String> listApplicationIds = new ArrayList<String>();
+		for (GenericValue genericValue : loanGuarantorList) {
+			//listApplicationIds.add(genericValue.getLong("loanApplicationId").toString());
+			//create a guarantor notice
+			//guarantorId
+			
+			guarantorNoticeId = delegator.getNextSeqIdLong("GuarantorNotice", 1);
+			guarantorNotice = delegator.makeValue("GuarantorNotice", UtilMisc.toMap(
+					"guarantorNoticeId", guarantorNoticeId, "loanApplicationId",
+					loanApplicationId, "guarantorId", genericValue.getLong("guarantorId"),
+					"noticeDate", new Timestamp(Calendar.getInstance().getTimeInMillis()), "loanBalance", bdLoanBalance, "interestAmount", interestAmount, "insuranceAmount", insuranceAmount));
+			try {
+				delegator.createOrStore(guarantorNotice);
+			} catch (GenericEntityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		
+		return "";
 	}
 	
 

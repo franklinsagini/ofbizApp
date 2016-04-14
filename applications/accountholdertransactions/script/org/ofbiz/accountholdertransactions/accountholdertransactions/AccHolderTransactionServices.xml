@@ -13,8 +13,97 @@
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
-	<!-- CashWithdrawal -->
-	<simple-method method-name="createCashWithdrawal"
+	<simple-method method-name="approveLimitTransaction" short-description="Member Transaction Entry" use-transaction="true">
+
+	        <entity-one entity-name="TellerLimitApprovals" value-field="lookedUpValue"/>
+	        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+	        
+	        
+	        <set field="isApprover" value="${bsh:org.ofbiz.accounting.teller.TellerUtilServices.isApprover(userLogin, delegator,lookedUpValue);}" type="Boolean"/>
+
+		<if>
+			<condition>
+				<if-compare field="isApprover" operator="equals" value="true"/>
+			</condition>
+			<then>
+				<set field="lookedUpValue.approvedBy" from-field="userLogin.userLoginId"/>
+	        			<set field="lookedUpValue.statusName" value="APPROVED"/>
+	        			<now-timestamp field="createdDate" />
+	        			<set field="lookedUpValue.dateApproved" from-field="createdDate" />
+	        			<store-value value-field="lookedUpValue"/>
+			</then>
+			<else-if>
+				<condition>
+					<if-compare field="isApprover" operator="equals" value="false"/>
+				</condition>
+				<then>
+					<add-error>
+						<fail-property resource="AccountHolderTransactionsUILabels.xml" property="approvalLimitNotApprover" />
+					</add-error>
+					<check-errors />
+				</then>
+			</else-if>
+		</if>
+	</simple-method>
+
+
+	<simple-method method-name="completeLimitTransaction" short-description="Member Transaction Entry" use-transaction="true">
+<!-- TO DO -->
+<!-- CHECK PREVIOUS TRANSACTIONS STATUS HERE IF COMPLTED IGNORE -->
+<entity-one entity-name="TellerLimitApprovals" value-field="lookedUpValue"/>
+	<if>
+		<condition>
+			<if-compare field="lookedUpValue.statusName" value="COMPLETED" operator="equals"/>
+		</condition>
+		<then>
+
+			<add-error>
+				<fail-property resource="AccountHolderTransactionsUILabels.xml" property="transactionAlreadyCompleted" />
+			</add-error>
+			<check-errors />
+
+		</then>
+		<else>
+<!-- CHECK IF ITS THE SAME TELLER THAT RAISED THIS DOCUMENT. SHE/HE SHOULD THE SAME TO COMPLETE THE TRANSACTION -->
+
+	<if>
+		<condition>
+			<if-compare-field to-field="lookedUpValue.tellerId" operator="equals" field="userLogin.userLoginId"></if-compare-field>
+		</condition>
+		<then>
+			<set field="lookedUpValue.statusName" value="COMPLETED"/>
+	        <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
+	        <store-value value-field="lookedUpValue"/>
+
+            <set-service-fields service-name="createCashWithdrawalAfterApproval" map="lookedUpValue" to-map="params"/>
+            <set field="params.memberAccountId" from-field="lookedUpValue.memberAccountId"/>
+            <set field="params.transactionAmount" from-field="lookedUpValue.amount"/>
+
+            <call-service service-name="createCashWithdrawalAfterApproval" in-map-name="params">
+            	<result-to-field result-name="accountTransactionParentId"/>
+            </call-service>
+
+
+	<field-to-result field="accountTransactionParentId" result-name="accountTransactionParentId" />
+		</then>
+		<else>
+			<add-error>
+			<fail-property resource="AccountHolderTransactionsUILabels.xml" property="wrongTellerTransaction" />
+			</add-error>
+			<check-errors />
+		</else>
+	</if>
+
+	        
+
+	        
+		</else>
+	</if>
+
+	
+	</simple-method>
+
+<simple-method method-name="createCashWithdrawalAfterApproval"
 		short-description="Create CashWithdrawal">
 
 		<make-value entity-name="AccountTransaction" value-field="newEntity" />
@@ -164,6 +253,222 @@
 
 												<property-to-field resource="AccountHolderTransactionsUILabels.xml"
 													property="commissionChargeSetupSuccess" field="successMessage" />
+													</else>
+												</if>
+												
+												
+
+											</else>
+										</if>
+
+
+
+									</else>
+								</if>
+
+
+
+							</else>
+						</if>
+
+
+					</else>
+				</if>
+
+
+
+			</else>
+		</if>
+
+	</simple-method>
+
+
+	<!-- CashWithdrawal -->
+	<simple-method method-name="createCashWithdrawal"
+		short-description="Create CashWithdrawal">
+
+		<make-value entity-name="AccountTransaction" value-field="newEntity" />
+		<set-pk-fields map="parameters" value-field="newEntity" />
+		<set-nonpk-fields map="parameters" value-field="newEntity" />
+
+		<!-- Check if the commission charges are set otherwise scream and dont 
+			allow a withdrawal to happen -->
+
+		<set field="commissionSetup"
+			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.commissionChargeIsSetup();}"
+			type="Boolean" />
+
+
+		<set field="ledgerAccountSetup"
+			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.legerAccountSetUp(newEntity);}"
+			type="Boolean" />
+		<set field="commissionAccountSetup"
+			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.commissionAccountSetUp(newEntity);}"
+			type="Boolean" />
+		<set field="exciseDutyAccountSetup"
+			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.exciseDutyAccountSetUp(newEntity);}"
+			type="Boolean" />
+
+		<set field="exciseDutyRateSetup"
+			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.exciseDutyRateSetUp();}"
+			type="Boolean" />
+			
+		<set field="enoughmoney"
+			value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.checkHasEnoughMoney(newEntity);}" />
+
+		<set field="tellerLimit"
+			value="${bsh:org.ofbiz.accounting.teller.TellerUtilServices.needsApproval(newEntity, delegator);}" type="Boolean"/>
+
+		<set field="falseField" value="false" type="Boolean" />
+		<set field="trueField" value="true" type="Boolean" />
+		
+		<if> <!-- commissionSetup -->
+			<condition>
+				<if-compare-field to-field="commissionSetup"
+					operator="equals" field="falseField"></if-compare-field>
+			</condition>
+			<then>
+
+				<add-error>
+					<fail-property resource="AccountHolderTransactionsUILabels.xml"
+						property="commissionChargeSetupError" />
+				</add-error>
+				<check-errors />
+
+			</then>
+
+			<else>
+
+
+				<if> <!-- ledgerAccountSetup -->
+					<condition>
+						<if-compare-field to-field="ledgerAccountSetup"
+							operator="equals" field="falseField"></if-compare-field>
+					</condition>
+					<then>
+						<add-error>
+							<fail-property resource="AccountHolderTransactionsUILabels.xml"
+								property="ledgerAccountSetupError" />
+						</add-error>
+						<check-errors />
+					</then>
+					<else>
+
+						<if> <!-- commissionAccountSetup -->
+							<condition>
+								<if-compare-field to-field="commissionAccountSetup"
+									operator="equals" field="falseField"></if-compare-field>
+							</condition>
+							<then>
+								<add-error>
+									<fail-property resource="AccountHolderTransactionsUILabels.xml"
+										property="commissionAccountSetupError" />
+								</add-error>
+								<check-errors />
+							</then>
+							<else>
+
+								<if> <!-- exciseDutyAccountSetup -->
+									<condition>
+										<if-compare-field to-field="exciseDutyAccountSetup"
+											operator="equals" field="falseField"></if-compare-field>
+									</condition>
+									<then>
+										<add-error>
+											<fail-property resource="AccountHolderTransactionsUILabels.xml"
+												property="exciseDutyAccountSetupError" />
+										</add-error>
+										<check-errors />
+									</then>
+									<else>
+
+										<if> <!-- exciseDutyRateSetup -->
+											<condition>
+												<if-compare-field to-field="exciseDutyRateSetup"
+													operator="equals" field="falseField"></if-compare-field>
+											</condition>
+											<then>
+												<add-error>
+													<fail-property resource="AccountHolderTransactionsUILabels.xml"
+														property="exciseDutyRateSetupError" />
+												</add-error>
+												<check-errors />
+											</then>
+											<else>
+												<if>
+													<condition>
+														<if-compare operator="not-equals" value="yes" field="enoughmoney"></if-compare>
+													</condition>
+													<then>
+														<set field="accountTransactionParentId"
+													value="NOTRANSACTION"
+													type="String" />
+													<field-to-result field="accountTransactionParentId"
+													result-name="accountTransactionParentId" />
+														<add-error>
+															<fail-message message="${enoughmoney}"/>
+														</add-error>
+														<check-errors />
+													</then>
+													<else>
+													
+														<!-- Finally Do the saving -->
+
+
+
+    <if>
+        <condition>
+            <if-compare field="tellerLimit" operator="equals" value="true"/>
+
+        </condition>
+        <then>
+            <property-to-field resource="AccountHolderTransactionsEntityLabels.xml"  property="This transaction is over 50,000 and needs Approval. Kindly let your supervisor approve before you complete the transaction " field="successMessage" />
+            <!-- THEN DO TELLLER LIMITS HERE -->
+            <set field="createCashWithdrawalApprovalDoc" value="${bsh:org.ofbiz.accounting.teller.TellerUtilServices.createCashWithdrawalApprovalDoc(newEntity,delegator,userLogin)}" type="Boolean"/>
+            <set field="accountTransactionParentId" value="NOTRANSACTION" type="String" />
+            <field-to-result field="accountTransactionParentId" result-name="accountTransactionParentId" />
+            
+        </then>
+        <else-if>
+            <condition>
+                <if-compare field="tellerLimit" operator="equals" value="false"/>
+            </condition>
+            <then>
+                <!-- THEN DO NORMAL CASH WITHDRAWAL FROM HERE -->
+
+               
+
+                <set field="newEntity.treasuryId"
+													value="${bsh:org.ofbiz.treasurymanagement.TreasuryUtility.getTellerId(userLogin);}"
+													type="String" />
+												<!-- withdrawalStatus -->
+												<!-- set field="accountTransactionParentId" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.cashWithdrawal(newEntity, 
+													userLogin);}" type="String"/ -->
+												<!-- set field="cashWithdrawalVer2"/ -->
+												<!-- Without Interbranch -->
+												<!-- set field="accountTransactionParentId"
+													value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.cashWithdrawalVer2(newEntity, userLogin);}"
+													type="String" / -->
+													
+												<!-- With Interbranch -->
+												<set field="accountTransactionParentId"
+													value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.cashWithdrawalInterbranch(newEntity, userLogin);}"
+													type="String" />	
+													
+												<field-to-result field="accountTransactionParentId"
+													result-name="accountTransactionParentId" />
+												<!-- call-simple-method method-name="cashWithdrawalSave" scope="inline"></call-simple-method -->
+												<!-- set field="transactionStatus" value="${bsh:org.ofbiz.accountholdertransactions.AccHolderTransactionServices.addChargesToTransaction(newEntity, 
+													userLogin, transactionType);}" type="String"/ -->
+
+												<property-to-field resource="AccountHolderTransactionsUILabels.xml"
+													property="commissionChargeSetupSuccess" field="successMessage" />
+            </then>
+        </else-if>
+    </if>														
+
+
+												
 													</else>
 												</if>
 												
@@ -1530,5 +1835,48 @@
 			</else>
 		</if>
 	</simple-method>
+
+	
+	<simple-method method-name="tellerLimitSetupUpdate"
+		short-description="Update Teller Limit Amount setup">
+		<entity-one entity-name="TellerLimitAmount" value-field="lookedUpValue"/>
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue"/>
+		<property-to-field resource="AccountHolderTransactionsEntityLabels.xml" 
+            				property="Successfully updated Teller Limit Amount " field="successMessage" />
+	</simple-method>
+	
+  <simple-method method-name="createTellerLimitApprover" short-description="Create Teller Approver">
+		  <make-value value-field="newEntity" entity-name="TellerLimitApprovers"/>
+		  <set-nonpk-fields value-field="newEntity" map="parameters"/>
+		  <set-pk-fields value-field="newEntity" map="parameters"/>
+		    <sequenced-id sequence-name="TellerLimitApprovers" field="tellerLimitApproversId"/>
+		    <set field="newEntity.tellerLimitApproversId" from-field="tellerLimitApproversId"/>
+		  <create-value value-field="newEntity"/>
+		  <property-to-field resource="AccountHolderTransactionsEntityLabels.xml" property="New Teller Approver Created" field="successMessage"/>
+  </simple-method>
+  
+ <!--  <simple-method method-name="updateTellerLimitApprover">
+     <entity-one value-field="lookedUpValue" entity-name="TellerLimitApprovers"/>
+     <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+     <store-value value-field="lookedUpValue"/>
+      <property-to-field resource="AccountHolderTransactionsEntityLabels.xml" property="Teller Approver Updated" field="successMessage"/>
+  </simple-method> -->
+  
+  <simple-method method-name="updateTellerLimitApprover"
+		short-description="Update Teller Approver">
+		<entity-one entity-name="TellerLimitApprovers" value-field="lookedUpValue"/>
+		<set-nonpk-fields value-field="lookedUpValue" map="parameters" />
+		<store-value value-field="lookedUpValue"/>
+		<property-to-field resource="AccountHolderTransactionsEntityLabels.xml" 
+            				property="Successfully updated Teller Limit Approver " field="successMessage" />
+	</simple-method>
+  
+  <simple-method method-name="deleteTellerLimitApprover">
+    <entity-one value-field="lookedUpValue" entity-name="TellerLimitApprovers"/>
+    <set-pk-fields value-field="lookedUpValue" map="parameters"/>
+    <remove-value value-field="lookedUpValue"/>
+      <property-to-field resource="AccountHolderTransactionsEntityLabels.xml" property="Teller Approver Deleted" field="successMessage"/>
+  </simple-method>	
 	
 </simple-methods>

@@ -1347,13 +1347,12 @@
 									action="_CREATE" />
 							</condition>
 							<widgets>
-							  <!--   <screenlet title="Test SMS">
+							  <!--  <screenlet title="Test SMS">
 							      <container>
 							         <include-form name="testSmS"
 										location="component://humanres/widget/forms/EmployeeForms.xml" />
 							      </container>
 							    </screenlet> -->
-							
 							
 								<screenlet title="New Separation Application">
 									<include-form name="NewSeparationApplication"
@@ -1368,6 +1367,11 @@
 
 						<section name="search-results">
 							<widgets>
+							   <screenlet title="Search Separation Application">
+									<include-form name="searchSeparationApplication"
+										location="component://humanres/widget/forms/EmployeeForms.xml" />
+								</screenlet>
+								
 								<screenlet title="List Separation Application">
 									<include-form name="listSeparationAppliacation"
 										location="component://humanres/widget/forms/EmployeeForms.xml" />
@@ -1622,6 +1626,48 @@
 		</section>
 	</screen>
 	
+	<screen name="statutoryReports">
+		<section>
+			<actions>
+			    <!-- <set field="headerItem" value="employeeReports"/> -->
+				<set field="tabButtonItem" value="statutoryReports" />
+				
+			</actions>
+			<widgets>
+				<decorator-screen name="EmployeeDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						 <screenlet title="Statutory Records">
+							<include-form name="statutoryForm"
+								location="component://humanres/widget/forms/EmployeeForms.xml" />
+						</screenlet>
+						 <!--  <include-form name="ListEmployeeSkills"
+							location="component://humanres/widget/forms/EmployeeForms.xml" />  -->
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	
+	<screen name="documentPortal">
+		<section>
+			<actions>
+			    <set field="headerItem" value="documentPortal"/>
+				<set field="tabButtonItem" value="documentPortal" />
+			</actions>
+			<widgets>
+				<decorator-screen name="EmployeeDecorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+							<include-screen name="documentPortal" location="component://party/widget/partymgr/ProfileScreens.xml" />
+						 <!--  <include-form name="ListEmployeeSkills"
+							location="component://humanres/widget/forms/EmployeeForms.xml" />  -->
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
 
 </screens>
 

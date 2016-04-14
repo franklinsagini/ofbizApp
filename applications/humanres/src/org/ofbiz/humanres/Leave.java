@@ -449,7 +449,7 @@ public static void deleteExistingCompassionateLost(Delegator delegator, String p
 						"partyId", EntityOperator.EQUALS, partyId),
 						EntityCondition.makeCondition("financialYear",EntityOperator.EQUALS, year),
 					EntityCondition.makeCondition("isDeductedFromAnnual",EntityOperator.EQUALS, "Y"),
-					EntityCondition.makeCondition("applicationStatus", EntityOperator.NOT_EQUAL, "Rejected")),
+					EntityCondition.makeCondition("applicationStatus", EntityOperator.EQUALS, "Approved")),
 						EntityOperator.AND);
 		
 		

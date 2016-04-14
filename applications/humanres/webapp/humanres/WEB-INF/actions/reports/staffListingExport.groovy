@@ -18,7 +18,10 @@ stafflist = [];
  nssf = staffItem.getString("socialSecurityNumber");
  isManagement = staffItem.getString("isManagement");
  
- stafflist.add([payrollNo :payrollNo, fname :fname, lname : lname, IdNo : IdNo, gender : gender,
+ fullName = fname +"  "+lname
+ 
+ 
+ stafflist.add([payrollNo :payrollNo, fname :fullName, lname : lname, IdNo : IdNo, gender : gender,
  pin : pin, nhif : nhif, nssf : nssf, appointmentDate : appointmentDate, isManagement : isManagement]);
  }
  

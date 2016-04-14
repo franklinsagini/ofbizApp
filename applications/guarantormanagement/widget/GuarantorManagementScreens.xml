@@ -16,6 +16,23 @@
         </section>
     </screen>
     
+     <screen name="freedGuarantors">
+        <section>
+            <actions>
+                <set field="headerItem" value="freedGuarantors"/><!-- this highlights the selected menu-item with name "main" -->
+            </actions>
+            <widgets>
+                <decorator-screen name="GuarantorManagementCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                      <screenlet name="Freed Guarantors">
+                         <include-form location="component://guarantormanagement/widget/GuarantorManagementForms.xml" name="freedGuarantorForm"/>
+                      </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <!-- forwardedLoanApplications -->
     <screen name="forwardedLoanApplications">
         <section>
@@ -146,5 +163,31 @@
             </widgets>
         </section>
     </screen>
+
+  <screen name="freedGuarantorFormScreen">
+    <section>
+            <actions>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="facilityId" from-field="parameters.facilityId"/>
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <property-to-field resource="widget" property="widget.form.defaultViewSize" field="viewSizeDefaultValue"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
+                <script location="component://guarantormanagement/webapp/guarantormanagement/WEB-INF/actions/reports/freedGuarantorForm.groovy"/>
+            </actions>
+            <widgets>
+                <container>
+                    <label></label>
+                    <label></label>
+                    <label style="h1" text="             FREED GUARANTOR REPORTS  "/>
+                    <label></label>
+                    <label style="h1" text="     BETWEEN  ${fd}  AND  ${ld}"></label>
+                </container>
+                <include-form name="freedGuarantorFormF" location="component://guarantormanagement/widget/GuarantorManagementForms.xml"/>
+            </widgets>
+        </section>
+  
+  </screen>
 
 </screens>

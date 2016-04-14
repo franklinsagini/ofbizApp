@@ -131,4 +131,51 @@ under the License.
         <remove-value value-field="lookedUpValue"/>
     </simple-method>
     
+    <!-- InsuranceClaimPayment -->
+    <simple-method method-name="createInsuranceClaimPayment" short-description="Create InsuranceClaimPayment">
+        <make-value entity-name="InsuranceClaimPayment" value-field="newEntity"/>
+        <set-pk-fields map="parameters" value-field="newEntity"/>
+        <set-nonpk-fields map="parameters" value-field="newEntity"/>
+        <set field="entityName" value="InsuranceClaimPayment"></set>
+        <set field="newEntity.insuranceClaimPaymentId" value="${bsh:org.ofbiz.party.party.SaccoUtility.getNextSequenc(entityName);}"></set>
+        <set field="newEntity.isActive" value="Y"/>
+	    <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
+        <create-value value-field="newEntity"/>
+    </simple-method>
+    
+     <simple-method method-name="updateInsuranceClaimPayment" short-description="Update InsuranceClaimPayment">
+        <entity-one entity-name="InsuranceClaimPayment" value-field="lookedUpValue"/>
+        <set-nonpk-fields value-field="lookedUpValue" map="parameters"/>
+        <store-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteInsuranceClaimPayment" short-description="Delete InsuranceClaimPayment">
+        <entity-one entity-name="InsuranceClaimPayment" value-field="lookedUpValue"/>
+        <remove-value value-field="lookedUpValue"/>
+    </simple-method>
+    
+    
+    <!--  payTheExpense -->	
+	<simple-method method-name="payTheExpense" short-description="Pay the Expense">
+         <set field="funeralExpensePaymentId" from-field="parameters.funeralExpensePaymentId" type="Long"/>
+        <set field="paymentStatus" value="${bsh:org.ofbiz.deathmanagement.DeathManagement.payFuneralExpense(userLogin, funeralExpensePaymentId);}"></set>
+        <!-- store-value value-field="lookedUpValue"/ -->
+        <log message="NNNNNNNNNNNNNNN Payment" level="info"/>
+    	<log message="${funeralExpensePaymentId}" level="info"/>
+		<if>
+			 <condition> 
+			 		<if-compare operator="equals" value="success" field="paymentStatus"></if-compare>
+            </condition> 
+            <then> 
+				<property-to-field resource="DeathManagementUiLabels.xml" 
+            	property="Successfully created payment" field="successMessage" />
+            </then>
+		<else>
+			<add-error> 
+                    <fail-message message="${paymentStatus}"/>
+                </add-error> 
+                <check-errors /> 		
+        </else>
+        </if>       
+    </simple-method>
 </simple-methods>

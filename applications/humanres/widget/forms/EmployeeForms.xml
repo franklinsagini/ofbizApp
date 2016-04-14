@@ -1446,10 +1446,10 @@
         </field>
         <!-- field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="buttontext"> <submit button-type="button"/></field -->
     </form>
-    
+ 
     <form name="NewSeparationApplication" type="single" target="createSeparationApplication"
        focus-field-name="name" header-row-style="header-row" default-table-style="basic-table" default-map-name="separationApplicationContext">
-       
+      
       <field name="separationApplicationId"><hidden/></field>
         <field name="partyId" title="Employee" tooltip="${uiLabelMap.CommonRequired}" widget-style="required" required-field="true">
         	<lookup target-form-name="LookupEmployee"/>
@@ -1468,12 +1468,56 @@
        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
        </form>
        
+       
+          
+    <form name="searchSeparationApplication" target="separationApplication" title="" type="single"
+        header-row-style="header-row" default-table-style="basic-table">
+      <!-- <auto-fields-entity entity-name="EmplLeave" default-field-type="find"/>  -->
+        <actions>
+        <entity-condition entity-name="SeparationApplication">
+        <order-by field-name="separationApplicationId DESC"/>
+        </entity-condition>
+        </actions>
+       
+        <field name="separationApplicationId" title="separationApplicationId"><hidden/></field>
+        <field name="partyId" title="Employee">
+        <drop-down allow-empty="true">
+        		<entity-options description="${firstName} ${lastName} (${employeeNumber})" entity-name="Person" key-field-name="partyId"></entity-options>
+        	</drop-down>
+        </field>
+        <field name="separationTypesId" title="Separation Type">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${separationName}" entity-name="SeparationTypes" key-field-name="separationTypesId"></entity-options>
+        	</drop-down>
+        </field>
+         <field name="effectiveDate" title="Effective Date"><date-find/></field>
+          <field name="notificationDate" title="Notification Date"><date-find/></field>
+          <field name="reason" title="Reason For Separation"><text-find></text-find></field>
+         
+        <field name="noConditionFind"><hidden value="Y"/>
+        <!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    
+       
+       
+       
        <form name="listSeparationAppliacation" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateSeparationApplication" paginate-target="separationApplication"
        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
        <actions>
            <entity-condition entity-name="SeparationApplication"><order-by field-name="separationApplicationId DESC"/>
            </entity-condition>
-       </actions>
+           
+            <service result-map-list="listIt" result-map="result" service-name="performFind">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="SeparationApplication"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+  
        <!-- auto-fields-service default-field-type="hidden" service-name="updateSeparationApplication"/ -->
        
        <field name="separationApplicationId"><hidden/></field>
@@ -1912,7 +1956,18 @@
      <field name="submitButton" title="SMS Sending(Test)" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     
-    
+    <form name="statutoryForm" type="single" target="runStatutoryForm" default-map-name="Person">
+        
+         <field name="statutoryType" >
+            <drop-down allow-empty="true">
+                <option key="pinNo" description="PIN No"/>
+                <option key="nssf" description="NSSF"/>
+                <option key="nhif" description="NHIF"/>
+               
+            </drop-down>
+        </field>
+        <field name="submitButton" title="RUN" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form> 
     
     
 </forms>

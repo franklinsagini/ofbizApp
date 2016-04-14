@@ -58,6 +58,45 @@
 		</section>
 	</screen>
 	
+	<!-- deathNotificationsForExpense -->
+	
+	    <screen name="deathNotificationsForExpense">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Death Notification For Expense Payment" />
+				<set field="tabButtonItem" value="deathNotificationsForExpense" />
+				<set field="headerItem" value="deathNotificationsForExpense"/>
+				<set field="labelTitleProperty" value="Death Notifications for Expense" />
+				<set field="cancelPage" from-field="parameters.CANCEL_PAGE"
+					default-value="DeathNotification" />
+					
+				<set field="partyId" from-field="parameters.partyId" type="Long"/>
+				<entity-one value-field="member" entity-name="Member">
+					<field-map field-name="partyId" from-field="partyId"/>
+				</entity-one>
+				<set field="stationId" from-field="member.stationId" global="true"/>
+
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						
+						<section name="search-results">
+							<widgets>
+								<screenlet title="Death Notification List (For Expense Payment)">
+									<include-form name="listDeathNotificationForExpense"
+										location="component://deathmanagement/widget/DeathManagementForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
 	<!-- deathInsuranceClaim -->
 	   <screen name="deathInsuranceClaim">
 		<section>
@@ -101,6 +140,84 @@
 			</widgets>
 		</section>
 	</screen>
+	
+	<!-- receiveClaimPayment -->
+		   <screen name="receiveClaimPayment">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Receive Claim Payment" />
+				<set field="tabButtonItem" value="receiveClaimPayment" />
+				<set field="headerItem" value="receiveClaimPayment"/>
+				<set field="labelTitleProperty" value="Receive Insurance Claim" />
+				<set field="cancelPage" from-field="parameters.CANCEL_PAGE"
+					default-value="InsuranceClaimPayment" />
+				<set field="createUserLoginURI" value="ProfileCreateUserLogin" />
+
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<widgets>
+								<!-- screenlet>
+									<label style="h3">${member.firstName} ${member.middleName} ${member.lastName}
+								</label>
+								</screenlet -->
+								<screenlet title="Insurance Claim Payment">
+									<include-form name="NewInsuranceClaimPayment"
+										location="component://deathmanagement/widget/DeathManagementForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+						<section name="search-results">
+							<widgets>
+								<screenlet title="Insurance Claim Payment List">
+									<include-form name="listInsuranceClaimPayment"
+										location="component://deathmanagement/widget/DeathManagementForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
+	<!-- insuranceClaims -->
+	<screen name="insuranceClaims">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Insurance Claims" />
+				<set field="tabButtonItem" value="insuranceClaims" />
+				<set field="headerItem" value="insuranceClaims"/>
+				<set field="labelTitleProperty" value="Insurance Claim" />
+				<set field="cancelPage" from-field="parameters.CANCEL_PAGE"
+					default-value="DeathNotification" />
+				<set field="createUserLoginURI" value="ProfileCreateUserLogin" />
+
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						
+						<section name="search-results">
+							<widgets>
+								<screenlet title="Insurance Claims List">
+									<include-form name="listDeathInsuranceClaimListing"
+										location="component://deathmanagement/widget/DeathManagementForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+	
 	
 	<!-- Funeral Expense Payment -->
 		   <screen name="funeralExpensePayment">
@@ -192,5 +309,44 @@
             </widgets>
         </section>
     </screen>
+    
+    <!-- deathInsuranceClaimListing -->
+    <screen name="deathInsuranceClaimListing">
+		<section>
+			<actions>
+				<set field="titleProperty" value="Death Notification For Claims" />
+				<set field="tabButtonItem" value="deathInsuranceClaimListing" />
+				<set field="headerItem" value="deathInsuranceClaimListing"/>
+				<set field="labelTitleProperty" value="Death Notifications for Claims" />
+				<set field="cancelPage" from-field="parameters.CANCEL_PAGE"
+					default-value="DeathNotification" />
+					
+				<set field="partyId" from-field="parameters.partyId" type="Long"/>
+				<entity-one value-field="member" entity-name="Member">
+					<field-map field-name="partyId" from-field="partyId"/>
+				</entity-one>
+				<set field="stationId" from-field="member.stationId" global="true"/>
+
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						
+						<section name="search-results">
+							<widgets>
+								<screenlet title="Death Notification List (For Expense Payment)">
+									<include-form name="listDeathNotificationForExpense"
+										location="component://deathmanagement/widget/DeathManagementForms.xml" />
+								</screenlet>
+							</widgets>
+						</section>
+
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
+    
 
 </screens>

@@ -30,6 +30,7 @@ under the License.
             <now-timestamp field="nowTimestamp"/>
             <set field="partyContent.fromDate" from-field="nowTimestamp"/>
         </if-empty>
+        <set field="partyContent.isPrivate" value="Y"/>
 
         <create-value value-field="partyContent"/>
     </simple-method>
@@ -41,6 +42,16 @@ under the License.
         <find-by-primary-key map="lookupPkMap" value-field="partyContent"/>
         <set-nonpk-fields value-field="partyContent" map="parameters"/>
         <store-value value-field="partyContent"/>
+    </simple-method>
+    
+     <simple-method method-name="makePublicPartyContent" short-description="Make  Content To Be Public Entity">
+       <entity-one value-field="lookupPkMap" entity-name="PartyContent"></entity-one>
+        <set-pk-fields value-field="lookupPkMap" map="parameters"/>
+        <set-nonpk-fields value-field="lookupPkMap" map="parameters"/>
+        <set field="lookupPkMap.isPrivate" value="N"/>
+        <log message="------------PARTY------------${lookupPkMap.partyId}" level="info"/>
+        <store-value value-field="lookupPkMap"/>
+        <property-to-field resource="HumanResUiLabels" property="Made Public" field="successMessage"/>
     </simple-method>
 
     <simple-method method-name="removePartyContent" short-description="Update Party Content Entity">

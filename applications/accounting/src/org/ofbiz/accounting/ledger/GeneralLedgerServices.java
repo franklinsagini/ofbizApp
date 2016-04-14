@@ -860,4 +860,24 @@ public class GeneralLedgerServices {
 
 		return sb.toString();
 	}
+	
+//	Given a Between Dates and GL Account Id get transactions for that account
+	
+	public static List<GenericValue>getTransactionsForGLByPeriod(Delegator delegator, String glAccountId, Timestamp startDate, Timestamp endDate){
+		List<GenericValue>transactions = null;
+		
+		EntityConditionList<EntityExpr> transactionConditions = EntityCondition.makeCondition(UtilMisc.toList(
+				EntityCondition.makeCondition("createdStamp", EntityOperator.GREATER_THAN_EQUAL_TO, startDate),
+				EntityCondition.makeCondition("createdStamp", EntityOperator.LESS_THAN_EQUAL_TO, endDate),
+				EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, glAccountId)
+				), EntityOperator.AND);
+		try {
+			transactions = delegator.findList("AcctgTransEntry", transactionConditions, null, UtilMisc.toList("-createdStamp"), null, false);
+		} catch (GenericEntityException e) {
+			e.printStackTrace();
+		}
+		
+		return transactions;
+	}
+	
 }

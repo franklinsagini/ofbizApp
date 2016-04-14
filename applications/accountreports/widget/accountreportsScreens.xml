@@ -2,43 +2,6 @@
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-
-<!--     <screen name="branchReports">
-        <section>
-            <actions>
-                <set field="titleProperty" value="Branch Reports"/>
-                <set field="headerItem" value="branchReports"/>
-            </actions>
-            <widgets>
-                <section>
-                    <widgets>
-                        <screenlet>
-                            <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                            <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <container style="lefthalf">
-                                    <screenlet title="Active Members">
-                                        <include-form name="activeMembers" location="component://accountreports/widget/accountreportsForms.xml"/>
-                                    </screenlet>
-                                </container>
-                                 <container style="righthalf">                          
-                                    <screenlet title="Total Loan Book">
-                                        <include-form name="TotalLoanBook" location="component://accountreports/widget/accountreportsForms.xml"/>
-                                    </screenlet>
-                                </container>
-                            </widgets>
-                        </section>
-                        </decorator-section>
-                        </decorator-screen>
-                    </screenlet>
-                    </widgets>
-                </section>
-            </widgets>
-        </section>
-    </screen>
- -->
-
     <!-- accountContribution -->
     <screen name="branchReports">
         <section>
@@ -55,22 +18,40 @@
                             </screenlet>
                         </container>
                         <container>
-                            <screenlet title="Loan Loss Report">
-                                <include-form name="LoanLossReport" location="component://accountreports/widget/accountreportsForms.xml"/>
+                            <screenlet title="Withdrawable Deposits">
+                                <include-form name="WithdrawableDeposit" location="component://accountreports/widget/accountreportsForms.xml"/>
                             </screenlet>
                         </container>
+                        <container>
+                            <screenlet title="Share Capital">
+                                <include-form name="ShareCapital" location="component://accountreports/widget/accountreportsForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
+                        <container>
+                            <screenlet title="Member Deposit">
+                                <include-form name="MemberDeposit" location="component://accountreports/widget/accountreportsForms.xml"/>
+                            </screenlet>
+                        </container>
+                        <container style="clear"/>
                         <container>
                             <screenlet title="Total Loan Book">
                                 <include-form name="TotalLoanBook" location="component://accountreports/widget/accountreportsForms.xml"/>
                             </screenlet>
                         </container>
                         <container style="clear"/>
-<!--                         <container>
+                       <container>
+                            <screenlet title="Loan Loss Report">
+                                <include-form name="LoanLossReport" location="component://accountreports/widget/accountreportsForms.xml"/>
+                            </screenlet>
+                        </container>
+<!--                       <container style="clear"/>
+                         <container>
                             <screenlet title="Active Loans">
                                 <include-form name="ActiveLoans" location="component://accountreports/widget/accountreportsForms.xml"/>
                             </screenlet>
-                        </container>
-                        <container style="clear"/>
+                        </container> -->
+<!--                         <container style="clear"/>
                         <container>
                             <screenlet title="Deliquent Loans">
                                 <include-form name="DeliquentLoans" location="component://accountreports/widget/accountreportsForms.xml"/>
@@ -91,13 +72,14 @@
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
                 <set field="startDate" from-field="parameters.startDate" type="Timestamp"/>
-                <script location="component://accountreports/webapp/accountreports/WEB-INF/actions/reports/branchMembers.groovy"/>
+                <set field="endDate" from-field="parameters.endDate" type="Timestamp"/>
+                <script location="component://accountreports/webapp/accountreports/WEB-INF/actions/reports/branchMembersAsAt.groovy"/>
             </actions>
             <widgets>
                 <label style="h3" text="INDIVIDUAL BRANCH MEMBERSHIP STATUS TOTAL "/>
                 <include-form name="branchesMembersData" location="component://accountreports/widget/accountreportsForms.xml"/>
-                <label style="h3" text="ALL BRANCHES TOTALS"/>
-                <include-form name="branchesTotals" location="component://accountreports/widget/accountreportsForms.xml"/>
+<!--                 <label style="h3" text="ALL BRANCHES TOTALS"/>
+                <include-form name="branchesTotals" location="component://accountreports/widget/accountreportsForms.xml"/> -->
             </widgets>
         </section>
     </screen>
@@ -135,6 +117,59 @@
             </widgets>
         </section>
     </screen>
+
+    <screen name="branchShareCapital">
+        <section>
+            <actions>
+                <set field="viewSize" value="99999"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                <set field="startDate" from-field="parameters.startDate" type="Timestamp"/>
+                <set field="endDate" from-field="parameters.startDate" type="Timestamp"/>
+                <script location="component://accountreports/webapp/accountreports/WEB-INF/actions/reports/branchShareCapital.groovy"/>
+            </actions>
+            <widgets>
+                <label style="h3" text="BRANCH SHARE CAPITAL FROM ${startDate} TO ${endDate}"/>
+                <include-form name="branchShareCapitalCSV" location="component://accountreports/widget/accountreportsForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="branchMemberDeposit">
+        <section>
+            <actions>
+                <set field="viewSize" value="99999"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                <set field="startDate" from-field="parameters.startDate" type="Timestamp"/>
+                <set field="endDate" from-field="parameters.startDate" type="Timestamp"/>
+                <script location="component://accountreports/webapp/accountreports/WEB-INF/actions/reports/branchMemberDeposit.groovy"/>
+            </actions>
+            <widgets>
+                <label style="h3" text="BRANCH MEMBER DEPOSIT FROM ${startDate} TO ${endDate}"/>
+                <include-form name="branchMemberDepositCSV" location="component://accountreports/widget/accountreportsForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+
+    <screen name="branchWithdrawableDeposit">
+        <section>
+            <actions>
+                <set field="viewSize" value="99999"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId"/>
+                <set field="startDate" from-field="parameters.startDate" type="Timestamp"/>
+                <set field="endDate" from-field="parameters.startDate" type="Timestamp"/>
+                <script location="component://accountreports/webapp/accountreports/WEB-INF/actions/reports/branchWithdrawableDeposit.groovy"/>
+            </actions>
+            <widgets>
+                <label style="h3" text="BRANCH WITHDRAWABLW DEPOSIT FROM ${startDate} TO ${endDate}"/>
+                <include-form name="branchWithdrawableDepositCSV" location="component://accountreports/widget/accountreportsForms.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
 
     <screen name="branchActiveLoans">
         <section>
@@ -415,7 +450,7 @@
             </widgets>
         </section>
     </screen>
-    
+
     <!-- As AT -->
 	<screen name="memberAccountListDownloadAsAt">
 		<section>
@@ -439,7 +474,7 @@
 			</widgets>
 		</section>
 	</screen>
-	
+
 	<!-- memberAccountListDownloadAsAtexcel -->
 	<screen name="memberAccountListDownloadAsAtexcel">
         <section>
@@ -468,7 +503,7 @@
             </widgets>
         </section>
     </screen>
-	
+
 	<!-- accountContribution -->
 	    <screen name="accountContribution">
         <section>
@@ -497,7 +532,7 @@
             </widgets>
         </section>
     </screen>
-    
+
        <screen name="accountContributionExcel">
         <section>
            <actions>
@@ -510,11 +545,11 @@
             </widgets>
         </section>
     </screen>
-    
 
 
-    
-    <!-- 
+
+
+    <!--
     memberTransactionsReport
 memberTransactionsReportExcel
      -->
@@ -545,7 +580,7 @@ memberTransactionsReportExcel
             </widgets>
         </section>
     </screen>
-    
+
        <screen name="memberTransactionsReportExcel">
         <section>
            <actions>
@@ -558,7 +593,7 @@ memberTransactionsReportExcel
            		<container>
 					<label style="h3">Transactions From ${dateStartDate} to ${dateEndDate}</label>
 				</container>
-				
+
            		<container>
 					<label style="h3">Credits</label>
 				</container>
@@ -570,9 +605,9 @@ memberTransactionsReportExcel
             </widgets>
         </section>
     </screen>
-    
+
     <!-- accountContributionExpected -->
-    
+
         	    <screen name="accountContributionExpected">
         <section>
             <actions>
@@ -600,10 +635,10 @@ memberTransactionsReportExcel
             </widgets>
         </section>
     </screen>
-    
+
     <!-- accountContributionExpectedExcel -->
 
-    
+
        <screen name="accountContributionExpectedExcel">
         <section>
            <actions>
@@ -616,8 +651,8 @@ memberTransactionsReportExcel
             </widgets>
         </section>
     </screen>
-    
-    
+
+
     <screen name="accountTransactionReport">
 		<section>
 			<actions>
@@ -641,7 +676,7 @@ memberTransactionsReportExcel
 			</widgets>
 		</section>
 	</screen>
-    
-    
-    
+
+
+
 </screens>

@@ -36,13 +36,34 @@
     <response name="success" type="view" value="nomineeReportPDF" save-home-view="true" />
   </request-map>
   
+   <request-map uri="runNomineeReportExcel">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="runNomineeReportExcel" save-home-view="true" />
+  </request-map>
+  
   <request-map uri="LookupActiveMember"><security https="true" auth="true"/><response name="success" type="view" value="LookupActiveMember"/></request-map>
+  <!--  -->
+  
+   <request-map uri="nomineeReportExcel">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="nomineeReportExcel" save-home-view="true" />
+  </request-map> 
+  
+  <request-map uri="nomineeReportExcel.csv">
+    <security https="true" auth="true" />
+    <response name="success" type="view" value="runNomineeReportExcel" save-home-view="true" />
+  </request-map>
+  
+  
     
     <!-- View Mappings -->
+     <view-map name="nomineeReportExcel" type="screen" page="component://nomineemanagement/widget/NomineeManagementScreens.xml#nomineeReportExcel"/>
+    
     <view-map name="main" type="screen" page="component://nomineemanagement/widget/NomineeManagementScreens.xml#main"/>
     
     <view-map name="LookupActiveMember" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupActiveMember"/>
     <view-map name="nomineeReport" type="screen" page="component://nomineemanagement/widget/NomineeManagementScreens.xml#nomineeReport"/>
     <view-map name="nomineeReportPDF" type="screenfop" page="component://nomineemanagement/widget/NomineeManagementScreens.xml#nomineeReportPDF" content-type="application/pdf" encoding="none"/>
+     <view-map name="runNomineeReportExcel" type="screencsv" page="component://nomineemanagement/widget/NomineeManagementScreens.xml#runNomineeReportExcel" content-type="text/csv" encoding="none"/>
     
 </site-conf>

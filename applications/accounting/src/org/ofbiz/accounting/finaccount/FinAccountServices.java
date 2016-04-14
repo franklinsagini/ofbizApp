@@ -287,6 +287,27 @@ public class FinAccountServices {
 		return ServiceUtil.returnSuccess("RECONCILIATION DELETED SUCCESSFULLY");
 	}
 
+
+	public static Map<String, Object> deleteLimitTransaction(DispatchContext dctx, Map<String, Object> context) {
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
+		String tellerLimitApprovalsId = (String) context.get("tellerLimitApprovalsId");
+
+		GenericValue tellerLimitApprovals = null;
+
+		try {
+			tellerLimitApprovals = delegator.findOne("TellerLimitApprovals", UtilMisc.toMap("tellerLimitApprovalsId", tellerLimitApprovalsId), false);
+			tellerLimitApprovals.remove();
+		} catch (GenericEntityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
+		return ServiceUtil.returnSuccess("TRANSACTION DELETED SUCCESSFULLY");
+	}
+
 	public static Map<String, Object> createReconHeader(DispatchContext dctx, Map<String, Object> context) {
 		Delegator delegator = dctx.getDelegator();
 		LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -388,7 +409,7 @@ public class FinAccountServices {
 				e1.printStackTrace();
 			}
 			Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
-			
+
 			System.out.println("######################### FIN ACCOUNT ID: "+ finAccountId);
 			GenericValue reconLines = delegator.makeValue("BankReconLines");
 			String reconLinesId = delegator.getNextSeqId("BankReconLines");
@@ -407,15 +428,15 @@ public class FinAccountServices {
 
 			// save to BankReconLines
 			reconLines.put("reconLineId", reconLinesId);
-			
-			
+
+
 		try {
 			reconLines.create();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-			
-			
+
+
 		}
 
 		transactions = getTransactionsForHeader(reconDate, finAccountId, delegator);
@@ -1057,7 +1078,7 @@ public class FinAccountServices {
 					    finAccountTrans.set("statusId", "FINACT_TRNS_APPROVED");
 					    finAccountTrans.store();
 					}
-					
+
 				}
 			}
 

@@ -22,19 +22,25 @@ under the License.
     <#-- REPORT TITLE -->
     <#-- fo:block font-size="18pt" font-weight="bold" text-align="center">
         CHAI SACCO
-    </fo:block -->
+    </fo:block>
     <fo:block font-size="12pt" text-align="center" text-decoration="underline" font-weight="bold" >
         ${title}
     </fo:block>
     <fo:block font-size="12pt" text-align="center" text-decoration="underline" font-weight="bold" >
        P.O BOX 278 - 00200 NAIROBI TEL: 020 - 214406/10
-    </fo:block>
+    </fo:block -->
     
     <fo:block><fo:leader/></fo:block>
+     <fo:block><fo:leader/></fo:block>
+      <fo:block><fo:leader/></fo:block>
     
- <fo:block font-size="12pt" text-align="center" text-decoration="underline" font-weight="bold" >
+ <fo:block font-size="12pt" text-align="center"  font-weight="bold" >
       LOAN CLEARANCE BY CASH
     </fo:block>
+     <fo:block border="thin solid black"> </fo:block>
+         <fo:block font-size="9pt" text-align="left">
+                <fo:leader/>       
+        </fo:block>
 
     <fo:block font-size="12pt" text-align="center" font-weight="bold" space-after="0.04in" text-decoration="underline" color="#FFFFFF">
      <#--  Branch : ${branch.groupName?if_exists} -->
@@ -387,7 +393,7 @@ under the License.
      
      <#assign depositBalance= Static["org.ofbiz.loanclearing.LoanClearingServices"].getMemberDepositsAccountBalance(memberId) />
      
-     	SHARES   ------------Kshs. ${depositBalance?string(",##0.0000")}--------------     AS AT ---------------${currentDate}------------
+     	MEMBER DEPOSITS -------- Kshs. ${depositBalance?string(",##0.0000")}  ----   AS AT  -----${currentDate} -----------
     </fo:block>
     
     
@@ -465,22 +471,39 @@ under the License.
                     
                     </fo:table>
        </fo:block>
+       
+  
+  
+   <fo:block font-size="12pt"  text-align="left" margin-left="0%" margin-bottom="0.2in" font-weight="bold">
+      PART 2 ASSISTANT LOANS OFFICER/ LOANS OFFICER   
+    </fo:block>
+    <fo:block font-size="9pt" text-align="left" margin-left="0%"  margin-bottom="0.2in">
+     	Authorized to clear the outstanding loan(s) as requested , the member will qualify for Kshs. 
+    </fo:block>
+    <fo:block font-size="9pt" text-align="left" margin-left="0%"  margin-bottom="0.2in">
+     	------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+    </fo:block>
     
-     <fo:block font-size="16pt"  text-align="left" margin-left="0%" margin-bottom="0.2in" font-weight="bold">
-      PART 3  ASSISTANT CREDIT CONTROL OFFICER
+    <fo:block font-size="9pt" text-align="left" margin-left="0%" margin-bottom="0.2in">
+		Signature -------------------------------------------- Date -------------------------------------------------------------------------------------------------------    
     </fo:block>
-    <fo:block font-size="12pt" text-align="left" margin-left="0%"  margin-bottom="0.2in">
-     	Authorized to clear the outstanding loan(s) as requested , the member will qualify for Kshs. ------------------------------------------
+       
+       
+     <fo:block font-size="12pt"  text-align="left" margin-left="0%" margin-bottom="0.2in" font-weight="bold">
+      PART 3  BRANCH MANAGER / CREDIT MANAGER
     </fo:block>
-    <fo:block font-size="12pt" text-align="left" margin-left="0%"  margin-bottom="0.2in">
+    <fo:block font-size="9pt" text-align="left" margin-left="0%"  margin-bottom="0.2in">
+     	Authorized to clear the outstanding loan(s) as requested , the member will qualify for Kshs. ------------------------------------------------
+    </fo:block>
+    <fo:block font-size="9pt" text-align="left" margin-left="0%"  margin-bottom="0.2in">
      	Main/School Fees/ Emergency / Product Loan Payable in  ------------------------------------------ Months
     </fo:block>
     
-    <fo:block font-size="12pt" text-align="left" margin-left="0%" margin-bottom="0.2in">
-		Signature -------------------------------------------- Date -------------------------------------     
+    <fo:block font-size="9pt" text-align="left" margin-left="0%" margin-bottom="0.2in">
+		Signature -------------------------------------------- Date -------------------------------------------------------------------------------------------------------    
     </fo:block>
     
-    <fo:block font-size="16pt"  text-align="left" margin-left="0%" margin-bottom="0.2in" font-weight="bold">
+    <#-- fo:block font-size="16pt"  text-align="left" margin-left="0%" margin-bottom="0.2in" font-weight="bold">
       PART 4  LOANS MANAGER
     </fo:block>
     
@@ -501,7 +524,7 @@ under the License.
     </fo:block>
         <fo:block font-size="12pt" text-align="left" margin-left="0%" margin-bottom="0.2in">
 		To Clear Kshs.  -------------------------------------------- is Here by granted/Rejected     
-    </fo:block>
+    </fo:block -->
     
     By  CASH    ---------------------- MEDICARE  --------------------------OTHERS
     </#if>

@@ -48,7 +48,22 @@
 		<security https="true" auth="true" />
 		<response name="success" type="view" value="LookupActiveMember" />
 	</request-map>
+	
+	<request-map uri="freedGuarantors">
+	 <security auth="true" https="true"/>
+	 <response name="success" type="view" value="freedGuarantors"></response>
+	 <response name="error" type="view" value="freedGuarantors"></response>
+	</request-map>
+	
+	<request-map uri="freedGuarantorForm.csv">
+	  <security auth="true" https="true"/>
+	  <response name="success" type="view" value="freedGuarantorForm"></response>
+	</request-map>
+	
     <!-- View Mappings -->
+    <view-map name="freedGuarantorForm" type="screencsv" page="component://guarantormanagement/widget/GuarantorManagementScreens.xml#freedGuarantorFormScreen" content-type="text/csv" encoding="none"></view-map>
+    
+     <view-map name="freedGuarantors" type="screen" page="component://guarantormanagement/widget/GuarantorManagementScreens.xml#freedGuarantors"/>
     <view-map name="main" type="screen" page="component://guarantormanagement/widget/GuarantorManagementScreens.xml#main"/>
     <view-map name="forwardedLoanApplications" type="screen"
 		page="component://guarantormanagement/widget/GuarantorManagementScreens.xml#forwardedLoanApplications" />

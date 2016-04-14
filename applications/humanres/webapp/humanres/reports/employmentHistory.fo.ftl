@@ -28,12 +28,14 @@ under the License.
     </fo:block>
     <fo:block><fo:leader/></fo:block>
     <#-- Employee Details -->
-    <fo:block font-size="10pt" text-align="left" font-weight="bold">
+    <fo:block font-size="12pt" text-align="left" font-weight="bold">
         Payroll Number: ${employee.employeeNumber}
     </fo:block>
-    <fo:block font-size="10pt" text-align="left" font-weight="bold">
+    <fo:block font-size="12pt" text-align="left" font-weight="bold">
         Employee Name: ${employee.firstName} ${employee.lastName}
     </fo:block>
+    
+     <fo:block><fo:leader/></fo:block>
 <#if history?has_content>
     <#-- REPORT BODY -->
     <fo:block space-after.optimum="10pt" font-size="10pt">
@@ -59,7 +61,7 @@ under the License.
                         <fo:block>Start Date</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
-                        <fo:block>End Date</fo:block>
+                        <fo:block>Through Date</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block>Separation Reason</fo:block>
