@@ -1480,6 +1480,10 @@ public class OnlineRemittanceProcessingServices {
 				GenericValue member = null;
 				member = LoanUtilities.getMemberGivenEmployeeNumber(
 						employeeNumber, onlineCode);
+				
+				if (member == null) {
+					return "COULD NOT FIND MEMBER WITH EMPLOYEE NUMBER: "+employeeNumber;
+				}
 
 				// if member is null, then there are missing members, please fix
 				// them first

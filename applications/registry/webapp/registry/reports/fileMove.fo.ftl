@@ -63,13 +63,15 @@ under the License.
 	
     <fo:block space-after.optimum="10pt" font-size="10pt">
         <fo:table table-layout="fixed" width="100%">
-            <fo:table-column column-width="70pt"/>
-            <fo:table-column column-width="70pt"/>
-            <fo:table-column column-width="70pt"/>
-            <fo:table-column column-width="70pt"/>
-            <fo:table-column column-width="70pt"/>
-            <fo:table-column column-width="80pt"/>
-            <fo:table-column column-width="150pt"/>
+            <fo:table-column column-width="50pt"/>
+            <fo:table-column column-width="50pt"/>
+            <fo:table-column column-width="50pt"/>
+            <fo:table-column column-width="55pt"/>
+            <fo:table-column column-width="50pt"/>
+            <fo:table-column column-width="65pt"/>
+            <fo:table-column column-width="85pt"/>
+            <fo:table-column column-width="65pt"/>
+            <fo:table-column column-width="100pt"/>
             <fo:table-header>
                 <fo:table-row font-weight="bold">
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
@@ -77,6 +79,12 @@ under the License.
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="left">Released To</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block text-align="left">Requested By</fo:block>
+                    </fo:table-cell>
+                    <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
+                        <fo:block text-align="left">File Location</fo:block>
                     </fo:table-cell>
                     <fo:table-cell padding="2pt" background-color="#D4D0C8" border="1pt solid" border-width=".1mm">
                         <fo:block text-align="left">Carried By</fo:block>
@@ -150,6 +158,26 @@ under the License.
                            <fo:block>REGISTRY</fo:block>
                           <#else>
                            <fo:block>${releasedTo.firstName?if_exists} ${releasedTo.lastName?if_exists}</fo:block>
+                            
+                            </#if>
+                        </fo:table-cell> 
+                        
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+						
+                            <#if movement.releasedTo?if_exists == "REGISTRY">
+                           <fo:block>REGISTRY</fo:block>
+                          <#else>
+                           <fo:block>${releasedTo.firstName?if_exists} ${releasedTo.lastName?if_exists}</fo:block>
+                            
+                            </#if>
+                        </fo:table-cell>
+                        
+                        <fo:table-cell padding="2pt" border="1pt solid" border-width=".1mm">
+						
+                            <#if movement.fileLocation?if_exists == "REGISTRY">
+                           <fo:block>REGISTRY</fo:block>
+                          <#else>
+                           <fo:block>${whoHasFile.fileLocation?if_exists}</fo:block>
                             
                             </#if>
                         </fo:table-cell> 

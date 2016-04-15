@@ -11,6 +11,11 @@ partyId = parameters.partyId
 
 lpartyId = partyId.toLong();
 
+whoHasFile = delegator.findOne("RegistryFiles", [partyId : partyId], false);
+context.whoHasFile = whoHasFile;
+println "---------------"+whoHasFile.fileLocation;
+
+
 
 def movementActivityList = []
 member = delegator.findOne("Member", [partyId : lpartyId], false);
@@ -60,9 +65,12 @@ duration = delegator.findByAnd("RegistryFileActivity", [activityId : movementIte
  
  }
  
+  
+ 
  def movement
 activities.eachWithIndex { movementItem, indexMovement ->
 
+	
 	
 	 movement = new FileMovement()
 	 movement.receivedBy = movementItem.receivedBy
@@ -76,8 +84,6 @@ activities.eachWithIndex { movementItem, indexMovement ->
 	 movement.timeStayedWithFile = org.ofbiz.registry.FileServices.calculatehoursBetweenDates(movementItem.timeOut)
 	 activity.listMovements.add(movement)
 	 System.out.println("RELEASEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD TO " + movement.releasedTo)
-
-
 	 
  }
  
