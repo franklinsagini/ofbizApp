@@ -397,8 +397,10 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
 		 <field name="isManagement" title="Select Type of Staff" tooltip="(Leave Blank if viewing ALL Staff)">
             <drop-down allow-empty="true">
+                <option key="SeniorManagement" description="Senior Management"/>
                 <option key="Management" description="Management"/>
-                <option key="Normal" description="Normal Staff"/>
+                <option key="supervisory" description="Supervisory Staff"/>
+                <option key="Normal" description="Functional Staff"/>
             </drop-down>
         </field>
         <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
@@ -920,6 +922,22 @@ under the License.
         </field>
     </form>  
      
+    <form name="staffListEmploymentTermsCSV" type="single" target="employmentTermsCSV.csv" title=""
+        header-row-style="header-row" default-table-style="basic-table">
+		 <field name="employmentTerms" title="Terms Of Employment" tooltip="Select employment Type" required-field="true">
+            <drop-down allow-empty="true">
+                <option key="permanent" description="Permanent"/>
+                <option key="intern" description="Intern"/>
+                <option key="contract" description="Contract"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
+            <submit button-type="button"/>
+            
+        </field>
+    </form>  
+       
+     
  <form name="staffBranch" type="single" target="staffBranch"
         odd-row-style="header-row" default-table-style="basic-table">
         <actions>
@@ -1129,7 +1147,7 @@ under the License.
  </form>     
 
     
- <form name="staffAgeAndGenderCSV" type="single" target="staffAgeAndGenderCSV" title=""
+ <form name="staffAgeAndGenderCSV" type="single" target="staffAgeAndGenderCSV.csv" title=""
         header-row-style="header-row" default-table-style="basic-table">
         <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
             <submit button-type="button"/>
@@ -1154,12 +1172,51 @@ under the License.
  </form>     
 
     
- <form name="dateOfEmploymentCSV" type="single" target="dateOfEmploymentCSV" title=""
+ <form name="dateOfEmploymentCSV" type="single" target="dateOfEmploymentCSV.csv" title=""
         header-row-style="header-row" default-table-style="basic-table">
         <field name="submitButton" title="${uiLabelMap.CommonRun}"  widget-style="smallSubmit">
             <submit button-type="button"/>
             
         </field>
- </form>            
+ </form> 
+ 
+  <form name="staffAgeAndGenderExport" list-name="employee_listing" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="employeeNumber" title="Payroll Number"><display/></field>
+        <field name="name" title="Name"><display/></field>
+        <field name="birthDate" title="Birth Date"><display/></field>
+        <field name="gender" title="Staff Gender"><display/></field>
+		<field name="yearOfBirth" title="Years Of Birth"><display/></field>
+		<field name="presentYears" title="Present Years"><display/></field>
+		<field name="ageInFiveYears" title="Age in 5 Years"><display/></field>
+        <field name="ageInTenYears" title="Age In Ten Years"><display/></field>
+        
+    </form>  
+    
+    <form name="dateOfEmploymentExport" list-name="employee_listing" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="employeeNumber" title="Payroll Number"><display/></field>
+        <field name="name" title="Employee Name"><display/></field>
+        <field name="dateOfApp" title="Date Of Employement"><display/></field>
+        <field name="yearsWorked" title="Years Worked"><display/></field>
+    </form>          
+    
+    <form name="employmentTermsCSV" list-name="stafflist" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+        <field name="payrollNo" title="Payroll Number"><display/></field>
+        <field name="fname" title="First Name"><display/></field>
+        <!-- <field name="lname" title="Last Name"><display/></field> -->
+        <field name="IdNo" title="ID Number"><display/></field>
+        <field name="gender" title="Staff Gender"><display/></field>
+		<field name="pin" title="Pin Number"><display/></field>
+		<field name="nhif" title="NHIF Number"><display/></field>
+		<field name="nssf" title="NSSF Number"><display/></field>
+        <field name="appointmentDate" title="Employment Date"><display/></field>
+		<field name="isManagement" title="Type Of Staff"><display/></field>
+        
+    </form>  
         
 </forms>
