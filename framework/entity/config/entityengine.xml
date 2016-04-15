@@ -710,54 +710,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
      b. If using an old version of the driver, beware of this resource leak:
       http://support.microsoft.com/kb/820773/
     -->
-        <datasource name="localmssql"
-            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
-            schema-name="dbo"
-            field-type-name="mssql"
-            check-on-start="true"
-            add-missing-on-start="true"
-            join-style="ansi"
-            alias-view-columns="false"
-            use-fk-initially-deferred="false">
-        <read-data reader-name="tenant"/>
-        <read-data reader-name="seed"/>
-        <read-data reader-name="seed-initial"/>
-        <read-data reader-name="demo"/>
-        <read-data reader-name="ext"/>
-        <read-data reader-name="ext-test"/>
-        <read-data reader-name="ext-demo"/>
-             <!-- <inline-jdbc
-                jdbc-driver="com.microsoft.sqlserver.jdbc.SQLServerDriver"
-                jdbc-uri="jdbc:sqlserver://localhost:1433;databaseName=vergesacco;SelectMethod=cursor;"
-                jdbc-username="vergeuser"
-                jdbc-password="(frank)1343"
-                isolation-level="ReadCommitted"
-                pool-minsize="2"
-                pool-maxsize="250"
-                time-between-eviction-runs-millis="600000"/>  -->
-                <inline-jdbc
-                jdbc-driver="com.microsoft.sqlserver.jdbc.SQLServerDriver"
-                jdbc-uri="jdbc:sqlserver://127.0.0.1\ROOT;databaseName=vergesacco;SelectMethod=cursor;"
-                jdbc-username="root"
-                jdbc-password="5002"
-                isolation-level="ReadCommitted"
-                pool-minsize="2"
-                pool-maxsize="250"
-                time-between-eviction-runs-millis="600000"/>    
-               <!--  <inline-jdbc
-                jdbc-driver="com.microsoft.sqlserver.jdbc.SQLServerDriver"
-                jdbc-uri="jdbc:sqlserver://192.168.1.210;databaseName=vergesacco;SelectMethod=cursor;"
-                jdbc-username="sa"
-                jdbc-password="TeamAlpha12!"
-                isolation-level="ReadCommitted"
-                pool-minsize="2"
-                pool-maxsize="250"
-                time-between-eviction-runs-millis="600000"/> -->
-    </datasource>
-
-    
-    <!-- localmssqlonline -->
-    	<datasource name="localmssqlonlinestations"
+<datasource name="localmssql"
             helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
             schema-name="dbo"
             field-type-name="mssql"
@@ -775,7 +728,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
         <read-data reader-name="ext-demo"/>
         <inline-jdbc
                 jdbc-driver="com.microsoft.sqlserver.jdbc.SQLServerDriver"
-                jdbc-uri="jdbc:sqlserver://localhost:1433;databaseName=exp;SelectMethod=cursor;"
+                jdbc-uri="jdbc:sqlserver://192.168.1.209:1433;databaseName=vergesacco;SelectMethod=cursor;"
                 jdbc-username="vergeuser"
                 jdbc-password="vergeuser2014"
                 isolation-level="ReadCommitted"
@@ -792,6 +745,45 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 pool-maxsize="250"
                 time-between-eviction-runs-millis="600000"/ -->
     </datasource>
+
+    
+    <!-- localmssqlonline -->
+        <datasource name="localmssqlonlinestations"
+            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
+            schema-name="dbo"
+            field-type-name="mssql"
+            check-on-start="true"
+            add-missing-on-start="true"
+            join-style="ansi"
+            alias-view-columns="false"
+            use-fk-initially-deferred="false">
+        <read-data reader-name="tenant"/>
+        <read-data reader-name="seed"/>
+        <read-data reader-name="seed-initial"/>
+        <read-data reader-name="demo"/>
+        <read-data reader-name="ext"/>
+        <read-data reader-name="ext-test"/>
+        <read-data reader-name="ext-demo"/>
+        <inline-jdbc
+                jdbc-driver="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+                jdbc-uri="jdbc:sqlserver://192.168.1.205:1433;databaseName=exp;SelectMethod=cursor;"
+                jdbc-username="sa"
+                jdbc-password="Kwamboka!979"
+                isolation-level="ReadCommitted"
+                pool-minsize="2"
+                pool-maxsize="250"
+                time-between-eviction-runs-millis="600000"/>
+                <!--inline-jdbc
+                jdbc-driver="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+                jdbc-uri="jdbc:sqlserver://localhost:1433;databaseName=vergesacco;SelectMethod=cursor;"
+                jdbc-username="vergeuser"
+                jdbc-password="vergeuser2014"
+                isolation-level="ReadCommitted"
+                pool-minsize="2"
+                pool-maxsize="250"
+                time-between-eviction-runs-millis="600000"/ -->
+    </datasource>
+
     
     <!--datasource name="localmssql"
             helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
