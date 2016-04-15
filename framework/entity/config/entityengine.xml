@@ -54,13 +54,13 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     <delegator name="default" entity-model-reader="main" entity-group-reader="main" entity-eca-reader="main" distributed-cache-clear-enabled="false">
         <!-- group-map group-name="org.ofbiz" datasource-name="localderby"/ -->
 
-
-
-		<!-- <group-map group-name="org.ofbiz" datasource-name="localpostgres"/> -->
-		<group-map group-name="org.ofbiz" datasource-name="localmssql"/>
-		<group-map group-name="org.ofbiz.onlinestations" datasource-name="localmssqlonlinestations"/>
+		 <!--  <group-map group-name="org.ofbiz" datasource-name="localpostgres"/>   -->
+	    <!-- <group-map group-name="org.ofbiz" datasource-name="localmysql"/> -->
+	    
+        <group-map group-name="org.ofbiz" datasource-name="localmssql"/> 
+	    <group-map group-name="org.ofbiz.onlinestations" datasource-name="localmssqlonlinestations"/>
 		
-
+  
         <group-map group-name="org.ofbiz.olap" datasource-name="localderbyolap"/>
         <group-map group-name="org.ofbiz.tenant" datasource-name="localderbytenant"/>
 
@@ -349,8 +349,8 @@ access. For a detailed description see the core/docs/entityconfig.html file.
         <inline-jdbc
                 jdbc-driver="com.mysql.jdbc.Driver"
                 jdbc-uri="jdbc:mysql://127.0.0.1/ofbiz?autoReconnect=true"
-                jdbc-username="ofbiz"
-                jdbc-password="ofbiz"
+                jdbc-username="code"
+                jdbc-password="code"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
                 pool-maxsize="250"
@@ -475,7 +475,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
         <read-data reader-name="ext-demo"/>
         <inline-jdbc
                 jdbc-driver="org.postgresql.Driver"
-                jdbc-uri="jdbc:postgresql://127.0.0.1/ofbiz"
+                jdbc-uri="jdbc:postgresql://127.0.0.1/afriskul"
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"
                 isolation-level="ReadCommitted"
@@ -726,7 +726,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
         <read-data reader-name="ext"/>
         <read-data reader-name="ext-test"/>
         <read-data reader-name="ext-demo"/>
-        <inline-jdbc
+             <!-- <inline-jdbc
                 jdbc-driver="com.microsoft.sqlserver.jdbc.SQLServerDriver"
                 jdbc-uri="jdbc:sqlserver://192.168.1.205:1433;databaseName=vergesacco;SelectMethod=cursor;"
                 jdbc-username="vergeuser"
@@ -734,16 +734,25 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
                 pool-maxsize="250"
-                time-between-eviction-runs-millis="600000"/>
-                <!--inline-jdbc
+                time-between-eviction-runs-millis="600000"/>  -->
+                <inline-jdbc
                 jdbc-driver="com.microsoft.sqlserver.jdbc.SQLServerDriver"
-                jdbc-uri="jdbc:sqlserver://localhost:1433;databaseName=vergesacco;SelectMethod=cursor;"
-                jdbc-username="vergeuser"
-                jdbc-password="vergeuser2014"
+                jdbc-uri="jdbc:sqlserver://127.0.0.1\ROOT;databaseName=vergesacco;SelectMethod=cursor;"
+                jdbc-username="root"
+                jdbc-password="5002"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
                 pool-maxsize="250"
-                time-between-eviction-runs-millis="600000"/ -->
+                time-between-eviction-runs-millis="600000"/>    
+               <!--  <inline-jdbc
+                jdbc-driver="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+                jdbc-uri="jdbc:sqlserver://192.168.1.210;databaseName=vergesacco;SelectMethod=cursor;"
+                jdbc-username="sa"
+                jdbc-password="TeamAlpha12!"
+                isolation-level="ReadCommitted"
+                pool-minsize="2"
+                pool-maxsize="250"
+                time-between-eviction-runs-millis="600000"/> -->
     </datasource>
     
     <!-- localmssqlonline -->
@@ -765,9 +774,9 @@ access. For a detailed description see the core/docs/entityconfig.html file.
         <read-data reader-name="ext-demo"/>
         <inline-jdbc
                 jdbc-driver="com.microsoft.sqlserver.jdbc.SQLServerDriver"
-                jdbc-uri="jdbc:sqlserver://192.168.1.205:1433;databaseName=exp;SelectMethod=cursor;"
-                jdbc-username="sa"
-                jdbc-password="Kwamboka!979"
+                jdbc-uri="jdbc:sqlserver://localhost:1433;databaseName=exp;SelectMethod=cursor;"
+                jdbc-username="vergeuser"
+                jdbc-password="vergeuser2014"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
                 pool-maxsize="250"

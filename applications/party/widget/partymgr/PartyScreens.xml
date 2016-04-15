@@ -4234,6 +4234,11 @@
 			<actions>
 				<set field="titleProperty" value="List Sacco Members" />
 				<set field="headerItem" value="chaiGroups" />
+				<set field="memberCtx" from-field="parameters" />
+				
+				<entity-condition list="listIt" entity-name="Member">
+				   <condition-expr field-name="isGroup" operator="equals" value="YES"/>
+				</entity-condition>
 <!-- 				<set field="tabButtonItem" value="findparty" />
  -->				
 			</actions>
@@ -4255,7 +4260,7 @@
 							   
 							<label style="h1" text="Chai Sacco Registered Groups"></label>
 							<screenlet title="Search Groups">
-							 <!--  <include-form location="component://party/widget/partymgr/PartyForms.xml" name="findchaiGroups"/> -->
+							 <include-form location="component://party/widget/partymgr/PartyForms.xml" name="searchGroupMembers"/> 
 							</screenlet>
 								  <include-form location="component://party/widget/partymgr/PartyForms.xml" name="chaiGroupsForm"/>
 							</widgets>

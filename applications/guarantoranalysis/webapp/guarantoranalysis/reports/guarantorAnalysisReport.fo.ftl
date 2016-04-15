@@ -81,6 +81,9 @@ under the License.
             
         </fo:list-block>
         
+        
+     
+        
 
 		 <#-- assign totalAmount = statement.itemTotal -->
 		 

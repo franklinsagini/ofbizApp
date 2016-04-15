@@ -108,18 +108,30 @@ under the License.
                                 <include-form name="staffOnProbationFormCSV" location="component://humanres/widget/ReportForms.xml"/>
                             </screenlet>
                         </container>
-                          <screenlet title="Employee List Employment Terms">
+                         <screenlet></screenlet>
+                       <container style="lefthalf">
+                       <screenlet title="Employee List Employment Terms">
                         <include-form location="component://humanres/widget/ReportForms.xml" name="staffListEmploymentTerms"/>
                         </screenlet>
+                        </container>
+                       
+                       <container style="righthalf">
                         <screenlet title="Staff Per Branch">
                         <include-form location="component://humanres/widget/ReportForms.xml" name="staffBranch"/>
                         </screenlet>
+                        </container>
+                        
+                         <container style="lefthalf">
                         <screenlet title="Run Staff List as at Certain Date">
                         <include-form location="component://humanres/widget/ReportForms.xml" name="staffListAsAtCertainDate"/>
                         </screenlet>
+                        </container>
+                        
+                         <container style="righthalf">
                          <screenlet title="Staff on Probation As At Certain Date">
                         <include-form location="component://humanres/widget/ReportForms.xml" name="StaffOnProbationAsAtCertainDate"/>
                         </screenlet>
+                        </container>
                         
                         <container style="lefthalf">
                         <screenlet title="Staff Age and Gender(PDF)">
@@ -131,13 +143,13 @@ under the License.
                             <include-form name="staffAgeAndGenderCSV" location="component://humanres/widget/ReportForms.xml"/>
                        </screenlet>
                        </container>
-                       
-                       <container style="">
+                        <screenlet></screenlet>
+                       <container style="lefthalf">
                         <screenlet title="Date Of Emploment(PDF)">
                            <include-form name="dateOfEmploymentPDF" location="component://humanres/widget/ReportForms.xml"/>
                         </screenlet>
                         </container>
-                         <container style="">
+                         <container style="righthalf">
                        <screenlet title="Date Of Employment(CSV)">
                             <include-form name="dateOfEmploymentCSV" location="component://humanres/widget/ReportForms.xml"/>
                        </screenlet>
@@ -1697,7 +1709,10 @@ under the License.
             </actions>
             <widgets>
                 <container>
-                    <label style="h1" text="STAFF LISTING"/>
+                    <!-- <label style="h1" text=""/>
+                    <label style="h1" text="                                         STATUTORY REPORT"/> -->
+                    <label style="h1" text=""/>
+                    
                 </container>
                 <include-form name="staffListingExport" location="component://humanres/widget/ReportForms.xml"/>
             </widgets>
@@ -2740,6 +2755,38 @@ under the License.
             </widgets>
         </section>
     </screen>
+
+
+	<screen name="staffAgeAndGenderCSV">
+		<section>
+			<actions>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap"
+					global="true" />
+
+				<set field="facilityId" from-field="parameters.facilityId" />
+				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"
+					default-value="0" />
+				<property-to-field resource="widget"
+					property="widget.form.defaultViewSize" field="viewSizeDefaultValue" />
+				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"
+					default-value="${viewSizeDefaultValue}" />
+				<script
+					location="component://humanres/webapp/humanres/WEB-INF/actions/reports/staffAgeAndGenderExport.groovy" />
+			</actions>
+			<widgets>
+				<container>
+				    <label style="h1" text="" />
+				     <label style="h1" text="" />
+					<label style="h1" text="STAFF AGE AND GENDER REPORT" />
+					<label style="h1" text="" />
+				</container>
+				<include-form location="component://humanres/widget/ReportForms.xml"
+					name="staffAgeAndGenderExport" />
+			</widgets>
+		</section>
+	</screen>
     
     <screen name="runStatutoryFormPDF">
         <section>
@@ -2784,5 +2831,67 @@ under the License.
         </section>
     </screen> 
     
+    
+ <screen name="dateOfEmploymentCSV">
+		<section>
+			<actions>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap"
+					global="true" />
+
+				<set field="facilityId" from-field="parameters.facilityId" />
+				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"
+					default-value="0" />
+				<property-to-field resource="widget"
+					property="widget.form.defaultViewSize" field="viewSizeDefaultValue" />
+				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"
+					default-value="${viewSizeDefaultValue}" />
+				<script
+					location="component://humanres/webapp/humanres/WEB-INF/actions/reports/dateOfEmploymentExport.groovy" />
+			</actions>
+			<widgets>
+				<container>
+				    <label style="h1" text="" />
+				     <label style="h1" text="" />
+					<label style="h1" text="DATE OF EMPLOYMENT REPORT" />
+					<label style="h1" text="" />
+				</container>
+				<include-form location="component://humanres/widget/ReportForms.xml"
+					name="dateOfEmploymentExport" />
+			</widgets>
+		</section>
+	</screen>
+	
+	<screen name="employmentTermsCSV">
+		<section>
+			<actions>
+				<property-map resource="ProductUiLabels" map-name="uiLabelMap"
+					global="true" />
+				<property-map resource="CommonUiLabels" map-name="uiLabelMap"
+					global="true" />
+
+				<set field="facilityId" from-field="parameters.facilityId" />
+				<set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer"
+					default-value="0" />
+				<property-to-field resource="widget"
+					property="widget.form.defaultViewSize" field="viewSizeDefaultValue" />
+				<set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer"
+					default-value="${viewSizeDefaultValue}" />
+				<script
+					location="component://humanres/webapp/humanres/WEB-INF/actions/reports/employmentTermsCSV.groovy" />
+			</actions>
+			<widgets>
+				<container>
+				    <label style="h1" text="" />
+				     <label style="h1" text="" />
+					<label style="h1" text="STAFF AGE AND GENDER REPORT" />
+					<label style="h1" text="" />
+				</container>
+				<include-form location="component://humanres/widget/ReportForms.xml"
+					name="employmentTermsCSV" />
+			</widgets>
+		</section>
+	</screen>
 
 </screens>

@@ -59,6 +59,8 @@
 		<security https="true" auth="true" />
 		<event type="service" invoke="createDeathInsuranceClaim" />
 		<response name="success" type="request-redirect" value="deathInsuranceClaim">
+		  <redirect-parameter name="partyId"/>
+			<redirect-parameter name="deathNotificationId"/>
 		</response>
 		<response name="error" type="view" value="deathInsuranceClaim" />
 	</request-map>
@@ -93,6 +95,9 @@
 		<security https="true" auth="true" />
 		<event type="service" invoke="createInsuranceClaimPayment" />
 		<response name="success" type="request-redirect" value="receiveClaimPayment">
+		   <redirect-parameter name="deathInsuranceClaimId"/>
+			<redirect-parameter name="partyId"/>
+			<redirect-parameter name="deathNotificationId"/>
 		</response>
 		<response name="error" type="view" value="deathInsuranceClaim" />
 	</request-map>

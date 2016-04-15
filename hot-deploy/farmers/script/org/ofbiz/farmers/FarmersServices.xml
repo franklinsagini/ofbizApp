@@ -34,4 +34,23 @@
 		<create-value value-field="newEntity" />
 	</simple-method>
 
+<simple-method method-name="deleteSecurityPerson" short-description="Delete The security Officer">
+		<entity-one entity-name="Security" value-field="lookedUpValue" />
+		<remove-value value-field="lookedUpValue" />
+		<property-to-field resource="HumanResUiLabels"
+			property="DeleteSuccess" field="successMessage" />
+</simple-method>
+
+
+<simple-method method-name="updateSecurityPerson"
+		short-description="Update Security officer Person">
+		<entity-one entity-name="Security" value-field="securityId" />
+		<set-nonpk-fields value-field="securityId" map="parameters" />
+		<store-value value-field="securityId" />
+		<property-to-field resource="HumanResUiLabels"
+			property="UpdateSuccess" field="successMessage" />
+</simple-method>
+
+
+
 </simple-methods>

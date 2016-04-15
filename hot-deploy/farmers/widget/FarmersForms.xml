@@ -59,7 +59,7 @@
 
 		<field name="locationId" tooltip="${uiLabelMap.CommonRequired}"
 			widget-style="required" required-field="true">
-			<drop-down allow-empty="false">
+			<drop-down allow-empty="true">
 				<entity-options key-field-name="locationId"
 					entity-name="Locations" description="${locationName}">
 					<entity-order-by field-name="locationName" />
@@ -143,37 +143,75 @@
 
 
 	<form name="securityFormList" type="list" list-name="listIt"
-		use-row-submit="true" separate-columns="true" target="UpdateLocationList"
-		paginate-target="security" odd-row-style="alternate-row"
+		use-row-submit="true" separate-columns="true" target="updateSecurityPerson"
+		paginate-target="Security" odd-row-style="alternate-row"
 		header-row-style="header-row-2" default-table-style="basic-table hover-bar">
 		<actions>
 			<entity-condition entity-name="Security"></entity-condition>
 		</actions>
 		<field name="securityId">
-			<display />
+			<hidden />
 		</field>
 		<field name="fName" title="First Name">
-			<display />
+			<text></text>
 		</field>
 		<field name="lName" title="Last Name">
-			<display />
+			<text></text>
 		</field>
 		<field name="midName" title="Middle Name">
-			<display />
+			<text></text>
 		</field>
 		<field name="institution" title="Institution">
-			<display />
+			<text></text>
 		</field>
 		<field name="placeWork" title="Place Of work">
-			<display />
+			<text></text>
 		</field>
 		<field name="homeArea" title="Home Area">
-			<display />
+			<text></text>
 		</field>
-		<field name="deleteGuard" title="Delete Person" widget-style="buttontext">
-        <hyperlink target="deleteSecurityOfficer?securityId=${Security.securityId}" description="Delete"/>
-        </field>
+		<field name="updateSecurityPerson" title="Update" widget-style="buttontext">
+			<submit button-type="button" />
+		</field>
+
+		<field name="deleteSecurityPerson" title="${uiLabelMap.CommonDelete}"
+			widget-style="buttontext">
+			<hyperlink target="deleteSecurityPerson" description="${uiLabelMap.CommonDelete}"
+				also-hidden="false" request-confirmation="true"
+				confirmation-message="Delete ${fName} as Security Officer?">
+				<parameter param-name="securityId" />
+			</hyperlink>
+		</field>
 	</form>
 
+
+	<form name="dairyForm" type="single" target="createDairy"
+		header-row-style="header-row" default-table-style="basic-table">
+
+		<field name="dairyId">
+			<hidden />
+		</field>
+
+		<field name="dairyName" tooltip="${uiLabelMap.CommonRequired}"
+			widget-style="required" required-field="true">
+			<text size="25"></text>
+		</field>
+		<field name="LocationId" tooltip="${uiLabelMap.CommonRequired}"
+			widget-style="required" required-field="true">
+			<drop-down allow-empty="true">
+				<entity-options key-field-name="locationId"
+					description="${locationName}" entity-name="Locations">
+					<entity-order-by field-name="locationName" />
+				</entity-options>
+			</drop-down>
+
+		</field>
+
+
+		<field name="submitButton" widget-style="smallSubmit">
+			<submit button-type="button" />
+		</field>
+
+	</form>
 
 </forms>

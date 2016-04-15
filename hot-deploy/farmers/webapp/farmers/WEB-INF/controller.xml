@@ -66,6 +66,26 @@
 		<response name="error" type="view" value="security" />
 	</request-map>	
 
+	<request-map uri="deleteSecurityPerson">
+		<security https="true" auth="true" />
+		<event type="service" invoke="deleteSecurityPerson" />
+		<response name="success" type="view" value="security" />
+		<response name="error" type="view" value="security" />
+	</request-map>
+
+	<request-map uri="updateSecurityPerson">
+		<security https="true" auth="true" />
+		<event type="service" invoke="updateSecurityPerson" />
+		<response name="success" type="view" value="security" />
+		<response name="error" type="view" value="security" />
+	</request-map>
+	
+	<request-map uri="dairy">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="dairyForm"></response>
+    </request-map>
+
+
 	<!-- View Mappings -->
 	<view-map name="main" type="screen"
 		page="component://farmers/widget/FarmersScreens.xml#main" />
@@ -75,5 +95,8 @@
 		page="component://farmers/widget/FarmersScreens.xml#farmers" />
 	<view-map name="security" type="screen"
 		page="component://farmers/widget/FarmersScreens.xml#security" />
+	<view-map name="dairyForm" type="screen"
+		page="component://farmers/widget/FarmersScreens.xml#dairy" />
+
 
 </site-conf>
