@@ -4385,10 +4385,12 @@
 							</condition>
 							<widgets>
 									<label style="h1">Signatories  For ${party.firstName} ${party.middleName} ${party.lastName}</label>
+								     <label style="h1" text=""></label>
+								     <label style="h1" text=""></label>
+								     <label style="h1" text=""></label>
 								
-								<screenlet title="Group Signitories ">
                                       <include-form location="component://party/widget/partymgr/PartyForms.xml" name="signatoriesMembersForGroup"/>
-								</screenlet>
+								
 							</widgets>
 							<fail-widgets>
 								<label style="h3">${uiLabelMap.PartyMgrCreatePermissionError}
@@ -4406,6 +4408,38 @@
 		</section>
 	</screen>
 	
-	
+	<screen name="chaiGroupsForTeller">
+		<section>
+			<actions>
+				<set field="titleProperty" value="List Sacco Members" />
+				<set field="headerItem" value="chaiGroups" />
+				<set field="memberCtx" from-field="parameters" />
+				
+				<entity-condition list="listIt" entity-name="Member">
+				   <condition-expr field-name="isGroup" operator="equals" value="YES"/>
+				</entity-condition>
+<!-- 				<set field="tabButtonItem" value="findparty" />
+ -->				
+			</actions>
+			<widgets>
+				<decorator-screen name="main-decorator"
+					location="${parameters.mainDecoratorLocation}">
+					<decorator-section name="body">
+						<section>
+							<!-- do check for PARTYMGR, _VIEW permission -->
+							<widgets>
+							
+							<label style="h1" text="Chai Sacco Registered Groups"></label>
+							<screenlet title="Search Groups">
+							 <include-form location="component://party/widget/partymgr/PartyForms.xml" name="searchGroupMembersByTeller"/> 
+							</screenlet>
+								  <include-form location="component://party/widget/partymgr/PartyForms.xml" name="chaiGroupsFormByTeller"/>
+							</widgets>
+						</section>
+					</decorator-section>
+				</decorator-screen>
+			</widgets>
+		</section>
+	</screen>
 
 </screens>

@@ -4116,6 +4116,7 @@ Gender
         </field> -->
         
         <field name="isGroup"><hidden value="YES"/></field>
+        <field name="createdBy"><hidden value="${userLogin.userLoginId}" /></field>
         
        <!--  <field name="genderId" title="Gender" widget-style="required" required-field="true">
             <drop-down allow-empty="true" >
@@ -4305,6 +4306,40 @@ Gender
 		<field name="recuiterNames" title="Recruiter Names"><text></text></field>
 		<field name="recruiterEmail" title="Recruiter Email"><text ></text></field>
 		<field name="recruiterPhone" title="Recruiter Phone"><text></text></field>
+		
+		
+		 <field name="minimumSignitories" title="Minimum Signitories Required" required-field="true">
+		     <drop-down allow-empty="true">
+		        <option key="1" description="One"/>
+		        <option key="2" description="Two"/>
+		        <option key="3" description="Three"/>
+		        <option key="4" description="Four"/>
+		        <option key="5" description="Five"/>
+		        <option key="6" description="Six"/>
+		        <option key="7" description="Seven"/>
+		        <option key="8" description="Eight"/>
+		        <option key="9" description="Nine"/>
+		        <option key="10" description="Ten"/>
+		     </drop-down>
+		 </field>
+		 
+		 <field name="minimumSigns" title="Minimum Member Signs" required-field="true">
+		     <drop-down allow-empty="true">
+		        <option key="1" description="One"/>
+		        <option key="2" description="Two"/>
+		        <option key="3" description="Three"/>
+		        <option key="4" description="Four"/>
+		        <option key="5" description="Five"/>
+		        <option key="6" description="Six"/>
+		        <option key="7" description="Seven"/>
+		        <option key="8" description="Eight"/>
+		        <option key="9" description="Nine"/>
+		        <option key="10" description="Ten"/>
+		     </drop-down>
+		 </field>
+		 
+		 <field name="importantComment" title="Comments On Group"><textarea cols="40" rows="3"/></field>
+		
        <!-- field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit" event="onClick" action="javascript: return confirm('Are you Sure do you want to continue ?');"><submit button-type="text-link"/></field -->
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit" event="onclick" action="javascript: return memberRegistrationFormValidation();"><submit button-type="button"/></field>
     </form>
@@ -4480,6 +4515,8 @@ Gender
             
         </actions>
         
+        <field name="partyId"><hidden/></field>
+        
         <field name="GroupNames">
         	<hyperlink target="viewmemberprofile" description="${firstName} ${middleName} ${lastName}">
         		<parameter param-name="partyId"/>
@@ -4509,7 +4546,41 @@ Gender
         <field name="createdStamp" title="Created Date">
         	<display type="date"></display>
         </field>
- 
+        
+        <field name="minimumSignitories" title="Minimum Signitories Required" required-field="true">
+		     <drop-down allow-empty="true">
+		        <option key="1" description="One"/>
+		        <option key="2" description="Two"/>
+		        <option key="3" description="Three"/>
+		        <option key="4" description="Four"/>
+		        <option key="5" description="Five"/>
+		        <option key="6" description="Six"/>
+		        <option key="7" description="Seven"/>
+		        <option key="8" description="Eight"/>
+		        <option key="9" description="Nine"/>
+		        <option key="10" description="Ten"/>
+		     </drop-down>
+		 </field>
+		 
+		 <field name="minimumSigns" title="Minimum Member Signs" required-field="true">
+		     <drop-down allow-empty="true">
+		        <option key="1" description="One"/>
+		        <option key="2" description="Two"/>
+		        <option key="3" description="Three"/>
+		        <option key="4" description="Four"/>
+		        <option key="5" description="Five"/>
+		        <option key="6" description="Six"/>
+		        <option key="7" description="Seven"/>
+		        <option key="8" description="Eight"/>
+		        <option key="9" description="Nine"/>
+		        <option key="10" description="Ten"/>
+		     </drop-down>
+		 </field>
+        
+        <field name="importantComment" title="Comment">
+        	<text></text>
+        </field>
+        <field name="updateDate" title="Update" widget-style="buttontext"><submit/></field>
         <field name="addMember" widget-style="buttontext">
         	<hyperlink target="addNewGroupMember" description="Add New Group Member">
         		<parameter param-name="partyId" from-field="partyId"/>
@@ -4529,6 +4600,127 @@ Gender
            </field>
  </form>
  
+  <form name="searchGroupMembersByTeller" type="single" target="registeredGroups" default-entity-name="Member">
+     	<actions>
+     	
+     	   <set field="isGroup" value="YES"/>
+     	   
+     	</actions>
+     	
+     	<field name="noConditionFind"><hidden value="Y"/></field>
+        <field name="firstName" title="Group Name"><text-find/></field>
+        
+        <field name="isGroup"><hidden value="YES"/></field>
+        
+        <field name="idNumber" title="Certificate/ID Number" position="2"><text-find/></field>
+
+        <field name="middleName" title="Middle Name"><hidden/></field>
+
+        <field name="payrollNumber" title="Payroll Number"><text-find/></field>
+
+        <field name="lastName" title="Last Name"><hidden/></field>
+
+        <field name="memberNumber" title="Member No." position="2"><text-find/></field>
+        
+         <field name="employeeNumber" title="Employee No."><text-find/></field>
+
+         <field name="mobileNumber" title="Telephone Number" position="2" >
+        	<text-find></text-find>
+        </field>
+   
+        <field name="stationId" title="Station">
+            <drop-down allow-empty="true" current-description="">
+                <entity-options description="${name}" key-field-name="stationId" entity-name="Station">
+                    <entity-order-by field-name="name"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        
+        <field name="branchId" title="Branch" position="2">
+            <drop-down allow-empty="true" current-description="">
+                <entity-options description="${groupName}" key-field-name="partyId" entity-name="PartyGroup">
+                	<entity-constraint name="isBranch" operator="equals" value="Y"/>
+                </entity-options>
+                <!-- list-options key-name="partyId" list-name="banchesList" description="${groupName}"/ -->
+            </drop-down>
+        </field>   
+        
+      <!--   <field name="createdStamp" title="Date Formed">
+        	<date-find/>
+        </field>  -->	
+        
+        <field name="searchButton" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
+   </form>
  
+   <form name="chaiGroupsFormByTeller" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="chaiGroupsFormTarget" paginate-target="chaiGroups"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+		<!-- condition-expr field-name="memberStatusId" operator="equals" value="${memberStatusId}"/ -->
+        <actions>
+        	<entity-condition entity-name="Member">
+        	   <condition-expr field-name="isGroup" operator="equals" value="YES"/>
+        	</entity-condition>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="memberCtx"/>
+                <field-map field-name="entityName" value="Member"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service> 
+            
+        </actions>
+        
+       <!--  <field name="partyId"><hidden/></field> -->
+        
+        <field name="partyId">
+        <display-entity entity-name="Member" description="${firstName} ${middleName} ${lastName}" key-field-name="partyId"></display-entity>
+        </field> 
+        <!-- <field name="name" title="Group Names"><display also-hidden="false"></display></field>
+  -->
+         <field name="payrollNumber" title="Payroll Number"><display></display></field>
+          <field name="memberNumber" title="Member No."><display></display></field>
+         <field name="mobileNumber" title="Telephone No"><display also-hidden="false"></display></field>
+        
+         <field name="postalAddress" title="Address" >
+            <display></display>
+        </field>
+        
+        <field name="stationId" title="Station">
+        	<display-entity entity-name="Station" description="${name}" key-field-name="stationId">
+        		
+        	</display-entity>
+        </field>
+     
+         <field name="branchId" title="Branch">
+           <display-entity entity-name="PartyGroup" description="${groupName}" key-field-name="partyId">
+           </display-entity>
+        </field>
+        
+        <field name="createdStamp" title="Created Date">
+        	<display type="date"></display>
+        </field>
+        
+        <field name="minimumSignitories" title="Minimum Signitories Required" required-field="true">
+		    <display></display>
+		 </field>
+		 
+		 <field name="minimumSigns" title="Minimum Member Signs" required-field="true">
+		    <display></display>
+		 </field>
+        
+        <field name="importantComment" title="Comment">
+        	<display></display>
+        </field>
+        <field name="viewSignitories" widget-style="smallSubmit">
+        	<hyperlink target="viewGroupSignitaries" description="View This Group Signitories">
+        		<parameter param-name="partyId"/>
+        	</hyperlink>
+        </field>
+        
+        <!--  <field name="Details">
+        	<hyperlink target="viewmemberprofile" description="Details">
+        		<parameter param-name="partyId" from-field="partyId"/>
+        	</hyperlink>
+           </field> -->
+ </form>
     
 </forms>
