@@ -55,6 +55,45 @@
             <submit button-type="button" />
         </field>
     </form>
+    
+      <!-- appliedLoansByStation -->
+    <form name="loanlistingbystationreportForm" type="single" target="loanlistingbystationreport.csv" title="" header-row-style="header-row"
+        default-table-style="basic-table">
+		<actions>
+			<entity-condition entity-name="PartyGroup" list="partyGroups">
+        		<condition-expr field-name="isBranch" operator="equals" value="Y"/>
+        	</entity-condition>
+		</actions>
+        <field name="startDate" title="From"  widget-style="required" required-field="true">
+        	<date-time type="date"/>
+        </field>
+        <field name="endDate" title="To" position="2"  widget-style="required" required-field="true">
+        	<date-time type="date"/>
+        </field>
+        <field name="stationId" title="Station">
+        	<drop-down allow-empty="true">
+        		<entity-options description="${name} - ${stationNumber} - Employer Code - (${employerCode})" entity-name="Station" key-field-name="stationId"></entity-options>
+        	</drop-down>
+        </field>
+        <field name="submitButton" title="Show" widget-style="smallSubmit">
+            <submit button-type="button" />
+        </field>
+    </form>
+    
+     <form name="stationLoanReportsExport" list-name="combinedList" target="" title="" 
+         type="list" view-size="99999"  odd-row-style="alternate-row" header-row-style="header-row-2" 
+         default-table-style="basic-table hover-bar" paginate="false"> 
+       <field name="loanNo" title="Loan Number"><display/></field>
+        <field name="fullName" title="Full Name"><display/></field>
+        <field name="payrollNumber" title="Payroll Number"><display/></field>
+        <field name="memberNumber" title="Member Number"><display/></field>
+        <field name="idNumber" title="Id Number"><display/></field>
+		<field name="disbursementDate" title="Disbursement Date"><display/></field>
+        <field name="loanBalance" title="Loan Balance"><display/></field>
+        
+    </form>
+    
+    
 
     <form name="loanReportsExport" list-name="combinedList" target="" title=""
          type="list" view-size="999999"  odd-row-style="alternate-row" header-row-style="header-row-2"
@@ -82,6 +121,7 @@
 
         <field name="loanAmt" title="Disbursed Amount"><display/></field>
         <field name="stationName" title="Station"><display/></field>
+        <field name="branchName" title="Branch"><display/></field>
 
     </form>
 

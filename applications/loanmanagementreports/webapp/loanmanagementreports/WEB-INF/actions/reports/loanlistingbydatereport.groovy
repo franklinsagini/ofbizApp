@@ -115,6 +115,8 @@ myLoansList.eachWithIndex { loan, index ->
 	loanItem.payrollNumber = member.payrollNumber.trim();
 	loanItem.memberNumber = member.memberNumber.trim();
 	loanItem.idNumber = member.idNumber.trim();
+	
+	
 	loanItem.disbursementDate = loan.disbursementDate;
 	loanBalance = loan.loanAmt - org.ofbiz.loans.LoanServices.getLoansRepaidByLoanApplicationId(loan.loanApplicationId);
 	loanItem.loanBalance = loanBalance;
@@ -139,9 +141,14 @@ myLoansList.eachWithIndex { loan, index ->
 	statementItem.totalAmount = totalAmount; ***/
 	
 	stationId = member.stationId;
+	branchId = member.branchId;
+	
 	station = delegator.findOne("Station", [stationId : stationId.toString()], false);
 	
+	branch = delegator.findOne("PartyGroup", [partyId : branchId.toString()], false);
+	
 	loanItem.stationName = station.name;
+	loanItem.branchName = branch.groupName;
 	
 	combinedList << loanItem
 }
