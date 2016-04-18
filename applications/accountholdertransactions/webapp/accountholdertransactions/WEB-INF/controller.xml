@@ -1082,10 +1082,28 @@
 	 <response name="success" type="view" value="tellerLimitApprovers"></response>
 	 <response name="error" type="view" value="tellerLimitApprovers"></response>
 	</request-map>
+	
+	<request-map uri="registeredGroups">
+	  <security auth="true" https="true"/>
+	  <response name="success" type="view" value="registeredGroups"></response>
+	  <response name="error" type="view" value="registeredGroups"></response>
+	</request-map>
+	
+	<request-map uri="viewGroupSignitaries">
+		<security auth="true" https="true" />
+		<response name="success" type="view" value="viewGroupSignitaries"></response>
+		<response name="error" type="view" value="viewGroupSignitaries"></response>
+	</request-map>
+	  
 
 	<!-- end of request mappings -->
 
 	<!-- View Mappings -->
+	
+	 <view-map name="registeredGroups" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#chaiGroupsForTeller"></view-map>
+	<view-map name="viewGroupSignitaries" type="screen"
+		page="component://party/widget/partymgr/PartyScreens.xml#viewGroupSignitaries"></view-map>	
 	<view-map name="LookupEmployee" type="screen"
 		page="component://humanres/widget/LookupScreens.xml#LookupEmployee" />
 
