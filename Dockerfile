@@ -2,12 +2,10 @@ FROM ubuntu:14.04
 
 MAINTAINER franklinsagini@gmail.com
 
-COPY sources.list.trusty  /etc/apt/sources.list 
-
 RUN   apt-get update && \
       apt-get install -y --no-install-recommends  wget  unzip   openjdk-6-jre  openjdk-6-jdk  && \
 
-WORKDIR  chaisacco 
+WORKDIR  ofbizApp 
 
 RUN   ./ant  && \
       ./ant load-demo  && \
